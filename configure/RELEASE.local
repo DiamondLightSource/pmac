@@ -1,0 +1,11 @@
+# The following definitions must be changed for each site
+
+# These following three base definitions are overwritten by definitions in 
+# the RELEASE.<arch>.Common files. Included here for information only.
+# SUPPORT         = /dls_sw/prod/R3.14.12.3/support
+# WORK            = /dls_sw/work/R3.14.12.3/support
+# EPICS_BASE      = /dls_sw/epics/R3.14.12.3/base
+
+ASYN=       $(SUPPORT)/asyn/4-26
+MOTOR=      $(SUPPORT)/motor/6-9dls2
+
