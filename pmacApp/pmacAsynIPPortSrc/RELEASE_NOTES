@@ -1,0 +1,192 @@
+              RELEASE NOTES for asyn version of tpmac module
+
+		            Matthew Pearson
+	                      24 Oct 11
+
+1. Changes to pmacAsynMotor
+
+* Removed include of motorSupport.dbd, so applications will need to include 
+this manually from now.
+
+* Added pmacSetOpenLoopEncoderAxis axis configuration routine, to read back the 
+position from a different axis number.
+
+
+
+
+              RELEASE NOTES for asyn version of tpmac module
+
+		            Matthew Pearson
+	                      11 Feb 09
+
+1. Changes to pmacAsynIPPort
+
+Ported to work with Asyn 4-10. It still compiles with Asyn 4-9, but
+is no longer compatible.
+
+Made extensive changes to the pmacAsynIPPort.c file to enable better
+support for ethernet based Delta Tau PMACS. This is an asyn interpose
+layer that deals with ethernet specific PMAC headers and trailers.
+
+Also added new configuration functions for use in the IOC shell.
+
+2. How to configure an IOC to use an ethernet PMAC:
+
+pmacAsynIPConfigure("pmacLV", "172.23.243.156:1025")
+pmacAsynMotorCreate("pmacLV", 0, 0, 8)
+drvAsynMotorConfigure("PMAC1", "pmacAsynMotor", 0, 9)
+
+similary for a 2nd ethernet PMAC in the same IOC:
+
+pmacAsynIPConfigure("pmacLV2", "172.23.243.157:1025")
+pmacAsynMotorCreate("pmacLV2", 0, 1, 8)
+drvAsynMotorConfigure("PMAC2", "pmacAsynMotor", 1, 9)
+
+3. To change to PMAC driver polling rates in the IOC shell:
+
+To change the polling period when the motor is not moving:
+pmacSetIdlePollPeriod(0, 500)
+
+To change the polling period when the motor is moving.
+pmacSetMovingPollPeriod(0, 50)
+
+The first parameter is the 'card'. The second parameter is the
+polling period in milliseconds.
+
+NOTE: The default idle polling period is 500ms. The default moving
+polling period is 100ms.
+
+
+
+
+              RELEASE NOTES for asyn version of tpmac module.
+
+                               Nick Rees
+                             26 July 2006
+
+1. Backwards incompatible changes since the last release.
+
+This release chould be completely backwards compatible with the old
+release with the exception of the VxWorks startup scripts. These need an
+extra line to create asyn ports that are used for ASCII communication
+and a change to pmacDrvConfig to say which asyn port the ASCII
+communications should use.
+
+For example, previously you may have configured the pmac with the lines:
+
+pmacVmeConfig (0, 0x7FA000, 0x700000, 0xa1, 6)
+pmacDrvConfig (0, 0, 0, 0, 0)
+
+Now, to get the same effect, you must use the lines:
+
+pmacVmeConfig (0, 0x7FA000, 0x700000, 0xa1, 6)
+pmacAsynConfig( "PMAC_MBX_PORT_", 0 )
+pmacDrvConfig (0, 0, 0, 0, "PMAC_MBX_PORT_0" )
+
+The parameters for pmacAsynConfig are two character strings which are
+the prefix of asyn ports to be set up for each configured PMAC card's
+mailbox and DPRAM ascii buffer respectively. If the string is not NULL,
+the routine will create an Asyn port and append the card number to the
+string prefix. In the above example, since we configured only one card,
+and gave it number 0, pmacAsynConfig will create a single asyn port
+PMAC_MBX_PORT_0. It will not create any asyn ports for the DPRAM ASCII
+buffer since the second parameter is NULL.
+
+The final parameter for pmacDrvConfig has also changed. Formerly, it was
+a disableMbx flag. Now, it is the asyn port to be used for ASCII
+communication. It can be an Mailbox, DPRAM ASCII, serial port or IP port
+(However, asyn support for the PMAC IP interface isn't implemented yet).
+
+
+2. New features.
+
+Since the ASCII communications at the lowest level use an asynOctet
+port, then you can use other asynOctet upper level software. Examples of
+this are:
+
+a. asynRecord
+
+You can connect any asyn record on your IOC to any available asynOctet
+port connected to your PMAC and use this as a simple command line interface.
+
+b. Motor Record
+
+The directory pmacAsynMotorSrc contains a PMAC motor record driver in
+the new asynMotor framework. To configure motor support for all motors
+on a card, add the following lines to the configuration lines given
+above:
+
+pmacAsynMotorCreate("PMAC_MAX_PORT_0", 0, 0, 32 );
+drvAsynMotorConfigure("pmac0", "pmacAsynMotor", 0, 33)
+
+The first of these configures the pmacAsynMotor driver and the second
+configures the generic drvAsynMotor layer. Note that this requires >
+release 5.9 of motor support and >= release 4.6 of asyn support.
+
+The parameters for the first routine are:
+ - port (char *) Asyn port for PMAC ASCII communicatons.
+ - address (int) Asyn port address. Always 0.
+ - card (int)    Card number to use. Is not necessarily the same card #
+                 used in the other initialisation routines, but probably
+                 should be.
+ - naxes (int)   Number of axes to configure. 1 based.
+
+The parameters for the second routine are:
+ - port (char *)   drvAsynMotor asyn port to be created.
+ - drvSup (char *) Driver support entry table name for driver. For PMAC
+                   this is pmacAsynMotor.
+ - card (int)      Card number specified in pmacAsynMotorCreate for this
+                   axis.
+ - nAxes (int)     #axes to configure (zero based). Note that since PMAC
+                   axes are 1 based and drvAsynMotor axes are 0 based
+                   this will generate a non-fatal warning of the form:
+                   <datestamp> drvAsynMotorConfigure: Failed to open axis 0
+
+To connect motor records to this driver, use:
+
+DTYP asynMotor and an
+OUT  @asyn($(PORT),$(AXIS))
+
+Where PORT is the asyn port and AXIS the motor axis #.
+
+c. Streams.
+
+You should be able to use streamDevice 2.0 and above to communicate
+other ascii commands to the underlying asynOctet port. 
+
+d. asynUploadFile
+
+This is a generic routine to upload a file to an asyn port. For example:
+
+asynUploadFile( "data/pmacTest.pmc", "PMAC_MBX_PORT_0", "\r", "\06" )
+
+The parameters are:
+
+ - filename (char *) File to upload.
+ - asynPort (char *) asynOctet port to upload the file to.
+ - out_term (char *) Output terminator to use at the end of every line
+ - inp_term (char *) Input terminator to search for in response to every line.
+
+All responses are ignored, the terminators just being scanned for as a handshake. If the writeread routine returns an error the routine exits printing the line number and
+
+
+3. Known problems/still to do
+
+a. Resolve the terminators for error notification. Currently,
+     - The DPRAM and MBX ASCII drivers return an error as <BELL>ERRnnn<CR><ACK>
+     - The serial line returns an error as <BELL>ERRnnn<CR>
+   We need to adopt a standard. I prefer the first since then all
+   transactions are terminated with an <ACK>, but then the serial line
+   driver needs an interpose interface to add the trailing <ACK>.
+b. Add windows support. This should be a asyn port using the PMAC
+   windows drivers.
+c. Add Linux PCI support. There is a Linux open/close/read/write
+   driver that should fit in fairly simply. It might need an interpose
+   interface to handle terminators.
+d. Convert the Asyn PMAC drivers to use the CPP asynMotorController/Axis interface.
+e. Add Diamond standard templates for PMAC co-ordinate systems.
+
+Note for those implementing the asynOctet drivers they must emulate the
+syntax of the PMAC serial port. Basically the means that on write "\r"
+is used as a record terminator, and on read ACK is used for a success
+terminator and <BELL>ERRnnn<CR><ACK> for an error response.
