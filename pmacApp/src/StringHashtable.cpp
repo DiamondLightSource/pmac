@@ -52,6 +52,16 @@ std::string StringHashtable::remove(const std::string& key)
   return returnString;
 }
 
+bool StringHashtable::hasKey(const std::string& key)
+{
+  bool retVal = false;
+  void *vPtr = Hashtable::lookup((const void *)key.c_str());
+  if (vPtr != NULL){
+    retVal = true;
+  }
+  return retVal;
+}
+
 std::string StringHashtable::firstKey()
 {
   char *key = NULL;

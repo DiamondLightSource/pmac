@@ -20,6 +20,7 @@ public:
   std::string lookup(const std::string& key);
   std::string insert(const std::string& key, const std::string& value);
   std::string remove(const std::string& key);
+  bool hasKey(const std::string& key);
   std::string firstKey();
   bool hasNextKey();
   std::string nextKey();
