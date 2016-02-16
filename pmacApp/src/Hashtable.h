@@ -29,10 +29,6 @@ public:
   // Look up key in hash table, return NULL if not found.
   void *lookup(const void *key);
 
-  // Look up key in hash table, return true if found.  Equivalent to
-  // lookup(const void *key) except when value is NULL.
-  //bool lookup_bool(const void *key, void **value);
-
   // Inserts (key,value) pair in hash table.  If value is already present its old
   // value is returned before being overwritten with the new value, otherwise NULL
   // is returned.
@@ -53,16 +49,6 @@ public:
   table_entry *internal_next();
   void keys(void **keys);
 
-  // Iterator for walking all entries in hash table.  The table *must* remain
-  // unchanged during the walk.  Start by initialising ix to zero, each call
-  // will increment ix and return the associated (key,value) pair and return
-  // true until the entire table has been walked, when false will be returned.
-  // Either key or value can be null if the result is not required. */
-  //bool hash_table_walk(size_t *ix, const void **key, void **value);
-  //#define hash_table_walk_const(table, ix, key, value)
-  //    hash_table_walk(table, ix, key, CAST_FROM_TO(const void **, void **, value))
-
-
   // Sanity checking of hash table consistency, raises assert fail if any error is
   // found.  Should only fail in presence of hash table bug, memory overwrite, or
   // key lifetime mismanagement.
@@ -79,15 +65,15 @@ protected:
 
 private:
 
-  static size_t INITIAL_SIZE;
-  static hash_t EMPTY_HASH;
-  static hash_t DELETED_HASH;
+  static size_t INITIAL_SIZE; // initial size of data store constant
+  static hash_t EMPTY_HASH;   // constant to represent an empty hash
+  static hash_t DELETED_HASH; // constant to represent a deleted hash
 
-  size_t entries;     // Number of entries in table
-  size_t deleted;     // Number of deleted entries in table
-  size_t size_mask;   // True size is power of 2, mask selects modulo size
-  size_t walk_index;
-  struct table_entry *table;
+  size_t entries;             // Number of entries in table
+  size_t deleted;             // Number of deleted entries in table
+  size_t size_mask;           // True size is power of 2, mask selects modulo size
+  size_t walk_index;          // Used for keeping track of next and has next
+  struct table_entry *table;  // Actual data storage pointer
 
 };
 

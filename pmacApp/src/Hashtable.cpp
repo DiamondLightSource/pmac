@@ -13,6 +13,11 @@ size_t Hashtable::INITIAL_SIZE = 8;
 hash_t Hashtable::EMPTY_HASH   = 0;  // Marks unused slot
 hash_t Hashtable::DELETED_HASH = -1; // Marks deleted slot, "tombstone"
 
+/**
+ * Constructor.  Takes no parameters.  Allocates memory for the initial size of
+ * the table as specified by the INITIAL_SIZE constant.  Initialises all other
+ * private member variables.
+ */
 Hashtable::Hashtable()
 {
   this->entries = 0;
@@ -22,17 +27,36 @@ Hashtable::Hashtable()
   this->table = (table_entry *)calloc(Hashtable::INITIAL_SIZE, sizeof(struct table_entry));
 }
 
+/**
+ * Destructor.  Takes no parameters.  Frees the previously allocated table memory.
+ */
 Hashtable::~Hashtable()
 {
   free(this->table);
 }
 
+/**
+ * Looks up the value of an entry according to the supplied key. If there is no entry
+ * found then the return value is NULL, otherwise the value is returned as a void ptr.
+ *
+ * @param key The key used to lookup the value.
+ * @return value
+ */
 void *Hashtable::lookup(const void *key)
 {
   bool found;
   return this->lookup(key, this->hash_string(key), &found)->value;
 }
 
+/**
+ * Inserts a new key, value pair into the hashtable. If an existing value already
+ * exists for the key then the old value is returned, otherwise the method returns
+ * NULL.
+ *
+ * @param key The key used to index into the hashtable.
+ * @param value The value to store in the hashtable.
+ * @return existing value or NULL
+ */
 void *Hashtable::insert(const void *key, void *value)
 {
   hash_t hash = this->hash_string(key);
@@ -64,6 +88,13 @@ void *Hashtable::insert(const void *key, void *value)
   return old_value;
 }
 
+/**
+ * Removes a key, value pair from the hashtable. The value is returned if it exists,
+ * otherwise the method returns NULL.
+ *
+ * @param key The key used to index into the hashtable.
+ * @return removed value or NULL
+ */
 void *Hashtable::remove(const void *key)
 {
   bool found;
@@ -82,11 +113,23 @@ void *Hashtable::remove(const void *key)
   return old_value;
 }
 
+/**
+ * Returns the current count of items in the hashtable.
+ *
+ * @return size of hashtable
+ */
 size_t Hashtable::count()
 {
   return this->entries - this->deleted;
 }
 
+/**
+ * Resizes the hashtable, re-allocates memory and frees up memory
+ * from the original table
+ *
+ * @param min_size The minimum size of the new hashtable.
+ *
+ */
 void Hashtable::resize(size_t min_size)
 {
   // Compute new size taking deleted items into account: next power of two
@@ -125,12 +168,24 @@ void Hashtable::resize(size_t min_size)
   free(oldtable);
 }
 
+/**
+ * Used for iterating over the hashtable. Returns the table entry
+ * item from the beginning of the hashtable.
+ *
+ * @return first entry from the hashtable
+ */
 table_entry *Hashtable::internal_begin()
 {
   this->walk_index = 0;
   return this->internal_next();
 }
 
+/**
+ * Used for iterating over the hashtable.  Checks if there is another
+ * entry in the hashtable after the current entry.
+ *
+ * @return true if there is another entry, false otherwise
+ */
 bool Hashtable::internal_hasNext()
 {
   for (size_t ix = this->walk_index; ix <= this->size_mask; ix ++){
@@ -142,6 +197,12 @@ bool Hashtable::internal_hasNext()
   return false;
 }
 
+/**
+ * Used for iterating over the hashtable.  Returns the next entry in the
+ * hashtable.  If there is no entry then this returns NULL.
+ *
+ * @return next entry from the hashtable
+ */
 table_entry *Hashtable::internal_next()
 {
   for (size_t ix = this->walk_index; ix <= this->size_mask; ix ++){
@@ -154,6 +215,11 @@ table_entry *Hashtable::internal_next()
   return NULL;
 }
 
+/**
+ * Returns an array of the keys from the hashtable.
+ *
+ * @param keys The pointer to array of keys.
+ */
 void Hashtable::keys(void **keys)
 {
   int keycount = 0;
@@ -170,11 +236,26 @@ void Hashtable::keys(void **keys)
   }
 }
 
+/**
+ * Checks if a particular hashtable entry is empty or deleted.
+ *
+ * @param entry The table entry to check.
+ * @return true if the entry is empty, false otherwise
+ */
 bool Hashtable::empty_entry(struct table_entry *entry)
 {
   return entry->hash == EMPTY_HASH  ||  entry->hash == DELETED_HASH;
 }
 
+/**
+ * Looks for a key/hash within the hashtable and returns the hashtable
+ * entry item if it is found.  Also
+ *
+ * @param key The key to search for.
+ * @param hash The hash of the key to search for.
+ * @param found Return boolean true if key found, false otherwise.
+ * @return table entry if found, NULL otherwise.
+ */
 struct table_entry *Hashtable::lookup(const void *key, hash_t hash, bool *found)
 {
   // Walk the hash table taking all bits of the hash value into account.
@@ -203,6 +284,12 @@ struct table_entry *Hashtable::lookup(const void *key, hash_t hash, bool *found)
   return NULL;
 }
 
+/**
+ * Turns a given key into a hash value.
+ *
+ * @param key The key to turn into a hash.
+ * @return hash value of the key.
+ */
 hash_t Hashtable::hash_string(const void *key)
 {
   hash_t retVal = 0;
