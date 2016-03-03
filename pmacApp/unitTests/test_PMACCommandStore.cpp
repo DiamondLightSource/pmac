@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(test_PMACCommandStore)
   BOOST_CHECK_EQUAL(store.size(), 6);
 
   // Check the command string contains all of the requested variables
-  std::string cmdString = store.readCommandString();
+  std::string cmdString = store.readCommandString(0);
   BOOST_CHECK_NE(cmdString.find("i1"), std::string::npos);
   BOOST_CHECK_NE(cmdString.find("i2"), std::string::npos);
   BOOST_CHECK_NE(cmdString.find("i3"), std::string::npos);
@@ -81,7 +81,7 @@ BOOST_AUTO_TEST_CASE(test_PMACCommandStore)
 
   // Insert the value and check again
   store.addItem("i7");
-  cmdString = store.readCommandString();
+  cmdString = store.readCommandString(0);
   BOOST_CHECK_NE(cmdString.find("i7"), std::string::npos);
 
   // Check the size
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(test_PMACCommandStore)
 
   // Now setup a reply string
   std::string reply = "10\r20\r30\r40\r50\r60\r70\r\6";
-  int status = store.updateReply(reply);
+  int status = store.updateReply(cmdString, reply);
 
   // Check the status is good
   BOOST_CHECK_EQUAL(status, 0);
@@ -105,7 +105,7 @@ BOOST_AUTO_TEST_CASE(test_PMACCommandStore)
 
   // Now setup a reply string with too many values
   reply = "1\r2\r3\r4\r5\r6\r7\r8\r\6";
-  status = store.updateReply(reply);
+  status = store.updateReply(cmdString, reply);
 
   // Check the status is bad
   BOOST_CHECK_EQUAL(status, -1);
@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE(test_PMACCommandStore)
 
   // Now setup a reply string with not enough values
   reply = "100\r200\r300\r\6";
-  status = store.updateReply(reply);
+  status = store.updateReply(cmdString, reply);
 
   // Check the status is bad
   BOOST_CHECK_EQUAL(status, -1);
