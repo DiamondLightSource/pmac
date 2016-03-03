@@ -226,11 +226,11 @@ void Hashtable::keys(void **keys)
   keys = (void **)malloc(sizeof(void *)*this->count());
   for (size_t ix = 0; ix <= this->size_mask; ix ++){
     struct table_entry *entry = &this->table[ix];
-    printf("ix: %d\n", ix);
+    //printf("ix: %d\n", ix);
     if (!empty_entry(entry)){
-      printf("not empty\n");
+      //printf("not empty\n");
       keys[keycount] = entry->key;
-      printf("key: %s\n", (char *)keys[keycount]);
+      //printf("key: %s\n", (char *)keys[keycount]);
       keycount++;
     }
   }
