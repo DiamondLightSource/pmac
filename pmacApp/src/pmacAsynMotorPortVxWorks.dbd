@@ -1,0 +1,14 @@
+function(pmacCreateController)
+function(pmacCreateAxis)
+function(pmacDisableLimitsCheck)
+function(pmacSetAxisScale)
+function(pmacSetOpenLoopEncoderAxis)
+function(pmacDebug)
+
+function(pmacCSCreateController)
+function(pmacCreateCSAxis);
+function(pmacCreateCSAxes);
+
+
+
+

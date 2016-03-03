@@ -1,0 +1,3 @@
+registrar(pmacControllerRegister)
+
+registrar(pmacCSControllerRegister)
