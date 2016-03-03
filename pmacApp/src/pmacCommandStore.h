@@ -9,9 +9,11 @@
 #define PMACAPP_SRC_PMACCOMMANDSTORE_H_
 
 #include "epicsTypes.h"
+#include "epicsMutex.h"
 #include "StringHashtable.h"
+#include "pmacDebugger.h"
 
-class pmacCommandStore
+class pmacCommandStore : public pmacDebugger
 {
 public:
   pmacCommandStore();
@@ -21,15 +23,17 @@ public:
   bool checkForItem(const std::string& key);
   std::string readValue(const std::string& key);
   int size();
-  std::string readCommandString();
-  int updateReply(const std::string& reply);
+  std::string readCommandString(int index);
+  int countCommandStrings();
+  int updateReply(const std::string& cmd, const std::string& reply);
   void report();
 
 private:
   void buildCommandString();
 
   StringHashtable store;
-  char commandString[1024];
+  char commandString[100][1024];
+  int qtyCmdStrings;
 };
 
 #endif /* PMACAPP_SRC_PMACCOMMANDSTORE_H_ */
