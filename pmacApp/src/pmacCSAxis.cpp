@@ -126,6 +126,20 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
   return status;
 }
 
+asynStatus pmacCSAxis::moveVelocity(double min_velocity, double max_velocity, double acceleration)
+{
+  static const char *functionName = "moveVelocity";
+  debug(DEBUG_ERROR, functionName, "not implemented for CS axes");
+  return asynError;
+}
+
+asynStatus pmacCSAxis::home(double minVelocity, double maxVelocity, double acceleration, int forwards)
+{
+  static const char *functionName = "home";
+  debug(DEBUG_ERROR, functionName, "not implemented for CS axes");
+  return asynError;
+}
+
 asynStatus pmacCSAxis::stop(double acceleration)
 {
   asynStatus status = asynSuccess;

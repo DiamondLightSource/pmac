@@ -22,7 +22,8 @@ public:
   pmacCSAxis(pmacCSController *pController, int axisNo);
   virtual ~pmacCSAxis();
   asynStatus move(double position, int relative, double min_velocity, double max_velocity, double acceleration);
-//  asynStatus moveVelocity(double min_velocity, double max_velocity, double acceleration);
+  asynStatus moveVelocity(double min_velocity, double max_velocity, double acceleration);
+  asynStatus home(double minVelocity, double maxVelocity, double acceleration, int forwards);
   asynStatus stop(double acceleration);
 //  asynStatus poll(bool *moving);
 //  asynStatus setPosition(double position);
