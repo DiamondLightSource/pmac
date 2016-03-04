@@ -1,0 +1,3 @@
+include "basic_asyn_motor.template"
+include "motor_in_cs.template"
+include "eloss_kill_autohome_records.template"
