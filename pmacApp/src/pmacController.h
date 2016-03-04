@@ -34,6 +34,8 @@
 #define PMAC_C_FastUpdateTimeString   "PMAC_C_FAST_UPDATE_TIME"
 
 #define PMAC_C_AxisCSString           "PMAC_C_AXIS_CS"
+#define PMAC_C_WriteCmdString           "PMAC_C_WRITE_CMD"
+#define PMAC_C_KillAxisString           "PMAC_C_KILL_AXIS"
 
 #define PMAC_MAXBUF 1024
 
@@ -67,6 +69,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   /* These are the methods that we override */
   asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
   asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
+  asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t nChars, size_t *nActual);
   void report(FILE *fp, int level);
   pmacAxis* getAxis(asynUser *pasynUser);
   pmacAxis* getAxis(int axisNo);
@@ -106,6 +109,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_CoordSysGroup_;
   int PMAC_C_FastUpdateTime_;
   int PMAC_C_AxisCS_;
+  int PMAC_C_WriteCmd_;
+  int PMAC_C_KillAxis_;
   int PMAC_C_LastParam_;
   #define LAST_PMAC_PARAM PMAC_C_LastParam_
   int parameters[PMAC_MAX_PARAMETERS];

@@ -213,6 +213,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_FastUpdateTimeString,   asynParamFloat64, &PMAC_C_FastUpdateTime_);
   createParam(PMAC_C_LastParamString,        asynParamInt32,   &PMAC_C_LastParam_);
   createParam(PMAC_C_AxisCSString,           asynParamInt32,   &PMAC_C_AxisCS_);
+  createParam(PMAC_C_WriteCmdString,         asynParamOctet,   &PMAC_C_WriteCmd_);
+  createParam(PMAC_C_KillAxisString,         asynParamInt32,   &PMAC_C_KillAxis_);
 
   pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
 
@@ -285,9 +287,9 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
   // Accepted parameter formats
   //
   // For reading variables
-  // PMAC_VFx_...  => PMAC Variable Fast Loop
-  // PMAC_VMx_...  => PMAC Variable Medium Loop
-  // PMAC_VSx_...  => PMAC Variable Slow Loop
+  // PMAC_VxF_...  => PMAC Variable Fast Loop
+  // PMAC_VxM_...  => PMAC Variable Medium Loop
+  // PMAC_VxS_...  => PMAC Variable Slow Loop
   //
   // x is I for int, D for double or S for string
   //
@@ -323,10 +325,11 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
 
       printf("Creating new parameter %s\n", pmacVariable);
       // Check for I, D or S in drvInfo[7]
-      switch(drvInfo[7]) {
+      switch(drvInfo[6]) {
         case 'I':
           // Create the parameter
           createParam(drvInfo, asynParamInt32, &(this->parameters[parameterIndex_]));
+          setIntegerParam(this->parameters[parameterIndex_], 0);
           // Add variable to integer parameter hashtable
           this->pIntParams_->insert(pmacVariable, this->parameters[parameterIndex_]);
           parameterIndex_++;
@@ -346,13 +349,13 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
         default:
           asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
                     "%s:%s: Expected PMAC_Vtx_... where x is one of I, D or S. Got '%c'\n",
-                    driverName, functionName, drvInfo[7]);
+                    driverName, functionName, drvInfo[6]);
           status = asynError;
       }
 
       if (status == asynSuccess){
         // Check for F, M or S in drvInfo[6]
-        switch(drvInfo[6]) {
+        switch(drvInfo[7]) {
           case 'F':
             this->pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, pmacVariable);
             break;
@@ -365,7 +368,7 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
           default:
             asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
                       "%s:%s: Expected PMAC_Vtx_... where t is one of F, M or S. Got '%c'\n",
-                      driverName, functionName, drvInfo[6]);
+                      driverName, functionName, drvInfo[7]);
             status = asynError;
         }
 
@@ -409,8 +412,8 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
           break;
         default:
           asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-                    "%s:%s: Expected PMAC_Vtx_... where x is one of I, D or S. Got '%c'\n",
-                    driverName, functionName, drvInfo[7]);
+                    "%s:%s: Expected PMAC_Wx_... where x is one of I, D or S. Got '%c'\n",
+                    driverName, functionName, drvInfo[6]);
           status = asynError;
       }
     }
@@ -590,7 +593,12 @@ void pmacController::callback(pmacCommandStore *sPtr, int type)
 
 asynStatus pmacController::immediateWriteRead(const char *command, char *response)
 {
-  return this->lowLevelWriteRead(command, response);
+  asynStatus status = asynSuccess;
+  static const char *functionName = "immediateWriteRead";
+  this->startTimer(DEBUG_TIMING, functionName);
+  status = this->lowLevelWriteRead(command, response);
+  this->stopTimer(DEBUG_TIMING, functionName, "PMAC write/read time");
+  return status;
 }
 
 /**
@@ -684,11 +692,14 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
   char response[PMAC_MAXBUF_] = {0};
   double encRatio = 1.0;
   epicsInt32 encposition = 0;
+  const char *name[128];
 	
-  static const char *functionName = "pmacController::writeFloat64";
+  static const char *functionName = "writeFloat64";
 
-  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
+  debug(DEBUG_FLOW, functionName);
 
+  getParamName(function, name);
+  debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) {
     return asynError;
@@ -758,7 +769,12 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
 	      "%s: Setting high limit on controller %s, axis %d to %f\n",
 	      functionName, portName, pAxis->axisNo_, value);
-  } 
+  } else if (pWriteParams_->hasKey(*name)){
+    // This is an integer write of a parameter, so send the immediate write/read
+    sprintf(command, "%s=%f", pWriteParams_->lookup(*name).c_str(), value);
+    debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
+    status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+  }
 
   if (command[0] != 0 && status) {
     status = (lowLevelWriteRead(command, response) == asynSuccess) && status;
@@ -778,6 +794,52 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 
 }
 
+/** Called when asyn clients call pasynOctet->write().
+  * This function performs actions for some parameters, including AttributesFile.
+  * For all parameters it sets the value in the parameter library and calls any registered callbacks..
+  * \param[in] pasynUser pasynUser structure that encodes the reason and address.
+  * \param[in] value Address of the string to write.
+  * \param[in] nChars Number of characters to write.
+  * \param[out] nActual Number of characters actually written. */
+asynStatus pmacController::writeOctet(asynUser *pasynUser, const char *value, size_t nChars, size_t *nActual)
+{
+  int addr=0;
+  int function = pasynUser->reason;
+  asynStatus status = asynSuccess;
+  char command[PMAC_MAXBUF_] = {0};
+  char response[PMAC_MAXBUF_] = {0};
+  const char *functionName = "writeOctet";
+
+  status = getAddress(pasynUser, &addr); if (status != asynSuccess) return(status);
+  // Set the parameter in the parameter library.
+  status = (asynStatus)setStringParam(addr, function, (char *)value);
+  if (status != asynSuccess) return(status);
+
+  if (function == PMAC_C_WriteCmd_){
+    // Write the arbitrary string to the PMAC, ignoring a reponse
+    strcpy(command, value);
+    status = this->immediateWriteRead(command, response);
+  }
+
+  // Do callbacks so higher layers see any changes
+  callParamCallbacks(addr, addr);
+
+  //Call base class method. This will handle callCallbacks even if the function was handled here.
+  status = asynMotorController::writeOctet(pasynUser, value, nChars, nActual);
+
+  if (status != asynSuccess){
+    epicsSnprintf(pasynUser->errorMessage, pasynUser->errorMessageSize,
+                  "%s:%s: status=%d, function=%d, value=%s",
+                  driverName, functionName, status, function, value);
+  } else {
+    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
+              "%s:%s: function=%d, value=%s\n",
+              driverName, functionName, function, value);
+  }
+  *nActual = nChars;
+  return status;
+}
+
 /**
  * Deal with controller specific epicsInt32 params.
  * @param pasynUser
@@ -794,7 +856,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   const char *name[128];
   static const char *functionName = "writeInt32";
 
-  debug(DEBUG_FLOW, functionName);
+  debug(DEBUG_ERROR, functionName);
 
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
@@ -834,7 +896,11 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   } else if (pWriteParams_->hasKey(*name)){
     // This is an integer write of a parameter, so send the immediate write/read
     sprintf(command, "%s=%d", pWriteParams_->lookup(*name).c_str(), value);
-    debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
+    debug(DEBUG_ERROR, functionName, "Command sent to PMAC", command);
+    status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+  } else if (function == PMAC_C_KillAxis_){
+    // Send the kill command to the PMAC immediately
+    sprintf(command, "#%dk", pAxis->axisNo_);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   }
   
