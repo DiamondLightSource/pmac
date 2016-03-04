@@ -67,7 +67,12 @@ asynStatus pmacMessageBroker::printConnectedStatus()
 
 asynStatus pmacMessageBroker::immediateWriteRead(const char *command, char *response)
 {
-  return this->lowLevelWriteRead(command, response);
+  asynStatus status = asynSuccess;
+  static const char *functionName = "immediateWriteRead";
+  this->startTimer(DEBUG_ERROR, functionName);
+  status = this->lowLevelWriteRead(command, response);
+  this->stopTimer(DEBUG_ERROR, functionName, "PMAC write/read time");
+  return status;
 }
 
 asynStatus pmacMessageBroker::addReadVariable(int type, const char *variable)
