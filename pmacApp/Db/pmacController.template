@@ -1,0 +1,213 @@
+##############################################################
+#
+# Records to read asynPortDriver parameters from the param 
+# library. This is for the Asyn model 3 driver pmacController 
+# driver.
+#
+# The Asyn address is set as zero because that's what we use 
+# for controller parameters.
+#
+# Note - the feedrate parms were originally intended to affect
+# the global feedrate by altering CS1 feedrate.
+# TODO: now that we have added coordinate system features to
+# the driver these will need to be moved to an axis based 
+# template. For now all CS defining and global parameters
+# reside in this template. This is temporary while I am 
+# developing the CS additions. gilesK (08/05/15)
+# 
+##############################################################
+
+# % macro, PORT, The asyn port for the pmac controller
+# % macro, P, PV Prefix
+# % macro, FEEDRATE, Set the global feedrate for this controller
+# % macro, FEEDRATE_POLL, Poll to make sure feedrate does not change, enable=1, disable=0 
+# % macro, TIMEOUT, Timeout for controller communincation 
+# % macro, CSG0, Name for Coordinate System Group 0 
+# % macro, CSG1, Name for Coordinate System Group 1 
+# % macro, CSG2, Name for Coordinate System Group 2 
+# % macro, CSG3, Name for Coordinate System Group 3 
+# % macro, CSG4, Name for Coordinate System Group 4 
+# % macro, CSG5, Name for Coordinate System Group 5 
+# % macro, CSG6, Name for Coordinate System Group 6 
+# % gui, $(name=), edm, pmacController.edl, P=$(P)
+
+##############################################################
+# This record indicates if we have a controller problem
+##############################################################
+
+# ///
+# /// Record used to indicate if the controller has a problem. This is set in the
+# /// controller poll loop, and is used to set the motor record axis status.
+# ///
+record(bi, "$(P):GLOBAL_PROBLEM_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_GLOBALSTATUS")
+   field(SCAN, "I/O Intr")
+   field(ZNAM, "Status OK")
+   field(ONAM, "Status Problem")
+}
+
+##############################################################
+# Monitor and set the PMAC feedrate
+##############################################################
+
+# ///
+# /// Get the PMAC feedrate. This is read in the controller poll loop.
+# ///
+record(ai, "$(P):FEEDRATE_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE")
+   field(SCAN, "I/O Intr")
+   field(PREC, "2")
+}
+
+# ///
+# /// Set the PMAC feedrate limit. This determins if the current feedrate
+# /// read from the controller is out of range, and will be used to set axis alarms.
+# ///
+record(longout, "$(P):FEEDRATE_LIMIT")
+{
+   field(PINI, "YES")
+   field(VAL, "$(FEEDRATE=100)")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE_LIMIT")
+   field(DRVH, "100")
+   field(DRVL, "0")
+}
+
+# ///
+# /// Set the PMAC feedrate limit. This writes a new feedrate to
+# /// the controller.
+# ///
+record(longout, "$(P):FEEDRATE")
+{
+   field(PINI, "YES")
+   field(VAL, "$(FEEDRATE=100)")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE")
+   field(DRVH, "100")
+   field(DRVL, "0")
+}
+
+# ///
+# /// Enable or disable feedrate polling.
+# ///
+# % autosave 2
+record(bo, "$(P):FEEDRATE_POLL_ENABLE")
+{
+   field(PINI, "YES")
+   field(VAL, "$(FEEDRATE_POLL=0)")
+   field(ZNAM, "Disabled")
+   field(ONAM, "Enabled")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE_POLL")
+}
+
+# ///
+# /// Record used to indicate if the feedrate is below the limit. This is set from the
+# /// controller poll loop, and is used to set the motor record axis status.
+# ///
+record(bi, "$(P):FEEDRATE_PROBLEM_RBV")
+{
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE_PROBLEM")
+   field(SCAN, "I/O Intr")
+   field(ZNAM, "Feedrate OK")
+   field(ONAM, "Feedrate Problem")
+}
+
+# ///
+# /// Select a group of coordinate systems into the controller.
+# ///
+# % autosave 2
+record(mbbo, "$(P):COORDINATE_SYS_GROUP")
+{
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_COORDINATE_SYS_GROUP")
+   field(VAL, "0")
+   field(ZRST, "$(CSG0=)")
+   field(ZRVL, "0")
+   field(ONST, "$(CSG1=)")
+   field(ONVL, "1")
+   field(TWST, "$(CSG2=)")
+   field(TWVL, "2")
+   field(THST, "$(CSG3=)")
+   field(THVL, "3")
+   field(FRST, "$(CSG4=)")
+   field(FRVL, "4")
+   field(FVST, "$(CSG5=)")
+   field(FVVL, "5")
+   field(SXST, "$(CSG6=)")
+   field(SXVL, "6")
+   field(SVST, "$(CSG7=)")
+   field(SVVL, "7")
+}
+
+# ///
+# /// Read back the current group of coordinate systems into the controller.
+# ///
+record(mbbi, "$(P):COORDINATE_SYS_GROUP_RBV")
+{
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_COORDINATE_SYS_GROUP")
+   field(SCAN, "I/O Intr")
+   field(ZRST, "$(CSG0=)")
+   field(ZRVL, "0")
+   field(ONST, "$(CSG1=)")
+   field(ONVL, "1")
+   field(TWST, "$(CSG2=)")
+   field(TWVL, "2")
+   field(THST, "$(CSG3=)")
+   field(THVL, "3")
+   field(FRST, "$(CSG4=)")
+   field(FRVL, "4")
+   field(FVST, "$(CSG5=)")
+   field(FVVL, "5")
+   field(SXST, "$(CSG6=)")
+   field(SXVL, "6")
+   field(SVST, "$(CSG7=)")
+   field(SVVL, "7")
+}
+
+# ///
+# /// Control deferred moves on the controller
+# ///
+# ///
+# /// Select a group of coordinate systems into th # % autosave 2e controller.
+# ///
+record(mbbo, "$(P):MOTOR_DEFER_MOVES")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+    field(VAL, "0")
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(ZRST, "GO")
+    field(ONST, "Defer Fast Moves")
+    field(TWST, "Defer Coordinated")
+}
+
+# ///
+# /// Read back the current group of coordinate systems into the controller.
+# ///
+record(mbbi, "$(P):MOTOR_DEFER_MOVES_RBV")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+    field(SCAN, "I/O Intr")
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(ZRST, "GO")
+    field(ONST, "Defer Fast Moves")
+    field(TWST, "Defer Coordinated")
+}
+
