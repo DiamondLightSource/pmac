@@ -1715,6 +1715,67 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
   return status;
 }
 
+asynStatus pmacController::doubleToPMACFloat(double value, int64_t *representation)
+{
+  asynStatus status = asynSuccess;
+  double absVal = value;
+  int negative = 0;
+  int exponent = 0;
+  double expVal = 0.0;
+  double mantissaVal = 0.0;
+  double maxMantissa = 34359738368.0;  // 0x800000000
+  const char *functionName = "doubleToPMACFloat";
+
+  debug(DEBUG_TRACE, functionName);
+  debugf(DEBUG_VARIABLE, functionName, "Value : %20.10lf\n", value);
+
+  // Check for a negative number, and get the absolute
+  if (absVal < 0.0){
+    absVal = absVal * -1.0;
+    negative = 1;
+  }
+  expVal = absVal;
+  mantissaVal = absVal;
+
+  // Work out the exponent required to normalise
+  // Normalised should be between 1 and 2
+  while (expVal >= 2.0){
+    expVal = expVal / 2.0;
+    exponent++;
+  }
+  while (expVal < 1.0){
+    expVal = expVal * 2.0;
+    exponent--;
+  }
+  // Offset exponent to provide +-2048 range
+  exponent += 0x800;
+
+  // Get the mantissa into correct format, this might not be
+  // the most efficient way to do this
+  while (mantissaVal < maxMantissa){
+    mantissaVal *= 2.0;
+  }
+  mantissaVal = mantissaVal / 2.0;
+  // Get the integer representation for the altered mantissa
+  int64_t intVal = (int64_t)mantissaVal;
+
+  // If negative value then subtract altered mantissa from max
+  if (negative == 1){
+    intVal = 0xFFFFFFFFFLL - intVal;
+  }
+
+  // Shift the altered mantissa by 12 bits and then set those
+  // 12 bits to the offset exponent
+  int64_t tVal = intVal << 12;
+  tVal += exponent;
+
+  *representation = tVal;
+
+  debugf(DEBUG_VARIABLE, functionName, "Prepared value: %12lX\n", tVal);
+
+  return status;
+}
+
 asynStatus pmacController::newGetGlobalStatus(pmacCommandStore *sPtr)
 {
   asynStatus status = asynSuccess;

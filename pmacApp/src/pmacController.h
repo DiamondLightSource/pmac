@@ -125,7 +125,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus abortProfile();
   void trajectoryTask();
   asynStatus sendTrajectoryDemands(int buffer);
-  asynStatus doubleToPMACFloat(double value, int64_t &representation);
+  asynStatus doubleToPMACFloat(double value, int64_t *representation);
 
   //Disable the check for disabled hardware limits.
   asynStatus pmacDisableLimitsCheck(int axis);
