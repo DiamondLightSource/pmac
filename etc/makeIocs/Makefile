@@ -1,35 +1,51 @@
 TOP = ../..
 include $(TOP)/configure/CONFIG
 
+# include the list of IOCs
+include $(TOP)/etc/makeIocs/Makefile.iocs
+
+# this is the dls-xml-iocbuilder.py file
+XMLBUILDER := dls-xml-iocbuilder.py
+
 # set to -d to get debugging
-DEBUG :=
-
-# These are the xml files we will make iocs out of
-XMLS := $(wildcard *.xml)
-
-# These are the IOCS
-IOCS := $(patsubst %.xml, %, $(XMLS))
-
-# These are the IOCS we don't want to make simulations out of
-NO_SIMS := example
-
-# Make simulations from all IOCS not in NO_SIMS
-SIMS := $(patsubst %, %_sim, $(filter-out $(NO_SIMS), $(IOCS)))
-
-# These are the IOC dirs to make
-IOC_DIRS := $(patsubst %, $(TOP)/iocs/%, $(IOCS) $(SIMS))
+DEBUG := -d
 
 # Add the created iocs and sims to the install target
-install: $(IOC_DIRS)
+TARGETS += $(patsubst %, ../../makeIocs/O.Common/%, $(IOCS)) $(IOC_DIRS)
 
-# General rule for a Standard IOC
-$(TOP)/iocs/%: %.xml
-	dls-xml-iocbuilder.py $(DEBUG) $<
+# include standard rules
+include $(TOP)/configure/RULES
 
-# General rule for a simulation IOC
-$(TOP)/iocs/%_sim: %.xml
-	dls-xml-iocbuilder.py $(DEBUG) --sim=linux-x86 $<
+# General rule for building a Standard IOC from an XML file
+../../makeIocs/O.Common/%: ../%.xml
+	$(RMDIR) ../O.Common/tmp $@     
+	$(XMLBUILDER) $(DEBUG) -e -o ../O.Common/tmp $<
+	$(MV) ../O.Common/tmp/$(*F) $@
 
-# Remove the generated iocs on clean
-clean:
-	rm -rf $(IOC_DIRS)
+# General rule for building a Simulation IOC from an XML file
+../../makeIocs/O.Common/%_sim: ../%.xml
+	$(RMDIR) ../O.Common/tmp $@
+	$(XMLBUILDER) $(DEBUG) --sim=linux-x86 -e -o ../O.Common/tmp $<
+	$(MV) ../O.Common/tmp/$(*F)_sim $@
+
+# Alternate rule for building a Standard IOC from a python file
+../../makeIocs/O.Common/%: ../%.py
+	$(RMDIR) ../O.Common/tmp $@
+	./$< $(DEBUG) -e -o ../O.Common/tmp $*
+	$(MV) ../O.Common/tmp/$(*F) $@
+
+# Alternate rule for building a Simulation IOC from a python file
+../../makeIocs/O.Common/%_sim: ../%.py
+	$(RMDIR) ../O.Common/tmp $@
+	./$< $(DEBUG) --sim=linux-x86 -e -o ../O.Common/tmp $*
+	$(MV) ../O.Common/tmp/$(*F)_sim $@
+
+# Install ioc from O.Common
+$(TOP)/iocs/%: ../../makeIocs/O.Common/%
+	$(RMDIR) $@
+	$(CP) -rf $< $@
+
+# Special rule to get rid of installed ioc
+uninstall:
+	$(RMDIR) $(IOC_DIRS)
+

@@ -2,12 +2,12 @@
 <components arch="linux-x86_64">
 	<pmac.pmacAsynIPPort IP="172.23.253.11:1025" name="BRICK1port"/>
 	<pmac.GeoBrick Port="BRICK1port" name="BRICK1"/>
-	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1" EGU="mm" ELOSS_VAR="465" M="M1" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="M1"/>
-	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2" EGU="mm" ELOSS_VAR="466" M="M2" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="M2"/>
-	<pmac.dls_pmac_asyn_motor ADDR="3" DESC="Motor 3" EGU="mm" ELOSS_VAR="467" M="M3" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="M3"/>
-	<pmac.dls_pmac_asyn_motor ADDR="4" DESC="Motor 4" EGU="mm" ELOSS_VAR="468" M="M4" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="M4"/>
-	<pmac.dls_pmac_asyn_motor ADDR="5" DESC="Motor 5" EGU="mm" ELOSS_VAR="469" M="M5" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="M5"/>
-	<pmac.dls_pmac_asyn_motor ADDR="6" DESC="Motor 6" EGU="mm" ELOSS_VAR="470" M="M6" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="M6"/>
-	<pmac.dls_pmac_asyn_motor ADDR="7" DESC="Motor 7" EGU="mm" ELOSS_VAR="471" M="M7" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="M7"/>
-	<pmac.dls_pmac_asyn_motor ADDR="8" DESC="Motor 8" EGU="mm" ELOSS_VAR="472" M="M8" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="M8"/>
+	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1" EGU="mm" ELOSS_VAR="465" M="M1" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M1"/>
+	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2" EGU="mm" ELOSS_VAR="466" M="M2" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M2"/>
+	<pmac.dls_pmac_asyn_motor ADDR="3" DESC="Motor 3" EGU="mm" ELOSS_VAR="467" M="M3" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M3"/>
+	<pmac.dls_pmac_asyn_motor ADDR="4" DESC="Motor 4" EGU="mm" ELOSS_VAR="468" M="M4" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M4"/>
+	<pmac.dls_pmac_asyn_motor ADDR="5" DESC="Motor 5" EGU="mm" ELOSS_VAR="469" M="M5" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M5"/>
+	<pmac.dls_pmac_asyn_motor ADDR="6" DESC="Motor 6" EGU="mm" ELOSS_VAR="470" M="M6" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M6"/>
+	<pmac.dls_pmac_asyn_motor ADDR="7" DESC="Motor 7" EGU="mm" ELOSS_VAR="471" M="M7" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M7"/>
+	<pmac.dls_pmac_asyn_motor ADDR="8" DESC="Motor 8" EGU="mm" ELOSS_VAR="472" M="M8" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M8"/>
 </components>

@@ -4,7 +4,7 @@ from iocbuilder.modules.asyn import AsynPort, Asyn
 from iocbuilder.modules.motor import MotorLib, basic_asyn_motor, MotorRecord
 from iocbuilder.modules.busy import Busy
 
-#__all__ = ['GeoBrick']
+__all__ = ['GeoBrick']
 
 
 class Pmac(Device):
@@ -150,14 +150,8 @@ def add_eloss_kill_autohome(cls):
 class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
     WarnMacros = False
     TemplateFile = 'dls_pmac_asyn_motor.template'
-    Arguments = {}
-    #ProtocolFiles = ['pmac.proto']
     Dependencies = (Busy,)
     
-    def __init__(self, **args):        
-        self.__super.__init__(**args)
-        self.__dict__.update(**args)
-
 dls_pmac_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 dls_pmac_asyn_motor.ArgInfo.descriptions["SPORT"] = Ident("Delta tau motor controller comms port", DeltaTauCommsPort)
 
