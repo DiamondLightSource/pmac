@@ -140,10 +140,18 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
     0, 0),  // Default priority and stack size
   pmacDebugger("pmacCSController"),
   csNumber_(csNo),
-  progNumber_(program)
+  progNumber_(program),
+  profileInitialized_(false)
 {
   asynStatus status = asynSuccess;
   static const char *functionName = "pmacCSController";
+
+  // Init the status
+  status_[0] = 0;
+  status_[1] = 0;
+  status_[2] = 0;
+
+  setIntegerParam(profileBuild_, 0);
 
   pAxes_ = (pmacCSAxis **)(asynMotorController::pAxes_);
 
@@ -163,6 +171,29 @@ pmacCSController::~pmacCSController()
 {
 
 }
+
+asynStatus pmacCSController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements)
+{
+  asynStatus status = asynSuccess;
+  static const char *functionName = "writeFloat64Array";
+  debug(DEBUG_ERROR, functionName);
+
+  if (!profileInitialized_){
+    // Initialise the trajectory scan interface pointers
+    debug(DEBUG_ERROR, functionName, "Initialising CS trajectory scan interface");
+    status = this->initializeProfile(PMAC_MAX_TRAJECTORY_POINTS);
+  }
+
+  if (status == asynSuccess){
+    profileInitialized_ = true;
+    status = asynMotorController::writeFloat64Array(pasynUser, value, nElements);
+  } else {
+    debug(DEBUG_ERROR, functionName, "Failed to initialise trajectory scan interface");
+  }
+
+  return status;
+}
+
 
 bool pmacCSController::getMoving()
 {
@@ -194,9 +225,25 @@ int pmacCSController::getProgramNumber()
 
 void pmacCSController::callback(pmacCommandStore *sPtr, int type)
 {
+  char key[32];
+  int nvals = 0;
+  std::string value = "";
+  epicsUInt32 status[3] = {0, 0, 0};
   static const char *functionName = "callback";
 
   debug(DEBUG_TRACE, functionName, "Coordinate system status callback");
+
+  // Parse the status
+  sprintf(key, "&%d??", csNumber_);
+  value = sPtr->readValue(key);
+  nvals = sscanf(value.c_str(), "%6x%6x%6x", &status[0], &status[1], &status[2]);
+  if (nvals != 3){
+    debugf(DEBUG_ERROR, functionName, "Failed to parse status. Key: %s  Value: %s", key, value.c_str());
+  } else{
+    status_[0] = status[0];
+    status_[1] = status[1];
+    status_[2] = status[2];
+  }
 }
 
 asynStatus pmacCSController::immediateWriteRead(const char *command, char *response)
@@ -236,6 +283,142 @@ asynStatus pmacCSController::monitorPMACVariable(int poll_speed, const char *var
 {
   // Simply forward the request to the main controller
   return ((pmacController *)pC_)->monitorPMACVariable(poll_speed, var);
+}
+
+asynStatus pmacCSController::buildProfile()
+{
+  static const char *functionName = "buildProfile";
+
+  debug(DEBUG_ERROR, functionName, "Called for CS", csNumber_);
+
+  // Call into main controller to notify we want to trajectory scan
+  return ((pmacController *)pC_)->buildProfile(csNumber_);
+}
+
+asynStatus pmacCSController::executeProfile()
+{
+  static const char *functionName = "executeProfile";
+
+  debug(DEBUG_ERROR, functionName, "Called for CS", csNumber_);
+
+  // Call into main controller to notify we want to trajectory scan
+  return ((pmacController *)pC_)->executeProfile(csNumber_);
+}
+
+asynStatus pmacCSController::tScanBuildTimeArray(double *profileTimes, int *numPoints, int maxPoints)
+{
+  asynStatus status = asynSuccess;
+  int points = 0;
+  static const char *functionName = "tScanBuildTimeArray";
+
+  debug(DEBUG_ERROR, functionName);
+
+  // Read the number of points defined
+  getIntegerParam(profileNumPoints_, &points);
+  // If too many points have been asked for then clip at the maximum
+  if (points > maxPoints){
+    points = maxPoints;
+  }
+  debug(DEBUG_ERROR, functionName, "Number of trajectory times", points);
+
+  // If points is zero then this is not a valid operation, cannot scan zero points
+  if (points == 0){
+    debug(DEBUG_ERROR, functionName, "Zero points defined", points);
+    status = asynError;
+  }
+
+  if (status == asynSuccess){
+    // Perform a memcpy into the supplied profile times array
+    memcpy(profileTimes, profileTimes_, points*sizeof(double));
+    *numPoints = points;
+  }
+
+  return status;
+}
+
+asynStatus pmacCSController::tScanIncludedAxes(int *axisMask)
+{
+  asynStatus status = asynSuccess;
+  int mask = 0;
+  int use = 0;
+  static const char *functionName = "tScanIncludedAxes";
+
+  debug(DEBUG_ERROR, functionName);
+
+  // Loop over each axis and check if it is to be included in the trajectory scan
+  this->lock();
+  for (int i=1; i<numAxes_; i++){
+    // Check if each axis is in use for the trajectory scan
+    getIntegerParam(i, profileUseAxis_, &use);
+    if (use == 1){
+      mask += 1<<(i-1);
+    }
+  }
+  this->unlock();
+
+  debug(DEBUG_ERROR, functionName, "Trajectory axis mask", mask);
+  *axisMask = mask;
+
+  return status;
+}
+
+asynStatus pmacCSController::tScanBuildProfileArray(double *positions, int axis, int numPoints)
+{
+  asynStatus status = asynSuccess;
+  pmacCSAxis *pA = NULL;
+  static const char *functionName = "tScanBuildProfileArray";
+
+  debug(DEBUG_ERROR, functionName, "Called for axis", axis);
+
+  pA = getAxis(axis);
+  if (!pA){
+    debug(DEBUG_ERROR, functionName, "Invalid axis number", axis);
+    status = asynError;
+  }
+
+  if (status == asynSuccess){
+    // Perform a memcpy into the supplied profile times array
+    memcpy(positions, pA->profilePositions_, numPoints*sizeof(double));
+  }
+
+  return status;
+}
+
+asynStatus pmacCSController::tScanCheckForErrors()
+{
+  asynStatus status = asynSuccess;
+  static const char *functionName = "tScanCheckForErrors";
+
+  debug(DEBUG_TRACE, functionName);
+
+  if ((status_[2] & CS_STATUS3_LIMIT) != 0){
+    status = asynError;
+  }
+  if ((status_[1] & CS_STATUS2_FOLLOW_ERR) != 0){
+    status = asynError;
+  }
+  if ((status_[1] & CS_STATUS2_AMP_FAULT) != 0){
+    status = asynError;
+  }
+  if ((status_[1] & CS_STATUS2_RUNTIME_ERR) != 0){
+    status = asynError;
+  }
+  return status;
+}
+
+asynStatus pmacCSController::tScanCheckProgramRunning(int *running)
+{
+  asynStatus status = asynSuccess;
+  static const char *functionName = "tScanCheckProgramRunning";
+
+  debug(DEBUG_TRACE, functionName);
+
+  if ((status_[0] & CS_STATUS1_RUNNING_PROG) != 0){
+    *running = 1;
+  } else {
+    *running = 0;
+  }
+  return status;
 }
 
 /*************************************************************************************/
@@ -316,7 +499,7 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
   }
 
   pC->lock();
-  for (int axis=1; axis<=numAxes; axis++) {
+  for (int axis=0; axis<=numAxes; axis++) {
     pAxis = new pmacCSAxis(pC, axis);
     pAxis = NULL;
   }
