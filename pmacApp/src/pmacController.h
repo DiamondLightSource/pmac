@@ -37,15 +37,56 @@
 #define PMAC_C_WriteCmdString           "PMAC_C_WRITE_CMD"
 #define PMAC_C_KillAxisString           "PMAC_C_KILL_AXIS"
 
+#define PMAC_C_TrajBufferLengthString  "PMAC_C_TRAJ_LENGTH"  // Length of a single buffer e.g. AX, AY
+#define PMAC_C_TrajTotalPointsString   "PMAC_C_TRAJ_POINTS"  // Total number of points scanned through
+#define PMAC_C_TrajStatusString        "PMAC_C_TRAJ_STATUS"  // Current status reported by the PMAC
+#define PMAC_C_TrajCurrentIndexString  "PMAC_C_TRAJ_INDEX"   // Current index position in buffers
+#define PMAC_C_TrajCurrentBufferString "PMAC_C_TRAJ_CBUFF"   // Current buffer specifier - 0: A, 1: B
+#define PMAC_C_TrajBuffAdrAString      "PMAC_C_TRAJ_ADRA"    // Start index of buffer A
+#define PMAC_C_TrajBuffAdrBString      "PMAC_C_TRAJ_ADRB"    // Start index of buffer B
+#define PMAC_C_TrajBuffFillAString     "PMAC_C_TRAJ_FILLA"   // Fill level of buffer A
+#define PMAC_C_TrajBuffFillBString     "PMAC_C_TRAJ_FILLB"   // Fill level of buffer B
+#define PMAC_C_TrajRunTimeString       "PMAC_C_TRAJ_TIME"    // Current run time of scan (s)
+#define PMAC_C_TrajCSNumberString      "PMAC_C_TRAJ_CS"      // Current CS scan is executing on
+#define PMAC_C_TrajPercentString       "PMAC_C_TRAJ_PERCENT" // Percentage of scan complete
+#define PMAC_C_TrajEStatusString       "PMAC_C_TRAJ_ESTATUS" // Our report of tScan status
+
 #define PMAC_MAXBUF 1024
 
 #define PMAC_MAX_PARAMETERS 1000
+
+#define PMAC_MAX_CS 16
+#define PMAC_MAX_CS_AXES 9
+
+#define PMAC_MAX_TRAJECTORY_POINTS 10000000
+
+#define PMAC_POINTS_PER_WRITE 30
 
 #define PMAC_MEDIUM_LOOP_TIME 2000
 #define PMAC_SLOW_LOOP_TIME   5000
 
 #define DEFERRED_FAST_MOVES 1
 #define DEFERRED_COORDINATED_MOVES 2
+
+#define PMAC_TRAJ_STATUS         "P4001" // Status of motion program for EPICS - 0: Idle, 1: Running, 2: Finished, 3: Error
+#define PMAC_TRAJ_ABORT          "P4002" // Abort trigger for EPICS
+#define PMAC_TRAJ_AXES           "P4003" // An int between 1 and 511 specifying which axes to use
+#define PMAC_TRAJ_BUFFER_LENGTH  "P4004" // Length of a single buffer e.g. AX, AY
+#define PMAC_TRAJ_TOTAL_POINTS   "P4005" // Total number of points scanned through
+#define PMAC_TRAJ_CURRENT_INDEX  "P4006" // Current index position in buffers
+#define PMAC_TRAJ_CURRENT_BUFFER "P4007" // Current buffer specifier - 0: A, 1: B
+#define PMAC_TRAJ_BUFF_ADR_A     "P4008" // Start index of buffer A
+#define PMAC_TRAJ_BUFF_ADR_B     "P4009" // Start index of buffer B
+#define PMAC_TRAJ_CURR_ADR       "P4010" // A or B buffer address
+#define PMAC_TRAJ_BUFF_FILL_A    "P4011" // Fill level of buffer A
+#define PMAC_TRAJ_BUFF_FILL_B    "P4012" // Fill level of buffer B
+#define PMAC_TRAJ_CURR_FILL      "P4013" // The indexes that current buffer has been filled up to
+
+#define PMAC_TRAJ_BUFFER_A 0
+#define PMAC_TRAJ_BUFFER_B 1
+
+#define PMAC_TRAJ_STATUS_RUNNING 1
+#define PMAC_TRAJ_STATUS_FINISHED 2
 
 class pmacCSMonitor;
 class pmacCSController;
@@ -62,6 +103,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   void setDebugLevel(int level, int axis);
   asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
   virtual void callback(pmacCommandStore *sPtr, int type);
+  asynStatus slowUpdate(pmacCommandStore *sPtr);
 
   //asynStatus printConnectedStatus(void);
   asynStatus immediateWriteRead(const char *command, char *response);
@@ -70,11 +112,20 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
   asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
   asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t nChars, size_t *nActual);
+
   void report(FILE *fp, int level);
   pmacAxis* getAxis(asynUser *pasynUser);
   pmacAxis* getAxis(int axisNo);
   asynStatus poll();
 
+  // Trajectory scanning methods
+  asynStatus initializeProfile(size_t maxPoints);
+  asynStatus buildProfile(int csNo);
+  asynStatus executeProfile(int csNo);
+  asynStatus abortProfile();
+  void trajectoryTask();
+  asynStatus sendTrajectoryDemands(int buffer);
+  asynStatus doubleToPMACFloat(double value, int64_t &representation);
 
   //Disable the check for disabled hardware limits.
   asynStatus pmacDisableLimitsCheck(int axis);
@@ -111,6 +162,19 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_AxisCS_;
   int PMAC_C_WriteCmd_;
   int PMAC_C_KillAxis_;
+  int PMAC_C_TrajBufferLength_;
+  int PMAC_C_TrajTotalPoints_;
+  int PMAC_C_TrajStatus_;
+  int PMAC_C_TrajCurrentIndex_;
+  int PMAC_C_TrajCurrentBuffer_;
+  int PMAC_C_TrajBuffAdrA_;
+  int PMAC_C_TrajBuffAdrB_;
+  int PMAC_C_TrajBuffFillA_;
+  int PMAC_C_TrajBuffFillB_;
+  int PMAC_C_TrajRunTime_;
+  int PMAC_C_TrajCSNumber_;
+  int PMAC_C_TrajPercent_;
+  int PMAC_C_TrajEStatus_;
   int PMAC_C_LastParam_;
   #define LAST_PMAC_PARAM PMAC_C_LastParam_
   int parameters[PMAC_MAX_PARAMETERS];
@@ -136,6 +200,24 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   epicsTimeStamp lastSlowTime_;
   bool printNextError_;
   bool feedRatePoll_;
+
+  // Trajectory scan variables
+  bool profileInitialized_;
+  int tScanExecuting_;            // Is a scan executing
+  int tScanCSNo_;                 // The CS number of the executing scan
+  int tScanNumPoints_;            // Total number of points in the scan
+  int tScanAxisMask_;             // Mask describing which axes are used in the scan
+  int tScanPointCtr_;             // Counter of scan points written
+  int tScanPmacBufferPtr_;
+  int tScanPmacTotalPts_;
+  int tScanPmacStatus_;
+  int tScanPmacBufferNumber_;     // Which half buffer (A=0,B=1) is the PMAC reading
+  int tScanPmacBufferAddressA_;
+  int tScanPmacBufferAddressB_;
+  int tScanPmacBufferSize_;
+  double **tScanPositions_;       // 2D array of profile positions (1 array for each axis)
+  epicsEventId startEventId_;
+  epicsEventId stopEventId_;
 
   asynStatus lowLevelWriteRead(const char *command, char *response);
 //  asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
