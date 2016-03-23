@@ -1,0 +1,335 @@
+##
+## Record to read the number of axes selected for the current
+## trajectory scan
+##
+record(longin, "$(P)$(R)PROFILE_NUM_AXES_RBV") {
+  field(DESC, "Number of axes selected")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_NUM_AXES")
+  field(SCAN, "I/O Intr")  
+}
+
+##
+## Records to specify the number of motion points that define
+## the trajectory scan
+##
+record(longin, "$(P)$(R)PROFILE_NUM_POINTS_RBV") {
+  field(DESC, "Number of points defined")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_NUM_POINTS")
+  field(SCAN, "I/O Intr")  
+}
+
+##
+## Record to read the current executing point of trajectory scan
+##
+record(longin, "$(P)$(R)PROFILE_CURRENT_POINT_RBV") {
+  field(DESC, "Currently executing point")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_CURRENT_POINT")
+  field(SCAN, "I/O Intr")  
+}
+
+
+##
+## Records to set the current time mode for the trajectory scan
+## FIXED => A single value is used for each point
+## ARRAY => An array of time points is supplied
+##
+record(bo, "$(P)$(R)PROFILE_TIME_MODE")
+{
+  field(DESC, "Time mode for trajectory scan")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0)PROFILE_TIME_MODE")
+  field(ZNAM, "FIXED")
+  field(ONAM, "ARRAY")
+  field(VAL,  "1")
+  field(PINI, "YES")
+}
+
+record(bi, "$(P)$(R)PROFILE_TIME_MODE_RBV")
+{
+  field(DESC, "Time mode for trajectory scan")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),0)PROFILE_TIME_MODE")
+  field(ZNAM, "FIXED")
+  field(ONAM, "ARRAY")
+  field(SCAN, "I/O Intr")  
+}
+
+##
+## Records to specify the fixed time between points
+##
+record(ao, "$(P)$(R)PROFILE_FIXED_TIME") {
+  field(DESC, "Fixed time between points")
+  field(DTYP, "asynFloat64")
+  field(OUT, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
+  field(PINI, "NO")
+}
+
+record(ai, "$(P)$(R)PROFILE_FIXED_TIME_RBV") {
+  field(DESC, "Fixed time between points")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
+  field(SCAN, "I/O Intr")  
+}
+
+##
+## Record to specify the array of times between points
+##
+record(waveform, "$(P)$(R)PROFILE_TIME_ARRAY")
+{
+    field(PINI, "NO")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_TIME_ARRAY")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(NPOINTS)")
+}
+
+##
+## Records to specify the acceleration
+##
+record(ao, "$(P)$(R)PROFILE_ACCELERATION") {
+  field(DESC, "Acceleration value")
+  field(DTYP, "asynFloat64")
+  field(OUT, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
+  field(PINI, "NO")
+}
+
+record(ai, "$(P)$(R)PROFILE_ACCELERATION_RBV") {
+  field(DESC, "Acceleration value")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
+  field(SCAN, "I/O Intr")  
+}
+
+###################################################################
+#  These records control trajectory scan building (pre-execute)   # 
+#                                                                 #
+###################################################################
+
+record(bo, "$(P)$(R)PROFILE_BUILD") {
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PROFILE_BUILD")
+}
+
+record(mbbi, "$(P)$(R)PROFILE_BUILD_STATE_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_BUILD_STATE")
+  field(ZRVL, "0")
+  field(ZRST, "Done")
+  field(ZRSV, "NO_ALARM")
+  field(ONVL, "1")
+  field(ONST, "Busy")
+  field(ONSV, "MINOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(mbbi, "$(P)$(R)PROFILE_BUILD_STATUS_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_BUILD_STATUS")
+  field(ZRVL, "0")
+  field(ZRST, "Undefined")
+  field(ZRSV, "INVALID")
+  field(ONVL, "1")
+  field(ONST, "Success")
+  field(ONSV, "NO_ALARM")
+  field(TWVL, "2")
+  field(TWST, "Failure")
+  field(TWSV, "MAJOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(P)$(R)PROFILE_BUILD_MESSAGE_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PROFILE_BUILD_MESSAGE")
+  field(FTVL, "CHAR")
+  field(NELM, "1000")
+  field(SCAN, "I/O Intr")
+}
+
+
+###################################################################
+#  These records control trajectory scan execution                # 
+#                                                                 #
+###################################################################
+
+record(bo, "$(P)$(R)PROFILE_EXECUTE") {
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PROFILE_EXECUTE")
+}
+
+record(mbbi, "$(P)$(R)PROFILE_EXECUTE_STATE_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_EXECUTE_STATE")
+  field(ZRVL, "0")
+  field(ZRST, "Done")
+  field(ZRSV, "NO_ALARM")
+  field(ONVL, "1")
+  field(ONST, "Move start")
+  field(ONSV, "MINOR")
+  field(TWVL, "2")
+  field(TWST, "Executing")
+  field(TWSV, "MINOR")
+  field(THVL, "3")
+  field(THST, "Flyback")
+  field(THSV, "MINOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(mbbi, "$(P)$(R)PROFILE_EXECUTE_STATUS_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_EXECUTE_STATUS")
+  field(ZRVL, "0")
+  field(ZRST, "Undefined")
+  field(ZRSV, "INVALID")
+  field(ONVL, "1")
+  field(ONST, "Success")
+  field(ONSV, "NO_ALARM")
+  field(TWVL, "2")
+  field(TWST, "Failure")
+  field(TWSV, "MAJOR")
+  field(THVL, "3")
+  field(THST, "Abort")
+  field(THSV, "MAJOR")
+  field(FRVL, "4")
+  field(FRST, "Timeout")
+  field(FRSV, "MAJOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(P)$(R)PROFILE_EXECUTE_MESSAGE_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PROFILE_EXECUTE_MESSAGE")
+  field(FTVL, "CHAR")
+  field(NELM, "1000")
+  field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  This record aborts a trajectory scan                           # 
+#                                                                 #
+###################################################################
+
+record(bo, "$(P)$(R)PROFILE_ABORT") {
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PROFILE_ABORT")
+}
+
+###################################################################
+#  These records provide status feedback                          # 
+#                                                                 #
+###################################################################
+
+record(longin, "$(P)$(R)BUFFER_A_ADDRESS_RBV") {
+  field(DESC, "PMAC address of buffer A")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_ADRA")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(P)$(R)BUFFER_B_ADDRESS_RBV") {
+  field(DESC, "PMAC address of buffer B")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_ADRB")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(P)$(R)BUFFER_LENGTH_RBV") {
+  field(DESC, "Length of trajectory buffers")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_LENGTH")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(P)$(R)CURRENT_INDEX_RBV") {
+  field(DESC, "Current PMAC index of buffer")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_INDEX")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(P)$(R)TOTAL_POINTS_RBV") {
+  field(DESC, "Total points scanned")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_POINTS")
+  field(SCAN, "I/O Intr")  
+}
+
+record(bi, "$(P)$(R)CURRENT_BUFFER_RBV") {
+  field(DESC, "Current PMAC buffer in use")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CBUFF")
+  field(ZNAM, "A")
+  field(ONAM, "B")
+  field(SCAN, "I/O Intr")  
+}
+
+record(mbbi, "$(P)$(R)TRAJECTORY_STATUS_RBV") {
+  field(DESC, "Current PMAC trajectory status")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_STATUS")
+  field(ZRVL, "0")
+  field(ONVL, "1")
+  field(TWVL, "2")
+  field(THVL, "3")
+  field(ZRST, "Idle")
+  field(ONST, "Running")
+  field(TWST, "Finished")
+  field(THST, "Error")
+  field(SCAN, "I/O Intr")  
+}
+
+###################################################################
+#  These records report the current EPICS filled buffer ptrs      # 
+#                                                                 #
+###################################################################
+
+record(longin, "$(P)$(R)EPICS_BUFFER_A_PTR_RBV") {
+  field(DESC, "Current EPICS buffer A Ptr")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_FILLA")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(P)$(R)EPICS_BUFFER_B_PTR_RBV") {
+  field(DESC, "Current EPICS buffer B Ptr")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_FILLB")
+  field(SCAN, "I/O Intr")  
+}
+
+record(ai, "$(P)$(R)TSCAN_TIME_RBV") {
+  field(DESC, "Time of scan (s)")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_TIME")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(P)$(R)TSCAN_CS_RBV") {
+  field(DESC, "CS Number of current scan")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CS")
+  field(SCAN, "I/O Intr")  
+}
+
+record(ai, "$(P)$(R)TSCAN_PERCENT_RBV") {
+  field(DESC, "Time of scan (s)")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_PERCENT")
+  field(SCAN, "I/O Intr")  
+}
+
+record(mbbi, "$(P)$(R)TSCAN_EXT_STATUS_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_ESTATUS")
+  field(ZRVL, "0")
+  field(ZRST, "Good")
+  field(ZRSV, "NO_ALARM")
+  field(ONVL, "1")
+  field(ONST, "Bad")
+  field(ONSV, "MAJOR")
+  field(SCAN, "I/O Intr")
+}
