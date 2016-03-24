@@ -5,6 +5,8 @@
 #
 ###############################################################
 
+#% macro, PADDR, Address of axis (must be 2 digits e.g. 01)
+
 #Calculate if a move was internal or not
 record(calcout, "$(P)$(M):MR_MIP_INTERNAL") {
   field(DESC, "MR internal")
