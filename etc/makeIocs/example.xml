@@ -10,4 +10,12 @@
 	<pmac.dls_pmac_asyn_motor ADDR="6" DESC="Motor 6" EGU="mm" ELOSS_VAR="470" M="M6" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M6"/>
 	<pmac.dls_pmac_asyn_motor ADDR="7" DESC="Motor 7" EGU="mm" ELOSS_VAR="471" M="M7" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M7"/>
 	<pmac.dls_pmac_asyn_motor ADDR="8" DESC="Motor 8" EGU="mm" ELOSS_VAR="472" M="M8" MRES="0.001" P="PMAC_TEST:" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M8"/>
+	<pmac.pmacDisableLimitsCheck Axis="1" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="2" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="3" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="4" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="5" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="6" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="7" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="8" Controller="BRICK1"/>
 </components>
