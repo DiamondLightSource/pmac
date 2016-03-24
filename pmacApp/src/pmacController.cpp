@@ -1669,7 +1669,10 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
       sprintf(cmd[9], "%s,$%X%06X", cmd[9], 0, (int)profileTimes_[tScanPointCtr_]);
       for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
         if ((1<<index & tScanAxisMask_) > 0){
-          sprintf(cmd[index], "%s,$%X", cmd[index], (int)tScanPositions_[index][tScanPointCtr_]);
+          int64_t ival = 0;
+          doubleToPMACFloat(tScanPositions_[index][tScanPointCtr_], &ival);
+//          sprintf(cmd[index], "%s,$%X", cmd[index], (int)tScanPositions_[index][tScanPointCtr_]);
+          sprintf(cmd[index], "%s,$%lX", cmd[index], ival);
         }
       }
       // Increment the scan point counter
