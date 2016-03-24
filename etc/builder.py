@@ -121,6 +121,27 @@ class GeoBrickGlobalControl(_GeoBrickGlobalControlT, Device):
                 self.args[i] = self.PORT.CsGroupNamesList[i]
                     
 
+class pmacDisableLimitsCheck(Device):
+    Dependencies = (Pmac,)
+
+    def __init__(self, Controller, Axis = None):
+        self.__super.__init__()
+        self.Controller = Controller
+        self.Axis = Axis
+
+    def Initialise(self):
+        if self.Axis is None:
+            self.Axis = 0
+        
+        # model 3 version of pmacDisableLimitsCheck uses port instead of card 
+        self.ControllerPort = self.Controller.DeviceName() 
+        print 'pmacDisableLimitsCheck("%(ControllerPort)s", %(Axis)d, 1)' % self.__dict__
+
+    ArgInfo = makeArgInfo(__init__,
+        Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
+        Axis       = Simple('Axis number to disable limit check, defaults to all', int))
+
+
 
 def add_basic(cls):
     """Convenience function to add basic_asyn_motor attributes to a class that
