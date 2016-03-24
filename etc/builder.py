@@ -165,9 +165,23 @@ def add_eloss_kill_autohome(cls):
     cls.guiTags = eloss_kill_autohome_records.guiTags
     return cls
 
+class motor_in_cs_records(AutoSubstitution):
+    WarnMacros = False
+    TemplateFile = "motor_in_cs.template"
+
+def add_motor_in_cs(cls):
+    """Convenience function to add motor_in_cs_records attributes to a class that
+    includes it via an msi include statement rather than verbatim"""
+    cls.Arguments = motor_in_cs_records.Arguments + [x for x in cls.Arguments if x not in motor_in_cs_records.Arguments]
+    cls.ArgInfo = motor_in_cs_records.ArgInfo + cls.ArgInfo.filtered(without=motor_in_cs_records.ArgInfo.Names())
+    cls.Defaults.update(motor_in_cs_records.Defaults)
+    cls.guiTags = motor_in_cs_records.guiTags
+    return cls
+
 
 @add_basic
 @add_eloss_kill_autohome
+@add_motor_in_cs
 class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
     WarnMacros = False
     TemplateFile = 'dls_pmac_asyn_motor.template'
