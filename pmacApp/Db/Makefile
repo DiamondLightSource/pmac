@@ -11,6 +11,7 @@ include $(TOP)/configure/CONFIG
 # Create and install (or just install) into <top>/db
 # databases, templates, substitutions like this
 DB += pmacController.template
+DB += pmacControllerTrajectory.template
 DB += dls_pmac_asyn_motor.template
 DB += motor_in_cs.template
 DB += eloss_kill_autohome_records.template

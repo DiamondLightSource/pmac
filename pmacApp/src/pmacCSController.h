@@ -27,6 +27,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
   public:
     pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program);
     virtual ~pmacCSController();
+    asynStatus writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements);
     bool getMoving();
     int getCSNumber();
     int getProgramNumber();
@@ -43,6 +44,14 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     // Add PMAC variable/status item to monitor
     asynStatus monitorPMACVariable(int poll_speed, const char *var);
 
+    virtual asynStatus buildProfile();
+    virtual asynStatus executeProfile();
+    asynStatus tScanBuildTimeArray(double *profileTimes, int *numPoints, int maxPoints);
+    asynStatus tScanIncludedAxes(int *axisMask);
+    asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
+    asynStatus tScanCheckForErrors();
+    asynStatus tScanCheckProgramRunning(int *running);
+
   protected:
     pmacCSAxis **pAxes_; // Array of pointers to axis objects
 
@@ -54,7 +63,9 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
   private:
     int csNumber_;
     int progNumber_;
+    int status_[3];
     void *pC_;
+    bool profileInitialized_;
 
     static const epicsUInt32 PMAC_ERROR_PRINT_TIME_;
 
