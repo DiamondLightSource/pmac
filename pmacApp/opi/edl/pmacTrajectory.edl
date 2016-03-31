@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 30
-y 51
+x 32
+y 77
 w 451
 h 536
 font "arial-bold-r-12.0"
@@ -963,13 +963,13 @@ x 25
 y 50
 w 45
 h 20
-controlPv "$(P)$(R)Axis1CS_RBV"
+controlPv "$(P)$(R)Motor1CS_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -983,13 +983,13 @@ x 75
 y 50
 w 45
 h 20
-controlPv "$(P)$(R)Axis2CS_RBV"
+controlPv "$(P)$(R)Motor2CS_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1003,13 +1003,13 @@ x 125
 y 50
 w 45
 h 20
-controlPv "$(P)$(R)Axis3CS_RBV"
+controlPv "$(P)$(R)Motor3CS_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1023,13 +1023,13 @@ x 175
 y 50
 w 45
 h 20
-controlPv "$(P)$(R)Axis4CS_RBV"
+controlPv "$(P)$(R)Motor4CS_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1043,13 +1043,13 @@ x 225
 y 50
 w 45
 h 20
-controlPv "$(P)$(R)Axis5CS_RBV"
+controlPv "$(P)$(R)Motor5CS_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1063,13 +1063,13 @@ x 275
 y 50
 w 45
 h 20
-controlPv "$(P)$(R)Axis6CS_RBV"
+controlPv "$(P)$(R)Motor6CS_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1083,13 +1083,13 @@ x 325
 y 50
 w 45
 h 20
-controlPv "$(P)$(R)Axis7CS_RBV"
+controlPv "$(P)$(R)Motor7CS_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1103,13 +1103,13 @@ x 375
 y 50
 w 45
 h 20
-controlPv "$(P)$(R)Axis8CS_RBV"
+controlPv "$(P)$(R)Motor8CS_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
