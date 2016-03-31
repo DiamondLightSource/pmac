@@ -424,3 +424,67 @@ record(longin, "$(P)$(R)STAT_AVE_TIME_RBV") {
   field(SCAN, "I/O Intr")
 }
 
+record(ai, "$(P)$(R)Motor1CS_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),1)PMAC_C_AXIS_CS")
+    field(PINI, "NO")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)Motor2CS_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),2)PMAC_C_AXIS_CS")
+    field(PINI, "NO")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)Motor3CS_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),3)PMAC_C_AXIS_CS")
+    field(PINI, "NO")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)Motor4CS_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),4)PMAC_C_AXIS_CS")
+    field(PINI, "NO")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)Motor5CS_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),5)PMAC_C_AXIS_CS")
+    field(PINI, "NO")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)Motor6CS_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),6)PMAC_C_AXIS_CS")
+    field(PINI, "NO")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)Motor7CS_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),7)PMAC_C_AXIS_CS")
+    field(PINI, "NO")
+    field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)Motor8CS_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),8)PMAC_C_AXIS_CS")
+    field(PINI, "NO")
+    field(SCAN, "I/O Intr")
+}
+
