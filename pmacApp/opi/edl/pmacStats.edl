@@ -1,0 +1,544 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 659
+y 106
+w 436
+h 351
+font "arial-bold-r-12.0"
+ctlFont "arial-bold-r-12.0"
+btnFont "arial-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 25
+ctlBgColor1 index 3
+ctlBgColor2 index 3
+topShadowColor index 1
+botShadowColor index 11
+showGrid
+snapToGrid
+gridSize 5
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 435
+h 350
+lineColor index 5
+fill
+fillColor index 5
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 15
+w 410
+h 320
+lineColor index 14
+fill
+fillColor index 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 10
+w 187
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 5
+value {
+  "  PMAC Message Statistics  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 30
+w 105
+h 20
+controlPv "$(P)$(R)STAT_MSG_NO_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 55
+w 105
+h 20
+controlPv "$(P)$(R)STAT_MSG_WRITE_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 30
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Number Of Messages Sent"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 55
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Last Message Write (bytes)"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 80
+w 105
+h 20
+controlPv "$(P)$(R)STAT_MSG_READ_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 80
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Last Message Read Bytes"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 105
+w 105
+h 20
+controlPv "$(P)$(R)STAT_MSG_TIME_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 130
+w 105
+h 20
+controlPv "$(P)$(R)STAT_MAX_WRITE_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 105
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Last Message Time (ms)"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 130
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Max Message Write (bytes)"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 155
+w 105
+h 20
+controlPv "$(P)$(R)STAT_MAX_READ_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 155
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Max Message Read (bytes)"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 180
+w 105
+h 20
+controlPv "$(P)$(R)STAT_MAX_TIME_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 180
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Max Message Time (ms)"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 205
+w 105
+h 20
+controlPv "$(P)$(R)STAT_AVE_WRITE_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 230
+w 105
+h 20
+controlPv "$(P)$(R)STAT_AVE_READ_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 255
+w 105
+h 20
+controlPv "$(P)$(R)STAT_AVE_TIME_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 280
+w 105
+h 20
+controlPv "$(P)$(R)STAT_TOTAL_WRITE_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 290
+y 305
+w 105
+h 20
+controlPv "$(P)$(R)STAT_TOTAL_READ_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 205
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Average Message Write (bytes)"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 230
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Average Message Read (bytes)"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 255
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Average Message Time (ms)"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 280
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Total Bytes Written"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 305
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Total Bytes Read"
+}
+endObjectProperties
+

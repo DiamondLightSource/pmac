@@ -16,8 +16,14 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
   lowLevelPortUser_(0),
   noOfMessages_(0),
   totalBytesWritten_(0),
-  totalBytesRead_(0)
+  totalBytesRead_(0),
+  totalMsgTime_(0),
+  lastMsgBytesWritten_(0),
+  lastMsgBytesRead_(0),
+  lastMsgTime_(0),
+  updateTime_(0.0)
 {
+  epicsTimeGetCurrent(&this->writeTime_);
   epicsTimeGetCurrent(&this->startTime_);
   epicsTimeGetCurrent(&this->currentTime_);
   slowCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_SLOW_READ);
@@ -121,10 +127,12 @@ asynStatus pmacMessageBroker::updateVariables(int type)
       debug(DEBUG_VARIABLE, functionName, "Fast Store command string count", noOfCmds);
       for (int index = 0; index < noOfCmds; index++){
         cmd = fastStore_.readCommandString(index);
-        this->immediateWriteRead(cmd.c_str(), response);
-        debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int)strlen(response));
-        // Update the store with the response
-        fastStore_.updateReply(cmd, response);
+        if (cmd.length() > 0){
+          this->immediateWriteRead(cmd.c_str(), response);
+          debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int)strlen(response));
+          // Update the store with the response
+          fastStore_.updateReply(cmd, response);
+        }
       }
       // Perform the necessary callbacks
       fastCallbacks_->callCallbacks(&fastStore_);
@@ -135,9 +143,11 @@ asynStatus pmacMessageBroker::updateVariables(int type)
       noOfCmds = mediumStore_.countCommandStrings();
       for (int index = 0; index < noOfCmds; index++){
         cmd = mediumStore_.readCommandString(index);
-        this->immediateWriteRead(cmd.c_str(), response);
-        // Update the store with the response
-        mediumStore_.updateReply(cmd, response);
+        if (cmd.length() > 0){
+          this->immediateWriteRead(cmd.c_str(), response);
+          // Update the store with the response
+          mediumStore_.updateReply(cmd, response);
+        }
       }
       // Perform the necessary callbacks
       mediumCallbacks_->callCallbacks(&mediumStore_);
@@ -148,9 +158,11 @@ asynStatus pmacMessageBroker::updateVariables(int type)
       noOfCmds = slowStore_.countCommandStrings();
       for (int index = 0; index < noOfCmds; index++){
         cmd = slowStore_.readCommandString(index);
-        this->immediateWriteRead(cmd.c_str(), response);
-        // Update the store with the response
-        slowStore_.updateReply(cmd, response);
+        if (cmd.length() > 0){
+          this->immediateWriteRead(cmd.c_str(), response);
+          // Update the store with the response
+          slowStore_.updateReply(cmd, response);
+        }
       }
       // Perform the necessary callbacks
       slowCallbacks_->callCallbacks(&slowStore_);
@@ -197,6 +209,24 @@ asynStatus pmacMessageBroker::registerForUpdates(pmacCallbackInterface *cbPtr, i
 double pmacMessageBroker::readUpdateTime()
 {
   return updateTime_;
+}
+
+asynStatus pmacMessageBroker::readStatistics(int *noOfMsgs,
+                                             int *totalBytesWritten,
+                                             int *totalBytesRead,
+                                             int *totalMsgTime,
+                                             int *lastMsgBytesWritten,
+                                             int *lastMsgBytesRead,
+                                             int *lastMsgTime)
+{
+  *noOfMsgs = this->noOfMessages_;
+  *totalBytesWritten = this->totalBytesWritten_;
+  *totalBytesRead = this->totalBytesRead_;
+  *totalMsgTime = this->totalMsgTime_;
+  *lastMsgBytesWritten = this->lastMsgBytesWritten_;
+  *lastMsgBytesRead = this->lastMsgBytesRead_;
+  *lastMsgTime = this->lastMsgTime_;
+  return asynSuccess;
 }
 
 /**
@@ -269,6 +299,7 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   static const char *functionName = "pmacController::lowLevelWriteRead";
 
   asynPrint(this->ownerAsynUser_, ASYN_TRACE_FLOW, "%s\n", functionName);
+  epicsTimeGetCurrent(&this->writeTime_);
 
   if (!lowLevelPortUser_) {
     return asynError;
@@ -293,7 +324,12 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
     this->noOfMessages_++;
     this->totalBytesWritten_ += strlen(command);
     this->totalBytesRead_ += strlen(response);
+    this->lastMsgBytesWritten_ = strlen(command);
+    this->lastMsgBytesRead_ = strlen(response);
     epicsTimeGetCurrent(&this->currentTime_);
+    double elapsedTime = epicsTimeDiffInSeconds(&this->currentTime_, &this->writeTime_);
+    this->lastMsgTime_ = (int)(elapsedTime * 1000.0);
+    this->totalMsgTime_ += this->lastMsgTime_;
   }
 
   asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response);
