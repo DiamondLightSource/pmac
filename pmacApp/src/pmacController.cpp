@@ -989,7 +989,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   const char *name[128];
   static const char *functionName = "writeInt32";
 
-  debug(DEBUG_ERROR, functionName);
+  debug(DEBUG_TRACE, functionName);
 
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
@@ -1029,7 +1029,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   } else if (pWriteParams_->hasKey(*name)){
     // This is an integer write of a parameter, so send the immediate write/read
     sprintf(command, "%s=%d", pWriteParams_->lookup(*name).c_str(), value);
-    debug(DEBUG_ERROR, functionName, "Command sent to PMAC", command);
+    debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   } else if (function == PMAC_C_KillAxis_){
     // Send the kill command to the PMAC immediately

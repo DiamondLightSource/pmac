@@ -19,6 +19,7 @@
 
 # % macro, PORT, The asyn port for the pmac controller
 # % macro, P, PV Prefix
+# % macro, R, PV Suffix
 # % macro, FEEDRATE, Set the global feedrate for this controller
 # % macro, FEEDRATE_POLL, Poll to make sure feedrate does not change, enable=1, disable=0 
 # % macro, TIMEOUT, Timeout for controller communincation 
@@ -29,7 +30,7 @@
 # % macro, CSG4, Name for Coordinate System Group 4 
 # % macro, CSG5, Name for Coordinate System Group 5 
 # % macro, CSG6, Name for Coordinate System Group 6 
-# % gui, $(name=), edm, pmacController.edl, P=$(P)
+# % gui, $(name=), edm, pmacController.edl, P=$(P),R=$(R)
 
 ##############################################################
 # This record indicates if we have a controller problem
@@ -39,7 +40,7 @@
 # /// Record used to indicate if the controller has a problem. This is set in the
 # /// controller poll loop, and is used to set the motor record axis status.
 # ///
-record(bi, "$(P):GLOBAL_PROBLEM_RBV")
+record(bi, "$(P)$(R)GLOBAL_PROBLEM_RBV")
 {
    field(DTYP, "asynInt32")
    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_GLOBALSTATUS")
@@ -55,7 +56,7 @@ record(bi, "$(P):GLOBAL_PROBLEM_RBV")
 # ///
 # /// Get the PMAC feedrate. This is read in the controller poll loop.
 # ///
-record(ai, "$(P):FEEDRATE_RBV")
+record(ai, "$(P)$(R)FEEDRATE_RBV")
 {
    field(DTYP, "asynInt32")
    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE")
@@ -67,7 +68,7 @@ record(ai, "$(P):FEEDRATE_RBV")
 # /// Set the PMAC feedrate limit. This determins if the current feedrate
 # /// read from the controller is out of range, and will be used to set axis alarms.
 # ///
-record(longout, "$(P):FEEDRATE_LIMIT")
+record(longout, "$(P)$(R)FEEDRATE_LIMIT")
 {
    field(PINI, "YES")
    field(VAL, "$(FEEDRATE=100)")
@@ -81,7 +82,7 @@ record(longout, "$(P):FEEDRATE_LIMIT")
 # /// Set the PMAC feedrate limit. This writes a new feedrate to
 # /// the controller.
 # ///
-record(longout, "$(P):FEEDRATE")
+record(longout, "$(P)$(R)FEEDRATE")
 {
    field(PINI, "YES")
    field(VAL, "$(FEEDRATE=100)")
@@ -95,7 +96,7 @@ record(longout, "$(P):FEEDRATE")
 # /// Enable or disable feedrate polling.
 # ///
 # % autosave 2
-record(bo, "$(P):FEEDRATE_POLL_ENABLE")
+record(bo, "$(P)$(R)FEEDRATE_POLL_ENABLE")
 {
    field(PINI, "YES")
    field(VAL, "$(FEEDRATE_POLL=0)")
@@ -109,7 +110,7 @@ record(bo, "$(P):FEEDRATE_POLL_ENABLE")
 # /// Record used to indicate if the feedrate is below the limit. This is set from the
 # /// controller poll loop, and is used to set the motor record axis status.
 # ///
-record(bi, "$(P):FEEDRATE_PROBLEM_RBV")
+record(bi, "$(P)$(R)FEEDRATE_PROBLEM_RBV")
 {
    field(PINI, "YES")
    field(DTYP, "asynInt32")
@@ -123,56 +124,56 @@ record(bi, "$(P):FEEDRATE_PROBLEM_RBV")
 # /// Select a group of coordinate systems into the controller.
 # ///
 # % autosave 2
-record(mbbo, "$(P):COORDINATE_SYS_GROUP")
-{
-   field(PINI, "YES")
-   field(DTYP, "asynInt32")
-   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_COORDINATE_SYS_GROUP")
-   field(VAL, "0")
-   field(ZRST, "$(CSG0=)")
-   field(ZRVL, "0")
-   field(ONST, "$(CSG1=)")
-   field(ONVL, "1")
-   field(TWST, "$(CSG2=)")
-   field(TWVL, "2")
-   field(THST, "$(CSG3=)")
-   field(THVL, "3")
-   field(FRST, "$(CSG4=)")
-   field(FRVL, "4")
-   field(FVST, "$(CSG5=)")
-   field(FVVL, "5")
-   field(SXST, "$(CSG6=)")
-   field(SXVL, "6")
-   field(SVST, "$(CSG7=)")
-   field(SVVL, "7")
-}
+#record(mbbo, "$(P)$(R)COORDINATE_SYS_GROUP")
+#{
+#   field(PINI, "YES")
+#   field(DTYP, "asynInt32")
+#   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_COORDINATE_SYS_GROUP")
+#   field(VAL, "0")
+#   field(ZRST, "$(CSG0=)")
+#   field(ZRVL, "0")
+#   field(ONST, "$(CSG1=)")
+#   field(ONVL, "1")
+#   field(TWST, "$(CSG2=)")
+#   field(TWVL, "2")
+#   field(THST, "$(CSG3=)")
+#   field(THVL, "3")
+#   field(FRST, "$(CSG4=)")
+#   field(FRVL, "4")
+#   field(FVST, "$(CSG5=)")
+#   field(FVVL, "5")
+#   field(SXST, "$(CSG6=)")
+#   field(SXVL, "6")
+#   field(SVST, "$(CSG7=)")
+#   field(SVVL, "7")
+#}
 
 # ///
 # /// Read back the current group of coordinate systems into the controller.
 # ///
-record(mbbi, "$(P):COORDINATE_SYS_GROUP_RBV")
-{
-   field(PINI, "YES")
-   field(DTYP, "asynInt32")
-   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_COORDINATE_SYS_GROUP")
-   field(SCAN, "I/O Intr")
-   field(ZRST, "$(CSG0=)")
-   field(ZRVL, "0")
-   field(ONST, "$(CSG1=)")
-   field(ONVL, "1")
-   field(TWST, "$(CSG2=)")
-   field(TWVL, "2")
-   field(THST, "$(CSG3=)")
-   field(THVL, "3")
-   field(FRST, "$(CSG4=)")
-   field(FRVL, "4")
-   field(FVST, "$(CSG5=)")
-   field(FVVL, "5")
-   field(SXST, "$(CSG6=)")
-   field(SXVL, "6")
-   field(SVST, "$(CSG7=)")
-   field(SVVL, "7")
-}
+#record(mbbi, "$(P)$(R)COORDINATE_SYS_GROUP_RBV")
+#{
+#   field(PINI, "YES")
+#   field(DTYP, "asynInt32")
+#   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_COORDINATE_SYS_GROUP")
+#   field(SCAN, "I/O Intr")
+#   field(ZRST, "$(CSG0=)")
+#   field(ZRVL, "0")
+#   field(ONST, "$(CSG1=)")
+#   field(ONVL, "1")
+#   field(TWST, "$(CSG2=)")
+#   field(TWVL, "2")
+#   field(THST, "$(CSG3=)")
+#   field(THVL, "3")
+#   field(FRST, "$(CSG4=)")
+#   field(FRVL, "4")
+#   field(FVST, "$(CSG5=)")
+#   field(FVVL, "5")
+#   field(SXST, "$(CSG6=)")
+#   field(SXVL, "6")
+#   field(SVST, "$(CSG7=)")
+#   field(SVVL, "7")
+#}
 
 # ///
 # /// Control deferred moves on the controller
@@ -180,34 +181,34 @@ record(mbbi, "$(P):COORDINATE_SYS_GROUP_RBV")
 # ///
 # /// Select a group of coordinate systems into th # % autosave 2e controller.
 # ///
-record(mbbo, "$(P):MOTOR_DEFER_MOVES")
-{
-    field(PINI, "YES")
-    field(DTYP, "asynInt32")
-    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
-    field(VAL, "0")
-    field(ZRVL, 0)
-    field(ONVL, 1)
-    field(TWVL, 2)
-    field(ZRST, "GO")
-    field(ONST, "Defer Fast Moves")
-    field(TWST, "Defer Coordinated")
-}
+#record(mbbo, "$(P)$(R)MOTOR_DEFER_MOVES")
+#{
+#    field(PINI, "YES")
+#    field(DTYP, "asynInt32")
+#    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+#    field(VAL, "0")
+#    field(ZRVL, 0)
+#    field(ONVL, 1)
+#    field(TWVL, 2)
+#    field(ZRST, "GO")
+#    field(ONST, "Defer Fast Moves")
+#    field(TWST, "Defer Coordinated")
+#}
 
 # ///
 # /// Read back the current group of coordinate systems into the controller.
 # ///
-record(mbbi, "$(P):MOTOR_DEFER_MOVES_RBV")
-{
-    field(PINI, "YES")
-    field(DTYP, "asynInt32")
-    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
-    field(SCAN, "I/O Intr")
-    field(ZRVL, 0)
-    field(ONVL, 1)
-    field(TWVL, 2)
-    field(ZRST, "GO")
-    field(ONST, "Defer Fast Moves")
-    field(TWST, "Defer Coordinated")
-}
+#record(mbbi, "$(P)$(R)MOTOR_DEFER_MOVES_RBV")
+#{
+#    field(PINI, "YES")
+#    field(DTYP, "asynInt32")
+#    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+#    field(SCAN, "I/O Intr")
+#    field(ZRVL, 0)
+#    field(ONVL, 1)
+#    field(TWVL, 2)
+#    field(ZRST, "GO")
+#    field(ONST, "Defer Fast Moves")
+#    field(TWST, "Defer Coordinated")
+#}
 
