@@ -246,6 +246,18 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_TrajCSNumberString,      asynParamInt32,   &PMAC_C_TrajCSNumber_);
   createParam(PMAC_C_TrajPercentString,       asynParamFloat64, &PMAC_C_TrajPercent_);
   createParam(PMAC_C_TrajEStatusString,       asynParamInt32,   &PMAC_C_TrajEStatus_);
+  createParam(PMAC_C_NoOfMsgsString,          asynParamInt32,   &PMAC_C_NoOfMsgs_);
+  createParam(PMAC_C_TotalBytesWrittenString, asynParamInt32,   &PMAC_C_TotalBytesWritten_);
+  createParam(PMAC_C_TotalBytesReadString,    asynParamInt32,   &PMAC_C_TotalBytesRead_);
+  createParam(PMAC_C_MsgBytesWrittenString,   asynParamInt32,   &PMAC_C_MsgBytesWritten_);
+  createParam(PMAC_C_MsgBytesReadString,      asynParamInt32,   &PMAC_C_MsgBytesRead_);
+  createParam(PMAC_C_MsgTimeString,           asynParamInt32,   &PMAC_C_MsgTime_);
+  createParam(PMAC_C_MaxBytesWrittenString,   asynParamInt32,   &PMAC_C_MaxBytesWritten_);
+  createParam(PMAC_C_MaxBytesReadString,      asynParamInt32,   &PMAC_C_MaxBytesRead_);
+  createParam(PMAC_C_MaxTimeString,           asynParamInt32,   &PMAC_C_MaxTime_);
+  createParam(PMAC_C_AveBytesWrittenString,   asynParamInt32,   &PMAC_C_AveBytesWritten_);
+  createParam(PMAC_C_AveBytesReadString,      asynParamInt32,   &PMAC_C_AveBytesRead_);
+  createParam(PMAC_C_AveTimeString,           asynParamInt32,   &PMAC_C_AveTime_);
 
   pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
 
@@ -275,6 +287,19 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setDoubleParam(PMAC_C_TrajRunTime_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajCSNumber_, tScanCSNo_) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajEStatus_, 0) == asynSuccess) && paramStatus);
+  // Initialise the statistics
+  paramStatus = ((setIntegerParam(PMAC_C_NoOfMsgs_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_TotalBytesWritten_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_TotalBytesRead_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_MsgBytesWritten_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_MsgBytesRead_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_MsgTime_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_MaxBytesWritten_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_MaxBytesRead_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_MaxTime_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_AveBytesWritten_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_AveBytesRead_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_AveTime_, 0) == asynSuccess) && paramStatus);
 
   callParamCallbacks();
 
@@ -749,49 +774,16 @@ asynStatus pmacController::immediateWriteRead(const char *command, char *respons
  */
 asynStatus pmacController::lowLevelWriteRead(const char *command, char *response)
 {
-  //asynStatus status = asynSuccess;
-  //int eomReason = 0;
-  //size_t nwrite = 0;
-  //size_t nread = 0;
-  //int commsError = 0;
+  asynStatus status = asynSuccess;
   static const char *functionName = "lowLevelWriteRead";
 
   debug(DEBUG_FLOW, functionName);
 
-  return pBroker_->immediateWriteRead(command, response);
-
-  //asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
-  //printf("Writing: %s\n", command);
-
-/*  if (!lowLevelPortUser_) {
-    setIntegerParam(PMAC_C_CommsError_, PMAC_ERROR_);
-    return asynError;
+  status = pBroker_->immediateWriteRead(command, response);
+  if (status == asynSuccess){
+    status = this->updateStatistics();
   }
-  
-  asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: command: %s\n", functionName, command);
-  
-  //Make sure the low level port is connected before we attempt comms
-  //Use the controller-wide param PMAC_C_CommsError_
-  getIntegerParam(PMAC_C_CommsError_, &commsError);
-  
-  if (!commsError) {
-    status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
-					 command, strlen(command),
-					 response, PMAC_MAXBUF_,
-					 PMAC_TIMEOUT_,
-					 &nwrite, &nread, &eomReason );
-    
-    if (status) {
-      asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
-      setIntegerParam(PMAC_C_CommsError_, PMAC_ERROR_);
-    } else {
-      setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
-    }
-  }
-  
-  asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response); 
-  
-  return status;*/
+  return status;
 }
 
 
@@ -1110,6 +1102,7 @@ asynStatus pmacController::poll()
   // Always call for a fast update
   debug(DEBUG_TRACE, functionName, "Fast update has been called", tBuff);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+  this->updateStatistics();
   setDoubleParam(PMAC_C_FastUpdateTime_, pBroker_->readUpdateTime());
 
   if (epicsTimeDiffInSeconds(&nowTime_, &lastMediumTime_) >= PMAC_MEDIUM_LOOP_TIME/1000.0){
@@ -1458,10 +1451,7 @@ void pmacController::trajectoryTask()
       this->lock();
       tScanExecuting_ = 1;
 
-      // Record the scan start time
-      epicsTimeGetCurrent(&startTime);
-
-      debug(DEBUG_TRACE, functionName, "Trajectory scan started");
+      debug(DEBUG_ERROR, functionName, "Trajectory scan started");
 
       // Set the trajectory CS number
       setIntegerParam(PMAC_C_TrajCSNumber_, tScanCSNo_);
@@ -1474,6 +1464,9 @@ void pmacController::trajectoryTask()
 
       // Send the initial half buffer of position updates
       status = this->sendTrajectoryDemands(epicsBufferNumber);
+
+      // Record the scan start time
+      epicsTimeGetCurrent(&startTime);
 
       // Calculate the axis mask ready to send to the PMAC
       // X => 256
@@ -1556,7 +1549,7 @@ void pmacController::trajectoryTask()
         // Set the execute status to failure
         setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
         // Set the message accordingly
-        setStringParam(profileExecuteMessage_, "Trajectory scan failed");
+        setStringParam(profileExecuteMessage_, "Trajectory scan failed, motion program timeout start");
       }
       callParamCallbacks();
     }
@@ -1700,7 +1693,9 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
     } else {
       // TODO: ERROR!!
     }
+    this->unlock();
     status = this->immediateWriteRead(cstr, response);
+    this->lock();
     // Set the parameter according to the filled points
     if (buffer == PMAC_TRAJ_BUFFER_A){
       setIntegerParam(PMAC_C_TrajBuffFillA_, epicsBufferPtr);
@@ -1710,7 +1705,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
       // TODO: ERROR!!
     }
 
-    debug(DEBUG_ERROR, functionName, "Command", cstr);
+    debug(DEBUG_FLOW, functionName, "Command", cstr);
   }
 
   stopTimer(DEBUG_ERROR, functionName, "Time taken to send trajectory demand");
@@ -1725,6 +1720,8 @@ asynStatus pmacController::doubleToPMACFloat(double value, int64_t *representati
   int negative = 0;
   int exponent = 0;
   double expVal = 0.0;
+  int64_t intVal = 0;
+  int64_t tVal = 0;
   double mantissaVal = 0.0;
   double maxMantissa = 34359738368.0;  // 0x800000000
   const char *functionName = "doubleToPMACFloat";
@@ -1732,45 +1729,51 @@ asynStatus pmacController::doubleToPMACFloat(double value, int64_t *representati
   debug(DEBUG_TRACE, functionName);
   debugf(DEBUG_VARIABLE, functionName, "Value : %20.10lf\n", value);
 
-  // Check for a negative number, and get the absolute
-  if (absVal < 0.0){
-    absVal = absVal * -1.0;
-    negative = 1;
-  }
-  expVal = absVal;
-  mantissaVal = absVal;
+  // Check for special case 0.0
+  if (absVal == 0.0){
+    // Set value accordingly
+    tVal = 0x0;
+  } else {
+    // Check for a negative number, and get the absolute
+    if (absVal < 0.0){
+      absVal = absVal * -1.0;
+      negative = 1;
+    }
+    expVal = absVal;
+    mantissaVal = absVal;
 
-  // Work out the exponent required to normalise
-  // Normalised should be between 1 and 2
-  while (expVal >= 2.0){
-    expVal = expVal / 2.0;
-    exponent++;
-  }
-  while (expVal < 1.0){
-    expVal = expVal * 2.0;
-    exponent--;
-  }
-  // Offset exponent to provide +-2048 range
-  exponent += 0x800;
+    // Work out the exponent required to normalise
+    // Normalised should be between 1 and 2
+    while (expVal >= 2.0){
+      expVal = expVal / 2.0;
+      exponent++;
+    }
+    while (expVal < 1.0){
+      expVal = expVal * 2.0;
+      exponent--;
+    }
+    // Offset exponent to provide +-2048 range
+    exponent += 0x800;
 
-  // Get the mantissa into correct format, this might not be
-  // the most efficient way to do this
-  while (mantissaVal < maxMantissa){
-    mantissaVal *= 2.0;
-  }
-  mantissaVal = mantissaVal / 2.0;
-  // Get the integer representation for the altered mantissa
-  int64_t intVal = (int64_t)mantissaVal;
+    // Get the mantissa into correct format, this might not be
+    // the most efficient way to do this
+    while (mantissaVal < maxMantissa){
+      mantissaVal *= 2.0;
+    }
+    mantissaVal = mantissaVal / 2.0;
+    // Get the integer representation for the altered mantissa
+    intVal = (int64_t)mantissaVal;
 
-  // If negative value then subtract altered mantissa from max
-  if (negative == 1){
-    intVal = 0xFFFFFFFFFLL - intVal;
-  }
+    // If negative value then subtract altered mantissa from max
+    if (negative == 1){
+      intVal = 0xFFFFFFFFFLL - intVal;
+    }
 
-  // Shift the altered mantissa by 12 bits and then set those
-  // 12 bits to the offset exponent
-  int64_t tVal = intVal << 12;
-  tVal += exponent;
+    // Shift the altered mantissa by 12 bits and then set those
+    // 12 bits to the offset exponent
+    tVal = intVal << 12;
+    tVal += exponent;
+  }
 
   *representation = tVal;
 
@@ -1963,6 +1966,58 @@ asynStatus pmacController::newGetGlobalStatus(pmacCommandStore *sPtr)
   } else {
     setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
   }
+
+  return status;
+}
+
+asynStatus pmacController::updateStatistics()
+{
+  asynStatus status = asynSuccess;
+  int noOfMsgs = 0;
+  int totalBytesWritten = 0;
+  int totalBytesRead = 0;
+  int totalMsgTime = 0;
+  int lastMsgBytesWritten = 0;
+  int lastMsgBytesRead = 0;
+  int lastMsgTime = 0;
+  int maxBytesWritten = 0;
+  int maxBytesRead = 0;
+  int maxTime = 0;
+  static const char *functionName = "updateStatistics";
+
+  debug(DEBUG_FLOW, functionName);
+
+  status = pBroker_->readStatistics(&noOfMsgs,
+                                    &totalBytesWritten,
+                                    &totalBytesRead,
+                                    &totalMsgTime,
+                                    &lastMsgBytesWritten,
+                                    &lastMsgBytesRead,
+                                    &lastMsgTime);
+
+  setIntegerParam(PMAC_C_NoOfMsgs_, noOfMsgs);
+  setIntegerParam(PMAC_C_TotalBytesWritten_, totalBytesWritten);
+  setIntegerParam(PMAC_C_TotalBytesRead_, totalBytesRead);
+  setIntegerParam(PMAC_C_MsgBytesWritten_, lastMsgBytesWritten);
+  setIntegerParam(PMAC_C_MsgBytesRead_, lastMsgBytesRead);
+  setIntegerParam(PMAC_C_MsgTime_, lastMsgTime);
+  getIntegerParam(PMAC_C_MaxBytesWritten_, &maxBytesWritten);
+  if (lastMsgBytesWritten > maxBytesWritten){
+    setIntegerParam(PMAC_C_MaxBytesWritten_, lastMsgBytesWritten);
+  }
+  getIntegerParam(PMAC_C_MaxBytesRead_, &maxBytesRead);
+  if (lastMsgBytesRead > maxBytesRead){
+    setIntegerParam(PMAC_C_MaxBytesRead_, lastMsgBytesRead);
+  }
+  getIntegerParam(PMAC_C_MaxTime_, &maxTime);
+  if (lastMsgTime > maxTime){
+    setIntegerParam(PMAC_C_MaxTime_, lastMsgTime);
+  }
+  setIntegerParam(PMAC_C_AveBytesWritten_, totalBytesWritten/noOfMsgs);
+  setIntegerParam(PMAC_C_AveBytesRead_, totalBytesRead/noOfMsgs);
+  setIntegerParam(PMAC_C_AveTime_, totalMsgTime/noOfMsgs);
+
+  callParamCallbacks();
 
   return status;
 }

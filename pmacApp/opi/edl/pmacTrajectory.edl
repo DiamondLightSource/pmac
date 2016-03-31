@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 172
-y 78
+x 30
+y 51
 w 451
 h 536
 font "arial-bold-r-12.0"
@@ -118,7 +118,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -138,7 +138,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -196,7 +196,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -235,7 +235,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -255,7 +255,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -313,7 +313,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -352,7 +352,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -448,7 +448,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -467,7 +467,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -505,7 +505,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -578,7 +578,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -597,7 +597,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -635,7 +635,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -690,7 +690,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -748,7 +748,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -788,7 +788,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -808,7 +808,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -867,7 +867,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -925,7 +925,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -969,7 +969,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -989,7 +989,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1009,7 +1009,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1029,7 +1029,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1049,7 +1049,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1069,7 +1069,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1089,7 +1089,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1109,7 +1109,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -1309,7 +1309,7 @@ fgColor index 16
 fgAlarm
 bgColor index 10
 fill
-font "helvetica-medium-r-10.0"
+font "helvetica-medium-r-14.0"
 fontAlign "center"
 endObjectProperties
 

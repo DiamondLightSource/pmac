@@ -8,6 +8,7 @@ include $(TOP)/configure/CONFIG
 ifdef BOOST
   PROD_IOC_Linux += pmac-test
   pmac-test_SRCS += pmac-test.cpp
+  pmac-test_SRCS += MockPMACAsynDriver.cpp
   pmac-test_SRCS += test_StringHashtable.cpp
   pmac-test_SRCS += test_PMACCommandStore.cpp
 

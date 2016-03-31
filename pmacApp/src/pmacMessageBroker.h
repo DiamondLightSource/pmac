@@ -34,6 +34,13 @@ public:
   asynStatus updateVariables(int type);
   asynStatus registerForUpdates(pmacCallbackInterface *cbPtr, int type);
   double readUpdateTime();
+  asynStatus readStatistics(int *noOfMsgs,
+                            int *totalBytesWritten,
+                            int *totalBytesRead,
+                            int *totalMsgTime,
+                            int *lastMsgBytesWritten,
+                            int *lastMsgBytesRead,
+                            int *lastMsgTime);
 
 private:
   asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
@@ -60,6 +67,11 @@ private:
   int noOfMessages_;
   int totalBytesWritten_;
   int totalBytesRead_;
+  int totalMsgTime_;
+  int lastMsgBytesWritten_;
+  int lastMsgBytesRead_;
+  int lastMsgTime_;
+  epicsTimeStamp writeTime_;
   epicsTimeStamp startTime_;
   epicsTimeStamp currentTime_;
 

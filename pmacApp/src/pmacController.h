@@ -37,6 +37,19 @@
 #define PMAC_C_WriteCmdString           "PMAC_C_WRITE_CMD"
 #define PMAC_C_KillAxisString           "PMAC_C_KILL_AXIS"
 
+#define PMAC_C_NoOfMsgsString          "PMAC_C_NO_OF_MSGS"
+#define PMAC_C_TotalBytesWrittenString "PMAC_C_TBYTES_WRITE"
+#define PMAC_C_TotalBytesReadString    "PMAC_C_TBYTES_READ"
+#define PMAC_C_MsgBytesWrittenString   "PMAC_C_MBYTES_WRITE"
+#define PMAC_C_MsgBytesReadString      "PMAC_C_MBYTES_READ"
+#define PMAC_C_MsgTimeString           "PMAC_C_MSG_TIME"
+#define PMAC_C_MaxBytesWrittenString   "PMAC_C_MAX_BYTES_WRITE"
+#define PMAC_C_MaxBytesReadString      "PMAC_C_MAX_BYTES_READ"
+#define PMAC_C_MaxTimeString           "PMAC_C_MAX_TIME"
+#define PMAC_C_AveBytesWrittenString   "PMAC_C_AVE_BYTES_WRITE"
+#define PMAC_C_AveBytesReadString      "PMAC_C_AVE_BYTES_READ"
+#define PMAC_C_AveTimeString           "PMAC_C_AVE_TIME"
+
 #define PMAC_C_TrajBufferLengthString  "PMAC_C_TRAJ_LENGTH"  // Length of a single buffer e.g. AX, AY
 #define PMAC_C_TrajTotalPointsString   "PMAC_C_TRAJ_POINTS"  // Total number of points scanned through
 #define PMAC_C_TrajStatusString        "PMAC_C_TRAJ_STATUS"  // Current status reported by the PMAC
@@ -175,6 +188,18 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_TrajCSNumber_;
   int PMAC_C_TrajPercent_;
   int PMAC_C_TrajEStatus_;
+  int PMAC_C_NoOfMsgs_;
+  int PMAC_C_TotalBytesWritten_;
+  int PMAC_C_TotalBytesRead_;
+  int PMAC_C_MsgBytesWritten_;
+  int PMAC_C_MsgBytesRead_;
+  int PMAC_C_MsgTime_;
+  int PMAC_C_MaxBytesWritten_;
+  int PMAC_C_MaxBytesRead_;
+  int PMAC_C_MaxTime_;
+  int PMAC_C_AveBytesWritten_;
+  int PMAC_C_AveBytesRead_;
+  int PMAC_C_AveTime_;
   int PMAC_C_LastParam_;
   #define LAST_PMAC_PARAM PMAC_C_LastParam_
   int parameters[PMAC_MAX_PARAMETERS];
@@ -224,6 +249,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
 
   asynStatus newGetGlobalStatus(pmacCommandStore *sPtr);
 //  asynStatus getGlobalStatus(epicsUInt32 *globalStatus, int *feedrate, int feedrate_poll);
+
+  asynStatus updateStatistics();
 
   asynStatus processDeferredMoves(void);
 
