@@ -121,6 +121,12 @@ class GeoBrickGlobalControl(_GeoBrickGlobalControlT, Device):
                 self.args[i] = self.PORT.CsGroupNamesList[i]
                     
 
+class GeoBrickTrajectoryControlT(AutoSubstitution):
+    """Creates some PVs for executing trajectory scans on the pmac controller"""
+    TemplateFile = "pmacControllerTrajectory.template"
+    Dependencies = (GeoBrick,)
+    
+
 class pmacDisableLimitsCheck(Device):
     Dependencies = (Pmac,)
 
