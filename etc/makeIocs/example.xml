@@ -20,4 +20,7 @@
 	<pmac.pmacDisableLimitsCheck Axis="6" Controller="BRICK1"/>
 	<pmac.pmacDisableLimitsCheck Axis="7" Controller="BRICK1"/>
 	<pmac.pmacDisableLimitsCheck Axis="8" Controller="BRICK1"/>
+	<pmac.CS CS="1" Controller="BRICK1" IdlePoll="500" name="CS1"/>
+	<pmac.dls_profile_controller NAXES="9" NPOINTS="10000" NPULSES="10000" P="PMAC_TEST:" PORT="CS1" R="CS1:" TIMEOUT="1"/>
+	<pmac.dls_profile_move_axis ADDR="1" M="1" MOTOR="PMAC_TEST:M1" NPOINTS="10000" P="PMAC_TEST:" PORT="CS1" PREC="3" R="X1:" TIMEOUT="1"/>
 </components>

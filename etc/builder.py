@@ -198,3 +198,68 @@ dls_pmac_asyn_motor.ArgInfo.descriptions["SPORT"] = Ident("Delta tau motor contr
 
 
 
+class CS(DeltaTau):
+    Dependencies = (Pmac,)
+    _CSs = []
+       
+    def __init__(self, name, Controller, CS, PLCNum = None, NAxes = 9, 
+        Program = 10, IdlePoll = 500, MovingPoll = 100):
+
+        self.PortName = Controller.PortName
+        # PLC number for position reporting
+        if PLCNum is None:
+            self.PLCNum = CS + 15        
+        else:
+            self.PLCNum = PLCNum
+        # reference for linking pmacAsynCoordCreate and drvAsynMotorConfigure
+        self.Ref = len(self._CSs)
+        self._CSs.append(self)       
+        # Store other attributes
+        if name is None:
+            name = "CS%d" % (self.Ref)
+        self.name = name
+        self.NAxes = NAxes
+        self.IdlePoll = IdlePoll
+        self.MovingPoll = MovingPoll  
+        self.Program = Program
+        self.CS = CS
+        self.Controller = Controller
+        # init the AsynPort superclass
+        self.__super.__init__(name) 
+        print self.__dict__
+     
+    # __init__ arguments
+    ArgInfo = makeArgInfo(__init__,
+        name = Simple(
+            'CS Name (for asyn port that motor records are connected to)',
+            str),
+        Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
+        CS         = Simple('CS number', int),
+        PLCNum     = Simple('PLC Number, defaults to CS + 15', int),
+        NAxes      = Simple('Number of axes', int),
+        Program    = Simple('Motion Program to run', int),
+        IdlePoll   = Simple('Idle Poll Period in ms', int),
+        MovingPoll = Simple('Moving Poll Period in ms', int))
+    
+    def Initialise(self):
+        print '# Create CS (ControllerPort, Addr, CSNumber, CSRef, Prog)'
+        print 'pmacCreateCS("%(asyn_name)s", "%(Controller)s", %(CS)d, %(Program)s)' % self.__dict__
+        print '# Configure Model 3 CS Axes Driver (Controler Port, Axis Count)'
+        print 'pmacCreateCSAxes("%(asyn_name)s", %(NAxes)d)' % self.__dict__
+#        print 'pmacAsynCoordCreate("%(PortName)s", 0, %(CS)d, %(Ref)d, %(Program)s)' % self.__dict__
+#        print '# Configure CS (PortName, DriverName, CSRef, NAxes)'
+#        print 'drvAsynMotorConfigure("%s", "pmacAsynCoord", %d, %d)' % (self.DeviceName(), self.Ref, self.NAxes)                 
+#        print '# Set Idle and Moving poll periods (CS_Ref, PeriodMilliSeconds)'
+#        print 'pmacSetCoordIdlePollPeriod(%(Ref)d, %(IdlePoll)d)' % self.__dict__
+#        print 'pmacSetCoordMovingPollPeriod(%(Ref)d, %(MovingPoll)d)' % self.__dict__
+
+class dls_profile_controller(AutoSubstitution):
+    WarnMacros = False
+    TemplateFile = 'pmacProfileController.template'
+    
+class dls_profile_move_axis(AutoSubstitution):
+    WarnMacros = False
+    TemplateFile = 'pmacProfileAxis.template'
+    
+
+
