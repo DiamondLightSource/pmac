@@ -12,6 +12,9 @@ include $(TOP)/configure/CONFIG
 # databases, templates, substitutions like this
 DB += pmacController.template
 DB += pmacControllerTrajectory.template
+DB += pmacProfileAxis.template
+DB += pmacProfileController.template
+DB += pmac_cs_axis.template
 DB += dls_pmac_asyn_motor.template
 DB += motor_in_cs.template
 DB += eloss_kill_autohome_records.template

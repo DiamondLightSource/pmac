@@ -1,0 +1,2 @@
+include "profileMoveAxis.template"
+include "basic_asyn_motor.template"
