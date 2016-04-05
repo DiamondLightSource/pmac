@@ -186,6 +186,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   epicsTimeAddSeconds(&lastSlowTime_, PMAC_SLOW_LOOP_TIME / -1000.0);
   printNextError_ = false;
   feedRatePoll_ = false;
+  movingPollPeriod_ = movingPollPeriod;
+  idlePollPeriod_ = idlePollPeriod;
   profileInitialized_ = false;
   tScanExecuting_ = 0;
   tScanCSNo_ = 0;
@@ -274,7 +276,15 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   } else {
     setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
   }
-  startPoller(movingPollPeriod, idlePollPeriod, PMAC_FORCED_FAST_POLLS_);
+//  char buff[20000];
+//  this->listPLCProgram(10, buff, 20000);
+//  printf("PLC10: %s\n", buff);
+//  this->listPLCProgram(11, buff, 20000);
+//  printf("PLC11: %s\n", buff);
+//  this->listPLCProgram(17, buff, 20000);
+//  printf("PLC17: %s\n", buff);
+//  this->listPLCProgram(18, buff, 20000);
+//  printf("PLC18: %s\n", buff);
 
   bool paramStatus = true;
   paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
@@ -352,6 +362,12 @@ pmacController::~pmacController(void)
 {
   //Destructor. Should never get here.
   delete pAxisZero;
+}
+
+void pmacController::startPMACPolling()
+{
+  // Start the underlying polling thread (asynMotorController)
+  startPoller(movingPollPeriod_, idlePollPeriod_, PMAC_FORCED_FAST_POLLS_);
 }
 
 void pmacController::setDebugLevel(int level, int axis)
@@ -1445,13 +1461,13 @@ void pmacController::trajectoryTask()
     // If we are not scanning then wait for a semaphore that is given when a scan is started
     if (!tScanExecuting_){
       // Release the lock while we wait for an event that says scan has started, then lock again
-      debug(DEBUG_ERROR, functionName, "Waiting for scan to start");
+      debug(DEBUG_TRACE, functionName, "Waiting for scan to start");
       this->unlock();
       status = epicsEventWait(this->startEventId_);
       this->lock();
       tScanExecuting_ = 1;
 
-      debug(DEBUG_ERROR, functionName, "Trajectory scan started");
+      debug(DEBUG_TRACE, functionName, "Trajectory scan started");
 
       // Set the trajectory CS number
       setIntegerParam(PMAC_C_TrajCSNumber_, tScanCSNo_);
@@ -2013,10 +2029,11 @@ asynStatus pmacController::updateStatistics()
   if (lastMsgTime > maxTime){
     setIntegerParam(PMAC_C_MaxTime_, lastMsgTime);
   }
-  setIntegerParam(PMAC_C_AveBytesWritten_, totalBytesWritten/noOfMsgs);
-  setIntegerParam(PMAC_C_AveBytesRead_, totalBytesRead/noOfMsgs);
-  setIntegerParam(PMAC_C_AveTime_, totalMsgTime/noOfMsgs);
-
+  if (noOfMsgs > 0){
+    setIntegerParam(PMAC_C_AveBytesWritten_, totalBytesWritten/noOfMsgs);
+    setIntegerParam(PMAC_C_AveBytesRead_, totalBytesRead/noOfMsgs);
+    setIntegerParam(PMAC_C_AveTime_, totalMsgTime/noOfMsgs);
+  }
   callParamCallbacks();
 
   return status;
@@ -2245,6 +2262,50 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, int csNo)
   return asynSuccess;
 }
 
+asynStatus pmacController::listPLCProgram(int plcNo, char *buffer, size_t size)
+{
+  int word = 0;
+  char reply[PMAC_MAXBUF];
+  char cmd[PMAC_MAXBUF];
+  char line[PMAC_MAXBUF];
+  int cword = 0;
+  int running = 1;
+  asynStatus status = asynSuccess;
+  static const char *functionName = "listPLCProgram";
+
+  startTimer(DEBUG_ERROR, functionName);
+  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_VARIABLE, functionName, "Listing PLC", plcNo);
+
+  // Setup the list command
+  strcpy(buffer, "");
+  while (running == 1 && word < 10000){
+    sprintf(cmd, "list plc%d,%d,1", plcNo, word);
+    pBroker_->immediateWriteRead(cmd, reply);
+    if (reply[0] == 0x7){
+      running = 0;
+    } else {
+      sscanf(reply, "%d:%s", &cword, line);
+      if (cword == word){
+        if (strlen(buffer) + strlen(line) + 1 > size){
+          // We cannot add the next line as the buffer would be full
+          // Report the error
+          running = 0;
+          status = asynError;
+        } else {
+          strcat(buffer, line);
+          strcat(buffer, " ");
+        }
+      }
+    }
+    word ++;
+  }
+  debug(DEBUG_VARIABLE, functionName, "PLC", buffer);
+  stopTimer(DEBUG_ERROR, functionName, "Time taken to list PLC");
+
+  return status;
+}
+
 asynStatus pmacController::processDeferredMoves(void)
 {
   asynStatus status = asynSuccess;
@@ -2307,12 +2368,10 @@ extern "C" {
 asynStatus pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 				int numAxes, int movingPollPeriod, int idlePollPeriod)
 {
-
-    pmacController *ppmacController
-      = new pmacController(portName, lowLevelPortName, lowLevelPortAddress, numAxes, movingPollPeriod/1000., idlePollPeriod/1000.);
-    ppmacController = NULL;
-
-    return asynSuccess;
+  pmacController *ppmacController = new pmacController(portName, lowLevelPortName, lowLevelPortAddress, numAxes, movingPollPeriod/1000., idlePollPeriod/1000.);
+  ppmacController->startPMACPolling();
+  ppmacController = NULL;
+  return asynSuccess;
 }
 
 /**
