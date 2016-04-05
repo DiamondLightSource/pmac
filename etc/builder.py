@@ -261,5 +261,55 @@ class dls_profile_move_axis(AutoSubstitution):
     WarnMacros = False
     TemplateFile = 'pmacProfileAxis.template'
     
+class pmacCreateCsGroup(Device):
+    """Create a group of axis mappings to coordinate systems. Instantating a GeoBrickGlobalControl
+    will create a PV for switching between these groups"""
+    Dependencies = (Pmac,)
 
+    def __init__(self, Controller, GroupNumber, GroupName, AxisCount):
+        self.__super.__init__()
+        self.Controller = Controller
+        self.GroupNumber = GroupNumber
+        self.AxisCount = AxisCount
+        self.GroupName = GroupName
+
+    def Initialise(self):        
+        assert type(self.Controller) is GeoBrick or type(self.Controller) is Geobrick, \
+            "CsGroup functions are only supported by model 3 drivers Geobrick3, PMAC3"
+            # model 3 version of pmacDisableLimitsCheck uses port instead of card 
+        print 'pmacCreateCsGroup("%(Controller)s", %(GroupNumber)d, "%(GroupName)s", %(AxisCount)d)' % self.__dict__
+        
+    def Finalise(self):
+        # add groupname to the controller's list
+        self.Controller.CsGroupNamesList['CSG%d' % self.GroupNumber] = self.GroupName
+
+    ArgInfo = makeArgInfo(__init__,
+        Controller = Ident ('Underlying PMAC3 or GeoBrick3 object', DeltaTau),
+        GroupNumber = Simple('Unique Group number to describe this group', int),
+        GroupName = Simple('Description of the group', str),
+        AxisCount = Simple('Number of CS axes in this group', int))
+
+class pmacCsGroupAddAxis(Device):
+    Dependencies = (Pmac,)
+
+    def __init__(self, Controller, GroupNumber, AxisNumber, AxisDef, CoordSysNumber):
+        self.__super.__init__()
+        self.Controller = Controller
+        self.GroupNumber = GroupNumber
+        self.AxisNumber = AxisNumber
+        self.AxisDef = AxisDef
+        self.CoordSysNumber = CoordSysNumber
+
+    def Initialise(self):        
+        assert type(self.Controller) is GeoBrick or type(self.Controller) is Geobrick, \
+            "CsGroup functions are only supported by model 3 drivers Geobrick3, PMAC3"
+            # model 3 version of pmacDisableLimitsCheck uses port instead of card 
+        print 'pmacCsGroupAddAxis(%(Controller)s, %(GroupNumber)d, %(AxisNumber)d, %(AxisDef)s, %(CoordSysNumber)d)' % self.__dict__
+
+    ArgInfo = makeArgInfo(__init__,
+        Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
+        GroupNumber = Simple('Unique Group number to describe this group', int),
+        AxisNumber = Simple('Axis number of axis to add to the group', int),
+        AxisDef = Simple('CS Axis definition for this axis i.e. one of I A B C U V W X Y Z (or may include linear equations)', str),
+        CoordSysNumber = Simple('Axis number of axis to add to the group', int))
 
