@@ -6,6 +6,8 @@
  */
 
 #include "MockPMACAsynDriver.h"
+#include <stdio.h>
+#include <string>
 
 /* asynCommon methods */
 static void report(void *drvPvt,FILE *fp,int details)
@@ -14,19 +16,20 @@ static void report(void *drvPvt,FILE *fp,int details)
   pmPmacPvt->driver->report(drvPvt, fp, details);
 }
 
-static asynStatus connect(void *drvPvt,asynUser *pasynUser)
+static asynStatus aconnect(void *drvPvt,asynUser *pasynUser)
 {
+  printf("c connect called\n");
   mPmacPvt *pmPmacPvt = (mPmacPvt *)drvPvt;
   return pmPmacPvt->driver->connect(drvPvt, pasynUser);
 }
 
-static asynStatus disconnect(void *drvPvt,asynUser *pasynUser)
+static asynStatus adisconnect(void *drvPvt,asynUser *pasynUser)
 {
   mPmacPvt *pmPmacPvt = (mPmacPvt *)drvPvt;
   return pmPmacPvt->driver->disconnect(drvPvt, pasynUser);
 }
 
-static asynCommon asyn = { report, connect, disconnect };
+static asynCommon asyn = { report, aconnect, adisconnect };
 
 static asynStatus cPMACWrite(void *drvPvt,
                              asynUser *pasynUser,
@@ -49,21 +52,43 @@ static asynStatus cPMACRead(void *drvPvt,
   return pmPmacPvt->driver->read(drvPvt, pasynUser, data, maxchars, nbytesTransfered, eomReason);
 }
 
+static asynStatus cEchoFlush(void *drvPvt,asynUser *pasynUser)
+{
+  printf("c connect called\n");
+  return asynSuccess;
+}
+
+static asynStatus cSetEos(void *drvPvt,asynUser *pasynUser, const char *eos,int eoslen)
+{
+  printf("c connect called\n");
+  return asynSuccess;
+}
+
+static asynStatus cGetEos(void *drvPvt,asynUser *pasynUser, char *eos, int eossize, int *eoslen)
+{
+  printf("c connect called\n");
+  return asynSuccess;
+}
+
+static asynOctet  *pasynOctet;
+static mPmacPvt   *pmPmacPvt;
 
 MockPMACAsynDriver::MockPMACAsynDriver(const char *dn, double delay, int noAutoConnect)
 {
-  mPmacPvt   *pmPmacPvt;
+  //mPmacPvt   *pmPmacPvt;
   char       *portName;
   asynStatus status;
   size_t     nbytes;
   int        attributes;
-  asynOctet  *pasynOctet;
+
+  printf("Creating Mock\n");
 
   nbytes = sizeof(mPmacPvt) + sizeof(asynOctet) + strlen(dn) + 1;
   pmPmacPvt = (mPmacPvt *)callocMustSucceed(nbytes,sizeof(char),"MockPmacDriverInit");
   pasynOctet = (asynOctet *)(pmPmacPvt + 1);
   portName = (char *)(pasynOctet + 1);
   strcpy(portName,dn);
+  printf("portName: %s\n", portName);
   pmPmacPvt->portName = portName;
   pmPmacPvt->driver = this;
   pmPmacPvt->delay = delay;
@@ -76,6 +101,8 @@ MockPMACAsynDriver::MockPMACAsynDriver(const char *dn, double delay, int noAutoC
   if(status!=asynSuccess) {
       printf("echoDriverInit registerDriver failed\n");
       return;
+  } else {
+    printf("Registration complete!\n");
   }
   status = pasynManager->registerInterface(portName,&pmPmacPvt->common);
   if(status!=asynSuccess){
@@ -85,9 +112,9 @@ MockPMACAsynDriver::MockPMACAsynDriver(const char *dn, double delay, int noAutoC
 
   pasynOctet->write = cPMACWrite;
   pasynOctet->read = cPMACRead;
-//  pasynOctet->flush = echoFlush;
-//  pasynOctet->setInputEos = setEos;
-//  pasynOctet->getInputEos = getEos;
+  pasynOctet->flush = cEchoFlush;
+  pasynOctet->setInputEos = cSetEos;
+  pasynOctet->getInputEos = cGetEos;
   pmPmacPvt->octet.interfaceType = asynOctetType;
   pmPmacPvt->octet.pinterface  = pasynOctet;
   pmPmacPvt->octet.drvPvt = pmPmacPvt;
@@ -128,6 +155,8 @@ asynStatus MockPMACAsynDriver::connect(void *drvPvt,asynUser *pasynUser)
   mPmacPvt    *pmPmacPvt = (mPmacPvt *)drvPvt;
   int        addr;
   asynStatus status;
+
+  printf("Connect called\n");
 
   status = pasynManager->getAddr(pasynUser,&addr);
   if(status!=asynSuccess) return status;
@@ -180,7 +209,7 @@ asynStatus MockPMACAsynDriver::write(void *drvPvt,
   deviceBuffer *pdeviceBuffer;
   int          addr;
   asynStatus   status;
-
+printf("Data: %s\n", data);
   status = pasynManager->getAddr(pasynUser,&addr);
   if(status!=asynSuccess) return status;
   addr = 0;
@@ -211,7 +240,38 @@ asynStatus MockPMACAsynDriver::write(void *drvPvt,
   }
   pdeviceBuffer = &pdeviceInfo->buffer;
   if(nchars>BUFFERSIZE) nchars = BUFFERSIZE;
-  if(nchars>0) memcpy(pdeviceBuffer->buffer,data,nchars);
+  if(nchars>0){
+    // Here we need to split the incoming string into tokens, then set the reply
+    std::string keys(data);
+
+    int status = 0;
+    int running = 1;
+    while (keys.find("\r") != std::string::npos && running == 1){
+      std::string val = keys.substr(0, keys.find("\r"));
+      keys = keys.substr(keys.find("\r")+1);
+      if (keys.find(" ") != std::string::npos){
+        std::string key = keys.substr(0, keys.find(" "));
+        printf("KEY    %s", key.c_str());
+        printf("VALUE  %s", val.c_str());
+        //keys = keys.substr(keys.find(" ")+1);
+        //if (this->store.hasKey(key)){
+        //  this->store.insert(key, val);
+        //}
+      } else {
+        std::string key = keys;
+        printf("KEY    %s", key.c_str());
+        printf("VALUE  %s", val.c_str());
+        //debug(DEBUG_VARIABLE, functionName, "KEY  ", key);
+        //debug(DEBUG_VARIABLE, functionName, "VALUE", val);
+        //if (this->store.hasKey(key)){
+        //  this->store.insert(key, val);
+        //}
+        running = 0;
+      }
+    }
+
+    memcpy(pdeviceBuffer->buffer,data,nchars);
+  }
   asynPrintIO(pasynUser,ASYN_TRACEIO_DRIVER,data,nchars,
               "echoWrite nchars %lu\n",(unsigned long)nchars);
   pdeviceBuffer->nchars = nchars;
@@ -306,4 +366,11 @@ asynStatus MockPMACAsynDriver::read(void *drvPvt,
   asynPrintIO(pasynUser,ASYN_TRACEIO_DRIVER,data,nout,
       "echoRead nbytesTransfered %lu\n",(unsigned long)*nbytesTransfered);
   return status;
+}
+
+asynStatus MockPMACAsynDriver::setDataItem(const std::string& key, const std::string& value)
+{
+  // Set the value in the data store
+  data_[key] = value;
+  return asynSuccess;
 }

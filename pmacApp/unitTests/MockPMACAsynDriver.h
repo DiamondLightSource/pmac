@@ -13,6 +13,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <string>
+#include <map>
 
 #include <cantProceed.h>
 #include <epicsStdio.h>
@@ -21,6 +23,7 @@
 
 #include <asynDriver.h>
 #include <asynOctet.h>
+#include <asynOctetSyncIO.h>
 
 #include <epicsExport.h>
 #define BUFFERSIZE 4096
@@ -83,6 +86,10 @@ public:
                   size_t maxchars,
                   size_t *nbytesTransfered,
                   int *eomReason);
+  asynStatus setDataItem(const std::string& key, const std::string& value);
+
+private:
+  std::map<std::string, std::string> data_;
 
 };
 
