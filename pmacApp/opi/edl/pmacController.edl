@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 226
-y 103
+x 228
+y 129
 w 613
 h 599
 font "arial-medium-r-14.0"
@@ -525,8 +525,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P):COORDINATE_SYS_GROUP"
-indicatorPv "$(P):COORDINATE_SYS_GROUP_RBV"
+controlPv "$(P)$(R)COORDINATE_SYS_GROUP"
+indicatorPv "$(P)$(R)COORDINATE_SYS_GROUP_RBV"
 font "arial-bold-r-14.0"
 endObjectProperties
 

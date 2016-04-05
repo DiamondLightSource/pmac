@@ -113,6 +113,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
 
   virtual ~pmacController();
 
+  void startPMACPolling();
+
   void setDebugLevel(int level, int axis);
   asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
   virtual void callback(pmacCommandStore *sPtr, int type);
@@ -158,6 +160,9 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
 
   // Register a coordinate system with this controller
   asynStatus registerCS(pmacCSController *csPtr, int csNo);
+
+  // List PLC program
+  asynStatus listPLCProgram(int plcNo, char *buffer, size_t size);
 
  protected:
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
@@ -225,6 +230,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   epicsTimeStamp lastSlowTime_;
   bool printNextError_;
   bool feedRatePoll_;
+  double movingPollPeriod_;
+  double idlePollPeriod_;
 
   // Trajectory scan variables
   bool profileInitialized_;

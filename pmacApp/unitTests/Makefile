@@ -11,11 +11,17 @@ ifdef BOOST
   pmac-test_SRCS += MockPMACAsynDriver.cpp
   pmac-test_SRCS += test_StringHashtable.cpp
   pmac-test_SRCS += test_PMACCommandStore.cpp
+  pmac-test_SRCS += test_PMACGroupsHashtable.cpp
+  pmac-test_SRCS += test_CharIntHashtable.cpp
+  pmac-test_SRCS += test_PMACCsGroups.cpp
 
   # Add pmac tests for new classes like this:
   #pmac-test_SRCS += test_<test name>.cpp
   
-  pmac-test_LIBS += boost_unit_test_framework pmacAsynMotorPort
+  pmac-test_LIBS += boost_unit_test_framework
+  pmac-test_LIBS += pmacAsynMotorPort
+  pmac-test_LIBS += asyn
+	pmac-test_LIBS += $(EPICS_BASE_IOC_LIBS)
   boost_unit_test_framework_DIR=$(BOOST_LIB)
 endif
 

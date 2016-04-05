@@ -107,8 +107,8 @@ BOOST_AUTO_TEST_CASE(test_PMACCommandStore)
   reply = "1\r2\r3\r4\r5\r6\r7\r8\r\6";
   status = store.updateReply(cmdString, reply);
 
-  // Check the status is bad
-  BOOST_CHECK_EQUAL(status, -1);
+  // Check the status is good
+  BOOST_CHECK_EQUAL(status, 0);
 
   // Check each value
   BOOST_CHECK_EQUAL(store.readValue(cmdString.substr(0,2)), "1");
@@ -123,8 +123,8 @@ BOOST_AUTO_TEST_CASE(test_PMACCommandStore)
   reply = "100\r200\r300\r\6";
   status = store.updateReply(cmdString, reply);
 
-  // Check the status is bad
-  BOOST_CHECK_EQUAL(status, -1);
+  // Check the status is good
+  BOOST_CHECK_EQUAL(status, 0);
 
   // Check each value
   BOOST_CHECK_EQUAL(store.readValue(cmdString.substr(0,2)), "100");

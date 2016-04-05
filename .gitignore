@@ -7,5 +7,6 @@ include
 lib
 db
 dbd
+data
 iocs
 

@@ -26,8 +26,8 @@ public:
 	pmacCsGroups(pmacController *pController);
 	virtual ~pmacCsGroups();
 
-	void addGroup(int id, char* name, int axisCount);
-	void addAxisToGroup(int id, int axis, char* axisDef, int coordSysNumber);
+	void addGroup(int id, const std::string& name, int axisCount);
+	asynStatus addAxisToGroup(int id, int axis, const std::string& axisDef, int coordSysNumber);
 	int getAxisCoordSys(int axis);
 	asynStatus switchToGroup(int id);
 	asynStatus processDeferredCoordMoves(void);

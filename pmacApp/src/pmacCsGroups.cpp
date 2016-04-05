@@ -77,16 +77,13 @@ pmacCsGroups::~pmacCsGroups()
  * 					(using calls to addAxisGroup)
  *
  */
-void pmacCsGroups::addGroup(int id, char* name, int axisCount)
+void pmacCsGroups::addGroup(int id, const std::string& name, int axisCount)
 {
 	// axisCount is not required for this implementation - keeping it
 	// in case we need to drop STL
-//  pmacCsGroup group;
-//  group.name = name;
-  pmacCsGroup *group = (pmacCsGroup *)malloc(sizeof(pmacCsGroup));
+  pmacCsGroup *group = new pmacCsGroup;
 	group->name = name;
 
-//  csGroups[id] = group;
   csGroups.insert(id, group);
 }
 
@@ -103,22 +100,26 @@ void pmacCsGroups::addGroup(int id, char* name, int axisCount)
  * 			definition is to be defined
  *
  */
-void pmacCsGroups::addAxisToGroup(int id, int axis, char* axisDef,
+asynStatus pmacCsGroups::addAxisToGroup(int id, int axis, const std::string& axisDef,
 		int coordSysNumber)
 {
 	static const char *functionName = "pmacCsGroups::addAxisToGroup";
-	pmacCsAxisDef *def = (pmacCsAxisDef *)malloc(sizeof(pmacCsAxisDef));
+	asynStatus status = asynSuccess;
+  pmacCsAxisDef *def = new pmacCsAxisDef;
 	def->axisDefinition = axisDef;
 	def->axisNo = axis;
 	def->coordSysNumber = coordSysNumber;
 
-//  csGroups[id].axisDefs[axis] = def;
-	((pmacCsGroup *)csGroups.lookup(id))->axisDefs.insert(axis, def);
-
-//  asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s: axis %d, CS %d, def %s, COUNT %d\n",
-//      functionName, axis, coordSysNumber, axisDef, (int)csGroups[id].axisDefs.size());
-  asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s: axis %d, CS %d, def %s, COUNT %d\n",
-      functionName, axis, coordSysNumber, axisDef, (int)((pmacCsGroup *)csGroups.lookup(id))->axisDefs.count());
+	pmacCsGroup *pGrp = (pmacCsGroup *)csGroups.lookup(id);
+	if (pGrp == NULL){
+	  status = asynError;
+    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Invalid Coordinate System Group Number\n", functionName);
+	} else {
+	  pGrp->axisDefs.insert(axis, def);
+	  asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s: axis %d, CS %d, def %s, COUNT %d\n",
+	            functionName, axis, coordSysNumber, axisDef.c_str(), (int)pGrp->axisDefs.count());
+	}
+	return status;
 }
 
 /**
@@ -132,8 +133,10 @@ void pmacCsGroups::addAxisToGroup(int id, int axis, char* axisDef,
 int pmacCsGroups::getAxisCoordSys(int axis)
 {
   pmacCsAxisDef *axd = (pmacCsAxisDef *)((pmacCsGroup *)csGroups.lookup(currentGroup))->axisDefs.lookup(axis);
+  if (axd == NULL){
+    throw std::out_of_range("Axis not in CS group definition");
+  }
   return axd->coordSysNumber;
-//  return csGroups[currentGroup].axisDefs[axis].coordSysNumber;
 }
 
 /**
@@ -151,16 +154,15 @@ asynStatus pmacCsGroups::switchToGroup(int id)
 	char response[PMAC_MAXBUF] = {0};
 	asynStatus cmdStatus;
 
-	if (csGroups.lookup(id) != NULL)
+	if (csGroups.lookup(id) == NULL)
 	{
 		cmdStatus = asynError;
 		asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Invalid Coordinate System Group Number\n", functionName);
 	}
 	else
 	{
-//    pmacCsAxisDefList *pAxisDefs = &csGroups[id].axisDefs;
-    pmacCsAxisDefList *pAxisDefs = &((pmacCsGroup *)csGroups.lookup(id))->axisDefs;
-
+	  pmacCsGroup *pGrp = (pmacCsGroup *)csGroups.lookup(id);
+    pmacCsAxisDefList *pAxisDefs = &(pGrp->axisDefs);
 		// abort all motion and programs and undefine all cs mappings
 		sprintf(command, "%c\nundefine all",0x01);
 		cmdStatus = pC_->lowLevelWriteRead(command, response);
@@ -168,13 +170,22 @@ asynStatus pmacCsGroups::switchToGroup(int id)
 		if (cmdStatus == asynSuccess)
 		{
 			currentGroup = id;
-			for (size_t i = 0; i < pAxisDefs->count() &&	cmdStatus == asynSuccess; i++)
-			{
-			  pmacCsAxisDef *axd = (pmacCsAxisDef *)pAxisDefs->lookup(i);
-				sprintf(command, "&%d #%d->%s", axd->coordSysNumber,
-				    axd->axisNo,
-						axd->axisDefinition.c_str());
-				cmdStatus = pC_->lowLevelWriteRead(command, response);
+
+			if (pAxisDefs->count() > 0){
+			  int axis = pAxisDefs->firstKey();
+        pmacCsAxisDef *axd = (pmacCsAxisDef *)pAxisDefs->lookup(axis);
+        sprintf(command, "&%d #%d->%s", axd->coordSysNumber,
+            axd->axisNo,
+            axd->axisDefinition.c_str());
+        cmdStatus = pC_->lowLevelWriteRead(command, response);
+        while (pAxisDefs->hasNextKey() == true && cmdStatus == asynSuccess){
+          axis = pAxisDefs->nextKey();
+          axd = (pmacCsAxisDef *)pAxisDefs->lookup(axis);
+          sprintf(command, "&%d #%d->%s", axd->coordSysNumber,
+              axd->axisNo,
+              axd->axisDefinition.c_str());
+          cmdStatus = pC_->lowLevelWriteRead(command, response);
+        }
 			}
 		}
 	}

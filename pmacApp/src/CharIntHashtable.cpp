@@ -8,6 +8,7 @@
 #include "CharIntHashtable.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdexcept>
 
 CharIntHashtable::CharIntHashtable() : Hashtable()
 {
@@ -19,14 +20,24 @@ CharIntHashtable::~CharIntHashtable()
 
 int CharIntHashtable::lookup(const char key)
 {
-  return *(int *)Hashtable::lookup(&key);
+  char nkey[2];
+  nkey[0] = key;
+  nkey[1] = 0;
+  void *ptr = Hashtable::lookup(&nkey);
+  if (ptr == NULL){
+    throw(std::out_of_range("No entry in hashtable"));
+  }
+  return *(int *)ptr;
 }
 
 int CharIntHashtable::insert(const char key, int value)
 {
+  char nkey[2];
   int *val = (int *)malloc(sizeof(int));
   *val = value;
-  void *vPtr = Hashtable::insert(&key, (void *)val);
+  nkey[0] = key;
+  nkey[1] = 0;
+  void *vPtr = Hashtable::insert(&nkey, (void *)val);
   if (vPtr != NULL){
     return *(int *)vPtr;
   }
@@ -35,7 +46,10 @@ int CharIntHashtable::insert(const char key, int value)
 
 int CharIntHashtable::remove(const char key)
 {
-  return *(int *)Hashtable::remove(&key);
+  char nkey[2];
+  nkey[0] = key;
+  nkey[1] = 0;
+  return *(int *)Hashtable::remove(&nkey);
 }
 
 char CharIntHashtable::firstKey()

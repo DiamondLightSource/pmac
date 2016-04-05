@@ -67,6 +67,9 @@ void *pmacGroupsHashtable::copy_key(const void *key)
 
 bool pmacGroupsHashtable::compare_key(const void *key1, const void *key2)
 {
+  if (key1 == NULL || key2 == NULL){
+    return false;
+  }
   return (*(int *)key1 == *(int *)key2);
 }
 
