@@ -2,7 +2,6 @@
 <components arch="linux-x86_64">
 	<pmac.pmacAsynIPPort IP="172.23.253.11:1025" name="BRICK1port"/>
 	<pmac.GeoBrick Port="BRICK1port" name="BRICK1"/>
-	<pmac.GeoBrickGlobalControl P="PMAC_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.CTRL"/>
 	<pmac.GeoBrickTrajectoryControlT NPOINTS="10000" P="PMAC_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.TRAJ"/>
 	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1" DHLM="1000" DLLM="-1000" EGU="mm" ELOSS_VAR="465" M="M1" MRES="0.001" P="PMAC_TEST:" PADDR="01" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M1"/>
 	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2" DHLM="1000" DLLM="-1000" EGU="mm" ELOSS_VAR="466" M="M2" MRES="0.001" P="PMAC_TEST:" PADDR="02" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="MOTORS.M2"/>
@@ -23,4 +22,17 @@
 	<pmac.CS CS="1" Controller="BRICK1" IdlePoll="500" name="CS1"/>
 	<pmac.dls_profile_controller NAXES="9" NPOINTS="10000" NPULSES="10000" P="PMAC_TEST:" PORT="CS1" R="CS1:" TIMEOUT="1"/>
 	<pmac.dls_profile_move_axis ADDR="1" M="1" MOTOR="PMAC_TEST:M1" NPOINTS="10000" P="PMAC_TEST:" PORT="CS1" PREC="3" R="X1:" TIMEOUT="1"/>
+	<pmac.pmacCreateCsGroup AxisCount="8" Controller="BRICK1" GroupName="TestGroup1" GroupNumber="0"/>
+	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1" GroupName="TestGroup2" GroupNumber="1"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="X" AxisNumber="1" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="Y" AxisNumber="2" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="Z" AxisNumber="3" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="U" AxisNumber="4" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="V" AxisNumber="5" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="W" AxisNumber="6" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="7" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="8" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="1" Controller="BRICK1" CoordSysNumber="2" GroupNumber="1"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="2" Controller="BRICK1" CoordSysNumber="2" GroupNumber="1"/>
+	<pmac.GeoBrickGlobalControl P="PMAC_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.CTRL"/>
 </components>
