@@ -15,13 +15,14 @@
 #include <errno.h>
 #include <string>
 #include <map>
+#include <vector>
 
 #include <cantProceed.h>
 #include <epicsStdio.h>
 #include <epicsThread.h>
 #include <iocsh.h>
 
-#include <asynDriver.h>
+#include <asynPortDriver.h>
 #include <asynOctet.h>
 #include <asynOctetSyncIO.h>
 
@@ -29,67 +30,29 @@
 #define BUFFERSIZE 4096
 #define NUM_DEVICES 1
 
-class MockPMACAsynDriver;
-
-typedef struct deviceBuffer {
-    char buffer[BUFFERSIZE];
-    size_t  nchars;
-} deviceBuffer;
-
-typedef struct deviceInfo {
-    deviceBuffer buffer;
-    int          connected;
-} deviceInfo;
-
-typedef struct mPmacPvt {
-    deviceInfo    device[NUM_DEVICES];
-    const char    *portName;
-    MockPMACAsynDriver *driver;
-    int           connected;
-    double        delay;
-    asynInterface common;
-    asynInterface octet;
-    char          eos[2];
-    int           eoslen;
-    void          *pasynPvt;   /*For registerInterruptSource*/
-} mPmacPvt;
-
-
-/* asynOctet methods */
-/*static asynStatus echoWrite(void *drvPvt,asynUser *pasynUser,
-    const char *data,size_t numchars,size_t *nbytesTransfered);
-static asynStatus echoRead(void *drvPvt,asynUser *pasynUser,
-    char *data,size_t maxchars,size_t *nbytesTransfered,int *eomReason);
-static asynStatus echoFlush(void *drvPvt,asynUser *pasynUser);
-static asynStatus setEos(void *drvPvt,asynUser *pasynUser,
-    const char *eos,int eoslen);
-static asynStatus getEos(void *drvPvt,asynUser *pasynUser,
-    char *eos, int eossize, int *eoslen);
-*/
-
-class MockPMACAsynDriver
+class MockPMACAsynDriver : public asynPortDriver
 {
 public:
-  MockPMACAsynDriver(const char *dn, double delay, int noAutoConnect);
+  MockPMACAsynDriver(const char *portName, double delay, int noAutoConnect);
   virtual ~MockPMACAsynDriver();
-  void report(void *drvPvt,FILE *fp,int details);
-  asynStatus connect(void *drvPvt,asynUser *pasynUser);
-  asynStatus disconnect(void *drvPvt,asynUser *pasynUser);
-  asynStatus write(void *drvPvt,
-                   asynUser *pasynUser,
-                   const char *data,
-                   size_t nchars,
-                   size_t *nbytesTransfered);
-  asynStatus read(void *drvPvt,
-                  asynUser *pasynUser,
-                  char *data,
-                  size_t maxchars,
-                  size_t *nbytesTransfered,
-                  int *eomReason);
-  asynStatus setDataItem(const std::string& key, const std::string& value);
+
+  virtual asynStatus readOctet(asynUser *pasynUser,
+                               char *value,
+                               size_t maxChars,
+                               size_t *nActual,
+                               int *eomReason);
+  virtual asynStatus writeOctet(asynUser *pasynUser,
+                                const char *value,
+                                size_t maxChars,
+                                size_t *nActual);
+
+  void clearStore();
+  bool checkForWrite(const std::string& item);
+  bool checkForWrite(const std::string& item, int index);
 
 private:
-  std::map<std::string, std::string> data_;
+  std::vector<std::string> writes_;
+  std::string response_;
 
 };
 
