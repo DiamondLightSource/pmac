@@ -151,6 +151,10 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   status_[1] = 0;
   status_[2] = 0;
 
+  // Create parameters for user buffer and velocity mode in trajectory scanning
+  createParam(PMAC_C_ProfileUserString,    asynParamInt32Array, &PMAC_C_ProfileUser_);
+  createParam(PMAC_C_ProfileVelModeString, asynParamInt32Array, &PMAC_C_ProfileVelMode_);
+
   setIntegerParam(profileBuild_, 0);
 
   pAxes_ = (pmacCSAxis **)(asynMotorController::pAxes_);
@@ -194,6 +198,40 @@ asynStatus pmacCSController::writeFloat64Array(asynUser *pasynUser, epicsFloat64
   return status;
 }
 
+/** Called when asyn clients call pasynInt32Array->write().
+  * \param[in] pasynUser pasynUser structure that encodes the reason and address.
+  * \param[in] value Pointer to the array to write.
+  * \param[in] nElements Number of elements to write. */
+asynStatus pmacCSController::writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements)
+{
+  asynStatus status = asynSuccess;
+  int function = pasynUser->reason;
+  static const char *functionName = "writeInt32Array";
+  debug(DEBUG_ERROR, functionName);
+
+  if (!profileInitialized_){
+    // Initialise the trajectory scan interface pointers
+    debug(DEBUG_ERROR, functionName, "Initialising CS trajectory scan interface");
+    status = this->initializeProfile(PMAC_MAX_TRAJECTORY_POINTS);
+  }
+
+  if (status == asynSuccess){
+    profileInitialized_ = true;
+  } else {
+    debug(DEBUG_ERROR, functionName, "Failed to initialise trajectory scan interface");
+  }
+
+  if (status == asynSuccess){
+    if (function == PMAC_C_ProfileUser_){
+      memcpy(profileUser_, value, nElements*sizeof(int));
+    } else if (function == PMAC_C_ProfileVelMode_){
+      memcpy(profileVelMode_, value, nElements*sizeof(int));
+    } else {
+      status = asynMotorController::writeInt32Array(pasynUser, value, nElements);
+    }
+  }
+  return status;
+}
 
 bool pmacCSController::getMoving()
 {
@@ -283,6 +321,22 @@ asynStatus pmacCSController::monitorPMACVariable(int poll_speed, const char *var
 {
   // Simply forward the request to the main controller
   return ((pmacController *)pC_)->monitorPMACVariable(poll_speed, var);
+}
+
+asynStatus pmacCSController::initializeProfile(size_t maxProfilePoints)
+{
+  // Allocate memory required for user buffer
+  if (profileUser_){
+    free(profileUser_);
+  }
+  profileUser_ = (int *)calloc(maxProfilePoints, sizeof(int));
+  // Allocate memory required for velocity mode buffer
+  if (profileVelMode_){
+    free(profileVelMode_);
+  }
+  profileVelMode_ = (int *)calloc(maxProfilePoints, sizeof(int));
+  // Call parent method to ensure other buffers are allocated
+  return asynMotorController::initializeProfile(maxProfilePoints);
 }
 
 asynStatus pmacCSController::buildProfile()
@@ -379,6 +433,67 @@ asynStatus pmacCSController::tScanBuildProfileArray(double *positions, int axis,
   if (status == asynSuccess){
     // Perform a memcpy into the supplied profile times array
     memcpy(positions, pA->profilePositions_, numPoints*sizeof(double));
+  }
+
+  return status;
+}
+asynStatus pmacCSController::tScanBuildUserArray(int *userArray, int *numPoints, int maxPoints)
+{
+  asynStatus status = asynSuccess;
+  int points = 0;
+  static const char *functionName = "tScanBuildUserArray";
+
+  debug(DEBUG_ERROR, functionName);
+
+  // Read the number of points defined
+  getIntegerParam(profileNumPoints_, &points);
+  // If too many points have been asked for then clip at the maximum
+  if (points > maxPoints){
+    points = maxPoints;
+  }
+  debug(DEBUG_ERROR, functionName, "Number of trajectory times", points);
+
+  // If points is zero then this is not a valid operation, cannot scan zero points
+  if (points == 0){
+    debug(DEBUG_ERROR, functionName, "Zero points defined", points);
+    status = asynError;
+  }
+
+  if (status == asynSuccess){
+    // Perform a memcpy into the supplied profile times array
+    memcpy(userArray, profileUser_, points*sizeof(int));
+    *numPoints = points;
+  }
+
+  return status;
+}
+
+asynStatus pmacCSController::tScanBuildVelModeArray(int *velModeArray, int *numPoints, int maxPoints)
+{
+  asynStatus status = asynSuccess;
+  int points = 0;
+  static const char *functionName = "tScanBuildVelModeArray";
+
+  debug(DEBUG_ERROR, functionName);
+
+  // Read the number of points defined
+  getIntegerParam(profileNumPoints_, &points);
+  // If too many points have been asked for then clip at the maximum
+  if (points > maxPoints){
+    points = maxPoints;
+  }
+  debug(DEBUG_ERROR, functionName, "Number of trajectory times", points);
+
+  // If points is zero then this is not a valid operation, cannot scan zero points
+  if (points == 0){
+    debug(DEBUG_ERROR, functionName, "Zero points defined", points);
+    status = asynError;
+  }
+
+  if (status == asynSuccess){
+    // Perform a memcpy into the supplied profile times array
+    memcpy(velModeArray, profileVelMode_, points*sizeof(int));
+    *numPoints = points;
   }
 
   return status;
