@@ -164,6 +164,9 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   // List PLC program
   asynStatus listPLCProgram(int plcNo, char *buffer, size_t size);
 
+  asynStatus storeKinematics();
+  asynStatus listKinematic(int csNo, const std::string& type, char *buffer, size_t size);
+
  protected:
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
@@ -205,6 +208,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_AveBytesWritten_;
   int PMAC_C_AveBytesRead_;
   int PMAC_C_AveTime_;
+  int PMAC_C_ForwardKinematic_[PMAC_MAX_CS];
+  int PMAC_C_InverseKinematic_[PMAC_MAX_CS];
   int PMAC_C_LastParam_;
   #define LAST_PMAC_PARAM PMAC_C_LastParam_
   int parameters[PMAC_MAX_PARAMETERS];
@@ -345,6 +350,9 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   static const epicsUInt32 PMAC_HARDWARE_PROB;
   static const epicsUInt32 PMAX_AXIS_GENERAL_PROB1;
   static const epicsUInt32 PMAX_AXIS_GENERAL_PROB2;
+
+  static const char *PMAC_C_ForwardKinematicString[];
+  static const char *PMAC_C_InverseKinematicString[];
 
   friend class pmacAxis;
   friend class pmacCsGroups;
