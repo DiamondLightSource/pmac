@@ -1251,9 +1251,9 @@ asynStatus pmacController::initializeProfile(size_t maxPoints)
   }
 
   // Allocate the user buffer array
-  profileUser_ = (int *)malloc(sizeof(int) * PMAC_MAX_CS_AXES);
+  profileUser_ = (int *)malloc(sizeof(int) * maxPoints);
   // Allocate the velocity mode array
-  profileVelMode_ = (int *)malloc(sizeof(int) * PMAC_MAX_CS_AXES);
+  profileVelMode_ = (int *)malloc(sizeof(int) * maxPoints);
 
   // Finally call super class
   return asynMotorController::initializeProfile(maxPoints);
