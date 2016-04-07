@@ -50,22 +50,19 @@ asynStatus pmacMessageBroker::connect(const char *port, int addr)
 }
 
 /**
- * Utilty function to print the connected status of the low level asyn port.
+ * Utilty function to return the connected status of the low level asyn port.
  * @return asynStatus
  */
-asynStatus pmacMessageBroker::printConnectedStatus()
+asynStatus pmacMessageBroker::getConnectedStatus(int *connected)
 {
-  static const char *functionName = "pmacController::printConnectedStatus";
+  static const char *functionName = "pmacController::getConnectedStatus";
   asynStatus status = asynSuccess;
-  int asynManagerConnected = 0;
+  *connected = 0;
 
   if (lowLevelPortUser_){
-    status = pasynManager->isConnected(lowLevelPortUser_, &asynManagerConnected);
-    if (status!=asynSuccess) {
+    status = pasynManager->isConnected(lowLevelPortUser_, connected);
+    if (status != asynSuccess) {
       asynPrint(this->ownerAsynUser_, ASYN_TRACE_ERROR, "pmacController: Error calling pasynManager::isConnected.\n");
-      return status;
-    } else {
-      asynPrint(this->ownerAsynUser_, ASYN_TRACE_FLOW, "%s isConnected: %d\n", functionName, asynManagerConnected);
     }
   }
   return status;

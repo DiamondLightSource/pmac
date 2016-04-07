@@ -20,6 +20,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "pmacTestingUtilities.h"
 #include "pmacController.h"
 #include "pmacCsGroups.h"
 #include "MockPMACAsynDriver.h"
@@ -33,9 +34,20 @@ struct PMACCsGroupsFixture
 
   PMACCsGroupsFixture()
   {
-    pMock = new MockPMACAsynDriver("MOCK1", 0.5, 1);
-    pPmac = new pmacController("PMAC1", "MOCK1", 0, 8, 0.2, 1.0);
+    std::string mockport("MOCK");
+    uniqueAsynPortName(mockport);
+    std::string pmacport("PMAC");
+    uniqueAsynPortName(pmacport);
+
+    pMock = new MockPMACAsynDriver(mockport.c_str(), 0.01, 1);
+    // Set the response to error for initial messages
+    pMock->setResponse("\007ERR003\006");
+    pPmac = new pmacController(pmacport.c_str(), mockport.c_str(), 0, 8, 0.2, 1.0);
     pGroups = new pmacCsGroups(pPmac);
+    // Clear the response
+    pMock->setResponse("");
+    // Clear out any startup messages
+    pMock->clearStore();
   }
 
   ~PMACCsGroupsFixture()

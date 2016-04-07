@@ -21,6 +21,8 @@ MockPMACAsynDriver::MockPMACAsynDriver(const char *portName, double delay, int n
                  0,
                  0)
 {
+  delay_ = delay;
+  waitingForResponse_ = false;
   response_ = "";
 }
 
@@ -35,14 +37,17 @@ asynStatus MockPMACAsynDriver::readOctet(asynUser *pasynUser,
                                          size_t *nActual,
                                          int *eomReason)
 {
-  if (response_ != ""){
-    strncpy(value, response_.c_str(), maxChars);
-    if (response_.length() > maxChars){
-      *nActual = maxChars;
-    } else {
-      *nActual = response_.length();
+  if (waitingForResponse_ == true){
+    if (response_ != ""){
+      strncpy(value, response_.c_str(), maxChars);
+      if (response_.length() > maxChars){
+        *nActual = maxChars;
+      } else {
+        *nActual = response_.length();
+      }
     }
   }
+  waitingForResponse_ = false;
   return asynSuccess;
 }
 
@@ -53,7 +58,14 @@ asynStatus MockPMACAsynDriver::writeOctet(asynUser *pasynUser,
 {
   std::string input(value);
   writes_.push_back(input);
+  waitingForResponse_ = true;
+  epicsThreadSleep(delay_);
   return asynSuccess;
+}
+
+void MockPMACAsynDriver::setResponse(const std::string& response)
+{
+  response_ = response;
 }
 
 void MockPMACAsynDriver::clearStore()

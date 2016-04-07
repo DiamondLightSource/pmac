@@ -28,7 +28,7 @@ public:
   pmacMessageBroker(asynUser *pasynUser);
   virtual ~pmacMessageBroker();
   asynStatus connect(const char *port, int addr);
-  asynStatus printConnectedStatus();
+  asynStatus getConnectedStatus(int *connected);
   asynStatus immediateWriteRead(const char *command, char *response);
   asynStatus addReadVariable(int type, const char *variable);
   asynStatus updateVariables(int type);
