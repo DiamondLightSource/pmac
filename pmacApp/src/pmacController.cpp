@@ -1249,6 +1249,12 @@ asynStatus pmacController::initializeProfile(size_t maxPoints)
   for (int axis = 0; axis < PMAC_MAX_CS_AXES; axis++){
     tScanPositions_[axis] = (double *)malloc(sizeof(double) * maxPoints);
   }
+
+  // Allocate the user buffer array
+  profileUser_ = (int *)malloc(sizeof(int) * PMAC_MAX_CS_AXES);
+  // Allocate the velocity mode array
+  profileVelMode_ = (int *)malloc(sizeof(int) * PMAC_MAX_CS_AXES);
+
   // Finally call super class
   return asynMotorController::initializeProfile(maxPoints);
 }
@@ -1332,13 +1338,21 @@ asynStatus pmacController::buildProfile(int csNo)
     // Copy the time array
     status = pCSControllers_[tScanCSNo_]->tScanBuildTimeArray(profileTimes_, &numPoints, PMAC_MAX_TRAJECTORY_POINTS);
     tScanNumPoints_ = numPoints;
+    if (status == asynSuccess){
+      // Copy the user buffer array
+      status = pCSControllers_[tScanCSNo_]->tScanBuildUserArray(profileUser_, &numPoints, PMAC_MAX_TRAJECTORY_POINTS);
+    }
+    if (status == asynSuccess){
+      // Copy the velocity mode array
+      status = pCSControllers_[tScanCSNo_]->tScanBuildVelModeArray(profileVelMode_, &numPoints, PMAC_MAX_TRAJECTORY_POINTS);
+    }
     if (status != asynSuccess){
       // Set the build state to done
       setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
       // Set the build status to failure
       setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
       // Set the message accordingly
-      setStringParam(profileBuildMessage_, "Failed to build profile times");
+      setStringParam(profileBuildMessage_, "Failed to build profile times/user/velocity mode");
     } else {
       // Ask the CS controller for the bitmap of axes that are to be included in the scan
       // 1 to 9 axes (0 is error) 111111111 => 1 .. 511
@@ -1715,14 +1729,15 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
 
     int bufferCount = 0;
     while ((bufferCount < nBuffers) && (epicsBufferPtr < tScanPmacBufferSize_) && (tScanPointCtr_ < tScanNumPoints_)){
-      // TODO: First 24 bits (X) should be written for user buffer
-      // TODO: Currently hardcoded to 0
-      sprintf(cmd[9], "%s,$%X%06X", cmd[9], 0, (int)profileTimes_[tScanPointCtr_]);
+      // Create the velmode/user/time memory writes:
+      // First 4 bits are for velocity mode %01X
+      // Second 4 bits are for user buffer %01X
+      // Remaining 24 bits are for delta times %06X
+      sprintf(cmd[9], "%s,$%01X%01X%06X", cmd[9], (int)profileVelMode_[tScanPointCtr_], (int)profileUser_[tScanPointCtr_], (int)profileTimes_[tScanPointCtr_]);
       for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
         if ((1<<index & tScanAxisMask_) > 0){
           int64_t ival = 0;
           doubleToPMACFloat(tScanPositions_[index][tScanPointCtr_], &ival);
-//          sprintf(cmd[index], "%s,$%X", cmd[index], (int)tScanPositions_[index][tScanPointCtr_]);
           sprintf(cmd[index], "%s,$%lX", cmd[index], ival);
         }
       }

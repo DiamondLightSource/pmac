@@ -253,6 +253,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int tScanPmacBufferAddressB_;
   int tScanPmacBufferSize_;
   double **tScanPositions_;       // 2D array of profile positions (1 array for each axis)
+  int *profileUser_;              // Array of profile user values
+  int *profileVelMode_;           // Array of profile velocity modes
   epicsEventId startEventId_;
   epicsEventId stopEventId_;
 
