@@ -55,9 +55,10 @@ asynStatus pmacMessageBroker::connect(const char *port, int addr)
  */
 asynStatus pmacMessageBroker::getConnectedStatus(int *connected)
 {
-  static const char *functionName = "pmacController::getConnectedStatus";
+  static const char *functionName = "getConnectedStatus";
   asynStatus status = asynSuccess;
   *connected = 0;
+  debug(DEBUG_TRACE, functionName);
 
   if (lowLevelPortUser_){
     status = pasynManager->isConnected(lowLevelPortUser_, connected);
