@@ -19,23 +19,24 @@
 #include "pmacMessageBroker.h"
 #include "IntegerHashtable.h"
 
-#define PMAC_C_FirstParamString "PMAC_C_FIRSTPARAM"
-#define PMAC_C_LastParamString "PMAC_C_LASTPARAM"
+#define PMAC_C_FirstParamString        "PMAC_C_FIRSTPARAM"
+#define PMAC_C_LastParamString         "PMAC_C_LASTPARAM"
 
-#define PMAC_C_GlobalStatusString "PMAC_C_GLOBALSTATUS"
-#define PMAC_C_CommsErrorString "PMAC_C_COMMSERROR"
+#define PMAC_C_GlobalStatusString      "PMAC_C_GLOBALSTATUS"
+#define PMAC_C_CommsErrorString        "PMAC_C_COMMSERROR"
 
-#define PMAC_C_FeedRateString         "PMAC_C_FEEDRATE"
-#define PMAC_C_FeedRateLimitString    "PMAC_C_FEEDRATE_LIMIT"
-#define PMAC_C_FeedRatePollString     "PMAC_C_FEEDRATE_POLL"
-#define PMAC_C_FeedRateProblemString  "PMAC_C_FEEDRATE_PROBLEM"
-#define PMAC_C_CoordSysGroup  		  "PMAC_C_COORDINATE_SYS_GROUP"
+#define PMAC_C_FeedRateString          "PMAC_C_FEEDRATE"
+#define PMAC_C_FeedRateLimitString     "PMAC_C_FEEDRATE_LIMIT"
+#define PMAC_C_FeedRatePollString      "PMAC_C_FEEDRATE_POLL"
+#define PMAC_C_FeedRateProblemString   "PMAC_C_FEEDRATE_PROBLEM"
+#define PMAC_C_CoordSysGroup  		     "PMAC_C_COORDINATE_SYS_GROUP"
 
-#define PMAC_C_FastUpdateTimeString   "PMAC_C_FAST_UPDATE_TIME"
+#define PMAC_C_FastUpdateTimeString    "PMAC_C_FAST_UPDATE_TIME"
 
-#define PMAC_C_AxisCSString           "PMAC_C_AXIS_CS"
-#define PMAC_C_WriteCmdString           "PMAC_C_WRITE_CMD"
-#define PMAC_C_KillAxisString           "PMAC_C_KILL_AXIS"
+#define PMAC_C_AxisCSString            "PMAC_C_AXIS_CS"
+#define PMAC_C_WriteCmdString          "PMAC_C_WRITE_CMD"
+#define PMAC_C_KillAxisString          "PMAC_C_KILL_AXIS"
+#define PMAC_C_PLCProgramsString       "PMAC_C_PLC_PROGS"
 
 #define PMAC_C_NoOfMsgsString          "PMAC_C_NO_OF_MSGS"
 #define PMAC_C_TotalBytesWrittenString "PMAC_C_TBYTES_WRITE"
@@ -119,6 +120,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
   virtual void callback(pmacCommandStore *sPtr, int type);
   asynStatus slowUpdate(pmacCommandStore *sPtr);
+  asynStatus mediumUpdate(pmacCommandStore *sPtr);
 
   //asynStatus printConnectedStatus(void);
   asynStatus immediateWriteRead(const char *command, char *response);
@@ -183,6 +185,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_AxisCS_;
   int PMAC_C_WriteCmd_;
   int PMAC_C_KillAxis_;
+  int PMAC_C_PLCPrograms_;
   int PMAC_C_TrajBufferLength_;
   int PMAC_C_TrajTotalPoints_;
   int PMAC_C_TrajStatus_;

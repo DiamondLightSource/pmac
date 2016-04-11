@@ -207,6 +207,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 	pmacDebugger("pmacController")
 {
   int index = 0;
+  int plcNo = 0;
+  char plcCmd[32];
   static const char *functionName = "pmacController::pmacController";
 
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
@@ -259,44 +261,45 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pGroupList = new pmacCsGroups(this);
 
   //Create controller-specific parameters
-  createParam(PMAC_C_FirstParamString,        asynParamInt32,   &PMAC_C_FirstParam_);
-  createParam(PMAC_C_GlobalStatusString,      asynParamInt32,   &PMAC_C_GlobalStatus_);
-  createParam(PMAC_C_CommsErrorString,        asynParamInt32,   &PMAC_C_CommsError_);
-  createParam(PMAC_C_FeedRateString,          asynParamInt32,   &PMAC_C_FeedRate_);
-  createParam(PMAC_C_FeedRateLimitString,     asynParamInt32,   &PMAC_C_FeedRateLimit_);
-  createParam(PMAC_C_FeedRatePollString,      asynParamInt32,   &PMAC_C_FeedRatePoll_);
-  createParam(PMAC_C_FeedRateProblemString,   asynParamInt32,   &PMAC_C_FeedRateProblem_);
-  createParam(PMAC_C_CoordSysGroup,           asynParamInt32,   &PMAC_C_CoordSysGroup_);
-  createParam(PMAC_C_FastUpdateTimeString,    asynParamFloat64, &PMAC_C_FastUpdateTime_);
-  createParam(PMAC_C_LastParamString,         asynParamInt32,   &PMAC_C_LastParam_);
-  createParam(PMAC_C_AxisCSString,            asynParamInt32,   &PMAC_C_AxisCS_);
-  createParam(PMAC_C_WriteCmdString,          asynParamOctet,   &PMAC_C_WriteCmd_);
-  createParam(PMAC_C_KillAxisString,          asynParamInt32,   &PMAC_C_KillAxis_);
-  createParam(PMAC_C_TrajBufferLengthString,  asynParamInt32,   &PMAC_C_TrajBufferLength_);
-  createParam(PMAC_C_TrajTotalPointsString,   asynParamInt32,   &PMAC_C_TrajTotalPoints_);
-  createParam(PMAC_C_TrajStatusString,        asynParamInt32,   &PMAC_C_TrajStatus_);
-  createParam(PMAC_C_TrajCurrentIndexString,  asynParamInt32,   &PMAC_C_TrajCurrentIndex_);
-  createParam(PMAC_C_TrajCurrentBufferString, asynParamInt32,   &PMAC_C_TrajCurrentBuffer_);
-  createParam(PMAC_C_TrajBuffAdrAString,      asynParamInt32,   &PMAC_C_TrajBuffAdrA_);
-  createParam(PMAC_C_TrajBuffAdrBString,      asynParamInt32,   &PMAC_C_TrajBuffAdrB_);
-  createParam(PMAC_C_TrajBuffFillAString,     asynParamInt32,   &PMAC_C_TrajBuffFillA_);
-  createParam(PMAC_C_TrajBuffFillBString,     asynParamInt32,   &PMAC_C_TrajBuffFillB_);
-  createParam(PMAC_C_TrajRunTimeString,       asynParamFloat64, &PMAC_C_TrajRunTime_);
-  createParam(PMAC_C_TrajCSNumberString,      asynParamInt32,   &PMAC_C_TrajCSNumber_);
-  createParam(PMAC_C_TrajPercentString,       asynParamFloat64, &PMAC_C_TrajPercent_);
-  createParam(PMAC_C_TrajEStatusString,       asynParamInt32,   &PMAC_C_TrajEStatus_);
-  createParam(PMAC_C_NoOfMsgsString,          asynParamInt32,   &PMAC_C_NoOfMsgs_);
-  createParam(PMAC_C_TotalBytesWrittenString, asynParamInt32,   &PMAC_C_TotalBytesWritten_);
-  createParam(PMAC_C_TotalBytesReadString,    asynParamInt32,   &PMAC_C_TotalBytesRead_);
-  createParam(PMAC_C_MsgBytesWrittenString,   asynParamInt32,   &PMAC_C_MsgBytesWritten_);
-  createParam(PMAC_C_MsgBytesReadString,      asynParamInt32,   &PMAC_C_MsgBytesRead_);
-  createParam(PMAC_C_MsgTimeString,           asynParamInt32,   &PMAC_C_MsgTime_);
-  createParam(PMAC_C_MaxBytesWrittenString,   asynParamInt32,   &PMAC_C_MaxBytesWritten_);
-  createParam(PMAC_C_MaxBytesReadString,      asynParamInt32,   &PMAC_C_MaxBytesRead_);
-  createParam(PMAC_C_MaxTimeString,           asynParamInt32,   &PMAC_C_MaxTime_);
-  createParam(PMAC_C_AveBytesWrittenString,   asynParamInt32,   &PMAC_C_AveBytesWritten_);
-  createParam(PMAC_C_AveBytesReadString,      asynParamInt32,   &PMAC_C_AveBytesRead_);
-  createParam(PMAC_C_AveTimeString,           asynParamInt32,   &PMAC_C_AveTime_);
+  createParam(PMAC_C_FirstParamString,        asynParamInt32,      &PMAC_C_FirstParam_);
+  createParam(PMAC_C_GlobalStatusString,      asynParamInt32,      &PMAC_C_GlobalStatus_);
+  createParam(PMAC_C_CommsErrorString,        asynParamInt32,      &PMAC_C_CommsError_);
+  createParam(PMAC_C_FeedRateString,          asynParamInt32,      &PMAC_C_FeedRate_);
+  createParam(PMAC_C_FeedRateLimitString,     asynParamInt32,      &PMAC_C_FeedRateLimit_);
+  createParam(PMAC_C_FeedRatePollString,      asynParamInt32,      &PMAC_C_FeedRatePoll_);
+  createParam(PMAC_C_FeedRateProblemString,   asynParamInt32,      &PMAC_C_FeedRateProblem_);
+  createParam(PMAC_C_CoordSysGroup,           asynParamInt32,      &PMAC_C_CoordSysGroup_);
+  createParam(PMAC_C_FastUpdateTimeString,    asynParamFloat64,    &PMAC_C_FastUpdateTime_);
+  createParam(PMAC_C_LastParamString,         asynParamInt32,      &PMAC_C_LastParam_);
+  createParam(PMAC_C_AxisCSString,            asynParamInt32,      &PMAC_C_AxisCS_);
+  createParam(PMAC_C_WriteCmdString,          asynParamOctet,      &PMAC_C_WriteCmd_);
+  createParam(PMAC_C_KillAxisString,          asynParamInt32,      &PMAC_C_KillAxis_);
+  createParam(PMAC_C_PLCProgramsString,       asynParamInt32Array, &PMAC_C_PLCPrograms_);
+  createParam(PMAC_C_TrajBufferLengthString,  asynParamInt32,      &PMAC_C_TrajBufferLength_);
+  createParam(PMAC_C_TrajTotalPointsString,   asynParamInt32,      &PMAC_C_TrajTotalPoints_);
+  createParam(PMAC_C_TrajStatusString,        asynParamInt32,      &PMAC_C_TrajStatus_);
+  createParam(PMAC_C_TrajCurrentIndexString,  asynParamInt32,      &PMAC_C_TrajCurrentIndex_);
+  createParam(PMAC_C_TrajCurrentBufferString, asynParamInt32,      &PMAC_C_TrajCurrentBuffer_);
+  createParam(PMAC_C_TrajBuffAdrAString,      asynParamInt32,      &PMAC_C_TrajBuffAdrA_);
+  createParam(PMAC_C_TrajBuffAdrBString,      asynParamInt32,      &PMAC_C_TrajBuffAdrB_);
+  createParam(PMAC_C_TrajBuffFillAString,     asynParamInt32,      &PMAC_C_TrajBuffFillA_);
+  createParam(PMAC_C_TrajBuffFillBString,     asynParamInt32,      &PMAC_C_TrajBuffFillB_);
+  createParam(PMAC_C_TrajRunTimeString,       asynParamFloat64,    &PMAC_C_TrajRunTime_);
+  createParam(PMAC_C_TrajCSNumberString,      asynParamInt32,      &PMAC_C_TrajCSNumber_);
+  createParam(PMAC_C_TrajPercentString,       asynParamFloat64,    &PMAC_C_TrajPercent_);
+  createParam(PMAC_C_TrajEStatusString,       asynParamInt32,      &PMAC_C_TrajEStatus_);
+  createParam(PMAC_C_NoOfMsgsString,          asynParamInt32,      &PMAC_C_NoOfMsgs_);
+  createParam(PMAC_C_TotalBytesWrittenString, asynParamInt32,      &PMAC_C_TotalBytesWritten_);
+  createParam(PMAC_C_TotalBytesReadString,    asynParamInt32,      &PMAC_C_TotalBytesRead_);
+  createParam(PMAC_C_MsgBytesWrittenString,   asynParamInt32,      &PMAC_C_MsgBytesWritten_);
+  createParam(PMAC_C_MsgBytesReadString,      asynParamInt32,      &PMAC_C_MsgBytesRead_);
+  createParam(PMAC_C_MsgTimeString,           asynParamInt32,      &PMAC_C_MsgTime_);
+  createParam(PMAC_C_MaxBytesWrittenString,   asynParamInt32,      &PMAC_C_MaxBytesWritten_);
+  createParam(PMAC_C_MaxBytesReadString,      asynParamInt32,      &PMAC_C_MaxBytesRead_);
+  createParam(PMAC_C_MaxTimeString,           asynParamInt32,      &PMAC_C_MaxTime_);
+  createParam(PMAC_C_AveBytesWrittenString,   asynParamInt32,      &PMAC_C_AveBytesWritten_);
+  createParam(PMAC_C_AveBytesReadString,      asynParamInt32,      &PMAC_C_AveBytesRead_);
+  createParam(PMAC_C_AveTimeString,           asynParamInt32,      &PMAC_C_AveTime_);
   for (index = 0; index < PMAC_MAX_CS; index++){
     createParam(PMAC_C_ForwardKinematicString[index], asynParamOctet, &PMAC_C_ForwardKinematic_[index]);
     createParam(PMAC_C_InverseKinematicString[index], asynParamOctet, &PMAC_C_InverseKinematic_[index]);
@@ -369,6 +372,13 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_INDEX);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_BUFFER);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_TOTAL_POINTS);
+
+  // Medium readout of the PLC program status
+  for (plcNo = 0; plcNo < 32; plcNo++){
+    sprintf(plcCmd, "M%d", (plcNo+5000));
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, plcCmd);
+  }
+
   // Slow readout required of these values
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFFER_LENGTH);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_A);
@@ -589,6 +599,12 @@ void pmacController::callback(pmacCommandStore *sPtr, int type)
   }
 
   // If this is a slow callback then execute the slow update
+  if (type == pmacMessageBroker::PMAC_MEDIUM_READ){
+    // Execute the medium update loop
+    this->mediumUpdate(sPtr);
+  }
+
+  // If this is a slow callback then execute the slow update
   if (type == pmacMessageBroker::PMAC_SLOW_READ){
     // Parse PMAC global status
     this->slowUpdate(sPtr);
@@ -730,6 +746,45 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr)
       setIntegerParam(PMAC_C_TrajBuffAdrB_, tScanPmacBufferAddressB_);
       debugf(DEBUG_VARIABLE, functionName, "Slow read trajectory address buffer B [%s] => %X", PMAC_TRAJ_BUFF_ADR_B, tScanPmacBufferAddressB_);
     }
+  }
+
+  return status;
+}
+
+asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
+{
+  asynStatus status = asynSuccess;
+  int nvals = 0;
+  int plc = 0;
+  int plcProgsRunning[32] = {0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0,
+                             0, 0, 0, 0, 0, 0, 0, 0};
+  std::string plcString = "";
+  char command[8];
+  static const char *functionName = "mediumUpdate";
+  debug(DEBUG_FLOW, functionName);
+
+  // Read the PLC program status variables
+  for (plc = 0; plc < 32; plc++){
+    sprintf(command, "M%d", (plc+5000));
+    plcString = sPtr->readValue(command);
+    if (plcString == ""){
+      debug(DEBUG_ERROR, functionName, "Problem reading PLC program status", command);
+      status = asynError;
+    } else {
+      nvals = sscanf(plcString.c_str(), "%d", &plcProgsRunning[plc]);
+      if (nvals != 1) {
+        debug(DEBUG_ERROR, functionName, "Error reading PLC program status", command);
+        debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+        debug(DEBUG_ERROR, functionName, "    response", plcString);
+        status = asynError;
+      }
+    }
+  }
+  // Call callbacks for PLC programs
+  if (status == asynSuccess){
+    doCallbacksInt32Array(plcProgsRunning, 32, PMAC_C_PLCPrograms_, 0);
   }
 
   return status;
