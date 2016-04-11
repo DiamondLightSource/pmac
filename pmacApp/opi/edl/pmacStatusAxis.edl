@@ -1,0 +1,2377 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 176
+y 155
+w 432
+h 536
+font "arial-medium-r-16.0"
+ctlFont "arial-bold-r-16.0"
+btnFont "arial-medium-r-16.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 18
+ctlBgColor1 index 3
+ctlBgColor2 index 5
+topShadowColor index 1
+botShadowColor index 11
+title "PMAC Status Axis - $(M):$(A)"
+showGrid
+snapToGrid
+gridSize 5
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 50
+w 420
+h 125
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 195
+w 420
+h 305
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 40
+y 0
+w 385
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 40
+y 0
+w 385
+h 31
+lineColor index 3
+fill
+fillColor index 3
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 40
+y 3
+w 385
+h 25
+lineColor index 11
+fillColor index 0
+numPoints 3
+xPoints {
+  0 40
+  1 425
+  2 425
+}
+yPoints {
+  0 28
+  1 28
+  2 3
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 40
+y 3
+w 385
+h 25
+font "arial-bold-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 48
+value {
+  "$(A) Axis Status"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 40
+y 3
+w 385
+h 25
+lineColor index 1
+fillColor index 0
+numPoints 3
+xPoints {
+  0 40
+  1 40
+  2 425
+}
+yPoints {
+  0 28
+  1 3
+  2 3
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 95
+h 30
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 4
+y 2
+w 93
+h 30
+lineColor index 11
+fillColor index 63
+lineWidth 2
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 93
+h 30
+lineColor index 1
+fillColor index 63
+lineWidth 2
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 4
+y 2
+w 90
+h 27
+lineColor index 49
+fill
+fillColor index 48
+lineWidth 3
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 24
+y 6
+w 8
+h 3
+lineColor index 1
+fill
+fillColor index 0
+lineWidth 2
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 0
+y 0
+w 96
+h 31
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "PMAC Axis"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 5
+y 185
+w 71
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  Axis status  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 330
+y 505
+w 95
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-medium-r-18.0"
+3d
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 150
+w 112
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Following Error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 120
+w 57
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Velocity"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 90
+w 60
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Position"
+}
+autoSize
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 205
+w 186
+h 288
+
+beginGroup
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 397
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 397
+w 105
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "CS Axis definition bit 0"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 409
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 409
+w 106
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "CS Axis definition bit 1"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 421
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 2
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 421
+w 106
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "CS Axis definition bit 2"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 433
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 433
+w 105
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "CS Axis definition bit 3"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 445
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 4
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 445
+w 93
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(CS-1) # bit 0 (LSB)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 457
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 457
+w 63
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(CS-1) # bit 1"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 469
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 6
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 469
+w 63
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(CS-1) # bit 2"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 481
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 7
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 481
+w 96
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(CS-1) # bit 3 (MSB)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 205
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 205
+w 69
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "In-position true"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 217
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 217
+w 156
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Warning following error exceeded"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 229
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 2
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 229
+w 139
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Fatal following error exceeded"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 241
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 241
+w 93
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Amplifier fault error"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 253
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 4
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 253
+w 108
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Backlash direction flag"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 265
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 265
+w 111
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "I2T Amplifier fault error"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 277
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 6
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 277
+w 141
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Integrated fatal following error"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 289
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 7
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 289
+w 61
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Trigger move"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 301
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 8
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 301
+w 96
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Phasing search error"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 313
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 9
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 313
+w 98
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Motor Phase Request"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 325
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 10
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 325
+w 71
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Home complete"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 337
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 11
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 337
+w 114
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Stopped on position limit"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 349
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 12
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 349
+w 118
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Desired position limit stop"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 361
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 13
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 361
+w 104
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Foreground in-position"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 373
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 14
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 373
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 13
+y 385
+w 12
+h 12
+controlPv "$(M):$(A):status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 15
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 43
+y 385
+w 69
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Assigned to CS"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 205
+w 193
+h 288
+
+beginGroup
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 481
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 15
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 481
+w 104
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Motor activated (Ixx00)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 469
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 14
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 469
+w 162
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Negative end limit set (soft or hard)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 457
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 13
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 457
+w 156
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Positive end limit set (soft or hard)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 445
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 12
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 445
+w 143
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Ext servo algo ena (Iyy00/Iyy50)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 433
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 11
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 433
+w 83
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Amplifier enabled"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 421
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 10
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 421
+w 74
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Open loop mode"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 409
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 9
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 409
+w 81
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Move timer active"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 397
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 8
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 397
+w 154
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Integration mode (Ixx30;0 always)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 385
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 7
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 385
+w 80
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Dwell in progress"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 373
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 6
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 373
+w 76
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Data block error"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 361
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 361
+w 80
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Desired velocity 0"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 349
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 4
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 349
+w 137
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Abort deceleration in progress"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 337
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 337
+w 64
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Block request"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 325
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 2
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 325
+w 113
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Home search in progress"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 313
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 313
+w 163
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "User-written phase ena (Ixx59 bit 1)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 301
+w 12
+h 12
+controlPv "$(M):$(A):status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 301
+w 159
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "User-written servo ena (Ixx59 bit 1)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 205
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 8
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 205
+w 150
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Rapid max velocity select (Ixx90)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 217
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 9
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 217
+w 155
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Sign/magnitude servo ena (Ixx96)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 229
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 10
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 229
+w 156
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Software capture ena (Ixx97 bit 0)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 241
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 11
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 241
+w 154
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Capture on error ena (Ixx97 bit 1)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 253
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 12
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 253
+w 119
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Pos follow ena (Ixx06 bit0)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 265
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 13
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 265
+w 157
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Pos follow offset mode (Ixx06 bit 1)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 277
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 14
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 277
+w 154
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Commutation enable (Ixx01 bit 0)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 289
+w 12
+h 12
+controlPv "$(M):$(A):status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 15
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 250
+y 289
+w 155
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Y-addr commute enc (Ixx01 bit 1)"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 5
+y 40
+w 58
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  Axis Info  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 125
+y 85
+w 295
+h 25
+controlPv "$(M):$(A):POSITION"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 125
+y 115
+w 295
+h 25
+controlPv "$(M):$(A):VELOCITY"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 125
+y 145
+w 295
+h 25
+controlPv "$(M):$(A):FOLL_ERROR"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 60
+w 83
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Description"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 125
+y 55
+w 295
+h 25
+controlPv "$(M):$(A):DESC"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
