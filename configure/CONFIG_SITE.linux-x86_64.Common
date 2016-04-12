@@ -1,0 +1,21 @@
+#     - To build the IOC applications set BUILD_IOCS to YES
+#       Otherwise set it to NO
+BUILD_IOCS=NO
+
+#     - To include GraphicsMagick support set the following to YES
+#     - To not use it comment out the line or set it to NO
+#     - GraphicsMagick is required for NDFileMagick and the URL driver.
+USE_GRAPHICSMAGICK=NO
+
+#CROSS_COMPILER_TARGET_ARCHS = 
+
+# Comment-in the following line if building asyn ports stand-alone
+# i.e. without an IOC. Note that asyn will also need to have been 
+# built with this flag
+# EPICS_LIBCOM_ONLY=YES
+
+# Definitions required for compiling the unit tests
+BOOST           = /dls_sw/prod/tools/RHEL6-x86_64/boost/1-48-0/prefix
+BOOST_LIB       = $(BOOST)/lib
+BOOST_INCLUDE   = -I$(BOOST)/include
+
