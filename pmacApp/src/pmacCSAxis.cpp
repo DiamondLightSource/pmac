@@ -290,8 +290,8 @@ asynStatus pmacCSAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     if (((status[1] & pC_->CS_STATUS2_AMP_FAULT) != 0) || ((status[1] & pC_->CS_STATUS2_RUNTIME_ERR) != 0)){
       if(printErrors){
         asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-          "*** Warning *** axis %d problem status0=%x status1=%x status3=%x\n",
-          axisNo_, status[0], status[1], status[2]);
+          "*** Warning *** Coordinate System [%d] axis %d problem status0=%x status1=%x status3=%x\n",
+          pC_->csNumber_, axisNo_, status[0], status[1], status[2]);
         printNextError_ = false;
       }
       axisProblemFlag = 1;
