@@ -41,11 +41,12 @@ public:
                             int *lastMsgBytesWritten,
                             int *lastMsgBytesRead,
                             int *lastMsgTime);
+  asynStatus readStoreSize(int type, int *size);
+  asynStatus report(int type);
 
 private:
   asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
   asynStatus lowLevelWriteRead(const char *command, char *response);
-  void report();
 
   // Mutex required for locking across threads
   epicsMutex mutex_;

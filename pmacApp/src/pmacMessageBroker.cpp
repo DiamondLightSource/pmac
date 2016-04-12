@@ -227,6 +227,58 @@ asynStatus pmacMessageBroker::readStatistics(int *noOfMsgs,
   return asynSuccess;
 }
 
+asynStatus pmacMessageBroker::readStoreSize(int type, int *size)
+{
+  asynStatus status = asynSuccess;
+
+  // Lock the mutex
+  mutex_.lock();
+
+  if (type == PMAC_FAST_READ){
+    *size = fastStore_.size();
+  } else if (type == PMAC_MEDIUM_READ){
+    *size = mediumStore_.size();
+  } else if (type == PMAC_SLOW_READ){
+    *size = slowStore_.size();
+  } else {
+    status = asynError;
+  }
+
+  // Unlock the mutex
+  mutex_.unlock();
+
+  return status;
+}
+
+asynStatus pmacMessageBroker::report(int type)
+{
+  asynStatus status = asynSuccess;
+
+  // Lock the mutex
+  mutex_.lock();
+
+  if (type == PMAC_FAST_READ){
+    printf("Report of PMAC fast store\n");
+    printf("=========================\n");
+    fastStore_.report();
+  } else if (type == PMAC_MEDIUM_READ){
+    printf("Report of PMAC medium store\n");
+    printf("===========================\n");
+    mediumStore_.report();
+  } else if (type == PMAC_SLOW_READ){
+    printf("Report of PMAC slow store\n");
+    printf("=========================\n");
+    slowStore_.report();
+  } else {
+    status = asynError;
+  }
+
+  // Unlock the mutex
+  mutex_.unlock();
+
+  return status;
+}
+
 /**
  * Connect to the underlying low level Asyn port that is used for comms.
  * This uses the asynOctetSyncIO interface, and also sets the input and output terminators.
@@ -335,13 +387,3 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   return status;
 }
 
-void pmacMessageBroker::report()
-{
-  double elapsedTime = 0.0;
-  printf("Total number of messages: %d\n", this->noOfMessages_);
-  printf("Total number of bytes written: %d\n", this->totalBytesWritten_);
-  printf("Total number of bytes read: %d\n", this->totalBytesRead_);
-  elapsedTime = epicsTimeDiffInSeconds(&this->currentTime_, &this->startTime_);
-  printf("Average message rate: %.2f / s\n", (double)this->noOfMessages_/elapsedTime);
-  printf("Average data rate: %.2f\n", (double)this->totalBytesWritten_/elapsedTime);
-}

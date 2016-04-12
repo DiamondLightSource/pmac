@@ -12,6 +12,10 @@ include $(TOP)/configure/CONFIG
 # databases, templates, substitutions like this
 DB += pmacController.template
 DB += pmacControllerTrajectory.template
+DB += pmacStatus.template
+DB += pmacStatusAxis.template
+DB += pmacStatus8Axes.template
+DB += pmacStatus32Axes.template
 DB += pmacProfileAxis.template
 DB += pmacProfileController.template
 DB += pmac_cs_axis.template

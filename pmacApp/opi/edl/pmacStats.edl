@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 659
-y 106
-w 436
-h 351
+x 221
+y 195
+w 977
+h 429
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
 btnFont "arial-bold-r-12.0"
@@ -84,7 +84,7 @@ x 290
 y 30
 w 105
 h 20
-controlPv "$(P)$(R)STAT_MSG_NO_RBV"
+controlPv "$(pmac):STAT_MSG_NO_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -104,7 +104,7 @@ x 290
 y 55
 w 105
 h 20
-controlPv "$(P)$(R)STAT_MSG_WRITE_RBV"
+controlPv "$(pmac):STAT_MSG_WRITE_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -162,7 +162,7 @@ x 290
 y 80
 w 105
 h 20
-controlPv "$(P)$(R)STAT_MSG_READ_RBV"
+controlPv "$(pmac):STAT_MSG_READ_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -201,7 +201,7 @@ x 290
 y 105
 w 105
 h 20
-controlPv "$(P)$(R)STAT_MSG_TIME_RBV"
+controlPv "$(pmac):STAT_MSG_TIME_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -221,7 +221,7 @@ x 290
 y 130
 w 105
 h 20
-controlPv "$(P)$(R)STAT_MAX_WRITE_RBV"
+controlPv "$(pmac):STAT_MAX_WRITE_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -279,7 +279,7 @@ x 290
 y 155
 w 105
 h 20
-controlPv "$(P)$(R)STAT_MAX_READ_RBV"
+controlPv "$(pmac):STAT_MAX_READ_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -318,7 +318,7 @@ x 290
 y 180
 w 105
 h 20
-controlPv "$(P)$(R)STAT_MAX_TIME_RBV"
+controlPv "$(pmac):STAT_MAX_TIME_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -357,7 +357,7 @@ x 290
 y 205
 w 105
 h 20
-controlPv "$(P)$(R)STAT_AVE_WRITE_RBV"
+controlPv "$(pmac):STAT_AVE_WRITE_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -377,7 +377,7 @@ x 290
 y 230
 w 105
 h 20
-controlPv "$(P)$(R)STAT_AVE_READ_RBV"
+controlPv "$(pmac):STAT_AVE_READ_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -397,7 +397,7 @@ x 290
 y 255
 w 105
 h 20
-controlPv "$(P)$(R)STAT_AVE_TIME_RBV"
+controlPv "$(pmac):STAT_AVE_TIME_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -417,7 +417,7 @@ x 290
 y 280
 w 105
 h 20
-controlPv "$(P)$(R)STAT_TOTAL_WRITE_RBV"
+controlPv "$(pmac):STAT_TOTAL_WRITE_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -437,7 +437,7 @@ x 290
 y 305
 w 105
 h 20
-controlPv "$(P)$(R)STAT_TOTAL_READ_RBV"
+controlPv "$(pmac):STAT_TOTAL_READ_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -540,5 +540,194 @@ useDisplayBg
 value {
   "Total Bytes Read"
 }
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 740
+y 30
+w 105
+h 20
+controlPv "$(pmac):SLOW_SIZE_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 465
+y 30
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "No of PMAC variables in slow poll"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 740
+y 85
+w 105
+h 20
+controlPv "$(pmac):MEDIUM_SIZE_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 465
+y 85
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "No of PMAC variables in medium poll"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 740
+y 140
+w 105
+h 20
+controlPv "$(pmac):FAST_SIZE_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 465
+y 140
+w 250
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "No of PMAC variables in fast poll"
+}
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 740
+y 55
+w 105
+h 25
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):REPORT_SLOW"
+pressValue "0"
+onLabel "REPORT"
+offLabel "REPORT"
+3d
+useEnumNumeric
+font "helvetica-bold-r-14.0"
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 740
+y 110
+w 105
+h 25
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):REPORT_MEDIUM"
+pressValue "0"
+onLabel "REPORT"
+offLabel "REPORT"
+3d
+useEnumNumeric
+font "helvetica-bold-r-14.0"
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 740
+y 165
+w 105
+h 25
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):REPORT_FAST"
+pressValue "0"
+onLabel "REPORT"
+offLabel "REPORT"
+3d
+useEnumNumeric
+font "helvetica-bold-r-14.0"
 endObjectProperties
 
