@@ -197,6 +197,29 @@ dls_pmac_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor contro
 dls_pmac_asyn_motor.ArgInfo.descriptions["SPORT"] = Ident("Delta tau motor controller comms port", DeltaTauCommsPort)
 
 
+class _pmacStatusAxis(AutoSubstitution):
+#    ProtocolFiles = ['pmac.proto']
+    TemplateFile = 'pmacStatusAxis.template'
+
+class pmacStatus(AutoSubstitution):
+    Dependencies = (Pmac,)
+#    ProtocolFiles = ['pmac.proto']
+    TemplateFile = 'pmacStatus.template'
+
+    def __init__(self, **args):
+        # init the super class
+        self.__super.__init__(**args)
+        self.axes = []
+        NAXES = int(args["NAXES"])
+        assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
+        # for each axis
+        for i in range(1, NAXES + 1):
+            args["AXIS"] = i
+            # make a _pmacStatusAxis instance
+            self.axes.append(
+                _pmacStatusAxis(
+                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
+pmacStatus.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 
 class CS(DeltaTau):
     Dependencies = (Pmac,)

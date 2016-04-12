@@ -36,4 +36,5 @@
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="1" Controller="BRICK1" CoordSysNumber="2" GroupNumber="1"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="2" Controller="BRICK1" CoordSysNumber="2" GroupNumber="1"/>
 	<pmac.GeoBrickGlobalControl P="PMAC_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.CTRL"/>
+	<pmac.pmacStatus DEVICE="PMAC_TEST" NAXES="8" PLC="5" PORT="BRICK1" VERSION="1" name="BSTAT1"/>
 </components>
