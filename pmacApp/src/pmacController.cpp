@@ -314,6 +314,12 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_AveBytesWrittenString,   asynParamInt32,      &PMAC_C_AveBytesWritten_);
   createParam(PMAC_C_AveBytesReadString,      asynParamInt32,      &PMAC_C_AveBytesRead_);
   createParam(PMAC_C_AveTimeString,           asynParamInt32,      &PMAC_C_AveTime_);
+  createParam(PMAC_C_FastStoreString,         asynParamInt32,      &PMAC_C_FastStore_);
+  createParam(PMAC_C_MediumStoreString,       asynParamInt32,      &PMAC_C_MediumStore_);
+  createParam(PMAC_C_SlowStoreString,         asynParamInt32,      &PMAC_C_SlowStore_);
+  createParam(PMAC_C_ReportFastString,        asynParamInt32,      &PMAC_C_ReportFast_);
+  createParam(PMAC_C_ReportMediumString,      asynParamInt32,      &PMAC_C_ReportMedium_);
+  createParam(PMAC_C_ReportSlowString,        asynParamInt32,      &PMAC_C_ReportSlow_);
   for (index = 0; index < PMAC_MAX_CS; index++){
     createParam(PMAC_C_ForwardKinematicString[index], asynParamOctet, &PMAC_C_ForwardKinematic_[index]);
     createParam(PMAC_C_InverseKinematicString[index], asynParamOctet, &PMAC_C_InverseKinematic_[index]);
@@ -346,6 +352,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateProblem_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateLimit_, 100) == asynSuccess) && paramStatus);
   paramStatus = ((setDoubleParam(PMAC_C_FastUpdateTime_, 0.0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_CoordSysGroup_, 0) == asynSuccess) && paramStatus);
   // Initialise the trajectory interface
   paramStatus = ((setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE) == asynSuccess) && paramStatus);
@@ -365,6 +372,9 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setIntegerParam(PMAC_C_AveBytesWritten_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_AveBytesRead_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_AveTime_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_FastStore_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_MediumStore_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_SlowStore_, 0) == asynSuccess) && paramStatus);
 
   callParamCallbacks();
 
@@ -537,7 +547,7 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
       // Retrieve the name of the variable
       char *pmacVariable = epicsStrDup(drvInfo + 9);
 
-      printf("Creating new parameter %s\n", pmacVariable);
+      debug(DEBUG_VARIABLE, functionName, "Creating new parameter", pmacVariable);
       // Check for I, D or S in drvInfo[6]
       switch(drvInfo[6]) {
         case 'I':
@@ -610,7 +620,7 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
       // Retrieve the name of the variable
       char *pmacVariable = epicsStrDup(drvInfo + 8);
 
-      printf("Creating new write only parameter %s\n", pmacVariable);
+      debug(DEBUG_VARIABLE, functionName, "Creating new write only parameter", pmacVariable);
       // Check for I, D or S in drvInfo[7]
       switch(drvInfo[6]) {
         case 'I':
@@ -773,6 +783,7 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr)
   asynStatus status = asynSuccess;
   int nvals = 0;
   std::string trajPtr = "";
+  int storeSize = 0;
   static const char *functionName = "slowUpdate";
   debug(DEBUG_FLOW, functionName);
 
@@ -831,6 +842,17 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr)
       setIntegerParam(PMAC_C_TrajBuffAdrB_, tScanPmacBufferAddressB_);
       debugf(DEBUG_VARIABLE, functionName, "Slow read trajectory address buffer B [%s] => %X", PMAC_TRAJ_BUFF_ADR_B, tScanPmacBufferAddressB_);
     }
+  }
+
+  // Read out the size of the pmac command stores
+  if (pBroker_->readStoreSize(pmacMessageBroker::PMAC_FAST_READ, &storeSize) == asynSuccess){
+    setIntegerParam(PMAC_C_FastStore_, storeSize);
+  }
+  if (pBroker_->readStoreSize(pmacMessageBroker::PMAC_MEDIUM_READ, &storeSize) == asynSuccess){
+    setIntegerParam(PMAC_C_MediumStore_, storeSize);
+  }
+  if (pBroker_->readStoreSize(pmacMessageBroker::PMAC_SLOW_READ, &storeSize) == asynSuccess){
+    setIntegerParam(PMAC_C_SlowStore_, storeSize);
   }
 
   return status;
@@ -1396,6 +1418,12 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     // Send the kill command to the PMAC immediately
     sprintf(command, "#%dk", pAxis->axisNo_);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+  } else if (function == PMAC_C_ReportFast_){
+    status = (this->pBroker_->report(pmacMessageBroker::PMAC_FAST_READ) == asynSuccess) && status;
+  } else if (function == PMAC_C_ReportMedium_){
+    status = (this->pBroker_->report(pmacMessageBroker::PMAC_MEDIUM_READ) == asynSuccess) && status;
+  } else if (function == PMAC_C_ReportSlow_){
+    status = (this->pBroker_->report(pmacMessageBroker::PMAC_SLOW_READ) == asynSuccess) && status;
   }
   
   //Call base class method. This will handle callCallbacks even if the function was handled here.

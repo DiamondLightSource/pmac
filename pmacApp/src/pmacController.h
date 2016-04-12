@@ -61,6 +61,13 @@
 #define PMAC_C_AveBytesReadString      "PMAC_C_AVE_BYTES_READ"
 #define PMAC_C_AveTimeString           "PMAC_C_AVE_TIME"
 
+#define PMAC_C_FastStoreString         "PMAC_C_FAST_STORE"
+#define PMAC_C_MediumStoreString       "PMAC_C_MEDIUM_STORE"
+#define PMAC_C_SlowStoreString         "PMAC_C_SLOW_STORE"
+#define PMAC_C_ReportFastString        "PMAC_C_REPORT_FAST"
+#define PMAC_C_ReportMediumString      "PMAC_C_REPORT_MEDIUM"
+#define PMAC_C_ReportSlowString        "PMAC_C_REPORT_SLOW"
+
 #define PMAC_C_TrajBufferLengthString  "PMAC_C_TRAJ_LENGTH"  // Length of a single buffer e.g. AX, AY
 #define PMAC_C_TrajTotalPointsString   "PMAC_C_TRAJ_POINTS"  // Total number of points scanned through
 #define PMAC_C_TrajStatusString        "PMAC_C_TRAJ_STATUS"  // Current status reported by the PMAC
@@ -234,6 +241,12 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_AveBytesWritten_;
   int PMAC_C_AveBytesRead_;
   int PMAC_C_AveTime_;
+  int PMAC_C_FastStore_;
+  int PMAC_C_MediumStore_;
+  int PMAC_C_SlowStore_;
+  int PMAC_C_ReportFast_;
+  int PMAC_C_ReportMedium_;
+  int PMAC_C_ReportSlow_;
   int PMAC_C_ForwardKinematic_[PMAC_MAX_CS];
   int PMAC_C_InverseKinematic_[PMAC_MAX_CS];
   int PMAC_C_LastParam_;
