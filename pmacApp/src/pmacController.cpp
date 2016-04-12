@@ -208,12 +208,15 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 {
   int index = 0;
   int plcNo = 0;
-  char plcCmd[32];
+  int gpioNo = 0;
+  int progNo = 0;
+  char cmd[32];
   static const char *functionName = "pmacController::pmacController";
 
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
 
   //Initialize non static data members
+  cid_ = 0;
   parameterIndex_ = 0;
   lowLevelPortUser_ = NULL;
   movesDeferred_ = 0;
@@ -243,6 +246,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   // Create the parameter hashtables
   pIntParams_ = new IntegerHashtable();
+  pHexParams_ = new IntegerHashtable();
   pDoubleParams_ = new IntegerHashtable();
   pStringParams_ = new IntegerHashtable();
   pWriteParams_ = new StringHashtable();
@@ -274,7 +278,17 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_AxisCSString,            asynParamInt32,      &PMAC_C_AxisCS_);
   createParam(PMAC_C_WriteCmdString,          asynParamOctet,      &PMAC_C_WriteCmd_);
   createParam(PMAC_C_KillAxisString,          asynParamInt32,      &PMAC_C_KillAxis_);
-  createParam(PMAC_C_PLCProgramsString,       asynParamInt32Array, &PMAC_C_PLCPrograms_);
+  createParam(PMAC_C_PLCBits00String,         asynParamInt32,      &PMAC_C_PLCBits00_);
+  createParam(PMAC_C_PLCBits01String,         asynParamInt32,      &PMAC_C_PLCBits01_);
+  createParam(PMAC_C_StatusBits01String,      asynParamInt32,      &PMAC_C_StatusBits01_);
+  createParam(PMAC_C_StatusBits02String,      asynParamInt32,      &PMAC_C_StatusBits02_);
+  createParam(PMAC_C_StatusBits03String,      asynParamInt32,      &PMAC_C_StatusBits03_);
+  createParam(PMAC_C_GpioInputsString,        asynParamInt32,      &PMAC_C_GpioInputs_);
+  createParam(PMAC_C_GpioOutputsString,       asynParamInt32,      &PMAC_C_GpioOutputs_);
+  createParam(PMAC_C_ProgBitsString,          asynParamInt32,      &PMAC_C_ProgBits_);
+  createParam(PMAC_C_AxisBits01String,        asynParamInt32,      &PMAC_C_AxisBits01_);
+  createParam(PMAC_C_AxisBits02String,        asynParamInt32,      &PMAC_C_AxisBits02_);
+  createParam(PMAC_C_AxisBits03String,        asynParamInt32,      &PMAC_C_AxisBits03_);
   createParam(PMAC_C_TrajBufferLengthString,  asynParamInt32,      &PMAC_C_TrajBufferLength_);
   createParam(PMAC_C_TrajTotalPointsString,   asynParamInt32,      &PMAC_C_TrajTotalPoints_);
   createParam(PMAC_C_TrajStatusString,        asynParamInt32,      &PMAC_C_TrajStatus_);
@@ -321,15 +335,11 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
     setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
   }
 
+  // Readout the device type
+  this->readDeviceType();
 
   // Read the kinematics
   this->storeKinematics();
-//  this->listPLCProgram(11, buff, 20000);
-//  printf("PLC11: %s\n", buff);
-//  this->listPLCProgram(17, buff, 20000);
-//  printf("PLC17: %s\n", buff);
-//  this->listPLCProgram(18, buff, 20000);
-//  printf("PLC18: %s\n", buff);
 
   bool paramStatus = true;
   paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
@@ -373,13 +383,57 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_BUFFER);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_TOTAL_POINTS);
 
-  // Medium readout of the PLC program status
+  // Medium readout of the PLC program status (same for both Geobrick and VME)
   for (plcNo = 0; plcNo < 32; plcNo++){
-    sprintf(plcCmd, "M%d", (plcNo+5000));
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, plcCmd);
+    sprintf(cmd, "M%d", (plcNo+5000));
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
   }
 
-  // Slow readout required of these values
+  // Medium readout of the GPIO status bits
+  switch (cid_)
+  {
+    case PMAC_CID_GEOBRICK_:
+      // Outputs
+      for (gpioNo = 0; gpioNo < 8; gpioNo++){
+        sprintf(cmd, "M%d", (gpioNo+32));
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+      }
+      // Inputs
+      for (gpioNo = 0; gpioNo < 16; gpioNo++){
+        sprintf(cmd, "M%d", gpioNo);
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+      }
+      break;
+
+    case PMAC_CID_PMAC_:
+      // Outputs
+      for (gpioNo = 0; gpioNo < 8; gpioNo++){
+        sprintf(cmd, "M%d", (gpioNo+7716));
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+        sprintf(cmd, "M%d", (gpioNo+7740));
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+      }
+      // Inputs
+      for (gpioNo = 0; gpioNo < 8; gpioNo++){
+        sprintf(cmd, "M%d", (gpioNo+7616));
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+        sprintf(cmd, "M%d", (gpioNo+7640));
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+      }
+      break;
+
+    default:
+      // As we couldn't read the cid from the PMAC we don't know which m-vars to read
+      debug(DEBUG_ERROR, functionName, "Unable to set GPIO M-vars, unknown Card ID");
+  }
+
+  // Medium readout of the motion program status (same for both Geobrick and VME)
+  for (progNo = 0; progNo < 16; progNo++){
+    sprintf(cmd, "M%d", ((progNo*100)+5180));
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+  }
+
+  // Slow readout required of trajectory buffer setup
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFFER_LENGTH);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_A);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_B);
@@ -484,7 +538,7 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
       char *pmacVariable = epicsStrDup(drvInfo + 9);
 
       printf("Creating new parameter %s\n", pmacVariable);
-      // Check for I, D or S in drvInfo[7]
+      // Check for I, D or S in drvInfo[6]
       switch(drvInfo[6]) {
         case 'I':
           // Create the parameter
@@ -492,6 +546,14 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
           setIntegerParam(this->parameters[parameterIndex_], 0);
           // Add variable to integer parameter hashtable
           this->pIntParams_->insert(pmacVariable, this->parameters[parameterIndex_]);
+          parameterIndex_++;
+          break;
+        case 'H':
+          // Create the parameter
+          createParam(drvInfo, asynParamInt32, &(this->parameters[parameterIndex_]));
+          setIntegerParam(this->parameters[parameterIndex_], 0);
+          // Add variable to integer parameter hashtable
+          this->pHexParams_->insert(pmacVariable, this->parameters[parameterIndex_]);
           parameterIndex_++;
           break;
         case 'D':
@@ -514,7 +576,7 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
       }
 
       if (status == asynSuccess){
-        // Check for F, M or S in drvInfo[6]
+        // Check for F, M or S in drvInfo[7]
         switch(drvInfo[7]) {
           case 'F':
             this->pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, pmacVariable);
@@ -630,6 +692,29 @@ void pmacController::callback(pmacCommandStore *sPtr, int type)
         debug(DEBUG_VARIABLE, functionName, "Found key  ", key.c_str());
         debug(DEBUG_VARIABLE, functionName, "      value", val);
         setIntegerParam(this->pIntParams_->lookup(key), val);
+      }
+    }
+    callParamCallbacks();
+  }
+
+  // Check for hex integer params
+  key = this->pHexParams_->firstKey();
+  if (key != ""){
+    if (sPtr->checkForItem(key)){
+      int val = 0;
+      sscanf(sPtr->readValue(key).c_str(), "$%x", &val);
+      debug(DEBUG_VARIABLE, functionName, "Found key  ", key.c_str());
+      debug(DEBUG_VARIABLE, functionName, "      value", val);
+      setIntegerParam(this->pHexParams_->lookup(key), val);
+    }
+    while (this->pHexParams_->hasNextKey()){
+      key = this->pHexParams_->nextKey();
+      if (sPtr->checkForItem(key)){
+        int val = 0;
+        sscanf(sPtr->readValue(key).c_str(), "$%x", &val);
+        debug(DEBUG_VARIABLE, functionName, "Found key  ", key.c_str());
+        debug(DEBUG_VARIABLE, functionName, "      value", val);
+        setIntegerParam(this->pHexParams_->lookup(key), val);
       }
     }
     callParamCallbacks();
@@ -756,11 +841,19 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
   asynStatus status = asynSuccess;
   int nvals = 0;
   int plc = 0;
-  int plcProgsRunning[32] = {0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0,
-                             0, 0, 0, 0, 0, 0, 0, 0};
+  int plcBit = 0;
+  int plcBits00 = 0;
+  int plcBits01 = 0;
   std::string plcString = "";
+  int gpio = 0;
+  int gpioBit = 0;
+  int gpioOutputs = 0;
+  int gpioInputs = 0;
+  std::string gpioString = "";
+  int prog = 0;
+  int progBit = 0;
+  int progBits = 0;
+  std::string progString = "";
   char command[8];
   static const char *functionName = "mediumUpdate";
   debug(DEBUG_FLOW, functionName);
@@ -773,18 +866,173 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
       debug(DEBUG_ERROR, functionName, "Problem reading PLC program status", command);
       status = asynError;
     } else {
-      nvals = sscanf(plcString.c_str(), "%d", &plcProgsRunning[plc]);
+      nvals = sscanf(plcString.c_str(), "%d", &plcBit);
       if (nvals != 1) {
         debug(DEBUG_ERROR, functionName, "Error reading PLC program status", command);
         debug(DEBUG_ERROR, functionName, "    nvals", nvals);
         debug(DEBUG_ERROR, functionName, "    response", plcString);
         status = asynError;
+      } else {
+        if (plc < 16){
+          plcBits00 += plcBit<<plc;
+        } else {
+          plcBits01 += plcBit<<(plc-16);
+        }
       }
     }
   }
-  // Call callbacks for PLC programs
+
+  // Read the GPIO status variables
+  switch (cid_)
+  {
+    case PMAC_CID_GEOBRICK_:
+      // Outputs
+      for (gpio = 0; gpio < 8; gpio++){
+        sprintf(command, "M%d", (gpio+32));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == ""){
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioOutputs += gpioBit<<gpio;
+          }
+        }
+      }
+      // Inputs
+      for (gpio = 0; gpio < 16; gpio++){
+        sprintf(command, "M%d", gpio);
+        gpioString = sPtr->readValue(command);
+        if (gpioString == ""){
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioInputs += gpioBit<<gpio;
+          }
+        }
+      }
+      break;
+
+    case PMAC_CID_PMAC_:
+      // Outputs
+      for (gpio = 0; gpio < 8; gpio++){
+        sprintf(command, "M%d", (gpio+7716));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == ""){
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioOutputs += gpioBit<<(gpio+8);
+          }
+        }
+        sprintf(command, "M%d", (gpio+7740));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == ""){
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioOutputs += gpioBit<<gpio;
+          }
+        }
+      }
+      // Inputs
+      for (gpio = 0; gpio < 8; gpio++){
+        sprintf(command, "M%d", (gpio+7616));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == ""){
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioInputs += gpioBit<<(gpio+8);
+          }
+        }
+        sprintf(command, "M%d", (gpio+7640));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == ""){
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioInputs += gpioBit<<gpio;
+          }
+        }
+      }
+      break;
+
+    default:
+      // As we couldn't read the cid from the PMAC we don't know which m-vars to read
+      debug(DEBUG_ERROR, functionName, "Unable to read GPIO M-vars, unknown Card ID");
+
+  }
+
+  // Read the motion program status variables
+  for (prog = 0; prog < 16; prog++){
+    sprintf(command, "M%d", ((prog*100)+5180));
+    progString = sPtr->readValue(command);
+    if (progString == ""){
+      debug(DEBUG_ERROR, functionName, "Problem reading motion program status", command);
+      status = asynError;
+    } else {
+      nvals = sscanf(progString.c_str(), "%d", &progBit);
+      if (nvals != 1) {
+        debug(DEBUG_ERROR, functionName, "Error reading motion program status", command);
+        debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+        debug(DEBUG_ERROR, functionName, "    response", progString);
+        status = asynError;
+      } else {
+        progBits += progBit<<prog;
+      }
+    }
+  }
+
+  // Call callbacks for PLC program status
   if (status == asynSuccess){
-    doCallbacksInt32Array(plcProgsRunning, 32, PMAC_C_PLCPrograms_, 0);
+    setIntegerParam(PMAC_C_PLCBits00_, plcBits00);
+    setIntegerParam(PMAC_C_PLCBits01_, plcBits01);
+    setIntegerParam(PMAC_C_GpioInputs_, gpioInputs);
+    setIntegerParam(PMAC_C_GpioOutputs_, gpioOutputs);
+    setIntegerParam(PMAC_C_ProgBits_, progBits);
+    callParamCallbacks();
   }
 
   return status;
@@ -1914,6 +2162,9 @@ asynStatus pmacController::newGetGlobalStatus(pmacCommandStore *sPtr)
 {
   asynStatus status = asynSuccess;
   epicsUInt32 globalStatus = 0;
+  int gStat1 = 0;
+  int gStat2 = 0;
+  int gStat3 = 0;
   int feedrate = 0;
   int feedrate_limit = 0;
   bool printErrors = 0;
@@ -2034,6 +2285,12 @@ asynStatus pmacController::newGetGlobalStatus(pmacCommandStore *sPtr)
       debug(DEBUG_ERROR, functionName, "    nvals", nvals);
       debug(DEBUG_ERROR, functionName, "    response", globStatus);
       status = asynError;
+    }
+    nvals = sscanf(globStatus.c_str(), "%4x%4x%4x", &gStat1, &gStat2, &gStat3);
+    if (nvals == 3){
+      setIntegerParam(PMAC_C_StatusBits01_, gStat1);
+      setIntegerParam(PMAC_C_StatusBits02_, gStat2);
+      setIntegerParam(PMAC_C_StatusBits03_, gStat3);
     }
   }
 
@@ -2372,6 +2629,31 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, int csNo)
   this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
 
   return asynSuccess;
+}
+
+asynStatus pmacController::readDeviceType()
+{
+  asynStatus status = asynSuccess;
+  char reply[PMAC_MAXBUF];
+  char cmd[PMAC_MAXBUF];
+  int nvals = 0;
+  static const char *functionName = "readDeviceType";
+
+  debug(DEBUG_TRACE, functionName);
+
+  strcpy(cmd, "cid");
+  status = pBroker_->immediateWriteRead(cmd, reply);
+  if (status == asynSuccess){
+    nvals = sscanf(reply, "%d", &cid_);
+    if (nvals != 1) {
+      debug(DEBUG_ERROR, functionName, "Error reading card ID (cid)");
+      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+      debug(DEBUG_ERROR, functionName, "    response", reply);
+      status = asynError;
+    }
+  }
+  debug(DEBUG_ERROR, functionName, "Read device ID", cid_);
+  return status;
 }
 
 asynStatus pmacController::listPLCProgram(int plcNo, char *buffer, size_t size)

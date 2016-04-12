@@ -463,6 +463,9 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     double position = 0;
     double enc_position = 0;
     int nvals = 0;
+    int aStat1 = 0;
+    int aStat2 = 0;
+    int aStat3 = 0;
     epicsUInt32 status[2] = {0};
     int axisProblemFlag = 0;
     int limitsDisabledBit = 0;
@@ -503,6 +506,12 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     }
     debug(DEBUG_VARIABLE, functionName, "Read status[0]", (int)status[0]);
     debug(DEBUG_VARIABLE, functionName, "Read status[1]", (int)status[1]);
+    nvals = sscanf(value.c_str(), "%4x%4x%4x", &aStat1, &aStat2, &aStat3);
+    if (nvals == 3){
+      setIntegerParam(pC_->PMAC_C_AxisBits01_, aStat1);
+      setIntegerParam(pC_->PMAC_C_AxisBits02_, aStat2);
+      setIntegerParam(pC_->PMAC_C_AxisBits03_, aStat3);
+    }
 
     // Parse the position
     sprintf(key, "#%dP", axisNo_);

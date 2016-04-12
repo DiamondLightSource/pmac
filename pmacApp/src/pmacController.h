@@ -36,7 +36,17 @@
 #define PMAC_C_AxisCSString            "PMAC_C_AXIS_CS"
 #define PMAC_C_WriteCmdString          "PMAC_C_WRITE_CMD"
 #define PMAC_C_KillAxisString          "PMAC_C_KILL_AXIS"
-#define PMAC_C_PLCProgramsString       "PMAC_C_PLC_PROGS"
+#define PMAC_C_PLCBits00String         "PMAC_C_PLC_BITS00"
+#define PMAC_C_PLCBits01String         "PMAC_C_PLC_BITS01"
+#define PMAC_C_StatusBits01String      "PMAC_C_STATUS_BITS01"
+#define PMAC_C_StatusBits02String      "PMAC_C_STATUS_BITS02"
+#define PMAC_C_StatusBits03String      "PMAC_C_STATUS_BITS03"
+#define PMAC_C_GpioInputsString        "PMAC_C_GPIO_INPUTS"
+#define PMAC_C_GpioOutputsString       "PMAC_C_GPIO_OUTPUTS"
+#define PMAC_C_ProgBitsString          "PMAC_C_PROG_BITS"
+#define PMAC_C_AxisBits01String        "PMAC_C_AXIS_BITS01"
+#define PMAC_C_AxisBits02String        "PMAC_C_AXIS_BITS02"
+#define PMAC_C_AxisBits03String        "PMAC_C_AXIS_BITS03"
 
 #define PMAC_C_NoOfMsgsString          "PMAC_C_NO_OF_MSGS"
 #define PMAC_C_TotalBytesWrittenString "PMAC_C_TBYTES_WRITE"
@@ -163,6 +173,9 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   // Register a coordinate system with this controller
   asynStatus registerCS(pmacCSController *csPtr, int csNo);
 
+  // Read out the device type (cid)
+  asynStatus readDeviceType();
+
   // List PLC program
   asynStatus listPLCProgram(int plcNo, char *buffer, size_t size);
 
@@ -185,7 +198,17 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_AxisCS_;
   int PMAC_C_WriteCmd_;
   int PMAC_C_KillAxis_;
-  int PMAC_C_PLCPrograms_;
+  int PMAC_C_PLCBits00_;
+  int PMAC_C_PLCBits01_;
+  int PMAC_C_StatusBits01_;
+  int PMAC_C_StatusBits02_;
+  int PMAC_C_StatusBits03_;
+  int PMAC_C_GpioInputs_;
+  int PMAC_C_GpioOutputs_;
+  int PMAC_C_ProgBits_;
+  int PMAC_C_AxisBits01_;
+  int PMAC_C_AxisBits02_;
+  int PMAC_C_AxisBits03_;
   int PMAC_C_TrajBufferLength_;
   int PMAC_C_TrajTotalPoints_;
   int PMAC_C_TrajStatus_;
@@ -221,9 +244,11 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   pmacCsGroups *pGroupList;
 
  private:
+  int cid_;
   int parameterIndex_;
   pmacMessageBroker *pBroker_;
   IntegerHashtable *pIntParams_;
+  IntegerHashtable *pHexParams_;
   IntegerHashtable *pDoubleParams_;
   IntegerHashtable *pStringParams_;
   StringHashtable *pWriteParams_;
