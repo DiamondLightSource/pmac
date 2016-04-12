@@ -14,18 +14,7 @@
 # Scan rate for pmac status, plc querying, cpu load querying
 record(fanout, "$(DEVICE):ReadBack") {
   field(SCAN, "1 second")
-  field(FLNK, "$(DEVICE):ReadBack2")
-  field(LNK1, "$(DEVICE):CTRLSTAT:status1")
-  field(LNK2, "$(DEVICE):CPULOAD")
-  field(LNK3, "$(DEVICE):PLCGET")
-  field(LNK4, "$(DEVICE):PROGGET")
-  field(LNK5, "$(DEVICE):MACROERRS")
-  field(LNK6, "$(DEVICE):AxisRB")
-}
-
-record(fanout, "$(DEVICE):ReadBack2") {
-  field(LNK1, "$(DEVICE):GPIO_INPUTS_GET")
-  field(LNK2, "$(DEVICE):GPIO_OUTPUTS_GET")
+  field(LNK1, "$(DEVICE):AxisRB")
 }
 
 # pmac type record
@@ -36,6 +25,7 @@ record(mbbi, "$(DEVICE):PMACTYPE") {
   field(ONVL, "602413")
   field(ZRST, "Geobrick LV")
   field(ONST, "Turbo PMAC2")
+  field(SCAN, "I/O Intr")
   field(INP, "@asyn($(PORT),0)PMAC_VIM_cid")
 }
 
@@ -44,6 +34,7 @@ record(mbbi, "$(DEVICE):PMACTYPE") {
 # % gui, $(name=), sevr
 record(ai, "$(DEVICE):CPULOAD") {
   field(DTYP, "asynFloat64")
+  field(SCAN, "I/O Intr")
   field(INP, "@asyn($(PORT),0)PMAC_VDM_P$(PLC)75")
   field(PREC, "2")
   field(LINR, "LINEAR")
@@ -91,24 +82,6 @@ record(mbbiDirect, "$(DEVICE):CTRLSTAT:status3") {
   field(INP, "$(DEVICE):READ_CTRLSTAT3")
 }
 
-#record(waveform, "$(DEVICE):PLCGET") {
-#  field(DTYP, "stream")
-#  field(FLNK, "$(DEVICE):PLCPARSE")
-#  field(INP, "@pmac.proto getPlcsDisabled$(VERSION) $(PORT)")
-#  field(NELM, "32")
-#  field(FTVL, "USHORT")
-#  field(DESC, "Query plcs cmd")
-#}
-
-#record(genSub, "$(DEVICE):PLCPARSE") {
-#  field(SNAM, "parsePlcBitString")
-#  field(INPA, "$(DEVICE):PLCGET.VAL")
-#  field(FTA, "USHORT")
-#  field(NOA, "32")
-#  field(FTVA, "ULONG")
-#  field(FTVB, "ULONG")
-#  field(FLNK, "$(DEVICE):PLCDISBITS00")
-#}
 
 record(longin, "$(DEVICE):READ_PLCBITS00") {
   field(DTYP, "asynInt32")
@@ -164,24 +137,6 @@ record(mbbiDirect, "$(DEVICE):GPIO_INP_BITS") {
   field(INP, "$(DEVICE):READ_GPIO_INP")
 }
 
-#record(waveform, "$(DEVICE):GPIO_OUTPUTS_GET") {
-#  field(DTYP, "stream")
-#  field(FLNK, "$(DEVICE):GPIO_OP_PARSE")
-#  field(INP, "@pmac.proto getGPIOOutputs$(VERSION) $(PORT)")
-#  field(NELM, "16")
-#  field(FTVL, "USHORT")
-#  field(DESC, "Query GPIO Outputs")
-#}
-
-#record(genSub, "$(DEVICE):GPIO_OP_PARSE") {
-#  field(SNAM, "parseGPIOBitString")
-#  field(INPA, "$(DEVICE):GPIO_OUTPUTS_GET.VAL")
-#  field(FTA, "USHORT")
-#  field(NOA, "16")
-#  field(FTVA, "ULONG")
-#  field(FLNK, "$(DEVICE):GPIO_OP_BITS")
-#}
-
 record(longin, "$(DEVICE):READ_GPIO_OUT") {
   field(DTYP, "asynInt32")
   field(SCAN, "I/O Intr")
@@ -193,25 +148,6 @@ record(longin, "$(DEVICE):READ_GPIO_OUT") {
 record(mbbiDirect, "$(DEVICE):GPIO_OP_BITS") {
   field(INP, "$(DEVICE):READ_GPIO_OUT")
 }
-
-#record(waveform, "$(DEVICE):PROGGET") {
-#  field(DESC, "Query motion progs")
-#  field(DTYP, "stream")
-#  field(FLNK, "$(DEVICE):PROGPARSE")
-#  field(INP, "@pmac.proto getMotionProgramActive$(VERSION) $(PORT)")
-#  field(NELM, "16")
-#  field(FTVL, "USHORT")
-#  field(SIOL, "@")
-#}
-
-#record(genSub, "$(DEVICE):PROGPARSE") {
-#  field(SNAM, "parseProgBitString")
-#  field(INPA, "$(DEVICE):PROGGET")
-#  field(FTA, "USHORT")
-#  field(NOA, "16")
-#  field(FTVA, "ULONG")
-#  field(FLNK, "$(DEVICE):PROGBITS")
-#}
 
 record(longin, "$(DEVICE):READ_PROGBITS") {
   field(DTYP, "asynInt32")
@@ -550,4 +486,132 @@ record(seq, "$(DEVICE):AxisRB4") {
 record(longin, "$(DEVICE):NAXES") {
   field(PINI, "YES")
   field(VAL, "$(NAXES)")
+}
+
+###################################################################
+#  These records report the current comms statistics              # 
+#                                                                 #
+###################################################################
+
+record(longin, "$(DEVICE):STAT_MSG_NO_RBV") {
+  field(DESC, "Number of messages sent")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_NO_OF_MSGS")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(DEVICE):STAT_TOTAL_WRITE_RBV") {
+  field(DESC, "Total bytes written")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TBYTES_WRITE")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(DEVICE):STAT_TOTAL_READ_RBV") {
+  field(DESC, "Total bytes read")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TBYTES_READ")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(DEVICE):STAT_MSG_WRITE_RBV") {
+  field(DESC, "Last message bytes written")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MBYTES_WRITE")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(DEVICE):STAT_MSG_READ_RBV") {
+  field(DESC, "Last message bytes read")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MBYTES_READ")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(DEVICE):STAT_MSG_TIME_RBV") {
+  field(DESC, "Last message time (ms)")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MSG_TIME")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(DEVICE):STAT_MAX_WRITE_RBV") {
+  field(DESC, "Maximum written bytes")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MAX_BYTES_WRITE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(DEVICE):STAT_MAX_READ_RBV") {
+  field(DESC, "Maximum read bytes")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MAX_BYTES_READ")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(DEVICE):STAT_MAX_TIME_RBV") {
+  field(DESC, "Maximum time for message")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MAX_TIME")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(DEVICE):STAT_AVE_WRITE_RBV") {
+  field(DESC, "Average written bytes")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_AVE_BYTES_WRITE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(DEVICE):STAT_AVE_READ_RBV") {
+  field(DESC, "Average read bytes")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_AVE_BYTES_READ")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(DEVICE):STAT_AVE_TIME_RBV") {
+  field(DESC, "Average time for message")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_AVE_TIME")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(DEVICE):FAST_SIZE_RBV") {
+  field(DESC, "Size of fast PMAC store")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_FAST_STORE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(DEVICE):REPORT_FAST") {
+  field(DESC, "Report the contents of fast store")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_REPORT_FAST")
+}
+
+record(longin, "$(DEVICE):MEDIUM_SIZE_RBV") {
+  field(DESC, "Size of medium PMAC store")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MEDIUM_STORE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(DEVICE):REPORT_MEDIUM") {
+  field(DESC, "Report the contents of medium store")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_REPORT_MEDIUM")
+}
+
+record(longin, "$(DEVICE):SLOW_SIZE_RBV") {
+  field(DESC, "Size of slow PMAC store")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_SLOW_STORE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(DEVICE):REPORT_SLOW") {
+  field(DESC, "Report the contents of slow store")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_REPORT_SLOW")
 }
