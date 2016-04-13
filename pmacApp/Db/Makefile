@@ -22,6 +22,7 @@ DB += pmac_cs_axis.template
 DB += dls_pmac_asyn_motor.template
 DB += motor_in_cs.template
 DB += eloss_kill_autohome_records.template
+DB += pmacVariableWrite.template
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
