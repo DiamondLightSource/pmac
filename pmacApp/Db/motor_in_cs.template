@@ -5,8 +5,6 @@
 #
 ###############################################################
 
-#% macro, PADDR, Address of axis (must be 2 digits e.g. 01)
-
 #Calculate if a move was internal or not
 record(calcout, "$(P)$(M):MR_MIP_INTERNAL") {
   field(DESC, "MR internal")
@@ -45,7 +43,8 @@ record(longout, "$(P)$(M):MR_MOVE_WRITE") {
   field(DESC, "Motor record move")
   field(DTYP, "asynInt32")
   field(VAL, "1")  
-  field(OUT, "@asyn($(PORT),0)PMAC_WI_P47$(PADDR)")
+#  field(OUT, "@asyn($(PORT),0)PMAC_WI_P47$(PADDR)")
+  field(OUT, "@asyn($(PORT),0)PMAC_WI_P`4700+$(ADDR)`")
   field(FLNK, "$(P)$(M):MR_RESET_FLAGS")  
 }
 
@@ -68,7 +67,8 @@ record(calcout, "$(P)$(M):MRES_CALC") {
 
 record(ao, "$(P)$(M):MRES_SET") {
   field(DTYP, "asynFloat64")
-  field(OUT, "@asyn($(PORT),0)PMAC_WD_P48$(PADDR)")
+#  field(OUT, "@asyn($(PORT),0)PMAC_WD_P48$(PADDR)")
+  field(OUT, "@asyn($(PORT),0)PMAC_WD_P`4800+$(ADDR)`")
   field(FLNK, "$(P)$(M):MR_MOVE_WRITE")  
 }
 
@@ -81,7 +81,8 @@ record(calcout, "$(P)$(M):OFF_SET_CALC") {
 
 record(ao, "$(P)$(M):OFF_SET") {
   field(DTYP, "asynFloat64")
-  field(OUT, "@asyn($(PORT),0)PMAC_WD_P49$(PADDR)")
+#  field(OUT, "@asyn($(PORT),0)PMAC_WD_P49$(PADDR)")
+  field(OUT, "@asyn($(PORT),0)PMAC_WD_P`4900+$(ADDR)`")
   field(FLNK, "$(P)$(M):MR_MOVE_WRITE")  
 }
 

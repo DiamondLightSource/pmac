@@ -9,7 +9,6 @@
 # onto pmacStatusAxis screen
 #% macro, ALLOW_HOMED_SET, Set to a blank to allow this axis to have its homed
 # status manually.  This is set to a comment character by default.
-#% macro, ELOSS_VAR, Normally 464+ADDR.  Status P variable for encoder loss.
 
 # disable motor when homing
 record(calcout, "$(P)$(M):SDIS") {
@@ -79,7 +78,7 @@ record(calc, "$(P)$(M):ELOSSVAR") {
 
 record(ai, "$(P)$(M):ELOSS") {
   field(DTYP, "asynInt32")
-  field(INP, "@asyn($(PORT),0)PMAC_VIS_P$(ELOSS_VAR)")  
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_P`464+$(ADDR)`")  
   field(SCAN, "I/O Intr")  
 }
 
@@ -94,7 +93,7 @@ record(calcout, "$(P)$(M):ELOSSRC") {
 
 record(ao, "$(P)$(M):SEND_ELOSSRC") {
   field(DTYP, "asynInt32")
-  field(OUT, "@asyn($(PORT),0)PMAC_VIS_P$(ELOSS_VAR)")  
+  field(OUT, "@asyn($(PORT),0)PMAC_VIS_P`464+$(ADDR)`")  
 }
 
 # Overwrite the description of pmacStatus

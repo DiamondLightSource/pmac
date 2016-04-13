@@ -11,6 +11,12 @@ include $(TOP)/configure/CONFIG
 DBD += pmacAsynMotorPort.dbd
 DBD += pmacAsynMotorPortVxWorks.dbd
 
+DBD += pmac.dbd
+pmac_DBD += base.dbd
+pmac_DBD += asyn.dbd
+pmac_DBD += calcSupport.dbd
+pmac_DBD += busySupport.dbd
+pmac_DBD += motorSupport.dbd
 
 LIBRARY_IOC += pmacAsynMotorPort
 
