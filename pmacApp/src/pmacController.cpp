@@ -675,6 +675,7 @@ asynStatus pmacController::processDrvInfo(char *input, char *output)
   char *sqPtr;
   char *eqPtr;
   char *pinfix;
+  int lstatus = 0;
   static const char *functionName = "processDrvInfo";
 
   debug(DEBUG_TRACE, functionName);
@@ -698,11 +699,30 @@ asynStatus pmacController::processDrvInfo(char *input, char *output)
       pinfix[len] = '\0';
       debug(DEBUG_VARIABLE, functionName, "Input expression", pinfix);
       // Now run the expression through the calc routines
-      postfix(pinfix, ppostfix, &perr);
-      calcPerform(NULL, &presult, ppostfix);
-      debug(DEBUG_VARIABLE, functionName, "Calculated value", (int)presult);
-      sprintf(output, "%s%d%s", ppmacStart, (int)presult, ppmacEnd);
-      debug(DEBUG_VARIABLE, functionName, "Updated PMAC variable", output);
+      lstatus = postfix(pinfix, ppostfix, &perr);
+      if (lstatus != 0){
+        // postfix failed, report error
+        strcpy(output, input);
+        debug(DEBUG_ERROR, functionName, "Postfix expression error", calcErrorStr(perr));
+        debug(DEBUG_ERROR, functionName, "Postfix failed expression", pinfix);
+        status = asynError;
+      } else {
+        lstatus = calcPerform(NULL, &presult, ppostfix);
+        if (lstatus != 0){
+          // postfix failed, report error
+          strcpy(output, input);
+          debug(DEBUG_ERROR, functionName, "Failed to evaluate postfix expression", pinfix);
+          status = asynError;
+        } else {
+          debug(DEBUG_VARIABLE, functionName, "Calculated value", (int)presult);
+          sprintf(output, "%s%d%s", ppmacStart, (int)presult, ppmacEnd);
+          debug(DEBUG_VARIABLE, functionName, "Updated PMAC variable", output);
+        }
+      }
+    } else {
+      // We found only 1` so this cannot be an expression
+      // Simply copy the input into the output
+      strcpy(output, input);
     }
   } else {
     // Simply copy the input into the output
