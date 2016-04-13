@@ -25,6 +25,7 @@ using std::dec;
 #include <epicsTime.h>
 #include <epicsThread.h>
 #include <epicsString.h>
+#include <postfix.h>
 #include <iocsh.h>
 #include <drvSup.h>
 #include <registryFunction.h>
@@ -515,7 +516,7 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
   // PMAC_VxM_...  => PMAC Variable Medium Loop
   // PMAC_VxS_...  => PMAC Variable Slow Loop
   //
-  // x is I for int, D for double or S for string
+  // x is I for int, H for hex, D for double or S for string
   //
   // The must be no j or = in a variable, these items will simply be polled for their current status
   //
@@ -545,7 +546,9 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
     if (findParam(drvInfo, &index) && strlen(drvInfo) > 9 && strncmp(drvInfo, "PMAC_V", 6) == 0 && drvInfo[8] == '_'){
 
       // Retrieve the name of the variable
-      char *pmacVariable = epicsStrDup(drvInfo + 9);
+      char *rawPmacVariable = epicsStrDup(drvInfo + 9);
+      char pmacVariable[128];
+      this->processDrvInfo(rawPmacVariable, pmacVariable);
 
       debug(DEBUG_VARIABLE, functionName, "Creating new parameter", pmacVariable);
       // Check for I, D or S in drvInfo[6]
@@ -618,7 +621,9 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
     if (findParam(drvInfo, &index) && strlen(drvInfo) > 9 && strncmp(drvInfo, "PMAC_W", 6) == 0 && drvInfo[7] == '_'){
 
       // Retrieve the name of the variable
-      char *pmacVariable = epicsStrDup(drvInfo + 8);
+      char *rawPmacVariable = epicsStrDup(drvInfo + 8);
+      char pmacVariable[128];
+      this->processDrvInfo(rawPmacVariable, pmacVariable);
 
       debug(DEBUG_VARIABLE, functionName, "Creating new write only parameter", pmacVariable);
       // Check for I, D or S in drvInfo[7]
@@ -659,6 +664,53 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
   return status;
 }
 
+asynStatus pmacController::processDrvInfo(char *input, char *output)
+{
+  asynStatus status = asynSuccess;
+  char ppmacStart[128];
+  char ppmacEnd[128];
+  char ppostfix[128];
+  short perr = 0;
+  double presult = 0.0;
+  char *sqPtr;
+  char *eqPtr;
+  char *pinfix;
+  static const char *functionName = "processDrvInfo";
+
+  debug(DEBUG_TRACE, functionName);
+
+  // Search for any ` characters that represent an expression
+  sqPtr = strchr(input, '`');
+  if (sqPtr != NULL){
+    strncpy(ppmacStart, input, (sqPtr-input));
+    ppmacStart[sqPtr-input] = '\0';
+    debug(DEBUG_VARIABLE, functionName, "Pre expression", ppmacStart);
+    sqPtr++;
+    // We've found a quote character, search for the end quote
+    eqPtr = strchr(sqPtr, '`');
+    if (eqPtr != NULL){
+      strcpy(ppmacEnd, eqPtr+1);
+      debug(DEBUG_VARIABLE, functionName, "Post expression", ppmacEnd);
+      // We've found an end quote so check the string
+      int len = eqPtr - sqPtr;
+      pinfix = (char *)malloc((len + 1) * sizeof(char));
+      memcpy(pinfix, sqPtr, len);
+      pinfix[len] = '\0';
+      debug(DEBUG_VARIABLE, functionName, "Input expression", pinfix);
+      // Now run the expression through the calc routines
+      postfix(pinfix, ppostfix, &perr);
+      calcPerform(NULL, &presult, ppostfix);
+      debug(DEBUG_VARIABLE, functionName, "Calculated value", (int)presult);
+      sprintf(output, "%s%d%s", ppmacStart, (int)presult, ppmacEnd);
+      debug(DEBUG_VARIABLE, functionName, "Updated PMAC variable", output);
+    }
+  } else {
+    // Simply copy the input into the output
+    strcpy(output, input);
+  }
+
+  return status;
+}
 
 void pmacController::callback(pmacCommandStore *sPtr, int type)
 {

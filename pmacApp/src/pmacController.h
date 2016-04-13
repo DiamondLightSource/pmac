@@ -135,6 +135,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
 
   void setDebugLevel(int level, int axis);
   asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
+  asynStatus processDrvInfo(char *input, char *output);
   virtual void callback(pmacCommandStore *sPtr, int type);
   asynStatus slowUpdate(pmacCommandStore *sPtr);
   asynStatus mediumUpdate(pmacCommandStore *sPtr);
