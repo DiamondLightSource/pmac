@@ -1,6 +1,7 @@
 from iocbuilder import Device, AutoSubstitution, records, RecordFactory, SetSimulation, Architecture, ModuleBase
 from iocbuilder.arginfo import *
 from iocbuilder.modules.asyn import AsynPort, Asyn
+from iocbuilder.modules.calc import Calc
 from iocbuilder.modules.motor import MotorLib, basic_asyn_motor, MotorRecord
 from iocbuilder.modules.busy import Busy
 
@@ -196,6 +197,11 @@ class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
 dls_pmac_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 dls_pmac_asyn_motor.ArgInfo.descriptions["SPORT"] = Ident("Delta tau motor controller comms port", DeltaTauCommsPort)
 
+
+class autohome(AutoSubstitution):
+    Dependencies = (Calc,)
+    TemplateFile = 'autohome.template'
+autohome.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller port", DeltaTau)
 
 class _pmacStatusAxis(AutoSubstitution):
 #    ProtocolFiles = ['pmac.proto']
