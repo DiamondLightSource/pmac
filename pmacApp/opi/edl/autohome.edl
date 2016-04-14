@@ -1,0 +1,3455 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 189
+y 451
+w 684
+h 331
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 0
+botShadowColor index 14
+title "Homing - $(P)"
+showGrid
+snapToGrid
+gridSize 5
+disableScroll
+endScreenProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 685
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 685
+h 30
+lineColor index 3
+fill
+fillColor index 3
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 3
+w 685
+h 24
+lineColor index 11
+fillColor index 0
+numPoints 3
+xPoints {
+  0 0
+  1 685
+  2 685
+}
+yPoints {
+  0 27
+  1 27
+  2 3
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 0
+y 3
+w 685
+h 24
+font "arial-bold-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 48
+value {
+  "Homing - $(P)"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 3
+w 685
+h 24
+lineColor index 1
+fillColor index 0
+numPoints 3
+xPoints {
+  0 0
+  1 0
+  2 685
+}
+yPoints {
+  0 27
+  1 3
+  2 3
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 595
+y 305
+w 80
+h 20
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-14.0"
+3d
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 45
+w 180
+h 165
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 5
+y 35
+w 96
+h 15
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  Homing Status  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 10
+y 125
+w 170
+h 25
+controlPv "$(P):HM:STATUS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 10
+y 70
+w 170
+h 25
+controlPv "$(P):HM:STATE"
+fgColor index 16
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 160
+w 170
+h 20
+font "arial-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Move timer"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 50
+w 170
+h 20
+font "arial-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Homing State:"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 105
+w 170
+h 20
+font "arial-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Homing Status:"
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 235
+w 180
+h 90
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 5
+y 225
+w 100
+h 15
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  Homing Control  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 290
+w 70
+h 30
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P):HM:HOME"
+pressValue "1"
+onLabel "Home"
+offLabel "Home"
+3d
+useEnumNumeric
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 110
+y 290
+w 70
+h 30
+fgColor index 20
+onColor index 3
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P):HM:ABORT.PROC"
+releaseValue "1"
+onLabel "Abort"
+offLabel "Abort"
+3d
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 295
+w 20
+h 20
+controlPv "$(P):HM:HOMING"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 0
+numBits 1
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 200
+y 45
+w 475
+h 255
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 200
+y 35
+w 74
+h 15
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  Axis Status  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 260
+w 170
+h 25
+fgColor index 25
+bgColor index 3
+inconsistentColor index 0
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P):HM:HMGRP"
+font "arial-medium-r-12.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 240
+w 170
+h 20
+font "arial-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Group of axes to home:"
+}
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 55
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 55
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "1"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 55
+w 130
+h 15
+controlPv "$(Motor1):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 55
+w 85
+h 15
+controlPv "$(Motor1):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M1PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 280
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 280
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "32"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 280
+w 130
+h 15
+controlPv "$(Motor32):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 280
+w 85
+h 15
+controlPv "$(Motor32):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M32PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 70
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 70
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "2"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 70
+w 130
+h 15
+controlPv "$(Motor2):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 70
+w 85
+h 15
+controlPv "$(Motor2):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M2PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 85
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 85
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "3"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 85
+w 130
+h 15
+controlPv "$(Motor3):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 85
+w 85
+h 15
+controlPv "$(Motor3):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M3PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 100
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 100
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "4"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 100
+w 130
+h 15
+controlPv "$(Motor4):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 100
+w 85
+h 15
+controlPv "$(Motor4):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M4PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 115
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 115
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "5"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 115
+w 130
+h 15
+controlPv "$(Motor5):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 115
+w 85
+h 15
+controlPv "$(Motor5):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M5PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 130
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 130
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "6"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 130
+w 130
+h 15
+controlPv "$(Motor6):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 130
+w 85
+h 15
+controlPv "$(Motor6):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M6PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 145
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 145
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "7"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 145
+w 130
+h 15
+controlPv "$(Motor7):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 145
+w 85
+h 15
+controlPv "$(Motor7):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M7PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 160
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 160
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "8"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 160
+w 130
+h 15
+controlPv "$(Motor8):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 160
+w 85
+h 15
+controlPv "$(Motor8):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M8PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 175
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 175
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "9"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 175
+w 130
+h 15
+controlPv "$(Motor9):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 175
+w 85
+h 15
+controlPv "$(Motor9):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M9PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 190
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 190
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "10"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 190
+w 130
+h 15
+controlPv "$(Motor10):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 190
+w 85
+h 15
+controlPv "$(Motor10):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M10PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 205
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 205
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "11"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 205
+w 130
+h 15
+controlPv "$(Motor11):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 205
+w 85
+h 15
+controlPv "$(Motor11):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M11PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 220
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 220
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "12"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 220
+w 130
+h 15
+controlPv "$(Motor12):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 220
+w 85
+h 15
+controlPv "$(Motor12):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M12PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 235
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 235
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "13"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 235
+w 130
+h 15
+controlPv "$(Motor13):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 235
+w 85
+h 15
+controlPv "$(Motor13):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M13PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 250
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 250
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "14"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 250
+w 130
+h 15
+controlPv "$(Motor14):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 250
+w 85
+h 15
+controlPv "$(Motor14):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M14PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 265
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 265
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "15"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 265
+w 130
+h 15
+controlPv "$(Motor15):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 265
+w 85
+h 15
+controlPv "$(Motor15):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M15PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 280
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 205
+y 280
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "16"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 220
+y 280
+w 130
+h 15
+controlPv "$(Motor16):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 350
+y 280
+w 85
+h 15
+controlPv "$(Motor16):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M16PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 55
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 55
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "17"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 55
+w 130
+h 15
+controlPv "$(Motor17):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 55
+w 85
+h 15
+controlPv "$(Motor17):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M17PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 70
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 70
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "18"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 70
+w 130
+h 15
+controlPv "$(Motor18):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 70
+w 85
+h 15
+controlPv "$(Motor18):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M18PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 85
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 85
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "19"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 85
+w 130
+h 15
+controlPv "$(Motor19):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 85
+w 85
+h 15
+controlPv "$(Motor19):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M19PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 100
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 100
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "20"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 100
+w 130
+h 15
+controlPv "$(Motor20):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 100
+w 85
+h 15
+controlPv "$(Motor20):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M20PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 115
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 115
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "21"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 115
+w 130
+h 15
+controlPv "$(Motor21):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 115
+w 85
+h 15
+controlPv "$(Motor21):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M21PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 130
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 130
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "22"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 130
+w 130
+h 15
+controlPv "$(Motor22):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 130
+w 85
+h 15
+controlPv "$(Motor22):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M22PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 145
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 145
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "23"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 145
+w 130
+h 15
+controlPv "$(Motor23):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 145
+w 85
+h 15
+controlPv "$(Motor23):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M23PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 160
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 160
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "24"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 160
+w 130
+h 15
+controlPv "$(Motor24):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 160
+w 85
+h 15
+controlPv "$(Motor24):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M24PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 175
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 175
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "25"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 175
+w 130
+h 15
+controlPv "$(Motor25):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 175
+w 85
+h 15
+controlPv "$(Motor25):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M25PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 190
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 190
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "26"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 190
+w 130
+h 15
+controlPv "$(Motor26):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 190
+w 85
+h 15
+controlPv "$(Motor26):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M26PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 205
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 205
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "27"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 205
+w 130
+h 15
+controlPv "$(Motor27):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 205
+w 85
+h 15
+controlPv "$(Motor27):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M27PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 220
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 220
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "28"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 220
+w 130
+h 15
+controlPv "$(Motor28):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 220
+w 85
+h 15
+controlPv "$(Motor28):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M28PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 235
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 235
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "29"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 235
+w 130
+h 15
+controlPv "$(Motor29):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 235
+w 85
+h 15
+controlPv "$(Motor29):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M29PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 250
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 250
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "30"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 250
+w 130
+h 15
+controlPv "$(Motor30):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 250
+w 85
+h 15
+controlPv "$(Motor30):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M30PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 265
+w 230
+h 16
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 440
+y 265
+w 16
+h 16
+font "arial-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+value {
+  "31"
+}
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 455
+y 265
+w 130
+h 15
+controlPv "$(Motor31):HMPOS.DESC"
+fgColor index 14
+bgColor index 3
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 585
+y 265
+w 85
+h 15
+controlPv "$(Motor31):HMPOS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-medium-r-10.0"
+fontAlign "center"
+lineWidth 1
+lineAlarm
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:M31PV.SEVR"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 3550
+y 3050
+w 50
+h 25
+fgColour index 14
+bgColour index 0
+topShadowColour index 0
+botShadowColour index 14
+font "arial-medium-r-18.0"
+numItems 1
+symbolTag {
+  0 "?"
+}
+symbol0 {
+  0 "Motor1"
+}
+PV0 {
+  0 "$(P):HM:M1PV"
+}
+symbol1 {
+  0 "Motor2"
+}
+PV1 {
+  0 "$(P):HM:M2PV"
+}
+symbol2 {
+  0 "Motor3"
+}
+PV2 {
+  0 "$(P):HM:M3PV"
+}
+symbol3 {
+  0 "Motor4"
+}
+PV3 {
+  0 "$(P):HM:M4PV"
+}
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 3550
+y 3050
+w 50
+h 25
+fgColour index 14
+bgColour index 0
+topShadowColour index 0
+botShadowColour index 14
+font "arial-medium-r-18.0"
+numItems 1
+symbolTag {
+  0 "?"
+}
+symbol0 {
+  0 "Motor5"
+}
+PV0 {
+  0 "$(P):HM:M5PV"
+}
+symbol1 {
+  0 "Motor6"
+}
+PV1 {
+  0 "$(P):HM:M6PV"
+}
+symbol2 {
+  0 "Motor7"
+}
+PV2 {
+  0 "$(P):HM:M7PV"
+}
+symbol3 {
+  0 "Motor8"
+}
+PV3 {
+  0 "$(P):HM:M8PV"
+}
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 3550
+y 3050
+w 50
+h 25
+fgColour index 14
+bgColour index 0
+topShadowColour index 0
+botShadowColour index 14
+font "arial-medium-r-18.0"
+numItems 1
+symbolTag {
+  0 "?"
+}
+symbol0 {
+  0 "Motor9"
+}
+PV0 {
+  0 "$(P):HM:M9PV"
+}
+symbol1 {
+  0 "Motor10"
+}
+PV1 {
+  0 "$(P):HM:M10PV"
+}
+symbol2 {
+  0 "Motor11"
+}
+PV2 {
+  0 "$(P):HM:M11PV"
+}
+symbol3 {
+  0 "Motor12"
+}
+PV3 {
+  0 "$(P):HM:M12PV"
+}
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 3550
+y 3050
+w 50
+h 25
+fgColour index 14
+bgColour index 0
+topShadowColour index 0
+botShadowColour index 14
+font "arial-medium-r-18.0"
+numItems 1
+symbolTag {
+  0 "?"
+}
+symbol0 {
+  0 "Motor13"
+}
+PV0 {
+  0 "$(P):HM:M13PV"
+}
+symbol1 {
+  0 "Motor14"
+}
+PV1 {
+  0 "$(P):HM:M14PV"
+}
+symbol2 {
+  0 "Motor15"
+}
+PV2 {
+  0 "$(P):HM:M15PV"
+}
+symbol3 {
+  0 "Motor16"
+}
+PV3 {
+  0 "$(P):HM:M16PV"
+}
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 3550
+y 3050
+w 50
+h 25
+fgColour index 14
+bgColour index 0
+topShadowColour index 0
+botShadowColour index 14
+font "arial-medium-r-18.0"
+numItems 1
+symbolTag {
+  0 "?"
+}
+symbol0 {
+  0 "Motor17"
+}
+PV0 {
+  0 "$(P):HM:M17PV"
+}
+symbol1 {
+  0 "Motor18"
+}
+PV1 {
+  0 "$(P):HM:M18PV"
+}
+symbol2 {
+  0 "Motor19"
+}
+PV2 {
+  0 "$(P):HM:M19PV"
+}
+symbol3 {
+  0 "Motor20"
+}
+PV3 {
+  0 "$(P):HM:M20PV"
+}
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 3550
+y 3050
+w 50
+h 25
+fgColour index 14
+bgColour index 0
+topShadowColour index 0
+botShadowColour index 14
+font "arial-medium-r-18.0"
+numItems 1
+symbolTag {
+  0 "?"
+}
+symbol0 {
+  0 "Motor21"
+}
+PV0 {
+  0 "$(P):HM:M21PV"
+}
+symbol1 {
+  0 "Motor22"
+}
+PV1 {
+  0 "$(P):HM:M22PV"
+}
+symbol2 {
+  0 "Motor23"
+}
+PV2 {
+  0 "$(P):HM:M23PV"
+}
+symbol3 {
+  0 "Motor24"
+}
+PV3 {
+  0 "$(P):HM:M24PV"
+}
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 3550
+y 3050
+w 50
+h 25
+fgColour index 14
+bgColour index 0
+topShadowColour index 0
+botShadowColour index 14
+font "arial-medium-r-18.0"
+numItems 1
+symbolTag {
+  0 "?"
+}
+symbol0 {
+  0 "Motor25"
+}
+PV0 {
+  0 "$(P):HM:M25PV"
+}
+symbol1 {
+  0 "Motor26"
+}
+PV1 {
+  0 "$(P):HM:M26PV"
+}
+symbol2 {
+  0 "Motor27"
+}
+PV2 {
+  0 "$(P):HM:M27PV"
+}
+symbol3 {
+  0 "Motor28"
+}
+PV3 {
+  0 "$(P):HM:M28PV"
+}
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 3550
+y 3050
+w 50
+h 25
+fgColour index 14
+bgColour index 0
+topShadowColour index 0
+botShadowColour index 14
+font "arial-medium-r-18.0"
+numItems 1
+symbolTag {
+  0 "?"
+}
+symbol0 {
+  0 "Motor29"
+}
+PV0 {
+  0 "$(P):HM:M29PV"
+}
+symbol1 {
+  0 "Motor30"
+}
+PV1 {
+  0 "$(P):HM:M30PV"
+}
+symbol2 {
+  0 "Motor31"
+}
+PV2 {
+  0 "$(P):HM:M31PV"
+}
+symbol3 {
+  0 "Motor32"
+}
+PV3 {
+  0 "$(P):HM:M32PV"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 200
+y 305
+w 250
+h 20
+font "arial-bold-r-12.0"
+fontAlign "right"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Debug? (Pause after every stage)"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 455
+y 305
+w 130
+h 20
+fgColor index 25
+bgColor index 3
+inconsistentColor index 0
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P):HM:DEBUG"
+font "arial-medium-r-12.0"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 180
+w 170
+h 25
+
+beginGroup
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 5
+release 0
+x 10
+y 180
+w 170
+h 25
+controlPv "$(P):HM:TIMEOUT"
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 0
+fastUpdate
+useHexPrefix
+showUnits
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+endGroup
+
+visPv "$(P):HM:STATUS"
+visInvert
+visMin "8"
+visMax "9"
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 180
+w 170
+h 25
+fgColor index 19
+onColor index 3
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P):HM:RESUME.PROC"
+releaseValue "1"
+onLabel "Click to Resume"
+offLabel "Click to Resume"
+3d
+font "arial-bold-r-14.0"
+visPv "$(P):HM:STATUS"
+visMin "8"
+visMax "9"
+endObjectProperties
+
