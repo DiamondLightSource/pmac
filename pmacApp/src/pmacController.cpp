@@ -2099,9 +2099,8 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
     }
   }
 
-  // Calculate how many points can be written into a single message
-  // nAxes + 1 is due to the extra time and user buffer
-  nBuffers = PMAC_POINTS_PER_WRITE / (nAxes+1);
+  // How many points can be written into a single message
+  nBuffers = PMAC_POINTS_PER_WRITE;
 
 
   // Check the number of points we have, if greater than the buffer size
@@ -2154,21 +2153,32 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
 
     // Construct the final cmd string
     char cstr[1024];
+    // First send the times/user buffer
     sprintf(cstr, "%s", cmd[9]);
+    debug(DEBUG_ERROR, functionName, "Command", cstr);
+    this->unlock();
+    status = this->immediateWriteRead(cstr, response);
+    this->lock();
+    // Now send the axis positions
     for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
       if ((1<<index & tScanAxisMask_) > 0){
-        sprintf(cstr, "%s %s", cstr, cmd[index]);
+        sprintf(cstr, "%s", cmd[index]);
+        debug(DEBUG_ERROR, functionName, "Command", cstr);
+        this->unlock();
+        status = this->immediateWriteRead(cstr, response);
+        this->lock();
       }
     }
 
-    // Append the current buffer pointer to the command string ready to send to the PMAC
+    // Finally send the current buffer pointer to the PMAC
     if (buffer == PMAC_TRAJ_BUFFER_A){
-      sprintf(cstr, "%s %s=%d", cstr, PMAC_TRAJ_BUFF_FILL_A, epicsBufferPtr);
+      sprintf(cstr, "%s=%d", PMAC_TRAJ_BUFF_FILL_A, epicsBufferPtr);
     } else if (buffer == PMAC_TRAJ_BUFFER_B){
-      sprintf(cstr, "%s %s=%d", cstr, PMAC_TRAJ_BUFF_FILL_B, epicsBufferPtr);
+      sprintf(cstr, "%s=%d", PMAC_TRAJ_BUFF_FILL_B, epicsBufferPtr);
     } else {
       // TODO: ERROR!!
     }
+    debug(DEBUG_ERROR, functionName, "Command", cstr);
     this->unlock();
     status = this->immediateWriteRead(cstr, response);
     this->lock();
@@ -2180,10 +2190,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
     } else {
       // TODO: ERROR!!
     }
-
-    debug(DEBUG_FLOW, functionName, "Command", cstr);
   }
-
   stopTimer(DEBUG_ERROR, functionName, "Time taken to send trajectory demand");
 
   return status;
