@@ -1,5 +1,7 @@
 language: cpp
 compiler: gcc
+sudo: required
+dist: trusty
 
 env:
   - EPICS_BASE=/usr/lib/epics EPICS_HOST_ARCH=linux-x86_64
