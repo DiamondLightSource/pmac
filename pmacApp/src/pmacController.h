@@ -112,6 +112,7 @@
 #define PMAC_TRAJ_BUFF_FILL_A    "P4011" // Fill level of buffer A
 #define PMAC_TRAJ_BUFF_FILL_B    "P4012" // Fill level of buffer B
 #define PMAC_TRAJ_CURR_FILL      "P4013" // The indexes that current buffer has been filled up to
+#define PMAC_TRAJ_CURR_POS       4111    // The current position P variable base index
 
 #define PMAC_TRAJ_BUFFER_A 0
 #define PMAC_TRAJ_BUFFER_B 1
@@ -156,6 +157,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   // Trajectory scanning methods
   asynStatus initializeProfile(size_t maxPoints);
   asynStatus buildProfile(int csNo);
+  asynStatus preparePMAC();
   asynStatus executeProfile(int csNo);
   asynStatus abortProfile();
   void trajectoryTask();
