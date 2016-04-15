@@ -35,6 +35,7 @@ pmacCSAxis::pmacCSAxis(pmacCSController *pController, int axisNo)
 //  deferredRelative_ = 0;
 //  deferredTime_ = 0;
   scale_ = 10000;
+  position_ = 0.0;
   previous_position_ = 0.0;
   previous_direction_ = 0;
 //  amp_enabled_ = 0;
@@ -161,6 +162,11 @@ bool pmacCSAxis::getMoving()
   return moving_;
 }
 
+double pmacCSAxis::getCurrentPosition()
+{
+  return position_;
+}
+
 void pmacCSAxis::callback(pmacCommandStore *sPtr, int type)
 {
   asynStatus status = asynSuccess;
@@ -248,6 +254,9 @@ asynStatus pmacCSAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     homeSignal = 0;
 
     position *= scale_;
+
+    // Record current position
+    position_ = position;
 
     setDoubleParam(pC_->motorPosition_, position);
     setDoubleParam(pC_->motorEncoderPosition_, position);

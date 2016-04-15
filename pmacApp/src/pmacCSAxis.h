@@ -29,6 +29,7 @@ public:
 //  asynStatus setPosition(double position);
 //  asynStatus setClosedLoop(bool closedLoop);
   bool getMoving();
+  double getCurrentPosition();
 
   virtual void callback(pmacCommandStore *sPtr, int type);
 
@@ -56,6 +57,7 @@ private:
   double deferredTime_;
   */
   int scale_;
+  double position_;
   double previous_position_;
   int previous_direction_;
   /*

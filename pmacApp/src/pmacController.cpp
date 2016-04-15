@@ -1783,6 +1783,12 @@ asynStatus pmacController::buildProfile(int csNo)
     }
   }
 
+  if (status == asynSuccess){
+    // If all checks have passed so far then send the relevant starting params
+    // to the PMAC and fill the first half buffer
+    status = preparePMAC();
+  }
+
   // Finally if the profile build has completed then set the status accordingly
   if (status == asynSuccess){
     // Set the number of points in the scan
@@ -1799,6 +1805,52 @@ asynStatus pmacController::buildProfile(int csNo)
   }
   callParamCallbacks();
 
+  return status;
+}
+
+asynStatus pmacController::preparePMAC()
+{
+  asynStatus status = asynSuccess;
+  int axisMask = 0;
+  char response[1024];
+  char cmd[1024];
+  const char *functionName = "preparePMAC";
+
+  debug(DEBUG_TRACE, functionName);
+
+  // Set the trajectory CS number
+  setIntegerParam(PMAC_C_TrajCSNumber_, tScanCSNo_);
+
+  // Reset the scan point counter
+  tScanPointCtr_ = 0;
+
+  // Send the initial half buffer of position updates
+  // (Always buffer 0 to start)
+//  this->lock();
+  status = this->sendTrajectoryDemands(0);
+//  this->unlock();
+
+  if (status == asynSuccess){
+    // Calculate the axis mask ready to send to the PMAC
+    // X => 256
+    // Y => 128
+    // Z => 64
+    // U => 32
+    // V => 16
+    // W => 8
+    // A => 4
+    // B => 2
+    // C => 1
+    for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
+      if ((1<<index & tScanAxisMask_) > 0){
+        // Bits swapped from EPICS axis mask
+        axisMask += (1 << (8 - index));
+      }
+    }
+    sprintf(cmd, "%s=%d", PMAC_TRAJ_AXES, axisMask);
+    debug(DEBUG_ERROR, functionName, "Axis mask to send to PMAC (P4003)", axisMask);
+    status = this->immediateWriteRead(cmd, response);
+  }
   return status;
 }
 
@@ -1908,8 +1960,8 @@ void pmacController::trajectoryTask()
   epicsTimeStamp startTime, endTime;
   double elapsedTime;
   int epicsBufferNumber = 0;
-  int axisMask = 0;
   int progRunning = 0;
+  double position = 0.0;
   char response[1024];
   char cmd[1024];
   const char *functionName = "trajectoryTask";
@@ -1928,46 +1980,39 @@ void pmacController::trajectoryTask()
 
       debug(DEBUG_TRACE, functionName, "Trajectory scan started");
 
-      // Set the trajectory CS number
-      setIntegerParam(PMAC_C_TrajCSNumber_, tScanCSNo_);
-
-      // Reset the scan point counter
-      tScanPointCtr_ = 0;
-
-      // Reset the epicsBuffer number
+      // Reset the buffer number
       epicsBufferNumber = 0;
-
-      // Send the initial half buffer of position updates
-      status = this->sendTrajectoryDemands(epicsBufferNumber);
 
       // Record the scan start time
       epicsTimeGetCurrent(&startTime);
-
-      // Calculate the axis mask ready to send to the PMAC
-      // X => 256
-      // Y => 128
-      // Z => 64
-      // U => 32
-      // V => 16
-      // W => 8
-      // A => 4
-      // B => 2
-      // C => 1
-      axisMask = 0;
-      for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
-        if ((1<<index & tScanAxisMask_) > 0){
-          // Bits swapped from EPICS axis mask
-          axisMask += (1 << (8 - index));
-        }
-      }
-      sprintf(cmd, "%s=%d", PMAC_TRAJ_AXES, axisMask);
-      debug(DEBUG_ERROR, functionName, "Axis mask to send to PMAC (P4003)", axisMask);
-      this->immediateWriteRead(cmd, response);
 
       // Abort any current move to make sure axes are enabled
       sprintf(cmd, "&%dA", tScanCSNo_);
       debug(DEBUG_ERROR, functionName, "Sending command to abort previous move", cmd);
       this->immediateWriteRead(cmd, response);
+
+      // Now send to the PMAC the current position of any axes involved in the scan
+      for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
+        if ((1<<index & tScanAxisMask_) > 0){
+          if(tScanCSNo_ == 1){
+            // Special case CS 1 means use real motors
+            if (this->getAxis(index+1) != NULL){
+              position = this->getAxis(index+1)->previous_position_;
+              sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
+              debug(DEBUG_ERROR, functionName, "Sending current position for axis", cmd);
+              this->immediateWriteRead(cmd, response);
+            }
+          } else {
+            if (pCSControllers_[tScanCSNo_]->getAxis(index+1) != NULL){
+              position = pCSControllers_[tScanCSNo_]->getAxis(index+1)->getCurrentPosition();
+              sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
+              debug(DEBUG_ERROR, functionName, "Sending current position for axis", cmd);
+              this->immediateWriteRead(cmd, response);
+            }
+          }
+        }
+      }
+
       // We are ready to execute the start demand
       sprintf(cmd, "&%dB%dR", tScanCSNo_, 1); // TODO: motion program should not be hardcoded to 1
       debug(DEBUG_ERROR, functionName, "Sending command to start the trajectory move", cmd);
@@ -1982,6 +2027,13 @@ void pmacController::trajectoryTask()
       // Set the message accordingly
       setStringParam(profileExecuteMessage_, "Executing trajectory scan");
       callParamCallbacks();
+
+      // Now wait until we have confirmation that the scan has started
+      while ((tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING) && tScanExecuting_){
+        this->unlock();
+        status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
+        this->lock();
+      }
     }
 
     // Check if the reported PMAC buffer number is the same as the EPICS buffer number
@@ -1995,7 +2047,9 @@ void pmacController::trajectoryTask()
       }
       // EPICS buffer number has just been updated, so fill the next
       // half buffer with positions
+      this->unlock();
       status = this->sendTrajectoryDemands(epicsBufferNumber);
+      this->lock();
     }
 
     // Record the current scan time
@@ -2007,7 +2061,7 @@ void pmacController::trajectoryTask()
     // Check if the scan has stopped/finished (status from PMAC)
     // Only start checking this value after we have been running for
     // long enough to be reading the current scan value
-    if (elapsedTime > 2.0 && tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING){
+    if (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING){
       debug(DEBUG_ERROR, functionName, "tScanPmacStatus", tScanPmacStatus_);
       // Something has happened on the PMAC side
       tScanExecuting_ = 0;
@@ -2032,7 +2086,7 @@ void pmacController::trajectoryTask()
     // Check here if the scan status reported by the PMAC is running but
     // the motion program is not running, this points to some other error
     // (possibly motor in limit)
-    if (elapsedTime > 2.0 && tScanPmacStatus_ == PMAC_TRAJ_STATUS_RUNNING){
+    if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_RUNNING){
       if (pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning) == asynSuccess){
         if (progRunning == 0){
           // Program not running but it should be
@@ -2048,7 +2102,7 @@ void pmacController::trajectoryTask()
     }
 
     // Here we need to check for CS errors that would abort the scan
-    if (elapsedTime > 2.0 && pCSControllers_[tScanCSNo_]->tScanCheckForErrors() != asynSuccess){
+    if (pCSControllers_[tScanCSNo_]->tScanCheckForErrors() != asynSuccess){
       // There has been a CS error reported.  Abort the scan
       tScanExecuting_ = 0;
       // Set the status to 1 here, error detected
@@ -2069,13 +2123,6 @@ void pmacController::trajectoryTask()
       status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
       this->lock();
     }
-
-    // TODO: Check the total points
-    // TODO: Check the current point
-    // TODO: Check the PMAC buffer and point
-    // TODO: Work out how many points we can write in a single message
-    // TODO: Fill a buffer
-    // TODO: Wait for next available buffer
   }
 }
 
@@ -2099,9 +2146,8 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
     }
   }
 
-  // Calculate how many points can be written into a single message
-  // nAxes + 1 is due to the extra time and user buffer
-  nBuffers = PMAC_POINTS_PER_WRITE / (nAxes+1);
+  // How many points can be written into a single message
+  nBuffers = PMAC_POINTS_PER_WRITE;
 
 
   // Check the number of points we have, if greater than the buffer size
@@ -2154,24 +2200,29 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
 
     // Construct the final cmd string
     char cstr[1024];
+    // First send the times/user buffer
     sprintf(cstr, "%s", cmd[9]);
+    debug(DEBUG_ERROR, functionName, "Command", cstr);
+    status = this->immediateWriteRead(cstr, response);
+    // Now send the axis positions
     for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
       if ((1<<index & tScanAxisMask_) > 0){
-        sprintf(cstr, "%s %s", cstr, cmd[index]);
+        sprintf(cstr, "%s", cmd[index]);
+        debug(DEBUG_ERROR, functionName, "Command", cstr);
+        status = this->immediateWriteRead(cstr, response);
       }
     }
 
-    // Append the current buffer pointer to the command string ready to send to the PMAC
+    // Finally send the current buffer pointer to the PMAC
     if (buffer == PMAC_TRAJ_BUFFER_A){
-      sprintf(cstr, "%s %s=%d", cstr, PMAC_TRAJ_BUFF_FILL_A, epicsBufferPtr);
+      sprintf(cstr, "%s=%d", PMAC_TRAJ_BUFF_FILL_A, epicsBufferPtr);
     } else if (buffer == PMAC_TRAJ_BUFFER_B){
-      sprintf(cstr, "%s %s=%d", cstr, PMAC_TRAJ_BUFF_FILL_B, epicsBufferPtr);
+      sprintf(cstr, "%s=%d", PMAC_TRAJ_BUFF_FILL_B, epicsBufferPtr);
     } else {
       // TODO: ERROR!!
     }
-    this->unlock();
+    debug(DEBUG_ERROR, functionName, "Command", cstr);
     status = this->immediateWriteRead(cstr, response);
-    this->lock();
     // Set the parameter according to the filled points
     if (buffer == PMAC_TRAJ_BUFFER_A){
       setIntegerParam(PMAC_C_TrajBuffFillA_, epicsBufferPtr);
@@ -2180,10 +2231,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
     } else {
       // TODO: ERROR!!
     }
-
-    debug(DEBUG_FLOW, functionName, "Command", cstr);
   }
-
   stopTimer(DEBUG_ERROR, functionName, "Time taken to send trajectory demand");
 
   return status;
