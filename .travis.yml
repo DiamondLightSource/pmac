@@ -14,10 +14,10 @@ install:
 
 # Run the tests
 script:
-  - ./bin/linux-x86_64/plugin-test --log_level=test_suite
+  - ./bin/linux-x86_64/pmac-test --log_level=all
 
 # If all worked then work out the coverage and update coveralls.io
-after_success:
-  - sh ci/coverage.sh
-  - coveralls-lcov --source-encoding=ISO-8859-1 ci/coverage.info
+#after_success:
+#  - sh ci/coverage.sh
+#  - coveralls-lcov --source-encoding=ISO-8859-1 ci/coverage.info
   
