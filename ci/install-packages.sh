@@ -9,7 +9,7 @@ echo "deb-src http://epics.nsls2.bnl.gov/debian/ wheezy main contrib" | sudo tee
 
 # Installing the latest 3rd party packages: EPICS, hdf5, tiff, etc.
 sudo apt-get update -qq
-sudo apt-get install epics-dev libhdf5-serial-dev libtiff-dev libxml2-dev libboost-test-dev
+sudo apt-get -y install epics-dev libhdf5-serial-dev libtiff-dev libxml2-dev libboost-test-dev
 
 # Installing latest version of code coverage tool lcov (because the ubuntu package is very old)
 wget http://downloads.sourceforge.net/ltp/lcov-1.11.tar.gz
