@@ -7,7 +7,7 @@ set -e
 # with the details of where to find various external libraries.
 echo "EPICS_BASE=/usr/lib/epics"             >> configure/RELEASE.local
 echo "BOOST=/usr"                            >> configure/CONFIG_SITE.linux-x86_64.Common
-echo "BOOST_LIB=/usr/lib"                    >> configure/CONFIG_SITE.linux-x86_64.Common
+echo "BOOST_LIB=/usr/lib/x86_64-linux-gnu"   >> configure/CONFIG_SITE.linux-x86_64.Common
 echo "BOOST_INCLUDE=-I/usr/include"          >> configure/CONFIG_SITE.linux-x86_64.Common
 echo "HOST_OPT=NO"                           >> configure/CONFIG_SITE.linux-x86_64.Common 
 echo "USR_CXXFLAGS_Linux=--coverage"         >> configure/CONFIG_SITE.linux-x86_64.Common 
