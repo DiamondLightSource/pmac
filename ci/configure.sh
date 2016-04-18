@@ -39,3 +39,5 @@ echo "include \$(TOP)/configure/RULES_DIRS" >> pmacApp/Makefile
 echo "======= pmacApp/Makefile ==============================================="
 cat pmacApp/Makefile
 
+ls /usr/lib
+
