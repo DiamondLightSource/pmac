@@ -25,10 +25,10 @@ make -C busy-1-6-1/
 wget -nv http://www.aps.anl.gov/bcda/synApps/motor/tar/motorR6-9.tar.gz
 tar -zxf motorR6-9.tar.gz
 echo "TOP = .." > motorR6-9/motorApp/Makefile
-echo "include \$(TOP)/configure/CONFIG" > motorR6-9/motorApp/Makefile
-echo "DIRS += MotorSrc" > motorR6-9/motorApp/Makefile
-echo "DIRS += Db" > motorR6-9/motorApp/Makefile
-echo "include \$(TOP)/configure/RULES_DIRS" > motorR6-9/motorApp/Makefile
+echo "include \$(TOP)/configure/CONFIG" >> motorR6-9/motorApp/Makefile
+echo "DIRS += MotorSrc" >> motorR6-9/motorApp/Makefile
+echo "DIRS += Db" >> motorR6-9/motorApp/Makefile
+echo "include \$(TOP)/configure/RULES_DIRS" >> motorR6-9/motorApp/Makefile
 echo "======= Motor Makefile ========================================="
 cat motorR6-9/motorApp/Makefile
 echo "ASYN=`pwd`/asyn-R4-26" > motorR6-9/configure/RELEASE
