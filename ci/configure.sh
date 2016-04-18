@@ -27,3 +27,15 @@ cat configure/CONFIG_SITE.linux-x86_64.Common
 # Remove the RELEASE.linux-x86_64.Common file
 rm configure/RELEASE.linux-x86_64.Common
 
+# Stop the building of database templates, fails without vdct and not required
+# for unit tests.  Also no screen installation required.
+echo "TOP = .." > pmacApp/Makefile
+echo "include \$(TOP)/configure/CONFIG" >> pmacApp/Makefile
+echo "DIRS := \$(DIRS) \$(filter-out \$(DIRS), \$(wildcard *src*))" >> pmacApp/Makefile
+echo "DIRS := \$(DIRS) \$(filter-out \$(DIRS), \$(wildcard *Src*))" >> pmacApp/Makefile
+echo "DIRS += unitTests" >> pmacApp/Makefile
+echo "include \$(TOP)/configure/RULES_DIRS" >> pmacApp/Makefile
+
+echo "======= pmacApp/Makefile ==============================================="
+cat pmacApp/Makefile
+
