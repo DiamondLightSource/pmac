@@ -20,12 +20,21 @@ ifdef BOOST
   # Add pmac tests for new classes like this:
   #pmac-test_SRCS += test_<test name>.cpp
   
-  pmac-test_LIBS += boost_unit_test_framework
+  #pmac-test_LIBS += boost_unit_test_framework
   pmac-test_LIBS += pmacAsynMotorPort
   pmac-test_LIBS += asyn
 	pmac-test_LIBS += $(EPICS_BASE_IOC_LIBS)
-  boost_unit_test_framework_DIR=$(BOOST_LIB)
+  #boost_unit_test_framework_DIR=$(BOOST_LIB)
+  ifdef BOOST_LIB
+    boost_unit_test_framework_DIR=$(BOOST_LIB)
+    pmac-test_LIBS += boost_unit_test_framework
+  else
+    pmac-test_SYS_LIBS += boost_unit_test_framework
+  endif
 endif
+
+USR_INCLUDES += $(BOOST_INCLUDE)
+
 
 include $(TOP)/configure/RULES
 
