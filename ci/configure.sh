@@ -24,3 +24,6 @@ cat configure/RELEASE.local
 echo "======= configure/CONFIG_SITE.linux-x86_64.Common ======================="
 cat configure/CONFIG_SITE.linux-x86_64.Common
 
+# Remove the RELEASE.linux-x86_64.Common file
+rm configure/RELEASE.linux-x86_64.Common
+
