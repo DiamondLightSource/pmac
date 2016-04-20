@@ -24,6 +24,25 @@ DB += motor_in_cs.template
 DB += eloss_kill_autohome_records.template
 DB += pmacVariableWrite.template
 DB += autohome.template
+# The following templates are used for Coordinate Systems
+DB += 1jack_compensated.template
+DB += 2jack.template
+DB += 3jack_mirror.template
+DB += 3jack.template
+DB += accel_dcm.template
+DB += aperture_slits.template
+DB += B22_optics_box.template
+DB += bender.template
+DB += blade_slits.template
+DB += flexure_slits.template
+DB += gap_and_centre_slits.template
+DB += IDT_sagittal_bender.template
+DB += IDT_sagittal_dcm.template
+DB += multi_beamstop_on_platform.template
+DB += qcm.template
+DB += slit4-gui.template
+DB += symetrie_hexapod.template
+DB += zform.template
 
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add

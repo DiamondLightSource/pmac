@@ -1,0 +1,20 @@
+Release notes:
+
+1) Added reporting of PMAC error messages using an EPICS waveform PV. Before this release PMAC error messages were displayed on IOC console only. One EPICS waveform PV per PMAC card was added to the db file .../pmacApp/Db/pmacDb/AsciiPmac_waveform.db: 
+
+record(waveform, "$(pmac)StrErr") {
+  field(DTYP, "PMAC-VME ASCII")
+  field(INP, "#C$(C) S2 @")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
+}
+
+Files drvPmac.c, drvPmac.h, devPmacMbx.c, add_pmac.dbd were modified to add a waveform record support. 
+
+
+2) File statusRecord.c was modified to include definitions for YES/NO macros since they are no longer defined in EPICS-3.14.11 include files:
+
+#if !defined(YES) || !defined(NO)
+#define YES 1
+#define NO 0
+#endif

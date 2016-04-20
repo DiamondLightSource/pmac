@@ -1,0 +1,37 @@
+This directory contains a TSUB Record (Transformation Subroutine) source code
+and a collection of associated transformation subroutines for PMAC working
+through this TSUB record.
+
+TSUB is a general-purpose EPICS record providing a way to run user-written
+transformations in the IOC. The aim of TSUB is to fetch some input values
+through TSUB record "input" DB links, to perfom a transformation according
+to respective transformation subroutine (a user-supplied C-program) and to
+push the output values into the "output" DB links. The name of user-supplied
+subroutine is specified in the TSUB record SNAM field. TSUB record provides
+80 input DB links and 70 output DB links, which should be sufficient for most
+needs. By its versatility, it stands between EPICS Sub (subroutine) Record
+and aSub (Array Subroutine) records included into EPICS Base, although it was
+developed well before aSub. In principle, aSub can be used anywhere instead
+of TSUB, privided one converts respective subroutines written for TSUB and
+replaces the TSUB DB fields with aSub fields.
+
+A typical use of TSUB records with PMAC is to map from e.g. actual motors
+positions into axis positions or from requested axis mosition into requested
+motor position. For example, when one specifies desired monochromator energy,
+a TSUB record and the associated subroutine tsubMOEnAxs (see tsubMO.c) are
+used to map the value into desired monochromator rotary and monochromator
+second crystal translation positions.
+
+The transformation routines in this directory are grouped as one file per
+assembly type. So, when one adds a new PMAC motors assembly type (e.g. an
+XYZ translation stage), he has to write a new tsubXYZ.c file by analogy
+with other assemblies.
+
+As  TSUB is a soft record, it is independent of PMAC and VxWorks and can be
+compiled for e.g. Linux IOC (since the 07/2011 version) and deployed for
+other types of calculations.
+
+
+-- Sergey
+
+
