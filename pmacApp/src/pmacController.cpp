@@ -217,6 +217,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
 
   //Initialize non static data members
+  connected_ = 0;
   cid_ = 0;
   parameterIndex_ = 0;
   lowLevelPortUser_ = NULL;
@@ -342,11 +343,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
     setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
   }
 
-  // Readout the device type
-  this->readDeviceType();
-
-  // Read the kinematics
-  this->storeKinematics();
+  // Initialise the connection
+  this->initialiseConnection();
 
   bool paramStatus = true;
   paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
@@ -850,6 +848,57 @@ void pmacController::callback(pmacCommandStore *sPtr, int type)
 
 }
 
+asynStatus pmacController::checkConnection()
+{
+  asynStatus status = asynSuccess;
+  int connected;
+  static const char *functionName = "checkConnection";
+  debug(DEBUG_FLOW, functionName);
+
+  if (pBroker_ != NULL){
+    status = pBroker_->getConnectedStatus(&connected);
+  } else {
+    status = asynError;
+  }
+
+  if (status == asynSuccess){
+    connected_ = connected;
+    debug(DEBUG_VARIABLE, functionName, "Connection status", connected_);
+  }
+
+  return status;
+}
+
+asynStatus pmacController::initialiseConnection()
+{
+  asynStatus status = asynSuccess;
+  static const char *functionName = "initialiseConnection";
+  debug(DEBUG_FLOW, functionName);
+
+  // Check the connection status
+  status = this->checkConnection();
+
+  if (status == asynSuccess){
+    if (connected_ != 0){
+      // Attempt to read the device type
+      status = this->readDeviceType();
+
+      if (status == asynSuccess){
+        // Read the kinematics
+        status = this->storeKinematics();
+      }
+    } else {
+      status = asynError;
+    }
+  }
+
+  if (status != asynSuccess){
+    debug(DEBUG_ERROR, functionName, "Unable to initialise connection to PMAC!");
+  }
+
+  return status;
+}
+
 asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr)
 {
   asynStatus status = asynSuccess;
@@ -1234,9 +1283,15 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
 
   debug(DEBUG_FLOW, functionName);
 
-  status = pBroker_->immediateWriteRead(command, response);
-  if (status == asynSuccess){
-    status = this->updateStatistics();
+  // Check if we are connected, if not then do not continue
+  if (connected_ != 0){
+    status = pBroker_->immediateWriteRead(command, response);
+    if (status == asynSuccess){
+      status = this->updateStatistics();
+    }
+  } else {
+    strcpy(response, "");
+    status = asynError;
   }
   return status;
 }
@@ -1562,21 +1617,32 @@ asynStatus pmacController::poll()
   epicsTimeGetCurrent(&nowTime_);
   // Always call for a fast update
   debug(DEBUG_TRACE, functionName, "Fast update has been called", tBuff);
-  pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
-  this->updateStatistics();
-  setDoubleParam(PMAC_C_FastUpdateTime_, pBroker_->readUpdateTime());
 
+  // First check the connection
+  this->checkConnection();
+
+  if (connected_ != 0){
+    pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+    this->updateStatistics();
+    setDoubleParam(PMAC_C_FastUpdateTime_, pBroker_->readUpdateTime());
+  }
   if (epicsTimeDiffInSeconds(&nowTime_, &lastMediumTime_) >= PMAC_MEDIUM_LOOP_TIME/1000.0){
     epicsTimeAddSeconds(&lastMediumTime_, PMAC_MEDIUM_LOOP_TIME/1000.0);
     epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
     debug(DEBUG_TRACE, functionName, "Medium update has been called", tBuff);
-    pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+    // Check if we are connected
+    if (connected_ != 0){
+      pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+    }
   }
   if (epicsTimeDiffInSeconds(&nowTime_, &lastSlowTime_) >= PMAC_SLOW_LOOP_TIME/1000.0){
     epicsTimeAddSeconds(&lastSlowTime_, PMAC_SLOW_LOOP_TIME/1000.0);
     epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
     debug(DEBUG_TRACE, functionName, "Slow update has been called", tBuff);
-    pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+    // Check if we are connected
+    if (connected_ != 0){
+      pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+    }
   }
 
   return asynSuccess;

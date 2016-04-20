@@ -14,11 +14,12 @@
 # This associates an edm screen with the template
 # % gui, $(name=), edm, pmacStatus.edl, pmac=$(DEVICE)
 #
+
 # Scan rate for pmac status, plc querying, cpu load querying
-record(fanout, "$(DEVICE):ReadBack") {
-  field(SCAN, "1 second")
-  field(LNK1, "$(DEVICE):AxisRB")
-}
+#record(fanout, "$(DEVICE):ReadBack") {
+#  field(SCAN, "1 second")
+#  field(LNK1, "$(DEVICE):AxisRB")
+#}
 
 # pmac type record
 record(mbbi, "$(DEVICE):PMACTYPE") {
