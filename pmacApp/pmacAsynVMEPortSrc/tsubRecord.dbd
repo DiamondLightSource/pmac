@@ -1,0 +1,2694 @@
+recordtype(tsub) {
+	include "dbCommon.dbd" 
+	field(VAL,DBF_DOUBLE) {
+		prompt("Result")
+		asl(ASL0)
+		pp(TRUE)
+	}
+	field(INAM,DBF_STRING) {
+		prompt("Init Routine Name")
+		promptgroup(GUI_COMMON)
+		special(SPC_NOMOD)
+		interest(1)
+		size(16)
+	}
+	field(SNAM,DBF_STRING) {
+		prompt("Subroutine Name")
+		promptgroup(GUI_ALARMS)
+		special(SPC_NOMOD)
+		interest(1)
+		size(16)
+	}
+	field(SADR,DBF_NOACCESS) {
+		prompt("Subroutine Address")
+		special(SPC_NOMOD)
+		interest(4)
+		size(4)
+		extra("void *		sadr")
+	}
+	field(STYP,DBF_SHORT) {
+		prompt("Subr symbol type")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(EGU,DBF_STRING) {
+		prompt("Units Name")
+		promptgroup(GUI_TIMER)
+		interest(1)
+		size(16)
+	}
+	field(HOPR,DBF_FLOAT) {
+		prompt("High Operating Rng")
+		promptgroup(GUI_WAVE)
+		interest(1)
+	}
+	field(LOPR,DBF_FLOAT) {
+		prompt("Low Operating Range")
+		promptgroup(GUI_SCAN)
+		interest(1)
+	}
+	field(HIHI,DBF_FLOAT) {
+		prompt("Hihi Alarm Limit")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(LOLO,DBF_FLOAT) {
+		prompt("Lolo Alarm Limit")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(HIGH,DBF_FLOAT) {
+		prompt("High Alarm Limit")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(LOW,DBF_FLOAT) {
+		prompt("Low Alarm Limit")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(PREC,DBF_SHORT) {
+		prompt("Display Precision")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(BRSV,DBF_MENU) {
+		prompt("Bad Return Severity")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(HHSV,DBF_MENU) {
+		prompt("Hihi Severity")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LLSV,DBF_MENU) {
+		prompt("Lolo Severity")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(HSV,DBF_MENU) {
+		prompt("High Severity")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LSV,DBF_MENU) {
+		prompt("Low Severity")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(HYST,DBF_DOUBLE) {
+		prompt("Alarm Deadband")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(ADEL,DBF_DOUBLE) {
+		prompt("Archive Deadband")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(MDEL,DBF_DOUBLE) {
+		prompt("Monitor Deadband")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(LALM,DBF_DOUBLE) {
+		prompt("Last Value Alarmed")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(ALST,DBF_DOUBLE) {
+		prompt("Last Value Archived")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(MLST,DBF_DOUBLE) {
+		prompt("Last Value Monitored")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(OUTA,DBF_OUTLINK) {
+		prompt("Output Link A")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OUTB,DBF_OUTLINK) {
+		prompt("Output Link B")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OUTC,DBF_OUTLINK) {
+		prompt("Output Link C")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OUTD,DBF_OUTLINK) {
+		prompt("Output Link D")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OUTE,DBF_OUTLINK) {
+		prompt("Output Link E")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OUTF,DBF_OUTLINK) {
+		prompt("Output Link F")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OUTG,DBF_OUTLINK) {
+		prompt("Output Link G")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OUTH,DBF_OUTLINK) {
+		prompt("Output Link H")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OUTI,DBF_OUTLINK) {
+		prompt("Output Link I")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OUTJ,DBF_OUTLINK) {
+		prompt("Output Link J")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA0,DBF_OUTLINK) {
+		prompt("Output Link A0")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA1,DBF_OUTLINK) {
+		prompt("Output Link A1")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA2,DBF_OUTLINK) {
+		prompt("Output Link A2")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA3,DBF_OUTLINK) {
+		prompt("Output Link A3")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA4,DBF_OUTLINK) {
+		prompt("Output Link A4")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA5,DBF_OUTLINK) {
+		prompt("Output Link A5")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA6,DBF_OUTLINK) {
+		prompt("Output Link A6")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA7,DBF_OUTLINK) {
+		prompt("Output Link A7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA8,DBF_OUTLINK) {
+		prompt("Output Link A8")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTA9,DBF_OUTLINK) {
+		prompt("Output Link A9")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB0,DBF_OUTLINK) {
+		prompt("Output Link B0")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB1,DBF_OUTLINK) {
+		prompt("Output Link B1")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB2,DBF_OUTLINK) {
+		prompt("Output Link B2")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB3,DBF_OUTLINK) {
+		prompt("Output Link B3")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB4,DBF_OUTLINK) {
+		prompt("Output Link B4")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB5,DBF_OUTLINK) {
+		prompt("Output Link B5")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB6,DBF_OUTLINK) {
+		prompt("Output Link B6")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB7,DBF_OUTLINK) {
+		prompt("Output Link B7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB8,DBF_OUTLINK) {
+		prompt("Output Link B8")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTB9,DBF_OUTLINK) {
+		prompt("Output Link B9")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC0,DBF_OUTLINK) {
+		prompt("Output Link C0")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC1,DBF_OUTLINK) {
+		prompt("Output Link C1")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC2,DBF_OUTLINK) {
+		prompt("Output Link C2")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC3,DBF_OUTLINK) {
+		prompt("Output Link C3")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC4,DBF_OUTLINK) {
+		prompt("Output Link C4")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC5,DBF_OUTLINK) {
+		prompt("Output Link C5")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC6,DBF_OUTLINK) {
+		prompt("Output Link C6")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC7,DBF_OUTLINK) {
+		prompt("Output Link C7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC8,DBF_OUTLINK) {
+		prompt("Output Link C8")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTC9,DBF_OUTLINK) {
+		prompt("Output Link C9")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD0,DBF_OUTLINK) {
+		prompt("Output Link D0")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD1,DBF_OUTLINK) {
+		prompt("Output Link D1")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD2,DBF_OUTLINK) {
+		prompt("Output Link D2")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD3,DBF_OUTLINK) {
+		prompt("Output Link D3")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD4,DBF_OUTLINK) {
+		prompt("Output Link D4")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD5,DBF_OUTLINK) {
+		prompt("Output Link D5")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD6,DBF_OUTLINK) {
+		prompt("Output Link D6")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD7,DBF_OUTLINK) {
+		prompt("Output Link D7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD8,DBF_OUTLINK) {
+		prompt("Output Link D8")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTD9,DBF_OUTLINK) {
+		prompt("Output Link D9")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE0,DBF_OUTLINK) {
+		prompt("Output Link E0")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE1,DBF_OUTLINK) {
+		prompt("Output Link E1")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE2,DBF_OUTLINK) {
+		prompt("Output Link E2")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE3,DBF_OUTLINK) {
+		prompt("Output Link E3")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE4,DBF_OUTLINK) {
+		prompt("Output Link E4")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE5,DBF_OUTLINK) {
+		prompt("Output Link E5")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE6,DBF_OUTLINK) {
+		prompt("Output Link E6")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE7,DBF_OUTLINK) {
+		prompt("Output Link E7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE8,DBF_OUTLINK) {
+		prompt("Output Link E8")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTE9,DBF_OUTLINK) {
+		prompt("Output Link E9")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF0,DBF_OUTLINK) {
+		prompt("Output Link F0")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF1,DBF_OUTLINK) {
+		prompt("Output Link F1")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF2,DBF_OUTLINK) {
+		prompt("Output Link F2")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF3,DBF_OUTLINK) {
+		prompt("Output Link F3")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF4,DBF_OUTLINK) {
+		prompt("Output Link F4")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF5,DBF_OUTLINK) {
+		prompt("Output Link F5")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF6,DBF_OUTLINK) {
+		prompt("Output Link F6")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF7,DBF_OUTLINK) {
+		prompt("Output Link F7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF8,DBF_OUTLINK) {
+		prompt("Output Link F8")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OTF9,DBF_OUTLINK) {
+		prompt("Output Link F9")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(OA,DBF_DOUBLE) {
+		prompt("Output Value A")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB,DBF_DOUBLE) {
+		prompt("Output Value B")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC,DBF_DOUBLE) {
+		prompt("Output Value C")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD,DBF_DOUBLE) {
+		prompt("Output Value D")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE,DBF_DOUBLE) {
+		prompt("Output Value E")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF,DBF_DOUBLE) {
+		prompt("Output Value F")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OG,DBF_DOUBLE) {
+		prompt("Output Value G")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OH,DBF_DOUBLE) {
+		prompt("Output Value H")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OI,DBF_DOUBLE) {
+		prompt("Output Value I")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OJ,DBF_DOUBLE) {
+		prompt("Output Value J")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA0,DBF_DOUBLE) {
+		prompt("Output Value A0")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA1,DBF_DOUBLE) {
+		prompt("Output Value A1")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA2,DBF_DOUBLE) {
+		prompt("Output Value A2")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA3,DBF_DOUBLE) {
+		prompt("Output Value A3")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA4,DBF_DOUBLE) {
+		prompt("Output Value A4")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA5,DBF_DOUBLE) {
+		prompt("Output Value A5")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA6,DBF_DOUBLE) {
+		prompt("Output Value A6")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA7,DBF_DOUBLE) {
+		prompt("Output Value A7")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA8,DBF_DOUBLE) {
+		prompt("Output Value A8")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OA9,DBF_DOUBLE) {
+		prompt("Output Value A9")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB0,DBF_DOUBLE) {
+		prompt("Output Value B0")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB1,DBF_DOUBLE) {
+		prompt("Output Value B1")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB2,DBF_DOUBLE) {
+		prompt("Output Value B2")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB3,DBF_DOUBLE) {
+		prompt("Output Value B3")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB4,DBF_DOUBLE) {
+		prompt("Output Value B4")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB5,DBF_DOUBLE) {
+		prompt("Output Value B5")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB6,DBF_DOUBLE) {
+		prompt("Output Value B6")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB7,DBF_DOUBLE) {
+		prompt("Output Value B7")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB8,DBF_DOUBLE) {
+		prompt("Output Value B8")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OB9,DBF_DOUBLE) {
+		prompt("Output Value B9")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC0,DBF_DOUBLE) {
+		prompt("Output Value C0")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC1,DBF_DOUBLE) {
+		prompt("Output Value C1")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC2,DBF_DOUBLE) {
+		prompt("Output Value C2")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC3,DBF_DOUBLE) {
+		prompt("Output Value C3")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC4,DBF_DOUBLE) {
+		prompt("Output Value C4")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC5,DBF_DOUBLE) {
+		prompt("Output Value C5")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC6,DBF_DOUBLE) {
+		prompt("Output Value C6")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC7,DBF_DOUBLE) {
+		prompt("Output Value C7")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC8,DBF_DOUBLE) {
+		prompt("Output Value C8")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OC9,DBF_DOUBLE) {
+		prompt("Output Value C9")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD0,DBF_DOUBLE) {
+		prompt("Output Value D0")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD1,DBF_DOUBLE) {
+		prompt("Output Value D1")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD2,DBF_DOUBLE) {
+		prompt("Output Value D2")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD3,DBF_DOUBLE) {
+		prompt("Output Value D3")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD4,DBF_DOUBLE) {
+		prompt("Output Value D4")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD5,DBF_DOUBLE) {
+		prompt("Output Value D5")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD6,DBF_DOUBLE) {
+		prompt("Output Value D6")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD7,DBF_DOUBLE) {
+		prompt("Output Value D7")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD8,DBF_DOUBLE) {
+		prompt("Output Value D8")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OD9,DBF_DOUBLE) {
+		prompt("Output Value D9")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE0,DBF_DOUBLE) {
+		prompt("Output Value E0")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE1,DBF_DOUBLE) {
+		prompt("Output Value E1")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE2,DBF_DOUBLE) {
+		prompt("Output Value E2")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE3,DBF_DOUBLE) {
+		prompt("Output Value E3")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE4,DBF_DOUBLE) {
+		prompt("Output Value E4")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE5,DBF_DOUBLE) {
+		prompt("Output Value E5")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE6,DBF_DOUBLE) {
+		prompt("Output Value E6")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE7,DBF_DOUBLE) {
+		prompt("Output Value E7")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE8,DBF_DOUBLE) {
+		prompt("Output Value E8")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OE9,DBF_DOUBLE) {
+		prompt("Output Value E9")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF0,DBF_DOUBLE) {
+		prompt("Output Value F0")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF1,DBF_DOUBLE) {
+		prompt("Output Value F1")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF2,DBF_DOUBLE) {
+		prompt("Output Value F2")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF3,DBF_DOUBLE) {
+		prompt("Output Value F3")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF4,DBF_DOUBLE) {
+		prompt("Output Value F4")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF5,DBF_DOUBLE) {
+		prompt("Output Value F5")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF6,DBF_DOUBLE) {
+		prompt("Output Value F6")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF7,DBF_DOUBLE) {
+		prompt("Output Value F7")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF8,DBF_DOUBLE) {
+		prompt("Output Value F8")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(OF9,DBF_DOUBLE) {
+		prompt("Output Value F9")
+		promptgroup(GUI_DISPLAY)
+	}
+	field(LOA,DBF_DOUBLE) {
+		prompt("Prev Value of OA")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB,DBF_DOUBLE) {
+		prompt("Prev Value of OB")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC,DBF_DOUBLE) {
+		prompt("Prev Value of OC")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD,DBF_DOUBLE) {
+		prompt("Prev Value of OD")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE,DBF_DOUBLE) {
+		prompt("Prev Value of OE")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF,DBF_DOUBLE) {
+		prompt("Prev Value of OF")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOG,DBF_DOUBLE) {
+		prompt("Prev Value of OG")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOH,DBF_DOUBLE) {
+		prompt("Prev Value of OH")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOI,DBF_DOUBLE) {
+		prompt("Prev Value of OI")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOJ,DBF_DOUBLE) {
+		prompt("Prev Value of OJ")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA0,DBF_DOUBLE) {
+		prompt("Prev Value of OA0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA1,DBF_DOUBLE) {
+		prompt("Prev Value of OA1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA2,DBF_DOUBLE) {
+		prompt("Prev Value of OA2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA3,DBF_DOUBLE) {
+		prompt("Prev Value of OA3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA4,DBF_DOUBLE) {
+		prompt("Prev Value of OA4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA5,DBF_DOUBLE) {
+		prompt("Prev Value of OA5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA6,DBF_DOUBLE) {
+		prompt("Prev Value of OA6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA7,DBF_DOUBLE) {
+		prompt("Prev Value of OA7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA8,DBF_DOUBLE) {
+		prompt("Prev Value of OA8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOA9,DBF_DOUBLE) {
+		prompt("Prev Value of OA9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB0,DBF_DOUBLE) {
+		prompt("Prev Value of OB0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB1,DBF_DOUBLE) {
+		prompt("Prev Value of OB1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB2,DBF_DOUBLE) {
+		prompt("Prev Value of OB2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB3,DBF_DOUBLE) {
+		prompt("Prev Value of OB3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB4,DBF_DOUBLE) {
+		prompt("Prev Value of OB4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB5,DBF_DOUBLE) {
+		prompt("Prev Value of OB5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB6,DBF_DOUBLE) {
+		prompt("Prev Value of OB6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB7,DBF_DOUBLE) {
+		prompt("Prev Value of OB7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB8,DBF_DOUBLE) {
+		prompt("Prev Value of OB8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOB9,DBF_DOUBLE) {
+		prompt("Prev Value of OB9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC0,DBF_DOUBLE) {
+		prompt("Prev Value of OC0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC1,DBF_DOUBLE) {
+		prompt("Prev Value of OC1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC2,DBF_DOUBLE) {
+		prompt("Prev Value of OC2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC3,DBF_DOUBLE) {
+		prompt("Prev Value of OC3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC4,DBF_DOUBLE) {
+		prompt("Prev Value of OC4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC5,DBF_DOUBLE) {
+		prompt("Prev Value of OC5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC6,DBF_DOUBLE) {
+		prompt("Prev Value of OC6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC7,DBF_DOUBLE) {
+		prompt("Prev Value of OC7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC8,DBF_DOUBLE) {
+		prompt("Prev Value of OC8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOC9,DBF_DOUBLE) {
+		prompt("Prev Value of OC9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD0,DBF_DOUBLE) {
+		prompt("Prev Value of OD0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD1,DBF_DOUBLE) {
+		prompt("Prev Value of OD1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD2,DBF_DOUBLE) {
+		prompt("Prev Value of OD2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD3,DBF_DOUBLE) {
+		prompt("Prev Value of OD3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD4,DBF_DOUBLE) {
+		prompt("Prev Value of OD4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD5,DBF_DOUBLE) {
+		prompt("Prev Value of OD5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD6,DBF_DOUBLE) {
+		prompt("Prev Value of OD6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD7,DBF_DOUBLE) {
+		prompt("Prev Value of OD7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD8,DBF_DOUBLE) {
+		prompt("Prev Value of OD8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOD9,DBF_DOUBLE) {
+		prompt("Prev Value of OD9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE0,DBF_DOUBLE) {
+		prompt("Prev Value of OE0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE1,DBF_DOUBLE) {
+		prompt("Prev Value of OE1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE2,DBF_DOUBLE) {
+		prompt("Prev Value of OE2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE3,DBF_DOUBLE) {
+		prompt("Prev Value of OE3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE4,DBF_DOUBLE) {
+		prompt("Prev Value of OE4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE5,DBF_DOUBLE) {
+		prompt("Prev Value of OE5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE6,DBF_DOUBLE) {
+		prompt("Prev Value of OE6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE7,DBF_DOUBLE) {
+		prompt("Prev Value of OE7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE8,DBF_DOUBLE) {
+		prompt("Prev Value of OE8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOE9,DBF_DOUBLE) {
+		prompt("Prev Value of OE9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF0,DBF_DOUBLE) {
+		prompt("Prev Value of OF0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF1,DBF_DOUBLE) {
+		prompt("Prev Value of OF1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF2,DBF_DOUBLE) {
+		prompt("Prev Value of OF2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF3,DBF_DOUBLE) {
+		prompt("Prev Value of OF3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF4,DBF_DOUBLE) {
+		prompt("Prev Value of OF4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF5,DBF_DOUBLE) {
+		prompt("Prev Value of OF5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF6,DBF_DOUBLE) {
+		prompt("Prev Value of OF6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF7,DBF_DOUBLE) {
+		prompt("Prev Value of OF7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF8,DBF_DOUBLE) {
+		prompt("Prev Value of OF8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LOF9,DBF_DOUBLE) {
+		prompt("Prev Value of OF9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(INPA,DBF_INLINK) {
+		prompt("Input A")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPB,DBF_INLINK) {
+		prompt("Input B")
+		promptgroup(GUI_BITS2)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPC,DBF_INLINK) {
+		prompt("Input C")
+		promptgroup(GUI_CALC)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPD,DBF_INLINK) {
+		prompt("Input D")
+		promptgroup(GUI_CLOCK)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPE,DBF_INLINK) {
+		prompt("Input E")
+		promptgroup(GUI_COMPRESS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPF,DBF_INLINK) {
+		prompt("Input F")
+		promptgroup(GUI_CONVERT)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPG,DBF_INLINK) {
+		prompt("Input G")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPH,DBF_INLINK) {
+		prompt("Input H")
+		promptgroup(GUI_HIST)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPI,DBF_INLINK) {
+		prompt("Input I")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPJ,DBF_INLINK) {
+		prompt("Input J")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPK,DBF_INLINK) {
+		prompt("Input K")
+		promptgroup(GUI_MBB)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPL,DBF_INLINK) {
+		prompt("Input L")
+		promptgroup(GUI_MOTOR)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPM,DBF_INLINK) {
+		prompt("Input M")
+		promptgroup(GUI_OUTPUT)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPN,DBF_INLINK) {
+		prompt("Input N")
+		promptgroup(GUI_PID)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPO,DBF_INLINK) {
+		prompt("Input O")
+		promptgroup(GUI_PULSE)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPP,DBF_INLINK) {
+		prompt("Input P")
+		promptgroup(GUI_SELECT)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPQ,DBF_INLINK) {
+		prompt("Input Q")
+		promptgroup(GUI_SEQ1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPR,DBF_INLINK) {
+		prompt("Input R")
+		promptgroup(GUI_SEQ2)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPS,DBF_INLINK) {
+		prompt("Input S")
+		promptgroup(GUI_SEQ3)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(INPT,DBF_INLINK) {
+		prompt("Input T")
+		promptgroup(GUI_SUB)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA0,DBF_INLINK) {
+		prompt("Input A0")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA1,DBF_INLINK) {
+		prompt("Input A1")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA2,DBF_INLINK) {
+		prompt("Input A2")
+		promptgroup(GUI_BITS2)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA3,DBF_INLINK) {
+		prompt("Input A3")
+		promptgroup(GUI_CALC)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA4,DBF_INLINK) {
+		prompt("Input A4")
+		promptgroup(GUI_CLOCK)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA5,DBF_INLINK) {
+		prompt("Input A5")
+		promptgroup(GUI_COMPRESS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA6,DBF_INLINK) {
+		prompt("Input A6")
+		promptgroup(GUI_CONVERT)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA7,DBF_INLINK) {
+		prompt("Input A7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA8,DBF_INLINK) {
+		prompt("Input A8")
+		promptgroup(GUI_HIST)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPA9,DBF_INLINK) {
+		prompt("Input A9")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB0,DBF_INLINK) {
+		prompt("Input B0")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB1,DBF_INLINK) {
+		prompt("Input B1")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB2,DBF_INLINK) {
+		prompt("Input B2")
+		promptgroup(GUI_BITS2)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB3,DBF_INLINK) {
+		prompt("Input B3")
+		promptgroup(GUI_CALC)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB4,DBF_INLINK) {
+		prompt("Input B4")
+		promptgroup(GUI_CLOCK)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB5,DBF_INLINK) {
+		prompt("Input B5")
+		promptgroup(GUI_COMPRESS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB6,DBF_INLINK) {
+		prompt("Input B6")
+		promptgroup(GUI_CONVERT)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB7,DBF_INLINK) {
+		prompt("Input B7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB8,DBF_INLINK) {
+		prompt("Input B8")
+		promptgroup(GUI_HIST)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPB9,DBF_INLINK) {
+		prompt("Input B9")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC0,DBF_INLINK) {
+		prompt("Input C0")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC1,DBF_INLINK) {
+		prompt("Input C1")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC2,DBF_INLINK) {
+		prompt("Input C2")
+		promptgroup(GUI_BITS2)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC3,DBF_INLINK) {
+		prompt("Input C3")
+		promptgroup(GUI_CALC)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC4,DBF_INLINK) {
+		prompt("Input C4")
+		promptgroup(GUI_CLOCK)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC5,DBF_INLINK) {
+		prompt("Input C5")
+		promptgroup(GUI_COMPRESS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC6,DBF_INLINK) {
+		prompt("Input C6")
+		promptgroup(GUI_CONVERT)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC7,DBF_INLINK) {
+		prompt("Input C7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC8,DBF_INLINK) {
+		prompt("Input C8")
+		promptgroup(GUI_HIST)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPC9,DBF_INLINK) {
+		prompt("Input C9")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD0,DBF_INLINK) {
+		prompt("Input D0")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD1,DBF_INLINK) {
+		prompt("Input D1")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD2,DBF_INLINK) {
+		prompt("Input D2")
+		promptgroup(GUI_BITS2)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD3,DBF_INLINK) {
+		prompt("Input D3")
+		promptgroup(GUI_CALC)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD4,DBF_INLINK) {
+		prompt("Input D4")
+		promptgroup(GUI_CLOCK)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD5,DBF_INLINK) {
+		prompt("Input D5")
+		promptgroup(GUI_COMPRESS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD6,DBF_INLINK) {
+		prompt("Input D6")
+		promptgroup(GUI_CONVERT)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD7,DBF_INLINK) {
+		prompt("Input D7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD8,DBF_INLINK) {
+		prompt("Input D8")
+		promptgroup(GUI_HIST)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPD9,DBF_INLINK) {
+		prompt("Input D9")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE0,DBF_INLINK) {
+		prompt("Input E0")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE1,DBF_INLINK) {
+		prompt("Input E1")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE2,DBF_INLINK) {
+		prompt("Input E2")
+		promptgroup(GUI_BITS2)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE3,DBF_INLINK) {
+		prompt("Input E3")
+		promptgroup(GUI_CALC)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE4,DBF_INLINK) {
+		prompt("Input E4")
+		promptgroup(GUI_CLOCK)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE5,DBF_INLINK) {
+		prompt("Input E5")
+		promptgroup(GUI_COMPRESS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE6,DBF_INLINK) {
+		prompt("Input E6")
+		promptgroup(GUI_CONVERT)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE7,DBF_INLINK) {
+		prompt("Input E7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE8,DBF_INLINK) {
+		prompt("Input E8")
+		promptgroup(GUI_HIST)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPE9,DBF_INLINK) {
+		prompt("Input E9")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF0,DBF_INLINK) {
+		prompt("Input F0")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF1,DBF_INLINK) {
+		prompt("Input F1")
+		promptgroup(GUI_BITS1)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF2,DBF_INLINK) {
+		prompt("Input F2")
+		promptgroup(GUI_BITS2)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF3,DBF_INLINK) {
+		prompt("Input F3")
+		promptgroup(GUI_CALC)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF4,DBF_INLINK) {
+		prompt("Input F4")
+		promptgroup(GUI_CLOCK)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF5,DBF_INLINK) {
+		prompt("Input F5")
+		promptgroup(GUI_COMPRESS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF6,DBF_INLINK) {
+		prompt("Input F6")
+		promptgroup(GUI_CONVERT)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF7,DBF_INLINK) {
+		prompt("Input F7")
+		promptgroup(GUI_DISPLAY)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF8,DBF_INLINK) {
+		prompt("Input F8")
+		promptgroup(GUI_HIST)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(IPF9,DBF_INLINK) {
+		prompt("Input F9")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(A,DBF_DOUBLE) {
+		prompt("Value of Input A")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B,DBF_DOUBLE) {
+		prompt("Value of Input B")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C,DBF_DOUBLE) {
+		prompt("Value of Input C")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D,DBF_DOUBLE) {
+		prompt("Value of Input D")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E,DBF_DOUBLE) {
+		prompt("Value of Input E")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F,DBF_DOUBLE) {
+		prompt("Value of Input F")
+		pp(TRUE)
+		interest(1)
+	}
+	field(G,DBF_DOUBLE) {
+		prompt("Value of Input G")
+		pp(TRUE)
+		interest(1)
+	}
+	field(H,DBF_DOUBLE) {
+		prompt("Value of Input H")
+		pp(TRUE)
+		interest(1)
+	}
+	field(I,DBF_DOUBLE) {
+		prompt("Value of Input I")
+		pp(TRUE)
+		interest(1)
+	}
+	field(J,DBF_DOUBLE) {
+		prompt("Value of Input J")
+		pp(TRUE)
+		interest(1)
+	}
+	field(K,DBF_DOUBLE) {
+		prompt("Value of Input K")
+		pp(TRUE)
+		interest(1)
+	}
+	field(L,DBF_DOUBLE) {
+		prompt("Value of Input L")
+		pp(TRUE)
+		interest(1)
+	}
+	field(M,DBF_DOUBLE) {
+		prompt("Value of Input M")
+		pp(TRUE)
+		interest(1)
+	}
+	field(N,DBF_DOUBLE) {
+		prompt("Value of Input N")
+		pp(TRUE)
+		interest(1)
+	}
+	field(O,DBF_DOUBLE) {
+		prompt("Value of Input O")
+		pp(TRUE)
+		interest(1)
+	}
+	field(P,DBF_DOUBLE) {
+		prompt("Value of Input P")
+		pp(TRUE)
+		interest(1)
+	}
+	field(Q,DBF_DOUBLE) {
+		prompt("Value of Input Q")
+		pp(TRUE)
+		interest(1)
+	}
+	field(R,DBF_DOUBLE) {
+		prompt("Value of Input R")
+		pp(TRUE)
+		interest(1)
+	}
+	field(S,DBF_DOUBLE) {
+		prompt("Value of Input S")
+		pp(TRUE)
+		interest(1)
+	}
+	field(T,DBF_DOUBLE) {
+		prompt("Value of Input T")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A0,DBF_DOUBLE) {
+		prompt("Value of Input A0")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A1,DBF_DOUBLE) {
+		prompt("Value of Input A1")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A2,DBF_DOUBLE) {
+		prompt("Value of Input A2")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A3,DBF_DOUBLE) {
+		prompt("Value of Input A3")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A4,DBF_DOUBLE) {
+		prompt("Value of Input A4")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A5,DBF_DOUBLE) {
+		prompt("Value of Input A5")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A6,DBF_DOUBLE) {
+		prompt("Value of Input A6")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A7,DBF_DOUBLE) {
+		prompt("Value of Input A7")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A8,DBF_DOUBLE) {
+		prompt("Value of Input A8")
+		pp(TRUE)
+		interest(1)
+	}
+	field(A9,DBF_DOUBLE) {
+		prompt("Value of Input A9")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B0,DBF_DOUBLE) {
+		prompt("Value of Input B0")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B1,DBF_DOUBLE) {
+		prompt("Value of Input B1")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B2,DBF_DOUBLE) {
+		prompt("Value of Input B2")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B3,DBF_DOUBLE) {
+		prompt("Value of Input B3")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B4,DBF_DOUBLE) {
+		prompt("Value of Input B4")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B5,DBF_DOUBLE) {
+		prompt("Value of Input B5")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B6,DBF_DOUBLE) {
+		prompt("Value of Input B6")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B7,DBF_DOUBLE) {
+		prompt("Value of Input B7")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B8,DBF_DOUBLE) {
+		prompt("Value of Input B8")
+		pp(TRUE)
+		interest(1)
+	}
+	field(B9,DBF_DOUBLE) {
+		prompt("Value of Input B9")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C0,DBF_DOUBLE) {
+		prompt("Value of Input C0")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C1,DBF_DOUBLE) {
+		prompt("Value of Input C1")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C2,DBF_DOUBLE) {
+		prompt("Value of Input C2")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C3,DBF_DOUBLE) {
+		prompt("Value of Input C3")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C4,DBF_DOUBLE) {
+		prompt("Value of Input C4")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C5,DBF_DOUBLE) {
+		prompt("Value of Input C5")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C6,DBF_DOUBLE) {
+		prompt("Value of Input C6")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C7,DBF_DOUBLE) {
+		prompt("Value of Input C7")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C8,DBF_DOUBLE) {
+		prompt("Value of Input C8")
+		pp(TRUE)
+		interest(1)
+	}
+	field(C9,DBF_DOUBLE) {
+		prompt("Value of Input C9")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D0,DBF_DOUBLE) {
+		prompt("Value of Input D0")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D1,DBF_DOUBLE) {
+		prompt("Value of Input D1")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D2,DBF_DOUBLE) {
+		prompt("Value of Input D2")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D3,DBF_DOUBLE) {
+		prompt("Value of Input D3")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D4,DBF_DOUBLE) {
+		prompt("Value of Input D4")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D5,DBF_DOUBLE) {
+		prompt("Value of Input D5")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D6,DBF_DOUBLE) {
+		prompt("Value of Input D6")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D7,DBF_DOUBLE) {
+		prompt("Value of Input D7")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D8,DBF_DOUBLE) {
+		prompt("Value of Input D8")
+		pp(TRUE)
+		interest(1)
+	}
+	field(D9,DBF_DOUBLE) {
+		prompt("Value of Input D9")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E0,DBF_DOUBLE) {
+		prompt("Value of Input E0")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E1,DBF_DOUBLE) {
+		prompt("Value of Input E1")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E2,DBF_DOUBLE) {
+		prompt("Value of Input E2")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E3,DBF_DOUBLE) {
+		prompt("Value of Input E3")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E4,DBF_DOUBLE) {
+		prompt("Value of Input E4")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E5,DBF_DOUBLE) {
+		prompt("Value of Input E5")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E6,DBF_DOUBLE) {
+		prompt("Value of Input E6")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E7,DBF_DOUBLE) {
+		prompt("Value of Input E7")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E8,DBF_DOUBLE) {
+		prompt("Value of Input E8")
+		pp(TRUE)
+		interest(1)
+	}
+	field(E9,DBF_DOUBLE) {
+		prompt("Value of Input E9")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F0,DBF_DOUBLE) {
+		prompt("Value of Input F0")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F1,DBF_DOUBLE) {
+		prompt("Value of Input F1")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F2,DBF_DOUBLE) {
+		prompt("Value of Input F2")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F3,DBF_DOUBLE) {
+		prompt("Value of Input F3")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F4,DBF_DOUBLE) {
+		prompt("Value of Input F4")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F5,DBF_DOUBLE) {
+		prompt("Value of Input F5")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F6,DBF_DOUBLE) {
+		prompt("Value of Input F6")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F7,DBF_DOUBLE) {
+		prompt("Value of Input F7")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F8,DBF_DOUBLE) {
+		prompt("Value of Input F8")
+		pp(TRUE)
+		interest(1)
+	}
+	field(F9,DBF_DOUBLE) {
+		prompt("Value of Input F9")
+		pp(TRUE)
+		interest(1)
+	}
+	field(LA,DBF_DOUBLE) {
+		prompt("Prev Value of A")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB,DBF_DOUBLE) {
+		prompt("Prev Value of B")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC,DBF_DOUBLE) {
+		prompt("Prev Value of C")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD,DBF_DOUBLE) {
+		prompt("Prev Value of D")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE,DBF_DOUBLE) {
+		prompt("Prev Value of E")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF,DBF_DOUBLE) {
+		prompt("Prev Value of F")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LG,DBF_DOUBLE) {
+		prompt("Prev Value of G")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LH,DBF_DOUBLE) {
+		prompt("Prev Value of H")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LI,DBF_DOUBLE) {
+		prompt("Prev Value of I")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LJ,DBF_DOUBLE) {
+		prompt("Prev Value of J")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LK,DBF_DOUBLE) {
+		prompt("Prev Value of K")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LL,DBF_DOUBLE) {
+		prompt("Prev Value of L")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LM,DBF_DOUBLE) {
+		prompt("Prev Value of M")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LN,DBF_DOUBLE) {
+		prompt("Prev Value of N")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LO,DBF_DOUBLE) {
+		prompt("Prev Value of O")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LP,DBF_DOUBLE) {
+		prompt("Prev Value of P")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LQ,DBF_DOUBLE) {
+		prompt("Prev Value of Q")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LR,DBF_DOUBLE) {
+		prompt("Prev Value of R")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LS,DBF_DOUBLE) {
+		prompt("Prev Value of S")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LT,DBF_DOUBLE) {
+		prompt("Prev Value of T")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA0,DBF_DOUBLE) {
+		prompt("Prev Value of A0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA1,DBF_DOUBLE) {
+		prompt("Prev Value of A1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA2,DBF_DOUBLE) {
+		prompt("Prev Value of A2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA3,DBF_DOUBLE) {
+		prompt("Prev Value of A3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA4,DBF_DOUBLE) {
+		prompt("Prev Value of A4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA5,DBF_DOUBLE) {
+		prompt("Prev Value of A5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA6,DBF_DOUBLE) {
+		prompt("Prev Value of A6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA7,DBF_DOUBLE) {
+		prompt("Prev Value of A7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA8,DBF_DOUBLE) {
+		prompt("Prev Value of A8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LA9,DBF_DOUBLE) {
+		prompt("Prev Value of A9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB0,DBF_DOUBLE) {
+		prompt("Prev Value of B0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB1,DBF_DOUBLE) {
+		prompt("Prev Value of B1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB2,DBF_DOUBLE) {
+		prompt("Prev Value of B2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB3,DBF_DOUBLE) {
+		prompt("Prev Value of B3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB4,DBF_DOUBLE) {
+		prompt("Prev Value of B4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB5,DBF_DOUBLE) {
+		prompt("Prev Value of B5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB6,DBF_DOUBLE) {
+		prompt("Prev Value of B6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB7,DBF_DOUBLE) {
+		prompt("Prev Value of B7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB8,DBF_DOUBLE) {
+		prompt("Prev Value of B8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LB9,DBF_DOUBLE) {
+		prompt("Prev Value of B9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC0,DBF_DOUBLE) {
+		prompt("Prev Value of C0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC1,DBF_DOUBLE) {
+		prompt("Prev Value of C1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC2,DBF_DOUBLE) {
+		prompt("Prev Value of C2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC3,DBF_DOUBLE) {
+		prompt("Prev Value of C3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC4,DBF_DOUBLE) {
+		prompt("Prev Value of C4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC5,DBF_DOUBLE) {
+		prompt("Prev Value of C5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC6,DBF_DOUBLE) {
+		prompt("Prev Value of C6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC7,DBF_DOUBLE) {
+		prompt("Prev Value of C7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC8,DBF_DOUBLE) {
+		prompt("Prev Value of C8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LC9,DBF_DOUBLE) {
+		prompt("Prev Value of C9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD0,DBF_DOUBLE) {
+		prompt("Prev Value of D0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD1,DBF_DOUBLE) {
+		prompt("Prev Value of D1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD2,DBF_DOUBLE) {
+		prompt("Prev Value of D2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD3,DBF_DOUBLE) {
+		prompt("Prev Value of D3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD4,DBF_DOUBLE) {
+		prompt("Prev Value of D4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD5,DBF_DOUBLE) {
+		prompt("Prev Value of D5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD6,DBF_DOUBLE) {
+		prompt("Prev Value of D6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD7,DBF_DOUBLE) {
+		prompt("Prev Value of D7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD8,DBF_DOUBLE) {
+		prompt("Prev Value of D8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LD9,DBF_DOUBLE) {
+		prompt("Prev Value of D9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE0,DBF_DOUBLE) {
+		prompt("Prev Value of E0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE1,DBF_DOUBLE) {
+		prompt("Prev Value of E1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE2,DBF_DOUBLE) {
+		prompt("Prev Value of E2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE3,DBF_DOUBLE) {
+		prompt("Prev Value of E3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE4,DBF_DOUBLE) {
+		prompt("Prev Value of E4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE5,DBF_DOUBLE) {
+		prompt("Prev Value of E5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE6,DBF_DOUBLE) {
+		prompt("Prev Value of E6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE7,DBF_DOUBLE) {
+		prompt("Prev Value of E7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE8,DBF_DOUBLE) {
+		prompt("Prev Value of E8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LE9,DBF_DOUBLE) {
+		prompt("Prev Value of E9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF0,DBF_DOUBLE) {
+		prompt("Prev Value of F0")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF1,DBF_DOUBLE) {
+		prompt("Prev Value of F1")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF2,DBF_DOUBLE) {
+		prompt("Prev Value of F2")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF3,DBF_DOUBLE) {
+		prompt("Prev Value of F3")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF4,DBF_DOUBLE) {
+		prompt("Prev Value of F4")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF5,DBF_DOUBLE) {
+		prompt("Prev Value of F5")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF6,DBF_DOUBLE) {
+		prompt("Prev Value of F6")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF7,DBF_DOUBLE) {
+		prompt("Prev Value of F7")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF8,DBF_DOUBLE) {
+		prompt("Prev Value of F8")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LF9,DBF_DOUBLE) {
+		prompt("Prev Value of F9")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(NLA,DBF_DOUBLE) {
+		prompt("Non-link input A")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLB,DBF_DOUBLE) {
+		prompt("Non-link input B")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLC,DBF_DOUBLE) {
+		prompt("Non-link input C")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLD,DBF_DOUBLE) {
+		prompt("Non-link input D")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLE,DBF_DOUBLE) {
+		prompt("Non-link input E")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLF,DBF_DOUBLE) {
+		prompt("Non-link input F")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLG,DBF_DOUBLE) {
+		prompt("Non-link input G")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLH,DBF_DOUBLE) {
+		prompt("Non-link input H")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLI,DBF_DOUBLE) {
+		prompt("Non-link input I")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLJ,DBF_DOUBLE) {
+		prompt("Non-link input J")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLK,DBF_DOUBLE) {
+		prompt("Non-link input K")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLL,DBF_DOUBLE) {
+		prompt("Non-link input L")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLM,DBF_DOUBLE) {
+		prompt("Non-link input M")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLN,DBF_DOUBLE) {
+		prompt("Non-link input N")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLO,DBF_DOUBLE) {
+		prompt("Non-link input O")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLP,DBF_DOUBLE) {
+		prompt("Non-link input P")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLQ,DBF_DOUBLE) {
+		prompt("Non-link input Q")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLR,DBF_DOUBLE) {
+		prompt("Non-link input R")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLS,DBF_DOUBLE) {
+		prompt("Non-link input S")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(NLT,DBF_DOUBLE) {
+		prompt("Non-link input T")
+		promptgroup(GUI_DISPLAY)
+		pp(TRUE)
+		interest(1)
+	}
+	field(LNLA,DBF_DOUBLE) {
+		prompt("Prev Value of NLA")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLB,DBF_DOUBLE) {
+		prompt("Prev Value of NLB")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLC,DBF_DOUBLE) {
+		prompt("Prev Value of NLC")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLD,DBF_DOUBLE) {
+		prompt("Prev Value of NLD")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLE,DBF_DOUBLE) {
+		prompt("Prev Value of NLE")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLF,DBF_DOUBLE) {
+		prompt("Prev Value of NLF")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLG,DBF_DOUBLE) {
+		prompt("Prev Value of NLG")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLH,DBF_DOUBLE) {
+		prompt("Prev Value of NLH")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLI,DBF_DOUBLE) {
+		prompt("Prev Value of NLI")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLJ,DBF_DOUBLE) {
+		prompt("Prev Value of NLJ")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLK,DBF_DOUBLE) {
+		prompt("Prev Value of NLK")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLL,DBF_DOUBLE) {
+		prompt("Prev Value of NLL")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLM,DBF_DOUBLE) {
+		prompt("Prev Value of NLM")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLN,DBF_DOUBLE) {
+		prompt("Prev Value of NLN")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLO,DBF_DOUBLE) {
+		prompt("Prev Value of NLO")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLP,DBF_DOUBLE) {
+		prompt("Prev Value of NLP")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLQ,DBF_DOUBLE) {
+		prompt("Prev Value of NLQ")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLR,DBF_DOUBLE) {
+		prompt("Prev Value of NLR")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLS,DBF_DOUBLE) {
+		prompt("Prev Value of NLS")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(LNLT,DBF_DOUBLE) {
+		prompt("Prev Value of NLT")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+}

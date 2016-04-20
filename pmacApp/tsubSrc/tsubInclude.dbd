@@ -1,0 +1,23 @@
+#TSUB
+include "tsubRecord.dbd"
+
+registrar(tsubSeqFunc)
+registrar(tsubBDStFunc)
+registrar(tsubBD3StFunc)
+registrar(tsubCCDStFunc)
+registrar(tsubCSApFunc)
+registrar(tsubHSApFunc)
+registrar(tsubMDCsFunc)
+registrar(tsubMIStFunc)
+registrar(tsubMOEnFunc)
+registrar(tsubSHPsFunc)
+registrar(tsubTBStFunc)
+# registrar(tsubAPsFunc)
+registrar(tsubXPsFunc)
+# registrar(tsubXbmPsFunc)
+registrar(tsubXYPsFunc)
+registrar(tsubXYZPsFunc)
+registrar(tsubXYZfraPsFunc)
+registrar(tsubAcc65eFunc)
+registrar(tsubCollFunc)
+
