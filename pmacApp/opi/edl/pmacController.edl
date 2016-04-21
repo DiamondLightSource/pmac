@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 228
-y 129
-w 613
-h 599
+x 752
+y 117
+w 301
+h 351
 font "arial-medium-r-14.0"
 ctlFont "arial-bold-r-14.0"
 btnFont "arial-bold-r-14.0"
@@ -33,56 +33,11 @@ minor 0
 release 0
 x 0
 y 0
-w 450
-h 535
+w 300
+h 350
 lineColor index 5
 fill
 fillColor index 5
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 10
-y 180
-w 280
-h 90
-lineColor index 14
-fill
-fillColor index 3
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 10
-y 45
-w 280
-h 115
-lineColor index 14
-fill
-fillColor index 3
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 10
-y 290
-w 280
-h 180
-lineColor index 14
-fill
-fillColor index 3
 endObjectProperties
 
 # (Group)
@@ -185,8 +140,8 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 195
-y 560
+x 190
+y 310
 w 100
 h 30
 fgColor index 46
@@ -198,291 +153,14 @@ font "arial-bold-r-18.0"
 3d
 endObjectProperties
 
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 35
-w 77
-h 16
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 7
-value {
-  "  Feedrate  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 130
-y 65
-w 70
-h 25
-controlPv "$(P)$(R)FEEDRATE"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 205
-y 65
-w 70
-h 25
-controlPv "$(P)$(R)FEEDRATE_RBV"
-font "arial-bold-r-14.0"
-fontAlign "center"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 30
-fastUpdate
-useHexPrefix
-showUnits
-newPos
-objType "monitors"
-id "22"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 65
-w 65
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Feedrate"
-}
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 205
-y 95
-w 70
-h 25
-controlPv "$(P)$(R)FEEDRATE_LIMIT"
-font "arial-bold-r-14.0"
-fontAlign "center"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 30
-fastUpdate
-useHexPrefix
-newPos
-objType "monitors"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 95
-w 105
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Feedrate Limit"
-}
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 130
-y 95
-w 70
-h 25
-controlPv "$(P)$(R)FEEDRATE_LIMIT"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 125
-w 115
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Feedrate Polling"
-}
-endObjectProperties
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 165
-y 125
-w 110
-h 25
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)FEEDRATE_POLL_ENABLE"
-indicatorPv "$(P)$(R)FEEDRATE_POLL_ENABLE"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 170
-w 137
-h 16
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 7
-value {
-  "  Controller Status  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 240
-y 230
-w 30
-h 25
-controlPv "$(P)$(R)GLOBAL_PROBLEM_RBV"
-lineColor index 14
-onColor index 20
-offColor index 24
-lineWidth 2
-numBits 1
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 230
-w 140
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Controller Problem"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 200
-w 130
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Feedrate Problem"
-}
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 240
-y 200
-w 30
-h 25
-controlPv "$(P)$(R)FEEDRATE_PROBLEM_RBV"
-lineColor index 14
-onColor index 20
-offColor index 24
-lineWidth 2
-numBits 1
-endObjectProperties
-
 # (Rectangle)
 object activeRectangleClass
 beginObjectProperties
 major 4
 minor 0
 release 0
-x 320
-y 30
+x 10
+y 50
 w 280
 h 110
 lineColor index 14
@@ -496,8 +174,8 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 320
-y 20
+x 10
+y 40
 w 175
 h 20
 font "arial-bold-r-14.0"
@@ -516,8 +194,8 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 410
-y 50
+x 100
+y 70
 w 180
 h 25
 fgColor index 14
@@ -536,8 +214,8 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 330
-y 50
+x 20
+y 70
 w 75
 h 20
 font "arial-bold-r-14.0"
@@ -555,8 +233,8 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 320
-y 165
+x 10
+y 185
 w 280
 h 110
 lineColor index 14
@@ -570,8 +248,8 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 320
-y 155
+x 10
+y 175
 w 175
 h 20
 font "arial-bold-r-14.0"
@@ -590,8 +268,8 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 410
-y 185
+x 100
+y 205
 w 180
 h 25
 fgColor index 14
@@ -610,8 +288,8 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 330
-y 185
+x 20
+y 205
 w 75
 h 20
 font "arial-bold-r-14.0"
@@ -620,264 +298,6 @@ bgColor index 10
 useDisplayBg
 value {
   "All Axes"
-}
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 165
-y 325
-w 110
-h 20
-controlPv "$(P)$(R)PROFILE_BUILD_STATE_RBV"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 165
-y 375
-w 110
-h 20
-controlPv "$(P)$(R)PROFILE_EXECUTE_STATE_RBV"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Related Display)
-object relatedDisplayClass
-beginObjectProperties
-major 4
-minor 4
-release 0
-x 165
-y 430
-w 110
-h 30
-fgColor index 43
-bgColor index 3
-topShadowColor index 1
-botShadowColor index 11
-font "arial-bold-r-16.0"
-buttonLabel "Details"
-numPvs 4
-numDsps 1
-displayFileName {
-  0 "pmacTrajectory"
-}
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 165
-y 300
-w 110
-h 20
-controlPv "$(P)$(R)PROFILE_BUILD_STATUS_RBV"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 165
-y 350
-w 110
-h 20
-controlPv "$(P)$(R)PROFILE_EXECUTE_STATUS_RBV"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 300
-w 130
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Build Status"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 325
-w 130
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Build State"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 350
-w 130
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Execute Status"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 375
-w 130
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Execute State"
-}
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 165
-y 400
-w 110
-h 20
-controlPv "$(P)$(R)TSCAN_PERCENT_RBV"
-displayMode "decimal"
-precision 2
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 20
-y 400
-w 130
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "% Complete"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 280
-w 129
-h 16
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 7
-value {
-  "  Trajectory Scan  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Related Display)
-object relatedDisplayClass
-beginObjectProperties
-major 4
-minor 4
-release 0
-x 165
-y 495
-w 110
-h 30
-fgColor index 43
-bgColor index 3
-topShadowColor index 1
-botShadowColor index 11
-font "arial-bold-r-16.0"
-buttonLabel "Msg Stats"
-numPvs 4
-numDsps 1
-displayFileName {
-  0 "pmacStats"
 }
 endObjectProperties
 
