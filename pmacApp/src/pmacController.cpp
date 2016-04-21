@@ -217,6 +217,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
 
   //Initialize non static data members
+  connected_ = 0;
   cid_ = 0;
   parameterIndex_ = 0;
   lowLevelPortUser_ = NULL;
@@ -342,11 +343,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
     setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
   }
 
-  // Readout the device type
-  this->readDeviceType();
-
-  // Read the kinematics
-  this->storeKinematics();
+  // Initialise the connection
+  this->initialiseConnection();
 
   bool paramStatus = true;
   paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
@@ -850,6 +848,57 @@ void pmacController::callback(pmacCommandStore *sPtr, int type)
 
 }
 
+asynStatus pmacController::checkConnection()
+{
+  asynStatus status = asynSuccess;
+  int connected;
+  static const char *functionName = "checkConnection";
+  debug(DEBUG_FLOW, functionName);
+
+  if (pBroker_ != NULL){
+    status = pBroker_->getConnectedStatus(&connected);
+  } else {
+    status = asynError;
+  }
+
+  if (status == asynSuccess){
+    connected_ = connected;
+    debug(DEBUG_VARIABLE, functionName, "Connection status", connected_);
+  }
+
+  return status;
+}
+
+asynStatus pmacController::initialiseConnection()
+{
+  asynStatus status = asynSuccess;
+  static const char *functionName = "initialiseConnection";
+  debug(DEBUG_FLOW, functionName);
+
+  // Check the connection status
+  status = this->checkConnection();
+
+  if (status == asynSuccess){
+    if (connected_ != 0){
+      // Attempt to read the device type
+      status = this->readDeviceType();
+
+      if (status == asynSuccess){
+        // Read the kinematics
+        status = this->storeKinematics();
+      }
+    } else {
+      status = asynError;
+    }
+  }
+
+  if (status != asynSuccess){
+    debug(DEBUG_ERROR, functionName, "Unable to initialise connection to PMAC!");
+  }
+
+  return status;
+}
+
 asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr)
 {
   asynStatus status = asynSuccess;
@@ -1234,9 +1283,15 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
 
   debug(DEBUG_FLOW, functionName);
 
-  status = pBroker_->immediateWriteRead(command, response);
-  if (status == asynSuccess){
-    status = this->updateStatistics();
+  // Check if we are connected, if not then do not continue
+  if (connected_ != 0){
+    status = pBroker_->immediateWriteRead(command, response);
+    if (status == asynSuccess){
+      status = this->updateStatistics();
+    }
+  } else {
+    strcpy(response, "");
+    status = asynError;
   }
   return status;
 }
@@ -1562,21 +1617,32 @@ asynStatus pmacController::poll()
   epicsTimeGetCurrent(&nowTime_);
   // Always call for a fast update
   debug(DEBUG_TRACE, functionName, "Fast update has been called", tBuff);
-  pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
-  this->updateStatistics();
-  setDoubleParam(PMAC_C_FastUpdateTime_, pBroker_->readUpdateTime());
 
+  // First check the connection
+  this->checkConnection();
+
+  if (connected_ != 0){
+    pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+    this->updateStatistics();
+    setDoubleParam(PMAC_C_FastUpdateTime_, pBroker_->readUpdateTime());
+  }
   if (epicsTimeDiffInSeconds(&nowTime_, &lastMediumTime_) >= PMAC_MEDIUM_LOOP_TIME/1000.0){
     epicsTimeAddSeconds(&lastMediumTime_, PMAC_MEDIUM_LOOP_TIME/1000.0);
     epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
     debug(DEBUG_TRACE, functionName, "Medium update has been called", tBuff);
-    pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+    // Check if we are connected
+    if (connected_ != 0){
+      pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+    }
   }
   if (epicsTimeDiffInSeconds(&nowTime_, &lastSlowTime_) >= PMAC_SLOW_LOOP_TIME/1000.0){
     epicsTimeAddSeconds(&lastSlowTime_, PMAC_SLOW_LOOP_TIME/1000.0);
     epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
     debug(DEBUG_TRACE, functionName, "Slow update has been called", tBuff);
-    pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+    // Check if we are connected
+    if (connected_ != 0){
+      pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+    }
   }
 
   return asynSuccess;
@@ -1937,6 +2003,10 @@ asynStatus pmacController::abortProfile()
   sprintf(cmd, "%s=1", PMAC_TRAJ_ABORT);
   status = this->immediateWriteRead(cmd, response);
 
+  // Set the status P variable to idle in case the motion program cannot
+  sprintf(cmd, "%s=%d", PMAC_TRAJ_STATUS, PMAC_TRAJ_STATUS_FINISHED);
+  status = this->immediateWriteRead(cmd, response);
+
   // Set the scan executing variable to 0
   tScanExecuting_ = 0;
 
@@ -1959,6 +2029,8 @@ void pmacController::trajectoryTask()
   int status = asynSuccess;
   epicsTimeStamp startTime, endTime;
   double elapsedTime;
+  double timeout;
+  int epicsErrorDetect = 0;
   int epicsBufferNumber = 0;
   int progRunning = 0;
   double position = 0.0;
@@ -1971,6 +2043,8 @@ void pmacController::trajectoryTask()
   while (1) {
     // If we are not scanning then wait for a semaphore that is given when a scan is started
     if (!tScanExecuting_){
+      // Reset any of our own errors
+      epicsErrorDetect = 0;
       // Release the lock while we wait for an event that says scan has started, then lock again
       debug(DEBUG_TRACE, functionName, "Waiting for scan to start");
       this->unlock();
@@ -2017,111 +2091,170 @@ void pmacController::trajectoryTask()
       sprintf(cmd, "&%dB%dR", tScanCSNo_, 1); // TODO: motion program should not be hardcoded to 1
       debug(DEBUG_ERROR, functionName, "Sending command to start the trajectory move", cmd);
       this->immediateWriteRead(cmd, response);
-
-      // Reset our status
-      setIntegerParam(PMAC_C_TrajEStatus_, 0);
-      // Set the execute state to move start
-      setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_EXECUTING);
-      // Set the execute status to undefined
-      setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_SUCCESS);
-      // Set the message accordingly
-      setStringParam(profileExecuteMessage_, "Executing trajectory scan");
-      callParamCallbacks();
-
-      // Now wait until we have confirmation that the scan has started
-      while ((tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING) && tScanExecuting_){
-        this->unlock();
-        status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
-        this->lock();
-      }
-    }
-
-    // Check if the reported PMAC buffer number is the same as the EPICS buffer number
-    if (tScanPmacBufferNumber_ == epicsBufferNumber){
-      debug(DEBUG_ERROR, functionName, "Reading from buffer", tScanPmacBufferNumber_);
-      debug(DEBUG_ERROR, functionName, "Send next demand set to PMAC");
-      if (epicsBufferNumber == 0){
-        epicsBufferNumber = 1;
-      } else {
-        epicsBufferNumber = 0;
-      }
-      // EPICS buffer number has just been updated, so fill the next
-      // half buffer with positions
-      this->unlock();
-      status = this->sendTrajectoryDemands(epicsBufferNumber);
-      this->lock();
-    }
-
-    // Record the current scan time
-    epicsTimeGetCurrent(&endTime);
-    // Work out the elapsed time of the scan
-    elapsedTime = epicsTimeDiffInSeconds(&endTime, &startTime);
-    setDoubleParam(PMAC_C_TrajRunTime_, elapsedTime);
-
-    // Check if the scan has stopped/finished (status from PMAC)
-    // Only start checking this value after we have been running for
-    // long enough to be reading the current scan value
-    if (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING){
-      debug(DEBUG_ERROR, functionName, "tScanPmacStatus", tScanPmacStatus_);
-      // Something has happened on the PMAC side
-      tScanExecuting_ = 0;
-      if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_FINISHED){
-        // Set the execute state to done
-        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-        // Set the execute status to success
-        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_SUCCESS);
-        // Set the message accordingly
-        setStringParam(profileExecuteMessage_, "Trajectory scan complete");
-      } else {
+      printf("%s\n", response);
+      // Check if this command returned an error
+      if (response[0] == 0x7){
         // Set the execute state to done
         setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
         // Set the execute status to failure
         setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
         // Set the message accordingly
-        setStringParam(profileExecuteMessage_, "Trajectory scan failed, motion program timeout start");
+        setStringParam(profileExecuteMessage_, "Scan failed to start motion program - check motor status");
+        // Set the executing flag to 0
+        tScanExecuting_ = 0;
+        // Notify that EPICS detected the error
+        epicsErrorDetect = 1;
+      } else {
+        // Reset our status
+        setIntegerParam(PMAC_C_TrajEStatus_, 0);
+        // Set the execute state to move start
+        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_EXECUTING);
+        // Set the execute status to undefined
+        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_SUCCESS);
+        // Set the message accordingly
+        setStringParam(profileExecuteMessage_, "Executing trajectory scan");
       }
       callParamCallbacks();
+
+      // Set a timeout of 3, equivalent to ~3 seconds
+      timeout = 3.0;
+      // Now wait until we have confirmation that the scan has started
+      while ((tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING) && tScanExecuting_ && timeout > 0.0){
+        this->unlock();
+        status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
+        this->lock();
+        timeout -= 0.1;
+        printf("timeout %f\n", timeout);
+      }
+      // If we have timed out then notify the operator and fail the scan
+      if (timeout <= 0.0 && (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING)){
+        // Set the execute state to done
+        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+        // Set the execute status to failure
+        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
+        // Set the message accordingly
+        setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
+        // Set the executing flag to 0
+        tScanExecuting_ = 0;
+        // Notify that EPICS detected the error
+        epicsErrorDetect = 1;
+      }
+      // Now wait until we have confirmation that the motion program is executing
+      progRunning = 0;
+      // Set a timeout of 3, equivalent to ~3 seconds
+      timeout = 3.0;
+      while (progRunning == 0 && tScanExecuting_ && timeout > 0.0){
+        pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning);
+        this->unlock();
+        status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
+        this->lock();
+        timeout -= 0.1;
+      }
+      // If we have timed out then notify the operator and fail the scan
+      if (timeout <= 0.0 && progRunning == 0){
+        // Set the execute state to done
+        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+        // Set the execute status to failure
+        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
+        // Set the message accordingly
+        setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
+        // Set the executing flag to 0
+        tScanExecuting_ = 0;
+        // Notify that EPICS detected the error
+        epicsErrorDetect = 1;
+      }
     }
 
-    // Check here if the scan status reported by the PMAC is running but
-    // the motion program is not running, this points to some other error
-    // (possibly motor in limit)
-    if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_RUNNING){
-      if (pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning) == asynSuccess){
-        if (progRunning == 0){
-          // Program not running but it should be
-          tScanExecuting_ = 0;
+    // Now entering the main loop during a scan.  If the EPICS driver has detected
+    // a problem then do not execute any of this code
+    if (epicsErrorDetect == 0){
+      // Check if the reported PMAC buffer number is the same as the EPICS buffer number
+      if (tScanPmacBufferNumber_ == epicsBufferNumber){
+        debug(DEBUG_ERROR, functionName, "Reading from buffer", tScanPmacBufferNumber_);
+        debug(DEBUG_ERROR, functionName, "Send next demand set to PMAC");
+        if (epicsBufferNumber == 0){
+          epicsBufferNumber = 1;
+        } else {
+          epicsBufferNumber = 0;
+        }
+        // EPICS buffer number has just been updated, so fill the next
+        // half buffer with positions
+        this->unlock();
+        status = this->sendTrajectoryDemands(epicsBufferNumber);
+        this->lock();
+      }
+
+      // Record the current scan time
+      epicsTimeGetCurrent(&endTime);
+      // Work out the elapsed time of the scan
+      elapsedTime = epicsTimeDiffInSeconds(&endTime, &startTime);
+      setDoubleParam(PMAC_C_TrajRunTime_, elapsedTime);
+
+      // Check if the scan has stopped/finished (status from PMAC)
+      // Only start checking this value after we have been running for
+      // long enough to be reading the current scan value
+      if (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING){
+        debug(DEBUG_ERROR, functionName, "tScanPmacStatus", tScanPmacStatus_);
+        // Something has happened on the PMAC side
+        tScanExecuting_ = 0;
+        if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_FINISHED){
+          // Set the execute state to done
+          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+          // Set the execute status to success
+          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_SUCCESS);
+          // Set the message accordingly
+          setStringParam(profileExecuteMessage_, "Trajectory scan complete");
+        } else {
           // Set the execute state to done
           setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
           // Set the execute status to failure
           setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
           // Set the message accordingly
-          setStringParam(profileExecuteMessage_, "Trajectory scan failed, motion program not running");
+          setStringParam(profileExecuteMessage_, "Trajectory scan failed, motion program timeout start");
+        }
+        callParamCallbacks();
+      }
+
+      // Check here if the scan status reported by the PMAC is running but
+      // the motion program is not running, this points to some other error
+      // (possibly motor in limit)
+      if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_RUNNING){
+        if (pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning) == asynSuccess){
+          if (progRunning == 0){
+            // Program not running but it should be
+            tScanExecuting_ = 0;
+            // Set the execute state to done
+            setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+            // Set the execute status to failure
+            setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
+            // Set the message accordingly
+            setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
+          }
         }
       }
-    }
 
-    // Here we need to check for CS errors that would abort the scan
-    if (pCSControllers_[tScanCSNo_]->tScanCheckForErrors() != asynSuccess){
-      // There has been a CS error reported.  Abort the scan
-      tScanExecuting_ = 0;
-      // Set the status to 1 here, error detected
-      setIntegerParam(PMAC_C_TrajEStatus_, 1);
-      // Set the execute state to done
-      setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-      // Set the execute status to failure
-      setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-      // Set the message accordingly
-      setStringParam(profileExecuteMessage_, "Trajectory scan failed, coordinate system error");
-      callParamCallbacks();
-    }
+      // Here we need to check for CS errors that would abort the scan
+      if (pCSControllers_[tScanCSNo_]->tScanCheckForErrors() != asynSuccess){
+        // There has been a CS error reported.  Abort the scan
+        tScanExecuting_ = 0;
+        // Set the status to 1 here, error detected
+        setIntegerParam(PMAC_C_TrajEStatus_, 1);
+        // Set the execute state to done
+        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+        // Set the execute status to failure
+        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
+        // Set the message accordingly
+        setStringParam(profileExecuteMessage_, "Trajectory scan failed, coordinate system error");
+        callParamCallbacks();
+      }
 
-    // If we are scanning then sleep for a short period before checking the status
-    if (tScanExecuting_){
-      debug(DEBUG_FLOW, functionName, "Trajectory scan waiting");
-      this->unlock();
-      status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
-      this->lock();
+      // If we are scanning then sleep for a short period before checking the status
+      if (tScanExecuting_){
+        debug(DEBUG_FLOW, functionName, "Trajectory scan waiting");
+        this->unlock();
+        status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
+        this->lock();
+      }
     }
   }
 }

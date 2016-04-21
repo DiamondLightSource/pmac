@@ -138,6 +138,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
   asynStatus processDrvInfo(char *input, char *output);
   virtual void callback(pmacCommandStore *sPtr, int type);
+  asynStatus checkConnection();
+  asynStatus initialiseConnection();
   asynStatus slowUpdate(pmacCommandStore *sPtr);
   asynStatus mediumUpdate(pmacCommandStore *sPtr);
 
@@ -260,6 +262,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   pmacCsGroups *pGroupList;
 
  private:
+  int connected_;
   int cid_;
   int parameterIndex_;
   pmacMessageBroker *pBroker_;

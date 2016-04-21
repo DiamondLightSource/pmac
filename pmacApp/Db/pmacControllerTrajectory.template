@@ -1,3 +1,6 @@
+# This associates the template with an edm screen
+# % gui, $(PORT), edmtab, pmacTrajectory.edl, P=$(P),R=$(R)
+
 ##
 ## Record to read the number of axes selected for the current
 ## trajectory scan
