@@ -492,6 +492,80 @@ record(longin, "$(DEVICE):NAXES") {
   field(VAL, "$(NAXES)")
 }
 
+##############################################################
+# This record indicates if we have a controller problem
+##############################################################
+
+# ///
+# /// Record used to indicate if the controller has a problem. This is set in the
+# /// controller poll loop, and is used to set the motor record axis status.
+# ///
+record(bi, "$(DEVICE):GLOBAL_PROBLEM_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_GLOBALSTATUS")
+   field(SCAN, "I/O Intr")
+   field(ZNAM, "Status OK")
+   field(ONAM, "Status Problem")
+}
+
+##############################################################
+# Monitor and set the PMAC feedrate
+##############################################################
+
+# ///
+# /// Get the PMAC feedrate. This is read in the controller poll loop.
+# ///
+record(ai, "$(DEVICE):FEEDRATE_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE")
+   field(SCAN, "I/O Intr")
+   field(PREC, "2")
+}
+
+# ///
+# /// Set the PMAC feedrate limit. This determins if the current feedrate
+# /// read from the controller is out of range, and will be used to set axis alarms.
+# ///
+record(longout, "$(DEVICE):FEEDRATE_LIMIT")
+{
+   field(PINI, "YES")
+   field(VAL, "$(FEEDRATE=100)")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE_LIMIT")
+   field(DRVH, "100")
+   field(DRVL, "0")
+}
+
+# ///
+# /// Set the PMAC feedrate limit. This writes a new feedrate to
+# /// the controller.
+# ///
+record(longout, "$(DEVICE):FEEDRATE")
+{
+   field(PINI, "YES")
+   field(VAL, "$(FEEDRATE=100)")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE")
+   field(DRVH, "100")
+   field(DRVL, "0")
+}
+
+# ///
+# /// Record used to indicate if the feedrate is below the limit. This is set from the
+# /// controller poll loop, and is used to set the motor record axis status.
+# ///
+record(bi, "$(DEVICE):FEEDRATE_PROBLEM_RBV")
+{
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE_PROBLEM")
+   field(SCAN, "I/O Intr")
+   field(ZNAM, "Feedrate OK")
+   field(ONAM, "Feedrate Problem")
+}
+
 ###################################################################
 #  These records report the current comms statistics              # 
 #                                                                 #
