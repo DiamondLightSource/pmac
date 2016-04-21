@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 697
-y 80
+x 753
+y 88
 w 575
 h 886
 font "arial-medium-r-16.0"
@@ -63,9 +63,9 @@ major 4
 minor 0
 release 0
 x 5
-y 50
+y 45
 w 255
-h 75
+h 85
 lineColor index 14
 fill
 fillColor index 5
@@ -278,7 +278,7 @@ major 4
 minor 1
 release 1
 x 5
-y 40
+y 35
 w 71
 h 13
 font "arial-medium-r-12.0"
@@ -299,9 +299,9 @@ major 4
 minor 0
 release 0
 x 270
-y 50
+y 45
 w 300
-h 75
+h 85
 lineColor index 14
 fill
 fillColor index 5
@@ -315,35 +315,15 @@ minor 1
 release 1
 x 275
 y 55
-w 141
-h 30
+w 140
+h 20
 font "arial-bold-r-14.0"
 fgColor index 14
 bgColor index 0
 useDisplayBg
 value {
-  "Refresh Rate:"
+  "Feedrate Problem:"
 }
-endObjectProperties
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 420
-y 55
-w 145
-h 30
-fgColor index 25
-bgColor index 3
-inconsistentColor index 0
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(pmac):ReadBack.SCAN"
-indicatorPv "$(pmac):ReadBack.SCAN"
-font "arial-bold-r-14.0"
 endObjectProperties
 
 # (Static Text)
@@ -353,7 +333,7 @@ major 4
 minor 1
 release 1
 x 270
-y 40
+y 35
 w 38
 h 13
 font "arial-medium-r-12.0"
@@ -1553,9 +1533,9 @@ major 4
 minor 1
 release 1
 x 275
-y 90
-w 141
-h 30
+y 105
+w 140
+h 20
 font "arial-bold-r-14.0"
 fgColor index 14
 bgColor index 3
@@ -1610,9 +1590,9 @@ major 10
 minor 0
 release 0
 x 420
-y 90
+y 105
 w 145
-h 30
+h 20
 controlPv "$(pmac):MACROERRS"
 fgColor index 16
 fgAlarm
@@ -5052,6 +5032,61 @@ numPvs 4
 numDsps 1
 displayFileName {
   0 "pmacStats"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 420
+y 55
+w 15
+h 15
+controlPv "$(pmac):FEEDRATE_PROBLEM_RBV"
+lineColor index 14
+onColor index 20
+offColor index 24
+lineWidth 2
+numBits 1
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 420
+y 80
+w 15
+h 15
+controlPv "$(pmac):GLOBAL_PROBLEM_RBV"
+lineColor index 14
+onColor index 20
+offColor index 24
+lineWidth 2
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 275
+y 80
+w 140
+h 20
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Controller Problem:"
 }
 endObjectProperties
 
