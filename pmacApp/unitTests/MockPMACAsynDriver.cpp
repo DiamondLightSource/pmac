@@ -46,6 +46,7 @@ asynStatus MockPMACAsynDriver::readOctet(asynUser *pasynUser,
         *nActual = response_.length();
       }
     }
+    *eomReason = 2;
   }
   waitingForResponse_ = false;
   return asynSuccess;
