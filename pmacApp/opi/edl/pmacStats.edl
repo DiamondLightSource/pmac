@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 221
-y 195
-w 977
-h 429
+x 385
+y 72
+w 851
+h 386
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
 btnFont "arial-bold-r-12.0"
@@ -32,11 +32,41 @@ minor 0
 release 0
 x 0
 y 0
-w 435
-h 350
+w 850
+h 385
 lineColor index 5
 fill
 fillColor index 5
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 430
+y 265
+w 410
+h 70
+lineColor index 14
+fill
+fillColor index 3
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 430
+y 15
+w 410
+h 230
+lineColor index 14
+fill
+fillColor index 3
 endObjectProperties
 
 # (Rectangle)
@@ -548,7 +578,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 740
+x 720
 y 30
 w 105
 h 20
@@ -568,7 +598,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 465
+x 445
 y 30
 w 250
 h 20
@@ -587,7 +617,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 740
+x 720
 y 85
 w 105
 h 20
@@ -607,7 +637,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 465
+x 445
 y 85
 w 250
 h 20
@@ -626,7 +656,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 740
+x 720
 y 140
 w 105
 h 20
@@ -646,7 +676,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 465
+x 445
 y 140
 w 250
 h 20
@@ -665,7 +695,7 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 740
+x 720
 y 55
 w 105
 h 25
@@ -689,7 +719,7 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 740
+x 720
 y 110
 w 105
 h 25
@@ -713,7 +743,7 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 740
+x 720
 y 165
 w 105
 h 25
@@ -729,5 +759,326 @@ offLabel "REPORT"
 3d
 useEnumNumeric
 font "helvetica-bold-r-14.0"
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 740
+y 345
+w 100
+h 30
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-18.0"
+3d
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 610
+y 280
+w 90
+h 20
+controlPv "$(pmac):FEEDRATE"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 720
+y 280
+w 105
+h 20
+controlPv "$(pmac):FEEDRATE_RBV"
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 30
+fastUpdate
+useHexPrefix
+showUnits
+newPos
+objType "monitors"
+id "22"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 445
+y 275
+w 65
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Feedrate"
+}
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 720
+y 305
+w 105
+h 20
+controlPv "$(pmac):FEEDRATE_LIMIT"
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 30
+fastUpdate
+useHexPrefix
+newPos
+objType "monitors"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 445
+y 305
+w 105
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Feedrate Limit"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 610
+y 305
+w 90
+h 20
+controlPv "$(pmac):FEEDRATE_LIMIT"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 430
+y 10
+w 132
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 5
+value {
+  "  PMAC Debugging  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 430
+y 255
+w 121
+h 16
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 5
+value {
+  "  PMAC Feedrate  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 545
+y 215
+w 55
+h 20
+controlPv "$(pmac):DEBUG_AXISNO"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 630
+y 215
+w 55
+h 20
+controlPv "$(pmac):DEBUG_CSNO"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 445
+y 215
+w 80
+h 20
+controlPv "$(pmac):DEBUG_LEVEL"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 720
+y 210
+w 105
+h 25
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):DEBUG_EXECUTE"
+pressValue "1"
+onLabel "SET DEBUG"
+offLabel "SET DEBUG"
+3d
+useEnumNumeric
+font "helvetica-bold-r-14.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 445
+y 195
+w 80
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Debug Level"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 545
+y 195
+w 55
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Axis No"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 635
+y 195
+w 45
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "CS No"
+}
 endObjectProperties
 

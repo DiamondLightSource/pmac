@@ -35,23 +35,35 @@ int pmacDebugger::getLevel()
 
 void pmacDebugger::debug(int level, const std::string& method)
 {
+  char tBuff[32];
+  epicsTimeStamp ts;
   if (level == 0 || (level & level_) > 0){
-    printf("%s::%s called\n", owner_.c_str(), method.c_str());
+    epicsTimeGetCurrent(&ts);
+    epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &ts);
+    printf("%s %s::%s called\n", tBuff, owner_.c_str(), method.c_str());
   }
 }
 
 void pmacDebugger::debug(int level, const std::string& method, const std::string& message)
 {
+  char tBuff[32];
+  epicsTimeStamp ts;
   if (level == 0 || (level & level_) > 0){
-    printf("%s::%s %s\n", owner_.c_str(), method.c_str(), message.c_str());
+    epicsTimeGetCurrent(&ts);
+    epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &ts);
+    printf("%s %s::%s %s\n", tBuff, owner_.c_str(), method.c_str(), message.c_str());
   }
 }
 
 void pmacDebugger::debugf(int level, const std::string& method, const char *pformat, ...)
 {
+  char tBuff[32];
+  epicsTimeStamp ts;
   va_list pvar;
   if (level == 0 || (level & level_) > 0){
-    printf("%s::%s ", owner_.c_str(), method.c_str());
+    epicsTimeGetCurrent(&ts);
+    epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &ts);
+    printf("%s %s::%s ", tBuff, owner_.c_str(), method.c_str());
     va_start(pvar,pformat);
     vprintf(pformat, pvar);
     printf("\n");
@@ -61,22 +73,34 @@ void pmacDebugger::debugf(int level, const std::string& method, const char *pfor
 
 void pmacDebugger::debug(int level, const std::string& method, const std::string& message, const std::string& value)
 {
+  char tBuff[32];
+  epicsTimeStamp ts;
   if (level == 0 || (level & level_) > 0){
-    printf("%s::%s %s => %s\n", owner_.c_str(), method.c_str(), message.c_str(), value.c_str());
+    epicsTimeGetCurrent(&ts);
+    epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &ts);
+    printf("%s %s::%s %s => %s\n", tBuff, owner_.c_str(), method.c_str(), message.c_str(), value.c_str());
   }
 }
 
 void pmacDebugger::debug(int level, const std::string& method, const std::string& message, int value)
 {
+  char tBuff[32];
+  epicsTimeStamp ts;
   if (level == 0 || (level & level_) > 0){
-    printf("%s::%s %s => %d\n", owner_.c_str(), method.c_str(), message.c_str(), value);
+    epicsTimeGetCurrent(&ts);
+    epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &ts);
+    printf("%s %s::%s %s => %d\n", tBuff, owner_.c_str(), method.c_str(), message.c_str(), value);
   }
 }
 
 void pmacDebugger::debug(int level, const std::string& method, const std::string& message, double value)
 {
+  char tBuff[32];
+  epicsTimeStamp ts;
   if (level == 0 || (level & level_) > 0){
-    printf("%s::%s %s => %f\n", owner_.c_str(), method.c_str(), message.c_str(), value);
+    epicsTimeGetCurrent(&ts);
+    epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &ts);
+    printf("%s %s::%s %s => %f\n", tBuff, owner_.c_str(), method.c_str(), message.c_str(), value);
   }
 }
 

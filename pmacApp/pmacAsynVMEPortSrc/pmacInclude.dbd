@@ -1,0 +1,6 @@
+
+include "statusRecord.dbd"
+include "statusDevice.dbd"
+
+include "add_pmac.dbd"
+

@@ -30,6 +30,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
   public:
     pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program);
     virtual ~pmacCSController();
+    void setDebugLevel(int level, int axis);
     asynStatus writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements);
     asynStatus writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements);
     bool getMoving();

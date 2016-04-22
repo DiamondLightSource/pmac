@@ -40,8 +40,9 @@
  *
  */
 pmacCsGroups::pmacCsGroups(pmacController *pController) :
-		pC_(pController),
-		currentGroup(0)
+  pmacDebugger("pmacCSGroups"),
+	pC_(pController),
+	currentGroup(0)
 {
 	// Note assume all axes are not in a coordinate system initially
 	// PINI of the $(P):COORDINATE_SYS_GROUP will set the cs group later
@@ -79,11 +80,13 @@ pmacCsGroups::~pmacCsGroups()
  */
 void pmacCsGroups::addGroup(int id, const std::string& name, int axisCount)
 {
+  static const char *functionName = "addGroup";
+  debug(DEBUG_TRACE, functionName);
 	// axisCount is not required for this implementation - keeping it
 	// in case we need to drop STL
   pmacCsGroup *group = new pmacCsGroup;
 	group->name = name;
-
+	debugf(DEBUG_VARIABLE, functionName, "Adding group %s with %d axes", name.c_str(), axisCount);
   csGroups.insert(id, group);
 }
 
@@ -103,8 +106,9 @@ void pmacCsGroups::addGroup(int id, const std::string& name, int axisCount)
 asynStatus pmacCsGroups::addAxisToGroup(int id, int axis, const std::string& axisDef,
 		int coordSysNumber)
 {
-	static const char *functionName = "pmacCsGroups::addAxisToGroup";
+	static const char *functionName = "addAxisToGroup";
 	asynStatus status = asynSuccess;
+	debug(DEBUG_TRACE, functionName);
   pmacCsAxisDef *def = new pmacCsAxisDef;
 	def->axisDefinition = axisDef;
 	def->axisNo = axis;
@@ -113,11 +117,16 @@ asynStatus pmacCsGroups::addAxisToGroup(int id, int axis, const std::string& axi
 	pmacCsGroup *pGrp = (pmacCsGroup *)csGroups.lookup(id);
 	if (pGrp == NULL){
 	  status = asynError;
-    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Invalid Coordinate System Group Number\n", functionName);
+    debug(DEBUG_ERROR, functionName, "Invalid Coordinate System Group Number", id);
 	} else {
 	  pGrp->axisDefs.insert(axis, def);
-	  asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s: axis %d, CS %d, def %s, COUNT %d\n",
-	            functionName, axis, coordSysNumber, axisDef.c_str(), (int)pGrp->axisDefs.count());
+	  debugf(DEBUG_VARIABLE,
+	         functionName,
+	         "axis %d, CS %d, def %s, COUNT %d\n",
+	         axis,
+	         coordSysNumber,
+	         axisDef.c_str(),
+	         (int)pGrp->axisDefs.count());
 	}
 	return status;
 }
@@ -132,10 +141,13 @@ asynStatus pmacCsGroups::addAxisToGroup(int id, int axis, const std::string& axi
  */
 int pmacCsGroups::getAxisCoordSys(int axis)
 {
+  static const char *functionName = "getAxisCoordSys";
+  debug(DEBUG_TRACE, functionName);
   pmacCsAxisDef *axd = (pmacCsAxisDef *)((pmacCsGroup *)csGroups.lookup(currentGroup))->axisDefs.lookup(axis);
   if (axd == NULL){
     throw std::out_of_range("Axis not in CS group definition");
   }
+  debug(DEBUG_VARIABLE, functionName, "Coordinate system number", axd->coordSysNumber);
   return axd->coordSysNumber;
 }
 
@@ -149,24 +161,46 @@ int pmacCsGroups::getAxisCoordSys(int axis)
  */
 asynStatus pmacCsGroups::switchToGroup(int id)
 {
-	static const char *functionName = "pmacCsGroups::switchToGroup";
+	static const char *functionName = "switchToGroup";
 	char command[PMAC_MAXBUF] = {0};
 	char response[PMAC_MAXBUF] = {0};
 	asynStatus cmdStatus;
+	pmacCsGroup *pGrp;
+	pmacCsAxisDefList *pAxisDefs;
+  debug(DEBUG_TRACE, functionName);
 
 	if (csGroups.lookup(id) == NULL)
 	{
 		cmdStatus = asynError;
-		asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Invalid Coordinate System Group Number\n", functionName);
+		debug(DEBUG_ERROR, functionName, "Invalid Coordinate System Group Number", id);
 	}
 	else
 	{
-	  pmacCsGroup *pGrp = (pmacCsGroup *)csGroups.lookup(id);
-    pmacCsAxisDefList *pAxisDefs = &(pGrp->axisDefs);
-		// abort all motion and programs and undefine all cs mappings
-		sprintf(command, "%c\nundefine all",0x01);
-		cmdStatus = pC_->lowLevelWriteRead(command, response);
+	  // First abort motion on the currently selected group
+    pGrp = (pmacCsGroup *)csGroups.lookup(currentGroup);
+    if (pGrp != NULL){
+      pAxisDefs = &(pGrp->axisDefs);
+      if (pAxisDefs->count() > 0){
+        int axis = pAxisDefs->firstKey();
+        pmacCsAxisDef *axd = (pmacCsAxisDef *)pAxisDefs->lookup(axis);
+        sprintf(command, "&%dA", axd->coordSysNumber);
+        cmdStatus = pC_->lowLevelWriteRead(command, response);
+        while (pAxisDefs->hasNextKey() == true && cmdStatus == asynSuccess){
+          axis = pAxisDefs->nextKey();
+          axd = (pmacCsAxisDef *)pAxisDefs->lookup(axis);
+          sprintf(command, "&%dA", axd->coordSysNumber);
+          cmdStatus = pC_->lowLevelWriteRead(command, response);
+        }
+      }
+    }
 
+    // Now undefine all cs mappings
+    strcpy(command, "undefine all");
+    cmdStatus = pC_->lowLevelWriteRead(command, response);
+
+	  // Now redefine the mappings for the new group
+	  pGrp = (pmacCsGroup *)csGroups.lookup(id);
+    pAxisDefs = &(pGrp->axisDefs);
 		if (cmdStatus == asynSuccess)
 		{
 			currentGroup = id;
@@ -202,16 +236,17 @@ asynStatus pmacCsGroups::switchToGroup(int id)
  */
 asynStatus pmacCsGroups::abortMotion(int axis)
 {
+  static const char *functionName = "abortMotion";
 	char command[PMAC_MAXBUF] = {0};
 	char response[PMAC_MAXBUF] = {0};
 	int coordSysNum = getAxisCoordSys(axis);
 	asynStatus status = asynSuccess;
+  debug(DEBUG_TRACE, functionName);
 
 	if(coordSysNum != 0)
 	{
+    // Abort the motion for the CS
 		sprintf(command, "&%dA", coordSysNum);
-
-		//Execute the deferred move
 		status = pC_->lowLevelWriteRead(command, response);
 	}
 
@@ -231,12 +266,11 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 {
 	asynStatus status = asynSuccess;
 	pmacAxis *pAxis = NULL;
-	static const char *functionName = "pmacCsGroups::processDeferredCoordMoves";
+	static const char *functionName = "processDeferredCoordMoves";
 	int coordSysNumber = 0;
 	pmacCsaxisNamesToQ moveList;
 	float maxTimeToMove = 0;
-
-	asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
+	debug(DEBUG_TRACE, functionName);
 
 	// Scan all axes and verify that a valid coordinated deferred move can be made.
 	// All real axes with a deferred move request must be in the same coordinate system
@@ -255,9 +289,10 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 					if(coordSysNumber == 0)
 					{
 						status = asynError;
-						asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-								"%s Error: deferred coordinated move on real axis %d not in a coordinate system\n",
-								functionName, axis);
+						debugf(DEBUG_ERROR,
+						       functionName,
+						       "Deferred coordinated move on real axis %d not in a coordinate system",
+						       axis);
 					}
 				}
 				else
@@ -265,9 +300,11 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 					if(getAxisCoordSys(axis) != coordSysNumber)
 					{
 						status = asynError;
-						asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-								"%s Error: deferred coordinated move on multiple coordinate systems %d and %d\n",
-								functionName, coordSysNumber, getAxisCoordSys(axis));
+						debugf(DEBUG_ERROR,
+						       functionName,
+						       "Deferred coordinated move on multiple coordinate systems %d and %d",
+						       coordSysNumber,
+						       getAxisCoordSys(axis));
 					}
 				}
 
@@ -279,9 +316,12 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 					if(axisDef.length() != 1 || axisNamesToQ.lookup(axisDef[0]) != NULL)
 					{
 						status = asynError;
-						asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-								"%s Error: illegal deferred coordinated move on real axis %d defined as %s in CS %d\n",
-								functionName, axis, axisDef.c_str(), coordSysNumber);
+						debugf(DEBUG_ERROR,
+						       functionName,
+						       "Illegal deferred coordinated move on real axis %d defined as %s in CS %d",
+						       axis,
+						       axisDef.c_str(),
+						       coordSysNumber);
 					}
 					else
 					{
@@ -341,9 +381,11 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 					{
 						/// TODO remove this clause -
 						// status = asynError;
-						asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-								"%s **** WARNING: deferred coordinated move - real axis %d in CS %d is already moving\n",
-								functionName, axis, coordSysNumber);
+					  debugf(DEBUG_ERROR,
+					         functionName,
+					         "**** WARNING: deferred coordinated move - real axis %d in CS %d is already moving",
+					         axis,
+					         coordSysNumber);
 					}
 				}
 			}
@@ -354,13 +396,11 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 			sprintf(command, "&%d Q70=%f %s B101R", coordSysNumber, maxTimeToMove, moveStr);
 
 			//Execute the deferred move
-			asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
-					"%s : deferred move command = %s\n", functionName, command);
+			debug(DEBUG_FLOW, functionName, "Deferred move command", command);
 
 			if (pC_->lowLevelWriteRead(command, response) != asynSuccess)
 			{
-				asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-						"%s ERROR Sending Deferred Move Command.\n", functionName);
+			  debug(DEBUG_ERROR, functionName, "ERROR Sending Deferred Move Command.", command);
 				pC_->setIntegerParam(pC_->PMAC_C_CommsError_, pC_->PMAC_ERROR_);
 				status = asynError;
 			}

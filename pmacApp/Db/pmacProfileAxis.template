@@ -38,6 +38,14 @@ record(waveform,"$(P)$(R)M$(M)Positions") {
     field(NELM, "$(NPOINTS)")
     field(FTVL, "DOUBLE")
     field(PREC, "$(PREC)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(P)$(R)M$(M)NoOfPts") {
+    field(DESC, "Axis $(ADDR) Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)M$(M)Positions.NORD")
 }
 
 # These records make the motor resolution, offset and direction available to the driver
@@ -72,4 +80,8 @@ record(ao,"$(P)$(R)M$(M)Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))PROFILE_MOTOR_RESOLUTION")
     field(PREC, "$(PREC)")
+}
+
+record(longin, "$(P)$(R)AXIS$(ADDR):PRESENT") {
+    field(VAL, "1")
 }

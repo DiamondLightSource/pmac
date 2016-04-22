@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(test_PMACCsGroups)
   pGroups->switchToGroup(1);
 
   // Check the first message is undefine all
-  BOOST_CHECK_EQUAL(pMock->checkForWrite("\001\nundefine all", 0), true);
+  BOOST_CHECK_EQUAL(pMock->checkForWrite("undefine all", 0), true);
 
   // Now check that the messages sent contain the axis definitions
   BOOST_CHECK_EQUAL(pMock->checkForWrite("&1 #1->X"), true);
@@ -111,9 +111,10 @@ BOOST_AUTO_TEST_CASE(test_PMACCsGroups)
   // Switch to the group
   pGroups->switchToGroup(2);
 
-  // Check the first message is undefine all
-  BOOST_CHECK_EQUAL(pMock->checkForWrite("\001\nundefine all", 0), true);
-
+  // Check the messages sent contain CS aborts and undefine all
+  BOOST_CHECK_EQUAL(pMock->checkForWrite("&1A"), true);
+  BOOST_CHECK_EQUAL(pMock->checkForWrite("&2A"), true);
+  BOOST_CHECK_EQUAL(pMock->checkForWrite("undefine all"), true);
   // Now check that the messages sent contain the axis definitions
   BOOST_CHECK_EQUAL(pMock->checkForWrite("&1 #1->X"), true);
   BOOST_CHECK_EQUAL(pMock->checkForWrite("&1 #2->Y"), true);

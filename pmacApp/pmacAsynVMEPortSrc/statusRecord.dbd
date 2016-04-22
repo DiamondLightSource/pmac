@@ -1,0 +1,468 @@
+recordtype(status) {
+	include "dbCommon.dbd" 
+        field(VERS,DBF_DOUBLE) {
+                prompt("Version Number")
+                promptgroup(GUI_DISPLAY)
+                special(SPC_NOMOD)
+                interest(1)
+        }
+	field(VAL,DBF_LONG) {
+		prompt("Current value")
+		asl(ASL0)
+		pp(TRUE)
+	}
+	field(INP,DBF_INLINK) {
+		prompt("Input Specification")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(EGU,DBF_STRING) {
+		prompt("Units name")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+		size(16)
+	}
+	field(HOPR,DBF_LONG) {
+		prompt("High Operating Range")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(LOPR,DBF_LONG) {
+		prompt("Low Operating Range")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(LVAL,DBF_LONG) {
+		prompt("Last value")
+		pp(TRUE)
+	}
+	field(BI00,DBF_ENUM) {
+		prompt("bit 0 Value")
+		pp(TRUE)
+	}
+	field(BI01,DBF_ENUM) {
+		prompt("bit 1 Value")
+		pp(TRUE)
+	}
+	field(BI02,DBF_ENUM) {
+		prompt("bit 2 Value")
+		pp(TRUE)
+	}
+	field(BI03,DBF_ENUM) {
+		prompt("bit 3 Value")
+		pp(TRUE)
+	}
+	field(BI04,DBF_ENUM) {
+		prompt("bit 4 Value")
+		pp(TRUE)
+	}
+	field(BI05,DBF_ENUM) {
+		prompt("bit 5 Value")
+		pp(TRUE)
+	}
+	field(BI06,DBF_ENUM) {
+		prompt("bit 6 Value")
+		pp(TRUE)
+	}
+	field(BI07,DBF_ENUM) {
+		prompt("bit 7 Value")
+		pp(TRUE)
+	}
+	field(BI08,DBF_ENUM) {
+		prompt("bit 8 Value")
+		pp(TRUE)
+	}
+	field(BI09,DBF_ENUM) {
+		prompt("bit 9 Value")
+		pp(TRUE)
+	}
+	field(BI10,DBF_ENUM) {
+		prompt("bit 10 Value")
+		pp(TRUE)
+	}
+	field(BI11,DBF_ENUM) {
+		prompt("bit 11 Value")
+		pp(TRUE)
+	}
+	field(BI12,DBF_ENUM) {
+		prompt("bit 12 Value")
+		pp(TRUE)
+	}
+	field(BI13,DBF_ENUM) {
+		prompt("bit 13 Value")
+		pp(TRUE)
+	}
+	field(BI14,DBF_ENUM) {
+		prompt("bit 14 Value")
+		pp(TRUE)
+	}
+	field(BI15,DBF_ENUM) {
+		prompt("bit 15 Value")
+		pp(TRUE)
+	}
+	field(BI16,DBF_ENUM) {
+		prompt("bit 16 Value")
+		pp(TRUE)
+	}
+	field(BI17,DBF_ENUM) {
+		prompt("bit 17 Value")
+		pp(TRUE)
+	}
+	field(BI18,DBF_ENUM) {
+		prompt("bit 18 Value")
+		pp(TRUE)
+	}
+	field(BI19,DBF_ENUM) {
+		prompt("bit 19 Value")
+		pp(TRUE)
+	}
+	field(BI20,DBF_ENUM) {
+		prompt("bit 20 Value")
+		pp(TRUE)
+	}
+	field(BI21,DBF_ENUM) {
+		prompt("bit 20 Value")
+		pp(TRUE)
+	}
+	field(BI22,DBF_ENUM) {
+		prompt("bit 22 Value")
+		pp(TRUE)
+	}
+	field(BI23,DBF_ENUM) {
+		prompt("bit 23 Value")
+		pp(TRUE)
+	}
+	field(BI24,DBF_ENUM) {
+		prompt("bit 24 Value")
+		pp(TRUE)
+	}
+	field(BI25,DBF_ENUM) {
+		prompt("bit 25 Value")
+		pp(TRUE)
+	}
+	field(BI26,DBF_ENUM) {
+		prompt("bit 26 Value")
+		pp(TRUE)
+	}
+	field(BI27,DBF_ENUM) {
+		prompt("bit 27 Value")
+		pp(TRUE)
+	}
+	field(BI28,DBF_ENUM) {
+		prompt("bit 28 Value")
+		pp(TRUE)
+	}
+	field(BI29,DBF_ENUM) {
+		prompt("bit 29 Value")
+		pp(TRUE)
+	}
+	field(BI30,DBF_ENUM) {
+		prompt("bit 30 Value")
+		pp(TRUE)
+	}
+	field(BI31,DBF_ENUM) {
+		prompt("bit 31 Value")
+		pp(TRUE)
+	}
+	field(LK00,DBF_FWDLINK) {
+		prompt("Forward Link 0")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK01,DBF_FWDLINK) {
+		prompt("Forward Link 1")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK02,DBF_FWDLINK) {
+		prompt("Forward Link 2")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK03,DBF_FWDLINK) {
+		prompt("Forward Link 3")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK04,DBF_FWDLINK) {
+		prompt("Forward Link 4")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK05,DBF_FWDLINK) {
+		prompt("Forward Link 5")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK06,DBF_FWDLINK) {
+		prompt("Forward Link 6")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK07,DBF_FWDLINK) {
+		prompt("Forward Link 7")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK08,DBF_FWDLINK) {
+		prompt("Forward Link 8")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK09,DBF_FWDLINK) {
+		prompt("Forward Link 9")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK10,DBF_FWDLINK) {
+		prompt("Forward Link 10")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK11,DBF_FWDLINK) {
+		prompt("Forward Link 11")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK12,DBF_FWDLINK) {
+		prompt("Forward Link 12")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK13,DBF_FWDLINK) {
+		prompt("Forward Link 13")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK14,DBF_FWDLINK) {
+		prompt("Forward Link 14")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK15,DBF_FWDLINK) {
+		prompt("Forward Link 15")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK16,DBF_FWDLINK) {
+		prompt("Forward Link 16")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK17,DBF_FWDLINK) {
+		prompt("Forward Link 17")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK18,DBF_FWDLINK) {
+		prompt("Forward Link 18")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK19,DBF_FWDLINK) {
+		prompt("Forward Link 19")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK20,DBF_FWDLINK) {
+		prompt("Forward Link 20")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK21,DBF_FWDLINK) {
+		prompt("Forward Link 21")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK22,DBF_FWDLINK) {
+		prompt("Forward Link 22")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK23,DBF_FWDLINK) {
+		prompt("Forward Link 23")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK24,DBF_FWDLINK) {
+		prompt("Forward Link 24")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK25,DBF_FWDLINK) {
+		prompt("Forward Link 25")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK26,DBF_FWDLINK) {
+		prompt("Forward Link 26")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK27,DBF_FWDLINK) {
+		prompt("Forward Link 27")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK28,DBF_FWDLINK) {
+		prompt("Forward Link 28")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK29,DBF_FWDLINK) {
+		prompt("Forward Link 29")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK30,DBF_FWDLINK) {
+		prompt("Forward Link 30")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(LK31,DBF_FWDLINK) {
+		prompt("Forward Link 31")
+		promptgroup(GUI_LINKS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(HIHI,DBF_LONG) {
+		prompt("Hihi Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(LOLO,DBF_LONG) {
+		prompt("Lolo Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(HIGH,DBF_LONG) {
+		prompt("High Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(LOW,DBF_LONG) {
+		prompt("Low Alarm Limit")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+	}
+	field(HHSV,DBF_MENU) {
+		prompt("Hihi Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LLSV,DBF_MENU) {
+		prompt("Lolo Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(HSV,DBF_MENU) {
+		prompt("High Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(LSV,DBF_MENU) {
+		prompt("Low Severity")
+		promptgroup(GUI_ALARMS)
+		pp(TRUE)
+		interest(1)
+		menu(menuAlarmSevr)
+	}
+	field(HYST,DBF_LONG) {
+		prompt("Alarm Deadband")
+		promptgroup(GUI_ALARMS)
+		interest(1)
+	}
+	field(ADEL,DBF_LONG) {
+		prompt("Archive Deadband")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(MDEL,DBF_LONG) {
+		prompt("Monitor Deadband")
+		promptgroup(GUI_DISPLAY)
+		interest(1)
+	}
+	field(LALM,DBF_LONG) {
+		prompt("Last Value Alarmed")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(ALST,DBF_LONG) {
+		prompt("Last Value Archived")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(MLST,DBF_LONG) {
+		prompt("Last Val Monitored")
+		special(SPC_NOMOD)
+		interest(3)
+	}
+	field(SIOL,DBF_INLINK) {
+		prompt("Sim Input Specifctn")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(SVAL,DBF_LONG) {
+		prompt("Simulation Value")
+	}
+	field(SIML,DBF_INLINK) {
+		prompt("Sim Mode Location")
+		promptgroup(GUI_INPUTS)
+		special(SPC_NOMOD)
+		interest(1)
+	}
+	field(SIMM,DBF_MENU) {
+		prompt("Simulation Mode")
+		interest(1)
+		menu(menuYesNo)
+	}
+	field(SIMS,DBF_MENU) {
+		prompt("Sim mode Alarm Svrty")
+		promptgroup(GUI_INPUTS)
+		interest(2)
+		menu(menuAlarmSevr)
+	}
+}

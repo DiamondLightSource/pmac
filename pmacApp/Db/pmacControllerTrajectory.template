@@ -1,3 +1,6 @@
+# This associates the template with an edm screen
+# % gui, $(PORT), edmtab, pmacTrajectory.edl, P=$(P),R=$(R)
+
 ##
 ## Record to read the number of axes selected for the current
 ## trajectory scan
@@ -216,6 +219,24 @@ record(waveform, "$(P)$(R)PROFILE_EXECUTE_MESSAGE_RBV")
 record(bo, "$(P)$(R)PROFILE_ABORT") {
   field(DTYP, "asynInt32")
   field(OUT, "@asyn($(PORT),0)PROFILE_ABORT")
+}
+
+###################################################################
+#  These records are to set and read the motion program number    # 
+#                                                                 #
+###################################################################
+
+record(longout, "$(P)$(R)TSCAN_PROG_NO") {
+  field(DESC, "Trajectory program number")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG")
+}
+
+record(longin, "$(P)$(R)TSCAN_PROG_NO_RBV") {
+  field(DESC, "Trajectory program number")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG")
+  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################

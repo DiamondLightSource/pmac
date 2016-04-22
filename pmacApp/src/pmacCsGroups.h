@@ -15,12 +15,13 @@
 #include <string>
 #include <asynDriver.h>
 #include <map>
+#include "pmacDebugger.h"
 #include "pmacGroupsHashtable.h"
 #include "CharIntHashtable.h"
 
 class pmacController;
 
-class pmacCsGroups
+class pmacCsGroups : public pmacDebugger
 {
 public:
 	pmacCsGroups(pmacController *pController);

@@ -1,0 +1,1 @@
+device(status,CONSTANT,devStatusSoft,"Soft Channel")

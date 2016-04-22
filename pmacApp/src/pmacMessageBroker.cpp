@@ -346,7 +346,7 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   int eomReason = 0;
   size_t nwrite = 0;
   size_t nread = 0;
-  static const char *functionName = "pmacController::lowLevelWriteRead";
+  static const char *functionName = "pmacMessageBroker::lowLevelWriteRead";
 
   asynPrint(this->ownerAsynUser_, ASYN_TRACE_FLOW, "%s\n", functionName);
   epicsTimeGetCurrent(&this->writeTime_);
@@ -367,7 +367,12 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
                                        &nread,
                                        &eomReason);
 
-  if (status) {
+  // If no bytes read and no eomReason then this is an error
+  if (nread == 0 && eomReason == 0){
+    status = asynError;
+  }
+
+  if (status != asynSuccess) {
     asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
   } else {
     // Update statistics

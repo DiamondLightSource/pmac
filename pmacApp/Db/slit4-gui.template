@@ -1,0 +1,11 @@
+
+# % macro, name, Object and gui association name e.g. S1.GUI
+# % macro, P, prefix
+# % macro, M1, motor at position x plus (outboard)
+# % macro, M2, motor at position x minus (inboard)
+# % macro, M3, motor at position y plus (top)
+# % macro, M4, motor at position y minus (bottom)
+
+# % gui, $(name), edmembed, slit4-embed.edl, P=$(P),M1=$(M1=:X:PLUS),M2=$(M2=:X:MINUS),M3=$(M3=:Y:PLUS),M4=$(M4=:Y:MINUS)
+
+

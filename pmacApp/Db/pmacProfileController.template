@@ -15,6 +15,9 @@
 #% macro, NPULSES,  Maximum number of output pulses
 #% macro, TIMEOUT,  asyn timeout
 
+# This associates the template with an edm screen
+# % gui, $(PORT), edmtab, pmacTrajectoryCS.edl, P=$(P),R=$(R)
+
 #
 # PVs controlling the number of profile elements and the number of output
 # pulses
@@ -269,5 +272,95 @@ record(waveform,"$(P)$(R)ReadbackMessage") {
     field(FTVL, "CHAR")
     field(NELM, "256")
     field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)AXIS1:PRESENT") {
+    field(VAL, "0")
+}
+
+record(waveform,"$(P)$(R)M1Positions") {
+}
+
+record(bo,"$(P)$(R)M1UseAxis") {
+}
+
+record(longin, "$(P)$(R)AXIS2:PRESENT") {
+    field(VAL, "0")
+}
+
+record(waveform,"$(P)$(R)M2Positions") {
+}
+
+record(bo,"$(P)$(R)M2UseAxis") {
+}
+
+record(longin, "$(P)$(R)AXIS3:PRESENT") {
+    field(VAL, "0")
+}
+
+record(waveform,"$(P)$(R)M3Positions") {
+}
+
+record(bo,"$(P)$(R)M3UseAxis") {
+}
+
+record(longin, "$(P)$(R)AXIS4:PRESENT") {
+    field(VAL, "0")
+}
+
+record(waveform,"$(P)$(R)M4Positions") {
+}
+
+record(bo,"$(P)$(R)M4UseAxis") {
+}
+
+record(longin, "$(P)$(R)AXIS5:PRESENT") {
+    field(VAL, "0")
+}
+
+record(waveform,"$(P)$(R)M5Positions") {
+}
+
+record(bo,"$(P)$(R)M5UseAxis") {
+}
+
+record(longin, "$(P)$(R)AXIS6:PRESENT") {
+    field(VAL, "0")
+}
+
+record(waveform,"$(P)$(R)M6Positions") {
+}
+
+record(bo,"$(P)$(R)M6UseAxis") {
+}
+
+record(longin, "$(P)$(R)AXIS7:PRESENT") {
+    field(VAL, "0")
+}
+
+record(waveform,"$(P)$(R)M7Positions") {
+}
+
+record(bo,"$(P)$(R)M7UseAxis") {
+}
+
+record(longin, "$(P)$(R)AXIS8:PRESENT") {
+    field(VAL, "0")
+}
+
+record(waveform,"$(P)$(R)M8Positions") {
+}
+
+record(bo,"$(P)$(R)M8UseAxis") {
+}
+
+record(longin, "$(P)$(R)AXIS9:PRESENT") {
+    field(VAL, "0")
+}
+
+record(waveform,"$(P)$(R)M9Positions") {
+}
+
+record(bo,"$(P)$(R)M9UseAxis") {
 }
 

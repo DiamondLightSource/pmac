@@ -31,6 +31,11 @@
 #define PMAC_C_FeedRateProblemString   "PMAC_C_FEEDRATE_PROBLEM"
 #define PMAC_C_CoordSysGroup  		     "PMAC_C_COORDINATE_SYS_GROUP"
 
+#define PMAC_C_DebugLevelString        "PMAC_C_DEBUG_LEVEL"
+#define PMAC_C_DebugAxisString         "PMAC_C_DEBUG_AXIS"
+#define PMAC_C_DebugCSString           "PMAC_C_DEBUG_CS"
+#define PMAC_C_DebugCmdString          "PMAC_C_DEBUG_CMD"
+
 #define PMAC_C_FastUpdateTimeString    "PMAC_C_FAST_UPDATE_TIME"
 
 #define PMAC_C_AxisCSString            "PMAC_C_AXIS_CS"
@@ -81,6 +86,7 @@
 #define PMAC_C_TrajCSNumberString      "PMAC_C_TRAJ_CS"      // Current CS scan is executing on
 #define PMAC_C_TrajPercentString       "PMAC_C_TRAJ_PERCENT" // Percentage of scan complete
 #define PMAC_C_TrajEStatusString       "PMAC_C_TRAJ_ESTATUS" // Our report of tScan status
+#define PMAC_C_TrajProgString          "PMAC_C_TRAJ_PROG"    // Which motion program to execute
 
 #define PMAC_MAXBUF 1024
 
@@ -134,10 +140,12 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
 
   void startPMACPolling();
 
-  void setDebugLevel(int level, int axis);
+  void setDebugLevel(int level, int axis, int csNo);
   asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
   asynStatus processDrvInfo(char *input, char *output);
   virtual void callback(pmacCommandStore *sPtr, int type);
+  asynStatus checkConnection();
+  asynStatus initialiseConnection();
   asynStatus slowUpdate(pmacCommandStore *sPtr);
   asynStatus mediumUpdate(pmacCommandStore *sPtr);
 
@@ -204,6 +212,10 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_FeedRatePoll_;
   int PMAC_C_FeedRateProblem_;
   int PMAC_C_CoordSysGroup_;
+  int PMAC_C_DebugLevel_;
+  int PMAC_C_DebugAxis_;
+  int PMAC_C_DebugCS_;
+  int PMAC_C_DebugCmd_;
   int PMAC_C_FastUpdateTime_;
   int PMAC_C_AxisCS_;
   int PMAC_C_WriteCmd_;
@@ -232,6 +244,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_TrajCSNumber_;
   int PMAC_C_TrajPercent_;
   int PMAC_C_TrajEStatus_;
+  int PMAC_C_TrajProg_;
   int PMAC_C_NoOfMsgs_;
   int PMAC_C_TotalBytesWritten_;
   int PMAC_C_TotalBytesRead_;
@@ -260,6 +273,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   pmacCsGroups *pGroupList;
 
  private:
+  int connected_;
   int cid_;
   int parameterIndex_;
   pmacMessageBroker *pBroker_;

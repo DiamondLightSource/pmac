@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 32
-y 77
+x 665
+y 353
 w 451
 h 536
 font "arial-bold-r-12.0"
@@ -1311,5 +1311,48 @@ bgColor index 10
 fill
 font "helvetica-medium-r-14.0"
 fontAlign "center"
+endObjectProperties
+
+# (Bar)
+object activeBarClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 480
+w 325
+h 45
+indicatorColor index 25
+fgColor index 14
+bgColor index 3
+indicatorPv "$(P)$(R)TSCAN_PERCENT_RBV"
+showScale
+font "arial-bold-r-12.0"
+labelTicks "5"
+border
+min "0"
+max "100"
+scaleFormat "FFloat"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 470
+w 169
+h 12
+font "helvetica-medium-r-10.0"
+fgColor index 14
+bgColor index 5
+value {
+  "  Trajectory Scan Percent Complete  "
+}
+autoSize
+border
 endObjectProperties
 
