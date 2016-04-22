@@ -222,6 +222,24 @@ record(bo, "$(P)$(R)PROFILE_ABORT") {
 }
 
 ###################################################################
+#  These records are to set and read the motion program number    # 
+#                                                                 #
+###################################################################
+
+record(longout, "$(P)$(R)TSCAN_PROG_NO") {
+  field(DESC, "Trajectory program number")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG")
+}
+
+record(longin, "$(P)$(R)TSCAN_PROG_NO_RBV") {
+  field(DESC, "Trajectory program number")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG")
+  field(SCAN, "I/O Intr")  
+}
+
+###################################################################
 #  These records provide status feedback                          # 
 #                                                                 #
 ###################################################################

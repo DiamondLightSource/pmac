@@ -176,15 +176,30 @@ pmacCSController::~pmacCSController()
 
 }
 
+void pmacCSController::setDebugLevel(int level, int axis)
+{
+  // Check if an axis or controller wide debug is to be set
+  if (axis == 0){
+    printf("Setting PMAC CS controller debug level to %d\n", level);
+    // Set the level for the controller
+    this->setLevel(level);
+  } else {
+    if (this->getAxis(axis) != NULL){
+      printf("Setting PMAC CS axis %d debug level to %d\n", axis, level);
+      this->getAxis(axis)->setLevel(level);
+    }
+  }
+}
+
 asynStatus pmacCSController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements)
 {
   asynStatus status = asynSuccess;
   static const char *functionName = "writeFloat64Array";
-  debug(DEBUG_ERROR, functionName);
+  debug(DEBUG_TRACE, functionName);
 
   if (!profileInitialized_){
     // Initialise the trajectory scan interface pointers
-    debug(DEBUG_ERROR, functionName, "Initialising CS trajectory scan interface");
+    debug(DEBUG_TRACE, functionName, "Initialising CS trajectory scan interface");
     status = this->initializeProfile(PMAC_MAX_TRAJECTORY_POINTS);
   }
 
@@ -207,11 +222,11 @@ asynStatus pmacCSController::writeInt32Array(asynUser *pasynUser, epicsInt32 *va
   asynStatus status = asynSuccess;
   int function = pasynUser->reason;
   static const char *functionName = "writeInt32Array";
-  debug(DEBUG_ERROR, functionName);
+  debug(DEBUG_TRACE, functionName);
 
   if (!profileInitialized_){
     // Initialise the trajectory scan interface pointers
-    debug(DEBUG_ERROR, functionName, "Initialising CS trajectory scan interface");
+    debug(DEBUG_FLOW, functionName, "Initialising CS trajectory scan interface");
     status = this->initializeProfile(PMAC_MAX_TRAJECTORY_POINTS);
   }
 
@@ -298,6 +313,8 @@ asynStatus pmacCSController::immediateWriteRead(const char *command, char *respo
   if (status == asynSuccess){
     ((pmacController *)pC_)->immediateWriteRead(command, response);
   }
+
+  return status;
 }
 
 /** Returns a pointer to an pmacAxis object.
@@ -343,7 +360,7 @@ asynStatus pmacCSController::buildProfile()
 {
   static const char *functionName = "buildProfile";
 
-  debug(DEBUG_ERROR, functionName, "Called for CS", csNumber_);
+  debug(DEBUG_TRACE, functionName, "Called for CS", csNumber_);
 
   // Call into main controller to notify we want to trajectory scan
   return ((pmacController *)pC_)->buildProfile(csNumber_);
@@ -353,7 +370,7 @@ asynStatus pmacCSController::executeProfile()
 {
   static const char *functionName = "executeProfile";
 
-  debug(DEBUG_ERROR, functionName, "Called for CS", csNumber_);
+  debug(DEBUG_TRACE, functionName, "Called for CS", csNumber_);
 
   // Call into main controller to notify we want to trajectory scan
   return ((pmacController *)pC_)->executeProfile(csNumber_);
@@ -365,7 +382,7 @@ asynStatus pmacCSController::tScanBuildTimeArray(double *profileTimes, int *numP
   int points = 0;
   static const char *functionName = "tScanBuildTimeArray";
 
-  debug(DEBUG_ERROR, functionName);
+  debug(DEBUG_TRACE, functionName);
 
   // Read the number of points defined
   getIntegerParam(profileNumPoints_, &points);
@@ -373,7 +390,7 @@ asynStatus pmacCSController::tScanBuildTimeArray(double *profileTimes, int *numP
   if (points > maxPoints){
     points = maxPoints;
   }
-  debug(DEBUG_ERROR, functionName, "Number of trajectory times", points);
+  debug(DEBUG_VARIABLE, functionName, "Number of trajectory times", points);
 
   // If points is zero then this is not a valid operation, cannot scan zero points
   if (points == 0){
@@ -397,7 +414,7 @@ asynStatus pmacCSController::tScanIncludedAxes(int *axisMask)
   int use = 0;
   static const char *functionName = "tScanIncludedAxes";
 
-  debug(DEBUG_ERROR, functionName);
+  debug(DEBUG_TRACE, functionName);
 
   // Loop over each axis and check if it is to be included in the trajectory scan
   this->lock();
@@ -410,7 +427,7 @@ asynStatus pmacCSController::tScanIncludedAxes(int *axisMask)
   }
   this->unlock();
 
-  debug(DEBUG_ERROR, functionName, "Trajectory axis mask", mask);
+  debug(DEBUG_VARIABLE, functionName, "Trajectory axis mask", mask);
   *axisMask = mask;
 
   return status;
@@ -422,7 +439,7 @@ asynStatus pmacCSController::tScanBuildProfileArray(double *positions, int axis,
   pmacCSAxis *pA = NULL;
   static const char *functionName = "tScanBuildProfileArray";
 
-  debug(DEBUG_ERROR, functionName, "Called for axis", axis);
+  debug(DEBUG_TRACE, functionName, "Called for axis", axis);
 
   pA = getAxis(axis);
   if (!pA){
@@ -443,7 +460,7 @@ asynStatus pmacCSController::tScanBuildUserArray(int *userArray, int *numPoints,
   int points = 0;
   static const char *functionName = "tScanBuildUserArray";
 
-  debug(DEBUG_ERROR, functionName);
+  debug(DEBUG_TRACE, functionName);
 
   // Read the number of points defined
   getIntegerParam(profileNumPoints_, &points);
@@ -451,7 +468,7 @@ asynStatus pmacCSController::tScanBuildUserArray(int *userArray, int *numPoints,
   if (points > maxPoints){
     points = maxPoints;
   }
-  debug(DEBUG_ERROR, functionName, "Number of trajectory times", points);
+  debug(DEBUG_VARIABLE, functionName, "Number of trajectory times", points);
 
   // If points is zero then this is not a valid operation, cannot scan zero points
   if (points == 0){
@@ -474,7 +491,7 @@ asynStatus pmacCSController::tScanBuildVelModeArray(int *velModeArray, int *numP
   int points = 0;
   static const char *functionName = "tScanBuildVelModeArray";
 
-  debug(DEBUG_ERROR, functionName);
+  debug(DEBUG_TRACE, functionName);
 
   // Read the number of points defined
   getIntegerParam(profileNumPoints_, &points);
@@ -482,7 +499,7 @@ asynStatus pmacCSController::tScanBuildVelModeArray(int *velModeArray, int *numP
   if (points > maxPoints){
     points = maxPoints;
   }
-  debug(DEBUG_ERROR, functionName, "Number of trajectory times", points);
+  debug(DEBUG_VARIABLE, functionName, "Number of trajectory times", points);
 
   // If points is zero then this is not a valid operation, cannot scan zero points
   if (points == 0){

@@ -675,6 +675,11 @@ record(longin, "$(DEVICE):MEDIUM_SIZE_RBV") {
   field(SCAN, "I/O Intr")
 }
 
+###################################################################
+#  These records support debugging                                # 
+#                                                                 #
+###################################################################
+
 record(longout, "$(DEVICE):REPORT_MEDIUM") {
   field(DESC, "Report the contents of medium store")
   field(DTYP, "asynInt32")
@@ -692,4 +697,28 @@ record(longout, "$(DEVICE):REPORT_SLOW") {
   field(DESC, "Report the contents of slow store")
   field(DTYP, "asynInt32")
   field(OUT, "@asyn($(PORT),0)PMAC_C_REPORT_SLOW")
+}
+
+record(longout, "$(DEVICE):DEBUG_LEVEL"){
+  field(DESC, "Set the debug level")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_DEBUG_LEVEL")
+}
+
+record(longout, "$(DEVICE):DEBUG_AXISNO"){
+  field(DESC, "Debug which axis (0 is controller)")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_DEBUG_AXIS")
+}
+
+record(longout, "$(DEVICE):DEBUG_CSNO"){
+  field(DESC, "Debug which CS (0 is main controller)")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_DEBUG_CS")
+}
+
+record(longout, "$(DEVICE):DEBUG_EXECUTE"){
+  field(DESC, "Apply the debug settings")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_DEBUG_CMD")
 }
