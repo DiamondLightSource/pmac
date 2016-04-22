@@ -112,7 +112,7 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
     if (pC_->getProgramNumber() != 0){
       // Abort current move to make sure axes are enabled
       sprintf(commandtemp, "&%dA", pC_->getCSNumber());
-      debug(DEBUG_ERROR, functionName, "Sending command to PMAC", commandtemp);
+      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", commandtemp);
       status = pC_->immediateWriteRead(commandtemp, response);
       /* If the program specified is non-zero, add a command to run the program.
        * If program number is zero, then the move will have to be started by some
@@ -120,7 +120,7 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
        * movement. */
       sprintf(buff, " B%dR", pC_->getProgramNumber());
       strcat(command, buff);
-      debug(DEBUG_ERROR, functionName, "Sending command to PMAC", command);
+      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
       status = pC_->immediateWriteRead(command, response);
   }
 
@@ -191,16 +191,11 @@ void pmacCSAxis::callback(pmacCommandStore *sPtr, int type)
  */
 asynStatus pmacCSAxis::newGetAxisStatus(pmacCommandStore *sPtr)
 {
-//    char command[PMAC_MAXBUF] = {0};
-//    char response[PMAC_MAXBUF] = {0};
-    int cmdStatus = 0;;
     int done = 0;
     double position = 0;
-//    double enc_position = 0;
     int nvals = 0;
     epicsUInt32 status[3] = {0, 0, 0};
     int axisProblemFlag = 0;
-    int limitsDisabledBit = 0;
     bool printErrors = true;
     char key[16];
     std::string value = "";

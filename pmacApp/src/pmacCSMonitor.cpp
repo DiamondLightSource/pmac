@@ -28,11 +28,6 @@ pmacCSMonitor::~pmacCSMonitor()
 
 asynStatus pmacCSMonitor::registerCS(pmacCSController *csPtr, int csNo)
 {
-  char statVar[8];
-  static const char *functionName = "registerCS";
-
-//  debug(DEBUG_ERROR, functionName, "Registering CS", csNo);
-
   // Add the CS to the list
   pCSControllers_[csNo] = csPtr;
 
