@@ -2077,8 +2077,10 @@ void pmacController::trajectoryTask()
               this->immediateWriteRead(cmd, response);
             }
           } else {
-            if (pCSControllers_[tScanCSNo_]->getAxis(index+1) != NULL){
-              position = pCSControllers_[tScanCSNo_]->getAxis(index+1)->getCurrentPosition();
+            if (pCSControllers_[tScanCSNo_]->getAxis(index+7) != NULL){
+              // Here is a hack to account for the fact that CS motors have an artificial
+              // resolution of 0.0001
+              position = pCSControllers_[tScanCSNo_]->getAxis(index+7)->getCurrentPosition()/10000.0;
               sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
               debug(DEBUG_ERROR, functionName, "Sending current position for axis", cmd);
               this->immediateWriteRead(cmd, response);
@@ -2319,7 +2321,13 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
       for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
         if ((1<<index & tScanAxisMask_) > 0){
           int64_t ival = 0;
-          doubleToPMACFloat(tScanPositions_[index][tScanPointCtr_], &ival);
+          // This is a bit of a nasty hack due to the fact that CS multiply their demand positions
+          // by 10000 to get around the integer only motor record demand values
+          if (tScanCSNo_ > 1){
+            doubleToPMACFloat(tScanPositions_[index][tScanPointCtr_]/10000.0, &ival);
+          } else {
+            doubleToPMACFloat(tScanPositions_[index][tScanPointCtr_], &ival);
+          }
           sprintf(cmd[index], "%s,$%lX", cmd[index], ival);
         }
       }
