@@ -161,11 +161,29 @@ asynStatus pmacCsGroups::switchToGroup(int id)
 	}
 	else
 	{
-	  pmacCsGroup *pGrp = (pmacCsGroup *)csGroups.lookup(id);
+	  // First abort motion on the currently selected group
+    pmacCsGroup *pGrp = (pmacCsGroup *)csGroups.lookup(currentGroup);
     pmacCsAxisDefList *pAxisDefs = &(pGrp->axisDefs);
-		// abort all motion and programs and undefine all cs mappings
-		sprintf(command, "%c\nundefine all",0x01);
-		cmdStatus = pC_->lowLevelWriteRead(command, response);
+    if (pAxisDefs->count() > 0){
+      int axis = pAxisDefs->firstKey();
+      pmacCsAxisDef *axd = (pmacCsAxisDef *)pAxisDefs->lookup(axis);
+      sprintf(command, "&%dA", axd->coordSysNumber);
+      cmdStatus = pC_->lowLevelWriteRead(command, response);
+      while (pAxisDefs->hasNextKey() == true && cmdStatus == asynSuccess){
+        axis = pAxisDefs->nextKey();
+        axd = (pmacCsAxisDef *)pAxisDefs->lookup(axis);
+        sprintf(command, "&%dA", axd->coordSysNumber);
+        cmdStatus = pC_->lowLevelWriteRead(command, response);
+      }
+    }
+
+    // Now undefine all cs mappings
+    strcpy(command, "undefine all");
+    cmdStatus = pC_->lowLevelWriteRead(command, response);
+
+	  // Now redefine the mappings for the new group
+	  pGrp = (pmacCsGroup *)csGroups.lookup(id);
+    pAxisDefs = &(pGrp->axisDefs);
 
 		if (cmdStatus == asynSuccess)
 		{
