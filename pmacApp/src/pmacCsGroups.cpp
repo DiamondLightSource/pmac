@@ -142,8 +142,15 @@ asynStatus pmacCsGroups::addAxisToGroup(int id, int axis, const std::string& axi
 int pmacCsGroups::getAxisCoordSys(int axis)
 {
   static const char *functionName = "getAxisCoordSys";
+  pmacCsGroup *pGrp;
+  pmacCsAxisDef *axd;
+
   debug(DEBUG_TRACE, functionName);
-  pmacCsAxisDef *axd = (pmacCsAxisDef *)((pmacCsGroup *)csGroups.lookup(currentGroup))->axisDefs.lookup(axis);
+
+  pGrp = (pmacCsGroup *)csGroups.lookup(currentGroup);
+  if (pGrp != NULL){
+    axd = (pmacCsAxisDef *)pGrp->axisDefs.lookup(axis);
+  }
   if (axd == NULL){
     throw std::out_of_range("Axis not in CS group definition");
   }
@@ -226,6 +233,41 @@ asynStatus pmacCsGroups::switchToGroup(int id)
 	return cmdStatus;
 }
 
+asynStatus pmacCsGroups::clearCurrentGroup()
+{
+  static const char *functionName = "clearCurrentGroup";
+  char command[PMAC_MAXBUF] = {0};
+  char response[PMAC_MAXBUF] = {0};
+  asynStatus cmdStatus = asynSuccess;
+  pmacCsGroup *pGrp;
+  pmacCsAxisDefList *pAxisDefs;
+  debug(DEBUG_TRACE, functionName);
+
+  // Abort motion on the currently selected group
+  pGrp = (pmacCsGroup *)csGroups.lookup(currentGroup);
+  if (pGrp != NULL){
+    pAxisDefs = &(pGrp->axisDefs);
+    if (pAxisDefs->count() > 0){
+      int axis = pAxisDefs->firstKey();
+      pmacCsAxisDef *axd = (pmacCsAxisDef *)pAxisDefs->lookup(axis);
+      sprintf(command, "&%dA", axd->coordSysNumber);
+      cmdStatus = pC_->lowLevelWriteRead(command, response);
+      while (pAxisDefs->hasNextKey() == true && cmdStatus == asynSuccess){
+        axis = pAxisDefs->nextKey();
+        axd = (pmacCsAxisDef *)pAxisDefs->lookup(axis);
+        sprintf(command, "&%dA", axd->coordSysNumber);
+        cmdStatus = pC_->lowLevelWriteRead(command, response);
+      }
+    }
+  }
+
+  // Now undefine all cs mappings
+  strcpy(command, "undefine all");
+  cmdStatus = pC_->lowLevelWriteRead(command, response);
+
+  return cmdStatus;
+}
+
 /**
  * Aborts motion programs in the CS for which the given axis is currently mapped,
  * used to stop motion intiated in the deferred coordinated move
@@ -251,6 +293,29 @@ asynStatus pmacCsGroups::abortMotion(int axis)
 	}
 
 	return status;
+}
+
+asynStatus pmacCsGroups::manualGroup(const std::string& groupDef)
+{
+  static const char *functionName = "manualGroup";
+  char command[PMAC_MAXBUF] = {0};
+  char response[PMAC_MAXBUF] = {0};
+  asynStatus status = asynSuccess;
+  debug(DEBUG_TRACE, functionName);
+
+  // Set the current group to -1 to signify manual group
+  currentGroup = -1;
+
+  // Now attempt to clear the current group
+  status = clearCurrentGroup();
+
+  // If the clear worked then make the new assignments
+  if (status == asynSuccess){
+    sprintf(command, "%s", groupDef.c_str());
+    status = pC_->lowLevelWriteRead(command, response);
+  }
+
+  return status;
 }
 
 /**

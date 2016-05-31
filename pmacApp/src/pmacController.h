@@ -31,6 +31,10 @@
 #define PMAC_C_FeedRateProblemString   "PMAC_C_FEEDRATE_PROBLEM"
 #define PMAC_C_CoordSysGroup  		     "PMAC_C_COORDINATE_SYS_GROUP"
 
+#define PMAC_C_GroupCSNoString         "PMAC_C_GROUP_CS_NO"
+#define PMAC_C_GroupAssignString       "PMAC_C_GROUP_ASSIGNMENT"
+#define PMAC_C_GroupExecuteString      "PMAC_C_GROUP_EXECUTE"
+
 #define PMAC_C_DebugLevelString        "PMAC_C_DEBUG_LEVEL"
 #define PMAC_C_DebugAxisString         "PMAC_C_DEBUG_AXIS"
 #define PMAC_C_DebugCSString           "PMAC_C_DEBUG_CS"
@@ -200,6 +204,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus storeKinematics();
   asynStatus listKinematic(int csNo, const std::string& type, char *buffer, size_t size);
 
+  asynStatus executeManualGroup();
+
  protected:
   pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
@@ -212,6 +218,9 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_FeedRatePoll_;
   int PMAC_C_FeedRateProblem_;
   int PMAC_C_CoordSysGroup_;
+  int PMAC_C_GroupCSNo_;
+  int PMAC_C_GroupAssign_;
+  int PMAC_C_GroupExecute_;
   int PMAC_C_DebugLevel_;
   int PMAC_C_DebugAxis_;
   int PMAC_C_DebugCS_;
