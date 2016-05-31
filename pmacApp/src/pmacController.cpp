@@ -275,6 +275,9 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_FeedRatePollString,      asynParamInt32,      &PMAC_C_FeedRatePoll_);
   createParam(PMAC_C_FeedRateProblemString,   asynParamInt32,      &PMAC_C_FeedRateProblem_);
   createParam(PMAC_C_CoordSysGroup,           asynParamInt32,      &PMAC_C_CoordSysGroup_);
+  createParam(PMAC_C_GroupCSNoString,         asynParamInt32,      &PMAC_C_GroupCSNo_);
+  createParam(PMAC_C_GroupAssignString,       asynParamOctet,      &PMAC_C_GroupAssign_);
+  createParam(PMAC_C_GroupExecuteString,      asynParamInt32,      &PMAC_C_GroupExecute_);
   createParam(PMAC_C_DebugLevelString,        asynParamInt32,      &PMAC_C_DebugLevel_);
   createParam(PMAC_C_DebugAxisString,         asynParamInt32,      &PMAC_C_DebugAxis_);
   createParam(PMAC_C_DebugCSString,           asynParamInt32,      &PMAC_C_DebugCS_);
@@ -1491,6 +1494,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     getIntegerParam(PMAC_C_DebugAxis_, &axisNo);
     getIntegerParam(PMAC_C_DebugCS_, &csNo);
     this->setDebugLevel(level, axisNo, csNo);
+  } else if (function == PMAC_C_GroupExecute_){
+    status = (this->executeManualGroup() == asynSuccess) && status;
   }
   
   //Call base class method. This will handle callCallbacks even if the function was handled here.
@@ -2946,6 +2951,39 @@ asynStatus pmacController::processDeferredMoves(void)
     }
   }
      
+  return status;
+}
+
+asynStatus pmacController::executeManualGroup()
+{
+  asynStatus status = asynSuccess;
+  int csNo = 0;
+  char csAssignment[MAX_STRING_SIZE];
+  char cmd[PMAC_MAXBUF];
+  static const char *functionName = "executeManualGroup";
+
+  debug(DEBUG_TRACE, functionName);
+
+  strcpy(cmd, "");
+  // Loop over each axis, collecting CS based information
+  // building a string representation of the manual group
+  for (int axis = 0; axis <= this->numAxes_; axis++){
+    if (this->getAxis(axis) != NULL){
+      // Read the current cs no parameter for this axis
+      getIntegerParam(axis, PMAC_C_GroupCSNo_, &csNo);
+      // If the axis has an assigned CS no then we will use it
+      if (csNo != 0){
+        // Read the assignment string for this axis
+        getStringParam(axis, PMAC_C_GroupAssign_, MAX_STRING_SIZE, csAssignment);
+        sprintf(cmd, "%s &%d#%d->%s ", cmd, csNo, axis, csAssignment);
+      }
+    }
+  }
+  debug(DEBUG_VARIABLE, "Assignment", cmd);
+
+  // Execute the manual assignment
+  status = pGroupList->manualGroup(cmd);
+
   return status;
 }
 

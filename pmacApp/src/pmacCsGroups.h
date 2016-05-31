@@ -30,9 +30,11 @@ public:
 	void addGroup(int id, const std::string& name, int axisCount);
 	asynStatus addAxisToGroup(int id, int axis, const std::string& axisDef, int coordSysNumber);
 	int getAxisCoordSys(int axis);
-	asynStatus switchToGroup(int id);
+  asynStatus switchToGroup(int id);
+  asynStatus clearCurrentGroup();
 	asynStatus processDeferredCoordMoves(void);
 	asynStatus abortMotion(int axis);
+	asynStatus manualGroup(const std::string& groupDef);
 
 private:
 	struct pmacCsAxisDef

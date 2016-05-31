@@ -86,5 +86,14 @@ record(ao, "$(P)$(M):OFF_SET") {
   field(FLNK, "$(P)$(M):MR_MOVE_WRITE")  
 }
 
+record(longout, "$(P)$(M):ASSIGN:CS_NUMBER") {
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),$(ADDR))PMAC_C_GROUP_CS_NO")
+}
+
+record(stringout, "$(P)$(M):ASSIGN:CS_TYPE") {
+  field(DTYP, "asynOctetWrite")
+  field(OUT, "@asyn($(PORT),$(ADDR))PMAC_C_GROUP_ASSIGNMENT")
+}
 
 
