@@ -1965,6 +1965,8 @@ void pmacController::trajectoryTask()
               sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
               debug(DEBUG_TRACE, functionName, "Sending current position for axis", cmd);
               this->immediateWriteRead(cmd, response);
+              sprintf(cmd, "M%d=%f", (PMAC_TRAJ_CURR_DMD+index), position);
+              this->immediateWriteRead(cmd, response);
             }
           } else {
             if (pCSControllers_[tScanCSNo_]->getAxis(index) != NULL){
@@ -1973,6 +1975,8 @@ void pmacController::trajectoryTask()
               position = pCSControllers_[tScanCSNo_]->getAxis(index)->getCurrentPosition()/10000.0;
               sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
               debug(DEBUG_TRACE, functionName, "Sending current position for axis", cmd);
+              this->immediateWriteRead(cmd, response);
+              sprintf(cmd, "M%d=%f", (PMAC_TRAJ_CURR_DMD+index), position);
               this->immediateWriteRead(cmd, response);
             }
           }
