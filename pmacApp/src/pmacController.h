@@ -123,6 +123,7 @@
 #define PMAC_TRAJ_BUFF_FILL_B    "P4012" // Fill level of buffer B
 #define PMAC_TRAJ_CURR_FILL      "P4013" // The indexes that current buffer has been filled up to
 #define PMAC_TRAJ_CURR_POS       4111    // The current position P variable base index
+#define PMAC_TRAJ_CURR_DMD       4001    // The current position M variable base index
 
 #define PMAC_TRAJ_BUFFER_A 0
 #define PMAC_TRAJ_BUFFER_B 1
