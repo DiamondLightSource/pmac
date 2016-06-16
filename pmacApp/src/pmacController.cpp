@@ -1786,19 +1786,20 @@ asynStatus pmacController::preparePMAC()
 
   if (status == asynSuccess){
     // Calculate the axis mask ready to send to the PMAC
-    // X => 256
+    // Z => 256
     // Y => 128
-    // Z => 64
-    // U => 32
+    // X => 64
+    // W => 32
     // V => 16
-    // W => 8
-    // A => 4
+    // U => 8
+    // C => 4
     // B => 2
-    // C => 1
+    // A => 1
     for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
       if ((1<<index & tScanAxisMask_) > 0){
         // Bits swapped from EPICS axis mask
-        axisMask += (1 << (8 - index));
+//        axisMask += (1 << (8 - index));
+        axisMask += (1 << index);
       }
     }
     sprintf(cmd, "%s=%d", PMAC_TRAJ_AXES, axisMask);
@@ -1956,7 +1957,7 @@ void pmacController::trajectoryTask()
 
       // Now send to the PMAC the current position of any axes involved in the scan
       for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
-        if ((1<<index & tScanAxisMask_) > 0){
+        //if ((1<<index & tScanAxisMask_) > 0){
           if(tScanCSNo_ == 1){
             // Special case CS 1 means use real motors
             if (this->getAxis(index+1) != NULL){
@@ -1975,7 +1976,7 @@ void pmacController::trajectoryTask()
               this->immediateWriteRead(cmd, response);
             }
           }
-        }
+        //}
       }
 
       // We are ready to execute the start demand
@@ -2085,7 +2086,7 @@ void pmacController::trajectoryTask()
       // Only start checking this value after we have been running for
       // long enough to be reading the current scan value
       if (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING){
-        debug(DEBUG_ERROR, functionName, "tScanPmacStatus", tScanPmacStatus_);
+        debug(DEBUG_VARIABLE, functionName, "tScanPmacStatus", tScanPmacStatus_);
         // Something has happened on the PMAC side
         tScanExecuting_ = 0;
         if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_FINISHED){
