@@ -387,7 +387,9 @@ record(longin, "$(P):HM:TIMER") {
   field(DESC, "parse timer")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_VIF_I`5111+($(PLC)&30)*50+$(PLC)%2`")
-  field(SCAN, "I/O Intr")
+  field(SCAN, ".2 second")
+  field(SDIS, "$(P):HM:HOMING")
+  field(DISV, "0")
 }
 
 #record(scalcout, "$(P):HM:TIMER") {
