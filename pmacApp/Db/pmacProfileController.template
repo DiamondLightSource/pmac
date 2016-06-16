@@ -97,6 +97,23 @@ record(waveform,"$(P)$(R)Times") {
     field(FTVL, "DOUBLE")
     field(PREC, "3")
 }
+record(waveform,"$(P)$(R)UserArray") {
+    field(DESC, "User profile call at each point")
+    field(DTYP, "asynInt32ArrayOut")
+    field(INP,  "@asyn($(PORT),0,$(TIMEOUT))PMAC_PROFILE_USER")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "LONG")
+    field(PREC, "3")
+}
+record(waveform,"$(P)$(R)VelMode") {
+    field(DESC, "Velocity mode at each point")
+    field(DTYP, "asynInt32ArrayOut")
+    field(INP,  "@asyn($(PORT),0,$(TIMEOUT))PMAC_PROFILE_VELMODE")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "LONG")
+    field(PREC, "3")
+}
+
 record(ao,"$(P)$(R)Acceleration") {
     field(DESC, "Profile Acceleration")
     field(PINI, "YES")
