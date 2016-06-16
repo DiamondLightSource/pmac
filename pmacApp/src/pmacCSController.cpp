@@ -133,7 +133,7 @@ const epicsUInt32 pmacCSController::CS_STATUS3_LIMIT               = (0x1<<1);
  */
 pmacCSController::pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program)
   : asynMotorController(portName, 10, NUM_MOTOR_DRIVER_PARAMS+NUM_PMAC_CS_PARAMS,
-    0, // No additional interfaces
+    asynInt32ArrayMask, // For user mode and velocity mode
     0, // No addition interrupt interfaces
     ASYN_CANBLOCK | ASYN_MULTIDEVICE,
     1, // autoconnect
@@ -421,8 +421,10 @@ asynStatus pmacCSController::tScanIncludedAxes(int *axisMask)
   for (int i=1; i<numAxes_; i++){
     // Check if each axis is in use for the trajectory scan
     getIntegerParam(i, profileUseAxis_, &use);
+    debug(DEBUG_VARIABLE, functionName, "Use value", use);
     if (use == 1){
       mask += 1<<(i-1);
+      debug(DEBUG_VARIABLE, functionName, "Mask value", mask);
     }
   }
   this->unlock();
