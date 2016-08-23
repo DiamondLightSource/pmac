@@ -12,6 +12,14 @@ record(longin, "$(P)$(R)PROFILE_NUM_AXES_RBV") {
   field(SCAN, "I/O Intr")  
 }
 
+record(longout,"$(P)$(R)PROFILE_NUM_POINTS") {
+    field(DESC, "# of points in profile")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_NUM_POINTS")
+    field(VAL,  "$(NPOINTS)")
+}
+
 ##
 ## Records to specify the number of motion points that define
 ## the trajectory scan
@@ -111,9 +119,34 @@ record(ai, "$(P)$(R)PROFILE_ACCELERATION_RBV") {
 #                                                                 #
 ###################################################################
 
-record(bo, "$(P)$(R)PROFILE_BUILD") {
-  field(DTYP, "asynInt32")
-  field(OUT, "@asyn($(PORT),0)PROFILE_BUILD")
+record(stringout, "$(P)$(R)PROFILE_CS_NAME") {
+  field(DTYP, "asynOctetWrite")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
+}
+
+record(stringin, "$(P)$(R)PROFILE_CS_NAME_RBV") {
+  field(DTYP, "asynOctetRead")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
+  field(SCAN, "I/O Intr")  
+}
+
+
+###################################################################
+#  These records control trajectory scan building (pre-execute)   # 
+#                                                                 #
+###################################################################
+
+#record(bo, "$(P)$(R)PROFILE_BUILD") {
+#  field(DTYP, "asynInt32")
+#  field(OUT, "@asyn($(PORT),0)PROFILE_BUILD")
+#}
+
+record(busy,"$(P)$(R)PROFILE_BUILD") {
+    field(DESC,"Build and check profile")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_BUILD")
+    field(ZNAM, "Done")
+    field(ONAM, "Build")
 }
 
 record(mbbi, "$(P)$(R)PROFILE_BUILD_STATE_RBV") {
@@ -158,9 +191,17 @@ record(waveform, "$(P)$(R)PROFILE_BUILD_MESSAGE_RBV")
 #                                                                 #
 ###################################################################
 
-record(bo, "$(P)$(R)PROFILE_EXECUTE") {
-  field(DTYP, "asynInt32")
-  field(OUT, "@asyn($(PORT),0)PROFILE_EXECUTE")
+#record(bo, "$(P)$(R)PROFILE_EXECUTE") {
+#  field(DTYP, "asynInt32")
+#  field(OUT, "@asyn($(PORT),0)PROFILE_EXECUTE")
+#}
+
+record(busy,"$(P)$(R)PROFILE_EXECUTE") {
+    field(DESC,"Execute the profile")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_EXECUTE")
+    field(ZNAM, "Done")
+    field(ONAM, "Execute")
 }
 
 record(mbbi, "$(P)$(R)PROFILE_EXECUTE_STATE_RBV") {
@@ -356,67 +397,461 @@ record(mbbi, "$(P)$(R)TSCAN_EXT_STATUS_RBV") {
   field(SCAN, "I/O Intr")
 }
 
-record(ai, "$(P)$(R)Motor1CS_RBV")
-{
+###################################################################
+#  Axis A Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(P)$(R)A:UseAxis") {
+    field(DESC, "Use axis A in scan")
+    field(PINI, "YES")
     field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),1)PMAC_C_AXIS_CS")
-    field(PINI, "NO")
-    field(SCAN, "I/O Intr")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_A")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
 }
 
-record(ai, "$(P)$(R)Motor2CS_RBV")
-{
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),2)PMAC_C_AXIS_CS")
-    field(PINI, "NO")
-    field(SCAN, "I/O Intr")
+# Target position array for this axis
+record(waveform,"$(P)$(R)A:Positions") {
+    field(DESC, "Axis A positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_A")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
 }
 
-record(ai, "$(P)$(R)Motor3CS_RBV")
-{
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),3)PMAC_C_AXIS_CS")
-    field(PINI, "NO")
-    field(SCAN, "I/O Intr")
+record(longout,"$(P)$(R)A:NoOfPts") {
+    field(DESC, "Axis A Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)A:Positions.NORD")
 }
 
-record(ai, "$(P)$(R)Motor4CS_RBV")
-{
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),4)PMAC_C_AXIS_CS")
-    field(PINI, "NO")
-    field(SCAN, "I/O Intr")
+# Motor offset for this axis
+record(ao,"$(P)$(R)A:Offset") {
+    field(DESC, "Axis A offset")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_A")
+    field(PREC, "$(PREC=3)")
 }
 
-record(ai, "$(P)$(R)Motor5CS_RBV")
-{
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),5)PMAC_C_AXIS_CS")
-    field(PINI, "NO")
-    field(SCAN, "I/O Intr")
+# Motor resolution for this axis
+record(ao,"$(P)$(R)A:Resolution") {
+    field(DESC, "Axis A resolution")
+    field(VAL,  "1.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_A")
+    field(PREC, "$(PREC=3)")
 }
 
-record(ai, "$(P)$(R)Motor6CS_RBV")
-{
+###################################################################
+#  Axis B Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(P)$(R)B:UseAxis") {
+    field(DESC, "Use axis B in scan")
+    field(PINI, "YES")
     field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),6)PMAC_C_AXIS_CS")
-    field(PINI, "NO")
-    field(SCAN, "I/O Intr")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_B")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
 }
 
-record(ai, "$(P)$(R)Motor7CS_RBV")
-{
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),7)PMAC_C_AXIS_CS")
-    field(PINI, "NO")
-    field(SCAN, "I/O Intr")
+# Target position array for this axis
+record(waveform,"$(P)$(R)B:Positions") {
+    field(DESC, "Axis B positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_B")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
 }
 
-record(ai, "$(P)$(R)Motor8CS_RBV")
-{
-    field(DTYP, "asynInt32")
-    field(INP, "@asyn($(PORT),8)PMAC_C_AXIS_CS")
-    field(PINI, "NO")
-    field(SCAN, "I/O Intr")
+record(longout,"$(P)$(R)B:NoOfPts") {
+    field(DESC, "Axis B Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)B:Positions.NORD")
 }
 
+# Motor offset for this axis
+record(ao,"$(P)$(R)B:Offset") {
+    field(DESC, "Axis B offset")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_B")
+    field(PREC, "$(PREC=3)")
+}
+
+# Motor resolution for this axis
+record(ao,"$(P)$(R)B:Resolution") {
+    field(DESC, "Axis B resolution")
+    field(VAL,  "1.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_B")
+    field(PREC, "$(PREC=3)")
+}
+
+###################################################################
+#  Axis C Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(P)$(R)C:UseAxis") {
+    field(DESC, "Use axis C in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_C")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(P)$(R)C:Positions") {
+    field(DESC, "Axis C positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_C")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(P)$(R)C:NoOfPts") {
+    field(DESC, "Axis C Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)C:Positions.NORD")
+}
+
+# Motor offset for this axis
+record(ao,"$(P)$(R)C:Offset") {
+    field(DESC, "Axis C offset")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_C")
+    field(PREC, "$(PREC=3)")
+}
+
+# Motor resolution for this axis
+record(ao,"$(P)$(R)C:Resolution") {
+    field(DESC, "Axis C resolution")
+    field(VAL,  "1.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_C")
+    field(PREC, "$(PREC=3)")
+}
+
+###################################################################
+#  Axis U Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(P)$(R)U:UseAxis") {
+    field(DESC, "Use axis U in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_U")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(P)$(R)U:Positions") {
+    field(DESC, "Axis U positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_U")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(P)$(R)U:NoOfPts") {
+    field(DESC, "Axis U Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)U:Positions.NORD")
+}
+
+# Motor offset for this axis
+record(ao,"$(P)$(R)U:Offset") {
+    field(DESC, "Axis U offset")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_U")
+    field(PREC, "$(PREC=3)")
+}
+
+# Motor resolution for this axis
+record(ao,"$(P)$(R)U:Resolution") {
+    field(DESC, "Axis U resolution")
+    field(VAL,  "1.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_U")
+    field(PREC, "$(PREC=3)")
+}
+
+###################################################################
+#  Axis V Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(P)$(R)V:UseAxis") {
+    field(DESC, "Use axis V in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_V")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(P)$(R)V:Positions") {
+    field(DESC, "Axis V positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_V")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(P)$(R)V:NoOfPts") {
+    field(DESC, "Axis V Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)V:Positions.NORD")
+}
+
+# Motor offset for this axis
+record(ao,"$(P)$(R)V:Offset") {
+    field(DESC, "Axis V offset")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_V")
+    field(PREC, "$(PREC=3)")
+}
+
+# Motor resolution for this axis
+record(ao,"$(P)$(R)V:Resolution") {
+    field(DESC, "Axis V resolution")
+    field(VAL,  "1.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_V")
+    field(PREC, "$(PREC=3)")
+}
+
+###################################################################
+#  Axis W Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(P)$(R)W:UseAxis") {
+    field(DESC, "Use axis W in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_W")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(P)$(R)W:Positions") {
+    field(DESC, "Axis W positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_W")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(P)$(R)W:NoOfPts") {
+    field(DESC, "Axis W Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)W:Positions.NORD")
+}
+
+# Motor offset for this axis
+record(ao,"$(P)$(R)W:Offset") {
+    field(DESC, "Axis W offset")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_W")
+    field(PREC, "$(PREC=3)")
+}
+
+# Motor resolution for this axis
+record(ao,"$(P)$(R)W:Resolution") {
+    field(DESC, "Axis W resolution")
+    field(VAL,  "1.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_W")
+    field(PREC, "$(PREC=3)")
+}
+
+###################################################################
+#  Axis X Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(P)$(R)X:UseAxis") {
+    field(DESC, "Use axis X in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_X")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(P)$(R)X:Positions") {
+    field(DESC, "Axis X positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_X")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(P)$(R)X:NoOfPts") {
+    field(DESC, "Axis X Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)X:Positions.NORD")
+}
+
+# Motor offset for this axis
+record(ao,"$(P)$(R)X:Offset") {
+    field(DESC, "Axis X offset")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_X")
+    field(PREC, "$(PREC=3)")
+}
+
+# Motor resolution for this axis
+record(ao,"$(P)$(R)X:Resolution") {
+    field(DESC, "Axis X resolution")
+    field(VAL,  "1.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_X")
+    field(PREC, "$(PREC=3)")
+}
+
+###################################################################
+#  Axis Y Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(P)$(R)Y:UseAxis") {
+    field(DESC, "Use axis Y in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_Y")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(P)$(R)Y:Positions") {
+    field(DESC, "Axis Y positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_Y")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(P)$(R)Y:NoOfPts") {
+    field(DESC, "Axis Y Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)Y:Positions.NORD")
+}
+
+# Motor offset for this axis
+record(ao,"$(P)$(R)Y:Offset") {
+    field(DESC, "Axis Y offset")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_Y")
+    field(PREC, "$(PREC=3)")
+}
+
+# Motor resolution for this axis
+record(ao,"$(P)$(R)Y:Resolution") {
+    field(DESC, "Axis Y resolution")
+    field(VAL,  "1.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_Y")
+    field(PREC, "$(PREC=3)")
+}
+
+###################################################################
+#  Axis Z Trajectory Scan Records                                 # 
+#                                                                 #
+###################################################################
+
+record(bo,"$(P)$(R)Z:UseAxis") {
+    field(DESC, "Use axis Z in scan")
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_USE_AXIS_Z")
+    field(VAL,  "0")
+    field(ZNAM, "No")
+    field(ONAM, "Yes")
+}
+
+# Target position array for this axis
+record(waveform,"$(P)$(R)Z:Positions") {
+    field(DESC, "Axis Z positions")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_Z")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+record(longout,"$(P)$(R)Z:NoOfPts") {
+    field(DESC, "Axis Z Qty Points")
+    field(SCAN, "1 second")
+    field(OMSL, "closed_loop")
+    field(DOL,  "$(P)$(R)Z:Positions.NORD")
+}
+
+# Motor offset for this axis
+record(ao,"$(P)$(R)Z:Offset") {
+    field(DESC, "Axis Z offset")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_Z")
+    field(PREC, "$(PREC=3)")
+}
+
+# Motor resolution for this axis
+record(ao,"$(P)$(R)Z:Resolution") {
+    field(DESC, "Axis Z resolution")
+    field(VAL,  "1.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_Z")
+    field(PREC, "$(PREC=3)")
+}

@@ -30,6 +30,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
   public:
     pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program);
     virtual ~pmacCSController();
+    std::string getPortName();
     void setDebugLevel(int level, int axis);
     asynStatus writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements);
     asynStatus writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements);
@@ -71,6 +72,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     #define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_
 
   private:
+    std::string portName_;
     int csNumber_;
     int progNumber_;
     int status_[3];
