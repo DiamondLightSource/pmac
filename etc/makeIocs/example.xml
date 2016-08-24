@@ -2,7 +2,7 @@
 <components arch="linux-x86_64">
 	<pmac.pmacAsynIPPort IP="172.23.253.11:1025" name="BRICK1port"/>
 	<pmac.GeoBrick IdlePoll="1000" Port="BRICK1port" name="BRICK1"/>
-	<pmac.GeoBrickTrajectoryControlT NPOINTS="10000" P="PMAC_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.TRAJ"/>
+	<pmac.GeoBrickTrajectoryControlT NAXES="8" NPOINTS="10000" P="PMAC_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.TRAJ"/>
 	<pmac.pmacStatus DEVICE="PMAC_TEST" NAXES="8" PLC="5" PORT="BRICK1" name="BRICK1.STAT"/>
 	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1" DHLM="1000" DLLM="-1000" EGU="mm" M=":M1" MRES="0.001" P="PMAC_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="20" name="BRICK1.MOTORS.M1"/>
 	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2" DHLM="1000" DLLM="-1000" EGU="mm" M=":M2" MRES="0.001" P="PMAC_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="20" name="BRICK1.MOTORS.M2"/>

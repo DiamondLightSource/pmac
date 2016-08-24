@@ -121,12 +121,29 @@ class GeoBrickGlobalControl(_GeoBrickGlobalControlT, Device):
             if i in self.PORT.CsGroupNamesList:
                 self.args[i] = self.PORT.CsGroupNamesList[i]
                     
+class _pmacTrajectoryAxis(AutoSubstitution):
+    TemplateFile = 'pmacTrajectoryAxis.template'
 
 class GeoBrickTrajectoryControlT(AutoSubstitution):
     """Creates some PVs for executing trajectory scans on the pmac controller"""
     TemplateFile = "pmacControllerTrajectory.template"
     Dependencies = (GeoBrick,)
-    
+
+    def __init__(self, **args):
+        # init the super class
+        self.__super.__init__(**args)
+        self.axes = []
+        NAXES = int(args["NAXES"])
+        assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
+        # for each axis
+        for i in range(1, NAXES + 1):
+            args["MOTOR"] = i
+            # make a _pmacTrajectoryAxis instance
+            self.axes.append(
+                _pmacTrajectoryAxis(
+                    **filter_dict(args, _pmacTrajectoryAxis.ArgInfo.Names())))
+GeoBrickTrajectoryControlT.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
+
 
 class pmacDisableLimitsCheck(Device):
     Dependencies = (Pmac,)
@@ -226,6 +243,7 @@ class pmacStatus(AutoSubstitution):
                 _pmacStatusAxis(
                     **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
 pmacStatus.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
+
 
 class CS(DeltaTau):
     Dependencies = (Pmac,)
