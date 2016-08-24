@@ -24,12 +24,6 @@
 	<pmac.CS CS="3" Controller="BRICK1" IdlePoll="1000" name="CS2"/>
 	<motor.basic_asyn_motor ADDR="7" DESC="CS Centre" DHLM="100" DLLM="-100" EGU="mm" M=":CENTRE" MRES="0.0001" P="PMAC_TEST" PORT="CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.X"/>
 	<motor.basic_asyn_motor ADDR="8" DESC="CS Gap" DHLM="100" DLLM="-100" EGU="mm" M=":GAP" MRES="0.0001" P="PMAC_TEST" PORT="CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.Y"/>
-	<pmac.dls_profile_controller NAXES="9" NPOINTS="10000" NPULSES="10000" P="PMAC_TEST:" PORT="CS1" R="CS1:" TIMEOUT="1"/>
-	<pmac.dls_profile_controller NAXES="9" NPOINTS="10000" NPULSES="10000" P="PMAC_TEST:" PORT="CS2" R="CS2:" TIMEOUT="1"/>
-	<pmac.dls_profile_move_axis ADDR="1" M="1" MOTOR="PMAC_TEST:M1" NPOINTS="10000" P="PMAC_TEST:" PORT="CS1" PREC="3" R="CS1:" TIMEOUT="1"/>
-	<pmac.dls_profile_move_axis ADDR="2" M="2" MOTOR="PMAC_TEST:M2" NPOINTS="10000" P="PMAC_TEST:" PORT="CS1" PREC="3" R="CS1:" TIMEOUT="1"/>
-	<pmac.dls_profile_move_axis ADDR="1" M="1" MOTOR="PMAC_TEST:CENTRE" NPOINTS="10000" P="PMAC_TEST:" PORT="CS2" PREC="3" R="CS2:" TIMEOUT="1"/>
-	<pmac.dls_profile_move_axis ADDR="2" M="2" MOTOR="PMAC_TEST:GAP" NPOINTS="10000" P="PMAC_TEST:" PORT="CS2" PREC="3" R="CS2:" TIMEOUT="1"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1" GroupName="TestGroup1" GroupNumber="0"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1" GroupName="TestGroup2" GroupNumber="1"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="X" AxisNumber="1" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>

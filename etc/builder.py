@@ -300,14 +300,6 @@ class CS(DeltaTau):
 #        print 'pmacSetCoordIdlePollPeriod(%(Ref)d, %(IdlePoll)d)' % self.__dict__
 #        print 'pmacSetCoordMovingPollPeriod(%(Ref)d, %(MovingPoll)d)' % self.__dict__
 
-class dls_profile_controller(AutoSubstitution):
-    WarnMacros = False
-    TemplateFile = 'pmacProfileController.template'
-    
-class dls_profile_move_axis(AutoSubstitution):
-    WarnMacros = False
-    TemplateFile = 'pmacProfileAxis.template'
-    
 class pmacCreateCsGroup(Device):
     """Create a group of axis mappings to coordinate systems. Instantating a GeoBrickGlobalControl
     will create a PV for switching between these groups"""
