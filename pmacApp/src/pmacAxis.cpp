@@ -919,3 +919,8 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
     return asynSuccess;
 }
 
+int pmacAxis::getAxisCSNo()
+{
+  return assignedCS_;
+}
+

@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 665
-y 353
+x 766
+y 171
 w 451
-h 536
+h 762
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
 btnFont "arial-bold-r-12.0"
@@ -39,21 +39,6 @@ fill
 fillColor index 5
 endObjectProperties
 
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 10
-y 15
-w 430
-h 65
-lineColor index 14
-fill
-fillColor index 3
-endObjectProperties
-
 # (Group)
 object activeGroupClass
 beginObjectProperties
@@ -61,7 +46,7 @@ major 4
 minor 0
 release 0
 x 10
-y 260
+y 235
 w 210
 h 200
 
@@ -74,7 +59,7 @@ major 4
 minor 0
 release 0
 x 10
-y 265
+y 240
 w 210
 h 195
 lineColor index 14
@@ -89,7 +74,7 @@ major 4
 minor 1
 release 1
 x 10
-y 260
+y 235
 w 150
 h 12
 font "helvetica-medium-r-10.0"
@@ -109,7 +94,7 @@ major 10
 minor 0
 release 0
 x 140
-y 280
+y 255
 w 75
 h 20
 controlPv "$(P)$(R)BUFFER_A_ADDRESS_RBV"
@@ -129,7 +114,7 @@ major 10
 minor 0
 release 0
 x 140
-y 305
+y 280
 w 75
 h 20
 controlPv "$(P)$(R)BUFFER_B_ADDRESS_RBV"
@@ -149,7 +134,7 @@ major 4
 minor 1
 release 1
 x 15
-y 280
+y 255
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -168,7 +153,7 @@ major 4
 minor 1
 release 1
 x 15
-y 305
+y 280
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -187,7 +172,7 @@ major 10
 minor 0
 release 0
 x 140
-y 330
+y 305
 w 75
 h 20
 controlPv "$(P)$(R)BUFFER_LENGTH_RBV"
@@ -207,7 +192,7 @@ major 4
 minor 1
 release 1
 x 15
-y 330
+y 305
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -226,7 +211,7 @@ major 10
 minor 0
 release 0
 x 140
-y 355
+y 330
 w 75
 h 20
 controlPv "$(P)$(R)CURRENT_BUFFER_RBV"
@@ -246,7 +231,7 @@ major 10
 minor 0
 release 0
 x 140
-y 380
+y 355
 w 75
 h 20
 controlPv "$(P)$(R)CURRENT_INDEX_RBV"
@@ -266,7 +251,7 @@ major 4
 minor 1
 release 1
 x 15
-y 355
+y 330
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -285,7 +270,7 @@ major 4
 minor 1
 release 1
 x 15
-y 380
+y 355
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -304,7 +289,7 @@ major 10
 minor 0
 release 0
 x 140
-y 405
+y 380
 w 75
 h 20
 controlPv "$(P)$(R)TOTAL_POINTS_RBV"
@@ -324,7 +309,7 @@ major 4
 minor 1
 release 1
 x 15
-y 405
+y 380
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -343,7 +328,7 @@ major 10
 minor 0
 release 0
 x 140
-y 430
+y 405
 w 75
 h 20
 controlPv "$(P)$(R)TRAJECTORY_STATUS_RBV"
@@ -363,7 +348,7 @@ major 4
 minor 1
 release 1
 x 15
-y 430
+y 405
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -386,7 +371,7 @@ major 4
 minor 0
 release 0
 x 10
-y 95
+y 70
 w 430
 h 70
 lineColor index 14
@@ -401,7 +386,7 @@ major 4
 minor 1
 release 1
 x 10
-y 90
+y 65
 w 141
 h 12
 font "helvetica-medium-r-10.0"
@@ -420,9 +405,9 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 15
-y 110
-w 75
+x 125
+y 85
+w 40
 h 20
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -439,9 +424,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 280
-y 110
-w 155
+x 320
+y 85
+w 115
 h 20
 controlPv "$(P)$(R)PROFILE_BUILD_STATE_RBV"
 fgColor index 16
@@ -459,7 +444,7 @@ major 10
 minor 0
 release 0
 x 15
-y 135
+y 110
 w 420
 h 20
 controlPv "$(P)$(R)PROFILE_BUILD_MESSAGE_RBV"
@@ -477,9 +462,9 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 220
-y 110
-w 55
+x 285
+y 85
+w 35
 h 20
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -496,9 +481,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 55
-y 110
-w 155
+x 165
+y 85
+w 115
 h 20
 controlPv "$(P)$(R)PROFILE_BUILD_STATUS_RBV"
 fgColor index 16
@@ -516,7 +501,7 @@ major 4
 minor 0
 release 0
 x 10
-y 180
+y 155
 w 430
 h 70
 lineColor index 14
@@ -531,7 +516,7 @@ major 4
 minor 1
 release 1
 x 10
-y 175
+y 150
 w 165
 h 12
 font "helvetica-medium-r-10.0"
@@ -550,9 +535,9 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 15
-y 195
-w 75
+x 125
+y 170
+w 45
 h 20
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -569,9 +554,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 280
-y 195
-w 155
+x 320
+y 170
+w 115
 h 20
 controlPv "$(P)$(R)PROFILE_EXECUTE_STATE_RBV"
 fgColor index 16
@@ -589,7 +574,7 @@ major 10
 minor 0
 release 0
 x 15
-y 220
+y 195
 w 420
 h 20
 controlPv "$(P)$(R)PROFILE_EXECUTE_MESSAGE_RBV"
@@ -607,9 +592,9 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 220
-y 195
-w 55
+x 285
+y 170
+w 35
 h 20
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -626,9 +611,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 55
-y 195
-w 155
+x 170
+y 170
+w 110
 h 20
 controlPv "$(P)$(R)PROFILE_EXECUTE_STATUS_RBV"
 fgColor index 16
@@ -646,7 +631,7 @@ major 4
 minor 0
 release 0
 x 230
-y 265
+y 240
 w 210
 h 195
 lineColor index 14
@@ -661,7 +646,7 @@ major 4
 minor 1
 release 1
 x 230
-y 260
+y 235
 w 109
 h 12
 font "helvetica-medium-r-10.0"
@@ -681,7 +666,7 @@ major 10
 minor 0
 release 0
 x 360
-y 280
+y 255
 w 75
 h 20
 controlPv "$(P)$(R)EPICS_BUFFER_A_PTR_RBV"
@@ -701,7 +686,7 @@ major 4
 minor 1
 release 1
 x 235
-y 280
+y 255
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -720,7 +705,7 @@ major 4
 minor 1
 release 1
 x 235
-y 305
+y 280
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -739,7 +724,7 @@ major 10
 minor 0
 release 0
 x 360
-y 330
+y 305
 w 75
 h 20
 controlPv "$(P)$(R)PROFILE_NUM_POINTS_RBV"
@@ -759,7 +744,7 @@ major 4
 minor 1
 release 1
 x 235
-y 330
+y 305
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -778,7 +763,7 @@ major 10
 minor 0
 release 0
 x 360
-y 355
+y 330
 w 75
 h 20
 controlPv "$(P)$(R)TSCAN_TIME_RBV"
@@ -799,7 +784,7 @@ major 10
 minor 0
 release 0
 x 360
-y 380
+y 355
 w 75
 h 20
 controlPv "$(P)$(R)TSCAN_CS_RBV"
@@ -819,7 +804,7 @@ major 4
 minor 1
 release 1
 x 235
-y 355
+y 330
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -838,7 +823,7 @@ major 4
 minor 1
 release 1
 x 235
-y 380
+y 355
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -857,7 +842,7 @@ major 10
 minor 0
 release 0
 x 360
-y 405
+y 380
 w 75
 h 20
 controlPv "$(P)$(R)TSCAN_PERCENT_RBV"
@@ -878,7 +863,7 @@ major 4
 minor 1
 release 1
 x 235
-y 405
+y 380
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -897,7 +882,7 @@ major 4
 minor 1
 release 1
 x 235
-y 430
+y 405
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -916,7 +901,7 @@ major 10
 minor 0
 release 0
 x 360
-y 305
+y 280
 w 75
 h 20
 controlPv "$(P)$(R)EPICS_BUFFER_B_PTR_RBV"
@@ -936,7 +921,7 @@ major 4
 minor 1
 release 0
 x 350
-y 470
+y 445
 w 90
 h 55
 fgColor index 21
@@ -959,348 +944,8 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 25
-y 50
-w 45
-h 20
-controlPv "$(P)$(R)Motor1CS_RBV"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 75
-y 50
-w 45
-h 20
-controlPv "$(P)$(R)Motor2CS_RBV"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 125
-y 50
-w 45
-h 20
-controlPv "$(P)$(R)Motor3CS_RBV"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 175
-y 50
-w 45
-h 20
-controlPv "$(P)$(R)Motor4CS_RBV"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 225
-y 50
-w 45
-h 20
-controlPv "$(P)$(R)Motor5CS_RBV"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 275
-y 50
-w 45
-h 20
-controlPv "$(P)$(R)Motor6CS_RBV"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 325
-y 50
-w 45
-h 20
-controlPv "$(P)$(R)Motor7CS_RBV"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 375
-y 50
-w 45
-h 20
-controlPv "$(P)$(R)Motor8CS_RBV"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 30
-w 45
-h 20
-font "helvetica-medium-r-10.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Motor 1"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 75
-y 30
-w 45
-h 20
-font "helvetica-medium-r-10.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Motor 2"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 125
-y 30
-w 45
-h 20
-font "helvetica-medium-r-10.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Motor 3"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 175
-y 30
-w 45
-h 20
-font "helvetica-medium-r-10.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Motor 4"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 225
-y 30
-w 45
-h 20
-font "helvetica-medium-r-10.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Motor 5"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 275
-y 30
-w 45
-h 20
-font "helvetica-medium-r-10.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Motor 6"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 325
-y 30
-w 45
-h 20
-font "helvetica-medium-r-10.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Motor 7"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 375
-y 30
-w 45
-h 20
-font "helvetica-medium-r-10.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Motor 8"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 10
-w 195
-h 12
-font "helvetica-medium-r-10.0"
-fgColor index 14
-bgColor index 5
-value {
-  "  Motor Coordinate System Assignments  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
 x 360
-y 430
+y 405
 w 75
 h 20
 controlPv "$(P)$(R)TSCAN_EXT_STATUS_RBV"
@@ -1320,7 +965,7 @@ major 4
 minor 1
 release 1
 x 10
-y 480
+y 455
 w 325
 h 45
 indicatorColor index 25
@@ -1343,7 +988,7 @@ major 4
 minor 1
 release 1
 x 10
-y 470
+y 445
 w 169
 h 12
 font "helvetica-medium-r-10.0"
@@ -1354,5 +999,285 @@ value {
 }
 autoSize
 border
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 710
+y 225
+w 425
+h 20
+
+beginGroup
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 760
+y 225
+w 45
+h 20
+controlPv "$(P)$(R)M8:CS_RAW_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 710
+y 225
+w 45
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Motor 8"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 1085
+y 225
+w 50
+h 20
+controlPv "$(P)$(R)M8:CS_AXIS_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 920
+y 225
+w 100
+h 20
+controlPv "$(P)$(R)M8:CS_PORT_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 815
+y 225
+w 100
+h 20
+controlPv "$(P)$(R)M8:CS_PORT"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 1030
+y 225
+w 50
+h 20
+controlPv "$(P)$(R)M8:CS_AXIS"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 85
+w 105
+h 20
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)PROFILE_BUILD.PROC"
+pressValue "1"
+onLabel "Build Profile"
+offLabel "Build Profile"
+3d
+useEnumNumeric
+font "helvetica-bold-r-12.0"
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 170
+w 105
+h 20
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)PROFILE_EXECUTE.PROC"
+pressValue "1"
+onLabel "Execute Profile"
+offLabel "Execute Profile"
+3d
+useEnumNumeric
+font "helvetica-bold-r-12.0"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 10
+w 430
+h 45
+lineColor index 14
+fill
+fillColor index 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 5
+w 128
+h 12
+font "helvetica-medium-r-10.0"
+fgColor index 14
+bgColor index 5
+value {
+  "  Trajectory Scan Selection  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 95
+y 25
+w 100
+h 20
+controlPv "$(P)$(R)PROFILE_CS_NAME"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 205
+y 25
+w 100
+h 20
+controlPv "$(P)$(R)PROFILE_CS_NAME_RBV"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 4
+release 0
+x 315
+y 25
+w 115
+h 20
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-12.0"
+buttonLabel "Details"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "pmacTrajectoryDetails"
+}
 endObjectProperties
 

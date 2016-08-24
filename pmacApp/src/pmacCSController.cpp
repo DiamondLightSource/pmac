@@ -139,6 +139,7 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
     1, // autoconnect
     0, 0),  // Default priority and stack size
   pmacDebugger("pmacCSController"),
+  portName_(portName),
   csNumber_(csNo),
   progNumber_(program),
   profileInitialized_(false)
@@ -167,13 +168,18 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
 
   // Registration with the main controller. Register this coordinate system
   if (status == asynSuccess){
-    ((pmacController *)pC_)->registerCS(this, csNumber_);
+    ((pmacController *)pC_)->registerCS(this, portName, csNumber_);
   }
 }
 
 pmacCSController::~pmacCSController()
 {
 
+}
+
+std::string pmacCSController::getPortName()
+{
+  return portName_;
 }
 
 void pmacCSController::setDebugLevel(int level, int axis)
