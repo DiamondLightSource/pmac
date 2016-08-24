@@ -3,6 +3,11 @@
 #! DBD("../../dbd/pmac.dbd")
 #! DBDEND
 
+# % macro, PORT, The asyn port for the pmac controller
+# % macro, P, PV Prefix
+# % macro, R, PV Suffix
+# % macro, MOTOR, Motor axis number
+
 template() {
 
   #! InputMacro(P,"",3440,3060,16777215,1,true)

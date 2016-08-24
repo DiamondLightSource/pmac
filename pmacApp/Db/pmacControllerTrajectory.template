@@ -1,5 +1,17 @@
+# % macro, PORT, The asyn port for the pmac controller
+# % macro, P, PV Prefix
+# % macro, R, PV Suffix
+# % macro, NPOINTS, Maximum number of points in a scan
+# % macro, NAXES,   Number of axes
+
 # This associates the template with an edm screen
 # % gui, $(PORT), edmtab, pmacTrajectory.edl, P=$(P),R=$(R)
+
+
+record(longin, "$(P)$(R)PROFILE_NAXES") {
+  field(PINI, "YES")
+  field(VAL, "$(NAXES)")
+}
 
 ##
 ## Record to read the number of axes selected for the current
@@ -96,6 +108,27 @@ record(waveform, "$(P)$(R)PROFILE_TIME_ARRAY")
     field(FTVL, "DOUBLE")
     field(NELM, "$(NPOINTS)")
 }
+
+## Record to specify the User profile called at each point
+record(waveform,"$(P)$(R)USER_ARRAY") {
+    field(DESC, "User profile call at each point")
+    field(DTYP, "asynInt32ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PMAC_PROFILE_USER")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "LONG")
+    field(PREC, "3")
+}
+
+## Record to specific the Velocity mode to use at each point
+record(waveform,"$(P)$(R)VEL_MODE") {
+    field(DESC, "Velocity mode at each point")
+    field(DTYP, "asynInt32ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PMAC_PROFILE_VELMODE")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "LONG")
+    field(PREC, "3")
+}
+
 
 ##
 ## Records to specify the acceleration
@@ -439,6 +472,13 @@ record(ao,"$(P)$(R)A:Offset") {
     field(PREC, "$(PREC=3)")
 }
 
+record(ai, "$(P)$(R)A:Offset_RBV") {
+  field(DESC, "Axis A offset")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_A")
+  field(SCAN, "I/O Intr")  
+}
+
 # Motor resolution for this axis
 record(ao,"$(P)$(R)A:Resolution") {
     field(DESC, "Axis A resolution")
@@ -446,6 +486,29 @@ record(ao,"$(P)$(R)A:Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_A")
     field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)A:Resolution_RBV") {
+  field(DESC, "Axis A resolution")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_A")
+  field(SCAN, "I/O Intr")  
+}
+
+# Default axis position
+record(ao,"$(P)$(R)A:Default") {
+    field(DESC, "Axis A default position")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_A")
+    field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)A:Default_RBV") {
+  field(DESC, "Axis A default position")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_A")
+  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -490,6 +553,13 @@ record(ao,"$(P)$(R)B:Offset") {
     field(PREC, "$(PREC=3)")
 }
 
+record(ai, "$(P)$(R)B:Offset_RBV") {
+  field(DESC, "Axis B offset")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_B")
+  field(SCAN, "I/O Intr")  
+}
+
 # Motor resolution for this axis
 record(ao,"$(P)$(R)B:Resolution") {
     field(DESC, "Axis B resolution")
@@ -497,6 +567,29 @@ record(ao,"$(P)$(R)B:Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_B")
     field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)B:Resolution_RBV") {
+  field(DESC, "Axis B resolution")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_B")
+  field(SCAN, "I/O Intr")  
+}
+
+# Default axis position
+record(ao,"$(P)$(R)B:Default") {
+    field(DESC, "Axis B default position")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_B")
+    field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)B:Default_RBV") {
+  field(DESC, "Axis B default position")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_B")
+  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -541,6 +634,13 @@ record(ao,"$(P)$(R)C:Offset") {
     field(PREC, "$(PREC=3)")
 }
 
+record(ai, "$(P)$(R)C:Offset_RBV") {
+  field(DESC, "Axis C offset")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_C")
+  field(SCAN, "I/O Intr")  
+}
+
 # Motor resolution for this axis
 record(ao,"$(P)$(R)C:Resolution") {
     field(DESC, "Axis C resolution")
@@ -548,6 +648,29 @@ record(ao,"$(P)$(R)C:Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_C")
     field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)C:Resolution_RBV") {
+  field(DESC, "Axis C resolution")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_C")
+  field(SCAN, "I/O Intr")  
+}
+
+# Default axis position
+record(ao,"$(P)$(R)C:Default") {
+    field(DESC, "Axis C default position")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_C")
+    field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)C:Default_RBV") {
+  field(DESC, "Axis C default position")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_C")
+  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -592,6 +715,13 @@ record(ao,"$(P)$(R)U:Offset") {
     field(PREC, "$(PREC=3)")
 }
 
+record(ai, "$(P)$(R)U:Offset_RBV") {
+  field(DESC, "Axis U offset")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_U")
+  field(SCAN, "I/O Intr")  
+}
+
 # Motor resolution for this axis
 record(ao,"$(P)$(R)U:Resolution") {
     field(DESC, "Axis U resolution")
@@ -599,6 +729,29 @@ record(ao,"$(P)$(R)U:Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_U")
     field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)U:Resolution_RBV") {
+  field(DESC, "Axis U resolution")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_U")
+  field(SCAN, "I/O Intr")  
+}
+
+# Default axis position
+record(ao,"$(P)$(R)U:Default") {
+    field(DESC, "Axis U default position")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_U")
+    field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)U:Default_RBV") {
+  field(DESC, "Axis U default position")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_U")
+  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -643,6 +796,13 @@ record(ao,"$(P)$(R)V:Offset") {
     field(PREC, "$(PREC=3)")
 }
 
+record(ai, "$(P)$(R)V:Offset_RBV") {
+  field(DESC, "Axis V offset")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_V")
+  field(SCAN, "I/O Intr")  
+}
+
 # Motor resolution for this axis
 record(ao,"$(P)$(R)V:Resolution") {
     field(DESC, "Axis V resolution")
@@ -650,6 +810,29 @@ record(ao,"$(P)$(R)V:Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_V")
     field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)V:Resolution_RBV") {
+  field(DESC, "Axis V resolution")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_V")
+  field(SCAN, "I/O Intr")  
+}
+
+# Default axis position
+record(ao,"$(P)$(R)V:Default") {
+    field(DESC, "Axis V default position")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_V")
+    field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)V:Default_RBV") {
+  field(DESC, "Axis V default position")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_V")
+  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -694,6 +877,13 @@ record(ao,"$(P)$(R)W:Offset") {
     field(PREC, "$(PREC=3)")
 }
 
+record(ai, "$(P)$(R)W:Offset_RBV") {
+  field(DESC, "Axis W offset")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_W")
+  field(SCAN, "I/O Intr")  
+}
+
 # Motor resolution for this axis
 record(ao,"$(P)$(R)W:Resolution") {
     field(DESC, "Axis W resolution")
@@ -701,6 +891,29 @@ record(ao,"$(P)$(R)W:Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_W")
     field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)W:Resolution_RBV") {
+  field(DESC, "Axis W resolution")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_W")
+  field(SCAN, "I/O Intr")  
+}
+
+# Default axis position
+record(ao,"$(P)$(R)W:Default") {
+    field(DESC, "Axis W default position")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_W")
+    field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)W:Default_RBV") {
+  field(DESC, "Axis W default position")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_W")
+  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -745,6 +958,13 @@ record(ao,"$(P)$(R)X:Offset") {
     field(PREC, "$(PREC=3)")
 }
 
+record(ai, "$(P)$(R)X:Offset_RBV") {
+  field(DESC, "Axis X offset")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_X")
+  field(SCAN, "I/O Intr")  
+}
+
 # Motor resolution for this axis
 record(ao,"$(P)$(R)X:Resolution") {
     field(DESC, "Axis X resolution")
@@ -752,6 +972,29 @@ record(ao,"$(P)$(R)X:Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_X")
     field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)X:Resolution_RBV") {
+  field(DESC, "Axis X resolution")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_X")
+  field(SCAN, "I/O Intr")  
+}
+
+# Default axis position
+record(ao,"$(P)$(R)X:Default") {
+    field(DESC, "Axis X default position")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_X")
+    field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)X:Default_RBV") {
+  field(DESC, "Axis X default position")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_X")
+  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -796,6 +1039,13 @@ record(ao,"$(P)$(R)Y:Offset") {
     field(PREC, "$(PREC=3)")
 }
 
+record(ai, "$(P)$(R)Y:Offset_RBV") {
+  field(DESC, "Axis Y offset")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_Y")
+  field(SCAN, "I/O Intr")  
+}
+
 # Motor resolution for this axis
 record(ao,"$(P)$(R)Y:Resolution") {
     field(DESC, "Axis Y resolution")
@@ -803,6 +1053,29 @@ record(ao,"$(P)$(R)Y:Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_Y")
     field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)Y:Resolution_RBV") {
+  field(DESC, "Axis Y resolution")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_Y")
+  field(SCAN, "I/O Intr")  
+}
+
+# Default axis position
+record(ao,"$(P)$(R)Y:Default") {
+    field(DESC, "Axis Y default position")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_Y")
+    field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)Y:Default_RBV") {
+  field(DESC, "Axis Y default position")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_Y")
+  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -847,6 +1120,13 @@ record(ao,"$(P)$(R)Z:Offset") {
     field(PREC, "$(PREC=3)")
 }
 
+record(ai, "$(P)$(R)Z:Offset_RBV") {
+  field(DESC, "Axis Z offset")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_Z")
+  field(SCAN, "I/O Intr")  
+}
+
 # Motor resolution for this axis
 record(ao,"$(P)$(R)Z:Resolution") {
     field(DESC, "Axis Z resolution")
@@ -854,4 +1134,27 @@ record(ao,"$(P)$(R)Z:Resolution") {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_Z")
     field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)Z:Resolution_RBV") {
+  field(DESC, "Axis Z resolution")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_Z")
+  field(SCAN, "I/O Intr")  
+}
+
+# Default axis position
+record(ao,"$(P)$(R)Z:Default") {
+    field(DESC, "Axis Z default position")
+    field(VAL,  "0.0")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_Z")
+    field(PREC, "$(PREC=3)")
+}
+
+record(ai, "$(P)$(R)Z:Default_RBV") {
+  field(DESC, "Axis Z default position")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_Z")
+  field(SCAN, "I/O Intr")  
 }
