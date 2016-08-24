@@ -115,6 +115,15 @@
 #define PMAC_C_ProfileResXString       "PROFILE_RESOLUTION_X"
 #define PMAC_C_ProfileResYString       "PROFILE_RESOLUTION_Y"
 #define PMAC_C_ProfileResZString       "PROFILE_RESOLUTION_Z"
+#define PMAC_C_ProfileDefaultAString   "PROFILE_DEFAULT_A"
+#define PMAC_C_ProfileDefaultBString   "PROFILE_DEFAULT_B"
+#define PMAC_C_ProfileDefaultCString   "PROFILE_DEFAULT_C"
+#define PMAC_C_ProfileDefaultUString   "PROFILE_DEFAULT_U"
+#define PMAC_C_ProfileDefaultVString   "PROFILE_DEFAULT_V"
+#define PMAC_C_ProfileDefaultWString   "PROFILE_DEFAULT_W"
+#define PMAC_C_ProfileDefaultXString   "PROFILE_DEFAULT_X"
+#define PMAC_C_ProfileDefaultYString   "PROFILE_DEFAULT_Y"
+#define PMAC_C_ProfileDefaultZString   "PROFILE_DEFAULT_Z"
 
 #define PMAC_C_ProfileUserString       "PMAC_PROFILE_USER"    // User buffer for trajectory scan
 #define PMAC_C_ProfileVelModeString    "PMAC_PROFILE_VELMODE" // Velocity mode buffer for trajectory scan
@@ -196,6 +205,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus initialiseConnection();
   asynStatus slowUpdate(pmacCommandStore *sPtr);
   asynStatus mediumUpdate(pmacCommandStore *sPtr);
+  asynStatus fastUpdate(pmacCommandStore *sPtr);
 
   //asynStatus printConnectedStatus(void);
   asynStatus immediateWriteRead(const char *command, char *response);
@@ -329,6 +339,15 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_ProfileResY_;
   int PMAC_C_ProfileResZ_;
   int PMAC_C_ProfileUser_;
+  int PMAC_C_ProfileDefaultA_;
+  int PMAC_C_ProfileDefaultB_;
+  int PMAC_C_ProfileDefaultC_;
+  int PMAC_C_ProfileDefaultU_;
+  int PMAC_C_ProfileDefaultV_;
+  int PMAC_C_ProfileDefaultW_;
+  int PMAC_C_ProfileDefaultX_;
+  int PMAC_C_ProfileDefaultY_;
+  int PMAC_C_ProfileDefaultZ_;
   int PMAC_C_ProfileVelMode_;
   int PMAC_C_TrajBufferLength_;
   int PMAC_C_TrajTotalPoints_;
@@ -420,9 +439,6 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
 
   asynStatus lowLevelWriteRead(const char *command, char *response);
 //  asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
-
-  asynStatus newGetGlobalStatus(pmacCommandStore *sPtr);
-//  asynStatus getGlobalStatus(epicsUInt32 *globalStatus, int *feedrate, int feedrate_poll);
 
   asynStatus updateStatistics();
 

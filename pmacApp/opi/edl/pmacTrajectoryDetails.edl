@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 277
-y 138
-w 460
-h 812
+x 455
+y 93
+w 768
+h 606
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
 btnFont "arial-bold-r-12.0"
@@ -32,8 +32,8 @@ minor 0
 release 0
 x 0
 y 0
-w 450
-h 535
+w 775
+h 605
 lineColor index 5
 fill
 fillColor index 5
@@ -45,9 +45,9 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 10
-y 575
-w 410
+x 455
+y 15
+w 305
 h 105
 lineColor index 14
 fill
@@ -62,7 +62,7 @@ minor 0
 release 0
 x 10
 y 295
-w 430
+w 750
 h 265
 lineColor index 14
 fill
@@ -75,7 +75,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 315
+x 265
 y 305
 w 75
 h 20
@@ -95,7 +95,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 210
+x 175
 y 305
 w 75
 h 20
@@ -115,7 +115,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 105
+x 85
 y 305
 w 75
 h 20
@@ -155,8 +155,8 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 90
-y 630
+x 535
+y 70
 w 75
 h 20
 controlPv "$(P)$(R)PROFILE_NUM_POINTS"
@@ -175,8 +175,8 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 10
-y 570
+x 455
+y 10
 w 147
 h 12
 font "helvetica-medium-r-10.0"
@@ -195,8 +195,8 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 15
-y 630
+x 460
+y 70
 w 70
 h 20
 controlPv "$(P)$(R)PROFILE_NUM_POINTS"
@@ -214,8 +214,8 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 15
-y 600
+x 460
+y 40
 w 155
 h 20
 font "helvetica-bold-r-12.0"
@@ -225,888 +225,6 @@ useDisplayBg
 value {
   "Number of Points in Scan"
 }
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 25
-y 330
-w 365
-h 20
-
-beginGroup
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 105
-y 330
-w 75
-h 20
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)A:UseAxis"
-indicatorPv "$(P)$(R)A:UseAxis"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 315
-y 330
-w 75
-h 20
-controlPv "$(P)$(R)A:Positions.NELM"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 210
-y 330
-w 75
-h 20
-controlPv "$(P)$(R)A:NoOfPts"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 330
-w 55
-h 20
-font "helvetica-bold-r-12.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Axis A"
-}
-endObjectProperties
-
-endGroup
-
-visMin "1"
-visMax "2"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 25
-y 355
-w 365
-h 20
-
-beginGroup
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 105
-y 355
-w 75
-h 20
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)B:UseAxis"
-indicatorPv "$(P)$(R)B:UseAxis"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 315
-y 355
-w 75
-h 20
-controlPv "$(P)$(R)B:Positions.NELM"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 210
-y 355
-w 75
-h 20
-controlPv "$(P)$(R)B:NoOfPts"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 355
-w 55
-h 20
-font "helvetica-bold-r-12.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Axis B"
-}
-endObjectProperties
-
-endGroup
-
-visMin "1"
-visMax "2"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 25
-y 380
-w 365
-h 20
-
-beginGroup
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 105
-y 380
-w 75
-h 20
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)C:UseAxis"
-indicatorPv "$(P)$(R)C:UseAxis"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 315
-y 380
-w 75
-h 20
-controlPv "$(P)$(R)C:Positions.NELM"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 210
-y 380
-w 75
-h 20
-controlPv "$(P)$(R)C:NoOfPts"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 380
-w 55
-h 20
-font "helvetica-bold-r-12.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Axis C"
-}
-endObjectProperties
-
-endGroup
-
-visMin "1"
-visMax "2"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 25
-y 405
-w 365
-h 20
-
-beginGroup
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 105
-y 405
-w 75
-h 20
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)U:UseAxis"
-indicatorPv "$(P)$(R)U:UseAxis"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 315
-y 405
-w 75
-h 20
-controlPv "$(P)$(R)U:Positions.NELM"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 210
-y 405
-w 75
-h 20
-controlPv "$(P)$(R)U:NoOfPts"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 405
-w 55
-h 20
-font "helvetica-bold-r-12.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Axis U"
-}
-endObjectProperties
-
-endGroup
-
-visMin "1"
-visMax "2"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 25
-y 430
-w 365
-h 20
-
-beginGroup
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 105
-y 430
-w 75
-h 20
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)V:UseAxis"
-indicatorPv "$(P)$(R)V:UseAxis"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 315
-y 430
-w 75
-h 20
-controlPv "$(P)$(R)V:Positions.NELM"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 210
-y 430
-w 75
-h 20
-controlPv "$(P)$(R)V:NoOfPts"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 430
-w 55
-h 20
-font "helvetica-bold-r-12.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Axis V"
-}
-endObjectProperties
-
-endGroup
-
-visMin "1"
-visMax "2"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 25
-y 455
-w 365
-h 20
-
-beginGroup
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 105
-y 455
-w 75
-h 20
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)W:UseAxis"
-indicatorPv "$(P)$(R)W:UseAxis"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 315
-y 455
-w 75
-h 20
-controlPv "$(P)$(R)W:Positions.NELM"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 210
-y 455
-w 75
-h 20
-controlPv "$(P)$(R)W:NoOfPts"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 455
-w 55
-h 20
-font "helvetica-bold-r-12.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Axis W"
-}
-endObjectProperties
-
-endGroup
-
-visMin "1"
-visMax "2"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 25
-y 480
-w 365
-h 20
-
-beginGroup
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 105
-y 480
-w 75
-h 20
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)X:UseAxis"
-indicatorPv "$(P)$(R)X:UseAxis"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 315
-y 480
-w 75
-h 20
-controlPv "$(P)$(R)X:Positions.NELM"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 210
-y 480
-w 75
-h 20
-controlPv "$(P)$(R)X:NoOfPts"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 480
-w 55
-h 20
-font "helvetica-bold-r-12.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Axis X"
-}
-endObjectProperties
-
-endGroup
-
-visMin "1"
-visMax "2"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 25
-y 505
-w 365
-h 20
-
-beginGroup
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 105
-y 505
-w 75
-h 20
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)Y:UseAxis"
-indicatorPv "$(P)$(R)Y:UseAxis"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 315
-y 505
-w 75
-h 20
-controlPv "$(P)$(R)Y:Positions.NELM"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 210
-y 505
-w 75
-h 20
-controlPv "$(P)$(R)Y:NoOfPts"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 505
-w 55
-h 20
-font "helvetica-bold-r-12.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Axis Y"
-}
-endObjectProperties
-
-endGroup
-
-visMin "1"
-visMax "2"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 25
-y 530
-w 365
-h 20
-
-beginGroup
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 105
-y 530
-w 75
-h 20
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)Z:UseAxis"
-indicatorPv "$(P)$(R)Z:UseAxis"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 315
-y 530
-w 75
-h 20
-controlPv "$(P)$(R)Z:Positions.NELM"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 210
-y 530
-w 75
-h 20
-controlPv "$(P)$(R)Z:NoOfPts"
-displayMode "decimal"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 25
-y 530
-w 55
-h 20
-font "helvetica-bold-r-12.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Axis Z"
-}
-endObjectProperties
-
-endGroup
-
-visMin "1"
-visMax "2"
 endObjectProperties
 
 # (Rectangle)
@@ -1210,7 +328,7 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 150
+x 20
 y 250
 w 135
 h 25
@@ -1221,8 +339,8 @@ topShadowColor index 1
 botShadowColor index 11
 controlPv "$(P)$(R)ASSIGN:CS_EXECUTE.PROC"
 pressValue "0"
-onLabel "Update Assignments"
-offLabel "Update Assignments"
+onLabel "Manual Assignment"
+offLabel "Manual Assignment"
 3d
 useEnumNumeric
 font "helvetica-bold-r-12.0"
@@ -2306,5 +1424,1933 @@ endObjectProperties
 
 endGroup
 
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 330
+w 75
+h 20
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)A:UseAxis"
+indicatorPv "$(P)$(R)A:UseAxis"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 265
+y 330
+w 75
+h 20
+controlPv "$(P)$(R)A:Positions.NELM"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 175
+y 330
+w 75
+h 20
+controlPv "$(P)$(R)A:NoOfPts"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 330
+w 55
+h 20
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Axis A"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 355
+w 75
+h 20
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)B:UseAxis"
+indicatorPv "$(P)$(R)B:UseAxis"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 265
+y 355
+w 75
+h 20
+controlPv "$(P)$(R)B:Positions.NELM"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 175
+y 355
+w 75
+h 20
+controlPv "$(P)$(R)B:NoOfPts"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 355
+w 55
+h 20
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Axis B"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 380
+w 75
+h 20
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)C:UseAxis"
+indicatorPv "$(P)$(R)C:UseAxis"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 265
+y 380
+w 75
+h 20
+controlPv "$(P)$(R)C:Positions.NELM"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 175
+y 380
+w 75
+h 20
+controlPv "$(P)$(R)C:NoOfPts"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 380
+w 55
+h 20
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Axis C"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 405
+w 75
+h 20
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)U:UseAxis"
+indicatorPv "$(P)$(R)U:UseAxis"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 265
+y 405
+w 75
+h 20
+controlPv "$(P)$(R)U:Positions.NELM"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 175
+y 405
+w 75
+h 20
+controlPv "$(P)$(R)U:NoOfPts"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 405
+w 55
+h 20
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Axis U"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 430
+w 75
+h 20
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)V:UseAxis"
+indicatorPv "$(P)$(R)V:UseAxis"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 265
+y 430
+w 75
+h 20
+controlPv "$(P)$(R)V:Positions.NELM"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 175
+y 430
+w 75
+h 20
+controlPv "$(P)$(R)V:NoOfPts"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 430
+w 55
+h 20
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Axis V"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 455
+w 75
+h 20
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)W:UseAxis"
+indicatorPv "$(P)$(R)W:UseAxis"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 265
+y 455
+w 75
+h 20
+controlPv "$(P)$(R)W:Positions.NELM"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 175
+y 455
+w 75
+h 20
+controlPv "$(P)$(R)W:NoOfPts"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 455
+w 55
+h 20
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Axis W"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 480
+w 75
+h 20
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)X:UseAxis"
+indicatorPv "$(P)$(R)X:UseAxis"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 265
+y 480
+w 75
+h 20
+controlPv "$(P)$(R)X:Positions.NELM"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 175
+y 480
+w 75
+h 20
+controlPv "$(P)$(R)X:NoOfPts"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 480
+w 55
+h 20
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Axis X"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 505
+w 75
+h 20
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)Y:UseAxis"
+indicatorPv "$(P)$(R)Y:UseAxis"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 265
+y 505
+w 75
+h 20
+controlPv "$(P)$(R)Y:Positions.NELM"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 175
+y 505
+w 75
+h 20
+controlPv "$(P)$(R)Y:NoOfPts"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 505
+w 55
+h 20
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Axis Y"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 85
+y 530
+w 75
+h 20
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)Z:UseAxis"
+indicatorPv "$(P)$(R)Z:UseAxis"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 265
+y 530
+w 75
+h 20
+controlPv "$(P)$(R)Z:Positions.NELM"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 175
+y 530
+w 75
+h 20
+controlPv "$(P)$(R)Z:NoOfPts"
+displayMode "decimal"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 530
+w 55
+h 20
+font "helvetica-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Axis Z"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 355
+y 330
+w 60
+h 20
+controlPv "$(P)$(R)A:Default"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 355
+y 305
+w 130
+h 20
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Default Demand"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 355
+y 355
+w 60
+h 20
+controlPv "$(P)$(R)B:Default"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 355
+y 380
+w 60
+h 20
+controlPv "$(P)$(R)C:Default"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 355
+y 405
+w 60
+h 20
+controlPv "$(P)$(R)U:Default"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 355
+y 430
+w 60
+h 20
+controlPv "$(P)$(R)V:Default"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 355
+y 455
+w 60
+h 20
+controlPv "$(P)$(R)W:Default"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 355
+y 480
+w 60
+h 20
+controlPv "$(P)$(R)X:Default"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 355
+y 505
+w 60
+h 20
+controlPv "$(P)$(R)Y:Default"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 355
+y 530
+w 60
+h 20
+controlPv "$(P)$(R)Z:Default"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 290
+y 250
+w 145
+h 25
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P)$(R)COORDINATE_SYS_GROUP"
+indicatorPv "$(P)$(R)COORDINATE_SYS_GROUP"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 165
+y 250
+w 125
+h 25
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Select Group"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 490
+y 330
+w 60
+h 20
+controlPv "$(P)$(R)A:Resolution"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 625
+y 330
+w 60
+h 20
+controlPv "$(P)$(R)A:Offset"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 555
+y 330
+w 65
+h 20
+controlPv "$(P)$(R)A:Resolution_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 690
+y 330
+w 65
+h 20
+controlPv "$(P)$(R)A:Offset_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 330
+w 65
+h 20
+controlPv "$(P)$(R)A:Default_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 490
+y 355
+w 60
+h 20
+controlPv "$(P)$(R)B:Resolution"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 625
+y 355
+w 60
+h 20
+controlPv "$(P)$(R)B:Offset"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 555
+y 355
+w 65
+h 20
+controlPv "$(P)$(R)B:Resolution_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 690
+y 355
+w 65
+h 20
+controlPv "$(P)$(R)B:Offset_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 355
+w 65
+h 20
+controlPv "$(P)$(R)B:Default_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 490
+y 380
+w 60
+h 20
+controlPv "$(P)$(R)C:Resolution"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 625
+y 380
+w 60
+h 20
+controlPv "$(P)$(R)C:Offset"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 555
+y 380
+w 65
+h 20
+controlPv "$(P)$(R)C:Resolution_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 690
+y 380
+w 65
+h 20
+controlPv "$(P)$(R)C:Offset_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 380
+w 65
+h 20
+controlPv "$(P)$(R)C:Default_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 490
+y 405
+w 60
+h 20
+controlPv "$(P)$(R)U:Resolution"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 625
+y 405
+w 60
+h 20
+controlPv "$(P)$(R)U:Offset"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 555
+y 405
+w 65
+h 20
+controlPv "$(P)$(R)U:Resolution_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 690
+y 405
+w 65
+h 20
+controlPv "$(P)$(R)U:Offset_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 405
+w 65
+h 20
+controlPv "$(P)$(R)U:Default_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 490
+y 430
+w 60
+h 20
+controlPv "$(P)$(R)V:Resolution"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 625
+y 430
+w 60
+h 20
+controlPv "$(P)$(R)V:Offset"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 555
+y 430
+w 65
+h 20
+controlPv "$(P)$(R)V:Resolution_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 690
+y 430
+w 65
+h 20
+controlPv "$(P)$(R)V:Offset_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 430
+w 65
+h 20
+controlPv "$(P)$(R)V:Default_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 490
+y 455
+w 60
+h 20
+controlPv "$(P)$(R)W:Resolution"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 625
+y 455
+w 60
+h 20
+controlPv "$(P)$(R)W:Offset"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 555
+y 455
+w 65
+h 20
+controlPv "$(P)$(R)W:Resolution_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 690
+y 455
+w 65
+h 20
+controlPv "$(P)$(R)W:Offset_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 455
+w 65
+h 20
+controlPv "$(P)$(R)W:Default_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 490
+y 480
+w 60
+h 20
+controlPv "$(P)$(R)X:Resolution"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 625
+y 480
+w 60
+h 20
+controlPv "$(P)$(R)X:Offset"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 555
+y 480
+w 65
+h 20
+controlPv "$(P)$(R)X:Resolution_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 690
+y 480
+w 65
+h 20
+controlPv "$(P)$(R)X:Offset_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 480
+w 65
+h 20
+controlPv "$(P)$(R)X:Default_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 490
+y 505
+w 60
+h 20
+controlPv "$(P)$(R)Y:Resolution"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 625
+y 505
+w 60
+h 20
+controlPv "$(P)$(R)Y:Offset"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 555
+y 505
+w 65
+h 20
+controlPv "$(P)$(R)Y:Resolution_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 690
+y 505
+w 65
+h 20
+controlPv "$(P)$(R)Y:Offset_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 505
+w 65
+h 20
+controlPv "$(P)$(R)Y:Default_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 490
+y 530
+w 60
+h 20
+controlPv "$(P)$(R)Z:Resolution"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 625
+y 530
+w 60
+h 20
+controlPv "$(P)$(R)Z:Offset"
+precision 3
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 555
+y 530
+w 65
+h 20
+controlPv "$(P)$(R)Z:Resolution_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 690
+y 530
+w 65
+h 20
+controlPv "$(P)$(R)Z:Offset_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 530
+w 65
+h 20
+controlPv "$(P)$(R)Z:Default_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "helvetica-medium-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 490
+y 305
+w 130
+h 20
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Resolution"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 625
+y 305
+w 130
+h 20
+font "helvetica-bold-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Offset"
+}
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 630
+y 570
+w 130
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-12.0"
+3d
 endObjectProperties
 
