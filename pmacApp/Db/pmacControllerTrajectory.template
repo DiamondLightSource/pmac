@@ -8,7 +8,7 @@
 # % gui, $(PORT), edmtab, pmacTrajectory.edl, P=$(P),R=$(R)
 
 
-record(longin, "$(P)$(R)PROFILE_NAXES") {
+record(longin, "$(P)$(R)ProfileNaxes") {
   field(PINI, "YES")
   field(VAL, "$(NAXES)")
 }
@@ -17,14 +17,14 @@ record(longin, "$(P)$(R)PROFILE_NAXES") {
 ## Record to read the number of axes selected for the current
 ## trajectory scan
 ##
-record(longin, "$(P)$(R)PROFILE_NUM_AXES_RBV") {
+record(longin, "$(P)$(R)ProfileNumAxes_RBV") {
   field(DESC, "Number of axes selected")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PROFILE_NUM_AXES")
   field(SCAN, "I/O Intr")  
 }
 
-record(longout,"$(P)$(R)PROFILE_NUM_POINTS") {
+record(longout,"$(P)$(R)ProfileNumPoints") {
     field(DESC, "# of points in profile")
     field(PINI, "YES")
     field(DTYP, "asynInt32")
@@ -36,7 +36,7 @@ record(longout,"$(P)$(R)PROFILE_NUM_POINTS") {
 ## Records to specify the number of motion points that define
 ## the trajectory scan
 ##
-record(longin, "$(P)$(R)PROFILE_NUM_POINTS_RBV") {
+record(longin, "$(P)$(R)ProfileNumPoints_RBV") {
   field(DESC, "Number of points defined")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PROFILE_NUM_POINTS")
@@ -46,7 +46,7 @@ record(longin, "$(P)$(R)PROFILE_NUM_POINTS_RBV") {
 ##
 ## Record to read the current executing point of trajectory scan
 ##
-record(longin, "$(P)$(R)PROFILE_CURRENT_POINT_RBV") {
+record(longin, "$(P)$(R)ProfileCurrentPoint_RBV") {
   field(DESC, "Currently executing point")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PROFILE_CURRENT_POINT")
@@ -59,7 +59,7 @@ record(longin, "$(P)$(R)PROFILE_CURRENT_POINT_RBV") {
 ## FIXED => A single value is used for each point
 ## ARRAY => An array of time points is supplied
 ##
-record(bo, "$(P)$(R)PROFILE_TIME_MODE")
+record(bo, "$(P)$(R)ProfileTimeMode")
 {
   field(DESC, "Time mode for trajectory scan")
   field(DTYP, "asynInt32")
@@ -70,7 +70,7 @@ record(bo, "$(P)$(R)PROFILE_TIME_MODE")
   field(PINI, "YES")
 }
 
-record(bi, "$(P)$(R)PROFILE_TIME_MODE_RBV")
+record(bi, "$(P)$(R)ProfileTimeMode_RBV")
 {
   field(DESC, "Time mode for trajectory scan")
   field(DTYP, "asynInt32")
@@ -83,14 +83,14 @@ record(bi, "$(P)$(R)PROFILE_TIME_MODE_RBV")
 ##
 ## Records to specify the fixed time between points
 ##
-record(ao, "$(P)$(R)PROFILE_FIXED_TIME") {
+record(ao, "$(P)$(R)ProfileFixedTime") {
   field(DESC, "Fixed time between points")
   field(DTYP, "asynFloat64")
   field(OUT, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
   field(PINI, "NO")
 }
 
-record(ai, "$(P)$(R)PROFILE_FIXED_TIME_RBV") {
+record(ai, "$(P)$(R)ProfileFixedTime_RBV") {
   field(DESC, "Fixed time between points")
   field(DTYP, "asynFloat64")
   field(INP, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
@@ -100,7 +100,7 @@ record(ai, "$(P)$(R)PROFILE_FIXED_TIME_RBV") {
 ##
 ## Record to specify the array of times between points
 ##
-record(waveform, "$(P)$(R)PROFILE_TIME_ARRAY")
+record(waveform, "$(P)$(R)ProfileTimeArray")
 {
     field(PINI, "NO")
     field(DTYP, "asynFloat64ArrayOut")
@@ -110,7 +110,7 @@ record(waveform, "$(P)$(R)PROFILE_TIME_ARRAY")
 }
 
 ## Record to specify the User profile called at each point
-record(waveform,"$(P)$(R)USER_ARRAY") {
+record(waveform,"$(P)$(R)UserArray") {
     field(DESC, "User profile call at each point")
     field(DTYP, "asynInt32ArrayOut")
     field(INP,  "@asyn($(PORT),0)PMAC_PROFILE_USER")
@@ -120,7 +120,7 @@ record(waveform,"$(P)$(R)USER_ARRAY") {
 }
 
 ## Record to specific the Velocity mode to use at each point
-record(waveform,"$(P)$(R)VEL_MODE") {
+record(waveform,"$(P)$(R)VelocityMode") {
     field(DESC, "Velocity mode at each point")
     field(DTYP, "asynInt32ArrayOut")
     field(INP,  "@asyn($(PORT),0)PMAC_PROFILE_VELMODE")
@@ -133,14 +133,14 @@ record(waveform,"$(P)$(R)VEL_MODE") {
 ##
 ## Records to specify the acceleration
 ##
-record(ao, "$(P)$(R)PROFILE_ACCELERATION") {
+record(ao, "$(P)$(R)ProfileAcceleration") {
   field(DESC, "Acceleration value")
   field(DTYP, "asynFloat64")
   field(OUT, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
   field(PINI, "NO")
 }
 
-record(ai, "$(P)$(R)PROFILE_ACCELERATION_RBV") {
+record(ai, "$(P)$(R)ProfileAcceleration_RBV") {
   field(DESC, "Acceleration value")
   field(DTYP, "asynFloat64")
   field(INP, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
@@ -152,12 +152,12 @@ record(ai, "$(P)$(R)PROFILE_ACCELERATION_RBV") {
 #                                                                 #
 ###################################################################
 
-record(stringout, "$(P)$(R)PROFILE_CS_NAME") {
+record(stringout, "$(P)$(R)ProfileCsName") {
   field(DTYP, "asynOctetWrite")
   field(OUT, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
 }
 
-record(stringin, "$(P)$(R)PROFILE_CS_NAME_RBV") {
+record(stringin, "$(P)$(R)ProfileCsName_RBV") {
   field(DTYP, "asynOctetRead")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
   field(SCAN, "I/O Intr")  
@@ -169,12 +169,7 @@ record(stringin, "$(P)$(R)PROFILE_CS_NAME_RBV") {
 #                                                                 #
 ###################################################################
 
-#record(bo, "$(P)$(R)PROFILE_BUILD") {
-#  field(DTYP, "asynInt32")
-#  field(OUT, "@asyn($(PORT),0)PROFILE_BUILD")
-#}
-
-record(busy,"$(P)$(R)PROFILE_BUILD") {
+record(busy,"$(P)$(R)ProfileBuild") {
     field(DESC,"Build and check profile")
     field(DTYP, "asynInt32")
     field(OUT,  "@asyn($(PORT),0)PROFILE_BUILD")
@@ -182,7 +177,7 @@ record(busy,"$(P)$(R)PROFILE_BUILD") {
     field(ONAM, "Build")
 }
 
-record(mbbi, "$(P)$(R)PROFILE_BUILD_STATE_RBV") {
+record(mbbi, "$(P)$(R)ProfileBuildState_RBV") {
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PROFILE_BUILD_STATE")
   field(ZRVL, "0")
@@ -194,7 +189,7 @@ record(mbbi, "$(P)$(R)PROFILE_BUILD_STATE_RBV") {
   field(SCAN, "I/O Intr")
 }
 
-record(mbbi, "$(P)$(R)PROFILE_BUILD_STATUS_RBV") {
+record(mbbi, "$(P)$(R)ProfileBuildStatus_RBV") {
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PROFILE_BUILD_STATUS")
   field(ZRVL, "0")
@@ -209,7 +204,7 @@ record(mbbi, "$(P)$(R)PROFILE_BUILD_STATUS_RBV") {
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)PROFILE_BUILD_MESSAGE_RBV")
+record(waveform, "$(P)$(R)ProfileBuildMessage_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PROFILE_BUILD_MESSAGE")
@@ -224,12 +219,7 @@ record(waveform, "$(P)$(R)PROFILE_BUILD_MESSAGE_RBV")
 #                                                                 #
 ###################################################################
 
-#record(bo, "$(P)$(R)PROFILE_EXECUTE") {
-#  field(DTYP, "asynInt32")
-#  field(OUT, "@asyn($(PORT),0)PROFILE_EXECUTE")
-#}
-
-record(busy,"$(P)$(R)PROFILE_EXECUTE") {
+record(busy,"$(P)$(R)ProfileExecute") {
     field(DESC,"Execute the profile")
     field(DTYP, "asynInt32")
     field(OUT,  "@asyn($(PORT),0)PROFILE_EXECUTE")
@@ -237,7 +227,7 @@ record(busy,"$(P)$(R)PROFILE_EXECUTE") {
     field(ONAM, "Execute")
 }
 
-record(mbbi, "$(P)$(R)PROFILE_EXECUTE_STATE_RBV") {
+record(mbbi, "$(P)$(R)ProfileExecuteState_RBV") {
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PROFILE_EXECUTE_STATE")
   field(ZRVL, "0")
@@ -255,7 +245,7 @@ record(mbbi, "$(P)$(R)PROFILE_EXECUTE_STATE_RBV") {
   field(SCAN, "I/O Intr")
 }
 
-record(mbbi, "$(P)$(R)PROFILE_EXECUTE_STATUS_RBV") {
+record(mbbi, "$(P)$(R)ProfileExecuteStatus_RBV") {
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PROFILE_EXECUTE_STATUS")
   field(ZRVL, "0")
@@ -276,7 +266,7 @@ record(mbbi, "$(P)$(R)PROFILE_EXECUTE_STATUS_RBV") {
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)PROFILE_EXECUTE_MESSAGE_RBV")
+record(waveform, "$(P)$(R)ProfileExecuteMessage_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PROFILE_EXECUTE_MESSAGE")
@@ -290,7 +280,7 @@ record(waveform, "$(P)$(R)PROFILE_EXECUTE_MESSAGE_RBV")
 #                                                                 #
 ###################################################################
 
-record(bo, "$(P)$(R)PROFILE_ABORT") {
+record(bo, "$(P)$(R)ProfileAbort") {
   field(DTYP, "asynInt32")
   field(OUT, "@asyn($(PORT),0)PROFILE_ABORT")
 }
@@ -300,13 +290,13 @@ record(bo, "$(P)$(R)PROFILE_ABORT") {
 #                                                                 #
 ###################################################################
 
-record(longout, "$(P)$(R)TSCAN_PROG_NO") {
+record(longout, "$(P)$(R)TscanProgNo") {
   field(DESC, "Trajectory program number")
   field(DTYP, "asynInt32")
   field(OUT, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG")
 }
 
-record(longin, "$(P)$(R)TSCAN_PROG_NO_RBV") {
+record(longin, "$(P)$(R)TscanProgNo_RBV") {
   field(DESC, "Trajectory program number")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG")
@@ -318,42 +308,42 @@ record(longin, "$(P)$(R)TSCAN_PROG_NO_RBV") {
 #                                                                 #
 ###################################################################
 
-record(longin, "$(P)$(R)BUFFER_A_ADDRESS_RBV") {
+record(longin, "$(P)$(R)BufferAAddress_RBV") {
   field(DESC, "PMAC address of buffer A")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_ADRA")
   field(SCAN, "I/O Intr")  
 }
 
-record(longin, "$(P)$(R)BUFFER_B_ADDRESS_RBV") {
+record(longin, "$(P)$(R)BufferBAddress_RBV") {
   field(DESC, "PMAC address of buffer B")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_ADRB")
   field(SCAN, "I/O Intr")  
 }
 
-record(longin, "$(P)$(R)BUFFER_LENGTH_RBV") {
+record(longin, "$(P)$(R)BufferLength_RBV") {
   field(DESC, "Length of trajectory buffers")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_LENGTH")
   field(SCAN, "I/O Intr")  
 }
 
-record(longin, "$(P)$(R)CURRENT_INDEX_RBV") {
+record(longin, "$(P)$(R)CurrentIndex_RBV") {
   field(DESC, "Current PMAC index of buffer")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_INDEX")
   field(SCAN, "I/O Intr")  
 }
 
-record(longin, "$(P)$(R)TOTAL_POINTS_RBV") {
+record(longin, "$(P)$(R)TotalPoints_RBV") {
   field(DESC, "Total points scanned")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_POINTS")
   field(SCAN, "I/O Intr")  
 }
 
-record(bi, "$(P)$(R)CURRENT_BUFFER_RBV") {
+record(bi, "$(P)$(R)CurrentBuffer_RBV") {
   field(DESC, "Current PMAC buffer in use")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CBUFF")
@@ -362,7 +352,7 @@ record(bi, "$(P)$(R)CURRENT_BUFFER_RBV") {
   field(SCAN, "I/O Intr")  
 }
 
-record(mbbi, "$(P)$(R)TRAJECTORY_STATUS_RBV") {
+record(mbbi, "$(P)$(R)TrajectoryStatus_RBV") {
   field(DESC, "Current PMAC trajectory status")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_STATUS")
@@ -382,35 +372,35 @@ record(mbbi, "$(P)$(R)TRAJECTORY_STATUS_RBV") {
 #                                                                 #
 ###################################################################
 
-record(longin, "$(P)$(R)EPICS_BUFFER_A_PTR_RBV") {
+record(longin, "$(P)$(R)EpicsBufferAPtr_RBV") {
   field(DESC, "Current EPICS buffer A Ptr")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_FILLA")
   field(SCAN, "I/O Intr")  
 }
 
-record(longin, "$(P)$(R)EPICS_BUFFER_B_PTR_RBV") {
+record(longin, "$(P)$(R)EpicsBufferBPtr_RBV") {
   field(DESC, "Current EPICS buffer B Ptr")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_FILLB")
   field(SCAN, "I/O Intr")  
 }
 
-record(ai, "$(P)$(R)TSCAN_TIME_RBV") {
+record(ai, "$(P)$(R)TscanTime_RBV") {
   field(DESC, "Time of scan (s)")
   field(DTYP, "asynFloat64")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_TIME")
   field(SCAN, "I/O Intr")  
 }
 
-record(longin, "$(P)$(R)TSCAN_CS_RBV") {
+record(longin, "$(P)$(R)TscanCs_RBV") {
   field(DESC, "CS Number of current scan")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CS")
   field(SCAN, "I/O Intr")  
 }
 
-record(ai, "$(P)$(R)TSCAN_PERCENT_RBV") {
+record(ai, "$(P)$(R)TscanPercent_RBV") {
   field(DESC, "Time of scan (s)")
   field(DTYP, "asynFloat64")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_PERCENT")
@@ -418,7 +408,7 @@ record(ai, "$(P)$(R)TSCAN_PERCENT_RBV") {
   field(EGU, "%")  
 }
 
-record(mbbi, "$(P)$(R)TSCAN_EXT_STATUS_RBV") {
+record(mbbi, "$(P)$(R)TscanExtStatus_RBV") {
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_ESTATUS")
   field(ZRVL, "0")

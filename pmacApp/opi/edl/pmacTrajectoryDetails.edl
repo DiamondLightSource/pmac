@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 455
-y 93
+x 457
+y 119
 w 768
 h 606
 font "arial-bold-r-12.0"
@@ -159,7 +159,7 @@ x 535
 y 70
 w 75
 h 20
-controlPv "$(P)$(R)PROFILE_NUM_POINTS"
+controlPv "$(P)$(R)ProfileNumPoints_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -199,7 +199,7 @@ x 460
 y 70
 w 70
 h 20
-controlPv "$(P)$(R)PROFILE_NUM_POINTS"
+controlPv "$(P)$(R)ProfileNumPoints"
 fgColor index 25
 fgAlarm
 bgColor index 3
