@@ -5,7 +5,7 @@
 # % macro, NAXES,   Number of axes
 
 # This associates the template with an edm screen
-# % gui, $(PORT), edmtab, pmacTrajectory.edl, P=$(P),R=$(R)
+# % gui, $(name=), edm, pmacTrajectory.edl, P=$(P),R=$(R)
 
 
 record(longin, "$(P)$(R)ProfileNaxes") {
