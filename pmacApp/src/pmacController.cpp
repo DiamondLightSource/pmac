@@ -339,15 +339,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_ProfileResXString,       asynParamFloat64,      &PMAC_C_ProfileResX_);
   createParam(PMAC_C_ProfileResYString,       asynParamFloat64,      &PMAC_C_ProfileResY_);
   createParam(PMAC_C_ProfileResZString,       asynParamFloat64,      &PMAC_C_ProfileResZ_);
-  createParam(PMAC_C_ProfileDefaultAString,   asynParamFloat64,      &PMAC_C_ProfileDefaultA_);
-  createParam(PMAC_C_ProfileDefaultBString,   asynParamFloat64,      &PMAC_C_ProfileDefaultB_);
-  createParam(PMAC_C_ProfileDefaultCString,   asynParamFloat64,      &PMAC_C_ProfileDefaultC_);
-  createParam(PMAC_C_ProfileDefaultUString,   asynParamFloat64,      &PMAC_C_ProfileDefaultU_);
-  createParam(PMAC_C_ProfileDefaultVString,   asynParamFloat64,      &PMAC_C_ProfileDefaultV_);
-  createParam(PMAC_C_ProfileDefaultWString,   asynParamFloat64,      &PMAC_C_ProfileDefaultW_);
-  createParam(PMAC_C_ProfileDefaultXString,   asynParamFloat64,      &PMAC_C_ProfileDefaultX_);
-  createParam(PMAC_C_ProfileDefaultYString,   asynParamFloat64,      &PMAC_C_ProfileDefaultY_);
-  createParam(PMAC_C_ProfileDefaultZString,   asynParamFloat64,      &PMAC_C_ProfileDefaultZ_);
   createParam(PMAC_C_ProfileUserString,       asynParamInt32Array,   &PMAC_C_ProfileUser_);
   createParam(PMAC_C_ProfileVelModeString,    asynParamInt32Array,   &PMAC_C_ProfileVelMode_);
   createParam(PMAC_C_TrajBufferLengthString,  asynParamInt32,        &PMAC_C_TrajBufferLength_);
@@ -431,15 +422,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetX_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetY_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetZ_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileDefaultA_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileDefaultB_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileDefaultC_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileDefaultU_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileDefaultV_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileDefaultW_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileDefaultX_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileDefaultY_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileDefaultZ_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE) == asynSuccess) && paramStatus);
   paramStatus = ((setDoubleParam(PMAC_C_TrajRunTime_, 0.0) == asynSuccess) && paramStatus);
@@ -2470,15 +2452,15 @@ void pmacController::trajectoryTask()
       this->immediateWriteRead(cmd, response);
 
       // Now send to the PMAC the default position for all axes
-      position_index = PMAC_C_ProfileDefaultA_;
-      for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
-        getDoubleParam(position_index, &position);
-        sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
-        debug(DEBUG_TRACE, functionName, "Sending current position for axis", cmd);
-        this->immediateWriteRead(cmd, response);
-        sprintf(cmd, "M%d=%f", (PMAC_TRAJ_CURR_DMD+index), position);
-        this->immediateWriteRead(cmd, response);
-        position_index++;
+      //position_index = PMAC_C_ProfileDefaultA_;
+      //for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
+      //  getDoubleParam(position_index, &position);
+      //  sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
+      //  debug(DEBUG_TRACE, functionName, "Sending current position for axis", cmd);
+      //  this->immediateWriteRead(cmd, response);
+      //  sprintf(cmd, "M%d=%f", (PMAC_TRAJ_CURR_DMD+index), position);
+      //  this->immediateWriteRead(cmd, response);
+      //  position_index++;
 /*        //if ((1<<index & tScanAxisMask_) > 0){
           if(tScanCSNo_ == 1){
             // Special case CS 1 means use real motors
@@ -2503,7 +2485,7 @@ void pmacController::trajectoryTask()
             }
           }
         //}*/
-      }
+      //}
 
       // We are ready to execute the start demand
       getIntegerParam(PMAC_C_TrajProg_, &progNo);

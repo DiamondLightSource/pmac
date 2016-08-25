@@ -485,22 +485,6 @@ record(ai, "$(P)$(R)A:Resolution_RBV") {
   field(SCAN, "I/O Intr")  
 }
 
-# Default axis position
-record(ao,"$(P)$(R)A:Default") {
-    field(DESC, "Axis A default position")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_A")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(P)$(R)A:Default_RBV") {
-  field(DESC, "Axis A default position")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_A")
-  field(SCAN, "I/O Intr")  
-}
-
 ###################################################################
 #  Axis B Trajectory Scan Records                                 # 
 #                                                                 #
@@ -563,22 +547,6 @@ record(ai, "$(P)$(R)B:Resolution_RBV") {
   field(DESC, "Axis B resolution")
   field(DTYP, "asynFloat64")
   field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_B")
-  field(SCAN, "I/O Intr")  
-}
-
-# Default axis position
-record(ao,"$(P)$(R)B:Default") {
-    field(DESC, "Axis B default position")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_B")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(P)$(R)B:Default_RBV") {
-  field(DESC, "Axis B default position")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_B")
   field(SCAN, "I/O Intr")  
 }
 
@@ -647,22 +615,6 @@ record(ai, "$(P)$(R)C:Resolution_RBV") {
   field(SCAN, "I/O Intr")  
 }
 
-# Default axis position
-record(ao,"$(P)$(R)C:Default") {
-    field(DESC, "Axis C default position")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_C")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(P)$(R)C:Default_RBV") {
-  field(DESC, "Axis C default position")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_C")
-  field(SCAN, "I/O Intr")  
-}
-
 ###################################################################
 #  Axis U Trajectory Scan Records                                 # 
 #                                                                 #
@@ -725,22 +677,6 @@ record(ai, "$(P)$(R)U:Resolution_RBV") {
   field(DESC, "Axis U resolution")
   field(DTYP, "asynFloat64")
   field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_U")
-  field(SCAN, "I/O Intr")  
-}
-
-# Default axis position
-record(ao,"$(P)$(R)U:Default") {
-    field(DESC, "Axis U default position")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_U")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(P)$(R)U:Default_RBV") {
-  field(DESC, "Axis U default position")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_U")
   field(SCAN, "I/O Intr")  
 }
 
@@ -809,22 +745,6 @@ record(ai, "$(P)$(R)V:Resolution_RBV") {
   field(SCAN, "I/O Intr")  
 }
 
-# Default axis position
-record(ao,"$(P)$(R)V:Default") {
-    field(DESC, "Axis V default position")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_V")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(P)$(R)V:Default_RBV") {
-  field(DESC, "Axis V default position")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_V")
-  field(SCAN, "I/O Intr")  
-}
-
 ###################################################################
 #  Axis W Trajectory Scan Records                                 # 
 #                                                                 #
@@ -887,22 +807,6 @@ record(ai, "$(P)$(R)W:Resolution_RBV") {
   field(DESC, "Axis W resolution")
   field(DTYP, "asynFloat64")
   field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_W")
-  field(SCAN, "I/O Intr")  
-}
-
-# Default axis position
-record(ao,"$(P)$(R)W:Default") {
-    field(DESC, "Axis W default position")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_W")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(P)$(R)W:Default_RBV") {
-  field(DESC, "Axis W default position")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_W")
   field(SCAN, "I/O Intr")  
 }
 
@@ -971,22 +875,6 @@ record(ai, "$(P)$(R)X:Resolution_RBV") {
   field(SCAN, "I/O Intr")  
 }
 
-# Default axis position
-record(ao,"$(P)$(R)X:Default") {
-    field(DESC, "Axis X default position")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_X")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(P)$(R)X:Default_RBV") {
-  field(DESC, "Axis X default position")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_X")
-  field(SCAN, "I/O Intr")  
-}
-
 ###################################################################
 #  Axis Y Trajectory Scan Records                                 # 
 #                                                                 #
@@ -1052,22 +940,6 @@ record(ai, "$(P)$(R)Y:Resolution_RBV") {
   field(SCAN, "I/O Intr")  
 }
 
-# Default axis position
-record(ao,"$(P)$(R)Y:Default") {
-    field(DESC, "Axis Y default position")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_Y")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(P)$(R)Y:Default_RBV") {
-  field(DESC, "Axis Y default position")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_Y")
-  field(SCAN, "I/O Intr")  
-}
-
 ###################################################################
 #  Axis Z Trajectory Scan Records                                 # 
 #                                                                 #
@@ -1130,21 +1002,5 @@ record(ai, "$(P)$(R)Z:Resolution_RBV") {
   field(DESC, "Axis Z resolution")
   field(DTYP, "asynFloat64")
   field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_Z")
-  field(SCAN, "I/O Intr")  
-}
-
-# Default axis position
-record(ao,"$(P)$(R)Z:Default") {
-    field(DESC, "Axis Z default position")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_DEFAULT_Z")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(P)$(R)Z:Default_RBV") {
-  field(DESC, "Axis Z default position")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_DEFAULT_Z")
   field(SCAN, "I/O Intr")  
 }
