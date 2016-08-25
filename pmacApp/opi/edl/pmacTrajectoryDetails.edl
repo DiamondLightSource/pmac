@@ -3,9 +3,9 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 455
-y 93
-w 768
+x 457
+y 119
+w 641
 h 606
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
@@ -32,7 +32,7 @@ minor 0
 release 0
 x 0
 y 0
-w 775
+w 640
 h 605
 lineColor index 5
 fill
@@ -47,8 +47,8 @@ minor 0
 release 0
 x 455
 y 15
-w 305
-h 105
+w 175
+h 265
 lineColor index 14
 fill
 fillColor index 3
@@ -62,7 +62,7 @@ minor 0
 release 0
 x 10
 y 295
-w 750
+w 620
 h 265
 lineColor index 14
 fill
@@ -159,7 +159,7 @@ x 535
 y 70
 w 75
 h 20
-controlPv "$(P)$(R)PROFILE_NUM_POINTS"
+controlPv "$(P)$(R)ProfileNumPoints_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -199,7 +199,7 @@ x 460
 y 70
 w 70
 h 20
-controlPv "$(P)$(R)PROFILE_NUM_POINTS"
+controlPv "$(P)$(R)ProfileNumPoints"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -2137,197 +2137,6 @@ value {
 }
 endObjectProperties
 
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 355
-y 330
-w 60
-h 20
-controlPv "$(P)$(R)A:Default"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 355
-y 305
-w 130
-h 20
-font "helvetica-bold-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Default Demand"
-}
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 355
-y 355
-w 60
-h 20
-controlPv "$(P)$(R)B:Default"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 355
-y 380
-w 60
-h 20
-controlPv "$(P)$(R)C:Default"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 355
-y 405
-w 60
-h 20
-controlPv "$(P)$(R)U:Default"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 355
-y 430
-w 60
-h 20
-controlPv "$(P)$(R)V:Default"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 355
-y 455
-w 60
-h 20
-controlPv "$(P)$(R)W:Default"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 355
-y 480
-w 60
-h 20
-controlPv "$(P)$(R)X:Default"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 355
-y 505
-w 60
-h 20
-controlPv "$(P)$(R)Y:Default"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 355
-y 530
-w 60
-h 20
-controlPv "$(P)$(R)Z:Default"
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
 # (Menu Button)
 object activeMenuButtonClass
 beginObjectProperties
@@ -2374,7 +2183,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 490
+x 350
 y 330
 w 60
 h 20
@@ -2394,7 +2203,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 625
+x 485
 y 330
 w 60
 h 20
@@ -2414,7 +2223,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 555
+x 415
 y 330
 w 65
 h 20
@@ -2435,32 +2244,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 690
+x 550
 y 330
 w 65
 h 20
 controlPv "$(P)$(R)A:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 330
-w 65
-h 20
-controlPv "$(P)$(R)A:Default_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2477,7 +2265,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 490
+x 350
 y 355
 w 60
 h 20
@@ -2497,7 +2285,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 625
+x 485
 y 355
 w 60
 h 20
@@ -2517,7 +2305,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 555
+x 415
 y 355
 w 65
 h 20
@@ -2538,32 +2326,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 690
+x 550
 y 355
 w 65
 h 20
 controlPv "$(P)$(R)B:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 355
-w 65
-h 20
-controlPv "$(P)$(R)B:Default_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2580,7 +2347,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 490
+x 350
 y 380
 w 60
 h 20
@@ -2600,7 +2367,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 625
+x 485
 y 380
 w 60
 h 20
@@ -2620,7 +2387,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 555
+x 415
 y 380
 w 65
 h 20
@@ -2641,32 +2408,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 690
+x 550
 y 380
 w 65
 h 20
 controlPv "$(P)$(R)C:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 380
-w 65
-h 20
-controlPv "$(P)$(R)C:Default_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2683,7 +2429,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 490
+x 350
 y 405
 w 60
 h 20
@@ -2703,7 +2449,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 625
+x 485
 y 405
 w 60
 h 20
@@ -2723,7 +2469,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 555
+x 415
 y 405
 w 65
 h 20
@@ -2744,32 +2490,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 690
+x 550
 y 405
 w 65
 h 20
 controlPv "$(P)$(R)U:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 405
-w 65
-h 20
-controlPv "$(P)$(R)U:Default_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2786,7 +2511,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 490
+x 350
 y 430
 w 60
 h 20
@@ -2806,7 +2531,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 625
+x 485
 y 430
 w 60
 h 20
@@ -2826,7 +2551,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 555
+x 415
 y 430
 w 65
 h 20
@@ -2847,32 +2572,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 690
+x 550
 y 430
 w 65
 h 20
 controlPv "$(P)$(R)V:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 430
-w 65
-h 20
-controlPv "$(P)$(R)V:Default_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2889,7 +2593,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 490
+x 350
 y 455
 w 60
 h 20
@@ -2909,7 +2613,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 625
+x 485
 y 455
 w 60
 h 20
@@ -2929,7 +2633,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 555
+x 415
 y 455
 w 65
 h 20
@@ -2950,32 +2654,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 690
+x 550
 y 455
 w 65
 h 20
 controlPv "$(P)$(R)W:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 455
-w 65
-h 20
-controlPv "$(P)$(R)W:Default_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2992,7 +2675,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 490
+x 350
 y 480
 w 60
 h 20
@@ -3012,7 +2695,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 625
+x 485
 y 480
 w 60
 h 20
@@ -3032,7 +2715,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 555
+x 415
 y 480
 w 65
 h 20
@@ -3053,32 +2736,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 690
+x 550
 y 480
 w 65
 h 20
 controlPv "$(P)$(R)X:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 480
-w 65
-h 20
-controlPv "$(P)$(R)X:Default_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -3095,7 +2757,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 490
+x 350
 y 505
 w 60
 h 20
@@ -3115,7 +2777,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 625
+x 485
 y 505
 w 60
 h 20
@@ -3135,7 +2797,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 555
+x 415
 y 505
 w 65
 h 20
@@ -3156,32 +2818,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 690
+x 550
 y 505
 w 65
 h 20
 controlPv "$(P)$(R)Y:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 505
-w 65
-h 20
-controlPv "$(P)$(R)Y:Default_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -3198,7 +2839,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 490
+x 350
 y 530
 w 60
 h 20
@@ -3218,7 +2859,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 625
+x 485
 y 530
 w 60
 h 20
@@ -3238,7 +2879,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 555
+x 415
 y 530
 w 65
 h 20
@@ -3259,32 +2900,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 690
+x 550
 y 530
 w 65
 h 20
 controlPv "$(P)$(R)Z:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 530
-w 65
-h 20
-controlPv "$(P)$(R)Z:Default_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -3301,7 +2921,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 490
+x 350
 y 305
 w 130
 h 20
@@ -3321,7 +2941,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 625
+x 485
 y 305
 w 130
 h 20
@@ -3341,7 +2961,7 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 630
+x 495
 y 570
 w 130
 h 25

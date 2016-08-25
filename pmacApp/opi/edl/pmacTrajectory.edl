@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 766
-y 171
+x 794
+y 170
 w 451
 h 762
 font "arial-bold-r-12.0"
@@ -97,7 +97,7 @@ x 140
 y 255
 w 75
 h 20
-controlPv "$(P)$(R)BUFFER_A_ADDRESS_RBV"
+controlPv "$(P)$(R)BufferAAddress_RBV"
 displayMode "hex"
 fgColor index 16
 fgAlarm
@@ -117,7 +117,7 @@ x 140
 y 280
 w 75
 h 20
-controlPv "$(P)$(R)BUFFER_B_ADDRESS_RBV"
+controlPv "$(P)$(R)BufferBAddress_RBV"
 displayMode "hex"
 fgColor index 16
 fgAlarm
@@ -175,7 +175,7 @@ x 140
 y 305
 w 75
 h 20
-controlPv "$(P)$(R)BUFFER_LENGTH_RBV"
+controlPv "$(P)$(R)BufferLength_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -214,7 +214,7 @@ x 140
 y 330
 w 75
 h 20
-controlPv "$(P)$(R)CURRENT_BUFFER_RBV"
+controlPv "$(P)$(R)CurrentBuffer_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -234,7 +234,7 @@ x 140
 y 355
 w 75
 h 20
-controlPv "$(P)$(R)CURRENT_INDEX_RBV"
+controlPv "$(P)$(R)CurrentIndex_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -292,7 +292,7 @@ x 140
 y 380
 w 75
 h 20
-controlPv "$(P)$(R)TOTAL_POINTS_RBV"
+controlPv "$(P)$(R)TotalPoints_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -331,7 +331,7 @@ x 140
 y 405
 w 75
 h 20
-controlPv "$(P)$(R)TRAJECTORY_STATUS_RBV"
+controlPv "$(P)$(R)TrajectoryStatus_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -428,7 +428,7 @@ x 320
 y 85
 w 115
 h 20
-controlPv "$(P)$(R)PROFILE_BUILD_STATE_RBV"
+controlPv "$(P)$(R)ProfileBuildState_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -447,7 +447,7 @@ x 15
 y 110
 w 420
 h 20
-controlPv "$(P)$(R)PROFILE_BUILD_MESSAGE_RBV"
+controlPv "$(P)$(R)ProfileBuildMessage_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -485,7 +485,7 @@ x 165
 y 85
 w 115
 h 20
-controlPv "$(P)$(R)PROFILE_BUILD_STATUS_RBV"
+controlPv "$(P)$(R)ProfileBuildStatus_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -558,7 +558,7 @@ x 320
 y 170
 w 115
 h 20
-controlPv "$(P)$(R)PROFILE_EXECUTE_STATE_RBV"
+controlPv "$(P)$(R)ProfileExecuteState_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -577,7 +577,7 @@ x 15
 y 195
 w 420
 h 20
-controlPv "$(P)$(R)PROFILE_EXECUTE_MESSAGE_RBV"
+controlPv "$(P)$(R)ProfileExecuteMessage_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -615,7 +615,7 @@ x 170
 y 170
 w 110
 h 20
-controlPv "$(P)$(R)PROFILE_EXECUTE_STATUS_RBV"
+controlPv "$(P)$(R)ProfileExecuteStatus_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -669,7 +669,7 @@ x 360
 y 255
 w 75
 h 20
-controlPv "$(P)$(R)EPICS_BUFFER_A_PTR_RBV"
+controlPv "$(P)$(R)EpicsBufferAPtr_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -727,7 +727,7 @@ x 360
 y 305
 w 75
 h 20
-controlPv "$(P)$(R)PROFILE_NUM_POINTS_RBV"
+controlPv "$(P)$(R)ProfileNumPoints_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -766,7 +766,7 @@ x 360
 y 330
 w 75
 h 20
-controlPv "$(P)$(R)TSCAN_TIME_RBV"
+controlPv "$(P)$(R)TscanTime_RBV"
 displayMode "decimal"
 precision 2
 fgColor index 16
@@ -787,7 +787,7 @@ x 360
 y 355
 w 75
 h 20
-controlPv "$(P)$(R)TSCAN_CS_RBV"
+controlPv "$(P)$(R)TscanCs_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -845,7 +845,7 @@ x 360
 y 380
 w 75
 h 20
-controlPv "$(P)$(R)TSCAN_PERCENT_RBV"
+controlPv "$(P)$(R)TscanPercent_RBV"
 displayMode "decimal"
 precision 2
 fgColor index 16
@@ -904,7 +904,7 @@ x 360
 y 280
 w 75
 h 20
-controlPv "$(P)$(R)EPICS_BUFFER_B_PTR_RBV"
+controlPv "$(P)$(R)EpicsBufferBPtr_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -929,7 +929,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)PROFILE_ABORT"
+controlPv "$(P)$(R)ProfileAbort"
 pressValue "0"
 onLabel "Abort"
 offLabel "Abort"
@@ -948,7 +948,7 @@ x 360
 y 405
 w 75
 h 20
-controlPv "$(P)$(R)TSCAN_EXT_STATUS_RBV"
+controlPv "$(P)$(R)TscanExtStatus_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -971,7 +971,7 @@ h 45
 indicatorColor index 25
 fgColor index 14
 bgColor index 3
-indicatorPv "$(P)$(R)TSCAN_PERCENT_RBV"
+indicatorPv "$(P)$(R)TscanPercent_RBV"
 showScale
 font "arial-bold-r-12.0"
 labelTicks "5"
@@ -1151,7 +1151,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)PROFILE_BUILD.PROC"
+controlPv "$(P)$(R)ProfileBuild.PROC"
 pressValue "1"
 onLabel "Build Profile"
 offLabel "Build Profile"
@@ -1175,7 +1175,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)PROFILE_EXECUTE.PROC"
+controlPv "$(P)$(R)ProfileExecute.PROC"
 pressValue "1"
 onLabel "Execute Profile"
 offLabel "Execute Profile"
@@ -1229,7 +1229,7 @@ x 95
 y 25
 w 100
 h 20
-controlPv "$(P)$(R)PROFILE_CS_NAME"
+controlPv "$(P)$(R)ProfileCsName"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -1248,7 +1248,7 @@ x 205
 y 25
 w 100
 h 20
-controlPv "$(P)$(R)PROFILE_CS_NAME_RBV"
+controlPv "$(P)$(R)ProfileCsName_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
