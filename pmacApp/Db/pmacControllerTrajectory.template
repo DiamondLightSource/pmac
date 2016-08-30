@@ -8,6 +8,12 @@
 # % gui, $(name=), edm, pmacTrajectory.edl, P=$(P),R=$(R)
 
 
+record(longout, "$(P)$(R)CsManualAssign") {
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_GROUP_EXECUTE")
+}
+
+
 record(longin, "$(P)$(R)ProfileNaxes") {
   field(PINI, "YES")
   field(VAL, "$(NAXES)")
@@ -152,17 +158,32 @@ record(ai, "$(P)$(R)ProfileAcceleration_RBV") {
 #                                                                 #
 ###################################################################
 
-record(stringout, "$(P)$(R)ProfileCsName") {
-  field(DTYP, "asynOctetWrite")
-  field(OUT, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
+#record(stringout, "$(P)$(R)ProfileCsName") {
+#  field(DTYP, "asynOctetWrite")
+#  field(OUT, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
+#}
+
+record(mbbo, "$(P)$(R)ProfileCsName") 
+{
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT) 0)PMAC_C_TRAJ_CS_PORT")
+  field(PINI, "YES")
+  field(VAL,  "0")  
 }
 
-record(stringin, "$(P)$(R)ProfileCsName_RBV") {
-  field(DTYP, "asynOctetRead")
-  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
-  field(SCAN, "I/O Intr")  
-}
+#record(stringin, "$(P)$(R)ProfileCsName_RBV") {
+#  field(DTYP, "asynOctetRead")
+#  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CS_PORT")
+#  field(SCAN, "I/O Intr")  
+#}
 
+record(mbbi, "$(P)$(R)ProfileCsName_RBV") 
+{
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT) 0)PMAC_C_TRAJ_CS_PORT")
+  field(SCAN, "I/O Intr")
+  field(VAL,  "0")
+}
 
 ###################################################################
 #  These records control trajectory scan building (pre-execute)   # 

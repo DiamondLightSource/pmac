@@ -125,10 +125,6 @@ record(mbbi, "$(P)$(R)COORDINATE_SYS_GROUP_RBV")
 #}
 
 
-record(longout, "$(P)$(R)ASSIGN:CS_EXECUTE") {
-  field(DTYP, "asynInt32")
-  field(OUT, "@asyn($(PORT),0)PMAC_C_GROUP_EXECUTE")
-}
 
 
 ##############################################################

@@ -200,8 +200,8 @@ static void trajTaskC(void *drvPvt)
 pmacController::pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, 
 			       int numAxes, double movingPollPeriod, double idlePollPeriod)
   : asynMotorController(portName, numAxes+1, NUM_MOTOR_DRIVER_PARAMS+NUM_PMAC_PARAMS,
-      asynInt32ArrayMask, // For user mode and velocity mode
-			0, // No addition interrupt interfaces
+      asynEnumMask | asynInt32ArrayMask, // For user mode and velocity mode
+      asynEnumMask, // No addition interrupt interfaces
 			ASYN_CANBLOCK | ASYN_MULTIDEVICE, 
 			1, // autoconnect
 			0, 0),  // Default priority and stack size
@@ -278,8 +278,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_FeedRatePollString,      asynParamInt32,        &PMAC_C_FeedRatePoll_);
   createParam(PMAC_C_FeedRateProblemString,   asynParamInt32,        &PMAC_C_FeedRateProblem_);
   createParam(PMAC_C_CoordSysGroup,           asynParamInt32,        &PMAC_C_CoordSysGroup_);
-  createParam(PMAC_C_GroupCSPortString,       asynParamOctet,        &PMAC_C_GroupCSPort_);
-  createParam(PMAC_C_GroupCSPortRBVString,    asynParamOctet,        &PMAC_C_GroupCSPortRBV_);
+  createParam(PMAC_C_GroupCSPortString,       asynParamInt32,        &PMAC_C_GroupCSPort_);
+  createParam(PMAC_C_GroupCSPortRBVString,    asynParamInt32,        &PMAC_C_GroupCSPortRBV_);
   createParam(PMAC_C_GroupAssignString,       asynParamOctet,        &PMAC_C_GroupAssign_);
   createParam(PMAC_C_GroupAssignRBVString,    asynParamOctet,        &PMAC_C_GroupAssignRBV_);
   createParam(PMAC_C_GroupExecuteString,      asynParamInt32,        &PMAC_C_GroupExecute_);
@@ -352,7 +352,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_TrajBuffFillBString,     asynParamInt32,        &PMAC_C_TrajBuffFillB_);
   createParam(PMAC_C_TrajRunTimeString,       asynParamFloat64,      &PMAC_C_TrajRunTime_);
   createParam(PMAC_C_TrajCSNumberString,      asynParamInt32,        &PMAC_C_TrajCSNumber_);
-  createParam(PMAC_C_TrajCSPortString,        asynParamOctet,        &PMAC_C_TrajCSPort_);
+//  createParam(PMAC_C_TrajCSPortString,        asynParamOctet,        &PMAC_C_TrajCSPort_);
+  createParam(PMAC_C_TrajCSPortString,        asynParamInt32,        &PMAC_C_TrajCSPort_);
   createParam(PMAC_C_TrajPercentString,       asynParamFloat64,      &PMAC_C_TrajPercent_);
   createParam(PMAC_C_TrajEStatusString,       asynParamInt32,        &PMAC_C_TrajEStatus_);
   createParam(PMAC_C_TrajProgString,          asynParamInt32,        &PMAC_C_TrajProg_);
@@ -398,8 +399,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setDoubleParam(PMAC_C_FastUpdateTime_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_CoordSysGroup_, 0) == asynSuccess) && paramStatus);
   for (int axis = 0; axis <= numAxes; axis++){
-    paramStatus = ((setStringParam(axis, PMAC_C_GroupCSPort_, "") == asynSuccess) && paramStatus);
-    paramStatus = ((setStringParam(axis, PMAC_C_GroupCSPortRBV_, "") == asynSuccess) && paramStatus);
+    paramStatus = ((setIntegerParam(axis, PMAC_C_GroupCSPort_, 0) == asynSuccess) && paramStatus);
+    paramStatus = ((setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0) == asynSuccess) && paramStatus);
     paramStatus = ((setStringParam(axis, PMAC_C_GroupAssign_, "") == asynSuccess) && paramStatus);
     paramStatus = ((setStringParam(axis, PMAC_C_GroupAssignRBV_, "") == asynSuccess) && paramStatus);
   }
@@ -426,7 +427,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE) == asynSuccess) && paramStatus);
   paramStatus = ((setDoubleParam(PMAC_C_TrajRunTime_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajCSNumber_, tScanCSNo_) == asynSuccess) && paramStatus);
-  paramStatus = ((setStringParam(PMAC_C_TrajCSPort_, "") == asynSuccess) && paramStatus);
+  //paramStatus = ((setStringParam(PMAC_C_TrajCSPort_, "") == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajEStatus_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajProg_, 1) == asynSuccess) && paramStatus);
   // Initialise the statistics
@@ -1260,9 +1261,11 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
     }
     if (axisCs > 0){
       if (pCSControllers_[axisCs]){
-        setStringParam(axis, PMAC_C_GroupCSPortRBV_, (pCSControllers_[axisCs]->getPortName()).c_str());
+        setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, axisCs);
+        //setStringParam(axis, PMAC_C_GroupCSPortRBV_, (pCSControllers_[axisCs]->getPortName()).c_str());
       } else {
-        setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
+        setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
+        //setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
       }
       sprintf(command, "&%d#%d->", axisCs, axis);
       if (sPtr->checkForItem(command)){
@@ -1273,7 +1276,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
       }
     } else {
       setStringParam(axis, PMAC_C_GroupAssignRBV_, "");
-      setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
+      setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
     }
   }
 
@@ -1894,6 +1897,47 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
 
 }
 
+asynStatus pmacController::readEnum(asynUser *pasynUser, char *strings[], int values[], int severities[], size_t nElements, size_t *nIn)
+{
+  asynStatus status = asynSuccess;
+  int function = pasynUser->reason;
+  size_t index;
+  size_t enumIndex;
+  static const char *functionName = "readEnum";
+
+  if (function == PMAC_C_TrajCSPort_ || function == PMAC_C_GroupCSPort_ || function == PMAC_C_GroupCSPortRBV_){
+    enumIndex = 0;
+    // Loop over all coordinate systems checking for valid CS
+    for (index = 0; index < PMAC_MAX_CS; index++){
+      if (index == 0 && (function == PMAC_C_GroupCSPort_ || function == PMAC_C_GroupCSPortRBV_)){
+        if (function == PMAC_C_GroupCSPort_){
+          strings[enumIndex] = epicsStrDup("None");
+        } else {
+          strings[enumIndex] = epicsStrDup("");
+        }
+        values[enumIndex] = index;
+        severities[enumIndex] = 0;
+        enumIndex++;
+      } else {
+        if (pCSControllers_[index] != NULL){
+          if (strings[enumIndex]){
+            free(strings[enumIndex]);
+          }
+          strings[enumIndex] = epicsStrDup(pCSControllers_[index]->getPortName().c_str());
+          debug(DEBUG_VARIABLE, functionName, "Reading CS port", strings[enumIndex]);
+          values[enumIndex] = index;
+          severities[enumIndex] = 0;
+          enumIndex++;
+        }
+      }
+    }
+    *nIn = enumIndex;
+  } else {
+    *nIn = 0;
+    status = asynError;
+  }
+  return status;
+}
 
 /** Returns a pointer to an pmacAxis object.
   * Returns NULL if the axis number encoded in pasynUser is invalid.
@@ -2002,19 +2046,23 @@ asynStatus pmacController::buildProfile()
 {
   asynStatus status = asynSuccess;
   int csNo = 0;
-  char csPortName[MAX_STRING_SIZE];
+  int csPort = 0;
+  std::string csPortName;
   static const char *functionName = "buildProfile";
 
   debug(DEBUG_TRACE, functionName);
 
   // Read the port name for CS to execute
-  getStringParam(PMAC_C_TrajCSPort_, MAX_STRING_SIZE, csPortName);
+  getIntegerParam(PMAC_C_TrajCSPort_, &csPort);
+  debug(DEBUG_ERROR, functionName, "csPort", csPort);
+  csPortName = pCSControllers_[csPort]->getPortName();
+  debug(DEBUG_ERROR, functionName, "csPortName", csPortName);
 
   // Check the CS port name against a CS number
-  if (strcmp(csPortName, "")){
-    if (pPortToCs_->hasKey(csPortName)){
+  if (csPortName != ""){
+    if (pPortToCs_->hasKey(csPortName.c_str())){
       // Lookup the current CS number for this axis
-      csNo = pPortToCs_->lookup(csPortName);
+      csNo = pPortToCs_->lookup(csPortName.c_str());
       // If the axis has an assigned CS no then we will use it
       if (csNo != 0){
         // Execute the build for the specified CS
@@ -2251,19 +2299,23 @@ asynStatus pmacController::executeProfile()
 {
   asynStatus status = asynSuccess;
   int csNo = 0;
-  char csPortName[MAX_STRING_SIZE];
+  int csPort = 0;
+  std::string csPortName;
   static const char *functionName = "executeProfile";
 
   debug(DEBUG_TRACE, functionName);
 
   // Read the port name for CS to execute
-  getStringParam(PMAC_C_TrajCSPort_, MAX_STRING_SIZE, csPortName);
+  getIntegerParam(PMAC_C_TrajCSPort_, &csPort);
+  debug(DEBUG_ERROR, functionName, "csPort", csPort);
+  csPortName = pCSControllers_[csPort]->getPortName();
+  debug(DEBUG_ERROR, functionName, "csPortName", csPortName);
 
   // Check the CS port name against a CS number
-  if (strcmp(csPortName, "")){
-    if (pPortToCs_->hasKey(csPortName)){
+  if (csPortName != ""){
+    if (pPortToCs_->hasKey(csPortName.c_str())){
       // Lookup the current CS number for this axis
-      csNo = pPortToCs_->lookup(csPortName);
+      csNo = pPortToCs_->lookup(csPortName.c_str());
       // If the axis has an assigned CS no then we will use it
       if (csNo != 0){
         // Execute the trajectory scan for the CS
@@ -2415,8 +2467,8 @@ void pmacController::trajectoryTask()
   int epicsBufferNumber = 0;
   int progRunning = 0;
   int progNo = 0;
-  int position_index = 0;
-  double position = 0.0;
+  //int position_index = 0;
+  //double position = 0.0;
   char response[1024];
   char cmd[1024];
   const char *functionName = "trajectoryTask";
@@ -3272,7 +3324,8 @@ asynStatus pmacController::executeManualGroup()
 {
   asynStatus status = asynSuccess;
   int csNo = 0;
-  char csPortName[MAX_STRING_SIZE];
+  int csPort = 0;
+  std::string csPortName;
   char csAssignment[MAX_STRING_SIZE];
   char cmd[PMAC_MAXBUF];
   static const char *functionName = "executeManualGroup";
@@ -3286,23 +3339,27 @@ asynStatus pmacController::executeManualGroup()
     if (this->getAxis(axis) != NULL){
       debug(DEBUG_VARIABLE, functionName, "Creating manual assignment for axis", axis);
       // Read the current CS port name for this axis
-      getStringParam(axis, PMAC_C_GroupCSPort_, MAX_STRING_SIZE, csPortName);
-      debug(DEBUG_VARIABLE, functionName, "Port name to look up", csPortName);
-      if (strcmp(csPortName, "")){
-        if (pPortToCs_->hasKey(csPortName)){
-          // Lookup the current CS number for this axis
-          csNo = pPortToCs_->lookup(csPortName);
-          // If the axis has an assigned CS no then we will use it
-          if (csNo != 0){
-            // Read the assignment string for this axis
-            getStringParam(axis, PMAC_C_GroupAssign_, MAX_STRING_SIZE, csAssignment);
-            sprintf(cmd, "%s &%d#%d->%s ", cmd, csNo, axis, csAssignment);
+      getIntegerParam(axis, PMAC_C_GroupCSPort_, &csPort);
+      debug(DEBUG_VARIABLE, functionName, "csPort", csPort);
+      if (csPort > 0){
+        csPortName = pCSControllers_[csPort]->getPortName();
+        debug(DEBUG_VARIABLE, functionName, "Port name to look up", csPortName);
+        if (strcmp(csPortName.c_str(), "")){
+          if (pPortToCs_->hasKey(csPortName.c_str())){
+            // Lookup the current CS number for this axis
+            csNo = pPortToCs_->lookup(csPortName.c_str());
+            // If the axis has an assigned CS no then we will use it
+            if (csNo != 0){
+              // Read the assignment string for this axis
+              getStringParam(axis, PMAC_C_GroupAssign_, MAX_STRING_SIZE, csAssignment);
+              sprintf(cmd, "%s &%d#%d->%s ", cmd, csNo, axis, csAssignment);
+            }
           }
         }
       }
     }
   }
-  debug(DEBUG_ERROR, functionName, "Assignment", cmd);
+  debug(DEBUG_VARIABLE, functionName, "Assignment", cmd);
 
   // Execute the manual assignment
   status = pGroupList->manualGroup(cmd);
