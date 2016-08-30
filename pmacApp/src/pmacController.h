@@ -207,6 +207,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements);
   asynStatus writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements);
   asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t nChars, size_t *nActual);
+  asynStatus readEnum(asynUser *pasynUser, char *strings[], int values[], int severities[], size_t nElements, size_t *nIn);
 
   void report(FILE *fp, int level);
   pmacAxis* getAxis(asynUser *pasynUser);

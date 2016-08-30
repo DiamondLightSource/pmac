@@ -16,7 +16,7 @@ template() {
   #! InputMacro(PORT,"",3440,3240,16777215,1,true)
 }
 
-record(ai, "$(P)$(R)M$(MOTOR):CS_RAW_RBV")
+record(ai, "$(P)$(R)M$(MOTOR):CsRaw_RBV")
 {
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(MOTOR))PMAC_C_AXIS_CS")
@@ -24,23 +24,23 @@ record(ai, "$(P)$(R)M$(MOTOR):CS_RAW_RBV")
     field(SCAN, "I/O Intr")
 }
 
-record(stringout, "$(P)$(R)M$(MOTOR):CS_PORT") {
-  field(DTYP, "asynOctetWrite")
+record(mbbo, "$(P)$(R)M$(MOTOR):CsPort") {
+  field(DTYP, "asynInt32")
   field(OUT, "@asyn($(PORT),$(MOTOR))PMAC_C_GROUP_CS_PORT")
 }
 
-record(stringin, "$(P)$(R)M$(MOTOR):CS_PORT_RBV") {
-  field(DTYP, "asynOctetRead")
+record(mbbi, "$(P)$(R)M$(MOTOR):CsPort_RBV") {
+  field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),$(MOTOR))PMAC_C_GROUP_CS_PORT_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(stringout, "$(P)$(R)M$(MOTOR):CS_AXIS") {
+record(stringout, "$(P)$(R)M$(MOTOR):CsAxis") {
   field(DTYP, "asynOctetWrite")
   field(OUT, "@asyn($(PORT),$(MOTOR))PMAC_C_GROUP_ASSIGN")
 }
 
-record(stringin, "$(P)$(R)M$(MOTOR):CS_AXIS_RBV") {
+record(stringin, "$(P)$(R)M$(MOTOR):CsAxis_RBV") {
   field(DTYP, "asynOctetRead")
   field(INP, "@asyn($(PORT),$(MOTOR))PMAC_C_GROUP_ASSIGN_RBV")
   field(SCAN, "I/O Intr")
