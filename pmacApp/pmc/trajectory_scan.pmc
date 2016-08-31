@@ -1,0 +1,301 @@
+#include "./trajectory_scan.h"
+
+; *****************************************************************************************
+; Set-Up
+; *****************************************************************************************
+
+Del Gat
+
+; Set Initial Values
+BufferLength = BuffLen                          ; BuffLen defined in header file
+BufferAdr_A = $BufferAdr                        ; BufferAdr defined in header file
+BufferAdr_B = BufferAdr_A + 10*BufferLength
+Status = 0
+Abort = 0
+Error = 0
+
+; Make sure all buffers are closed
+Close
+
+; *****************************************************************************************
+; Program
+; *****************************************************************************************
+
+Open Program ProgramNum
+Clear
+
+Abs
+FRAX(A,B,C,U,V,W,X,Y,Z)
+
+A_Adr = $BlankAdrA                    ; Reset axes pointers to default positions
+B_Adr = $BlankAdrB
+C_Adr = $BlankAdrC
+U_Adr = $BlankAdrU
+V_Adr = $BlankAdrV
+W_Adr = $BlankAdrW
+X_Adr = $BlankAdrX
+Y_Adr = $BlankAdrY
+Z_Adr = $BlankAdrZ
+
+Status = 1                          ; Reset values to defaults
+Abort = 0
+Error = 0
+Trigger = 0
+CurrentIndex = 0
+TotalPoints = 0
+P4201 = 0
+P4202 = 0
+P4203 = 0
+P4500 = 0
+
+CurrentBufferAdr = BufferAdr_A      ; Set CurrentBuffer values to buffer A
+CurrentBufferFill = BufferFill_A
+CurrentBuffer = 0
+
+PrevBufferFill = BufferLength       ; Set PrevBufferFill to pass outer while loop condition
+
+GoSub101                            ; Check which axes are required
+GoSub103                            ; Set addresses for required axes
+
+While(Abort = 0 and Error = 0 and CurrentBufferFill > 0 and PrevBufferFill = BufferLength)
+
+    CurrentIndex = 1
+    ; This loop ends when Current_* is at N-1 because then Next_* is at N
+    While(Abort = 0 and Error = 0 and CurrentIndex < CurrentBufferFill)
+
+        P4201 = P4201 + 1                   ; For debugging
+
+        Next_Time = Next_Time_N/4           ; Convert 1/4s of a ms into ms
+
+        GoSub102                            ; Shift values through Next_* -> Current_* -> Prev_*
+        GoSub103                            ; Update Next_* addresses based on incremented `CurrentIndex`
+        PVT (Time)                          ; Set move time
+        GoSub104                            ; Calculate velocities
+        GoSub108                            ; Move axes
+
+        If(User > 0)
+            GoSub(User)                     ; Run any required subroutine
+        End If
+
+        CurrentIndex = CurrentIndex + 1
+
+        ; Check for following error and run-time error
+        If(M141 = 1 or M241 = 1 or RTE = 1)
+            Error = 3
+            Status = 3
+        End If
+
+    End While
+
+    Next_Time = Next_Time_N/4               ; Convert time for last point of buffer
+    GoSub102                                ; Shift previous/current coordinates to N-1th/Nth points in buffer
+
+    ; Toggle buffer - Change address & specifier, set new buffer fill, reset previous buffer fill
+    PrevBufferFill = CurrentBufferFill      ; Update previous buffer fill - will exit while loop if it wasn't full
+    If(Abort = 0)
+        If(CurrentBuffer = 0)
+            CurrentBufferAdr = BufferAdr_B
+            CurrentBuffer = 1
+            CurrentBufferFill = BufferFill_B
+            BufferFill_A = 0
+        Else
+            CurrentBufferAdr = BufferAdr_A
+            CurrentBuffer = 0
+            CurrentBufferFill = BufferFill_A
+            BufferFill_B = 0
+        End If
+    End If
+
+    ; Move to final point of buffer if next buffer has points
+    If(Abort = 0 and CurrentBufferFill > 0)     ; Do move with previous buffer N-1 and N and current buffer 1
+
+        P4202 = P4202 + 1                   ; For debugging
+
+        CurrentIndex = 0                    ; Reset to start of next buffer
+        GoSub103                            ; Update Next_* addresses to 0th point of next buffer
+        PVT (Time)                          ; Set move time
+        GoSub104                            ; Calculate velocities
+        GoSub108                            ; Move axes to final point of previous buffer
+        If(User > 0)
+            GoSub(User)                     ; Run any required subroutine
+        End If
+    End If
+
+End While
+
+; Set finished Idle Status if no error occurred - also move to final point if scan wasn't aborted
+If(Status = 1)
+    If(Abort = 0)
+
+        P4203 = P4203 + 1       ; For debugging
+
+        PVT (Time)              ; Set move time
+        GoSub105                ; Prev->Current velocity calculation
+        GoSub108                ; Move axes
+        If(User > 0)
+            GoSub(User)         ; Run any required subroutine
+        End If
+    End If
+    Status = 2                  ; Set program finished (Idle status)
+End If
+
+Dwell 0                         ; Stop program aborting before above lines are complete
+CMD"A"                          ; Abort program so it doesn't run through Subroutines
+While(1=1)                      ; Infinite While loop to make sure
+End While
+
+; Subroutine 1 ************************************************************************************
+; Check that axes value is valid and activate required axes. The *_Axis values point to the bits of
+; AxesParser and therefore represent axis activation
+; *************************************************************************************************
+N101
+    If(Axes > 511 or Axes < 1)
+        Status = 3
+        Error = 1
+    Else
+        AxesParser = Axes   ; Set bit parsed address to set required axes
+    End If
+Return
+
+; Subroutine 2 ************************************************************************************
+; Shift coordinate buffer through; Current -> Prev and then Next -> Current
+; *************************************************************************************************
+
+N102
+    Time = Next_Time
+    User = Next_User
+    VelMode = NextVelMode
+
+    Prev_A = Current_A
+    Current_A = Next_A
+    Prev_B = Current_B
+    Current_B = Next_B
+    Prev_C = Current_C
+    Current_C = Next_C
+    Prev_U = Current_U
+    Current_U = Next_U
+    Prev_V = Current_V
+    Current_V = Next_V
+    Prev_W = Current_W
+    Current_W = Next_W
+    Prev_X = Current_X
+    Current_X = Next_X
+    Prev_Y = Current_Y
+    Current_Y = Next_Y
+    Prev_Z = Current_Z
+    Current_Z = Next_Z
+Return
+
+; Subroutine 3 ************************************************************************************
+; Assign coordinate pointers based on CurrentBufferAdr (The start address of Buffer A/B),
+; BufferLength (length of the sub-buffers) and CurrentIndex (position of Next_* pointer within the
+; sub-buffers) If the axis is not activated (see Subroutine 1), it won't be incremented and will
+; remain pointing to the BlankAdr
+; *************************************************************************************************
+
+N103
+    Time_Adr = CurrentBufferAdr + CurrentIndex
+    User_Adr = CurrentBufferAdr + CurrentIndex
+    VelMode_Adr = CurrentBufferAdr + CurrentIndex
+
+    If(A_Axis = 1)
+        A_Adr = CurrentBufferAdr + CurrentIndex + BufferLength
+    End If
+    If(B_Axis = 1)
+        B_Adr = CurrentBufferAdr + CurrentIndex + 2*BufferLength
+    End If
+    If(C_Axis = 1)
+        C_Adr = CurrentBufferAdr + CurrentIndex + 3*BufferLength
+    End If
+    If(U_Axis = 1)
+        U_Adr = CurrentBufferAdr + CurrentIndex + 4*BufferLength
+    End If
+    If(V_Axis = 1)
+        V_Adr = CurrentBufferAdr + CurrentIndex + 5*BufferLength
+    End If
+    If(W_Axis = 1)
+        W_Adr = CurrentBufferAdr + CurrentIndex + 6*BufferLength
+    End If
+    If(X_Axis = 1)
+        X_Adr = CurrentBufferAdr + CurrentIndex + 7*BufferLength
+    End If
+    If(Y_Axis = 1)
+        Y_Adr = CurrentBufferAdr + CurrentIndex + 8*BufferLength
+    End If
+    If(Z_Axis = 1)
+        Z_Adr = CurrentBufferAdr + CurrentIndex + 9*BufferLength
+    End If
+Return
+
+; Subroutines 4-7 *********************************************************************************
+; Calculate velocities for next move - 4: Master, 5: Prev->Current, 6: Prev->Next, 7: Current->Next
+; Velocities are multiplied by 1000 because the units of Time are milliseconds and the units
+; of velocity are EGUs/second in the PVT move definition
+; *************************************************************************************************
+
+N104
+    If(Time = 0)                        ; Set error and abort if demanded move time is zero
+        Status = 3
+        Error = 2
+        CMD"A"
+        Dwell 0
+        Time = 1000
+    End If
+
+    ; Select velocity calculation based on VelMode value
+    If(VelMode = 1)
+        GoSub105                          ; Prev -> Current
+    EndIf
+    If(VelMode = 0 or VelMode > 2)
+        GoSub106                          ; Prev -> Next
+    EndIf
+    If(VelMode = 2)
+        GoSub107                          ; Current -> Next
+    EndIf
+Return
+
+N105
+    A_Vel = 1000*(Current_A - Prev_A)/Time
+    B_Vel = 1000*(Current_B - Prev_B)/Time
+    C_Vel = 1000*(Current_C - Prev_C)/Time
+    U_Vel = 1000*(Current_U - Prev_U)/Time
+    V_Vel = 1000*(Current_V - Prev_V)/Time
+    W_Vel = 1000*(Current_W - Prev_W)/Time
+    X_Vel = 1000*(Current_X - Prev_X)/Time
+    Y_Vel = 1000*(Current_Y - Prev_Y)/Time
+    Z_Vel = 1000*(Current_Z - Prev_Z)/Time
+Return
+
+N106
+    A_Vel = 1000*(Next_A - Prev_A)/(Time + Next_Time)
+    B_Vel = 1000*(Next_B - Prev_B)/(Time + Next_Time)
+    C_Vel = 1000*(Next_C - Prev_C)/(Time + Next_Time)
+    U_Vel = 1000*(Next_U - Prev_U)/(Time + Next_Time)
+    V_Vel = 1000*(Next_V - Prev_V)/(Time + Next_Time)
+    W_Vel = 1000*(Next_W - Prev_W)/(Time + Next_Time)
+    X_Vel = 1000*(Next_X - Prev_X)/(Time + Next_Time)
+    Y_Vel = 1000*(Next_Y - Prev_Y)/(Time + Next_Time)
+    Z_Vel = 1000*(Next_Z - Prev_Z)/(Time + Next_Time)
+Return
+
+N107
+    A_Vel = 1000*(Next_A - Current_A)/Next_Time
+    B_Vel = 1000*(Next_B - Current_B)/Next_Time
+    C_Vel = 1000*(Next_C - Current_C)/Next_Time
+    U_Vel = 1000*(Next_U - Current_U)/Next_Time
+    V_Vel = 1000*(Next_V - Current_V)/Next_Time
+    W_Vel = 1000*(Next_W - Current_W)/Next_Time
+    X_Vel = 1000*(Next_X - Current_X)/Next_Time
+    Y_Vel = 1000*(Next_Y - Current_Y)/Next_Time
+    Z_Vel = 1000*(Next_Z - Current_Z)/Next_Time
+Return
+
+; Subroutine 8 ************************************************************************************
+; Move axes
+; Set to Q Variables before move call to shorten command - The PMAC can't process it otherwise
+; *************************************************************************************************
+
+Close
+#include "./subroutine_move_axes.pmc"
+#include "./user_subroutines.pmc"
+
