@@ -6,6 +6,7 @@ include $(TOP)/configure/CONFIG
 
 # Copy all protocol files into data directory
 DATA += $(patsubst ../%, %, $(wildcard ../*.pmc))
+DATA += $(patsubst ../%, %, $(wildcard ../*.h))
 
 include $(TOP)/configure/RULES
 endif
