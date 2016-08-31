@@ -1,0 +1,21 @@
+; This file is #included in trajectory_scan.pmc and will be downloaded automatically
+; It cannot be downloaded on its own, as it doesn't have the ProgramNum definition
+; If this needs to be downloaded separately, just include the trajectory_scan.h head file below
+
+; #include "./trajectory_scan.h"
+
+Open Program ProgramNum
+
+; User Subroutines ********************************************************************************
+; Subroutines to be used via the user buffer - 1: Set Trigger High, 2: Set Trigger Low
+; *************************************************************************************************
+
+N1
+    Trigger == 1
+Return
+
+N2
+    Trigger == 0
+Return
+
+Close
