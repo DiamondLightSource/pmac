@@ -2569,51 +2569,78 @@ void pmacController::trajectoryTask()
       }
       callParamCallbacks();
 
-      // Set a timeout of 3, equivalent to ~3 seconds
-      timeout = 3.0;
-      // Now wait until we have confirmation that the scan has started
-      while ((tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING) && tScanExecuting_ && timeout > 0.0){
-        this->unlock();
-        status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
-        this->lock();
-        timeout -= 0.1;
-      }
-      // If we have timed out then notify the operator and fail the scan
-      if (timeout <= 0.0 && (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING)){
-        // Set the execute state to done
-        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-        // Set the execute status to failure
-        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-        // Set the message accordingly
-        setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
-        // Set the executing flag to 0
-        tScanExecuting_ = 0;
-        // Notify that EPICS detected the error
-        epicsErrorDetect = 1;
-      }
-      // Now wait until we have confirmation that the motion program is executing
-      progRunning = 0;
-      // Set a timeout of 3, equivalent to ~3 seconds
-      timeout = 3.0;
-      while (progRunning == 0 && tScanExecuting_ && timeout > 0.0){
-        pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning);
-        this->unlock();
-        status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
-        this->lock();
-        timeout -= 0.1;
-      }
-      // If we have timed out then notify the operator and fail the scan
-      if (timeout <= 0.0 && progRunning == 0){
-        // Set the execute state to done
-        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-        // Set the execute status to failure
-        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-        // Set the message accordingly
-        setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
-        // Set the executing flag to 0
-        tScanExecuting_ = 0;
-        // Notify that EPICS detected the error
-        epicsErrorDetect = 1;
+      // The following checks are performed with two modes:
+      // For 10 points or more perform standard checks of waiting for the program to start
+      // For less than 10 points the scan may already complete before we can check the status
+      // so perform a much tighter check and do not report errors
+      if (tScanNumPoints_ < 10){
+        // Set a timeout of 1.0, equivalent to waiting for a single stationary fast update
+        timeout = 1.0;
+        // Now wait until we have confirmation that the scan has started
+        while ((tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING) && tScanExecuting_ && timeout > 0.0){
+          this->unlock();
+          status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
+          this->lock();
+          timeout -= 0.1;
+        }
+        // Set a timeout of 1.0, equivalent to waiting for a single stationary fast update
+        timeout = 1.0;
+        // Now wait until we have confirmation that the motion program is executing
+        progRunning = 0;
+        while (progRunning == 0 && tScanExecuting_ && timeout > 0.0){
+          pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning);
+          this->unlock();
+          status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
+          this->lock();
+          timeout -= 0.1;
+        }
+      } else {
+        // Set a timeout of 3, equivalent to ~3 seconds
+        timeout = 3.0;
+        // Now wait until we have confirmation that the scan has started
+        while ((tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING) && tScanExecuting_ && timeout > 0.0){
+          this->unlock();
+          status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
+          this->lock();
+          timeout -= 0.1;
+        }
+        // If we have timed out then notify the operator and fail the scan
+        if (timeout <= 0.0 && (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING)){
+          // Set the execute state to done
+          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+          // Set the execute status to failure
+          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
+          // Set the message accordingly
+          setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
+          // Set the executing flag to 0
+          tScanExecuting_ = 0;
+          // Notify that EPICS detected the error
+          epicsErrorDetect = 1;
+        }
+        // Now wait until we have confirmation that the motion program is executing
+        progRunning = 0;
+        // Set a timeout of 3, equivalent to ~3 seconds
+        timeout = 3.0;
+        while (progRunning == 0 && tScanExecuting_ && timeout > 0.0){
+          pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning);
+          this->unlock();
+          status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
+          this->lock();
+          timeout -= 0.1;
+        }
+        // If we have timed out then notify the operator and fail the scan
+        if (timeout <= 0.0 && progRunning == 0){
+          // Set the execute state to done
+          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+          // Set the execute status to failure
+          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
+          // Set the message accordingly
+          setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
+          // Set the executing flag to 0
+          tScanExecuting_ = 0;
+          // Notify that EPICS detected the error
+          epicsErrorDetect = 1;
+        }
       }
     }
 
