@@ -300,6 +300,26 @@ class CS(DeltaTau):
 #        print 'pmacSetCoordIdlePollPeriod(%(Ref)d, %(IdlePoll)d)' % self.__dict__
 #        print 'pmacSetCoordMovingPollPeriod(%(Ref)d, %(MovingPoll)d)' % self.__dict__
 
+class pmacSetCoordStepsPerUnit(Device):
+    """Apply an integer scale factor to an axis on the PMAC"""
+    def __init__(self, CS, Axis, Scale):
+        # init the superclass
+        self.__super.__init__()
+        # store args
+        self.__dict__.update(locals())
+        self.Ref = CS.name
+        int(self.Scale)
+        self.Scale = str(self.Scale)
+        
+    def Initialise(self):
+        print 'pmacSetCoordStepsPerUnit("%(Ref)s", %(Axis)d, %(Scale)s)' % self.__dict__
+    # __init__ arguments
+    ArgInfo = makeArgInfo(__init__,
+        CS    = Ident ('Underlying CS object', CS),
+        Axis  = Simple('Axis number to apply scale to', int),
+        Scale = Simple('Scale factor the cts will be multiplied by before being passed to motor record', float))   
+
+
 class pmacCreateCsGroup(Device):
     """Create a group of axis mappings to coordinate systems. Instantating a GeoBrickGlobalControl
     will create a PV for switching between these groups"""
