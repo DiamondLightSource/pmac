@@ -61,6 +61,8 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     asynStatus tScanCheckForErrors();
     asynStatus tScanCheckProgramRunning(int *running);
 
+    asynStatus pmacSetAxisScale(int axis, int scale);
+
   protected:
     pmacCSAxis **pAxes_; // Array of pointers to axis objects
 

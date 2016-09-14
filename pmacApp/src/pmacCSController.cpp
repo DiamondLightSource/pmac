@@ -561,6 +561,42 @@ asynStatus pmacCSController::tScanCheckProgramRunning(int *running)
   return status;
 }
 
+/**
+ * Set the PMAC axis scale factor to increase resolution in the motor record.
+ * Default value is 1.
+ * @param axis Axis number to set the PMAC axis scale factor.
+ * @param scale Scale factor to set
+ */
+asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale)
+{
+  pmacCSAxis *pA = NULL;
+  static const char *functionName = "pmacCSController::pmacSetAxisScale";
+
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
+
+  if (scale < 1) {
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n", functionName);
+    return asynError;
+  }
+
+  this->lock();
+  pA = getAxis(axis);
+  if (pA) {
+    pA->scale_ = scale;
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+              "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
+              functionName, pA->scale_, pA->axisNo_, portName);
+
+  } else {
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+        "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName, axis);
+    return asynError;
+  }
+  this->unlock();
+  return asynSuccess;
+}
+
+
 /*************************************************************************************/
 /** The following functions have C linkage, and can be called directly or from iocsh */
 
@@ -647,6 +683,28 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
   return asynSuccess;
 }
 
+/**
+ * Set the PMAC axis scale factor to increase resolution in the motor record.
+ * Default value is 10000.
+ * @param controller The Asyn port name for the PMAC controller.
+ * @param axis Axis number to set the PMAC axis scale factor.
+ * @param scale Scale factor to set
+ */
+asynStatus pmacCSSetAxisScale(const char *pmacCSName, int axis, int scale)
+{
+  pmacCSController *pC;
+  static const char *functionName = "pmacSetCSAxisScale";
+
+  pC = (pmacCSController*) findAsynPortDriver(pmacCSName);
+  if (!pC) {
+    printf("%s: Error port %s not found\n", functionName, pmacCSName);
+    return asynError;
+  }
+
+  return pC->pmacSetAxisScale(axis, scale);
+}
+
+
 /* Code for iocsh registration */
 
 /* pmacCreateController */
@@ -688,11 +746,26 @@ static void configpmacCSAxesCallFunc(const iocshArgBuf *args)
   pmacCreateCSAxes(args[0].sval, args[1].ival);
 }
 
+/* pmacCSSetAxisScale */
+static const iocshArg pmacCSSetAxisScaleArg0 = {"Controller port name", iocshArgString};
+static const iocshArg pmacCSSetAxisScaleArg1 = {"Axis number", iocshArgInt};
+static const iocshArg pmacCSSetAxisScaleArg2 = {"Scale factor", iocshArgInt};
+static const iocshArg * const pmacCSSetAxisScaleArgs[] = {&pmacCSSetAxisScaleArg0,
+                                                          &pmacCSSetAxisScaleArg1,
+                                                          &pmacCSSetAxisScaleArg2};
+static const iocshFuncDef configpmacCSSetAxisScale = {"pmacSetCoordStepsPerUnit", 3, pmacCSSetAxisScaleArgs};
+
+static void configpmacCSSetAxisScaleFunc(const iocshArgBuf *args)
+{
+  pmacCSSetAxisScale(args[0].sval, args[1].ival, args[2].ival);
+}
+
 static void pmacCSControllerRegister(void)
 {
   iocshRegister(&configpmacCreateController,   configpmacCreateCSControllerCallFunc);
   iocshRegister(&configpmacCSAxis,             configpmacCSAxisCallFunc);
   iocshRegister(&configpmacCSAxes,             configpmacCSAxesCallFunc);
+  iocshRegister(&configpmacCSSetAxisScale,     configpmacCSSetAxisScaleFunc);
 }
 epicsExportRegistrar(pmacCSControllerRegister);
 
@@ -701,6 +774,7 @@ epicsExportRegistrar(pmacCSControllerRegister);
 epicsRegisterFunction(pmacCSCreateController);
 epicsRegisterFunction(pmacCreateCSAxis);
 epicsRegisterFunction(pmacCreateCSAxes);
+epicsRegisterFunction(pmacCSSetAxisScale);
 #endif
 } // extern "C"
 
