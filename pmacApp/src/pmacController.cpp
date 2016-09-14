@@ -2054,9 +2054,9 @@ asynStatus pmacController::buildProfile()
 
   // Read the port name for CS to execute
   getIntegerParam(PMAC_C_TrajCSPort_, &csPort);
-  debug(DEBUG_ERROR, functionName, "csPort", csPort);
+  debug(DEBUG_VARIABLE, functionName, "csPort", csPort);
   csPortName = pCSControllers_[csPort]->getPortName();
-  debug(DEBUG_ERROR, functionName, "csPortName", csPortName);
+  debug(DEBUG_VARIABLE, functionName, "csPortName", csPortName);
 
   // Check the CS port name against a CS number
   if (csPortName != ""){
@@ -2307,9 +2307,9 @@ asynStatus pmacController::executeProfile()
 
   // Read the port name for CS to execute
   getIntegerParam(PMAC_C_TrajCSPort_, &csPort);
-  debug(DEBUG_ERROR, functionName, "csPort", csPort);
+  debug(DEBUG_VARIABLE, functionName, "csPort", csPort);
   csPortName = pCSControllers_[csPort]->getPortName();
-  debug(DEBUG_ERROR, functionName, "csPortName", csPortName);
+  debug(DEBUG_VARIABLE, functionName, "csPortName", csPortName);
 
   // Check the CS port name against a CS number
   if (csPortName != ""){
@@ -2471,6 +2471,8 @@ void pmacController::trajectoryTask()
   //double position = 0.0;
   char response[1024];
   char cmd[1024];
+  char assignment[MAX_STRING_SIZE];
+  std::string axesStrings[PMAC_MAX_CS_AXES] = {"A", "B", "C", "U", "V", "W", "X", "Y", "Z"};
   const char *functionName = "trajectoryTask";
 
   this->lock();
@@ -2503,6 +2505,74 @@ void pmacController::trajectoryTask()
       debug(DEBUG_TRACE, functionName, "Sending command to abort previous move", cmd);
       this->immediateWriteRead(cmd, response);
 
+
+      for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
+        if ((1<<index & tScanAxisMask_) == 0){
+          debug(DEBUG_TRACE, functionName, "Checking for disabled axis assignment", axesStrings[index]);
+          // This axis has been disabled, so we need to check to see if it has a valid assignment
+          // Loop through the motor assignments
+          int assigned = 0;
+          // Loop over each real motor
+          for (int axis = 1; axis <= this->numAxes_-1; axis++){
+            // Check the motor exists
+            if (this->getAxis(axis) != NULL){
+              // Read the CS number for the axis
+              int axisCs = this->getAxis(axis)->getAxisCSNo();
+              // Check the axis is in the CS that we are scanning
+              if (axisCs == tScanCSNo_){
+                debug(DEBUG_TRACE, functionName, "Checking against motor", axis);
+                // Read the assignment
+                getStringParam(axis, PMAC_C_GroupAssignRBV_, MAX_STRING_SIZE, assignment);
+                debug(DEBUG_TRACE, functionName, "Motor assignment", assignment);
+                // Now verify whether the axis is present in this assignment
+                std::string strAssign(assignment);
+                if (strAssign == axesStrings[index]){
+                  // Check if this axis has already been assigned
+                  if (assigned == 1){
+                    debug(DEBUG_TRACE, functionName, "Axes already assigned");
+                    // Error, invalid axis assignment for disabled axis
+                    // Set the execute state to done
+                    setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+                    // Set the execute status to failure
+                    setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
+                    // Set the message accordingly
+                    sprintf(cmd, "Scan failed - duplicate assignment for disabled axis %s", axesStrings[index].c_str());
+                    setStringParam(profileExecuteMessage_, cmd);
+                    // Set the executing flag to 0
+                    tScanExecuting_ = 0;
+                    // Notify that EPICS detected the error
+                    epicsErrorDetect = 1;
+                  } else {
+                    // Set the assigment to 1, and write the Q variable down to the pmac
+                    assigned = 1;
+                    // Read the motor demand position
+                    double motorPos = 0.0;
+                    getDoubleParam(axis, motorPosition_, &motorPos);
+                    // Set the Q7x axis demand variable to the motor demand position
+                    sprintf(cmd, "&%dQ7%d=%f", tScanCSNo_, (index+1), motorPos);
+                    debug(DEBUG_TRACE, functionName, "Sending disabled axis position", cmd);
+                    this->immediateWriteRead(cmd, response);
+                  }
+                } else if (strAssign.find(axesStrings[index]) != std::string::npos){
+                  debug(DEBUG_TRACE, functionName, "Axes invalid assignment");
+                  // Error, invalid axis assignment for disabled axis
+                  // Set the execute state to done
+                  setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+                  // Set the execute status to failure
+                  setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
+                  // Set the message accordingly
+                  sprintf(cmd, "Scan failed - invalid assignment for disabled axis %s", strAssign.c_str());
+                  setStringParam(profileExecuteMessage_, cmd);
+                  // Set the executing flag to 0
+                  tScanExecuting_ = 0;
+                  // Notify that EPICS detected the error
+                  epicsErrorDetect = 1;
+                }
+              }
+            }
+          }
+        }
+      }
       // Now send to the PMAC the default position for all axes
       //position_index = PMAC_C_ProfileDefaultA_;
       //for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
@@ -2540,32 +2610,34 @@ void pmacController::trajectoryTask()
       //}
 
       // We are ready to execute the start demand
-      getIntegerParam(PMAC_C_TrajProg_, &progNo);
-      sprintf(cmd, "&%dB%dR", tScanCSNo_, progNo);
-      debug(DEBUG_TRACE, functionName, "Sending command to start the trajectory move", cmd);
-      this->immediateWriteRead(cmd, response);
-      printf("%s\n", response);
-      // Check if this command returned an error
-      if (response[0] == 0x7){
-        // Set the execute state to done
-        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-        // Set the execute status to failure
-        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-        // Set the message accordingly
-        setStringParam(profileExecuteMessage_, "Scan failed to start motion program - check motor status");
-        // Set the executing flag to 0
-        tScanExecuting_ = 0;
-        // Notify that EPICS detected the error
-        epicsErrorDetect = 1;
-      } else {
-        // Reset our status
-        setIntegerParam(PMAC_C_TrajEStatus_, 0);
-        // Set the execute state to move start
-        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_EXECUTING);
-        // Set the execute status to undefined
-        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_SUCCESS);
-        // Set the message accordingly
-        setStringParam(profileExecuteMessage_, "Executing trajectory scan");
+      // Only execute this if there has been no error detected so far
+      if (epicsErrorDetect == 0){
+        getIntegerParam(PMAC_C_TrajProg_, &progNo);
+        sprintf(cmd, "&%dB%dR", tScanCSNo_, progNo);
+        debug(DEBUG_TRACE, functionName, "Sending command to start the trajectory move", cmd);
+        this->immediateWriteRead(cmd, response);
+        // Check if this command returned an error
+        if (response[0] == 0x7){
+          // Set the execute state to done
+          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
+          // Set the execute status to failure
+          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
+          // Set the message accordingly
+          setStringParam(profileExecuteMessage_, "Scan failed to start motion program - check motor status");
+          // Set the executing flag to 0
+          tScanExecuting_ = 0;
+          // Notify that EPICS detected the error
+          epicsErrorDetect = 1;
+        } else {
+          // Reset our status
+          setIntegerParam(PMAC_C_TrajEStatus_, 0);
+          // Set the execute state to move start
+          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_EXECUTING);
+          // Set the execute status to undefined
+          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_SUCCESS);
+          // Set the message accordingly
+          setStringParam(profileExecuteMessage_, "Executing trajectory scan");
+        }
       }
       callParamCallbacks();
 
