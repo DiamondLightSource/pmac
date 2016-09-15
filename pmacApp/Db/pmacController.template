@@ -30,7 +30,6 @@
 # % macro, CSG4, Name for Coordinate System Group 4 
 # % macro, CSG5, Name for Coordinate System Group 5 
 # % macro, CSG6, Name for Coordinate System Group 6 
-# % gui, $(name=), edm, pmacController.edl, P=$(P),R=$(R)
 
 # ///
 # /// Select a group of coordinate systems into the controller.
