@@ -1642,7 +1642,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 	      functionName, portName, pAxis->axisNo_, value);
   } else if (pWriteParams_->hasKey(*name)){
     // This is an integer write of a parameter, so send the immediate write/read
-    sprintf(command, "%s=%f", pWriteParams_->lookup(*name).c_str(), value);
+    sprintf(command, "%s=%.12f", pWriteParams_->lookup(*name).c_str(), value);
     debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   }
