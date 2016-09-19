@@ -119,7 +119,7 @@ const epicsUInt32 pmacController::PMAC_GSTATUS_CPUTYPE               = (0x1<<21)
 const epicsUInt32 pmacController::PMAC_GSTATUS_REALTIME_INTR_RE      = (0x1<<22);
 const epicsUInt32 pmacController::PMAC_GSTATUS_RESERVED3             = (0x1<<23);
 
-const epicsUInt32 pmacController::PMAC_HARDWARE_PROB = (PMAC_GSTATUS_MACRO_RING_ERRORCHECK | PMAC_GSTATUS_MACRO_RING_COMMS | PMAC_GSTATUS_REALTIME_INTR | PMAC_GSTATUS_FLASH_ERROR | PMAC_GSTATUS_DPRAM_ERROR | PMAC_GSTATUS_CKSUM_ERROR | PMAC_GSTATUS_WATCHDOG | PMAC_GSTATUS_SERVO_ERROR);
+const epicsUInt32 pmacController::PMAC_HARDWARE_PROB = (PMAC_GSTATUS_REALTIME_INTR | PMAC_GSTATUS_FLASH_ERROR | PMAC_GSTATUS_DPRAM_ERROR | PMAC_GSTATUS_CKSUM_ERROR | PMAC_GSTATUS_WATCHDOG | PMAC_GSTATUS_SERVO_ERROR);
 
 const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB1 = 0;
 const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRED_STOP | PMAC_STATUS2_AMP_FAULT);
@@ -233,6 +233,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   movingPollPeriod_ = movingPollPeriod;
   idlePollPeriod_ = idlePollPeriod;
   profileInitialized_ = false;
+  tScanShortScan_ = false;
   tScanExecuting_ = 0;
   tScanCSNo_ = 0;
   tScanAxisMask_ = 0;
@@ -2107,6 +2108,8 @@ asynStatus pmacController::buildProfile(int csNo)
   asynStatus status = asynSuccess;
   int numPoints = 0;
   int axisMask = 0;
+  double totalScanTime = 0.0;
+  int counter = 0;
   static const char *functionName = "buildProfile";
 
   debug(DEBUG_TRACE, functionName);
@@ -2182,6 +2185,22 @@ asynStatus pmacController::buildProfile(int csNo)
 //    status = pCSControllers_[tScanCSNo_]->tScanBuildTimeArray(profileTimes_, &numPoints, PMAC_MAX_TRAJECTORY_POINTS);
     getIntegerParam(profileNumPoints_, &numPoints);
     tScanNumPoints_ = numPoints;
+
+    // Calculate if the scan is considered short (< 3 seconds)
+    while (counter < tScanNumPoints_ && totalScanTime < 3.0){
+      // Profile times are in ticks, 1/4 ms for each
+      totalScanTime += ((double)profileTimes_[counter]) / 4000.0;
+      counter++;
+    }
+    debug(DEBUG_VARIABLE, functionName, "Total scan time at least (s)", totalScanTime);
+
+    if (totalScanTime < 3.0){
+      // This is considered a short scan, set the flag appropriately
+      tScanShortScan_ = true;
+    } else {
+      tScanShortScan_ = false;
+    }
+
 //    if (status == asynSuccess){
 //      // Copy the user buffer array
 //      status = pCSControllers_[tScanCSNo_]->tScanBuildUserArray(profileUser_, &numPoints, PMAC_MAX_TRAJECTORY_POINTS);
@@ -2642,10 +2661,11 @@ void pmacController::trajectoryTask()
       callParamCallbacks();
 
       // The following checks are performed with two modes:
-      // For 10 points or more perform standard checks of waiting for the program to start
-      // For less than 10 points the scan may already complete before we can check the status
+      // For points that take more than 3 seconds perform standard checks of waiting for the
+      // program to start
+      // For less than 3 seconds the scan may already complete before we can check the status
       // so perform a much tighter check and do not report errors
-      if (tScanNumPoints_ < 10){
+      if (tScanShortScan_){
         // Set a timeout of 1.0, equivalent to waiting for a single stationary fast update
         timeout = 1.0;
         // Now wait until we have confirmation that the scan has started

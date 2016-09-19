@@ -136,23 +136,6 @@ record(waveform,"$(P)$(R)VelocityMode") {
 }
 
 
-##
-## Records to specify the acceleration
-##
-record(ao, "$(P)$(R)ProfileAcceleration") {
-  field(DESC, "Acceleration value")
-  field(DTYP, "asynFloat64")
-  field(OUT, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
-  field(PINI, "NO")
-}
-
-record(ai, "$(P)$(R)ProfileAcceleration_RBV") {
-  field(DESC, "Acceleration value")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_FIXED_TIME")
-  field(SCAN, "I/O Intr")  
-}
-
 ###################################################################
 #  These records control trajectory scan building (pre-execute)   # 
 #                                                                 #
