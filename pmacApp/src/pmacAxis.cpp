@@ -222,7 +222,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
     limitsDisabled_ = 0;
   }
 #endif
-  status = pC_->lowLevelWriteRead(command, response);
+  status = pC_->axisWriteRead(command, response);
   
   return status;
 }
@@ -325,7 +325,7 @@ asynStatus pmacAxis::home(double min_velocity, double max_velocity, double accel
 	      functionName, pC_->portName, axisNo_, home_type, home_flag, home_velocity, flag_mode, home_offset);
   }
 #endif
-  status = pC_->lowLevelWriteRead(command, response);
+  status = pC_->axisWriteRead(command, response);
 
   return status;
 }
@@ -363,7 +363,7 @@ asynStatus pmacAxis::moveVelocity(double min_velocity, double max_velocity, doub
     limitsDisabled_ = 0;
   }
 #endif
-  status = pC_->lowLevelWriteRead(command, response);
+  status = pC_->axisWriteRead(command, response);
 
   return status;
 }
@@ -405,7 +405,7 @@ asynStatus pmacAxis::stop(double acceleration)
   }
   deferredMove_ = 0;
 
-  status = pC_->lowLevelWriteRead(command, response);
+  status = pC_->axisWriteRead(command, response);
   return status;
 }
 
@@ -427,7 +427,7 @@ asynStatus pmacAxis::setClosedLoop(bool closedLoop)
   } else {
     sprintf(command, "#%d K",  axisNo_);
   }
-  status = pC_->lowLevelWriteRead(command, response);
+  status = pC_->axisWriteRead(command, response);
   return status;
 }
 

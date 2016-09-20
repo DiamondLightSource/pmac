@@ -10,6 +10,7 @@
 # % macro, P, Pv Prefix
 # % macro, PLC, PLC number
 # % macro, PORT,  Serial port to do communications across
+# % macro, CTRL, Controller record name prefix for disabling axis writes
 # % macro, GRP1,  Homing group 1 description
 # % macro, GRP2,  Homing group 2 description
 # % macro, GRP3,  Homing group 3 description
@@ -228,6 +229,12 @@ record(mbbi, "$(P):HM:STATE") {
 
 record(busy, "$(P):HM:HOMING") {
   field(FLNK, "$(P):HM:HOMED")
+}
+
+record(calcout, "$(P):HM:READONLY") {
+  field(CALC, "A")
+  field(INPA, "$(P):HM:HOMING CP")
+  field(OUT, "$(CTRL):AxesReadonly PP")
 }
 
 record(bo, "$(P):HM:HOME") {

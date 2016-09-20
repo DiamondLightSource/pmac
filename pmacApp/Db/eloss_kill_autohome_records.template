@@ -12,7 +12,7 @@
 
 # disable motor when homing
 record(calcout, "$(P)$(M):SDIS") {
-  field(INPA, "$(HOME=$(P)):HM:HOMING CP")
+#  field(INPA, "$(HOME=$(P)):HM:HOMING CP")
 }
 
 # dummy record in case we aren't homing

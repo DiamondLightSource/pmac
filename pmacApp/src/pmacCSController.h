@@ -41,6 +41,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     void callback(pmacCommandStore *sPtr, int type);
 
     asynStatus immediateWriteRead(const char *command, char *response);
+    asynStatus axisWriteRead(const char *command, char *response);
 
     pmacCSAxis *getAxis(int axisNo);
 
