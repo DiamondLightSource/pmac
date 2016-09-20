@@ -45,6 +45,7 @@
 #define PMAC_C_FastUpdateTimeString    "PMAC_C_FAST_UPDATE_TIME"
 
 #define PMAC_C_AxisCSString            "PMAC_C_AXIS_CS"
+#define PMAC_C_AxisReadonlyString      "PMAC_C_AXIS_READONLY"
 #define PMAC_C_WriteCmdString          "PMAC_C_WRITE_CMD"
 #define PMAC_C_KillAxisString          "PMAC_C_KILL_AXIS"
 #define PMAC_C_PLCBits00String         "PMAC_C_PLC_BITS00"
@@ -200,6 +201,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
 
   //asynStatus printConnectedStatus(void);
   asynStatus immediateWriteRead(const char *command, char *response);
+  asynStatus axisWriteRead(const char *command, char *response);
 
   /* These are the methods that we override */
   asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
@@ -281,6 +283,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_DebugCmd_;
   int PMAC_C_FastUpdateTime_;
   int PMAC_C_AxisCS_;
+  int PMAC_C_AxisReadonly_;
   int PMAC_C_WriteCmd_;
   int PMAC_C_KillAxis_;
   int PMAC_C_PLCBits00_;

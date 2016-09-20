@@ -113,7 +113,7 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
       // Abort current move to make sure axes are enabled
       sprintf(commandtemp, "&%dA", pC_->getCSNumber());
       debug(DEBUG_TRACE, functionName, "Sending command to PMAC", commandtemp);
-      status = pC_->immediateWriteRead(commandtemp, response);
+      status = pC_->axisWriteRead(commandtemp, response);
       /* If the program specified is non-zero, add a command to run the program.
        * If program number is zero, then the move will have to be started by some
        * external process, which is a mechanism of allowing coordinated starts to
@@ -121,7 +121,7 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
       sprintf(buff, " B%dR", pC_->getProgramNumber());
       strcat(command, buff);
       debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
-      status = pC_->immediateWriteRead(command, response);
+      status = pC_->axisWriteRead(command, response);
   }
 
   return status;
@@ -152,8 +152,8 @@ asynStatus pmacCSAxis::stop(double acceleration)
   sprintf(command, "&%d%sA "DEMAND"="READBACK, pC_->getCSNumber(), acc_buff, axisNo_, axisNo_);
   deferredMove_ = 0;
 
-  debug(DEBUG_ERROR, functionName, "CS Stop command", command);
-  status = pC_->immediateWriteRead(command, response);
+  debug(DEBUG_TRACE, functionName, "CS Stop command", command);
+  status = pC_->axisWriteRead(command, response);
   return status;
 }
 
