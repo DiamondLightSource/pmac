@@ -291,6 +291,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_FastUpdateTimeString,    asynParamFloat64,      &PMAC_C_FastUpdateTime_);
   createParam(PMAC_C_LastParamString,         asynParamInt32,        &PMAC_C_LastParam_);
   createParam(PMAC_C_AxisCSString,            asynParamInt32,        &PMAC_C_AxisCS_);
+  createParam(PMAC_C_AxisReadonlyString,      asynParamInt32,        &PMAC_C_AxisReadonly_);
   createParam(PMAC_C_WriteCmdString,          asynParamOctet,        &PMAC_C_WriteCmd_);
   createParam(PMAC_C_KillAxisString,          asynParamInt32,        &PMAC_C_KillAxis_);
   createParam(PMAC_C_PLCBits00String,         asynParamInt32,        &PMAC_C_PLCBits00_);
@@ -398,6 +399,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateProblem_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateLimit_, 100) == asynSuccess) && paramStatus);
   paramStatus = ((setDoubleParam(PMAC_C_FastUpdateTime_, 0.0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_AxisReadonly_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_CoordSysGroup_, 0) == asynSuccess) && paramStatus);
   for (int axis = 0; axis <= numAxes; axis++){
     paramStatus = ((setIntegerParam(axis, PMAC_C_GroupCSPort_, 0) == asynSuccess) && paramStatus);
@@ -1498,6 +1500,23 @@ asynStatus pmacController::immediateWriteRead(const char *command, char *respons
   this->startTimer(DEBUG_TIMING, functionName);
   status = this->lowLevelWriteRead(command, response);
   this->stopTimer(DEBUG_TIMING, functionName, "PMAC write/read time");
+  return status;
+}
+
+asynStatus pmacController::axisWriteRead(const char *command, char *response)
+{
+  int readonly = 0;
+  asynStatus status = asynSuccess;
+  static const char *functionName = "axisWriteRead";
+  // Here we need to check if we are in axis readonly mode
+  getIntegerParam(PMAC_C_AxisReadonly_, &readonly);
+  if (readonly == 0){
+    this->startTimer(DEBUG_TIMING, functionName);
+    status = this->lowLevelWriteRead(command, response);
+    this->stopTimer(DEBUG_TIMING, functionName, "PMAC write/read time");
+  } else {
+    debug(DEBUG_TRACE, functionName, "Axis command not sent (readonly mode)", command);
+  }
   return status;
 }
 

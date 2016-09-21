@@ -323,6 +323,24 @@ asynStatus pmacCSController::immediateWriteRead(const char *command, char *respo
   return status;
 }
 
+asynStatus pmacCSController::axisWriteRead(const char *command, char *response)
+{
+  static const char *functionName = "axisWriteRead";
+  asynStatus status = asynSuccess;
+
+  if (!pC_){
+    debug(DEBUG_ERROR,functionName, "ERROR PMAC controller not found");
+    status = asynError;
+  }
+
+  // Send the write/read demand to the PMAC controller
+  if (status == asynSuccess){
+    ((pmacController *)pC_)->axisWriteRead(command, response);
+  }
+
+  return status;
+}
+
 /** Returns a pointer to an pmacAxis object.
   * Returns NULL if the axis number is invalid.
   * \param[in] axisNo Axis index number. */

@@ -86,6 +86,31 @@ record(mbbi, "$(P)$(R)COORDINATE_SYS_GROUP_RBV")
    field(SVVL, "7")
 }
 
+#
+# Control read only mode for axes
+#
+record(bo, "$(P)$(R)AxesReadonly")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_AXIS_READONLY")
+    field(VAL, "0")
+    field(ZNAM, "Read/Write")
+    field(ONAM, "Readonly")
+}
+
+#
+# Read back the readonly mode for axes
+# 
+record(bi, "$(P)$(R)AxesReadonly_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_AXIS_READONLY")
+    field(SCAN, "I/O Intr")
+    field(ZNAM, "Read/Write")
+    field(ONAM, "Readonly")
+}
+
 # ///
 # /// Control deferred moves on the controller
 # ///
