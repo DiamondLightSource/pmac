@@ -1,0 +1,46 @@
+# # \file
+# # This template allows setting of variables for a 2jack CS. It requires
+# # PROG10_CS_motion.pmc and an instantiation of CS_2jack.pmc with the variables 
+# # shown in the image below:
+# # \image html 2jack-help.png "Setup of 2 jack CS"
+# # Build instructions for an example IOC are available 
+# # \ref build_instructions_CS2jack "here", with a pmc file containing 
+# # the CS definition available in iocs/CS2jack/defs.pmc
+# % macro, __doc__, Supporting template that allows setting of variables for a 
+# 2jack CS 
+# % macro, P, Pv Prefix
+# % macro, PORT, Motor controller serial port
+# % macro, COORD, Co-ordinate system number
+# % macro, PREC, Precision to display variables
+# % macro, JPV, Pv of real Jack motor, e.g. $(P):JACK
+# % macro, TPV, Pv of real Translation motor, e.g. $(P):Y
+# % macro, name, Object name and gui association name
+# This associates an edm screen with the template
+# % gui, $(name=), edm, 2jack.edl, 2jack=$(P)
+
+# # This record will zero J1 and J2 when processed
+record(fanout, "$(P):ZERO") {
+  field(LNK1, "$(P):ZEROJ")
+  field(LNK2, "$(P):ZEROT")
+}
+
+record(calcout, "$(P):ZEROJ") {
+  field(CALC, "-A")
+  field(INPA, "$(JPV=$(P):JACK).DRBV")
+  field(OUT, "$(JPV=$(P):JACK).OFF PP")
+}
+
+record(calcout, "$(P):ZEROT") {
+  field(CALC, "-A")
+  field(INPA, "$(TPV=$(P):Y).DRBV")
+  field(OUT, "$(TPV=$(P):Y).OFF PP")
+}
+
+substitute "VAR=&$(COORD)Q20,Q=:DIST,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+include "pmacVariableWrite.template"
+
+substitute "VAR=&$(COORD)Q21,Q=:PIVOT,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+include "pmacVariableWrite.template"
+
+substitute "VAR=&$(COORD)Q22,Q=:DEPTH,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+include "pmacVariableWrite.template"

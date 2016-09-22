@@ -26,38 +26,12 @@
 record(stringout, "$(P):dummy") {
 }
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords) {
-  macro(VAR, "&$(COORD)Q20")
-  macro(Q, ":LL")
-  macro(EGU, "mm")
-  macro(PREC, "$(PREC=3)")
-}
+substitute "VAR=&$(COORD)Q20,Q=:LL,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords2) {
-  macro(VAR, "&$(COORD)Q21")
-  macro(Q, ":SW")
-  macro(EGU, "mm")
-  macro(PREC, "$(PREC=3)")
-}
+substitute "VAR=&$(COORD)Q21,Q=:SW,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+include "pmacVariableWrite.template"
 
 #! Further lines contain data used by VisualDCT
 #! View(0,0,1.0)
 #! Record("$(P):dummy",20,23,0,0,"$(P):dummy")
-
-#! TemplateInstance("pmacVariableWriteRecords",500,20,0,"")
-#! TemplateField("pmacVariableWriteRecords","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords2",260,20,0,"")
-#! TemplateField("pmacVariableWriteRecords2","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","PREC",16777215,0,1)
-

@@ -25,6 +25,7 @@
 # % macro, name, Object name and gui association name
 # This associates an edm screen with the template
 # % gui, $(name=), edm, aperture_slits.edl, slits=$(P)
+
 # # This record will zero raw motors when processed
 record(fanout, "$(P):ZERO") {
   field(LNK1, "$(P):ZEROAP")
@@ -45,12 +46,8 @@ record(calcout, "$(P):ZEROAM") {
   field(OUT, "$(AMPV).OFF PP")
 }
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords) {
-  macro(VAR, "&$(COORD)Q20")
-  macro(Q, ":ASIZE")
-  macro(EGU, "mm")
-  macro(PREC, "$(PREC=3)")
-}
+substitute "VAR=&$(COORD)Q20,Q=:ASIZE,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+include "pmacVariableWrite.template"
 
 #! Further lines contain data used by VisualDCT
 #! View(0,0,1.0)
@@ -67,12 +64,3 @@ expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords) {
 #! Field("$(P):ZEROAM.INPA",16777215,1,"$(P):ZEROAM.INPA")
 #! Field("$(P):ZEROAM.INPB",16777215,1,"$(P):ZEROAM.INPB")
 #! Field("$(P):ZEROAM.OUT",16777215,1,"$(P):ZEROAM.OUT")
-
-#! TemplateInstance("pmacVariableWriteRecords",500,20,0,"")
-#! TemplateField("pmacVariableWriteRecords","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","PREC",16777215,0,1)
-

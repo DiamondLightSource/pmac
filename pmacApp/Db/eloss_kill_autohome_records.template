@@ -19,26 +19,14 @@ record(calcout, "$(P)$(M):SDIS") {
 record(busy, "$(HOME=$(P)):HM:HOMING") {
 }
 
-#record(calcout, "$(P)$(M):HMPOSASLO") {
-#  field(INPA, "$(P)$(M).MRES CP")
-#  field(INPB, "$(P)$(M):SCALE")  
-#  field(CALC, "A*B")
-#  field(OUT, "$(P)$(M):HMPOS.ASLO")
-#}
-
 # reports position of motor without offset
 record(ai, "$(P)$(M):HMPOS_RBV") {
-#  field(DTYP, "stream")
-#  field(INP, "@pmac.proto getVar(#$(ADDR)P) $(SPORT)")
   field(DTYP, "asynFloat64")
   field(INP, "@asyn($(PORT),0)PMAC_VDF_#$(ADDR)P")
   field(DESC, "$(DESC)")
   field(SCAN, "I/O Intr")
-#  field(SDIS, "$(HOME=$(P)):HM:HOMING")  
-#  field(DISV, "0")  
   field(PINI, "YES")
   field(PREC, "$(PREC)")
-#  field(LINR, "LINEAR")
   field(EGU, "$(EGU)")
 }
 
@@ -73,22 +61,10 @@ record(ao, "$(P)$(M):KILL") {
   field(VAL, "0")
 }
 
-#record(ao, "$(P)$(M):KILL") {
-#  field(DTYP, "stream")
-#  field(OUT, "@pmac.proto killMotor($(ADDR)) $(SPORT)")  
-#  field(VAL, "0")  
-#}
-
 record(calc, "$(P)$(M):ELOSSVAR") {
   field(CALC, "464+$(ADDR)")
   field(PINI, "YES")
 }
-
-#record(ai, "$(P)$(M):ELOSS") {
-#  field(DTYP, "stream")
-#  field(INP, "@pmac.proto getEloss($(P)$(M)) $(SPORT)")  
-#  field(SCAN, "5 second")  
-#}
 
 record(ai, "$(P)$(M):ELOSS") {
   field(DTYP, "asynInt32")
@@ -97,8 +73,6 @@ record(ai, "$(P)$(M):ELOSS") {
 }
 
 record(calcout, "$(P)$(M):ELOSSRC") {
-#  field(DTYP, "stream")
-#  field(OUT, "@pmac.proto resetEloss($(P)$(M)) $(SPORT)") 
   field(OUT, "$(P)$(M):SEND_ELOSSRC PP") 
   field(DESC, "Write 0 to A to reset Eloss")
   field(CALC, "A")

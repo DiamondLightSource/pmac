@@ -13,11 +13,12 @@ include $(TOP)/configure/CONFIG
 DB += pmacController.template
 DB += pmacControllerTrajectory.template
 DB += pmacStatus.template
-DB += pmacTrajectoryAxis.template
-DB += pmacTrajectory8Axes.template
 DB += pmacStatusAxis.template
 DB += pmacStatus8Axes.template
 DB += pmacStatus32Axes.template
+DB += pmacTrajectoryAxis.template
+DB += pmacTrajectory8Axes.template
+DB += pmacTrajectory32Axes.template
 DB += pmac_cs_axis.template
 DB += dls_pmac_asyn_motor.template
 DB += motor_in_cs.template
