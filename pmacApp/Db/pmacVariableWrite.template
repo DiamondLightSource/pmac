@@ -1,0 +1,11 @@
+# % macro, __doc__, Simple template that reads and writes to a variable on a 
+# PMAC or geoBrick via dynamic parameters.
+# % macro, P, Pv Prefix
+# % macro, Q, Pv Suffix
+# % macro, PORT, Motor controller serial port
+# % macro, VAR, Variable on PMAC to write to, e.g. P700
+# % macro, EGU, Engineering units
+# % macro, PREC, Record precision
+
+substitute "VARIABLE_PREC=$(PREC)"
+include "pmacVariableWriteRecords.template"
