@@ -30,40 +30,20 @@
 record(ao, "$(P):DUMMY") {
 }
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords1) {
-  macro(VAR, "&$(COORD)Q21")
-  macro(Q, ":BS1Z")
-  macro(EGU, "mm")
-  macro(PREC, "4")
-}
+substitute "VAR=&$(COORD)Q21,Q=:BS1Z,EGU=mm,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords2) {
-  macro(VAR, "&$(COORD)Q22")
-  macro(Q, ":BS2Z")
-  macro(EGU, "mm")
-  macro(PREC, "4")
-}
+substitute "VAR=&$(COORD)Q22,Q=:BS2Z,EGU=mm,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords3) {
-  macro(VAR, "&$(COORD)Q23")
-  macro(Q, ":BS3Z")
-  macro(EGU, "mm")
-  macro(PREC, "4")
-}
+substitute "VAR=&$(COORD)Q23,Q=:BS3Z,EGU=mm,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords5) {
-  macro(VAR, "&$(COORD)Q25")
-  macro(Q, ":BPITCH")
-  macro(EGU, "deg")
-  macro(PREC, "3")
-}
+substitute "VAR=&$(COORD)Q25,Q=:BPITCH,EGU=deg,VARIABLE_PREC=3"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords6) {
-  macro(VAR, "&$(COORD)Q26")
-  macro(Q, ":BYAW")
-  macro(EGU, "deg")
-  macro(PREC, "3")
-}
+substitute "VAR=&$(COORD)Q26,Q=:BYAW,EGU=deg,VARIABLE_PREC=3"
+include "pmacVariableWrite.template"
 
 record(fanout, "$(P):CALCBEAM") {
   field(LNK1, "$(P):CALCBPITCH")
@@ -181,83 +161,18 @@ record(seq, "$(P):TRACK:ABORT") {
   field(DO4, "0")   
 } 
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords7) {
-  macro(VAR, "&$(COORD)Q28")
-  macro(Q, ":CAMERA")
-  macro(EGU, "mm")
-  macro(PREC, "4")
-}
+substitute "VAR=&$(COORD)Q28,Q=:CAMERA,EGU=mm,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords8) {
-  macro(VAR, "&$(COORD)Q29")
-  macro(Q, ":ZGAP")
-  macro(EGU, "mm")
-  macro(PREC, "4")
-}
+substitute "VAR=&$(COORD)Q29,Q=:ZGAP,EGU=mm,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords9) {
-  macro(VAR, "&$(COORD)Q30")
-  macro(Q, ":BEAM")
-  macro(EGU, "mm")
-  macro(PREC, "4")
-}
+substitute "VAR=&$(COORD)Q30,Q=:BEAM,EGU=mm,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
 
 #! Further lines contain data used by VisualDCT
 #! View(0,0,1.0)
 #! Record("$(P):DUMMY",20,23,0,0,"$(P):DUMMY")
-
-#! TemplateInstance("pmacVariableWriteRecords1",260,20,0,"")
-#! TemplateField("pmacVariableWriteRecords1","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords2",500,20,0,"")
-#! TemplateField("pmacVariableWriteRecords2","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords3",740,20,0,"")
-#! TemplateField("pmacVariableWriteRecords3","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords4",980,20,0,"")
-#! TemplateField("pmacVariableWriteRecords4","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords4","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords4","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords4","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords4","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords4","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords5",1220,20,0,"")
-#! TemplateField("pmacVariableWriteRecords5","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords5","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords5","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords5","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords5","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords5","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords6",1460,20,0,"")
-#! TemplateField("pmacVariableWriteRecords6","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords6","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords6","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords6","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords6","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords6","PREC",16777215,0,1)
 
 #! Record("$(P):CALCBEAM",20,656,0,0,"$(P):CALCBEAM")
 #! Field("$(P):CALCBEAM.LNK1",16777215,1,"$(P):CALCBEAM.LNK1")

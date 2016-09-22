@@ -90,46 +90,6 @@ record(scalcout, "$(P):HM:RESUME") {
   field(OUT, "$(P):HM:ASYN1 PP")
 }
 
-# This will read the P variables P$(PLC)01 and P$(PLC)00
-# from the PMAC in one command.
-#record(asyn, "$(P):HM:ASYN2") {
-#  field(DESC, "Read homing status from PMAC")
-#  field(SCAN, ".2 second")
-#  field(PINI, "NO")
-#  field(DTYP, "asynRecordDevice")
-#  field(PORT, "$(PORT)")
-#  field(AOUT, "P$(PLC)01 P$(PLC)00 P$(PLC)02")
-#  field(FLNK, "$(P):HM:FAN1")
-#  field(DISV, "0")
-#  field(SDIS, "$(P):HM:HOMING")
-#}
-
-#record(scalcout, "$(P):HM:PARSE1") {
-#  field(DESC, "Parse PMAC response to P$(PLC)01")
-#  field(DTYP, "Soft Channel")
-#  field(SCAN, "Passive")
-#  field(PINI, "NO")
-#  field(CALC, "SSCANF(AA,'%d %*d %*d')")
-#  field(OOPT, "On Change")
-#  field(DOPT, "Use CALC")
-#  field(INAA, "$(P):HM:ASYN2.AINP")
-#  field(FLNK, "$(P):HM:STATUS")
-#  field(PREC, "0")
-#}
-
-#record(scalcout, "$(P):HM:PARSE2") {
-#  field(DESC, "Parse PMAC response to P$(PLC)00")
-#  field(DTYP, "Soft Channel")
-#  field(SCAN, "Passive")
-#  field(PINI, "NO")
-#  field(CALC, "SSCANF(AA,'%*d %d %*d')")
-#  field(OOPT, "On Change")
-#  field(DOPT, "Use CALC")
-#  field(INAA, "$(P):HM:ASYN2.AINP")
-#  field(FLNK, "$(P):HM:STATE")
-#  field(PREC, "0")
-#}
-
 record(mbbi, "$(P):HM:STATUS") {
   field(DESC, "Homing status")
   field(DTYP, "asynInt32")
@@ -252,12 +212,6 @@ record(calcout, "$(P):HM:CHECK") {
   field(DOPT, "Use CALC")
 }
 
-#record(fanout, "$(P):HM:FAN1") {
-#  field(FLNK, "$(P):HM:PARSE1")
-#  field(LNK1, "$(P):HM:PARSE2")
-#  field(LNK2, "$(P):HM:PARSE3")
-#}
-
 record(bo, "$(P):HM:HOMED") {
   field(SCAN, "Passive")
   field(PINI, "NO")
@@ -341,54 +295,10 @@ record(scalcout, "$(P):HM:SENDGRP") {
   field(DOPT, "Use CALC")
 }
 
-#record(scalcout, "$(P):HM:PARSE3") {
-#  field(DESC, "Parse pmac P$(PLC)02")
-#  field(SCAN, "Passive")
-#  field(PINI, "NO")
-#  field(DTYP, "Soft Channel")
-#  field(CALC, "SSCANF(AA,'%*d %*d %d')")
-#  field(INAA, "$(P):HM:ASYN2.AINP")
-#  field(OOPT, "On Change")
-#  field(DOPT, "Use CALC")
-#  field(PREC, "0")
-#  field(OUT, "$(P):HM:PARSE4 PP")
-#}
-
 record(ao, "$(P):HM:PLC") {
   field(DTYP, "Soft Channel")
   field(VAL, "$(PLC)")
 }
-
-#record(scalcout, "$(P):HM:TI2") {
-#  field(DESC, "create string with ivar")
-#  field(SCAN, "Passive")
-#  field(DTYP, "Soft Channel")
-#  field(CALC, "PRINTF('i%i i10',A)")
-#  field(OUT, "$(P):HM:ASYN3.AOUT PP")
-#  field(OOPT, "Every Time")
-#  field(DOPT, "Use CALC")
-#}
-
-#record(calcout, "$(P):HM:TI1") {
-#  field(DESC, "calc timer ivar")
-#  field(SCAN, "Passive")
-#  field(PINI, "YES")
-#  field(CALC, "5111+(A&30)*50+A%2")
-#  field(INPA, "$(P):HM:PLC PP")
-#  field(OUT, "$(P):HM:TI2.A PP")
-#  field(OOPT, "Every Time")
-#  field(DOPT, "Use CALC")
-#}
-
-#record(asyn, "$(P):HM:ASYN3") {
-#  field(DESC, "Read timer")
-#  field(SCAN, ".2 second")
-#  field(PINI, "NO")
-#  field(SDIS, "$(P):HM:HOMING")
-#  field(FLNK, "$(P):HM:FAN2")
-#  field(PORT, "$(PORT)")
-#  field(DISV, "0")
-#}
 
 record(longin, "$(P):HM:TIMER") {
   field(DESC, "parse timer")
@@ -399,36 +309,12 @@ record(longin, "$(P):HM:TIMER") {
   field(DISV, "0")
 }
 
-#record(scalcout, "$(P):HM:TIMER") {
-#  field(DESC, "parse timer")
-#  field(DTYP, "Soft Channel")
-#  field(CALC, "SSCANF(AA, '%d %*d')")
-#  field(INAA, "$(P):HM:ASYN3.AINP")
-#  field(OOPT, "On Change")
-#  field(DOPT, "Use CALC")
-#}
-
-#record(fanout, "$(P):HM:FAN2") {
-#  field(FLNK, "$(P):HM:TIMER")
-#  field(LNK1, "$(P):HM:I10")
-#}
-
 record(longin, "$(P):HM:I10") {
   field(DESC, "parse timer")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_VIM_I10")
   field(SCAN, "I/O Intr")
 }
-
-#record(scalcout, "$(P):HM:I10") {
-#  field(DESC, "parse timer")
-#  field(DTYP, "Soft Channel")
-#  field(FLNK, "$(P):HM:TIMEOUT")
-#  field(CALC, "SSCANF(AA, '%*d %d')")
-#  field(INAA, "$(P):HM:ASYN3.AINP")
-#  field(OOPT, "On Change")
-#  field(DOPT, "Use CALC")
-#}
 
 record(calcout, "$(P):HM:TIMEOUT") {
   field(SCAN, "Passive")
