@@ -1,0 +1,31 @@
+# # \file
+# # optical light focussing for Cyrille
+# % macro, P, Pv Prefix
+# % macro, PORT, Motor controller serial port
+# % macro, name, Object name and gui association name
+# This associates an edm screen with the template
+# % gui, $(name=), edm, zform.edl, zform=$(P)
+
+substitute "VAR=P1730,Q=:OFFSETD,EGU=mm,VARIABLE_PREC=3"
+include "pmacVariableWrite.template"
+
+substitute "VAR=P1731,Q=:OFFSETM3,EGU=deg,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
+
+substitute "VAR=P1732,Q=:OFFSETM4,EGU=deg,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
+
+substitute "VAR=P1733,Q=:ANGLEM5,EGU=deg,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
+
+substitute "VAR=P1734,Q=:DISTM3M5,EGU=mm,VARIABLE_PREC=3"
+include "pmacVariableWrite.template"
+
+substitute "VAR=P1735,Q=:XHOMEOFFSET,EGU=mm,VARIABLE_PREC=3"
+include "pmacVariableWrite.template"
+
+substitute "VAR=P1736,Q=:YHOMEOFFSET,EGU=deg,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"
+
+substitute "VAR=P1737,Q=:ZHOMEOFFSET,EGU=deg,VARIABLE_PREC=4"
+include "pmacVariableWrite.template"

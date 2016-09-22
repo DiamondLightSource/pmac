@@ -20,6 +20,7 @@
 # % macro, name, Object name and gui association name
 # This associates an edm screen with the template
 # % gui, $(name=), edm, bender-mirror.edl, bender=$(P)
+
 record(calc, "$(P):SNG") {
   field(DESC, "Singularity position")
   field(INPA, "$(P):INTERCEPT:RBV")
@@ -29,26 +30,14 @@ record(calc, "$(P):SNG") {
   field(EGU, "mm")
 }
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords) {
-  macro(VAR, "&$(COORD)Q20")
-  macro(Q, ":SLOPE")
-  macro(EGU, "1/Km/mm")
-  macro(PREC, "6")
-}
+substitute "VAR=&$(COORD)Q20,Q=:SLOPE,EGU=1/Km/mm,VARIABLE_PREC=6"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords2) {
-  macro(VAR, "&$(COORD)Q21")
-  macro(Q, ":INTERCEPT")
-  macro(EGU, "1/Km")
-  macro(PREC, "6")
-}
+substitute "VAR=&$(COORD)Q21,Q=:INTERCEPT,EGU=1/Km,VARIABLE_PREC=6"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords3) {
-  macro(VAR, "&$(COORD)Q22")
-  macro(Q, ":LIMIT")
-  macro(EGU, "Km")
-  macro(PREC, "1")
-}
+substitute "VAR=&$(COORD)Q22,Q=:LIMIT,EGU=Km,VARIABLE_PREC=1"
+include "pmacVariableWrite.template"
 
 record(calcout, "$(P):SLOPE:SYNC") {
   field(FLNK, "$(P):SNG")
@@ -63,32 +52,6 @@ record(calcout, "$(P):INTERCEPT:SYNC") {
 #! Record("$(P):SNG",2040,1820,0,0,"$(P):SNG")
 #! Field("$(P):SNG.INPA",16777215,1,"$(P):SNG.INPA")
 #! Field("$(P):SNG.INPB",16777215,1,"$(P):SNG.INPB")
-
-#! TemplateInstance("pmacVariableWriteRecords",2020,2140,0,"")
-#! TemplateField("pmacVariableWriteRecords","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords2",2240,2140,0,"")
-#! TemplateField("pmacVariableWriteRecords2","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords3",2460,2140,0,"")
-#! TemplateField("pmacVariableWriteRecords3","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","PREC",16777215,0,1)
 
 #! Record("$(P):SLOPE:SYNC",1740,1850,0,0,"$(P):SLOPE:SYNC")
 #! Field("$(P):SLOPE:SYNC.FLNK",16777215,1,"$(P):SLOPE:SYNC.FLNK")

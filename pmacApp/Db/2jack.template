@@ -23,6 +23,7 @@
 # % macro, name, Object name and gui association name
 # This associates an edm screen with the template
 # % gui, $(name=), edm, 2jack.edl, 2jack=$(P)
+
 # # This record will zero J1 and J2 when processed
 record(fanout, "$(P):ZERO") {
   field(LNK1, "$(P):ZEROJ1")
@@ -41,26 +42,14 @@ record(calcout, "$(P):ZEROJ2") {
   field(OUT, "$(J2PV=$(P):J2).OFF PP")
 }
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords1) {
-  macro(VAR, "&$(COORD)Q20")
-  macro(Q, ":DIST")
-  macro(EGU, "mm")
-  macro(PREC, "$(PREC=3)")
-}
+substitute "VAR=&$(COORD)Q20,Q=:DIST,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords2) {
-  macro(VAR, "&$(COORD)Q21")
-  macro(Q, ":PIVOT")
-  macro(EGU, "mm")
-  macro(PREC, "$(PREC=3)")
-}
+substitute "VAR=&$(COORD)Q21,Q=:PIVOT,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+include "pmacVariableWrite.template"
 
-expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords3) {
-  macro(VAR, "&$(COORD)Q22")
-  macro(Q, ":DEPTH")
-  macro(EGU, "mm")
-  macro(PREC, "$(PREC=3)")
-}
+substitute "VAR=&$(COORD)Q22,Q=:DEPTH,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+include "pmacVariableWrite.template"
 
 #! Further lines contain data used by VisualDCT
 #! View(0,0,1.0)
@@ -75,30 +64,4 @@ expand("pmacVariableWriteRecords.vdb", pmacVariableWriteRecords3) {
 #! Record("$(P):ZEROJ2",260,22,0,1,"$(P):ZEROJ2")
 #! Field("$(P):ZEROJ2.INPA",16777215,1,"$(P):ZEROJ2.INPA")
 #! Field("$(P):ZEROJ2.OUT",16777215,1,"$(P):ZEROJ2.OUT")
-
-#! TemplateInstance("pmacVariableWriteRecords1",200,380,0,"")
-#! TemplateField("pmacVariableWriteRecords1","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords1","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords2",420,380,0,"")
-#! TemplateField("pmacVariableWriteRecords2","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords2","PREC",16777215,0,1)
-
-
-#! TemplateInstance("pmacVariableWriteRecords3",640,380,0,"")
-#! TemplateField("pmacVariableWriteRecords3","VAR",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","EGU",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","Q",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","PORT",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","P",16777215,0,1)
-#! TemplateField("pmacVariableWriteRecords3","PREC",16777215,0,1)
 
