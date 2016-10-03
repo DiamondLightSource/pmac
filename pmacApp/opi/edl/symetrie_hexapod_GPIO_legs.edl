@@ -1,0 +1,1231 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 139
+y 277
+w 399
+h 441
+font "helvetica-medium-r-18.0"
+ctlFont "courier-bold-r-18.0"
+btnFont "helvetica-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 30
+ctlBgColor1 index 3
+ctlBgColor2 index 3
+topShadowColor index 1
+botShadowColor index 11
+title "Symetrie Hexapod - $(hexapod)"
+showGrid
+snapToGrid
+gridSize 5
+endScreenProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 65
+w 400
+h 370
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 65
+w 370
+h 370
+lineColor index 20
+fillColor index 27
+lineWidth 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 345
+y 325
+w 60
+h 40
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 20
+bgColor index 3
+useDisplayBg
+value {
+  "Hard"
+  "Limit"
+}
+endObjectProperties
+
+endGroup
+
+visPv "BL22I-MP-TMPCC-02:GENSTA1:RAWILK.B9"
+visMin "1"
+visMax "2"
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 70
+w 360
+h 360
+lineColor index 29
+fillColor index 27
+lineWidth 3
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x -25
+y 0
+w 445
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x -5
+y 2
+w 444
+h 25
+lineColor index 1
+fillColor index 0
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x -5
+y 3
+w 444
+h 25
+lineColor index 11
+fillColor index 0
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 4
+release 0
+x -5
+y 3
+w 444
+h 24
+fgColor index 14
+bgColor index 3
+topShadowColor index 0
+botShadowColor index 0
+font "arial-bold-r-14.0"
+xPosOffset 5
+yPosOffset 5
+button3Popup
+invisible
+buttonLabel "tooltip"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "generic-tooltip"
+}
+setPosition {
+  0 "button"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x -5
+y 3
+w 444
+h 25
+font "arial-bold-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 48
+value {
+  "Symetrie GPIO - $(hexapod)"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Menu Mux)
+object menuMuxClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 2000
+y 290
+w 60
+h 50
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(robot):UPDATE"
+font "helvetica-medium-r-18.0"
+initialState "0"
+numItems 2
+symbolTag {
+  0 "?"
+  1 "?"
+}
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 290
+y 415
+w 105
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-14.0"
+3d
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 85
+y 345
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 2"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 65
+y 345
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B1"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 35
+y 240
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 3"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 240
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B2"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 150
+y 85
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B3"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 130
+y 105
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 4"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 190
+y 105
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 5"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 210
+y 85
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B4"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 345
+y 240
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B5"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 285
+y 240
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 6"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 235
+y 345
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 1"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 295
+y 345
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B0"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 225
+y 240
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 8"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 205
+y 240
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B7"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 155
+y 240
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B9"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 95
+y 240
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 10"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 200
+y 270
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 9"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 195
+y 35
+w 170
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Safety sensor signal on"
+}
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 200
+y 375
+w 45
+h 45
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 200
+y 375
+w 45
+h 45
+lineColor index 29
+fillColor index 3
+lineWidth 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 200
+y 380
+w 45
+h 35
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 29
+bgColor index 3
+useDisplayBg
+value {
+  "Leg 1"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 135
+y 375
+w 45
+h 45
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 135
+y 375
+w 45
+h 45
+lineColor index 29
+fillColor index 3
+lineWidth 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 135
+y 380
+w 45
+h 35
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 29
+bgColor index 3
+useDisplayBg
+value {
+  "Leg 2"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 245
+y 385
+w 95
+h 25
+controlPv "$(hexapod):LEG1.RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 40
+y 385
+w 95
+h 25
+controlPv "$(hexapod):LEG2.RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 30
+y 175
+w 45
+h 45
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 30
+y 175
+w 45
+h 45
+lineColor index 29
+fillColor index 3
+lineWidth 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 180
+w 45
+h 35
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 29
+bgColor index 3
+useDisplayBg
+value {
+  "Leg 3"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 65
+y 125
+w 45
+h 45
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 65
+y 125
+w 45
+h 45
+lineColor index 29
+fillColor index 3
+lineWidth 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 65
+y 130
+w 45
+h 35
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 29
+bgColor index 3
+useDisplayBg
+value {
+  "Leg 4"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 75
+y 185
+w 95
+h 25
+controlPv "$(hexapod):LEG3.RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 40
+y 100
+w 95
+h 25
+controlPv "$(hexapod):LEG4.RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 270
+y 125
+w 45
+h 45
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 270
+y 125
+w 45
+h 45
+lineColor index 29
+fillColor index 3
+lineWidth 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 130
+w 45
+h 35
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 29
+bgColor index 3
+useDisplayBg
+value {
+  "Leg 5"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 245
+y 100
+w 95
+h 25
+controlPv "$(hexapod):LEG5.RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 210
+y 185
+w 95
+h 25
+controlPv "$(hexapod):LEG6.RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 305
+y 175
+w 45
+h 45
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 305
+y 175
+w 45
+h 45
+lineColor index 29
+fillColor index 3
+lineWidth 3
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 305
+y 180
+w 45
+h 35
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 29
+bgColor index 3
+useDisplayBg
+value {
+  "Leg 6"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 175
+y 330
+w 30
+h 120
+lineColor index 25
+fill
+fillColor index 30
+lineWidth 2
+closePolygon
+numPoints 8
+xPoints {
+  0 185
+  1 185
+  2 175
+  3 190
+  4 205
+  5 195
+  6 195
+  7 190
+}
+yPoints {
+  0 450
+  1 341
+  2 345
+  3 330
+  4 345
+  5 341
+  6 450
+  7 450
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 180
+y 215
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B6"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 200
+y 215
+w 60
+h 20
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Limit 7"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 180
+y 270
+w 20
+h 20
+controlPv "$(hexapod):GPIOSTA.B8"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 130
+y 325
+w 38
+h 16
+font "helvetica-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Beam"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 155
+y 155
+w 10
+h 15
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "X"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 150
+y 175
+w 40
+h 0
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 190
+  1 150
+}
+yPoints {
+  0 175
+  1 175
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 190
+y 135
+w 0
+h 40
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 190
+  1 190
+}
+yPoints {
+  0 175
+  1 135
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 165
+y 130
+w 20
+h 20
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Z"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 370
+y 35
+w 20
+h 20
+controlPv "$(hexapod):MOTIONSTA.BA"
+lineColor index 14
+onColor index 20
+offColor index 24
+numBits 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 45
+y 300
+w 290
+h 20
+font "helvetica-bold-r-18.0"
+fontAlign "center"
+fgColor index 21
+bgColor index 3
+useDisplayBg
+visPv "CALC\\\{A&63\}($(hexapod):GPIOSTA)"
+visMin "63"
+visMax "64"
+value {
+  "Yaw limit hit or GPIO unplugged"
+}
+endObjectProperties
+

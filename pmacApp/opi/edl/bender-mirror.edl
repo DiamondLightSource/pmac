@@ -1,0 +1,764 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 401
+y 311
+w 739
+h 571
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 1
+botShadowColor index 11
+title "Bender - $(bender)"
+showGrid
+disableScroll
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 382
+w 381
+h 98
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 8
+y 372
+w 87
+h 14
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 7
+value {
+  "  Fit parameters"
+}
+autoSize
+border
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 409
+y 389
+w 315
+h 122
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 598
+y 522
+w 110
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-14.0"
+3d
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 178
+y 40
+w 0
+h 322
+lineColor index 19
+fillColor index 0
+lineWidth 3
+arrows "to"
+numPoints 2
+xPoints {
+  0 178
+  1 178
+}
+yPoints {
+  0 362
+  1 40
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 99
+y 275
+w 571
+h 0
+lineColor index 19
+fillColor index 0
+lineWidth 3
+arrows "to"
+numPoints 2
+xPoints {
+  0 99
+  1 670
+}
+yPoints {
+  0 275
+  1 275
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 484
+y 297
+w 115
+h 40
+font "arial-medium-r-18.0"
+fgColor index 19
+bgColor index 0
+useDisplayBg
+value {
+  "Bender motor"
+  "position [mm]"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 108
+y 69
+w 53
+h 40
+font "arial-medium-r-18.0"
+fontAlign "center"
+fgColor index 19
+bgColor index 0
+useDisplayBg
+value {
+  "1/R"
+  "[1/Km]"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 166
+y 100
+w 341
+h 272
+lineColor index 24
+fillColor index 0
+numPoints 2
+xPoints {
+  0 166
+  1 507
+}
+yPoints {
+  0 372
+  1 100
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 417
+y 74
+w 81
+h 20
+font "arial-medium-r-18.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  " Concave"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 181
+y 75
+w 69
+h 20
+font "arial-medium-r-18.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  " Convex"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 298
+y 289
+w 62
+h 20
+font "arial-medium-r-18.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "SLOPE"
+}
+autoSize
+endObjectProperties
+
+# (Arc)
+object activeArcClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 162
+y 271
+w 120
+h 110
+lineColor index 14
+fill
+fillColor index 24
+startAngle 0
+totalAngle 42
+fillMode "pie"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 30
+y 305
+w 103
+h 20
+font "arial-medium-r-18.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "INTERCEPT"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 149
+y 277
+w 0
+h 94
+lineColor index 24
+fillColor index 0
+arrows "both"
+numPoints 2
+xPoints {
+  0 149
+  1 149
+}
+yPoints {
+  0 277
+  1 371
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 101
+y 218
+w 135
+h 32
+font "arial-medium-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "SINGULARITY at"
+  "-INTERCEPT/SLOPE"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 224
+y 200
+w 66
+h 72
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 224
+  1 290
+}
+yPoints {
+  0 200
+  1 272
+}
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 1
+y 1
+w 724
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 1
+y 3
+w 722
+h 25
+lineColor index 1
+fillColor index 0
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 1
+y 4
+w 722
+h 25
+lineColor index 11
+fillColor index 0
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 1
+y 4
+w 722
+h 24
+fgColor index 14
+bgColor index 3
+topShadowColor index 0
+botShadowColor index 0
+font "arial-bold-r-14.0"
+xPosOffset 5
+yPosOffset 5
+button3Popup
+invisible
+buttonLabel "tooltip"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "generic-tooltip"
+}
+setPosition {
+  0 "button"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 1
+y 4
+w 722
+h 25
+font "arial-bold-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 48
+value {
+  "Bender mirror CS setup - $(bender)"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 253
+y 390
+w 128
+h 35
+controlPv "$(bender):INTERCEPT:RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 209
+y 395
+w 50
+h 30
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "RBV"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 98
+y 389
+w 118
+h 35
+controlPv "$(bender):INTERCEPT"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 14
+y 395
+w 80
+h 30
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "INTERCEPT"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 255
+y 428
+w 122
+h 35
+controlPv "$(bender):SLOPE:RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 206
+y 433
+w 50
+h 30
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "RBV"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 96
+y 428
+w 122
+h 35
+controlPv "$(bender):SLOPE"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 35
+y 433
+w 50
+h 30
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "SLOPE"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 608
+y 412
+w 110
+h 35
+controlPv "$(bender):LIMIT:RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 564
+y 416
+w 45
+h 30
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "RBV"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 454
+y 411
+w 110
+h 35
+controlPv "$(bender):LIMIT"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 410
+y 416
+w 45
+h 30
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "LIMIT"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 409
+y 379
+w 164
+h 14
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 7
+value {
+  "  Limit for radius at singularity"
+}
+autoSize
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 420
+y 452
+w 168
+h 48
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Bender motor position "
+  "at singularity"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 605
+y 466
+w 110
+h 35
+controlPv "$(bender):SNG"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+endObjectProperties
+

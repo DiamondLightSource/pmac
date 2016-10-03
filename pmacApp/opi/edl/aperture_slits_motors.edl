@@ -1,0 +1,1574 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 264
+y 636
+w 634
+h 448
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 0
+botShadowColor index 14
+title "Slit - $(P)"
+showGrid
+gridSize 5
+disableScroll
+endScreenProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 634
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 2
+w 632
+h 25
+lineColor index 1
+fillColor index 0
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 1
+y 3
+w 632
+h 25
+lineColor index 11
+fillColor index 0
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 1
+y 3
+w 632
+h 24
+fgColor index 14
+bgColor index 3
+topShadowColor index 0
+botShadowColor index 0
+font "arial-bold-r-14.0"
+xPosOffset 5
+yPosOffset 5
+button3Popup
+invisible
+buttonLabel "tooltip"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "generic-tooltip"
+}
+setPosition {
+  0 "button"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 1
+y 3
+w 633
+h 25
+controlPv "$(P):NAME.DESC"
+displayMode "decimal"
+precision 145938632
+fgColor index 14
+bgColor index 48
+fill
+font "arial-bold-r-16.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 177
+y 131
+w 280
+h 195
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 177
+y 131
+w 280
+h 195
+lineColor index 5
+fill
+fillColor index 9
+lineWidth 4
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 186
+y 141
+w 260
+h 175
+lineColor index 11
+fill
+fillColor index 12
+lineWidth 4
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 196
+y 151
+w 240
+h 155
+lineColor index 13
+fill
+fillColor index 14
+lineWidth 4
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 327
+y 237
+w 0
+h 0
+lineColor index 0
+fillColor index 0
+arrows "to"
+numPoints 1
+xPoints {
+  0 327
+}
+yPoints {
+  0 237
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 191
+y 182
+w 90
+h 15
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 1
+bgColor index 0
+useDisplayBg
+value {
+  "X size"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 185
+y 128
+w 100
+h 14
+lineColor index 0
+fillColor index 0
+numPoints 2
+xPoints {
+  0 185
+  1 285
+}
+yPoints {
+  0 128
+  1 142
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 427
+y 290
+w 88
+h 31
+lineColor index 0
+fillColor index 0
+numPoints 2
+xPoints {
+  0 427
+  1 515
+}
+yPoints {
+  0 290
+  1 321
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 274
+y 136
+w 90
+h 15
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 1
+bgColor index 0
+useDisplayBg
+value {
+  "X Centre"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 358
+y 282
+w 90
+h 15
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 1
+bgColor index 0
+useDisplayBg
+value {
+  "Y size"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 154
+y 199
+w 62
+h 118
+lineColor index 0
+fillColor index 0
+numPoints 2
+xPoints {
+  0 154
+  1 216
+}
+yPoints {
+  0 317
+  1 199
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 404
+y 209
+w 90
+h 15
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 1
+bgColor index 0
+useDisplayBg
+value {
+  "Y Centre"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 448
+y 138
+w 16
+h 69
+lineColor index 0
+fillColor index 0
+numPoints 2
+xPoints {
+  0 448
+  1 464
+}
+yPoints {
+  0 207
+  1 138
+}
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 527
+y 197
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=4?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T4,temp=$(P)$(T4)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 197
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=3?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T3,temp=$(P)$(T3)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 222
+y 352
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=2?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T2,temp=$(P)$(T2)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 322
+y 77
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=1?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T1,temp=$(P)$(T1)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 527
+y 227
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=8?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T8,temp=$(P)$(T8)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 227
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=7?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T7,temp=$(P)$(T7)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 322
+y 352
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=6?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T6,temp=$(P)$(T6)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 222
+y 77
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=5?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T5,temp=$(P)$(T5)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 527
+y 167
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=4?1:0\}($(P):INFO:NFLOW)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-flow-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "flow=$(W)$(W4),label=Flow 4"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 167
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=3?1:0\}($(P):INFO:NFLOW)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-flow-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "flow=$(W)$(W3),label=Flow 3"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 322
+y 382
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=2?1:0\}($(P):INFO:NFLOW)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-flow-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "flow=$(W)$(W2),label=Flow 2"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 322
+y 47
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=1?1:0\}($(P):INFO:NFLOW)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-flow-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "flow=$(W)$(W1),label=Flow 1"
+}
+noScroll
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 456
+y 259
+w 70
+h 20
+
+beginGroup
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 456
+y 259
+w 70
+h 20
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-14.0"
+buttonLabel "BPM"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "generic-BPM"
+}
+endObjectProperties
+
+endGroup
+
+visPv "$(P):INFO:NCURR"
+visInvert
+visMin "0"
+visMax "4"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 237
+y 197
+w 160
+h 50
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 1
+bgColor index 30
+useDisplayBg
+value {
+  "Beam (Z)"
+  ""
+  "Pointing Towards You"
+}
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 307
+y 217
+w 20
+h 10
+lineColor index 25
+fill
+fillColor index 30
+lineWidth 2
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 527
+y 257
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=12?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T8,temp=$(P)$(T8)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 17
+y 257
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=11?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T7,temp=$(P)$(T7)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 222
+y 382
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=10?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T6,temp=$(P)$(T6)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 222
+y 47
+w 90
+h 20
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "CALC\\\{A>=9?1:0\}($(P):INFO:NTEMP)"
+setSize
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "BLGui-blank-embed.edl"
+  1 "BLGui-temp-embed.edl"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  1 "label=T5,temp=$(P)$(T5)"
+}
+noScroll
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 411
+y 176
+w 26
+h 100
+
+beginGroup
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 411
+y 176
+w 0
+h 100
+lineColor index 11
+fillColor index 0
+lineWidth 4
+arrows "both"
+numPoints 2
+xPoints {
+  0 411
+  1 411
+}
+yPoints {
+  0 176
+  1 276
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 411
+y 214
+w 26
+h 30
+lineColor index 11
+fillColor index 0
+lineWidth 4
+numPoints 5
+xPoints {
+  0 411
+  1 411
+  2 437
+  3 411
+  4 411
+}
+yPoints {
+  0 214
+  1 229
+  2 229
+  3 229
+  4 244
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 411
+y 216
+w 25
+h 25
+lineColor index 1
+fillColor index 0
+lineWidth 2
+numPoints 5
+xPoints {
+  0 411
+  1 411
+  2 436
+  3 411
+  4 411
+}
+yPoints {
+  0 241
+  1 229
+  2 229
+  3 229
+  4 216
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 411
+y 176
+w 0
+h 100
+lineColor index 1
+fillColor index 0
+lineWidth 2
+arrows "both"
+numPoints 2
+xPoints {
+  0 411
+  1 411
+}
+yPoints {
+  0 176
+  1 276
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 227
+y 152
+w 180
+h 22
+
+beginGroup
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 227
+y 174
+w 180
+h 0
+
+beginGroup
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 227
+y 174
+w 180
+h 0
+lineColor index 11
+fillColor index 0
+lineWidth 4
+arrows "both"
+numPoints 2
+xPoints {
+  0 227
+  1 407
+}
+yPoints {
+  0 174
+  1 174
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 227
+y 174
+w 180
+h 0
+lineColor index 1
+fillColor index 0
+lineWidth 2
+arrows "both"
+numPoints 2
+xPoints {
+  0 227
+  1 407
+}
+yPoints {
+  0 174
+  1 174
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 304
+y 152
+w 30
+h 22
+
+beginGroup
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 304
+y 152
+w 30
+h 22
+lineColor index 11
+fillColor index 0
+lineWidth 4
+numPoints 5
+xPoints {
+  0 304
+  1 319
+  2 319
+  3 319
+  4 334
+}
+yPoints {
+  0 174
+  1 174
+  2 152
+  3 174
+  4 174
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 304
+y 153
+w 30
+h 21
+lineColor index 1
+fillColor index 0
+lineWidth 2
+numPoints 5
+xPoints {
+  0 304
+  1 319
+  2 319
+  3 319
+  4 334
+}
+yPoints {
+  0 174
+  1 174
+  2 153
+  3 174
+  4 174
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 40
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "BLGui-motor-embed-soft.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P):X:CENTER"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 433
+y 40
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "BLGui-motor-embed-soft.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P):Y:CENTER"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 434
+y 298
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "BLGui-motor-embed-soft.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P):Y:SIZE"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 298
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "BLGui-motor-embed-soft.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P):X:SIZE"
+}
+noScroll
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 50
+h 30
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 48
+h 29
+lineColor index 1
+fillColor index 0
+lineWidth 2
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 2
+y 2
+w 48
+h 29
+lineColor index 11
+fillColor index 0
+lineWidth 2
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 2
+y 2
+w 47
+h 27
+lineColor index 49
+fill
+fillColor index 48
+lineWidth 3
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 12
+y 6
+w 4
+h 3
+lineColor index 1
+fill
+fillColor index 0
+lineWidth 2
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 5
+release 0
+x 0
+y 0
+w 50
+h 30
+controlPv "$(P):NAME"
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+precision 3
+nullColor index 0
+smartRefresh
+fastUpdate
+newPos
+noExecuteClipMask
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 534
+y 418
+w 95
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-medium-r-18.0"
+3d
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 535
+y 5
+w 90
+h 20
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-14.0"
+buttonLabel "Full Device"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "$(P)-device-screen-1"
+}
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 435
+y 418
+w 95
+h 25
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-14.0"
+buttonLabel "Slits Config"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "aperture_slits"
+}
+symbols {
+  0 "slits=$(P)"
+}
+endObjectProperties
+

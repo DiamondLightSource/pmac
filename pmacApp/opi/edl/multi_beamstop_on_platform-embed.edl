@@ -1,0 +1,84 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 313
+y 103
+w 790
+h 360
+font "helvetica-medium-r-14.0"
+ctlFont "courier-bold-r-14.0"
+btnFont "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 30
+ctlBgColor1 index 3
+ctlBgColor2 index 3
+topShadowColor index 1
+botShadowColor index 11
+title "multi_beamstop_embed"
+showGrid
+snapToGrid
+gridSize 5
+endScreenProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 0
+y 0
+w 790
+h 350
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "$(P):MODE"
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "multi_beamstop_on_platform_TSAXS-embed"
+  1 "multi_beamstop_on_platform_GISAXS-embed"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  0 "P=$(P)"
+  1 "P=$(P)"
+}
+noScroll
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 5
+y 360
+w 780
+h 0
+lineColor index 14
+fillColor index 3
+lineStyle "dash"
+numPoints 2
+xPoints {
+  0 5
+  1 785
+}
+yPoints {
+  0 359
+  1 359
+}
+endObjectProperties
+

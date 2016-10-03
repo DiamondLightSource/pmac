@@ -1,0 +1,59 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 153
+y 78
+w 1304
+h 893
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 1
+botShadowColor index 11
+title "Multi Beamstop Help"
+showGrid
+snapToGrid
+disableScroll
+endScreenProperties
+
+# (PNG Image)
+object activePngClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 1304
+h 895
+file "multi_beamstop_on_platform-help-TSAXS.png"
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 1190
+y 860
+w 110
+h 30
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-14.0"
+3d
+endObjectProperties
+

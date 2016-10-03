@@ -1,0 +1,337 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 907
+y 168
+w 790
+h 350
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 0
+botShadowColor index 14
+title "multi_beamstop_TSAXS"
+showGrid
+snapToGrid
+gridSize 5
+disableScroll
+endScreenProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 105
+y 175
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "motor-embed-small.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P):BS2:XABS,filename=motor.edl,box-label=BS2 X Absolute (compound)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 305
+y 175
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "motor-embed-small.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P):BS2:YABS,filename=motor.edl,box-label=BS2 Y Absolute (compound)"
+}
+noScroll
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 600
+y 125
+w 189
+h 104
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 600
+y 120
+w 118
+h 14
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 7
+value {
+  "  Compound Motors  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 650
+y 165
+w 135
+h 25
+fgColor index 25
+bgColor index 3
+inconsistentColor index 0
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P):MODE"
+indicatorPv "$(P):MODE:RBV"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+# (Button)
+object activeButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 650
+y 195
+w 135
+h 30
+fgColor index 25
+onColor index 4
+offColor index 3
+inconsistentColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(P):DEFER"
+onLabel "DEFER"
+3d
+font "arial-bold-r-14.0"
+objType "controls"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 605
+y 165
+w 50
+h 25
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Mode"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 605
+y 195
+w 50
+h 30
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Defer"
+  "Move"
+}
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 4
+release 0
+x 605
+y 135
+w 85
+h 25
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-14.0"
+buttonLabel "Setup"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "multi_beamstop_on_platform"
+}
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 4
+release 0
+x 695
+y 135
+w 90
+h 25
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-14.0"
+buttonLabel "Diagram"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "multi_beamstop_on_platform-help-TSAXS"
+}
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 105
+y 55
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "motor-embed-small.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P):BS2:CSX,filename=motor.edl,box-label=BS2 CSX (compound)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 305
+y 55
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "motor-embed-small.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P):BS2:CSY,filename=motor.edl,box-label=BS2 CSY (compound)"
+}
+noScroll
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 600
+y 240
+w 190
+h 110
+font "arial-bold-r-18.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "TSAXS Mode"
+  "Compound Motors"
+}
+endObjectProperties
+

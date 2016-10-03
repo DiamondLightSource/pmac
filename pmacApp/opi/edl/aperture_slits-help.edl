@@ -1,0 +1,848 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 387
+y 113
+w 629
+h 360
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 1
+botShadowColor index 11
+title "Aperture Slits Help"
+showGrid
+snapToGrid
+disableScroll
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 290
+y 160
+w 260
+h 60
+lineColor index 30
+fill
+fillColor index 30
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 90
+w 290
+h 170
+lineColor index 30
+fill
+fillColor index 30
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 510
+y 330
+w 110
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-14.0"
+3d
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 90
+y 220
+w 200
+h 80
+lineColor index 24
+fill
+fillColor index 23
+closePolygon
+numPoints 4
+xPoints {
+  0 90
+  1 90
+  2 290
+  3 290
+}
+yPoints {
+  0 240
+  1 300
+  2 300
+  3 220
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 90
+y 80
+w 200
+h 80
+lineColor index 24
+fill
+fillColor index 23
+closePolygon
+numPoints 4
+xPoints {
+  0 90
+  1 90
+  2 290
+  3 290
+}
+yPoints {
+  0 140
+  1 80
+  2 80
+  3 160
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 350
+y 40
+w 200
+h 80
+lineColor index 24
+fill
+fillColor index 23
+closePolygon
+numPoints 4
+xPoints {
+  0 350
+  1 350
+  2 550
+  3 550
+}
+yPoints {
+  0 100
+  1 40
+  2 40
+  3 120
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 80
+w 0
+h 0
+lineColor index 25
+fill
+fillColor index 30
+numPoints 1
+xPoints {
+  0 0
+}
+yPoints {
+  0 80
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 550
+y 160
+w 80
+h 20
+lineColor index 30
+fill
+fillColor index 30
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 350
+y 180
+w 200
+h 80
+lineColor index 24
+fill
+fillColor index 23
+closePolygon
+numPoints 4
+xPoints {
+  0 350
+  1 350
+  2 550
+  3 550
+}
+yPoints {
+  0 200
+  1 260
+  2 260
+  3 180
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 90
+w 630
+h 70
+lineColor index 25
+fillColor index 0
+numPoints 5
+xPoints {
+  0 0
+  1 90
+  2 90
+  3 290
+  4 630
+}
+yPoints {
+  0 90
+  1 90
+  2 140
+  3 160
+  4 160
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 180
+w 630
+h 80
+lineColor index 25
+fillColor index 0
+numPoints 8
+xPoints {
+  0 0
+  1 90
+  2 90
+  3 290
+  4 350
+  5 350
+  6 550
+  7 630
+}
+yPoints {
+  0 260
+  1 260
+  2 240
+  3 220
+  4 220
+  5 200
+  6 180
+  7 180
+}
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 190
+y 160
+w 100
+h 60
+
+beginGroup
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 290
+y 160
+w 0
+h 60
+lineColor index 14
+fillColor index 0
+arrows "both"
+numPoints 2
+xPoints {
+  0 290
+  1 290
+}
+yPoints {
+  0 160
+  1 220
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 190
+y 180
+w 94
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Aperture Size"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 450
+y 120
+w 100
+h 60
+
+beginGroup
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 550
+y 120
+w 0
+h 60
+lineColor index 14
+fillColor index 0
+arrows "both"
+numPoints 2
+xPoints {
+  0 550
+  1 550
+}
+yPoints {
+  0 120
+  1 180
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 450
+y 140
+w 94
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Aperture Size"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 160
+w 42
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Beam"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 10
+y 180
+w 40
+h 0
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 10
+  1 50
+}
+yPoints {
+  0 180
+  1 180
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 50
+y 60
+w 275
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "AP (aperture cutting +ve edge of beam)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 310
+y 10
+w 273
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "AM (aperture cutting -ve edge of beam)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 330
+w 469
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "When both aperture motors are at 0, the beam size = Aperture Size"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 330
+y 260
+w 0
+h 60
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 330
+  1 330
+}
+yPoints {
+  0 320
+  1 260
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 340
+y 290
+w 249
+h 32
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "X+ for horizontal aperture slit pair"
+  "(or Y+ for vertical aperture slit pair)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 70
+y 200
+w 135
+h 32
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "AP Position"
+  "(centre of aperture)"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 80
+y 180
+w 20
+h 20
+lineColor index 14
+fillColor index 0
+numPoints 8
+xPoints {
+  0 90
+  1 90
+  2 100
+  3 80
+  4 90
+  5 100
+  6 90
+  7 80
+}
+yPoints {
+  0 180
+  1 200
+  2 190
+  3 190
+  4 180
+  5 190
+  6 200
+  7 190
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 330
+y 110
+w 135
+h 32
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "AM Position"
+  "(centre of aperture)"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 340
+y 140
+w 20
+h 20
+lineColor index 14
+fillColor index 0
+numPoints 8
+xPoints {
+  0 350
+  1 350
+  2 360
+  3 340
+  4 350
+  5 360
+  6 350
+  7 340
+}
+yPoints {
+  0 140
+  1 160
+  2 150
+  3 150
+  4 140
+  5 150
+  6 160
+  7 150
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 600
+y 160
+w 20
+h 20
+lineColor index 14
+fillColor index 0
+numPoints 8
+xPoints {
+  0 610
+  1 610
+  2 620
+  3 600
+  4 610
+  5 620
+  6 610
+  7 600
+}
+yPoints {
+  0 160
+  1 180
+  2 170
+  3 170
+  4 160
+  5 170
+  6 180
+  7 170
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 580
+y 240
+w 46
+h 32
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Beam"
+  "Centre"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 570
+y 160
+w 0
+h 20
+lineColor index 14
+fillColor index 0
+numPoints 2
+xPoints {
+  0 570
+  1 570
+}
+yPoints {
+  0 160
+  1 180
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 570
+y 180
+w 0
+h 30
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 570
+  1 570
+}
+yPoints {
+  0 210
+  1 180
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 570
+y 130
+w 0
+h 30
+lineColor index 14
+fillColor index 0
+arrows "from"
+numPoints 2
+xPoints {
+  0 570
+  1 570
+}
+yPoints {
+  0 160
+  1 130
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 560
+y 100
+w 42
+h 32
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Beam"
+  "Size"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 610
+y 180
+w 0
+h 60
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 610
+  1 610
+}
+yPoints {
+  0 240
+  1 180
+}
+endObjectProperties
+
