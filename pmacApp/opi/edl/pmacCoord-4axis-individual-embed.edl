@@ -1,0 +1,417 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 587
+y 628
+w 620
+h 375
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 0
+botShadowColor index 14
+title "pmacCoord-slit4-individual-embed"
+showGrid
+snapToGrid
+gridSize 5
+disableScroll
+endScreenProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 210
+y 255
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "motor-embed-small.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P)$(M4),filename=motor.edl,box-label=$(m4-desc)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 420
+y 135
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "motor-embed-small.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P)$(M1),filename=motor.edl,box-label=$(m1-desc)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 135
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "motor-embed-small.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P)$(M2),filename=motor.edl,box-label=$(m2-desc)"
+}
+noScroll
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 215
+y 15
+w 190
+h 110
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\dummy=i:0"
+setSize
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "motor-embed-small.edl"
+}
+menuLabel {
+  0 "0"
+}
+symbols {
+  0 "motor=$(P)$(M3),filename=motor.edl,box-label=$(m3-desc)"
+}
+noScroll
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 180
+y 105
+w 250
+h 160
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 180
+y 105
+w 250
+h 160
+lineColor index 5
+fill
+fillColor index 9
+lineWidth 4
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 190
+y 115
+w 230
+h 140
+lineColor index 11
+fill
+fillColor index 12
+lineWidth 4
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 200
+y 125
+w 210
+h 120
+lineColor index 13
+fill
+fillColor index 14
+lineWidth 4
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 315
+y 195
+w 0
+h 0
+lineColor index 0
+fillColor index 0
+arrows "to"
+numPoints 1
+xPoints {
+  0 315
+}
+yPoints {
+  0 195
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 300
+y 140
+w 65
+h 40
+lineColor index 11
+fillColor index 0
+lineWidth 4
+arrows "both"
+numPoints 3
+xPoints {
+  0 300
+  1 300
+  2 365
+}
+yPoints {
+  0 140
+  1 180
+  2 180
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 220
+y 190
+w 160
+h 30
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 1
+bgColor index 30
+useDisplayBg
+value {
+  "Beam (Z)"
+  "Pointing Towards You"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 370
+y 170
+w 15
+h 20
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 1
+bgColor index 0
+useDisplayBg
+value {
+  "X"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 275
+y 135
+w 10
+h 16
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 1
+bgColor index 0
+useDisplayBg
+value {
+  "Y"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 300
+y 140
+w 65
+h 40
+lineColor index 3
+fillColor index 0
+lineWidth 2
+arrows "both"
+numPoints 3
+xPoints {
+  0 300
+  1 300
+  2 365
+}
+yPoints {
+  0 140
+  1 180
+  2 180
+}
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 290
+y 175
+w 20
+h 10
+lineColor index 25
+fill
+fillColor index 30
+lineWidth 2
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 2000
+y 2000
+w 60
+h 40
+fgColour index 14
+bgColour index 0
+topShadowColour index 0
+botShadowColour index 14
+font "arial-medium-r-18.0"
+numItems 2
+symbolTag {
+  0 "?"
+  1 "?"
+}
+symbol0 {
+  0 "m1-desc"
+}
+PV0 {
+  0 "$(P)$(M1).DESC"
+}
+symbol1 {
+  0 "m2-desc"
+}
+PV1 {
+  0 "$(P)$(M2).DESC"
+}
+symbol2 {
+  0 "m3-desc"
+}
+PV2 {
+  0 "$(P)$(M3).DESC"
+}
+symbol3 {
+  0 "m4-desc"
+}
+PV3 {
+  0 "$(P)$(M4).DESC"
+}
+endObjectProperties
+

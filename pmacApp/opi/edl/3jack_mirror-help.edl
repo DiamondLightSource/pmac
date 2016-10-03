@@ -1,0 +1,1422 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 457
+y 255
+w 651
+h 386
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 1
+botShadowColor index 11
+title "3 Jack Help"
+showGrid
+snapToGrid
+disableScroll
+endScreenProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 170
+y 290
+w 460
+h 50
+lineColor index 14
+fill
+fillColor index 4
+lineWidth 2
+numPoints 5
+xPoints {
+  0 330
+  1 630
+  2 480
+  3 170
+  4 330
+}
+yPoints {
+  0 340
+  1 310
+  2 290
+  3 320
+  4 340
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 560
+y 190
+w 20
+h 120
+lineColor index 49
+fill
+fillColor index 25
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 570
+y 190
+w 0
+h 120
+lineColor index 14
+fillColor index 0
+lineWidth 2
+arrows "to"
+numPoints 2
+xPoints {
+  0 570
+  1 570
+}
+yPoints {
+  0 310
+  1 190
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 460
+y 160
+w 20
+h 140
+lineColor index 49
+fill
+fillColor index 25
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 470
+y 160
+w 0
+h 140
+lineColor index 14
+fillColor index 0
+lineWidth 2
+arrows "to"
+numPoints 2
+xPoints {
+  0 470
+  1 470
+}
+yPoints {
+  0 300
+  1 160
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 220
+y 210
+w 20
+h 110
+lineColor index 49
+fill
+fillColor index 25
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 230
+y 210
+w 0
+h 110
+lineColor index 14
+fillColor index 0
+lineWidth 2
+arrows "to"
+numPoints 2
+xPoints {
+  0 230
+  1 230
+}
+yPoints {
+  0 320
+  1 210
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 620
+y 130
+w 10
+h 70
+lineColor index 33
+fill
+fillColor index 34
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 470
+y 40
+w 10
+h 110
+lineColor index 33
+fill
+fillColor index 34
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 180
+y 160
+w 10
+h 40
+lineColor index 33
+fill
+fillColor index 34
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 170
+y 10
+w 470
+h 250
+lineColor index 24
+fillColor index 0
+numPoints 16
+xPoints {
+  0 330
+  1 170
+  2 170
+  3 480
+  4 480
+  5 640
+  6 640
+  7 330
+  8 170
+  9 170
+  10 480
+  11 480
+  12 640
+  13 640
+  14 330
+  15 330
+}
+yPoints {
+  0 260
+  1 160
+  2 140
+  3 10
+  4 30
+  5 130
+  6 110
+  7 240
+  8 140
+  9 160
+  10 30
+  11 10
+  12 110
+  13 130
+  14 260
+  15 240
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 360
+y 220
+w 34
+h 20
+font "arial-medium-r-18.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "-MP"
+}
+autoSize
+endObjectProperties
+
+# (Arc)
+object activeArcClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 270
+y 210
+w 120
+h 100
+lineColor index 24
+fill
+fillColor index 20
+lineWidth 3
+startAngle 143
+totalAngle 12
+fillMode "pie"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 270
+y 210
+w 28
+h 20
+font "arial-medium-r-18.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "MR"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 90
+y 230
+w 85
+h 20
+font "arial-medium-r-18.0"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "(JTX,JTZ)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 430
+y 300
+w 85
+h 20
+font "arial-medium-r-18.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "(J2X,J2Z)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 530
+y 320
+w 83
+h 20
+font "arial-medium-r-18.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "(J3X,J3Z)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 220
+y 200
+w 20
+h 20
+font "arial-medium-r-18.0"
+fontAlign "center"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "x"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 180
+y 290
+w 41
+h 16
+font "arial-medium-r-14.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "Jack 1"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 420
+y 270
+w 41
+h 16
+font "arial-medium-r-14.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "Jack 2"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 520
+y 270
+w 41
+h 16
+font "arial-medium-r-14.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "Jack 3"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 320
+y 210
+w 28
+h 20
+font "arial-medium-r-18.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "MD"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 320
+y 250
+w 20
+h 20
+font "arial-medium-r-18.0"
+fontAlign "center"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "x"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 30
+y 160
+w 107
+h 16
+font "arial-medium-r-14.0"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "Jack Plane Axes"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 190
+y 330
+w 83
+h 20
+font "arial-medium-r-18.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "(J1X,J1Z)"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 10
+y 350
+w 160
+h 10
+lineColor index 29
+fillColor index 0
+lineWidth 2
+arrows "both"
+numPoints 3
+xPoints {
+  0 10
+  1 80
+  2 170
+}
+yPoints {
+  0 350
+  1 360
+  2 350
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 20
+y 360
+w 130
+h 20
+font "arial-medium-r-18.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "X                     Z"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 30
+y 330
+w 120
+h 16
+font "arial-medium-r-14.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "Global Plane Axes"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 360
+y 310
+w 101
+h 20
+font "arial-medium-r-18.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "(MCX,MCZ)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 400
+y 300
+w 20
+h 20
+font "arial-medium-r-18.0"
+fontAlign "center"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "x"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 370
+y 340
+w 124
+h 16
+font "arial-medium-r-14.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "Measurement point"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 30
+y 80
+w 117
+h 16
+font "arial-medium-r-14.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "Mirror Plane Axes"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 400
+y 130
+w 20
+h 20
+font "arial-medium-r-18.0"
+fontAlign "center"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "x"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 370
+y 60
+w 88
+h 64
+font "arial-medium-r-14.0"
+fontAlign "center"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "Projection of"
+  "Measurement"
+  "Point in"
+  "Mirror Plane"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 380
+y 170
+w 79
+h 20
+font "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "<Y  Axis>"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 530
+y 220
+w 105
+h 20
+font "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "<J3   Motor>"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 430
+y 250
+w 106
+h 20
+font "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "<J2   Motor>"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 200
+y 250
+w 95
+h 20
+font "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "<J1 Motor>"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 170
+y 140
+w 470
+h 120
+lineColor index 34
+fillColor index 4
+lineWidth 2
+numPoints 5
+xPoints {
+  0 330
+  1 640
+  2 480
+  3 170
+  4 330
+}
+yPoints {
+  0 260
+  1 200
+  2 140
+  3 200
+  4 260
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 240
+y 110
+w 110
+h 20
+font "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "<ROLL Axis>"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 470
+y 110
+w 124
+h 20
+font "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "<-PITCH Axis>"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 220
+y 140
+w 80
+h 16
+font "arial-medium-r-14.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "Mirror Plane"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 270
+y 310
+w 83
+h 16
+font "arial-medium-r-14.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "Global Plane"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 310
+y 340
+w 40
+h 20
+font "arial-medium-r-18.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "(0,0)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 270
+y 360
+w 126
+h 16
+font "arial-medium-r-14.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "Global Plane Origin"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 320
+y 330
+w 20
+h 20
+font "arial-medium-r-18.0"
+fontAlign "center"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "x"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 480
+y 200
+w 70
+h 16
+font "arial-medium-r-14.0"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "Jack Plane"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 480
+y 60
+w 52
+h 32
+font "arial-medium-r-14.0"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "Fixed"
+  "Support"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 580
+y 240
+w 53
+h 48
+font "arial-medium-r-14.0"
+fgColor index 29
+bgColor index 0
+useDisplayBg
+value {
+  "Variable"
+  "Height"
+  "Jack"
+}
+autoSize
+endObjectProperties
+
+# (Arc)
+object activeArcClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 450
+y 160
+w 40
+h 20
+lineColor index 14
+fillColor index 0
+lineWidth 2
+endObjectProperties
+
+# (Arc)
+object activeArcClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 550
+y 190
+w 40
+h 20
+lineColor index 14
+fillColor index 0
+lineWidth 2
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 220
+y 210
+w 20
+h 10
+lineColor index 14
+fillColor index 0
+lineWidth 2
+numPoints 4
+xPoints {
+  0 220
+  1 220
+  2 240
+  3 240
+}
+yPoints {
+  0 220
+  1 210
+  2 210
+  3 220
+}
+endObjectProperties
+
+# (Arc)
+object activeArcClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 270
+y 210
+w 120
+h 100
+lineColor index 24
+fill
+fillColor index 20
+lineWidth 3
+startAngle 13
+totalAngle 13
+fillMode "pie"
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 330
+y 240
+w 0
+h 20
+lineColor index 22
+fillColor index 0
+lineWidth 2
+arrows "to"
+numPoints 2
+xPoints {
+  0 330
+  1 330
+}
+yPoints {
+  0 260
+  1 240
+}
+endObjectProperties
+
+# (Arc)
+object activeArcClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 350
+y 90
+w 120
+h 100
+lineColor index 14
+fill
+fillColor index 4
+lineWidth 3
+startAngle 7
+totalAngle 20
+fillMode "pie"
+endObjectProperties
+
+# (Arc)
+object activeArcClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 350
+y 90
+w 120
+h 100
+lineColor index 14
+fill
+fillColor index 4
+lineWidth 3
+startAngle 143
+totalAngle 29
+fillMode "pie"
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 10
+y 170
+w 160
+h 20
+lineColor index 34
+fillColor index 0
+lineWidth 2
+arrows "both"
+numPoints 3
+xPoints {
+  0 10
+  1 70
+  2 170
+}
+yPoints {
+  0 170
+  1 190
+  2 170
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 410
+y 140
+w 0
+h 170
+lineColor index 14
+fillColor index 0
+lineWidth 2
+arrows "to"
+numPoints 2
+xPoints {
+  0 410
+  1 410
+}
+yPoints {
+  0 310
+  1 140
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 20
+y 180
+w 130
+h 20
+font "arial-medium-r-18.0"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "X                     Z"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 170
+y 210
+w 50
+h 30
+lineColor index 34
+fillColor index 0
+arrows "from"
+numPoints 2
+xPoints {
+  0 220
+  1 170
+}
+yPoints {
+  0 210
+  1 240
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 10
+y 90
+w 160
+h 40
+lineColor index 24
+fillColor index 0
+lineWidth 2
+arrows "both"
+numPoints 3
+xPoints {
+  0 10
+  1 70
+  2 170
+}
+yPoints {
+  0 90
+  1 130
+  2 90
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 20
+y 110
+w 130
+h 20
+font "arial-medium-r-18.0"
+fgColor index 24
+bgColor index 0
+useDisplayBg
+value {
+  "X                     Z"
+}
+autoSize
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 530
+y 360
+w 110
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-14.0"
+3d
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 270
+y 280
+w 120
+h 20
+font "arial-medium-r-14.0"
+fontAlign "center"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "Jack Plane Origin"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 310
+y 260
+w 40
+h 20
+font "arial-medium-r-18.0"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "(0,0)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 220
+w 85
+h 48
+font "arial-medium-r-14.0"
+fontAlign "center"
+fgColor index 34
+bgColor index 0
+useDisplayBg
+value {
+  "Jack 1 Top"
+  "Fix point"
+  "in Jack Plane"
+}
+autoSize
+endObjectProperties
+

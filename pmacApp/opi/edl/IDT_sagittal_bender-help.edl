@@ -1,0 +1,471 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 239
+y 108
+w 641
+h 582
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 1
+botShadowColor index 11
+title "IDT sagittal DCM Help"
+showGrid
+snapToGrid
+disableScroll
+endScreenProperties
+
+# (PNG Image)
+object activePngClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 320
+w 482
+h 259
+file "IDT_sagittal_bender.png"
+endObjectProperties
+
+# (Arc)
+object activeArcClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x -250
+y -610
+w 1000
+h 1000
+lineColor index 45
+fillColor index 0
+lineWidth 5
+startAngle 250
+totalAngle 40
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 520
+y 550
+w 110
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-14.0"
+3d
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 250
+y 10
+w 140
+h 360
+lineColor index 20
+fillColor index 0
+numPoints 3
+xPoints {
+  0 250
+  1 250
+  2 390
+}
+yPoints {
+  0 370
+  1 10
+  2 370
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 120
+y 180
+w 50
+h 32
+font "arial-bold-r-14.0"
+fgColor index 25
+bgColor index 0
+useDisplayBg
+value {
+  "Bend"
+  "Radius"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 110
+y 10
+w 140
+h 360
+lineColor index 25
+fillColor index 0
+lineWidth 3
+arrows "both"
+numPoints 2
+xPoints {
+  0 250
+  1 110
+}
+yPoints {
+  0 10
+  1 370
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 110
+y 370
+w 280
+h 0
+lineColor index 19
+fillColor index 0
+lineWidth 3
+arrows "both"
+numPoints 2
+xPoints {
+  0 110
+  1 390
+}
+yPoints {
+  0 370
+  1 370
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 210
+y 340
+w 81
+h 16
+font "arial-bold-r-14.0"
+fgColor index 19
+bgColor index 0
+useDisplayBg
+value {
+  "Crystal Len"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 110
+y 370
+w 0
+h 0
+lineColor index 14
+fillColor index 0
+numPoints 1
+xPoints {
+  0 110
+}
+yPoints {
+  0 370
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 70
+y 370
+w 40
+h 110
+lineColor index 20
+fillColor index 0
+numPoints 3
+xPoints {
+  0 110
+  1 110
+  2 70
+}
+yPoints {
+  0 480
+  1 370
+  2 480
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 110
+y 370
+w 0
+h 110
+lineColor index 19
+fillColor index 0
+lineWidth 3
+arrows "both"
+numPoints 2
+xPoints {
+  0 110
+  1 110
+}
+yPoints {
+  0 370
+  1 480
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 80
+y 420
+w 61
+h 16
+font "arial-bold-r-14.0"
+fgColor index 19
+bgColor index 0
+useDisplayBg
+value {
+  "Arm Len"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 70
+y 480
+w 40
+h 0
+lineColor index 25
+fillColor index 0
+lineWidth 3
+arrows "both"
+numPoints 2
+xPoints {
+  0 110
+  1 70
+}
+yPoints {
+  0 480
+  1 480
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 390
+y 480
+w 40
+h 0
+lineColor index 25
+fillColor index 0
+lineWidth 3
+arrows "both"
+numPoints 2
+xPoints {
+  0 430
+  1 390
+}
+yPoints {
+  0 480
+  1 480
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 390
+y 370
+w 40
+h 110
+lineColor index 20
+fillColor index 0
+numPoints 3
+xPoints {
+  0 430
+  1 390
+  2 390
+}
+yPoints {
+  0 480
+  1 370
+  2 480
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 70
+y 490
+w 45
+h 16
+font "arial-bold-r-14.0"
+fgColor index 25
+bgColor index 0
+useDisplayBg
+value {
+  "Bend1"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 380
+y 490
+w 46
+h 16
+font "arial-bold-r-14.0"
+fgColor index 25
+bgColor index 0
+useDisplayBg
+value {
+  "Bend2"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 250
+y 230
+w 170
+h 140
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 420
+  1 250
+}
+yPoints {
+  0 230
+  1 370
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 350
+y 130
+w 269
+h 96
+font "arial-bold-r-14.0"
+fgColor index 25
+bgColor index 0
+useDisplayBg
+value {
+  "Fraction"
+  "This is the fraction of the bend"
+  "contributed by Bend1. I.E 50% centres"
+  "the line between the two pivot points"
+  "and 40% would move the red line "
+  "towards Bend1 pivot"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 470
+y 390
+w 161
+h 80
+font "arial-bold-r-14.0"
+fgColor index 19
+bgColor index 0
+useDisplayBg
+value {
+  "Max Diff"
+  "This is the maximum"
+  "difference between the "
+  "Bend1 and Bend2"
+  "actuator values in mm"
+}
+autoSize
+endObjectProperties
+
