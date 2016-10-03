@@ -214,6 +214,13 @@ class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
 dls_pmac_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 dls_pmac_asyn_motor.ArgInfo.descriptions["SPORT"] = Ident("Delta tau motor controller comms port", DeltaTauCommsPort)
 
+@add_basic
+class dls_pmac_cs_asyn_motor(AutoSubstitution, MotorRecord):
+    WarnMacros = False
+    TemplateFile = 'dls_pmac_cs_asyn_motor.template'
+    
+dls_pmac_cs_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
+
 
 class autohome(AutoSubstitution):
     Dependencies = (Calc,)
@@ -318,6 +325,130 @@ class pmacSetCoordStepsPerUnit(Device):
         CS    = Ident ('Underlying CS object', CS),
         Axis  = Simple('Axis number to apply scale to', int),
         Scale = Simple('Scale factor the cts will be multiplied by before being passed to motor record', float))   
+
+
+def setPortArgInfo(cls):
+    cls.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller comms port", DeltaTau)
+    return cls
+
+@setPortArgInfo
+class pmacVariableWrite(AutoSubstitution):
+    WarnMacros = False
+    Dependencies = (Pmac,)
+    TemplateFile = 'pmacVariableWrite.template'
+
+def add_pmac_variable_write(cls):
+    """Convenience function to add pmacVariableWrite PORT attribute to a class that
+    includes it via an msi include statement rather than verbatim"""
+    cls.Arguments = cls.Arguments + ["PORT"]
+    pmac_arg_info = makeArgInfo(PORT = Ident ("Delta tau motor controller comms port", DeltaTau))
+    cls.ArgInfo = pmac_arg_info + cls.ArgInfo
+    return cls
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_accel_dcm(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'accel_dcm.template'    
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_IDT_sagittal_dcm(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'IDT_sagittal_dcm.template'
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_IDT_sagittal_bender(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'IDT_sagittal_bender.template'
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_qcm(AutoSubstitution):
+    Dependencies = (Pmac,)
+    Dependencies = (Calc,)
+    TemplateFile = 'qcm.template'    
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_aperture_slits(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'aperture_slits.template'    
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_B22_Optics_Box(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'B22_optics_box.template'    
+
+class CS_blade_slits(AutoSubstitution):
+    TemplateFile = 'blade_slits.template'    
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_bender(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'bender.template'    
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_flexure_slits(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'flexure_slits.template'    
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_gap_and_centre_slits(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'gap_and_centre_slits.template'    
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_multi_beamstop_on_platform(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'multi_beamstop_on_platform.template'    
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_1jack_compensated(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = '1jack_compensated.template'
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_2jack(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = '2jack.template'    
+
+@setPortArgInfo
+@add_pmac_variable_write
+class CS_3jack(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = '3jack.template'    
+
+@setPortArgInfo                
+@add_pmac_variable_write
+class CS_3jack_mirror(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = '3jack_mirror.template'    
+
+@setPortArgInfo                
+@add_pmac_variable_write
+class CS_zform(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'zform.template'    
+
+
+@setPortArgInfo                
+@add_pmac_variable_write
+class CS_symetrie_hexapod(AutoSubstitution):
+    Dependencies = (Pmac,)
+    TemplateFile = 'symetrie_hexapod.template'  
+
+class slit4_gui(AutoSubstitution):
+    TemplateFile = 'slit4-gui.template'
+
 
 
 class pmacCreateCsGroup(Device):
