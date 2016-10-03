@@ -1,0 +1,636 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 380
+y 593
+w 890
+h 389
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 1
+botShadowColor index 11
+title "IDT sagittal DCM Help"
+showGrid
+snapToGrid
+disableScroll
+endScreenProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 200
+y 10
+w 370
+h 370
+lineColor index 5
+fill
+fillColor index 4
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 130
+w 890
+h 130
+lineColor index 30
+fill
+fillColor index 30
+closePolygon
+numPoints 10
+xPoints {
+  0 0
+  1 190
+  2 290
+  3 540
+  4 890
+  5 890
+  6 590
+  7 480
+  8 240
+  9 0
+}
+yPoints {
+  0 260
+  1 260
+  2 240
+  3 150
+  4 150
+  5 130
+  6 130
+  7 150
+  8 240
+  9 240
+}
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 770
+y 360
+w 110
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-14.0"
+3d
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 210
+w 42
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Beam"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 10
+y 230
+w 40
+h 0
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 10
+  1 50
+}
+yPoints {
+  0 230
+  1 230
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 290
+y 170
+w 79
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Perp Motor"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 130
+w 890
+h 110
+lineColor index 25
+fillColor index 0
+numPoints 5
+xPoints {
+  0 0
+  1 240
+  2 480
+  3 590
+  4 890
+}
+yPoints {
+  0 240
+  1 240
+  2 150
+  3 130
+  4 130
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 150
+w 890
+h 110
+lineColor index 25
+fillColor index 0
+numPoints 5
+xPoints {
+  0 0
+  1 190
+  2 290
+  3 540
+  4 890
+}
+yPoints {
+  0 260
+  1 260
+  2 240
+  3 150
+  4 150
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 340
+y 210
+w 100
+h 20
+lineColor index 14
+fillColor index 0
+numPoints 2
+xPoints {
+  0 340
+  1 440
+}
+yPoints {
+  0 230
+  1 210
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 380
+y 160
+w 50
+h 10
+lineColor index 14
+fillColor index 0
+numPoints 2
+xPoints {
+  0 380
+  1 430
+}
+yPoints {
+  0 170
+  1 160
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 380
+y 170
+w 10
+h 50
+lineColor index 14
+fillColor index 0
+arrows "both"
+numPoints 2
+xPoints {
+  0 380
+  1 390
+}
+yPoints {
+  0 170
+  1 220
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 340
+y 230
+w 200
+h 0
+lineColor index 14
+fillColor index 0
+numPoints 2
+xPoints {
+  0 340
+  1 540
+}
+yPoints {
+  0 230
+  1 230
+}
+endObjectProperties
+
+# (Arc)
+object activeArcClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 240
+y 130
+w 200
+h 200
+lineColor index 14
+fill
+fillColor index 19
+startAngle 0
+totalAngle 11
+fillMode "pie"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 450
+y 210
+w 90
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Bragg Motor"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 670
+y 140
+w 0
+h 110
+lineColor index 14
+fillColor index 0
+arrows "both"
+numPoints 2
+xPoints {
+  0 670
+  1 670
+}
+yPoints {
+  0 140
+  1 250
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 250
+w 890
+h 0
+lineColor index 25
+fillColor index 0
+lineStyle "dash"
+numPoints 2
+xPoints {
+  0 0
+  1 890
+}
+yPoints {
+  0 250
+  1 250
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 140
+w 890
+h 0
+lineColor index 25
+fillColor index 0
+lineStyle "dash"
+numPoints 2
+xPoints {
+  0 0
+  1 890
+}
+yPoints {
+  0 140
+  1 140
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 420
+y 70
+w 220
+h 90
+lineColor index 24
+fill
+fillColor index 23
+closePolygon
+numPoints 4
+xPoints {
+  0 420
+  1 630
+  2 640
+  3 430
+}
+yPoints {
+  0 110
+  1 70
+  2 120
+  3 160
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 140
+y 230
+w 210
+h 90
+lineColor index 24
+fill
+fillColor index 23
+closePolygon
+numPoints 4
+xPoints {
+  0 140
+  1 340
+  2 350
+  3 150
+}
+yPoints {
+  0 270
+  1 230
+  2 280
+  3 320
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 680
+y 190
+w 43
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Offset"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 580
+y 280
+w 292
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Energy = EvLambda / (2 x d x sin(Bragg))"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 530
+y 90
+w 0
+h 0
+lineColor index 14
+fillColor index 0
+arrows "both"
+numPoints 1
+xPoints {
+  0 530
+}
+yPoints {
+  0 90
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 220
+y 90
+w 320
+h 60
+lineColor index 14
+fillColor index 0
+arrows "both"
+numPoints 2
+xPoints {
+  0 540
+  1 220
+}
+yPoints {
+  0 90
+  1 150
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 380
+y 100
+w 9
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Z"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 220
+y 150
+w 20
+h 100
+lineColor index 14
+fillColor index 0
+lineStyle "dash"
+numPoints 2
+xPoints {
+  0 240
+  1 220
+}
+yPoints {
+  0 250
+  1 150
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 320
+y 30
+w 455
+h 32
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Z offset = actual Z - calculated Z"
+  "where calculated Z puts the beam in the centre of the 2nd crystal"
+}
+autoSize
+endObjectProperties
+

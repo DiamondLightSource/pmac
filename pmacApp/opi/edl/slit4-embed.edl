@@ -1,0 +1,81 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 719
+y 259
+w 620
+h 410
+font "helvetica-medium-r-14.0"
+ctlFont "courier-bold-r-14.0"
+btnFont "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 30
+ctlBgColor1 index 3
+ctlBgColor2 index 3
+topShadowColor index 1
+botShadowColor index 11
+title "BLGui-slit4-embed"
+showGrid
+snapToGrid
+gridSize 5
+endScreenProperties
+
+# (Choice Button)
+object activeChoiceButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 380
+w 620
+h 25
+fgColor index 14
+bgColor index 3
+selectColor index 4
+inconsistentColor index 0
+topShadowColor index 1
+botShadowColor index 11
+controlPv "LOC\\$(!W)embed=e:1,Individual Blades, Size and Centre"
+font "arial-bold-r-16.0"
+orientation "horizontal"
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 0
+y 0
+w 620
+h 375
+fgColor index 14
+bgColor index 0
+topShadowColor index 0
+botShadowColor index 14
+displaySource "menu"
+filePv "LOC\\$(!W)embed"
+sizeOfs 5
+numDsps 2
+displayFileName {
+  0 "pmacCoord-4axis-individual-embed"
+  1 "pmacCoord-4axis-size-centre-embed"
+}
+menuLabel {
+  0 "0"
+  1 "1"
+}
+symbols {
+  0 "P=$(P),M1=$(M1),M2=$(M2),M3=$(M3),M4=$(M4)"
+  1 "P=$(P),M1=$(M1),M2=$(M2),M3=$(M3),M4=$(M4)"
+}
+noScroll
+endObjectProperties
+

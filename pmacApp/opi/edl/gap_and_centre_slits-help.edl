@@ -1,0 +1,598 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 942
+y 334
+w 630
+h 331
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 1
+botShadowColor index 11
+title "Gap and Centre Slits Help"
+showGrid
+snapToGrid
+disableScroll
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 70
+w 440
+h 140
+lineColor index 30
+fill
+fillColor index 30
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 510
+y 300
+w 110
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-bold-r-14.0"
+3d
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y -90
+w 0
+h 0
+lineColor index 25
+fill
+fillColor index 30
+numPoints 1
+xPoints {
+  0 0
+}
+yPoints {
+  0 -100
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 440
+y 120
+w 190
+h 40
+lineColor index 30
+fill
+fillColor index 30
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 490
+y 120
+w 80
+h 40
+
+beginGroup
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 570
+y 120
+w 0
+h 40
+lineColor index 14
+fillColor index 0
+arrows "both"
+numPoints 2
+xPoints {
+  0 570
+  1 570
+}
+yPoints {
+  0 120
+  1 160
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 490
+y 133
+w 75
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Beam Size"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 240
+y 160
+w 200
+h 60
+lineColor index 38
+fill
+fillColor index 36
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 10
+y 250
+w 0
+h 60
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 10
+  1 10
+}
+yPoints {
+  0 310
+  1 250
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 20
+y 280
+w 186
+h 32
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "X+ for horizontal slit pair"
+  "(or Y+ for vertical slit pair)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 230
+y 230
+w 225
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "-ve Blade (fixed on mechanism)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 150
+w 42
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Beam"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 10
+y 170
+w 40
+h 0
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 10
+  1 50
+}
+yPoints {
+  0 170
+  1 170
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 230
+y 10
+w 220
+h 280
+lineColor index 24
+fillColor index 0
+lineStyle "dash"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 250
+y 30
+w 20
+h 120
+lineColor index 24
+fillColor index 0
+lineStyle "dash"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 410
+y 30
+w 20
+h 120
+lineColor index 24
+fillColor index 0
+lineStyle "dash"
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 240
+y 60
+w 200
+h 60
+lineColor index 24
+fill
+fillColor index 23
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 230
+y 150
+w 20
+h 20
+lineColor index 14
+fillColor index 0
+numPoints 8
+xPoints {
+  0 240
+  1 240
+  2 230
+  3 250
+  4 240
+  5 230
+  6 240
+  7 250
+}
+yPoints {
+  0 150
+  1 170
+  2 160
+  3 160
+  4 150
+  5 160
+  6 170
+  7 160
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 140
+y 150
+w 82
+h 32
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Mechanism"
+  "Position"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 400
+y 120
+w 0
+h 40
+lineColor index 14
+fillColor index 0
+arrows "both"
+numPoints 2
+xPoints {
+  0 400
+  1 400
+}
+yPoints {
+  0 160
+  1 120
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 590
+y 130
+w 20
+h 20
+lineColor index 14
+fillColor index 0
+numPoints 8
+xPoints {
+  0 600
+  1 600
+  2 590
+  3 610
+  4 600
+  5 590
+  6 600
+  7 610
+}
+yPoints {
+  0 130
+  1 150
+  2 140
+  3 140
+  4 130
+  5 140
+  6 150
+  7 140
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 270
+y 120
+w 130
+h 40
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Mechanism Gap "
+  "(DIR=-1 to invert)"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 590
+y 150
+w 10
+h 50
+lineColor index 14
+fillColor index 0
+arrows "to"
+numPoints 2
+xPoints {
+  0 590
+  1 600
+}
+yPoints {
+  0 200
+  1 150
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 510
+y 200
+w 92
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Beam Centre"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 210
+y 40
+w 257
+h 16
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "+ve Blade (movable on mechanism)"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 70
+w 630
+h 50
+lineColor index 25
+fillColor index 0
+numPoints 4
+xPoints {
+  0 0
+  1 240
+  2 240
+  3 630
+}
+yPoints {
+  0 70
+  1 70
+  2 120
+  3 120
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 160
+w 630
+h 50
+lineColor index 25
+fillColor index 0
+numPoints 4
+xPoints {
+  0 0
+  1 240
+  2 240
+  3 630
+}
+yPoints {
+  0 210
+  1 210
+  2 160
+  3 160
+}
+endObjectProperties
+
