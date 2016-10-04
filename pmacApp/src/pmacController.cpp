@@ -2330,6 +2330,15 @@ asynStatus pmacController::preparePMAC()
     debug(DEBUG_VARIABLE, functionName, "Axis mask to send to PMAC (P4003)", axisMask);
     status = this->immediateWriteRead(cmd, response);
   }
+
+  if (status == asynSuccess){
+    // Re-initialise the values used by the motion program
+    // Set buffer B position to 0
+    sprintf(cmd, "%s=0 %s=0", PMAC_TRAJ_BUFF_FILL_B, PMAC_TRAJ_TOTAL_POINTS);
+    status = this->immediateWriteRead(cmd, response);
+    setIntegerParam(PMAC_C_TrajBuffFillB_, 0);
+  }
+
   return status;
 }
 
