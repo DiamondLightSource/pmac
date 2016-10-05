@@ -218,6 +218,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   //Initialize non static data members
   connected_ = 0;
+  initialised_ = 0;
   cid_ = 0;
   parameterIndex_ = 0;
   lowLevelPortUser_ = NULL;
@@ -963,6 +964,9 @@ asynStatus pmacController::initialiseConnection()
   static const char *functionName = "initialiseConnection";
   debug(DEBUG_FLOW, functionName);
 
+  // Set the initialised state to bad
+  initialised_ = 0;
+
   // Check the connection status
   status = this->checkConnection();
 
@@ -972,6 +976,8 @@ asynStatus pmacController::initialiseConnection()
       status = this->readDeviceType();
 
       if (status == asynSuccess){
+        // Initialisation successful
+        initialised_ = 1;
         // Read the kinematics
         status = this->storeKinematics();
       }
@@ -1999,7 +2005,7 @@ asynStatus pmacController::poll()
   // First check the connection
   this->checkConnection();
 
-  if (connected_ != 0){
+  if (connected_ != 0 && initialised_ != 0){
     pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
     this->updateStatistics();
     setDoubleParam(PMAC_C_FastUpdateTime_, pBroker_->readUpdateTime());
@@ -2009,7 +2015,7 @@ asynStatus pmacController::poll()
     epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
     debug(DEBUG_TRACE, functionName, "Medium update has been called", tBuff);
     // Check if we are connected
-    if (connected_ != 0){
+    if (connected_ != 0 && initialised_ != 0){
       pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
     }
   }
@@ -2018,7 +2024,7 @@ asynStatus pmacController::poll()
     epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
     debug(DEBUG_TRACE, functionName, "Slow update has been called", tBuff);
     // Check if we are connected
-    if (connected_ != 0){
+    if (connected_ != 0 && initialised_ != 0){
       pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
     }
   }
