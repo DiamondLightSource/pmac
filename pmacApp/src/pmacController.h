@@ -379,6 +379,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
 
  private:
   int connected_;
+  int initialised_;
   int cid_;
   int parameterIndex_;
   pmacMessageBroker *pBroker_;
