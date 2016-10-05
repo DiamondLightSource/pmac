@@ -38,5 +38,5 @@
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="1" Controller="BRICK1" CoordSysNumber="3" GroupNumber="1"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="2" Controller="BRICK1" CoordSysNumber="3" GroupNumber="1"/>
 	<pmac.GeoBrickGlobalControl P="PMAC_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.CTRL"/>
-	<pmac.autohome GRP2="Axis1" P="PMAC_TEST" PLC="10" PORT="BRICK1" name="BRICK1.HOME"/>
+	<pmac.autohome CTRL="PMAC_TEST:GB1:" GRP2="Axis1" P="PMAC_TEST" PLC="10" PORT="BRICK1" name="BRICK1.HOME"/>
 </components>
