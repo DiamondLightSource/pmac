@@ -48,8 +48,12 @@ Creating an IOC
 ---------------
 
 This guide assumes a knowledge of creating IOCs within EPICS, and only discusses the specifics of setting up the pmac module.
+An example IOC is provided in the iocs directory.  Once the dependencies are referenced this example will build an IOC that contains standard and compound motor records, status records for the controller and motors, and trajectory scan records necessary to execute trajectory scans.
 
 For an example IOC (called example)
+
+Makefile
+********
 
 The DBD and LIB definitions are required in the exampleApp/src/Makefile.  An example is provided below:
 
@@ -80,6 +84,9 @@ The DBD and LIB definitions are required in the exampleApp/src/Makefile.  An exa
   example_SRCS += exampleMain.cpp
   
   include $(TOP)/configure/RULES
+
+Database Substitutions
+**********************
 
 There are several database template files that can be used with the driver, depending on the level of interaction required.  Create a substitutions file in the exampleApp/db directory.  To include the basic PMAC controller records the following substitutions example should be added:
 
@@ -224,5 +231,163 @@ Motor records can be used to control both motors and coordinate system axes spec
     { "PMAC_TEST", ":M7", "BRICK1", "7", "Motor 7", "0.001", "1", "3", "mm", "1", "asynMotor", "0", "0", "$(VELO)", "0.5", "0", "0", "", "1000", "-1000", "", "", "MAJOR", "", "1000", "", "", "", "0", "0", "", "0", "0", "0", "", "0", "0", "1", "0", "0", "NO_ALARM", "NO_ALARM", "1", "1", "Use motor summary screen", "BRICK1.MOTORS.M7", "None", "", "$(DESC)", "BRICK1port", "$(P)", "$(P)", "#" }
     { "PMAC_TEST", ":M8", "BRICK1", "8", "Motor 8", "0.001", "1", "3", "mm", "1", "asynMotor", "0", "0", "$(VELO)", "0.5", "0", "0", "", "1000", "-1000", "", "", "MAJOR", "", "1000", "", "", "", "0", "0", "", "0", "0", "0", "", "0", "0", "1", "0", "0", "NO_ALARM", "NO_ALARM", "1", "1", "Use motor summary screen", "BRICK1.MOTORS.M8", "None", "", "$(DESC)", "BRICK1port", "$(P)", "$(P)", "#" }
   }
+
+For a description of the motor record fields see http://www.aps.anl.gov/bcda/synApps/motor/
+
+IOC Boot Script
+***************
+
+The following IOC startup script calls are available:
+
+* pmacAsynIPConfigure
+
+::
+
+  # Create IP Port (PortName, IPAddr)
+  pmacAsynIPConfigure("BRICK1port", "192.168.0.1:1025")
+  
+This call takes a name to assign to the port, and the address of the PMAC hardware controller (with optional port number).
+
+* pmacCreateController
+
+::
+
+  # Configure Model 3 Controller Driver (Controler Port,Asyn Motor Port, ADDR, Axes, MOVE_POLL, IDLE_POLL)
+  pmacCreateController("BRICK1", "BRICK1port", 0, 8, 100, 1000)
+
+The pmacCreateController call requires a name for the asyn port, the name of the low level asyn port (created previously), the address of the low level port (0), the number of motors present on the PMAC motion controller, plus a move and idle poll time (in ms).  The poll time is used to decide how often high priority status messages are requested from the controller, when all motors are either idle or if any motors are moving.
+
+* pmacCreateAxes
+
+::
+
+  # Configure Model 3 Axes Driver (Controler Port, Axis Count)
+  pmacCreateAxes("BRICK1", 8)
+
+A motor axis object is created for each physical motor using this call.  The name of the controller asyn port is required along with the number of motors present.
+
+* pmacCreateAxis
+
+::
+
+  # Configure Model 3 Axis Driver (Controler Port, Axis Number)
+  pmacCreateAxis("BRICK1", 3)
+
+A motor axis object is created for the specified physical motor using this call.  The name of the controller asyn port is required along with the number of the motor.
+
+* pmacDisableLimitsCheck
+
+::
+
+  # Disable the limits of an axis (Controller Port, Motor Number, All axes disabled)
+  pmacDisableLimitsCheck("BRICK1", 1, 1)
+
+This will disable limit checking within the driver.  If limit checking is not disabled and the motor is found to have its limits disabled then the motor record will enter an error state.  If the motor does not have limits connected then the limit checking behaviour can be overridden with this call.  If all axes disabled is set to 1 then the motor number is ignored and all limit checking is turned off.
+
+* pmacSetAxisScale
+
+::
+
+  # Set the PMAC axis scale factor (Controller Port, Motor Number, Scale factor)
+  pmacSetAxisScale("BRICK1", 1, 10)
+  
+This call can be made to increase resolution in the motor record for a specific motor. Default value is 1.
+
+* pmacSetOpenLoopEncoderAxis
+
+::
+
+  # Set an axis to use the encoder feedback from another axis (Controller Port, Motor Number, Encoder motor number)
+  pmacSetOpenLoopEncoderAxis("BRICK1", 2, 4)
+  
+If there is an open loop axis that has an encoder coming back on a different channel then the encoder readback axis number can be set here. This ensures that the encoder will be used for the position readback. It will also ensure that the encoder axis is set correctly when performing a set position on the open loop axis. To use this function, the axis number used for the encoder must have been configured already using pmacCreateAxis.
+
+* pmacDebug
+
+::
+
+  # Set the debug level (Controller Port, Debug level, Motor number (or 0 for controller), CS number (or 0 for real motors))
+  pmacDebug("BRICK1", 2, 0, 0)
+  
+Sets the debug level for the driver.  Setting both motor number and CS number to 0 applies the debug level to the controller.
+
+* pmacCreateCS
+
+::
+
+  # Create CS (CS Port, Controller Port, CSNumber, Prog)
+  pmacCreateCS("CS1", "BRICK1", 1, 10)
+
+Configure a coordinate system for the PMAC.  Takes a port name for the coordinate system as well as the name of the controller port, the coordinate system number and the motion program to execute whenever a compound axis is requested to move.
+
+* pmacCreateCSAxes
+
+::
+
+  # Configure Model 3 CS Axes Driver (Controler Port, Axis Count)
+  pmacCreateCSAxes("CS1", 9)
+
+A coordinate system motor axis object is created for each axis (ABCUVWXYZ) using this call.  The name of the coordinate system asyn port is required along with the number of axes.
+
+* pmacCreateCSAxis
+
+::
+
+  # pmacCreateCSAxis 'Controller port name' 'Axis number'
+  pmacCreateCSAxis("CS1", 1)
+
+A coordinate system motor axis object is created for the specified axis (ABCUVWXYZ) using this call.  The name of the coordinate system asyn port is required along with the number of the axis (1=A, 2=B, 3=C, 4=U, 5=V, 6=W, 7=X, 8=Y, 9=Z).
+
+* pmacCreateCsGroup
+
+::
+
+  # Create a new CS group of axes (Controller Port, Group Number, Group Name, Axis Count)
+  pmacCreateCsGroup("BRICK1", 0, "TestGroup1", 2)
+  
+* pmacCsGroupAddAxis
+
+::
+
+  # Add an axis definition to a CS group (Controller Port, Group Number, Axis Number, Axis CS Definition, CS Number)
+  pmacCsGroupAddAxis(BRICK1, 0, 1, X, 1)
+
+* pmacSetCoordStepsPerUnit
+
+::
+
+  # Set the PMAC CS axis scale factor (CS Port, Axis Number, Scale factor)
+  pmacSetCoordStepsPerUnit("CS1", 3, 5000)
+
+
+Adding autohome records
+-----------------------
+
+Database Substitutions
+**********************
+
+IOC Boot Script
+***************
+
+Adding coordinate system motors
+-------------------------------
+
+Database Substitutions
+**********************
+
+IOC Boot Script
+***************
+
+Adding trajectory scan records
+------------------------------
+
+Database Substitutions
+**********************
+
+IOC Boot Script
+***************
+
+Using the Module
+----------------
 
 
