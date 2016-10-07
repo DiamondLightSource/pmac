@@ -159,7 +159,7 @@ class pmacDisableLimitsCheck(Device):
         
         # model 3 version of pmacDisableLimitsCheck uses port instead of card 
         self.ControllerPort = self.Controller.DeviceName() 
-        print 'pmacDisableLimitsCheck("%(ControllerPort)s", %(Axis)d, 1)' % self.__dict__
+        print 'pmacDisableLimitsCheck("%(ControllerPort)s", %(Axis)d, 0)' % self.__dict__
 
     ArgInfo = makeArgInfo(__init__,
         Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
