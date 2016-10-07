@@ -621,9 +621,10 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
 
 
   // Check if we have already provided maximum number of custom parameters
-  if (parameterIndex_ > PMAC_MAX_PARAMETERS){
+  if (parameterIndex_ >= PMAC_MAX_PARAMETERS) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-          "%s:%s: Not enough space allocated to store all camera features, increase NFEATURES\n",
+          "%s:%s: Not enough space allocated to store a new custom parameter, \
+                    nothing will be done for this parameter.\n",
           driverName, functionName);
     status = asynError;
   }
