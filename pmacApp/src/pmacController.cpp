@@ -605,13 +605,8 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
   //
   // x is I for int, H for hex, D for double or S for string
   //
-  // The must be no j or = in a variable, these items will simply be polled for their current status
+  // There must be no j or = in a variable, these items will simply be polled for their current status
   //
-  // For commands
-  // PMAC_CMDx_... => Send command to PMAC
-  //
-  // x is I for int, D for double or S for string
-
   // For Writing only
   // PMAC_WI_... => Write Integer Value
   // PMAC_WD_... => Write Double Value
