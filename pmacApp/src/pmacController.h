@@ -225,6 +225,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus executeProfile(int csNo);
   asynStatus abortProfile();
   void trajectoryTask();
+  void setBuildStatus(int state, int status, const std::string& message);
+  void setProfileStatus(int state, int status, const std::string& message);
   asynStatus sendTrajectoryDemands(int buffer);
   asynStatus doubleToPMACFloat(double value, int64_t *representation);
 
