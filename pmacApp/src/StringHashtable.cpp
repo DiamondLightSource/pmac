@@ -36,6 +36,7 @@ std::string StringHashtable::insert(const std::string& key, const std::string& v
     void *vPtr = Hashtable::insert((const void *)key.c_str(), (void *)val);
     if (vPtr != NULL){
       returnString.assign((char *)vPtr);
+      free(vPtr);
     }
   }
   return returnString;

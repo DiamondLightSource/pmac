@@ -11,8 +11,12 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <unistd.h>
+#include <ios>
 
 void uniqueAsynPortName(std::string& name);
+void process_mem_usage(double& vm_usage, double& resident_set);
 
 
 

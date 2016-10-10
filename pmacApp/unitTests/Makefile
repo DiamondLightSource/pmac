@@ -11,12 +11,13 @@ ifdef BOOST
   pmac-test_SRCS += pmacTestUtilities.cpp  
   pmac-test_SRCS += MockPMACAsynDriver.cpp
   pmac-test_SRCS += test_StringHashtable.cpp
+  pmac-test_SRCS += test_IntegerHashtable.cpp
   pmac-test_SRCS += test_PMACCommandStore.cpp
   pmac-test_SRCS += test_PMACGroupsHashtable.cpp
   pmac-test_SRCS += test_CharIntHashtable.cpp
   pmac-test_SRCS += test_PMACMessageBroker.cpp
   pmac-test_SRCS += test_PMACCsGroups.cpp
-  pmac-test_SRCS += test_PMACController.cpp
+  #pmac-test_SRCS += test_PMACController.cpp
 
   # Add pmac tests for new classes like this:
   #pmac-test_SRCS += test_<test name>.cpp
