@@ -605,13 +605,8 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
   //
   // x is I for int, H for hex, D for double or S for string
   //
-  // The must be no j or = in a variable, these items will simply be polled for their current status
+  // There must be no j or = in a variable, these items will simply be polled for their current status
   //
-  // For commands
-  // PMAC_CMDx_... => Send command to PMAC
-  //
-  // x is I for int, D for double or S for string
-
   // For Writing only
   // PMAC_WI_... => Write Integer Value
   // PMAC_WD_... => Write Double Value
@@ -621,9 +616,10 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
 
 
   // Check if we have already provided maximum number of custom parameters
-  if (parameterIndex_ > PMAC_MAX_PARAMETERS){
+  if (parameterIndex_ >= PMAC_MAX_PARAMETERS) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-          "%s:%s: Not enough space allocated to store all camera features, increase NFEATURES\n",
+          "%s:%s: Not enough space allocated to store a new custom parameter, \
+                    nothing will be done for this parameter.\n",
           driverName, functionName);
     status = asynError;
   }
