@@ -10,8 +10,55 @@
 #include <tr1/memory>
 #include <iostream>
 #include <fstream>
+#include <unistd.h>
+#include <ios>
 
 #include "StringHashtable.h"
+
+//////////////////////////////////////////////////////////////////////////////
+//
+// process_mem_usage(double &, double &) - takes two doubles by reference,
+// attempts to read the system-dependent data for a process' virtual memory
+// size and resident set size, and return the results in KB.
+//
+// On failure, returns 0.0, 0.0
+
+void process_mem_usage(double& vm_usage, double& resident_set)
+{
+   using std::ios_base;
+   using std::ifstream;
+   using std::string;
+
+   vm_usage     = 0.0;
+   resident_set = 0.0;
+
+   // 'file' stat seems to give the most reliable results
+   //
+   ifstream stat_stream("/proc/self/stat",ios_base::in);
+
+   // dummy vars for leading entries in stat that we don't care about
+   //
+   string pid, comm, state, ppid, pgrp, session, tty_nr;
+   string tpgid, flags, minflt, cminflt, majflt, cmajflt;
+   string utime, stime, cutime, cstime, priority, nice;
+   string O, itrealvalue, starttime;
+
+   // the two fields we want
+   //
+   unsigned long vsize;
+   long rss;
+
+   stat_stream >> pid >> comm >> state >> ppid >> pgrp >> session >> tty_nr
+               >> tpgid >> flags >> minflt >> cminflt >> majflt >> cmajflt
+               >> utime >> stime >> cutime >> cstime >> priority >> nice
+               >> O >> itrealvalue >> starttime >> vsize >> rss; // don't care about the rest
+
+   stat_stream.close();
+
+   long page_size_kb = sysconf(_SC_PAGE_SIZE) / 1024; // in case x86-64 is configured to use 2MB pages
+   vm_usage     = vsize / 1024.0;
+   resident_set = rss * page_size_kb;
+}
 
 struct HashtableTestFixture
 {
@@ -109,6 +156,69 @@ BOOST_AUTO_TEST_CASE(test_Hashtable)
   value = t1.lookup("I5");
   BOOST_CHECK_EQUAL(value, "");
 
+}
+
+BOOST_AUTO_TEST_CASE(test_HashtableMemory)
+{
+  StringHashtable t1;
+  std::string value;
+  double vm = 0.0;
+  double res = 0.0;
+  double vm_base = 0.0;
+  double res_base = 0.0;
+
+  // Record the base memory usage
+  process_mem_usage(vm, res);
+  BOOST_MESSAGE("VM: " << vm << "; RSS: " << res);
+  process_mem_usage(vm_base, res_base);
+  BOOST_MESSAGE("VM: " << vm_base << "; RSS: " << res_base);
+
+  // Insert a value 10 times
+  for (int index = 0; index < 10; index++){
+    t1.insert("KEY1", "VALUE1");
+  }
+  // Record the base memory usage
+  process_mem_usage(vm, res);
+  BOOST_MESSAGE("VM: " << vm << "; RSS: " << res);
+  // Verify memory usage change less than 1%
+  BOOST_CHECK_CLOSE(vm/vm_base, 1.0, 1.0);
+  BOOST_CHECK_CLOSE(res/res_base, 1.0, 1.0);
+
+  // Insert the same value 10 million times
+  for (int index = 0; index < 10000000; index++){
+    t1.insert("KEY1", "VALUE1");
+  }
+
+  // Check memory usage
+  process_mem_usage(vm, res);
+  BOOST_MESSAGE("VM: " << vm << "; RSS: " << res);
+  // Verify memory usage change less than 1%
+  BOOST_CHECK_CLOSE(vm/vm_base, 1.0, 1.0);
+  BOOST_CHECK_CLOSE(res/res_base, 1.0, 1.0);
+
+  // Insert the same value 10 million times
+  for (int index = 0; index < 10000000; index++){
+    t1.insert("KEY1", "VALUE1");
+  }
+
+  // Check memory usage
+  process_mem_usage(vm, res);
+  BOOST_MESSAGE("VM: " << vm << "; RSS: " << res);
+  // Verify memory usage change less than 1%
+  BOOST_CHECK_CLOSE(vm/vm_base, 1.0, 1.0);
+  BOOST_CHECK_CLOSE(res/res_base, 1.0, 1.0);
+
+  // Insert the same value 10 million times
+  for (int index = 0; index < 10000000; index++){
+    t1.insert("KEY1", "VALUE1");
+  }
+
+  // Check memory usage
+  process_mem_usage(vm, res);
+  BOOST_MESSAGE("VM: " << vm << "; RSS: " << res);
+  // Verify memory usage change less than 1%
+  BOOST_CHECK_CLOSE(vm/vm_base, 1.0, 1.0);
+  BOOST_CHECK_CLOSE(res/res_base, 1.0, 1.0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
