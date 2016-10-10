@@ -605,13 +605,8 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
   //
   // x is I for int, H for hex, D for double or S for string
   //
-  // The must be no j or = in a variable, these items will simply be polled for their current status
+  // There must be no j or = in a variable, these items will simply be polled for their current status
   //
-  // For commands
-  // PMAC_CMDx_... => Send command to PMAC
-  //
-  // x is I for int, D for double or S for string
-
   // For Writing only
   // PMAC_WI_... => Write Integer Value
   // PMAC_WD_... => Write Double Value
@@ -621,9 +616,10 @@ asynStatus pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInf
 
 
   // Check if we have already provided maximum number of custom parameters
-  if (parameterIndex_ > PMAC_MAX_PARAMETERS){
+  if (parameterIndex_ >= PMAC_MAX_PARAMETERS) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-          "%s:%s: Not enough space allocated to store all camera features, increase NFEATURES\n",
+          "%s:%s: Not enough space allocated to store a new custom parameter, \
+                    nothing will be done for this parameter.\n",
           driverName, functionName);
     status = asynError;
   }
@@ -2095,32 +2091,20 @@ asynStatus pmacController::buildProfile()
         status = this->buildProfile(csNo);
       } else {
         debug(DEBUG_ERROR, functionName, "Invalid Coordinate System specified");
-        // Set the build state to done
-        setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-        // Set the build status to failure
-        setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
-        // Set the message accordingly
-        setStringParam(profileBuildMessage_, "Invalid Coordinate System specified");
+        // Set the status to failure
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Invalid Coordinate System specified");
         status = asynError;
       }
     } else {
       debug(DEBUG_ERROR, functionName, "Invalid Coordinate System specified");
-      // Set the build state to done
-      setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-      // Set the build status to failure
-      setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
-      // Set the message accordingly
-      setStringParam(profileBuildMessage_, "Invalid Coordinate System specified");
+      // Set the status to failure
+      this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Invalid Coordinate System specified");
       status = asynError;
     }
   } else {
     debug(DEBUG_ERROR, functionName, "No Coordinate System specified");
-    // Set the build state to done
-    setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-    // Set the build status to failure
-    setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
-    // Set the message accordingly
-    setStringParam(profileBuildMessage_, "No Coordinate System specified");
+    // Set the status to failure
+    this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "No Coordinate System specified");
     status = asynError;
   }
 
@@ -2139,12 +2123,8 @@ asynStatus pmacController::buildProfile(int csNo)
 
   debug(DEBUG_TRACE, functionName);
 
-  // Set the build state to busy
-  setIntegerParam(profileBuildState_, PROFILE_BUILD_BUSY);
-  // Set the build status to undefined
-  setIntegerParam(profileBuildStatus_, PROFILE_STATUS_UNDEFINED);
-  // Set the message accordingly
-  setStringParam(profileBuildMessage_, "Building profile");
+  // Set the status to building
+  this->setBuildStatus(PROFILE_BUILD_BUSY, PROFILE_STATUS_UNDEFINED, "Building profile");
   callParamCallbacks();
 
   // First check to see if we need to initialise memory
@@ -2155,35 +2135,23 @@ asynStatus pmacController::buildProfile(int csNo)
       profileInitialized_ = true;
     } else {
       debug(DEBUG_ERROR, functionName, "Failed to allocate memory on controller");
-      // Set the build state to done
-      setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-      // Set the build status to failure
-      setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
-      // Set the message accordingly
-      setStringParam(profileBuildMessage_, "Failed to allocate memory on controller");
+      // Set the status to failure
+      this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to allocate memory on controller");
     }
   }
 
   // Check the CS number is valid
   if (csNo > PMAC_MAX_CS){
     debug(DEBUG_ERROR, functionName, "Invalid CS number", csNo);
-    // Set the build state to done
-    setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-    // Set the build status to failure
-    setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
-    // Set the message accordingly
-    setStringParam(profileBuildMessage_, "Invalid CS number requested build");
+    // Set the status to failure
+    this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Invalid CS number requested build");
     status = asynError;
   }
   if (status == asynSuccess){
     if (pCSControllers_[csNo] == NULL){
       debug(DEBUG_ERROR, functionName, "Invalid CS number", csNo);
-      // Set the build state to done
-      setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-      // Set the build status to failure
-      setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
-      // Set the message accordingly
-      setStringParam(profileBuildMessage_, "Invalid CS number requested build");
+      // Set the status to failure
+      this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Invalid CS number requested build");
       status = asynError;
     }
   }
@@ -2191,12 +2159,8 @@ asynStatus pmacController::buildProfile(int csNo)
   // Verify that we are not currently executing a trajectory scan
   if (status == asynSuccess){
     if (tScanExecuting_ > 0){
-      // Set the build state to done
-      setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-      // Set the build status to failure
-      setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
-      // Set the message accordingly
-      setStringParam(profileBuildMessage_, "Scan is already executing");
+      // Set the status to failure
+      this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Scan is already executing");
       status = asynError;
     }
   }
@@ -2226,21 +2190,9 @@ asynStatus pmacController::buildProfile(int csNo)
       tScanShortScan_ = false;
     }
 
-//    if (status == asynSuccess){
-//      // Copy the user buffer array
-//      status = pCSControllers_[tScanCSNo_]->tScanBuildUserArray(profileUser_, &numPoints, PMAC_MAX_TRAJECTORY_POINTS);
-//    }
-//    if (status == asynSuccess){
-//      // Copy the velocity mode array
-//      status = pCSControllers_[tScanCSNo_]->tScanBuildVelModeArray(profileVelMode_, &numPoints, PMAC_MAX_TRAJECTORY_POINTS);
-//    }
     if (status != asynSuccess){
-      // Set the build state to done
-      setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-      // Set the build status to failure
-      setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
-      // Set the message accordingly
-      setStringParam(profileBuildMessage_, "Failed to build profile times/user/velocity mode");
+      // Set the status to failure
+      this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to build profile times/user/velocity mode");
     } else {
       // Ask the CS controller for the bitmap of axes that are to be included in the scan
       // 1 to 9 axes (0 is error) 111111111 => 1 .. 511
@@ -2254,12 +2206,8 @@ asynStatus pmacController::buildProfile(int csNo)
             // storage ready for the trajectory execution
             status = this->tScanBuildProfileArray(tScanPositions_[index], index, numPoints);
             if (status != asynSuccess){
-              // Set the build state to done
-              setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-              // Set the build status to failure
-              setIntegerParam(profileBuildStatus_, PROFILE_STATUS_FAILURE);
-              // Set the message accordingly
-              setStringParam(profileBuildMessage_, "Failed to build profile positions");
+              // Set the status to failure
+              this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to build profile positions");
             }
           }
         }
@@ -2277,12 +2225,8 @@ asynStatus pmacController::buildProfile(int csNo)
   if (status == asynSuccess){
     // Set the number of points in the scan
     setIntegerParam(profileNumPoints_, tScanNumPoints_);
-    // Set the build state to done
-    setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE);
-    // Set the build status to failure
-    setIntegerParam(profileBuildStatus_, PROFILE_STATUS_SUCCESS);
-    // Set the message accordingly
-    setStringParam(profileBuildMessage_, "Profile built");
+    // Set the status to complete
+    this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_SUCCESS, "Profile built");
   } else {
     // Zero the number of points in the scan
     setIntegerParam(profileNumPoints_, 0);
@@ -2375,32 +2319,20 @@ asynStatus pmacController::executeProfile()
         status = this->executeProfile(csNo);
       } else {
         debug(DEBUG_ERROR, functionName, "Invalid Coordinate System specified");
-        // Set the build state to done
-        setIntegerParam(profileExecuteState_, PROFILE_BUILD_DONE);
-        // Set the build status to failure
-        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-        // Set the message accordingly
-        setStringParam(profileExecuteMessage_, "Invalid Coordinate System specified");
+        // Set the status to failure
+        this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Invalid Coordinate System specified");
         status = asynError;
       }
     } else {
       debug(DEBUG_ERROR, functionName, "Invalid Coordinate System specified");
-      // Set the build state to done
-      setIntegerParam(profileExecuteState_, PROFILE_BUILD_DONE);
-      // Set the build status to failure
-      setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-      // Set the message accordingly
-      setStringParam(profileExecuteMessage_, "Invalid Coordinate System specified");
+      // Set the status to failure
+      this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Invalid Coordinate System specified");
       status = asynError;
     }
   } else {
     debug(DEBUG_ERROR, functionName, "No Coordinate System specified");
-    // Set the build state to done
-    setIntegerParam(profileExecuteState_, PROFILE_BUILD_DONE);
-    // Set the build status to failure
-    setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-    // Set the message accordingly
-    setStringParam(profileExecuteMessage_, "No Coordinate System specified");
+    // Set the status to failure
+    this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "No Coordinate System specified");
     status = asynError;
   }
   return status;
@@ -2415,24 +2347,16 @@ asynStatus pmacController::executeProfile(int csNo)
 
   debug(DEBUG_TRACE, functionName);
 
-  // Set the execute state to move start
-  setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_MOVE_START);
-  // Set the execute status to undefined
-  setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_UNDEFINED);
-  // Set the message accordingly
-  setStringParam(profileExecuteMessage_, "Starting trajectory execution");
+  // Set the status to starting
+  this->setProfileStatus(PROFILE_EXECUTE_MOVE_START, PROFILE_STATUS_UNDEFINED, "Starting trajectory execution");
   callParamCallbacks();
 
   // Check that the profile has been built successfully
   getIntegerParam(profileBuildState_, &buildState);
   getIntegerParam(profileBuildStatus_, &buildStatus);
   if ((buildStatus != PROFILE_STATUS_SUCCESS) || (buildState != PROFILE_BUILD_DONE)){
-    // Set the execute state to done
-    setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-    // Set the execute status to failure
-    setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-    // Set the message accordingly
-    setStringParam(profileExecuteMessage_, "Trajectory profile was not built successfully");
+    // Set the status to failure
+    this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Trajectory profile was not built successfully");
     debug(DEBUG_ERROR, functionName, "Trajectory was not built successfully");
     status = asynError;
     callParamCallbacks();
@@ -2442,12 +2366,8 @@ asynStatus pmacController::executeProfile(int csNo)
   // the trajectory scan
   if (status == asynSuccess){
     if (csNo != tScanCSNo_){
-      // Set the execute state to done
-      setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-      // Set the execute status to failure
-      setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-      // Set the message accordingly
-      setStringParam(profileExecuteMessage_, "Build and execute called by different CS");
+      // Set the status to failure
+      this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Build and execute called by different CS");
       debugf(DEBUG_ERROR, functionName, "Profile built by CS %d but execute was called by CS %d", tScanCSNo_, csNo);
       status = asynError;
       callParamCallbacks();
@@ -2457,12 +2377,8 @@ asynStatus pmacController::executeProfile(int csNo)
   // Verify that we are not currently executing a trajectory scan
   if (status == asynSuccess){
     if (tScanExecuting_ > 0){
-      // Set the execute state to done
-      setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-      // Set the execute status to failure
-      setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-      // Set the message accordingly
-      setStringParam(profileExecuteMessage_, "Scan is already executing");
+      // Set the status to failure
+      this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Scan is already executing");
       status = asynError;
       callParamCallbacks();
     }
@@ -2499,12 +2415,8 @@ asynStatus pmacController::abortProfile()
   // Send the signal to the trajectory thread
   epicsEventSignal(this->stopEventId_);
 
-  // Set the execute state to done
-  setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-  // Set the execute status to success
-  setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_ABORT);
-  // Set the message accordingly
-  setStringParam(profileExecuteMessage_, "Trajectory scan aborted");
+  // Set the status to aborted
+  this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_ABORT, "Trajectory scan aborted");
   callParamCallbacks();
 
   return status;
@@ -2584,13 +2496,10 @@ void pmacController::trajectoryTask()
                   if (assigned == 1){
                     debug(DEBUG_TRACE, functionName, "Axes already assigned");
                     // Error, invalid axis assignment for disabled axis
-                    // Set the execute state to done
-                    setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-                    // Set the execute status to failure
-                    setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
                     // Set the message accordingly
                     sprintf(cmd, "Scan failed - duplicate assignment for disabled axis %s", axesStrings[index].c_str());
-                    setStringParam(profileExecuteMessage_, cmd);
+                    // Set the status to failure
+                    this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, cmd);
                     // Set the executing flag to 0
                     tScanExecuting_ = 0;
                     // Notify that EPICS detected the error
@@ -2609,13 +2518,10 @@ void pmacController::trajectoryTask()
                 } else if (strAssign.find(axesStrings[index]) != std::string::npos){
                   debug(DEBUG_TRACE, functionName, "Axes invalid assignment");
                   // Error, invalid axis assignment for disabled axis
-                  // Set the execute state to done
-                  setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-                  // Set the execute status to failure
-                  setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
                   // Set the message accordingly
                   sprintf(cmd, "Scan failed - invalid assignment for disabled axis %s", strAssign.c_str());
-                  setStringParam(profileExecuteMessage_, cmd);
+                  // Set the status to failure
+                  this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, cmd);
                   // Set the executing flag to 0
                   tScanExecuting_ = 0;
                   // Notify that EPICS detected the error
@@ -2626,41 +2532,6 @@ void pmacController::trajectoryTask()
           }
         }
       }
-      // Now send to the PMAC the default position for all axes
-      //position_index = PMAC_C_ProfileDefaultA_;
-      //for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
-      //  getDoubleParam(position_index, &position);
-      //  sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
-      //  debug(DEBUG_TRACE, functionName, "Sending current position for axis", cmd);
-      //  this->immediateWriteRead(cmd, response);
-      //  sprintf(cmd, "M%d=%f", (PMAC_TRAJ_CURR_DMD+index), position);
-      //  this->immediateWriteRead(cmd, response);
-      //  position_index++;
-/*        //if ((1<<index & tScanAxisMask_) > 0){
-          if(tScanCSNo_ == 1){
-            // Special case CS 1 means use real motors
-            if (this->getAxis(index+1) != NULL){
-              position = this->getAxis(index+1)->previous_position_;
-              sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
-              debug(DEBUG_TRACE, functionName, "Sending current position for axis", cmd);
-              this->immediateWriteRead(cmd, response);
-              sprintf(cmd, "M%d=%f", (PMAC_TRAJ_CURR_DMD+index), position);
-              this->immediateWriteRead(cmd, response);
-            }
-          } else {
-            if (pCSControllers_[tScanCSNo_]->getAxis(index) != NULL){
-              // Here is a hack to account for the fact that CS motors have an artificial
-              // resolution of 0.0001
-              position = pCSControllers_[tScanCSNo_]->getAxis(index)->getCurrentPosition()/10000.0;
-              sprintf(cmd, "P%d=%f", (PMAC_TRAJ_CURR_POS+index), position);
-              debug(DEBUG_TRACE, functionName, "Sending current position for axis", cmd);
-              this->immediateWriteRead(cmd, response);
-              sprintf(cmd, "M%d=%f", (PMAC_TRAJ_CURR_DMD+index), position);
-              this->immediateWriteRead(cmd, response);
-            }
-          }
-        //}*/
-      //}
 
       // We are ready to execute the start demand
       // Only execute this if there has been no error detected so far
@@ -2671,12 +2542,8 @@ void pmacController::trajectoryTask()
         this->immediateWriteRead(cmd, response);
         // Check if this command returned an error
         if (response[0] == 0x7){
-          // Set the execute state to done
-          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-          // Set the execute status to failure
-          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-          // Set the message accordingly
-          setStringParam(profileExecuteMessage_, "Scan failed to start motion program - check motor status");
+          // Set the status to failure
+          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Scan failed to start motion program - check motor status");
           // Set the executing flag to 0
           tScanExecuting_ = 0;
           // Notify that EPICS detected the error
@@ -2684,12 +2551,8 @@ void pmacController::trajectoryTask()
         } else {
           // Reset our status
           setIntegerParam(PMAC_C_TrajEStatus_, 0);
-          // Set the execute state to move start
-          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_EXECUTING);
-          // Set the execute status to undefined
-          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_SUCCESS);
-          // Set the message accordingly
-          setStringParam(profileExecuteMessage_, "Executing trajectory scan");
+          // Set the status to executing
+          this->setProfileStatus(PROFILE_EXECUTE_EXECUTING, PROFILE_STATUS_SUCCESS, "Executing trajectory scan");
         }
       }
       callParamCallbacks();
@@ -2732,12 +2595,8 @@ void pmacController::trajectoryTask()
         }
         // If we have timed out then notify the operator and fail the scan
         if (timeout <= 0.0 && (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING)){
-          // Set the execute state to done
-          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-          // Set the execute status to failure
-          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-          // Set the message accordingly
-          setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
+          // Set the status to failure
+          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Scan failed, motion program not running - check motor status");
           // Set the executing flag to 0
           tScanExecuting_ = 0;
           // Notify that EPICS detected the error
@@ -2756,12 +2615,8 @@ void pmacController::trajectoryTask()
         }
         // If we have timed out then notify the operator and fail the scan
         if (timeout <= 0.0 && progRunning == 0){
-          // Set the execute state to done
-          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-          // Set the execute status to failure
-          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-          // Set the message accordingly
-          setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
+          // Set the status to failure
+          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Scan failed, motion program not running - check motor status");
           // Set the executing flag to 0
           tScanExecuting_ = 0;
           // Notify that EPICS detected the error
@@ -2803,19 +2658,11 @@ void pmacController::trajectoryTask()
         // Something has happened on the PMAC side
         tScanExecuting_ = 0;
         if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_FINISHED){
-          // Set the execute state to done
-          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-          // Set the execute status to success
-          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_SUCCESS);
-          // Set the message accordingly
-          setStringParam(profileExecuteMessage_, "Trajectory scan complete");
+          // Set the status to complete
+          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_SUCCESS, "Trajectory scan complete");
         } else {
-          // Set the execute state to done
-          setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-          // Set the execute status to failure
-          setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-          // Set the message accordingly
-          setStringParam(profileExecuteMessage_, "Trajectory scan failed, motion program timeout start");
+          // Set the status to failure
+          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Trajectory scan failed, motion program timeout start");
         }
         callParamCallbacks();
       }
@@ -2828,12 +2675,8 @@ void pmacController::trajectoryTask()
           if (progRunning == 0){
             // Program not running but it should be
             tScanExecuting_ = 0;
-            // Set the execute state to done
-            setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-            // Set the execute status to failure
-            setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-            // Set the message accordingly
-            setStringParam(profileExecuteMessage_, "Scan failed, motion program not running - check motor status");
+            // Set the status to failure
+            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Scan failed, motion program not running - check motor status");
           }
         }
       }
@@ -2844,12 +2687,8 @@ void pmacController::trajectoryTask()
         tScanExecuting_ = 0;
         // Set the status to 1 here, error detected
         setIntegerParam(PMAC_C_TrajEStatus_, 1);
-        // Set the execute state to done
-        setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE);
-        // Set the execute status to failure
-        setIntegerParam(profileExecuteStatus_, PROFILE_STATUS_FAILURE);
-        // Set the message accordingly
-        setStringParam(profileExecuteMessage_, "Trajectory scan failed, coordinate system error");
+        // Set the status to failure
+        this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Trajectory scan failed, coordinate system error");
         callParamCallbacks();
       }
 
@@ -2862,6 +2701,26 @@ void pmacController::trajectoryTask()
       }
     }
   }
+}
+
+void pmacController::setBuildStatus(int state, int status, const std::string& message)
+{
+  // Set the build state
+  setIntegerParam(profileBuildState_, state);
+  // Set the build status
+  setIntegerParam(profileBuildStatus_, status);
+  // Set the status message
+  setStringParam(profileBuildMessage_, message.c_str());
+}
+
+void pmacController::setProfileStatus(int state, int status, const std::string& message)
+{
+  // Set the execute state
+  setIntegerParam(profileExecuteState_, state);
+  // Set the execute status
+  setIntegerParam(profileExecuteStatus_, status);
+  // Set the status message
+  setStringParam(profileExecuteMessage_, message.c_str());
 }
 
 asynStatus pmacController::sendTrajectoryDemands(int buffer)
