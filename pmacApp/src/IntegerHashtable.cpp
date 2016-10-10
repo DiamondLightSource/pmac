@@ -34,7 +34,10 @@ void IntegerHashtable::insert(const std::string& key, int value)
   if (key != ""){
     int *val = (int *)malloc(sizeof(int));
     *val = value;
-    Hashtable::insert((const void *)key.c_str(), (void *)val);
+    void *vPtr = Hashtable::insert((const void *)key.c_str(), (void *)val);
+    if (vPtr != NULL){
+      free(vPtr);
+    }
   }
 }
 

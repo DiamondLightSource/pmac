@@ -11,6 +11,7 @@ ifdef BOOST
   pmac-test_SRCS += pmacTestUtilities.cpp  
   pmac-test_SRCS += MockPMACAsynDriver.cpp
   pmac-test_SRCS += test_StringHashtable.cpp
+  pmac-test_SRCS += test_IntegerHashtable.cpp
   pmac-test_SRCS += test_PMACCommandStore.cpp
   pmac-test_SRCS += test_PMACGroupsHashtable.cpp
   pmac-test_SRCS += test_CharIntHashtable.cpp
