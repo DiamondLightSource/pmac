@@ -289,7 +289,7 @@ Return
 
 N109
     PVT (Time * 0.001)                        ; Set move time
-    GoSub110
+    $(MOVECMD=GoSub110)
     TotalPoints = TotalPoints + 1
     If(User > 0)
         GoSub(User)                     ; Run any required subroutine
