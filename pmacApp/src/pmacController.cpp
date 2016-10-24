@@ -234,6 +234,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   movingPollPeriod_ = movingPollPeriod;
   idlePollPeriod_ = idlePollPeriod;
   profileInitialized_ = false;
+  profileBuilt_ = false;
   tScanShortScan_ = false;
   tScanExecuting_ = 0;
   tScanCSNo_ = 0;
@@ -247,6 +248,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   tScanPmacBufferAddressB_ = 0;
   tScanPmacBufferSize_ = 0;
   tScanPositions_ = NULL;
+  tScanPmacProgVersion_ = 0.0;
 
   // Create the hashtable for storing port to CS number mappings
   pPortToCs_ = new IntegerHashtable();
@@ -360,6 +362,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_TrajPercentString,       asynParamFloat64,      &PMAC_C_TrajPercent_);
   createParam(PMAC_C_TrajEStatusString,       asynParamInt32,        &PMAC_C_TrajEStatus_);
   createParam(PMAC_C_TrajProgString,          asynParamInt32,        &PMAC_C_TrajProg_);
+  createParam(PMAC_C_TrajProgVersionString,   asynParamFloat64,      &PMAC_C_TrajProgVersion_);
+  createParam(PMAC_C_TrajCodeVersionString,   asynParamFloat64,      &PMAC_C_TrajCodeVersion_);
   createParam(PMAC_C_NoOfMsgsString,          asynParamInt32,        &PMAC_C_NoOfMsgs_);
   createParam(PMAC_C_TotalBytesWrittenString, asynParamInt32,        &PMAC_C_TotalBytesWritten_);
   createParam(PMAC_C_TotalBytesReadString,    asynParamInt32,        &PMAC_C_TotalBytesRead_);
@@ -434,6 +438,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   //paramStatus = ((setStringParam(PMAC_C_TrajCSPort_, "") == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajEStatus_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajProg_, 1) == asynSuccess) && paramStatus);
+  paramStatus = ((setDoubleParam(PMAC_C_TrajProgVersion_, 0.0) == asynSuccess) && paramStatus);
+  paramStatus = ((setDoubleParam(PMAC_C_TrajCodeVersion_, PMAC_TRAJECTORY_VERSION) == asynSuccess) && paramStatus);
   // Initialise the statistics
   paramStatus = ((setIntegerParam(PMAC_C_NoOfMsgs_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TotalBytesWritten_, 0) == asynSuccess) && paramStatus);
@@ -522,6 +528,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFFER_LENGTH);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_A);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_B);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_PROG_VERSION);
 
 
   // Register this class for updates
@@ -1052,6 +1059,25 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr)
       // Save the value into the parameter
       setIntegerParam(PMAC_C_TrajBuffAdrB_, tScanPmacBufferAddressB_);
       debugf(DEBUG_VARIABLE, functionName, "Slow read trajectory address buffer B [%s] => %X", PMAC_TRAJ_BUFF_ADR_B, tScanPmacBufferAddressB_);
+    }
+  }
+
+  // Read the version number of the motion program
+  trajPtr = sPtr->readValue(PMAC_TRAJ_PROG_VERSION);
+  if (trajPtr == ""){
+    debug(DEBUG_ERROR, functionName, "Problem reading motion program version", PMAC_TRAJ_PROG_VERSION);
+    status = asynError;
+  } else {
+    nvals = sscanf(trajPtr.c_str(), "%lf", &tScanPmacProgVersion_);
+    if (nvals != 1) {
+      debug(DEBUG_ERROR, functionName, "Error reading motion program version", PMAC_TRAJ_PROG_VERSION);
+      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+      debug(DEBUG_ERROR, functionName, "    response", trajPtr);
+      status = asynError;
+    } else {
+      // Save the value into the parameter
+      setDoubleParam(PMAC_C_TrajProgVersion_, tScanPmacProgVersion_);
+      debugf(DEBUG_VARIABLE, functionName, "Slow read trajectory motion program version [%s] => %X", PMAC_TRAJ_PROG_VERSION, tScanPmacProgVersion_);
     }
   }
 
@@ -2117,7 +2143,6 @@ asynStatus pmacController::buildProfile(int csNo)
   asynStatus status = asynSuccess;
   int numPoints = 0;
   int axisMask = 0;
-  double totalScanTime = 0.0;
   int counter = 0;
   static const char *functionName = "buildProfile";
 
@@ -2138,6 +2163,16 @@ asynStatus pmacController::buildProfile(int csNo)
       // Set the status to failure
       this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to allocate memory on controller");
     }
+  }
+
+  // Check the version numbers are matching
+  if (tScanPmacProgVersion_ != PMAC_TRAJECTORY_VERSION){
+    debug(DEBUG_ERROR, functionName, "Motion program and driver versions do not match");
+    debug(DEBUG_ERROR, functionName, "Motion program version", tScanPmacProgVersion_);
+    debug(DEBUG_ERROR, functionName, "Driver version", PMAC_TRAJECTORY_VERSION);
+    // Set the status to failure
+    this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Program and driver version mismatch");
+    status = asynError;
   }
 
   // Check the CS number is valid
@@ -2170,30 +2205,21 @@ asynStatus pmacController::buildProfile(int csNo)
     // Set the current scan CS
     tScanCSNo_ = csNo;
     debug(DEBUG_VARIABLE, functionName, "Current scan CS", tScanCSNo_);
-    // Copy the time array
-//    status = pCSControllers_[tScanCSNo_]->tScanBuildTimeArray(profileTimes_, &numPoints, PMAC_MAX_TRAJECTORY_POINTS);
+    // Read the number of points in the scan
     getIntegerParam(profileNumPoints_, &numPoints);
     tScanNumPoints_ = numPoints;
 
-    // Calculate if the scan is considered short (< 3 seconds)
-    while (counter < tScanNumPoints_ && totalScanTime < 3.0){
-      // Profile times are in ticks, 1/4 ms for each
-      totalScanTime += ((double)profileTimes_[counter]) / 4000.0;
+    // Check for any invalid times
+    while (counter < tScanNumPoints_){
+      // Profile times must be less than 24bit
+      if (profileTimes_[counter] > 0xFFFFFF){
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Invalid profile time value (> 24 bit)");
+        status = asynError;
+      }
       counter++;
     }
-    debug(DEBUG_VARIABLE, functionName, "Total scan time at least (s)", totalScanTime);
 
-    if (totalScanTime < 3.0){
-      // This is considered a short scan, set the flag appropriately
-      tScanShortScan_ = true;
-    } else {
-      tScanShortScan_ = false;
-    }
-
-    if (status != asynSuccess){
-      // Set the status to failure
-      this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to build profile times/user/velocity mode");
-    } else {
+    if (status == asynSuccess){
       // Ask the CS controller for the bitmap of axes that are to be included in the scan
       // 1 to 9 axes (0 is error) 111111111 => 1 .. 511
       status = this->tScanIncludedAxes(&axisMask);
@@ -2227,6 +2253,8 @@ asynStatus pmacController::buildProfile(int csNo)
     setIntegerParam(profileNumPoints_, tScanNumPoints_);
     // Set the status to complete
     this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_SUCCESS, "Profile built");
+    // Set the internal built flag
+    profileBuilt_ = true;
   } else {
     // Zero the number of points in the scan
     setIntegerParam(profileNumPoints_, 0);
@@ -2354,7 +2382,7 @@ asynStatus pmacController::executeProfile(int csNo)
   // Check that the profile has been built successfully
   getIntegerParam(profileBuildState_, &buildState);
   getIntegerParam(profileBuildStatus_, &buildStatus);
-  if ((buildStatus != PROFILE_STATUS_SUCCESS) || (buildState != PROFILE_BUILD_DONE)){
+  if ((buildStatus != PROFILE_STATUS_SUCCESS) || (buildState != PROFILE_BUILD_DONE) || (!profileBuilt_)){
     // Set the status to failure
     this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Trajectory profile was not built successfully");
     debug(DEBUG_ERROR, functionName, "Trajectory was not built successfully");
@@ -2386,6 +2414,11 @@ asynStatus pmacController::executeProfile(int csNo)
 
   if (status == asynSuccess){
     // Checks have passed.
+    // Reset the built flag so that we cannot re-run the scan without re-building first.
+    // This is necessary due to the build writing values into the PMAC hardware, we cannot
+    // be sure that executing twice will produce a valid scan on the second iteration so we
+    // must force a re-build of the scan each time.
+    profileBuilt_ = false;
     // Send the signal to the trajectory thread
     epicsEventSignal(this->startEventId_);
   }
@@ -2431,7 +2464,7 @@ void pmacController::trajectoryTask()
   int epicsBufferNumber = 0;
   int progRunning = 0;
   int progNo = 0;
-  //int position_index = 0;
+  int totalProfilePoints = 0;
   //double position = 0.0;
   char response[1024];
   char cmd[1024];
@@ -2535,6 +2568,8 @@ void pmacController::trajectoryTask()
       // We are ready to execute the start demand
       // Only execute this if there has been no error detected so far
       if (epicsErrorDetect == 0){
+        // Read the total number of points within the scan
+        getIntegerParam(profileNumPoints_, &totalProfilePoints);
         getIntegerParam(PMAC_C_TrajProg_, &progNo);
         sprintf(cmd, "%s=%d", PMAC_TRAJ_STATUS, PMAC_TRAJ_STATUS_RUNNING);
         this->immediateWriteRead(cmd, response);
@@ -2596,8 +2631,15 @@ void pmacController::trajectoryTask()
         // Something has happened on the PMAC side
         tScanExecuting_ = 0;
         if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_FINISHED){
-          // Set the status to complete
-          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_SUCCESS, "Trajectory scan complete");
+          // Test the number of points scanned to ensure the motion program has actually
+          // completed and not just caught up with the buffer edge
+          if (totalProfilePoints == tScanPmacTotalPts_){
+            // Set the status to complete
+            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_SUCCESS, "Trajectory scan complete");
+          } else {
+            // Set the status to failure
+            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Trajectory scan failed, unable to fill buffers in time");
+          }
         } else {
           // Set the status to failure
           this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Trajectory scan failed, motion program timeout start");
