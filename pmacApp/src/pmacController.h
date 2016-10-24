@@ -135,6 +135,10 @@
 #define PMAC_C_TrajPercentString       "PMAC_C_TRAJ_PERCENT" // Percentage of scan complete
 #define PMAC_C_TrajEStatusString       "PMAC_C_TRAJ_ESTATUS" // Our report of tScan status
 #define PMAC_C_TrajProgString          "PMAC_C_TRAJ_PROG"    // Which motion program to execute
+#define PMAC_C_TrajProgVersionString   "PMAC_C_TRAJ_PROG_V"  // Motion program version number
+#define PMAC_C_TrajCodeVersionString   "PMAC_C_TRAJ_CODE_V"  // Version of this control code
+
+#define PMAC_TRAJECTORY_VERSION 1.1
 
 #define PMAC_MAXBUF 1024
 
@@ -166,6 +170,7 @@
 #define PMAC_TRAJ_BUFF_FILL_A    "P4011" // Fill level of buffer A
 #define PMAC_TRAJ_BUFF_FILL_B    "P4012" // Fill level of buffer B
 #define PMAC_TRAJ_CURR_FILL      "P4013" // The indexes that current buffer has been filled up to
+#define PMAC_TRAJ_PROG_VERSION   "P4020" // The indexes that current buffer has been filled up to
 #define PMAC_TRAJ_CURR_POS       4111    // The current position P variable base index
 #define PMAC_TRAJ_CURR_DMD       4001    // The current position M variable base index
 
@@ -352,6 +357,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_TrajPercent_;
   int PMAC_C_TrajEStatus_;
   int PMAC_C_TrajProg_;
+  int PMAC_C_TrajProgVersion_;
+  int PMAC_C_TrajCodeVersion_;
   int PMAC_C_NoOfMsgs_;
   int PMAC_C_TotalBytesWritten_;
   int PMAC_C_TotalBytesRead_;
@@ -421,6 +428,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int tScanPmacBufferAddressA_;
   int tScanPmacBufferAddressB_;
   int tScanPmacBufferSize_;
+  double tScanPmacProgVersion_;
   double **eguProfilePositions_;  // 2D array of profile positions in EGU (1 array for each axis)
   double **tScanPositions_;       // 2D array of profile positions (1 array for each axis)
   int *profileUser_;              // Array of profile user values
