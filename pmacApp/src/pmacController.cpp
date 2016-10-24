@@ -2439,7 +2439,7 @@ void pmacController::trajectoryTask()
   int epicsBufferNumber = 0;
   int progRunning = 0;
   int progNo = 0;
-  //int position_index = 0;
+  int totalProfilePoints = 0;
   //double position = 0.0;
   char response[1024];
   char cmd[1024];
@@ -2543,6 +2543,8 @@ void pmacController::trajectoryTask()
       // We are ready to execute the start demand
       // Only execute this if there has been no error detected so far
       if (epicsErrorDetect == 0){
+        // Read the total number of points within the scan
+        getIntegerParam(profileNumPoints_, &totalProfilePoints);
         getIntegerParam(PMAC_C_TrajProg_, &progNo);
         sprintf(cmd, "%s=%d", PMAC_TRAJ_STATUS, PMAC_TRAJ_STATUS_RUNNING);
         this->immediateWriteRead(cmd, response);
@@ -2604,8 +2606,15 @@ void pmacController::trajectoryTask()
         // Something has happened on the PMAC side
         tScanExecuting_ = 0;
         if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_FINISHED){
-          // Set the status to complete
-          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_SUCCESS, "Trajectory scan complete");
+          // Test the number of points scanned to ensure the motion program has actually
+          // completed and not just caught up with the buffer edge
+          if (totalProfilePoints == tScanPmacTotalPts_){
+            // Set the status to complete
+            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_SUCCESS, "Trajectory scan complete");
+          } else {
+            // Set the status to failure
+            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Trajectory scan failed, unable to fill buffers in time");
+          }
         } else {
           // Set the status to failure
           this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Trajectory scan failed, motion program timeout start");
