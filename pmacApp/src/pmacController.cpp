@@ -234,6 +234,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   movingPollPeriod_ = movingPollPeriod;
   idlePollPeriod_ = idlePollPeriod;
   profileInitialized_ = false;
+  profileBuilt_ = false;
   tScanShortScan_ = false;
   tScanExecuting_ = 0;
   tScanCSNo_ = 0;
@@ -2227,6 +2228,8 @@ asynStatus pmacController::buildProfile(int csNo)
     setIntegerParam(profileNumPoints_, tScanNumPoints_);
     // Set the status to complete
     this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_SUCCESS, "Profile built");
+    // Set the internal built flag
+    profileBuilt_ = true;
   } else {
     // Zero the number of points in the scan
     setIntegerParam(profileNumPoints_, 0);
@@ -2354,7 +2357,7 @@ asynStatus pmacController::executeProfile(int csNo)
   // Check that the profile has been built successfully
   getIntegerParam(profileBuildState_, &buildState);
   getIntegerParam(profileBuildStatus_, &buildStatus);
-  if ((buildStatus != PROFILE_STATUS_SUCCESS) || (buildState != PROFILE_BUILD_DONE)){
+  if ((buildStatus != PROFILE_STATUS_SUCCESS) || (buildState != PROFILE_BUILD_DONE) || (!profileBuilt_)){
     // Set the status to failure
     this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Trajectory profile was not built successfully");
     debug(DEBUG_ERROR, functionName, "Trajectory was not built successfully");
@@ -2386,6 +2389,11 @@ asynStatus pmacController::executeProfile(int csNo)
 
   if (status == asynSuccess){
     // Checks have passed.
+    // Reset the built flag so that we cannot re-run the scan without re-building first.
+    // This is necessary due to the build writing values into the PMAC hardware, we cannot
+    // be sure that executing twice will produce a valid scan on the second iteration so we
+    // must force a re-build of the scan each time.
+    profileBuilt_ = false;
     // Send the signal to the trajectory thread
     epicsEventSignal(this->startEventId_);
   }
