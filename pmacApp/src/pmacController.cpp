@@ -2143,7 +2143,6 @@ asynStatus pmacController::buildProfile(int csNo)
   asynStatus status = asynSuccess;
   int numPoints = 0;
   int axisMask = 0;
-  double totalScanTime = 0.0;
   int counter = 0;
   static const char *functionName = "buildProfile";
 
@@ -2206,30 +2205,21 @@ asynStatus pmacController::buildProfile(int csNo)
     // Set the current scan CS
     tScanCSNo_ = csNo;
     debug(DEBUG_VARIABLE, functionName, "Current scan CS", tScanCSNo_);
-    // Copy the time array
-//    status = pCSControllers_[tScanCSNo_]->tScanBuildTimeArray(profileTimes_, &numPoints, PMAC_MAX_TRAJECTORY_POINTS);
+    // Read the number of points in the scan
     getIntegerParam(profileNumPoints_, &numPoints);
     tScanNumPoints_ = numPoints;
 
-    // Calculate if the scan is considered short (< 3 seconds)
-    while (counter < tScanNumPoints_ && totalScanTime < 3.0){
-      // Profile times are in ticks, 1/4 ms for each
-      totalScanTime += ((double)profileTimes_[counter]) / 4000.0;
+    // Check for any invalid times
+    while (counter < tScanNumPoints_){
+      // Profile times must be less than 24bit
+      if (profileTimes_[counter] > 0xFFFFFF){
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Invalid profile time value (> 24 bit)");
+        status = asynError;
+      }
       counter++;
     }
-    debug(DEBUG_VARIABLE, functionName, "Total scan time at least (s)", totalScanTime);
 
-    if (totalScanTime < 3.0){
-      // This is considered a short scan, set the flag appropriately
-      tScanShortScan_ = true;
-    } else {
-      tScanShortScan_ = false;
-    }
-
-    if (status != asynSuccess){
-      // Set the status to failure
-      this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to build profile times/user/velocity mode");
-    } else {
+    if (status == asynSuccess){
       // Ask the CS controller for the bitmap of axes that are to be included in the scan
       // 1 to 9 axes (0 is error) 111111111 => 1 .. 511
       status = this->tScanIncludedAxes(&axisMask);
