@@ -8,6 +8,26 @@
 # % gui, $(name=), edm, pmacTrajectory.edl, P=$(P),R=$(R)
 
 
+##
+## Records to read the motion program and driver versions
+##
+record(ai, "$(P)$(R)ProgramVersion_RBV") {
+  field(DESC, "Motion Program Version")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_PROG_V")
+  field(SCAN, "I/O Intr")  
+}
+
+record(ai, "$(P)$(R)DriverVersion_RBV") {
+  field(DESC, "EPICS Driver Version")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TRAJ_CODE_V")
+  field(SCAN, "I/O Intr")  
+}
+
+##
+## Record to manually assign coordinate systems
+##
 record(longout, "$(P)$(R)CsManualAssign") {
   field(DTYP, "asynInt32")
   field(OUT, "@asyn($(PORT),0)PMAC_C_GROUP_EXECUTE")

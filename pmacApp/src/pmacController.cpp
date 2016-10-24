@@ -248,6 +248,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   tScanPmacBufferAddressB_ = 0;
   tScanPmacBufferSize_ = 0;
   tScanPositions_ = NULL;
+  tScanPmacProgVersion_ = 0.0;
 
   // Create the hashtable for storing port to CS number mappings
   pPortToCs_ = new IntegerHashtable();
@@ -361,6 +362,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_TrajPercentString,       asynParamFloat64,      &PMAC_C_TrajPercent_);
   createParam(PMAC_C_TrajEStatusString,       asynParamInt32,        &PMAC_C_TrajEStatus_);
   createParam(PMAC_C_TrajProgString,          asynParamInt32,        &PMAC_C_TrajProg_);
+  createParam(PMAC_C_TrajProgVersionString,   asynParamFloat64,      &PMAC_C_TrajProgVersion_);
+  createParam(PMAC_C_TrajCodeVersionString,   asynParamFloat64,      &PMAC_C_TrajCodeVersion_);
   createParam(PMAC_C_NoOfMsgsString,          asynParamInt32,        &PMAC_C_NoOfMsgs_);
   createParam(PMAC_C_TotalBytesWrittenString, asynParamInt32,        &PMAC_C_TotalBytesWritten_);
   createParam(PMAC_C_TotalBytesReadString,    asynParamInt32,        &PMAC_C_TotalBytesRead_);
@@ -435,6 +438,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   //paramStatus = ((setStringParam(PMAC_C_TrajCSPort_, "") == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajEStatus_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajProg_, 1) == asynSuccess) && paramStatus);
+  paramStatus = ((setDoubleParam(PMAC_C_TrajProgVersion_, 0.0) == asynSuccess) && paramStatus);
+  paramStatus = ((setDoubleParam(PMAC_C_TrajCodeVersion_, PMAC_TRAJECTORY_VERSION) == asynSuccess) && paramStatus);
   // Initialise the statistics
   paramStatus = ((setIntegerParam(PMAC_C_NoOfMsgs_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TotalBytesWritten_, 0) == asynSuccess) && paramStatus);
@@ -523,6 +528,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFFER_LENGTH);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_A);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_B);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_PROG_VERSION);
 
 
   // Register this class for updates
@@ -1053,6 +1059,25 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr)
       // Save the value into the parameter
       setIntegerParam(PMAC_C_TrajBuffAdrB_, tScanPmacBufferAddressB_);
       debugf(DEBUG_VARIABLE, functionName, "Slow read trajectory address buffer B [%s] => %X", PMAC_TRAJ_BUFF_ADR_B, tScanPmacBufferAddressB_);
+    }
+  }
+
+  // Read the version number of the motion program
+  trajPtr = sPtr->readValue(PMAC_TRAJ_PROG_VERSION);
+  if (trajPtr == ""){
+    debug(DEBUG_ERROR, functionName, "Problem reading motion program version", PMAC_TRAJ_PROG_VERSION);
+    status = asynError;
+  } else {
+    nvals = sscanf(trajPtr.c_str(), "%lf", &tScanPmacProgVersion_);
+    if (nvals != 1) {
+      debug(DEBUG_ERROR, functionName, "Error reading motion program version", PMAC_TRAJ_PROG_VERSION);
+      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+      debug(DEBUG_ERROR, functionName, "    response", trajPtr);
+      status = asynError;
+    } else {
+      // Save the value into the parameter
+      setDoubleParam(PMAC_C_TrajProgVersion_, tScanPmacProgVersion_);
+      debugf(DEBUG_VARIABLE, functionName, "Slow read trajectory motion program version [%s] => %X", PMAC_TRAJ_PROG_VERSION, tScanPmacProgVersion_);
     }
   }
 
@@ -2139,6 +2164,16 @@ asynStatus pmacController::buildProfile(int csNo)
       // Set the status to failure
       this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to allocate memory on controller");
     }
+  }
+
+  // Check the version numbers are matching
+  if (tScanPmacProgVersion_ != PMAC_TRAJECTORY_VERSION){
+    debug(DEBUG_ERROR, functionName, "Motion program and driver versions do not match");
+    debug(DEBUG_ERROR, functionName, "Motion program version", tScanPmacProgVersion_);
+    debug(DEBUG_ERROR, functionName, "Driver version", PMAC_TRAJECTORY_VERSION);
+    // Set the status to failure
+    this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Program and driver version mismatch");
+    status = asynError;
   }
 
   // Check the CS number is valid
