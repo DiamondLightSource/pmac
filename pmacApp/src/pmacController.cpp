@@ -1879,12 +1879,10 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     }
   }
   else if (function == motorDeferMoves_) {
+    debug(DEBUG_VARIABLE, functionName, "Motor defer value", value);
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s: Setting deferred move mode on PMAC %s to %d\n", functionName, portName, value);
-    if (value == 0 && this->movesDeferred_ == DEFERRED_FAST_MOVES) {
+    if (value == 0){
       status = (this->processDeferredMoves() == asynSuccess) && status;
-    }
-    else if (value == 0 && this->movesDeferred_ == DEFERRED_COORDINATED_MOVES) {
-    	status = (pGroupList->processDeferredCoordMoves() == asynSuccess) && status;
     }
     this->movesDeferred_ = value;
   }
@@ -3273,8 +3271,9 @@ asynStatus pmacController::processDeferredMoves(void)
   char command[PMAC_MAXBUF_] = {0};
   char response[PMAC_MAXBUF_] = {0};
   pmacAxis *pAxis = NULL;
-  static const char *functionName = "pmacController::processDeferredMoves";
+  static const char *functionName = "processDeferredMoves";
 
+  debug(DEBUG_TRACE, functionName);
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   //Build up combined move command for all axes involved in the deferred move.

@@ -2,15 +2,15 @@
 #% macro, name, gui entry
 #% macro, P, prefix
 #% macro, Q, suffix
-#% macro, BRICK, Controller
-#% gui, $(name), edmembed, pmacUtil_deferMoves.edl, P=$(P),Q=$(Q)
+#% macro, PORT, Controller
+#% gui, $(name), edm, pmacDeferMoves.edl, P=$(P),Q=$(Q)
 
 record(bo, "$(P):$(Q)")
 {
     field(DESC, "Binary Output")
-    field(DTYP, "asynUInt32Digital")
+    field(DTYP, "asynInt32")
     field(ONAM, "ON")
-    field(OUT,  "@asynMask($(BRICK),1,1)MOTOR_DEFER_MOVES")
+    field(OUT,  "@asyn($(PORT),0)MOTOR_DEFER_MOVES")
     field(SCAN, "Passive")
     field(VAL,  "0")
     field(ZNAM, "OFF")
