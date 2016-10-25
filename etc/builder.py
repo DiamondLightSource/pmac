@@ -121,6 +121,11 @@ class GeoBrickGlobalControl(_GeoBrickGlobalControlT, Device):
             if i in self.PORT.CsGroupNamesList:
                 self.args[i] = self.PORT.CsGroupNamesList[i]
                     
+class pmacDeferMoves(AutoSubstitution):
+    TemplateFile = 'pmacDeferMoves.template'
+    Dependencies = (GeoBrick,)
+pmacDeferMoves.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
+
 class _pmacTrajectoryAxis(AutoSubstitution):
     TemplateFile = 'pmacTrajectoryAxis.template'
 
