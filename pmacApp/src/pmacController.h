@@ -17,126 +17,133 @@
 #include "pmacAxis.h"
 #include "pmacCsGroups.h"
 #include "pmacMessageBroker.h"
+#include "pmacTrajectory.h"
 #include "IntegerHashtable.h"
 
-#define PMAC_C_FirstParamString        "PMAC_C_FIRSTPARAM"
-#define PMAC_C_LastParamString         "PMAC_C_LASTPARAM"
+#define PMAC_C_FirstParamString           "PMAC_C_FIRSTPARAM"
+#define PMAC_C_LastParamString            "PMAC_C_LASTPARAM"
 
-#define PMAC_C_GlobalStatusString      "PMAC_C_GLOBALSTATUS"
-#define PMAC_C_CommsErrorString        "PMAC_C_COMMSERROR"
+#define PMAC_C_GlobalStatusString         "PMAC_C_GLOBALSTATUS"
+#define PMAC_C_CommsErrorString           "PMAC_C_COMMSERROR"
 
-#define PMAC_C_FeedRateString          "PMAC_C_FEEDRATE"
-#define PMAC_C_FeedRateLimitString     "PMAC_C_FEEDRATE_LIMIT"
-#define PMAC_C_FeedRatePollString      "PMAC_C_FEEDRATE_POLL"
-#define PMAC_C_FeedRateProblemString   "PMAC_C_FEEDRATE_PROBLEM"
-#define PMAC_C_CoordSysGroup  		     "PMAC_C_COORDINATE_SYS_GROUP"
+#define PMAC_C_FeedRateString             "PMAC_C_FEEDRATE"
+#define PMAC_C_FeedRateLimitString        "PMAC_C_FEEDRATE_LIMIT"
+#define PMAC_C_FeedRatePollString         "PMAC_C_FEEDRATE_POLL"
+#define PMAC_C_FeedRateProblemString      "PMAC_C_FEEDRATE_PROBLEM"
+#define PMAC_C_CoordSysGroup  		        "PMAC_C_COORDINATE_SYS_GROUP"
 
-#define PMAC_C_GroupCSPortString       "PMAC_C_GROUP_CS_PORT"
-#define PMAC_C_GroupCSPortRBVString    "PMAC_C_GROUP_CS_PORT_RBV"
-#define PMAC_C_GroupAssignString       "PMAC_C_GROUP_ASSIGN"
-#define PMAC_C_GroupAssignRBVString    "PMAC_C_GROUP_ASSIGN_RBV"
-#define PMAC_C_GroupExecuteString      "PMAC_C_GROUP_EXECUTE"
+#define PMAC_C_GroupCSPortString          "PMAC_C_GROUP_CS_PORT"
+#define PMAC_C_GroupCSPortRBVString       "PMAC_C_GROUP_CS_PORT_RBV"
+#define PMAC_C_GroupAssignString          "PMAC_C_GROUP_ASSIGN"
+#define PMAC_C_GroupAssignRBVString       "PMAC_C_GROUP_ASSIGN_RBV"
+#define PMAC_C_GroupExecuteString         "PMAC_C_GROUP_EXECUTE"
 
-#define PMAC_C_DebugLevelString        "PMAC_C_DEBUG_LEVEL"
-#define PMAC_C_DebugAxisString         "PMAC_C_DEBUG_AXIS"
-#define PMAC_C_DebugCSString           "PMAC_C_DEBUG_CS"
-#define PMAC_C_DebugCmdString          "PMAC_C_DEBUG_CMD"
+#define PMAC_C_DebugLevelString           "PMAC_C_DEBUG_LEVEL"
+#define PMAC_C_DebugAxisString            "PMAC_C_DEBUG_AXIS"
+#define PMAC_C_DebugCSString              "PMAC_C_DEBUG_CS"
+#define PMAC_C_DebugCmdString             "PMAC_C_DEBUG_CMD"
 
-#define PMAC_C_FastUpdateTimeString    "PMAC_C_FAST_UPDATE_TIME"
+#define PMAC_C_FastUpdateTimeString       "PMAC_C_FAST_UPDATE_TIME"
 
-#define PMAC_C_AxisCSString            "PMAC_C_AXIS_CS"
-#define PMAC_C_AxisReadonlyString      "PMAC_C_AXIS_READONLY"
-#define PMAC_C_WriteCmdString          "PMAC_C_WRITE_CMD"
-#define PMAC_C_KillAxisString          "PMAC_C_KILL_AXIS"
-#define PMAC_C_PLCBits00String         "PMAC_C_PLC_BITS00"
-#define PMAC_C_PLCBits01String         "PMAC_C_PLC_BITS01"
-#define PMAC_C_StatusBits01String      "PMAC_C_STATUS_BITS01"
-#define PMAC_C_StatusBits02String      "PMAC_C_STATUS_BITS02"
-#define PMAC_C_StatusBits03String      "PMAC_C_STATUS_BITS03"
-#define PMAC_C_GpioInputsString        "PMAC_C_GPIO_INPUTS"
-#define PMAC_C_GpioOutputsString       "PMAC_C_GPIO_OUTPUTS"
-#define PMAC_C_ProgBitsString          "PMAC_C_PROG_BITS"
-#define PMAC_C_AxisBits01String        "PMAC_C_AXIS_BITS01"
-#define PMAC_C_AxisBits02String        "PMAC_C_AXIS_BITS02"
-#define PMAC_C_AxisBits03String        "PMAC_C_AXIS_BITS03"
+#define PMAC_C_AxisCSString               "PMAC_C_AXIS_CS"
+#define PMAC_C_AxisReadonlyString         "PMAC_C_AXIS_READONLY"
+#define PMAC_C_WriteCmdString             "PMAC_C_WRITE_CMD"
+#define PMAC_C_KillAxisString             "PMAC_C_KILL_AXIS"
+#define PMAC_C_PLCBits00String            "PMAC_C_PLC_BITS00"
+#define PMAC_C_PLCBits01String            "PMAC_C_PLC_BITS01"
+#define PMAC_C_StatusBits01String         "PMAC_C_STATUS_BITS01"
+#define PMAC_C_StatusBits02String         "PMAC_C_STATUS_BITS02"
+#define PMAC_C_StatusBits03String         "PMAC_C_STATUS_BITS03"
+#define PMAC_C_GpioInputsString           "PMAC_C_GPIO_INPUTS"
+#define PMAC_C_GpioOutputsString          "PMAC_C_GPIO_OUTPUTS"
+#define PMAC_C_ProgBitsString             "PMAC_C_PROG_BITS"
+#define PMAC_C_AxisBits01String           "PMAC_C_AXIS_BITS01"
+#define PMAC_C_AxisBits02String           "PMAC_C_AXIS_BITS02"
+#define PMAC_C_AxisBits03String           "PMAC_C_AXIS_BITS03"
 
-#define PMAC_C_NoOfMsgsString          "PMAC_C_NO_OF_MSGS"
-#define PMAC_C_TotalBytesWrittenString "PMAC_C_TBYTES_WRITE"
-#define PMAC_C_TotalBytesReadString    "PMAC_C_TBYTES_READ"
-#define PMAC_C_MsgBytesWrittenString   "PMAC_C_MBYTES_WRITE"
-#define PMAC_C_MsgBytesReadString      "PMAC_C_MBYTES_READ"
-#define PMAC_C_MsgTimeString           "PMAC_C_MSG_TIME"
-#define PMAC_C_MaxBytesWrittenString   "PMAC_C_MAX_BYTES_WRITE"
-#define PMAC_C_MaxBytesReadString      "PMAC_C_MAX_BYTES_READ"
-#define PMAC_C_MaxTimeString           "PMAC_C_MAX_TIME"
-#define PMAC_C_AveBytesWrittenString   "PMAC_C_AVE_BYTES_WRITE"
-#define PMAC_C_AveBytesReadString      "PMAC_C_AVE_BYTES_READ"
-#define PMAC_C_AveTimeString           "PMAC_C_AVE_TIME"
+#define PMAC_C_NoOfMsgsString             "PMAC_C_NO_OF_MSGS"
+#define PMAC_C_TotalBytesWrittenString    "PMAC_C_TBYTES_WRITE"
+#define PMAC_C_TotalBytesReadString       "PMAC_C_TBYTES_READ"
+#define PMAC_C_MsgBytesWrittenString      "PMAC_C_MBYTES_WRITE"
+#define PMAC_C_MsgBytesReadString         "PMAC_C_MBYTES_READ"
+#define PMAC_C_MsgTimeString              "PMAC_C_MSG_TIME"
+#define PMAC_C_MaxBytesWrittenString      "PMAC_C_MAX_BYTES_WRITE"
+#define PMAC_C_MaxBytesReadString         "PMAC_C_MAX_BYTES_READ"
+#define PMAC_C_MaxTimeString              "PMAC_C_MAX_TIME"
+#define PMAC_C_AveBytesWrittenString      "PMAC_C_AVE_BYTES_WRITE"
+#define PMAC_C_AveBytesReadString         "PMAC_C_AVE_BYTES_READ"
+#define PMAC_C_AveTimeString              "PMAC_C_AVE_TIME"
 
-#define PMAC_C_FastStoreString         "PMAC_C_FAST_STORE"
-#define PMAC_C_MediumStoreString       "PMAC_C_MEDIUM_STORE"
-#define PMAC_C_SlowStoreString         "PMAC_C_SLOW_STORE"
-#define PMAC_C_ReportFastString        "PMAC_C_REPORT_FAST"
-#define PMAC_C_ReportMediumString      "PMAC_C_REPORT_MEDIUM"
-#define PMAC_C_ReportSlowString        "PMAC_C_REPORT_SLOW"
+#define PMAC_C_FastStoreString            "PMAC_C_FAST_STORE"
+#define PMAC_C_MediumStoreString          "PMAC_C_MEDIUM_STORE"
+#define PMAC_C_SlowStoreString            "PMAC_C_SLOW_STORE"
+#define PMAC_C_ReportFastString           "PMAC_C_REPORT_FAST"
+#define PMAC_C_ReportMediumString         "PMAC_C_REPORT_MEDIUM"
+#define PMAC_C_ReportSlowString           "PMAC_C_REPORT_SLOW"
 
-#define PMAC_C_ProfileUseAxisAString   "PROFILE_USE_AXIS_A"
-#define PMAC_C_ProfileUseAxisBString   "PROFILE_USE_AXIS_B"
-#define PMAC_C_ProfileUseAxisCString   "PROFILE_USE_AXIS_C"
-#define PMAC_C_ProfileUseAxisUString   "PROFILE_USE_AXIS_U"
-#define PMAC_C_ProfileUseAxisVString   "PROFILE_USE_AXIS_V"
-#define PMAC_C_ProfileUseAxisWString   "PROFILE_USE_AXIS_W"
-#define PMAC_C_ProfileUseAxisXString   "PROFILE_USE_AXIS_X"
-#define PMAC_C_ProfileUseAxisYString   "PROFILE_USE_AXIS_Y"
-#define PMAC_C_ProfileUseAxisZString   "PROFILE_USE_AXIS_Z"
-#define PMAC_C_ProfilePositionsAString "PROFILE_POSITIONS_A"
-#define PMAC_C_ProfilePositionsBString "PROFILE_POSITIONS_B"
-#define PMAC_C_ProfilePositionsCString "PROFILE_POSITIONS_C"
-#define PMAC_C_ProfilePositionsUString "PROFILE_POSITIONS_U"
-#define PMAC_C_ProfilePositionsVString "PROFILE_POSITIONS_V"
-#define PMAC_C_ProfilePositionsWString "PROFILE_POSITIONS_W"
-#define PMAC_C_ProfilePositionsXString "PROFILE_POSITIONS_X"
-#define PMAC_C_ProfilePositionsYString "PROFILE_POSITIONS_Y"
-#define PMAC_C_ProfilePositionsZString "PROFILE_POSITIONS_Z"
-#define PMAC_C_ProfileOffsetAString    "PROFILE_OFFSET_A"
-#define PMAC_C_ProfileOffsetBString    "PROFILE_OFFSET_B"
-#define PMAC_C_ProfileOffsetCString    "PROFILE_OFFSET_C"
-#define PMAC_C_ProfileOffsetUString    "PROFILE_OFFSET_U"
-#define PMAC_C_ProfileOffsetVString    "PROFILE_OFFSET_V"
-#define PMAC_C_ProfileOffsetWString    "PROFILE_OFFSET_W"
-#define PMAC_C_ProfileOffsetXString    "PROFILE_OFFSET_X"
-#define PMAC_C_ProfileOffsetYString    "PROFILE_OFFSET_Y"
-#define PMAC_C_ProfileOffsetZString    "PROFILE_OFFSET_Z"
-#define PMAC_C_ProfileResAString       "PROFILE_RESOLUTION_A"
-#define PMAC_C_ProfileResBString       "PROFILE_RESOLUTION_B"
-#define PMAC_C_ProfileResCString       "PROFILE_RESOLUTION_C"
-#define PMAC_C_ProfileResUString       "PROFILE_RESOLUTION_U"
-#define PMAC_C_ProfileResVString       "PROFILE_RESOLUTION_V"
-#define PMAC_C_ProfileResWString       "PROFILE_RESOLUTION_W"
-#define PMAC_C_ProfileResXString       "PROFILE_RESOLUTION_X"
-#define PMAC_C_ProfileResYString       "PROFILE_RESOLUTION_Y"
-#define PMAC_C_ProfileResZString       "PROFILE_RESOLUTION_Z"
+#define PMAC_C_ProfileUseAxisAString      "PROFILE_USE_AXIS_A"
+#define PMAC_C_ProfileUseAxisBString      "PROFILE_USE_AXIS_B"
+#define PMAC_C_ProfileUseAxisCString      "PROFILE_USE_AXIS_C"
+#define PMAC_C_ProfileUseAxisUString      "PROFILE_USE_AXIS_U"
+#define PMAC_C_ProfileUseAxisVString      "PROFILE_USE_AXIS_V"
+#define PMAC_C_ProfileUseAxisWString      "PROFILE_USE_AXIS_W"
+#define PMAC_C_ProfileUseAxisXString      "PROFILE_USE_AXIS_X"
+#define PMAC_C_ProfileUseAxisYString      "PROFILE_USE_AXIS_Y"
+#define PMAC_C_ProfileUseAxisZString      "PROFILE_USE_AXIS_Z"
+#define PMAC_C_ProfilePositionsAString    "PROFILE_POSITIONS_A"
+#define PMAC_C_ProfilePositionsBString    "PROFILE_POSITIONS_B"
+#define PMAC_C_ProfilePositionsCString    "PROFILE_POSITIONS_C"
+#define PMAC_C_ProfilePositionsUString    "PROFILE_POSITIONS_U"
+#define PMAC_C_ProfilePositionsVString    "PROFILE_POSITIONS_V"
+#define PMAC_C_ProfilePositionsWString    "PROFILE_POSITIONS_W"
+#define PMAC_C_ProfilePositionsXString    "PROFILE_POSITIONS_X"
+#define PMAC_C_ProfilePositionsYString    "PROFILE_POSITIONS_Y"
+#define PMAC_C_ProfilePositionsZString    "PROFILE_POSITIONS_Z"
+#define PMAC_C_ProfileOffsetAString       "PROFILE_OFFSET_A"
+#define PMAC_C_ProfileOffsetBString       "PROFILE_OFFSET_B"
+#define PMAC_C_ProfileOffsetCString       "PROFILE_OFFSET_C"
+#define PMAC_C_ProfileOffsetUString       "PROFILE_OFFSET_U"
+#define PMAC_C_ProfileOffsetVString       "PROFILE_OFFSET_V"
+#define PMAC_C_ProfileOffsetWString       "PROFILE_OFFSET_W"
+#define PMAC_C_ProfileOffsetXString       "PROFILE_OFFSET_X"
+#define PMAC_C_ProfileOffsetYString       "PROFILE_OFFSET_Y"
+#define PMAC_C_ProfileOffsetZString       "PROFILE_OFFSET_Z"
+#define PMAC_C_ProfileResAString          "PROFILE_RESOLUTION_A"
+#define PMAC_C_ProfileResBString          "PROFILE_RESOLUTION_B"
+#define PMAC_C_ProfileResCString          "PROFILE_RESOLUTION_C"
+#define PMAC_C_ProfileResUString          "PROFILE_RESOLUTION_U"
+#define PMAC_C_ProfileResVString          "PROFILE_RESOLUTION_V"
+#define PMAC_C_ProfileResWString          "PROFILE_RESOLUTION_W"
+#define PMAC_C_ProfileResXString          "PROFILE_RESOLUTION_X"
+#define PMAC_C_ProfileResYString          "PROFILE_RESOLUTION_Y"
+#define PMAC_C_ProfileResZString          "PROFILE_RESOLUTION_Z"
+#define PMAC_C_ProfileAppendString        "PROFILE_APPEND"
+#define PMAC_C_ProfileAppendStateString   "PROFILE_APPEND_STATE"
+#define PMAC_C_ProfileAppendStatusString  "PROFILE_APPEND_STATUS"
+#define PMAC_C_ProfileAppendMessageString "PROFILE_APPEND_MESSAGE"
+#define PMAC_C_ProfileNumBuildString      "PROFILE_NUM_BUILD"
+#define PMAC_C_ProfileBuiltPointsString   "PROFILE_POINTS_BUILT"
 
-#define PMAC_C_ProfileUserString       "PMAC_PROFILE_USER"    // User buffer for trajectory scan
-#define PMAC_C_ProfileVelModeString    "PMAC_PROFILE_VELMODE" // Velocity mode buffer for trajectory scan
+#define PMAC_C_ProfileUserString          "PMAC_PROFILE_USER"    // User buffer for trajectory scan
+#define PMAC_C_ProfileVelModeString       "PMAC_PROFILE_VELMODE" // Velocity mode buffer for trajectory scan
 
-#define PMAC_C_TrajBufferLengthString  "PMAC_C_TRAJ_LENGTH"  // Length of a single buffer e.g. AX, AY
-#define PMAC_C_TrajTotalPointsString   "PMAC_C_TRAJ_POINTS"  // Total number of points scanned through
-#define PMAC_C_TrajStatusString        "PMAC_C_TRAJ_STATUS"  // Current status reported by the PMAC
-#define PMAC_C_TrajCurrentIndexString  "PMAC_C_TRAJ_INDEX"   // Current index position in buffers
-#define PMAC_C_TrajCurrentBufferString "PMAC_C_TRAJ_CBUFF"   // Current buffer specifier - 0: A, 1: B
-#define PMAC_C_TrajBuffAdrAString      "PMAC_C_TRAJ_ADRA"    // Start index of buffer A
-#define PMAC_C_TrajBuffAdrBString      "PMAC_C_TRAJ_ADRB"    // Start index of buffer B
-#define PMAC_C_TrajBuffFillAString     "PMAC_C_TRAJ_FILLA"   // Fill level of buffer A
-#define PMAC_C_TrajBuffFillBString     "PMAC_C_TRAJ_FILLB"   // Fill level of buffer B
-#define PMAC_C_TrajRunTimeString       "PMAC_C_TRAJ_TIME"    // Current run time of scan (s)
-#define PMAC_C_TrajCSNumberString      "PMAC_C_TRAJ_CS"      // Current CS scan is executing on
-#define PMAC_C_TrajCSPortString        "PMAC_C_TRAJ_CS_PORT" // Desired CS port to execute
-#define PMAC_C_TrajPercentString       "PMAC_C_TRAJ_PERCENT" // Percentage of scan complete
-#define PMAC_C_TrajEStatusString       "PMAC_C_TRAJ_ESTATUS" // Our report of tScan status
-#define PMAC_C_TrajProgString          "PMAC_C_TRAJ_PROG"    // Which motion program to execute
-#define PMAC_C_TrajProgVersionString   "PMAC_C_TRAJ_PROG_V"  // Motion program version number
-#define PMAC_C_TrajCodeVersionString   "PMAC_C_TRAJ_CODE_V"  // Version of this control code
+#define PMAC_C_TrajBufferLengthString     "PMAC_C_TRAJ_LENGTH"  // Length of a single buffer e.g. AX, AY
+#define PMAC_C_TrajTotalPointsString      "PMAC_C_TRAJ_POINTS"  // Total number of points scanned through
+#define PMAC_C_TrajStatusString           "PMAC_C_TRAJ_STATUS"  // Current status reported by the PMAC
+#define PMAC_C_TrajCurrentIndexString     "PMAC_C_TRAJ_INDEX"   // Current index position in buffers
+#define PMAC_C_TrajCurrentBufferString    "PMAC_C_TRAJ_CBUFF"   // Current buffer specifier - 0: A, 1: B
+#define PMAC_C_TrajBuffAdrAString         "PMAC_C_TRAJ_ADRA"    // Start index of buffer A
+#define PMAC_C_TrajBuffAdrBString         "PMAC_C_TRAJ_ADRB"    // Start index of buffer B
+#define PMAC_C_TrajBuffFillAString        "PMAC_C_TRAJ_FILLA"   // Fill level of buffer A
+#define PMAC_C_TrajBuffFillBString        "PMAC_C_TRAJ_FILLB"   // Fill level of buffer B
+#define PMAC_C_TrajRunTimeString          "PMAC_C_TRAJ_TIME"    // Current run time of scan (s)
+#define PMAC_C_TrajCSNumberString         "PMAC_C_TRAJ_CS"      // Current CS scan is executing on
+#define PMAC_C_TrajCSPortString           "PMAC_C_TRAJ_CS_PORT" // Desired CS port to execute
+#define PMAC_C_TrajPercentString          "PMAC_C_TRAJ_PERCENT" // Percentage of scan complete
+#define PMAC_C_TrajEStatusString          "PMAC_C_TRAJ_ESTATUS" // Our report of tScan status
+#define PMAC_C_TrajProgString             "PMAC_C_TRAJ_PROG"    // Which motion program to execute
+#define PMAC_C_TrajProgVersionString      "PMAC_C_TRAJ_PROG_V"  // Motion program version number
+#define PMAC_C_TrajCodeVersionString      "PMAC_C_TRAJ_CODE_V"  // Version of this control code
 
 #define PMAC_TRAJECTORY_VERSION 1.1
 
@@ -225,12 +232,14 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus initializeProfile(size_t maxPoints);
   asynStatus buildProfile();
   asynStatus buildProfile(int csNo);
+  asynStatus appendToProfile();
   asynStatus preparePMAC();
   asynStatus executeProfile();
   asynStatus executeProfile(int csNo);
   asynStatus abortProfile();
   void trajectoryTask();
   void setBuildStatus(int state, int status, const std::string& message);
+  void setAppendStatus(int state, int status, const std::string& message);
   void setProfileStatus(int state, int status, const std::string& message);
   asynStatus sendTrajectoryDemands(int buffer);
   asynStatus doubleToPMACFloat(double value, int64_t *representation);
@@ -340,6 +349,12 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_ProfileResX_;
   int PMAC_C_ProfileResY_;
   int PMAC_C_ProfileResZ_;
+  int PMAC_C_ProfileAppend_;
+  int PMAC_C_ProfileAppendState_;
+  int PMAC_C_ProfileAppendStatus_;
+  int PMAC_C_ProfileAppendMessage_;
+  int PMAC_C_ProfileNumBuild_;
+  int PMAC_C_ProfileBuiltPoints_;
   int PMAC_C_ProfileUser_;
   int PMAC_C_ProfileVelMode_;
   int PMAC_C_TrajBufferLength_;
@@ -392,6 +407,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int cid_;
   int parameterIndex_;
   pmacMessageBroker *pBroker_;
+  pmacTrajectory *pTrajectory_;
   IntegerHashtable *pPortToCs_;
   IntegerHashtable *pIntParams_;
   IntegerHashtable *pHexParams_;
@@ -415,6 +431,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   // Trajectory scan variables
   bool profileInitialized_;
   bool profileBuilt_;
+  bool appendAvailable_;
   bool tScanShortScan_;           // Is the scan a short scan (< 3.0 seconds)
   int tScanExecuting_;            // Is a scan executing
   int tScanCSNo_;                 // The CS number of the executing scan

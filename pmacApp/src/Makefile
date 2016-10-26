@@ -33,6 +33,7 @@ INC += pmacGroupsHashtable.h
 INC += CharIntHashtable.h
 INC += pmacCommandStore.h
 INC += pmacMessageBroker.h
+INC += pmacTrajectory.h
 INC += pmacCallbackStore.h
 INC += pmacCallbackInterface.h
 INC += pmacDebugger.h
@@ -55,6 +56,7 @@ pmacAsynMotorPort_SRCS += IntegerHashtable.cpp
 pmacAsynMotorPort_SRCS += Hashtable.cpp
 pmacAsynMotorPort_SRCS += pmacCommandStore.cpp
 pmacAsynMotorPort_SRCS += pmacMessageBroker.cpp
+pmacAsynMotorPort_SRCS += pmacTrajectory.cpp
 pmacAsynMotorPort_SRCS += pmacCallbackStore.cpp
 pmacAsynMotorPort_SRCS += pmacCallbackInterface.cpp
 
