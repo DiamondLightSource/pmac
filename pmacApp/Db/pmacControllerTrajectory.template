@@ -69,6 +69,32 @@ record(longin, "$(P)$(R)ProfileNumPoints_RBV") {
   field(SCAN, "I/O Intr")  
 }
 
+
+##
+## Records to specify the number of motion points to build
+## into the scan currently
+##
+record(longout,"$(P)$(R)ProfilePointsToBuild") {
+    field(DESC, "# of points to build/append")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_NUM_BUILD")
+    field(VAL,  "0")
+}
+
+record(longin, "$(P)$(R)ProfilePointsToBuild_RBV") {
+  field(DESC, "# of points to build/append")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_NUM_BUILD")
+  field(SCAN, "I/O Intr")  
+}
+
+record(longin, "$(P)$(R)ProfilePointsBuilt_RBV") {
+  field(DESC, "# of points built into scan")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_POINTS_BUILT")
+  field(SCAN, "I/O Intr")  
+}
+
 ##
 ## Record to read the current executing point of trajectory scan
 ##
@@ -232,6 +258,56 @@ record(waveform, "$(P)$(R)ProfileBuildMessage_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PROFILE_BUILD_MESSAGE")
+  field(FTVL, "CHAR")
+  field(NELM, "1000")
+  field(SCAN, "I/O Intr")
+}
+
+
+###################################################################
+#  These records control trajectory scan appending (points can    # 
+#  only be appended after a scan has been built)                  #
+###################################################################
+
+record(busy,"$(P)$(R)ProfileAppend") {
+    field(DESC,"Append points to profile")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_APPEND")
+    field(ZNAM, "Done")
+    field(ONAM, "Append")
+}
+
+record(mbbi, "$(P)$(R)ProfileAppendState_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_APPEND_STATE")
+  field(ZRVL, "0")
+  field(ZRST, "Done")
+  field(ZRSV, "NO_ALARM")
+  field(ONVL, "1")
+  field(ONST, "Busy")
+  field(ONSV, "MINOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(mbbi, "$(P)$(R)ProfileAppendStatus_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PROFILE_APPEND_STATUS")
+  field(ZRVL, "0")
+  field(ZRST, "Undefined")
+  field(ZRSV, "INVALID")
+  field(ONVL, "1")
+  field(ONST, "Success")
+  field(ONSV, "NO_ALARM")
+  field(TWVL, "2")
+  field(TWST, "Failure")
+  field(TWSV, "MAJOR")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(P)$(R)ProfileAppendMessage_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PROFILE_APPEND_MESSAGE")
   field(FTVL, "CHAR")
   field(NELM, "1000")
   field(SCAN, "I/O Intr")
