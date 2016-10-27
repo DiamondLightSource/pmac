@@ -18,6 +18,8 @@
 #include "pmacCsGroups.h"
 #include "pmacMessageBroker.h"
 #include "pmacTrajectory.h"
+#include "pmacHardwareTurbo.h"
+#include "pmacHardwarePower.h"
 #include "IntegerHashtable.h"
 
 #define PMAC_C_FirstParamString           "PMAC_C_FIRSTPARAM"
@@ -406,6 +408,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int parameterIndex_;
   pmacMessageBroker *pBroker_;
   pmacTrajectory *pTrajectory_;
+  pmacHardwareInterface *pHardware_;
   IntegerHashtable *pPortToCs_;
   IntegerHashtable *pIntParams_;
   IntegerHashtable *pHexParams_;
@@ -470,6 +473,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   static const epicsUInt32 PMAC_ERROR_;
   static const epicsInt32 PMAC_CID_PMAC_;
   static const epicsInt32 PMAC_CID_GEOBRICK_;
+  static const epicsInt32 PMAC_CID_POWER_;
   
   static const epicsUInt32 PMAC_STATUS1_MAXRAPID_SPEED;    
   static const epicsUInt32 PMAC_STATUS1_ALT_CMNDOUT_MODE;  
