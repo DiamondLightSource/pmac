@@ -2219,9 +2219,8 @@ asynStatus pmacController::buildProfile(int csNo)
     // Set the current scan CS
     tScanCSNo_ = csNo;
     debug(DEBUG_VARIABLE, functionName, "Current scan CS", tScanCSNo_);
-    // Read the number of points in the scan
+    // Read the maximum number of points in the scan
     getIntegerParam(profileNumPoints_, &numPoints);
-    tScanNumPoints_ = numPoints;
     // Read in the number of points ready for building
     getIntegerParam(PMAC_C_ProfileNumBuild_, &numPointsToBuild);
 
@@ -2259,12 +2258,15 @@ asynStatus pmacController::buildProfile(int csNo)
 
   if (status == asynSuccess){
     // Initialise the trajectory store
-    status = pTrajectory_->initialise(tScanNumPoints_);
+    status = pTrajectory_->initialise(numPoints);
 
     if (status == asynSuccess){
       // Set the trajectory store initial values
       status = pTrajectory_->append(tScanPositions_, profileTimes_, profileUser_, profileVelMode_, numPointsToBuild);
       setIntegerParam(PMAC_C_ProfileBuiltPoints_, pTrajectory_->getNoOfValidPoints());
+      // Set the scan size to be equal to the number of built points
+      tScanNumPoints_ = pTrajectory_->getNoOfValidPoints();
+
       if (status != asynSuccess){
         // Set the status to failure
         this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to build trajectory object");
@@ -2284,8 +2286,8 @@ asynStatus pmacController::buildProfile(int csNo)
 
   // Finally if the profile build has completed then set the status accordingly
   if (status == asynSuccess){
-    // Set the number of points in the scan
-    setIntegerParam(profileNumPoints_, tScanNumPoints_);
+    // Set the maximum number of points in the scan
+    setIntegerParam(profileNumPoints_, numPoints);
     // Set the status to complete
     this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_SUCCESS, "Profile built");
     // Reset any append status
@@ -2316,9 +2318,26 @@ asynStatus pmacController::appendToProfile()
   if (appendAvailable_){
     // Read in the number of points to append
     getIntegerParam(PMAC_C_ProfileNumBuild_, &numPointsToBuild);
+    //Check if each axis from the coordinate system is involved in this trajectory scan
+    for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
+      if ((1<<index & tScanAxisMask_) > 0){
+        if (status == asynSuccess){
+          // If the axis is going to be included then copy the position array into local
+          // storage ready for the trajectory execution
+          status = this->tScanBuildProfileArray(tScanPositions_[index], index, numPointsToBuild);
+          if (status != asynSuccess){
+            // Set the status to failure
+            this->setAppendStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to compile profile positions");
+          }
+        }
+      }
+    }
     // Append the points to the store
     status = pTrajectory_->append(tScanPositions_, profileTimes_, profileUser_, profileVelMode_, numPointsToBuild);
     setIntegerParam(PMAC_C_ProfileBuiltPoints_, pTrajectory_->getNoOfValidPoints());
+    // Set the scan size to be equal to the number of built points
+    tScanNumPoints_ = pTrajectory_->getNoOfValidPoints();
+
     if (status != asynSuccess){
       // Set the status to failure
       this->setAppendStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to append points to trajectory object");
@@ -2647,7 +2666,7 @@ void pmacController::trajectoryTask()
       // Only execute this if there has been no error detected so far
       if (epicsErrorDetect == 0){
         // Read the total number of points within the scan
-        getIntegerParam(profileNumPoints_, &totalProfilePoints);
+        totalProfilePoints = pTrajectory_->getNoOfValidPoints();
         getIntegerParam(PMAC_C_TrajProg_, &progNo);
         sprintf(cmd, "%s=%d", PMAC_TRAJ_STATUS, PMAC_TRAJ_STATUS_RUNNING);
         this->immediateWriteRead(cmd, response);
@@ -2679,6 +2698,8 @@ void pmacController::trajectoryTask()
     // Now entering the main loop during a scan.  If the EPICS driver has detected
     // a problem then do not execute any of this code
     if (epicsErrorDetect == 0){
+      // Read the total number of points within the scan
+      totalProfilePoints = pTrajectory_->getNoOfValidPoints();
       // Check if the reported PMAC buffer number is the same as the EPICS buffer number
       if (tScanPmacBufferNumber_ == epicsBufferNumber){
         debug(DEBUG_TRACE, functionName, "Reading from buffer", tScanPmacBufferNumber_);
