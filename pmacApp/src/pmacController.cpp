@@ -2219,9 +2219,8 @@ asynStatus pmacController::buildProfile(int csNo)
     // Set the current scan CS
     tScanCSNo_ = csNo;
     debug(DEBUG_VARIABLE, functionName, "Current scan CS", tScanCSNo_);
-    // Read the number of points in the scan
+    // Read the maximum number of points in the scan
     getIntegerParam(profileNumPoints_, &numPoints);
-    tScanNumPoints_ = numPoints;
     // Read in the number of points ready for building
     getIntegerParam(PMAC_C_ProfileNumBuild_, &numPointsToBuild);
 
@@ -2259,12 +2258,15 @@ asynStatus pmacController::buildProfile(int csNo)
 
   if (status == asynSuccess){
     // Initialise the trajectory store
-    status = pTrajectory_->initialise(tScanNumPoints_);
+    status = pTrajectory_->initialise(numPoints);
 
     if (status == asynSuccess){
       // Set the trajectory store initial values
       status = pTrajectory_->append(tScanPositions_, profileTimes_, profileUser_, profileVelMode_, numPointsToBuild);
       setIntegerParam(PMAC_C_ProfileBuiltPoints_, pTrajectory_->getNoOfValidPoints());
+      // Set the scan size to be equal to the number of built points
+      tScanNumPoints_ = pTrajectory_->getNoOfValidPoints();
+
       if (status != asynSuccess){
         // Set the status to failure
         this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to build trajectory object");
@@ -2284,8 +2286,8 @@ asynStatus pmacController::buildProfile(int csNo)
 
   // Finally if the profile build has completed then set the status accordingly
   if (status == asynSuccess){
-    // Set the number of points in the scan
-    setIntegerParam(profileNumPoints_, tScanNumPoints_);
+    // Set the maximum number of points in the scan
+    setIntegerParam(profileNumPoints_, numPoints);
     // Set the status to complete
     this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_SUCCESS, "Profile built");
     // Reset any append status
@@ -2316,9 +2318,26 @@ asynStatus pmacController::appendToProfile()
   if (appendAvailable_){
     // Read in the number of points to append
     getIntegerParam(PMAC_C_ProfileNumBuild_, &numPointsToBuild);
+    //Check if each axis from the coordinate system is involved in this trajectory scan
+    for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
+      if ((1<<index & tScanAxisMask_) > 0){
+        if (status == asynSuccess){
+          // If the axis is going to be included then copy the position array into local
+          // storage ready for the trajectory execution
+          status = this->tScanBuildProfileArray(tScanPositions_[index], index, numPointsToBuild);
+          if (status != asynSuccess){
+            // Set the status to failure
+            this->setAppendStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to compile profile positions");
+          }
+        }
+      }
+    }
     // Append the points to the store
     status = pTrajectory_->append(tScanPositions_, profileTimes_, profileUser_, profileVelMode_, numPointsToBuild);
     setIntegerParam(PMAC_C_ProfileBuiltPoints_, pTrajectory_->getNoOfValidPoints());
+    // Set the scan size to be equal to the number of built points
+    tScanNumPoints_ = pTrajectory_->getNoOfValidPoints();
+
     if (status != asynSuccess){
       // Set the status to failure
       this->setAppendStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to append points to trajectory object");
@@ -2576,61 +2595,66 @@ void pmacController::trajectoryTask()
       this->immediateWriteRead(cmd, response);
 
 
-      for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
-        if ((1<<index & tScanAxisMask_) == 0){
-          debug(DEBUG_TRACE, functionName, "Checking for disabled axis assignment", axesStrings[index]);
-          // This axis has been disabled, so we need to check to see if it has a valid assignment
-          // Loop through the motor assignments
-          int assigned = 0;
-          // Loop over each real motor
-          for (int axis = 1; axis <= this->numAxes_-1; axis++){
-            // Check the motor exists
-            if (this->getAxis(axis) != NULL){
-              // Read the CS number for the axis
-              int axisCs = this->getAxis(axis)->getAxisCSNo();
-              // Check the axis is in the CS that we are scanning
-              if (axisCs == tScanCSNo_){
-                debug(DEBUG_TRACE, functionName, "Checking against motor", axis);
-                // Read the assignment
-                getStringParam(axis, PMAC_C_GroupAssignRBV_, MAX_STRING_SIZE, assignment);
-                debug(DEBUG_TRACE, functionName, "Motor assignment", assignment);
-                // Now verify whether the axis is present in this assignment
-                std::string strAssign(assignment);
-                if (strAssign == axesStrings[index]){
-                  // Check if this axis has already been assigned
-                  if (assigned == 1){
-                    debug(DEBUG_TRACE, functionName, "Axes already assigned");
+      // TODO: The current disabled implementation could introduce motor creep from one
+      // trajectory scan to the next and should be investigated further.
+      // Only perform this check if we are scanning coordinate system 1
+      if (tScanCSNo_ == 1){
+        for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
+          if ((1<<index & tScanAxisMask_) == 0){
+            debug(DEBUG_TRACE, functionName, "Checking for disabled axis assignment", axesStrings[index]);
+            // This axis has been disabled, so we need to check to see if it has a valid assignment
+            // Loop through the motor assignments
+            int assigned = 0;
+            // Loop over each real motor
+            for (int axis = 1; axis <= this->numAxes_-1; axis++){
+              // Check the motor exists
+              if (this->getAxis(axis) != NULL){
+                // Read the CS number for the axis
+                int axisCs = this->getAxis(axis)->getAxisCSNo();
+                // Check the axis is in the CS that we are scanning
+                if (axisCs == tScanCSNo_){
+                  debug(DEBUG_TRACE, functionName, "Checking against motor", axis);
+                  // Read the assignment
+                  getStringParam(axis, PMAC_C_GroupAssignRBV_, MAX_STRING_SIZE, assignment);
+                  debug(DEBUG_TRACE, functionName, "Motor assignment", assignment);
+                  // Now verify whether the axis is present in this assignment
+                  std::string strAssign(assignment);
+                  if (strAssign == axesStrings[index]){
+                    // Check if this axis has already been assigned
+                    if (assigned == 1){
+                      debug(DEBUG_TRACE, functionName, "Axes already assigned");
+                      // Error, invalid axis assignment for disabled axis
+                      // Set the message accordingly
+                      sprintf(cmd, "Scan failed - duplicate assignment for disabled axis %s", axesStrings[index].c_str());
+                      // Set the status to failure
+                      this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, cmd);
+                      // Set the executing flag to 0
+                      tScanExecuting_ = 0;
+                      // Notify that EPICS detected the error
+                      epicsErrorDetect = 1;
+                    } else {
+                      // Set the assigment to 1, and write the Q variable down to the pmac
+                      assigned = 1;
+                      // Read the motor demand position
+                      double motorPos = 0.0;
+                      getDoubleParam(axis, motorPosition_, &motorPos);
+                      // Set the Q7x axis demand variable to the motor demand position
+                      sprintf(cmd, "&%dQ7%d=%f", tScanCSNo_, (index+1), motorPos);
+                      debug(DEBUG_TRACE, functionName, "Sending disabled axis position", cmd);
+                      this->immediateWriteRead(cmd, response);
+                    }
+                  } else if (strAssign.find(axesStrings[index]) != std::string::npos){
+                    debug(DEBUG_TRACE, functionName, "Axes invalid assignment");
                     // Error, invalid axis assignment for disabled axis
                     // Set the message accordingly
-                    sprintf(cmd, "Scan failed - duplicate assignment for disabled axis %s", axesStrings[index].c_str());
+                    sprintf(cmd, "Scan failed - invalid assignment for disabled axis %s", strAssign.c_str());
                     // Set the status to failure
                     this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, cmd);
                     // Set the executing flag to 0
                     tScanExecuting_ = 0;
                     // Notify that EPICS detected the error
                     epicsErrorDetect = 1;
-                  } else {
-                    // Set the assigment to 1, and write the Q variable down to the pmac
-                    assigned = 1;
-                    // Read the motor demand position
-                    double motorPos = 0.0;
-                    getDoubleParam(axis, motorPosition_, &motorPos);
-                    // Set the Q7x axis demand variable to the motor demand position
-                    sprintf(cmd, "&%dQ7%d=%f", tScanCSNo_, (index+1), motorPos);
-                    debug(DEBUG_TRACE, functionName, "Sending disabled axis position", cmd);
-                    this->immediateWriteRead(cmd, response);
                   }
-                } else if (strAssign.find(axesStrings[index]) != std::string::npos){
-                  debug(DEBUG_TRACE, functionName, "Axes invalid assignment");
-                  // Error, invalid axis assignment for disabled axis
-                  // Set the message accordingly
-                  sprintf(cmd, "Scan failed - invalid assignment for disabled axis %s", strAssign.c_str());
-                  // Set the status to failure
-                  this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, cmd);
-                  // Set the executing flag to 0
-                  tScanExecuting_ = 0;
-                  // Notify that EPICS detected the error
-                  epicsErrorDetect = 1;
                 }
               }
             }
@@ -2642,7 +2666,7 @@ void pmacController::trajectoryTask()
       // Only execute this if there has been no error detected so far
       if (epicsErrorDetect == 0){
         // Read the total number of points within the scan
-        getIntegerParam(profileNumPoints_, &totalProfilePoints);
+        totalProfilePoints = pTrajectory_->getNoOfValidPoints();
         getIntegerParam(PMAC_C_TrajProg_, &progNo);
         sprintf(cmd, "%s=%d", PMAC_TRAJ_STATUS, PMAC_TRAJ_STATUS_RUNNING);
         this->immediateWriteRead(cmd, response);
@@ -2674,6 +2698,8 @@ void pmacController::trajectoryTask()
     // Now entering the main loop during a scan.  If the EPICS driver has detected
     // a problem then do not execute any of this code
     if (epicsErrorDetect == 0){
+      // Read the total number of points within the scan
+      totalProfilePoints = pTrajectory_->getNoOfValidPoints();
       // Check if the reported PMAC buffer number is the same as the EPICS buffer number
       if (tScanPmacBufferNumber_ == epicsBufferNumber){
         debug(DEBUG_TRACE, functionName, "Reading from buffer", tScanPmacBufferNumber_);
