@@ -234,41 +234,41 @@ Return
 
 N105
     TmpTime = 1000000/Time
-    A_Vel = TmpTime*(Current_A - Prev_A)
-    B_Vel = TmpTime*(Current_B - Prev_B)
-    C_Vel = TmpTime*(Current_C - Prev_C)
-    U_Vel = TmpTime*(Current_U - Prev_U)
-    V_Vel = TmpTime*(Current_V - Prev_V)
-    W_Vel = TmpTime*(Current_W - Prev_W)
-    X_Vel = TmpTime*(Current_X - Prev_X)
-    Y_Vel = TmpTime*(Current_Y - Prev_Y)
-    Z_Vel = TmpTime*(Current_Z - Prev_Z)
+    A_Vel = A_Axis*TmpTime*(Current_A - Prev_A)
+    B_Vel = B_Axis*TmpTime*(Current_B - Prev_B)
+    C_Vel = C_Axis*TmpTime*(Current_C - Prev_C)
+    U_Vel = U_Axis*TmpTime*(Current_U - Prev_U)
+    V_Vel = V_Axis*TmpTime*(Current_V - Prev_V)
+    W_Vel = W_Axis*TmpTime*(Current_W - Prev_W)
+    X_Vel = X_Axis*TmpTime*(Current_X - Prev_X)
+    Y_Vel = Y_Axis*TmpTime*(Current_Y - Prev_Y)
+    Z_Vel = Z_Axis*TmpTime*(Current_Z - Prev_Z)
 Return
 
 N106
     TmpTime = 1000000/(Time + Next_Time) 
-    A_Vel = TmpTime*(Next_A - Prev_A)
-    B_Vel = TmpTime*(Next_B - Prev_B)
-    C_Vel = TmpTime*(Next_C - Prev_C)
-    U_Vel = TmpTime*(Next_U - Prev_U)
-    V_Vel = TmpTime*(Next_V - Prev_V)
-    W_Vel = TmpTime*(Next_W - Prev_W)
-    X_Vel = TmpTime*(Next_X - Prev_X)
-    Y_Vel = TmpTime*(Next_Y - Prev_Y)
-    Z_Vel = TmpTime*(Next_Z - Prev_Z)
+    A_Vel = A_Axis*TmpTime*(Next_A - Prev_A)
+    B_Vel = B_Axis*TmpTime*(Next_B - Prev_B)
+    C_Vel = C_Axis*TmpTime*(Next_C - Prev_C)
+    U_Vel = U_Axis*TmpTime*(Next_U - Prev_U)
+    V_Vel = V_Axis*TmpTime*(Next_V - Prev_V)
+    W_Vel = W_Axis*TmpTime*(Next_W - Prev_W)
+    X_Vel = X_Axis*TmpTime*(Next_X - Prev_X)
+    Y_Vel = Y_Axis*TmpTime*(Next_Y - Prev_Y)
+    Z_Vel = Z_Axis*TmpTime*(Next_Z - Prev_Z)
 Return
 
 N107
     TmpTime = 1000000/Next_Time 
-    A_Vel = TmpTime*(Next_A - Current_A)
-    B_Vel = TmpTime*(Next_B - Current_B)
-    C_Vel = TmpTime*(Next_C - Current_C)
-    U_Vel = TmpTime*(Next_U - Current_U)
-    V_Vel = TmpTime*(Next_V - Current_V)
-    W_Vel = TmpTime*(Next_W - Current_W)
-    X_Vel = TmpTime*(Next_X - Current_X)
-    Y_Vel = TmpTime*(Next_Y - Current_Y)
-    Z_Vel = TmpTime*(Next_Z - Current_Z)
+    A_Vel = A_Axis*TmpTime*(Next_A - Current_A)
+    B_Vel = B_Axis*TmpTime*(Next_B - Current_B)
+    C_Vel = C_Axis*TmpTime*(Next_C - Current_C)
+    U_Vel = U_Axis*TmpTime*(Next_U - Current_U)
+    V_Vel = V_Axis*TmpTime*(Next_V - Current_V)
+    W_Vel = W_Axis*TmpTime*(Next_W - Current_W)
+    X_Vel = X_Axis*TmpTime*(Next_X - Current_X)
+    Y_Vel = Y_Axis*TmpTime*(Next_Y - Current_Y)
+    Z_Vel = Z_Axis*TmpTime*(Next_Z - Current_Z)
 Return
 
 N108
