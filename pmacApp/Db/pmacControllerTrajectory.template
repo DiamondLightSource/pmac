@@ -1,7 +1,8 @@
 # % macro, PORT, The asyn port for the pmac controller
 # % macro, P, PV Prefix
 # % macro, R, PV Suffix
-# % macro, NPOINTS, Maximum number of points in a scan
+# % macro, NPOINTS, Number of points that can be built at any time
+# % macro, MAXPOINTS, Maximum number of points in a scan
 # % macro, NAXES,   Number of axes
 
 # This associates the template with an edm screen
@@ -55,7 +56,7 @@ record(longout,"$(P)$(R)ProfileNumPoints") {
     field(PINI, "YES")
     field(DTYP, "asynInt32")
     field(OUT,  "@asyn($(PORT),0)PROFILE_NUM_POINTS")
-    field(VAL,  "$(NPOINTS)")
+    field(VAL,  "$(MAXPOINTS=4000000)")
 }
 
 ##
