@@ -47,7 +47,7 @@ class SimulatedPmacApp(npyscreen.NPSAppManaged):
     def update(self):
         while self.simulator.getRunning():
             self.simulator.update()
-            sleep(0.05)
+            sleep(0.001)
 
     def onStart(self):
         self.keypress_timeout_default = 100
@@ -88,14 +88,6 @@ class MainMenu(npyscreen.FormBaseNew):
         if selected == 0:
             self.parentApp.setNextForm(None)
             self.parentApp.switchFormNow()
-
-
-#def threaded_simulator(simulator):
-#    running = True
-#    while running == True:
-#        running = simulator.getRunning()
-#        simulator.update()
-#        sleep(0.1)
 
 
 class PMACServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
@@ -195,72 +187,85 @@ class CoordinateSystem():
         self.controller.set_p_var(4007, 0)  # current buffer
         self.time_at_last_point = current_milli_time()
         buffer_memory_address = self.controller.get_p_var(4008)
-        self.delta_time = self.controller.read_memory_address(buffer_memory_address)
+        self.delta_time = self.controller.read_memory_address(buffer_memory_address) / 1000
         self.running_scan = True
 
     def update(self):
         # Check if we are running the trajectory scan
         if self.running_scan:
-            # Read the current time
-            current_time = current_milli_time()
-            # Read the time for last point
-            # Work out if we should be moving to the next point
-            if current_time > (self.time_at_last_point + self.delta_time):
-                # Get the point
-                point_index = self.controller.get_p_var(4006)
-                # increment the point
-                point_index = point_index + 1
-                # Check to see if we have crossed buffer
-                if point_index == self.controller.get_p_var(4004):
-                    point_index = 0
-                    if self.controller.get_p_var(4007) == 0:
-                        self.controller.set_p_var(4007, 1)
+            # Check for an abort
+            status = self.controller.get_p_var(4001)  # Set status to active
+            if status != 1:
+                # Aborted to stop the scan
+                self.running_scan = False
+                self.in_position = 1
+            else:
+                # Read the current time
+                current_time = current_milli_time()
+                # Read the time for last point
+                # Work out if we should be moving to the next point
+                if current_time > (self.time_at_last_point + self.delta_time):
+                    # Get the point
+                    point_index = self.controller.get_p_var(4006)
+                    # increment the point
+                    point_index = point_index + 1
+                    # Check to see if we have crossed buffer
+                    if point_index == self.controller.get_p_var(4004):
+                        point_index = 0
+                        if self.controller.get_p_var(4007) == 0:
+                            self.controller.set_p_var(4007, 1)
+                            self.controller.set_p_var(4011, 0)
+                        else:
+                            self.controller.set_p_var(4007, 0)
+                            self.controller.set_p_var(4012, 0)
+
+                    # Read the buffer A or B
+                    current_buffer = self.controller.get_p_var(4007)
+                    if current_buffer == 0:
+                        # We are in buffer A
+                        current_buffer_fill = 4011
+                        current_buffer_address = 4008
                     else:
-                        self.controller.set_p_var(4007, 0)
+                        # We are in buffer B
+                        current_buffer_fill = 4012
+                        current_buffer_address = 4009
 
-                # Read the buffer A or B
-                current_buffer = self.controller.get_p_var(4007)
-                if current_buffer == 0:
-                    # We are in buffer A
-                    current_buffer_fill = 4011
-                    current_buffer_address = 4008
-                else:
-                    # We are in buffer B
-                    current_buffer_fill = 4012
-                    current_buffer_address = 4009
+                    # Set the new point index
+                    self.controller.set_p_var(4006, point_index)
+                    # Increment the total points
+                    total_points = self.controller.get_p_var(4005)+1
+                    self.controller.set_p_var(4005, total_points)
+                    logging.debug("Total points: %d", total_points)
+                    logging.debug("Current fill level of A: %d", self.controller.get_p_var(4011))
+                    if point_index == self.controller.get_p_var(current_buffer_fill):
+                        # Scan has finished, we caught up
+                        self.running_scan = False
+                        self.in_position = 1
+                        self.controller.set_p_var(4001, 2)  # Set status to IDLE
+                    else:
+                        # Work out delta time
+                        buffer_memory_address = self.controller.get_p_var(current_buffer_address) + point_index
+                        self.delta_time = self.controller.read_memory_address(buffer_memory_address) / 1000
+                        self.time_at_last_point = current_time
+                        for axis in range(1,9):
+                            position_memory_address = buffer_memory_address + (1000*axis)
+                            current_position = self.controller.axes[axis].readPosition()
+                            new_position = self.controller.read_position(position_memory_address)
+                            if self.delta_time == 0:
+                                logging.debug("Zero delta time for CS")
+                                velocity = 1.0
+                            else:
+                                velocity = (new_position - current_position) / self.delta_time
+                            if velocity < 0.0:
+                                velocity *= -1.0
+                            self.controller.axes[axis].writeIVar(22, velocity)
+                            self.controller.axes[axis].move(float(new_position))
 
-                # Set the new point index
-                self.controller.set_p_var(4006, point_index)
-                # Increment the total points
-                total_points = self.controller.get_p_var(4005)+1
-                self.controller.set_p_var(4005, total_points)
-                logging.debug("Total points: %d", total_points)
-                logging.debug("Current fill level of A: %d", self.controller.get_p_var(4011))
-                if point_index == self.controller.get_p_var(current_buffer_fill):
-                    # Scan has finished, we caught up
-                    self.running_scan = False
-                    self.in_position = 1
-                    self.controller.set_p_var(4001, 2)  # Set status to IDLE
-                else:
-                    # Work out delta time
-                    buffer_memory_address = self.controller.get_p_var(current_buffer_address) + point_index
-                    self.delta_time = self.controller.read_memory_address(buffer_memory_address)
-                    self.time_at_last_point = current_time
-                    for axis in range(1,9):
-                        position_memory_address = buffer_memory_address + (1000*axis)
-                        current_position = self.controller.axes[axis].readPosition()
-                        new_position = self.controller.read_position(position_memory_address)
-                        velocity = (new_position - current_position) / self.delta_time
-                        if velocity < 0.0:
-                            velocity = -1.0 * velocity
-                        self.controller.axes[axis].writeIVar(22, velocity) 
-                        self.controller.axes[axis].move(float(self.controller.read_position(position_memory_address)))
+                        logging.debug("Reading trajectory time: %d", self.delta_time)
 
-                    logging.debug("Reading trajectory time: %d", self.delta_time)
-
-                # Work out the velocity
-                # Set the move demands
-                # Update the counters
+                    # Work out the velocity
+                    # Set the move demands
+                    # Update the counters
 
 
     def get_status(self):
@@ -517,9 +522,15 @@ class PMACSimulator():
         self.running = running
 
     def convertToDouble(self, value):
+        logging.debug("Converting value: %x", value)
         exponent = value & 0xFFF
         exponent = exponent - 0x800
         mantissa = value >> 12
+        if mantissa & 0x800000000:
+            negative = -1.0
+            mantissa = 0xFFFFFFFFF - mantissa
+        else:
+            negative = 1.0
 
         for index in range(0, exponent):
             mantissa = mantissa / 2.0
@@ -534,6 +545,7 @@ class PMACSimulator():
             for index in range(0, (exponent*-1)):
                 mantissa = mantissa / 2.0
 
+        mantissa *= negative
         logging.debug("Converted value: %f", mantissa)
         return mantissa
 
