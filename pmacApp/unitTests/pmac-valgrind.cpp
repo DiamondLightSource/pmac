@@ -8,6 +8,7 @@
 #include <cmath>
 #include <tr1/memory>
 #include <asynPortClient.h>
+#include <unistd.h>
 
 #include "pmacAsynIPPort.h"
 #include "pmacController.h"
@@ -62,9 +63,6 @@ int main()
   // Start the PMAC polling thread
   pPmac->startPMACPolling();
 
-  // Wait to allow variables to be updated before starting the trajectory scan
-  sleep(5.0);
-
   // Setup a trajectory scan
   for (int index = 0; index < 2000; index++){
     trajPoints[index] = 5.0 * sin(2.0 * 3.142 * double(index) / 2000.0);
@@ -99,7 +97,7 @@ int main()
   pIntClient->read(&running);
   while (running == 1){
     pIntClient->read(&running);
-    sleep(0.5);
+    sleep(1);
   }
   delete pCsAxis1;
   delete pCsAxis2;
