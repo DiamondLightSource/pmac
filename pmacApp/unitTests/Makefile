@@ -38,6 +38,14 @@ endif
 
 USR_INCLUDES += $(BOOST_INCLUDE)
 
+# Executable for testing with Valgrind
+PROD_IOC_Linux += pmac-valgrind
+pmac-valgrind_SRCS += pmac-valgrind.cpp
+pmac-valgrind_LIBS += pmacAsynIPPort
+pmac-valgrind_LIBS += pmacAsynMotorPort
+pmac-valgrind_LIBS += asyn
+mac-valgrind_LIBS += $(EPICS_BASE_IOC_LIBS)
+
 
 include $(TOP)/configure/RULES
 
