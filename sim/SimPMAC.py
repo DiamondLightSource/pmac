@@ -251,11 +251,15 @@ class CoordinateSystem():
                             position_memory_address = buffer_memory_address + (1000*axis)
                             current_position = self.controller.axes[axis].readPosition()
                             new_position = self.controller.read_position(position_memory_address)
-                            velocity = (new_position - current_position) / self.delta_time
+                            if self.delta_time == 0:
+                                logging.debug("Zero delta time for CS")
+                                velocity = 1.0
+                            else:
+                                velocity = (new_position - current_position) / self.delta_time
                             if velocity < 0.0:
                                 velocity *= -1.0
                             self.controller.axes[axis].writeIVar(22, velocity)
-                            self.controller.axes[axis].move(float(self.controller.read_position(position_memory_address)))
+                            self.controller.axes[axis].move(float(new_position))
 
                         logging.debug("Reading trajectory time: %d", self.delta_time)
 
@@ -518,9 +522,15 @@ class PMACSimulator():
         self.running = running
 
     def convertToDouble(self, value):
+        logging.debug("Converting value: %x", value)
         exponent = value & 0xFFF
         exponent = exponent - 0x800
         mantissa = value >> 12
+        if mantissa & 0x800000000:
+            negative = -1.0
+            mantissa = 0xFFFFFFFFF - mantissa
+        else:
+            negative = 1.0
 
         for index in range(0, exponent):
             mantissa = mantissa / 2.0
@@ -535,6 +545,7 @@ class PMACSimulator():
             for index in range(0, (exponent*-1)):
                 mantissa = mantissa / 2.0
 
+        mantissa *= negative
         logging.debug("Converted value: %f", mantissa)
         return mantissa
 
