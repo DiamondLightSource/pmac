@@ -1,0 +1,84 @@
+CLOSE
+
+;#########################################################################################################
+;; \file
+;; PLC for pausing moves on an external input gate signal. Pausing is implemented using the %100 and 
+;; %0 commands by default (macro) which will pause all motors on the PMAC.
+;;
+;; In addition to the basic gating, it can also capture and latch a user defined variable on both edges.
+;;
+;; Fist the macros that must be substituted:
+;;  - PLC: The PLC number to use
+;;  - gate: The variable to use as an input gate. Typically this variable will only have values 0 or 1.
+;;          GPIO M-variables are intended to be used as input.
+;;  - edgelatch: Variable to read and latch on both rising and falling edge of the gate.
+;; 
+;; Macros that have default values defined:
+;;  - high: The value of the high signal. Default is 0 as the GPIO logic is inverted.
+;;  - low:  The value of the low signal. Default is 1 as the GPIO logic is inverted.
+;;  - risingedgecmd: The command to implement on the rising edge (i.e. a transition from the low macro
+;;                   value to the high macro value) Default: CMD "%100"
+;;  - fallingedgecmd: The command to run on the falling edge. Default: CMD "%0"
+;;  - cleanupcmd: The command to reset the state of the controller or stage after running the PLC. 
+;;                Default: CMD "%100"
+;;
+;#########################################################################################################
+
+#define previousvalue P$(PLC)01
+#define gatelatch P$(PLC)09
+#define enable P$(PLC)02
+#define re_latch P$(PLC)03
+#define fe_latch P$(PLC)04
+#define edge P$(PLC)05
+#define counter P$(PLC)06
+#define num_pulses P$(PLC)07
+#define run_mode P$(PLC)08
+
+#define RUNMODE_CONTINUOUS 0
+#define RUNMODE_MULTIPLE   1
+
+#define highval $(high=0)
+#define lowval $(low=1)
+
+#define re_cmd $(risingedgecmd=CMD \"%100\")
+#define fe_cmd $(fallingedgecmd=CMD \"%0\")
+#define cleanup $(cleanupcmd=CMD \"%100\")
+
+enable = 0
+num_pulses = 0
+counter = 0
+run_mode = RUNMODE_CONTINUOUS
+
+OPEN PLC $(PLC)
+CLEAR
+    gatelatch = $(gate)
+    
+    if ( previousvalue != gatelatch )
+    
+        if ( gatelatch = highval )
+            re_cmd
+            re_latch = $(edgelatch)
+            edge = 1
+            counter = counter + 1
+        else
+            fe_latch = $(edgelatch)
+            fe_cmd
+            edge = 0
+        endif
+        
+        previousvalue = gatelatch
+    
+        if ( run_mode = RUNMODE_MULTIPLE)
+        if ( counter !< num_pulses )
+            enable = 0
+        endif
+        endif
+    
+        if ( enable = 0 )
+            cleanup
+            counter = 0
+            disable plc $(PLC)
+        endif
+    endif
+CLOSE
+

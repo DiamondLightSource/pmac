@@ -1,0 +1,86 @@
+CLOSE
+
+;###############################################################################
+; PLC to stop all motors if motion stop button is pressed
+; Original Author: Tom Cobb
+; Used variables: p200..202, i5211
+; Macros (and example values): 
+; STOPTIME=$(STOPTIME) ;Time taken for all motors to stop before they are killed
+;
+; NB Needs either BRICK_M_variables.pmc or PMAC_M_variables.pmc loaded
+;###############################################################################
+
+; The stopping procedure will ensure all motors stop quickly and safely. First 
+; the co-ordinate systems are aborted and motors are stopped with a CTRL^A, 
+; which ensures the motors come to a halt in a controlled manner. Next the
+; feedrates are reduced to 0 to prevent any move request from EPICS. Finally all
+; individual motors are killed - this ensures all motors cannot be moved again 
+; unless explicitly commanded to. When the motion stop is released it restores
+; the amps and feedrates
+
+; To make timeout more readable
+#define MilliSeconds               * 8388608/i10
+#define Timer                      i5211
+#define CurrentEstop               m7647
+#define LastEstop                  p200
+
+LastEstop = 1
+
+OPEN PLC2 CLEAR
+if (CurrentEstop!=LastEstop)
+	; CurrentEstop = 0 when pressed, 1 when reset
+	LastEstop = CurrentEstop	
+	; On press
+	if (LastEstop=0)
+		; Abort all moves and stop all motors
+		CMD^A
+		; Wait $(STOPTIME)ms for them to stop
+		Timer = $(STOPTIME) MilliSeconds
+		WHILE (Timer > 0)
+		ENDW
+		; Reduce all feedrates to 0
+		CMD^O	
+		; Kill Motors
+		CMD^K
+	else
+		; Restore all feedrates
+		ADDRESS&1
+		CMD "%100"
+		ADDRESS&2
+		CMD "%100"
+		ADDRESS&3
+		CMD "%100"
+		ADDRESS&4
+		CMD "%100"
+		ADDRESS&5
+		CMD "%100"
+		ADDRESS&6
+		CMD "%100"
+		ADDRESS&7
+		CMD "%100"
+		ADDRESS&8
+		CMD "%100"
+		ADDRESS&9
+		CMD "%100"
+		ADDRESS&10
+		CMD "%100"
+		ADDRESS&11
+		CMD "%100"
+		ADDRESS&12
+		CMD "%100"
+		ADDRESS&13
+		CMD "%100"
+		ADDRESS&14
+		CMD "%100"
+		ADDRESS&15
+		CMD "%100"
+		ADDRESS&16
+		CMD "%100"		
+	endif
+	
+endif
+
+CLOSE
+
+ENABLE PLC 2
+
