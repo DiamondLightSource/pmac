@@ -1918,6 +1918,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     status = (this->pBroker_->report(pmacMessageBroker::PMAC_SLOW_READ) == asynSuccess) && status;
   } else if (function == PMAC_C_ProfileAppend_){
     status = (this->appendToProfile() == asynSuccess) && status;
+    // Reset the value to complete any caput callback
+    value = 0;
   } else if (function == PMAC_C_DebugCmd_){
     // Read the level, axis number and CS number
     int level = 0;
