@@ -1,0 +1,89 @@
+CLOSE
+
+;###################################################################
+;
+; Define Motion for 2Theta with the Reflectivity Detector
+;
+; Original Author: James O'Hea
+;
+; Defined axes:
+;        TTH (Addr 6) = 2Theta in degs
+;
+; Macros (and example values):
+;        COORD = $(COORD)        CS number (only works for CS 1..9), e.g. 2
+;        PLC = $(PLC)            PLC number, should be CS number+15, e.g. 17
+;        TTHX = $(TTHX)          Axis Number for TTHX, e.g. 1
+;	
+;###################################################################
+
+; Set trig calculations to be performed in degrees
+i15 = 0
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+&$(COORD)#$(TTHX)->I
+
+; Define resolution, offset, and move flag variables
+; These are set by motor_in_cs.template (from spreadsheet)
+#define TTHXMOVE P(4700+$(TTHX))
+#define TTHXMRES P(4800+$(TTHX))
+#define TTHXOFF  P(4900+$(TTHX))
+
+; Constants 
+;xxxxxxxx
+
+; Q1-9 Kinematic Positions (Temporary variables used in kinematic calculations by PMAC)
+
+#define TTH        Q7        ; Desired 2Theta Angle
+
+; Q128-199 Forward Kinematic Temporary Variables
+
+; None needed
+
+; Q228-299 Inverse Kinematic Temporary Variables
+
+; None needed
+
+; Q20-70 EPICS Variables
+
+; None needed
+
+#define TTHX		P$(TTHX)	; TTHX Calculation
+
+; Forward Kinematics - Calculate 2theta from the TTHX position
+#define TTHXPOS (TTHXMRES*TTHX+TTHXOFF)
+
+OPEN FORWARD
+CLEAR
+        TTH = asin(TTHXPOS / 12.5)
+CLOSE
+
+; Inverse Kinematics - Calculate X from 2theta
+#define TTHXPOS		Q232
+
+OPEN INVERSE
+CLEAR
+        TTHXPOS = (12.5 * sin(TTH))    
+
+	; X calculated in motor counts
+        P$(TTHX)  = ((TTHXPOS - TTHXOFF) / TTHXMRES)
+CLOSE
+
+; A PLC for position reporting
+#define TTH		Q87	; Desired 2Theta
+#define TTHXPOS		(TTHXMRES*(m$(TTHX)62/(I$(TTHX)08*32))+TTHXOFF)
+
+OPEN PLC $(PLC)
+CLEAR
+    ADDRESS&$(COORD)
+    TTH = asin(TTHXPOS / 12.5)    
+    ; If beta or theta motor records did the last move, set demands = readbacks
+    if (TTHXMOVE = 1)
+        TTHXMOVE = 0
+        Q77 = Q87
+    endif
+CLOSE
+
+ENABLE PLC $(PLC)

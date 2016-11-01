@@ -1,0 +1,107 @@
+CLOSE
+
+;##############################################################################
+;
+; Control Y by the X Positions of the Bases of a Scissor Jack
+;
+; Original Author: James O'Hea
+;
+; Defined axes:
+;        Y (Addr 7) = Y in mm
+;
+; Macros (and example values):
+;        COORD = $(COORD)                     CS number (only works for CS 1..9), e.g. 2
+;        PLC = $(PLC)                         PLC number, should be CS number+15, e.g. 17
+;        INBOARD_X = $(INBOARD_X)             Axis Number for Inboard X, e.g. 1
+;        OUTBOARD_X = $(OUTBOARD_X)           Axis Number for Outboard X, e.g. 2
+;
+;        LEG_LENGTH = $(LEG_LENGTH)           Length of jack leg in mm
+;        PLATFORM_WIDTH = $(PLATFORM_WIDTH)   Width of top platform in mm
+;        IBX_BASE_WIDTH = $(IBX_BASE_WIDTH)   Width of Inboard X Base in mm
+;        OBX_BASE_WIDTH = $(OBX_BASE_WIDTH)   Width of Outboard X Base in mm
+;
+;##############################################################################
+
+; Set trig calculations to be performed in degrees
+i15 = 0
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+&$(COORD)#$(INBOARD_X)->I
+&$(COORD)#$(OUTBOARD_X)->I
+
+; Define resolution, offset, and move flag variables
+; These are set by motor_in_cs.template (from spreadsheet)
+#define IBXMOVE P(4700+$(INBOARD_X))
+#define IBXMRES P(4800+$(INBOARD_X))
+#define IBXOFF  P(4900+$(INBOARD_X))
+#define OBXMOVE P(4700+$(OUTBOARD_X))
+#define OBXMRES P(4800+$(OUTBOARD_X))
+#define OBXOFF  P(4900+$(OUTBOARD_X))
+
+; Q1-9 Kinematic Positions (Temporary variables used in kinematic calculations by PMAC)
+
+#define Y           Q8        ; Desired Y 
+
+; Q128-199 Forward Kinematic Temporary Variables
+
+; None needed
+
+; Q228-299 Inverse Kinematic Temporary Variables
+
+; None needed
+
+; Q20-70 EPICS Variables
+
+#define INBOARD_X		P$(INBOARD_X)	; INBOARD_X Calculation
+#define OUTBOARD_X		P$(OUTBOARD_X)	; OUTBOARD_X Calculation
+
+; Forward Kinematics - Calculate Y from INBOARD_X, OUTBOARD_X
+#define IBXPOS (IBXMRES*INBOARD_X+IBXOFF)
+#define OBXPOS (OBXMRES*OUTBOARD_X+OBXOFF)
+
+OPEN FORWARD
+CLEAR
+        Y = SQRT((LEG_LENGTH * LEG_LENGTH) - ((0.5 * ((INBOARD_X - OUTBOARD_X + OBX_BASE_WIDTH - IBX_BASE_WIDTH + S)) * (0.5 * ((INBOARD_X - OUTBOARD_X + OBX_BASE_WIDTH - IBX_BASE_WIDTH + S))))
+CLOSE
+
+; Inverse Kinematics - Calculate INBOARD_X and OUTBOARD_X from energy, grating, and diffraction order
+#define IBXPOS		Q232
+#define OBXPOS		Q233
+
+OPEN INVERSE
+CLEAR
+	
+	; INBOARD_X and OUTBOARD_X calculated in mm's
+	IBXPOS = IBXPOS - PLATFORM_WIDTH + SQRT((LEG_LENGTH * LEG_LENGTH) - (Y * Y)) + IBX_BASE_WIDTH
+	OBXPOS = OBXPOS - SQRT((LEG_LENGTH * LEG_LENGTH) - (YPOS * YPOS)) + OBX_BASE_WIDTH
+
+	; INBOARD_X and OUTBOARD_X calculated in motor counts
+    P$(INBOARD_X)  = ((IBXPOS - IBXOFF) / IBXMRES)
+    P$(OUTBOARD_X) = ((OBXPOS - OBXOFF) / OBXMRES)
+
+CLOSE
+
+; A PLC for position reporting
+#define Y           Q88     ; Desired Y
+#define IBXPOS		(IBXMRES*(m$(INBOARD_X)62/(I$(INBOARD_X)08*32))+IBXOFF)
+#define OBXPOS		(OBXMRES*(m$(OUTBOARD_X)62/(I$(OUTBOARD_X)08*32))+OBXOFF)
+
+OPEN PLC $(PLC)
+CLEAR
+    ADDRESS&$(COORD)
+    Y = SQRT((LEG_LENGTH * LEG_LENGTH) - ((0.5 * ((INBOARD_X - OUTBOARD_X + OBX_BASE_WIDTH - IBX_BASE_WIDTH + S)) * (0.5 * ((INBOARD_X - OUTBOARD_X + OBX_BASE_WIDTH - IBX_BASE_WIDTH + S))))
+
+    ; If INBOARD_X or OUTBOARD_X motor records did the last move, set demands = readbacks
+    if (IBXMOVE = 1)
+    or (OBXMOVE = 1)
+        IBXMOVE = 0
+        OBXMOVE = 0
+        Q77 = Q87
+        Q78 = Q88
+    endif
+CLOSE
+
+ENABLE PLC $(PLC)
