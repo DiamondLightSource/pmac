@@ -1311,7 +1311,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
         setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
         //setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
       }
-      sprintf(command, "&%d#%d->", axisCs, axis);
+      sprintf(command, "&%d#%d->,", axisCs, axis);
       if (sPtr->checkForItem(command)){
         debugf(DEBUG_VARIABLE, functionName, "Axis %d CS %d assignment: %s", axis, axisCs, (sPtr->readValue(command)).c_str());
         setStringParam(axis, PMAC_C_GroupAssignRBV_, (sPtr->readValue(command)).c_str());
