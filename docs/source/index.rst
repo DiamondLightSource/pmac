@@ -10,7 +10,8 @@ The EPICS PMAC driver is an asyn type 3 driver that supports the motor record fo
 
 This documentation provides the following sections:
 
-* An :ref:`introduction` to the module which describes the overall goals.
+* An :ref:`introduction` to the module.
+* A :ref:`migration` document, how to migrate from tpmac, pmacCoord and pmacUtil.
 * A :ref:`user_guide` which describes how to setup an IOC, and how to execute various motions.
 * Detailed :ref:`design_doc` documentation and auto-generated documentation from the source code.
 
@@ -20,6 +21,7 @@ Contents:
    :maxdepth: 2
 
    introduction
+   migration
    user
    design
 
