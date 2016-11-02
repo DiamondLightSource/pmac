@@ -1,0 +1,256 @@
+;*********************************************************************************************************
+;Configure motor variables for all axes
+;*********************************************************************************************************
+i100,32,100 = 0          ;deactivate axis (disable if axis not used to improve processing time)
+i101,32,100 = 0          ;disable commutation
+i108,32,100 = 96         ;default scale factor
+i109,32,100 = 96         ;default scale factor
+i111,32,100 = 3200       ;following error limit in 1/16th cts - set to 0 to disable
+i112,32,100 = 1600       ;Warning Following Error Limit
+i113,32,100 = 0          ;+ Software Position Limit
+i114,32,100 = 0          ;- Software Position Limit
+i115,32,100 = 0.25       ;Abort/Lim Decel Rate
+i117,32,100 = 0.015625   ;Maximum Acceleration
+i119,32,100 = 0.009804   ;max jogging accel (counts/msec^2)
+i120,32,100 = 200        ;time to accelerate
+i121,32,100 = 0          ;s-curve time
+i122,32,100 = 1          ;jog speed (counts/msec)
+i123,32,100 = 1          ;Homing velocity (counts/msec)
+i124,32,100 = $240001    ;enable limit switches ($260001 will disable them) and set action on fault bit to kill motors in same co-ordinate system
+i126,32,100 = 0          ;home offset in 1/16th cts
+i130,32,100 = 14000      ;proportional gain (sets step pulse to encoder pulse ratio on stepper axes)
+i131,32,100 = 0          ;derivative gain
+i132,32,100 = 7500       ;velocity feedforward gain
+i133,32,100 = 0          ;integral gain
+i135,32,100 = 100000     ;Acceleration Feed Forwards Gain
+i136,32,100 = 0          ;Notch filter coefficient N1 (default 0)
+i137,32,100 = 0          ;Notch filter coefficient N2 (default 0)
+i138,32,100 = 0          ;Notch filter coefficient D1 (default 0)
+i139,32,100 = 0          ;Notch filter coefficient D2 (default 0)
+i164,32,100 = -16        ;enable deadband
+i165,32,100 = 8          ;deadband in 16ths of an encoder count (64*1/16)=4 (4 encoder counts = 1 motor count)
+i169,32,100 = 32767      ;set max output frequency to maximum (default is 20480)
+
+;******* Axis 1 - ?????????? *********
+ms0,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms0,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms0,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms0,i916 = 2      ;set output type to PFM for steppers
+ms0,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 2 - ?????????? *********
+ms1,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms1,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms1,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms1,i916 = 2      ;set output type to PFM for steppers
+ms1,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 3 - ?????????? *********
+ms4,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms4,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms4,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms4,i916 = 2      ;set output type to PFM for steppers
+ms4,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 4 - ?????????? *********
+ms5,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms5,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms5,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms5,i916 = 2      ;set output type to PFM for steppers
+ms5,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 5 - ?????????? *********
+ms8,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms8,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms8,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms8,i916 = 2      ;set output type to PFM for steppers
+ms8,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 6 - ?????????? *********
+ms9,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms9,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms9,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms9,i916 = 2      ;set output type to PFM for steppers
+ms9,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 7 - ?????????? *********
+ms12,i910 = 8     ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms12,i912 = 2     ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms12,i913 = 0     ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms12,i916 = 2     ;set output type to PFM for steppers
+ms12,i918 = 0     ;set motor direction to match limit direction
+
+;******* Axis 8 - ?????????? *********
+ms13,i910 = 8     ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms13,i912 = 2     ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms13,i913 = 0     ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms13,i916 = 2     ;set output type to PFM for steppers
+ms13,i918 = 0     ;set motor direction to match limit direction
+
+;******* Axis 9 - ?????????? *********
+ms16,i910 = 8     ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms16,i912 = 2     ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms16,i913 = 0     ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms16,i916 = 2     ;set output type to PFM for steppers
+ms16,i918 = 0     ;set motor direction to match limit direction
+
+;******* Axis 10 - ?????????? *********
+ms17,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms17,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms17,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms17,i916 = 2      ;set output type to PFM for steppers
+ms17,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 11 - ?????????? *********
+ms20,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms20,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms20,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms20,i916 = 2      ;set output type to PFM for steppers
+ms20,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 12 - ?????????? *********
+ms21,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms21,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms21,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms21,i916 = 2      ;set output type to PFM for steppers
+ms21,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 13 - ?????????? *********
+ms24,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms24,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms24,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms24,i916 = 2      ;set output type to PFM for steppers
+ms24,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 14 - ?????????? *********
+ms25,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms25,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms25,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms25,i916 = 2      ;set output type to PFM for steppers
+ms25,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 15 - ?????????? *********
+ms28,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms28,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms28,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms28,i916 = 2      ;set output type to PFM for steppers
+ms28,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 16 - ?????????? *********
+ms29,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms29,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms29,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms29,i916 = 2      ;set output type to PFM for steppers
+ms29,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 17 - ?????????? *********
+ms32,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms32,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms32,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms32,i916 = 2      ;set output type to PFM for steppers
+ms32,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 18 - ?????????? *********
+ms33,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms33,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms33,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms33,i916 = 2      ;set output type to PFM for steppers
+ms33,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 19 - ?????????? *********
+ms36,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms36,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms36,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms36,i916 = 2      ;set output type to PFM for steppers
+ms36,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 20 - ?????????? *********
+ms37,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms37,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms37,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms37,i916 = 2      ;set output type to PFM for steppers
+ms37,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 21 - ?????????? *********
+ms40,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms40,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms40,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms40,i916 = 2      ;set output type to PFM for steppers
+ms40,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 22 - ?????????? *********
+ms41,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms41,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms41,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms41,i916 = 2      ;set output type to PFM for steppers
+ms41,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 23 - ?????????? *********
+ms44,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms44,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms44,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms44,i916 = 2      ;set output type to PFM for steppers
+ms44,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 24 - ?????????? *********
+ms45,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms45,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms45,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms45,i916 = 2      ;set output type to PFM for steppers
+ms45,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 25 - ?????????? *********
+ms48,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms48,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms48,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms48,i916 = 2      ;set output type to PFM for steppers
+ms48,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 26 - ?????????? *********
+ms49,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms49,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms49,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms49,i916 = 2      ;set output type to PFM for steppers
+ms49,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 27 - ?????????? *********
+ms52,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms52,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms52,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms52,i916 = 2      ;set output type to PFM for steppers
+ms52,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 28 - ?????????? *********
+ms53,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms53,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms53,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms53,i916 = 2      ;set output type to PFM for steppers
+ms53,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 29 - ?????????? *********
+ms56,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms56,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms56,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms56,i916 = 2      ;set output type to PFM for steppers
+ms56,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 30 - ?????????? *********
+ms57,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms57,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms57,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms57,i916 = 2      ;set output type to PFM for steppers
+ms57,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 31 - ?????????? *********
+ms60,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms60,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms60,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms60,i916 = 2      ;set output type to PFM for steppers
+ms60,i918 = 0      ;set motor direction to match limit direction
+
+;******* Axis 32 - ?????????? *********
+ms61,i910 = 8      ;encoder (3=CW closed loop,7=CCW closed loop,8=open loop)
+ms61,i912 = 2      ;Home on (0=immediate,1=indexHI,2=flagHI,3=indexHIflagHI,..,11=indexHIflagLO,..)
+ms61,i913 = 0      ;Home flag selector (0 = Home, 1 = PLim, 2 = MLim, 3 = User)
+ms61,i916 = 2      ;set output type to PFM for steppers
+ms61,i918 = 0      ;set motor direction to match limit direction

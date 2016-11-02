@@ -1,0 +1,163 @@
+CLOSE
+
+;###############################################
+; Define motion of B22's optics box
+; Original Author: Tom Cobb
+; Defined axes:
+;   W (addr 5) = Xexit in same EGUs as actuators
+;   X (addr 6) = Yexit in same EGUs as actuators
+;   Y (addr 7) = ThetaExit in i15 EGUs
+;   Z (addr 8) = PhiExit in i15 EGUs
+; Macros (and example values):
+;   COORD = $(COORD) ;CS number (only works for CS 1..9), e.g. 2
+;   PLC = $(PLC) ;PLC number, should be CS number+15, e.g. 17
+;   M9PITCH = $(M9PITCH) ;Axisnum for M9 pitch actuator, e.g. 1
+;   M9ROLL = $(M9ROLL) ;Axisnum for M9 roll actuator, e.g. 2
+;   XM9 = $(XM9) ;Lateral distance between actuator and pivot ball on M9 in mm
+;   YM9 = $(XM9) ;Distance between M9 pitch actuator and pivot ball on M9 in mm
+;   M10PITCH = $(M10PITCH) ;Axisnum for M10 pitch actuator, e.g. 3
+;   M10ROLL = $(M10ROLL) ;Axisnum for M10 roll actuator, e.g. 4
+;   XM10 = $(XM10) ;Lateral distance between actuator and pivot ball on M10 in mm
+;   YM10 = $(XM10) ;Distance between M10 pitch actuator and pivot ball on M10 in mm
+;   LM9M10 = $(LM9M10) ;Distance between M9 and M10 centres in mm
+;################################################
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+#$(M9PITCH)->I
+#$(M9ROLL)->I
+#$(M10PITCH)->I
+#$(M10ROLL)->I
+
+; These are set by motor_in_cs.template
+#define M9PITCHMOVE P(4700+$(M9PITCH))
+#define M9PITCHMRES P(4800+$(M9PITCH))
+#define M9PITCHOFF  P(4900+$(M9PITCH))
+#define M9ROLLMOVE P(4700+$(M9ROLL))
+#define M9ROLLMRES P(4800+$(M9ROLL))
+#define M9ROLLOFF  P(4900+$(M9ROLL))
+#define M10PITCHMOVE P(4700+$(M10PITCH))
+#define M10PITCHMRES P(4800+$(M10PITCH))
+#define M10PITCHOFF  P(4900+$(M10PITCH))
+#define M10ROLLMOVE P(4700+$(M10ROLL))
+#define M10ROLLMRES P(4800+$(M10ROLL))
+#define M10ROLLOFF  P(4900+$(M10ROLL))
+
+; Setup the inputs, all are in mm
+#define XM9      Q20
+#define YM9      Q21
+#define XM10     Q22
+#define YM10     Q23
+#define LM9M10   Q24
+XM9 = $(XM9)
+YM9 = $(YM9)
+XM10 = $(XM10)
+YM10 = $(XM10)
+LM9M10 = $(LM9M10)
+
+; Calculate exit X, Y, Theta, and Phi from actuator positions
+#define M9PITCHPOS (M9PITCHMRES*P$(M9PITCH)+M9PITCHOFF)
+#define M9ROLLPOS (M9ROLLMRES*P$(M9ROLL)+M9ROLLOFF)
+#define M10PITCHPOS (M10PITCHMRES*P$(M10PITCH)+M10PITCHOFF)
+#define M10ROLLPOS (M10ROLLMRES*P$(M10ROLL)+M10ROLLOFF)
+#define XEXIT     Q6
+#define YEXIT     Q7
+#define THETAEXIT Q8
+#define PHIEXIT   Q9
+; Local variables
+#define THETAM9  Q128
+#define PHIM9    Q129
+#define THETAM10 Q130
+#define PHIM10   Q131
+OPEN FORWARD
+CLEAR
+    ; get angles from actuators
+    THETAM9 = M9PITCHPOS * 1000 / XM9
+    PHIM9 = M9ROLLPOS * 1000 / YM9
+    THETAM10 = M10PITCHPOS * 1000 / XM10
+    PHIM10 = M10ROLLPOS * 1000 / YM10
+    ; calculate exit values from angles
+    XEXIT = (THETAM9 * LM9M10) / 1000
+    YEXIT = (PHIM9 * LM9M10) / 1000
+    THETAEXIT = 2 * (THETAM9 + THETAM10)
+    PHIEXIT = 2 * (PHIM9 + PHIM10)
+CLOSE
+
+; Calculate actuator positions from exit X, Y, Theta, and Phi
+; Local variables
+#define THETAM9  Q228
+#define PHIM9    Q229
+#define THETAM10 Q230
+#define PHIM10   Q231
+#define M9PITCHPOS Q232
+#define M9ROLLPOS Q233
+#define M10PITCHPOS Q234
+#define M10ROLLPOS Q235
+OPEN INVERSE
+CLEAR
+    ; get angles from exit
+    THETAM9 = XEXIT * 1000 / LM9M10
+    PHIM9 = YEXIT * 1000 / LM9M10
+    THETAM10 = (THETAEXIT - 2 * THETAM9) / 2
+    PHIM10 = (PHIEXIT - 2 * PHIM9) / 2
+    ; calculate actuator values from angles in EGUs
+    M9PITCHPOS = THETAM9 * XM9 / 1000
+    M9ROLLPOS = PHIM9 * YM9 / 1000
+    M10PITCHPOS = THETAM10 * XM10 / 1000
+    M10ROLLPOS = PHIM10 * YM10 / 1000
+    ; then in cts
+    P$(M9PITCH) = (M9PITCHPOS - M9PITCHOFF) / M9PITCHMRES
+    P$(M9ROLL) = (M9ROLLPOS - M9ROLLOFF) / M9ROLLMRES
+    P$(M10PITCH) = (M10PITCHPOS - M10PITCHOFF) / M10PITCHMRES
+    P$(M10ROLL) = (M10ROLLPOS - M10ROLLOFF) / M10ROLLMRES
+CLOSE
+
+; A PLC(sx+15) needs to be made to do position reporting
+; Readbacks should be in &{axisnum}Q81..89
+; As forward kinematic, but with Px = mx62/(Ix08*32)
+#define M9PITCHPOS (M9PITCHMRES*m$(M9PITCH)62/(I$(M9PITCH)08*32)+M9PITCHOFF)
+#define M9ROLLPOS (M9ROLLMRES*m$(M9ROLL)62/(I$(M9ROLL)08*32)+M9ROLLOFF)
+#define M10PITCHPOS (M10PITCHMRES*m$(M10PITCH)62/(I$(M10PITCH)08*32)+M10PITCHOFF)
+#define M10ROLLPOS (M10ROLLMRES*m$(M10ROLL)62/(I$(M10ROLL)08*32)+M10ROLLOFF)
+#define XEXIT     Q86
+#define YEXIT     Q87
+#define THETAEXIT Q88
+#define PHIEXIT   Q89
+; Local variables
+#define THETAM9  Q328
+#define PHIM9    Q329
+#define THETAM10 Q330
+#define PHIM10   Q331
+OPEN PLC $(PLC)
+CLEAR
+    ADDRESS&$(COORD)
+    ; get angles from actuators
+    THETAM9 = M9PITCHPOS * 1000 / XM9
+    PHIM9 = M9ROLLPOS * 1000 / YM9
+    THETAM10 = M10PITCHPOS * 1000 / XM10
+    PHIM10 = M10ROLLPOS * 1000 / YM10
+    ; calculate exit values from angles
+    XEXIT = (THETAM9 * LM9M10) / 1000
+    YEXIT = (PHIM9 * LM9M10) / 1000
+    THETAEXIT = 2 * (THETAM9 + THETAM10)
+    PHIEXIT = 2 * (PHIM9 + PHIM10)
+    ; If actuator motor record did the last move, set demands = readbacks
+    if (M9PITCHMOVE = 1)
+    or (M9ROLLMOVE = 1)
+    or (M10PITCHMOVE = 1)
+    or (M10ROLLMOVE = 1)
+        M9PITCHMOVE = 0
+        M9ROLLMOVE = 0
+        M10PITCHMOVE = 0
+        M10ROLLMOVE = 0
+        Q76 = Q86
+        Q77 = Q87
+        Q78 = Q88
+        Q79 = Q89
+    endif
+CLOSE
+ENABLE PLC $(PLC)
+
+

@@ -1,0 +1,624 @@
+CLOSE
+
+;##########################################################################
+;
+; This motion program performs a scan of one, two or three dimensions. There
+; are 3 sets of scan parameters one for each axis. The scans are nested and
+; the order of nesting is defined in Q variables so can be changed from epics.
+; A smaller 1D/2D scan can be setup in any one/two of the three sets of scan
+; parameters provided the unused scan definitions are disabled using m[n]_npoints=0.
+; Each set of scan parameters allows a motor dwell time to be defined if required
+; to allow the mechanics to settle after the move.
+; The user can define pmac commands using the CMD substitution to execute at each 
+; motor position. This could be used for triggering a detector, waiting for an 
+; external synchronisation input or calling another motion program or subroutine.
+; If an exisiting coordinate system kinomatic is not being used then a simple axis
+; definition can be added using the DEF[n] substitutions.
+;
+; In order to add a subroutine add the call definition to this programs substitutions
+; (e.g. substitute "CMD1=GOSUB 1000") and then load an extension pmc file 
+; (e.g. substitute "EXTENSION=#include \"PROG11_extension.pmc\"") where file contents are:
+;   N1000
+;   extra_state=extra_state+1
+;   RETURN
+; NB1 If your subroutine is time consuming it should call GOSUB 90 periodically
+; to check for a user abort.
+; NB2 Default tiggering subroutines have been provided in this file (see subroutines 500,510 & 520)
+;
+
+; Original Author: Pete Leicester
+;
+;
+; Macros (and example values):
+;	COORD = $(COORD)          CS number e.g. 2
+;	PROG = $(PROG)            PROG number e.g. 11
+;	M1 = $(M1=X)              Axis e.g. X,Y or Z (ignored if M1CMD is defined)
+;	M2 = $(M2=Y)              Axis e.g. X,Y or Z (ignored if M2CMD is defined)
+;	M3 = $(M3=Z)              Axis e.g. X,Y or Z (ignored if M3CMD is defined)
+;   M1CMD =$(M1CMD=GOSUB 110) Optional: command to move motor M1 (defaults to GOSUB which executes M1 definition)
+;   M2CMD =$(M2CMD=GOSUB 111) Optional: command to move motor M2 (defaults to GOSUB which executes M2 definition)
+;   M3CMD =$(M3CMD=GOSUB 112) Optional: command to move motor M3 (defaults to GOSUB which executes M3 definition)
+;	DEF1 = $(DEF1=)           1st optional definition command (e.g. #1->1000X)
+;	DEF2 = $(DEF2=)           2nd optional definition command (e.g. #1->1000X)
+;	DEF3 = $(DEF3=)           3rd optional definition command (e.g. #1->1000X)
+;	INIT1 = $(INIT1=GOSUB 500) 1st optional command to execute at start of scan (e.g. GOSUB n or CALL prog.n)
+;	INIT2 = $(INIT2=)         2nd optional command to execute at start of scan (e.g. LINEAR TA1 TS0 F1)
+;	INIT3 = $(INIT3=)         3rd optional command to execute at start of scan (e.g. GOSUB n or CALL prog.n)
+;	CMD1 = $(CMD1=GOSUB 510)  1st optional command to execute at motor step position (e.g. GOSUB n or CALL prog.n)
+;	CMD2 = $(CMD2=)           2nd optional command to execute at motor step position (e.g. GOSUB n or CALL prog.n)
+;	CMD3 = $(CMD3=)           3rd optional command to execute at motor step position (e.g. GOSUB n or CALL prog.n)
+;	EXIT1 = $(EXIT1=GOSUB 520) 1st optional command to execute at end of scan (e.g. GOSUB n or CALL prog.n)
+;	EXIT2 = $(EXIT2=)         2nd optional command to execute at end of scan (e.g. GOSUB n or CALL prog.n)
+;	EXIT3 = $(EXIT3=)         3rd optional command to execute at edn of scan (e.g. GOSUB n or CALL prog.n)
+;   EXTENSION = $(EXTENSION=) Optional extension file (e.g. EXTENSION=\"#include PROG11_extension.pmc\")
+;   Q_BASE_ADDR = $(Q_BASE_ADDR=30) Optional: Base address for Q variables (must end in 0 to match db)
+;   P_BASE_ADDR = $(P_BASE_ADDR=3200) Optional: Base address for P variables
+; Macros for default optional trigger implementation (see N500, N510 and N520):
+;   SCAN_OUT = $(SCAN_OUT=M33)    Scanning GPIO output M variable
+;   SCAN_BUSY = $(SCAN_BUSY=1)    On value to write SCAN_OUT
+;   SCAN_IDLE = $(SCAN_IDLE=0)    Off value to write to SCAN_OUT
+;   SCAN_DLY = $(SCAN_DLY=10)     Dwell after SCAN_BUSY is set before scan proceeds
+;   TRIG_OUT = $(TRIG_OUT=M32)    Tigger GPIO output M variable
+;   TRIG_ON = $(TRIG_ON=1)        On value to write TRIG_OUT
+;   TRIG_OFF = $(TRIG_OFF=0)      Off value to write to TRIG_OUT
+;   TRIG_LEN = $(TRIG_LEN=1)      Trigger pulse length (ms)
+;   CAM_ACTIVE = $(CAM_ACTIVE=M0) Camera active GPIO input M variable
+;   CAM_IDLE = $(CAM_IDLE=0)      Camera idle value read from CAM_ACTIVE
+;   CAM_BUSY = $(CAM_BUSY=1)      Camera busy value read from CAM_ACTIVE
+;
+; Setup variables for each scan
+;   m[n]_npoints     - number of points (i.e. steps+1)
+;                         0 = dont move this motor 
+;                         1 = move to start position only, no further steps
+;                         n = number of points (equals number of steps+1)
+;   m[n]_start_pos   - motor start positions in egus
+;   m[n]_step_size   - motor step sizes in egus
+;   m[n]_alternate   - defines number of scans after which direction will be reversed 
+;                         0 = raster scan (all scans in forward direction)
+;                         1 = bi-directional (alternate forward then reverse scans) 
+;                         n = n scans forward then n scans reversed then repeated
+;   m[n]_dwell       - dwell time after motor move before continuing with scan in ms
+;                         -1 = no dwell
+;                         n = milliseconds to dwell (DWELL n)
+;   m[n]_order       - defines scan order
+;                         1 = scan this motor first, outer most motor which does least moves
+;                         2 = scan this motor second, middle motor
+;                         3 = scan this motor third, inner most motor which does most moves
+; Status variables for each scan
+;   m[n]_point       - the number of points completed in the current scan
+;   m[n]_scan        - the number of full scans completed by this motor
+; Global status variables for all scans
+;   error_loc        - value indicates where last error occurred
+;   scan_order       - the current scan nesting/state (details below)
+;   progress         - overall progress percentage done indicator
+; Extra variables for custom use - not used by this program but transfered to/from epics PVs
+;   extra_state      - enum status variable, read back by epics
+;   extra_ctrl       - enum control variable, written down from epics
+;   extra_long       - integer control/status variable, written down from epics and read back into epics
+
+&$(COORD)
+
+; NB BLS-GEN-CTRL-0005.doc defines PMAC programming standards including variable usage.
+
+#define MAX_SCAN_DEFS 3
+
+; scan_order state definitions
+; The scan_order variable is incremented to achieve the following states so few definitions 
+; are required. They are all listed here for completeness. 
+#define SCAN_IDLE         0
+;       SCAN_ORDER_1      1
+;       SCAN_ORDER_2      2
+;       SCAN_ORDER_3      3  ;=MAX_SCAN_DEFS
+;       SCAN_AT_STEP_POS  4  ;=MAX_SCAN_DEFS+1
+#define SCAN_ABORTED      5  ;=MAX_SCAN_DEFS+2
+
+; Q variables
+; Use Q20..70 to communicate setup variables but be careful to avoid conflict with CS definitions.
+#define Q_BASE_ADDR $(Q_BASE_ADDR=30)
+
+; motor 1 scan definition and status 
+; the first few are read by epics
+#define m1_addr          ($(Q_BASE_ADDR=30)+0)    ; base address of m1 motor parameters
+#define m1_npoints      Q($(Q_BASE_ADDR=30)+0)    ; number of points in the scan
+#define m1_start_pos    Q($(Q_BASE_ADDR=30)+1)    ; position of first point
+#define m1_step_size    Q($(Q_BASE_ADDR=30)+2)    ; step between points
+#define m1_alternate    Q($(Q_BASE_ADDR=30)+3)    ; raster, bi-directional single, bi-directional multiple
+#define m1_dwell        Q($(Q_BASE_ADDR=30)+4)    ; dwell after motor move
+#define m1_order        Q($(Q_BASE_ADDR=30)+5)    ; nesting order of scan
+#define m1_point        Q($(Q_BASE_ADDR=30)+6)    ; number of points completed in the current scan
+#define m1_scan         Q($(Q_BASE_ADDR=30)+7)    ; number of full scans completed by this motor
+; local/status variable
+#define mtr_order1_addr Q($(Q_BASE_ADDR=30)+9)    ; address of order2 m[123]_... scan parameters
+
+; motor 2 scan definition and status 
+; the first few are read by epics
+#define m2_addr          ($(Q_BASE_ADDR=30)+10)   ; base address of m2 motor parameters
+#define m2_npoints      Q($(Q_BASE_ADDR=30)+10)
+#define m2_start_pos    Q($(Q_BASE_ADDR=30)+11)
+#define m2_step_size    Q($(Q_BASE_ADDR=30)+12)
+#define m2_alternate    Q($(Q_BASE_ADDR=30)+13)
+#define m2_dwell        Q($(Q_BASE_ADDR=30)+14)   
+#define m2_order        Q($(Q_BASE_ADDR=30)+15)
+#define m2_point        Q($(Q_BASE_ADDR=30)+16)
+#define m2_scan         Q($(Q_BASE_ADDR=30)+17)
+; local/status variable
+#define mtr_order2_addr Q($(Q_BASE_ADDR=30)+19)   ; address of order2 m[123]_... scan parameters
+
+; motor 3 scan definition and status 
+; the first few are read by epics
+#define m3_addr          ($(Q_BASE_ADDR=30)+20)   ; base address of m3 motor parameters
+#define m3_npoints      Q($(Q_BASE_ADDR=30)+20)
+#define m3_start_pos    Q($(Q_BASE_ADDR=30)+21)
+#define m3_step_size    Q($(Q_BASE_ADDR=30)+22)
+#define m3_alternate    Q($(Q_BASE_ADDR=30)+23)
+#define m3_dwell        Q($(Q_BASE_ADDR=30)+24)   
+#define m3_order        Q($(Q_BASE_ADDR=30)+25)
+#define m3_point        Q($(Q_BASE_ADDR=30)+26)
+#define m3_scan         Q($(Q_BASE_ADDR=30)+27)
+; local/status variable
+#define mtr_order3_addr Q($(Q_BASE_ADDR=30)+29)   ; address of order3 m[123]_... scan parameters
+
+; local/status variables 
+; the first few are read by epics
+#define error_loc      Q($(Q_BASE_ADDR=30)+30)  ; value indicates where last error occurred
+#define scan_order     Q($(Q_BASE_ADDR=30)+31)  ; the current scan nesting/state, will be:
+                                                ;   0 = idle
+                                                ;   1 = 1st (outer) motor move in progress
+                                                ;   2 = 2st (middle) motor move in progress
+                                                ;   3 = 3rd (inner) motor move in progress
+                                                ;   4 = at step position 
+                                                ;   5 = aborted by request from epics
+#define progress       Q($(Q_BASE_ADDR=30)+32)  ; overall progress counter (total points)
+#define abort          Q($(Q_BASE_ADDR=30)+33)  ; set to 1 by epics to request this prog to abort the scan
+; The 'extra_..' variables appear in the epics db and can be customised to the application
+; They are used by the optional default trigger subroutines 500, 510 and 520.
+#define extra_state    Q($(Q_BASE_ADDR=30)+34)  ; customisable extra enum state read back by epics 
+#define extra_ctrl     Q($(Q_BASE_ADDR=30)+35)  ; customisable extra enum control set by epics 
+#define extra_long     Q($(Q_BASE_ADDR=30)+36)  ; customisable extra integer set & read back by epics 
+#define start_point    Q($(Q_BASE_ADDR=30)+37)  ; scan start point set by epics (usually 1 unless resuming mid scan)
+; additional variables not read by epics
+#define mtr_addr       Q($(Q_BASE_ADDR=30)+38)  ; address of m[123]_... scan parameters, will be m1_addr, m2_addr or m3_addr
+#define scan_demand    Q($(Q_BASE_ADDR=30)+39)  ; the new demand to send to the next motor (in egus)
+
+; indexed access to the motor scan definitions
+#define midx_npoints      Q(mtr_addr+0)
+#define midx_start_pos    Q(mtr_addr+1)
+#define midx_step_size    Q(mtr_addr+2)
+#define midx_alternate    Q(mtr_addr+3)
+#define midx_dwell        Q(mtr_addr+4)   
+#define midx_order        Q(mtr_addr+5)
+#define midx_point        Q(mtr_addr+6)
+#define midx_scan         Q(mtr_addr+7)
+
+; indexed access to the motor scan definitions
+#define midx_order1_npoints      Q(mtr_order1_addr+0)
+#define midx_order1_start_pos    Q(mtr_order1_addr+1)
+#define midx_order1_step_size    Q(mtr_order1_addr+2)
+#define midx_order1_alternate    Q(mtr_order1_addr+3)
+#define midx_order1_dwell        Q(mtr_order1_addr+4)
+#define midx_order1_order        Q(mtr_order1_addr+5)
+#define midx_order1_point        Q(mtr_order1_addr+6)
+#define midx_order1_scan         Q(mtr_order1_addr+7)
+
+; indexed access to the motor scan definitions
+#define midx_order2_npoints      Q(mtr_order2_addr+0)
+#define midx_order2_start_pos    Q(mtr_order2_addr+1)
+#define midx_order2_step_size    Q(mtr_order2_addr+2)
+#define midx_order2_alternate    Q(mtr_order2_addr+3)
+#define midx_order2_dwell        Q(mtr_order2_addr+4)
+#define midx_order2_order        Q(mtr_order2_addr+5)
+#define midx_order2_point        Q(mtr_order2_addr+6)
+#define midx_order2_scan         Q(mtr_order2_addr+7)
+
+; indexed access to the motor scan definitions
+#define midx_order3_npoints      Q(mtr_order3_addr+0)
+#define midx_order3_start_pos    Q(mtr_order3_addr+1)
+#define midx_order3_step_size    Q(mtr_order3_addr+2)
+#define midx_order3_alternate    Q(mtr_order3_addr+3)
+#define midx_order3_dwell        Q(mtr_order3_addr+4)
+#define midx_order3_order        Q(mtr_order3_addr+5)
+#define midx_order3_point        Q(mtr_order3_addr+6)
+#define midx_order3_scan         Q(mtr_order3_addr+7)
+
+; error handling
+#define SETERROR M(100*$(COORD)+5082)=1
+; servo cycle to ms conversion factor
+#define millisec_conversion   (8388608/i10)
+
+; P variables 
+; Use P3200..4700 to prevent conflicts with PLC definitions.
+#define P_BASE_ADDR $(P_BASE_ADDR=3200)
+#define prog_start_servo_count  P($(P_BASE_ADDR=3200))
+#define prog_run_time           P($(P_BASE_ADDR=3201))
+#define trig_pulse_len          P($(P_BASE_ADDR=3202))
+#define skip_table_ptr          P($(P_BASE_ADDR=3203))
+#define skip_table_base         P($(P_BASE_ADDR=3204))
+
+; Skip table definition
+; Default skip table base address is 0 indicating no skip table defined.
+; Each bit of the 32 bit P variable skip table entry is used as a flag to indicate if a point in the scan 
+; should be skipped. Bit 0 of P(skip_table_base) corresponds to the first point in the scan,
+; bit 1 is the second point etc. Bit 0 of P(skip_table_base+1) corresponds to the 33rd point.
+; Set P_SKIP_BASE_ADDR  to 3300 or above to avoid conflicts.
+#define P_SKIP_BASE_ADDR   $(P_SKIP_BASE_ADDR=0)
+#define idx_skip_table    P(skip_table_ptr+skip_table_base)
+
+; some defaults
+; define default motor scanning order
+m1_order=1     ; default = M1 $(M1=X), the outer most motor which does least moves
+m2_order=2     ; default = M2 $(M2=Y),
+m3_order=3     ; default = M3 $(M3=Z), the inner most motor which does most moves
+
+m1_dwell=-1     ; default dwell time
+m2_dwell=-1    
+m3_dwell=-1  
+
+start_point=1   ; start scan at first point
+
+trig_pulse_len = $(TRIG_LEN=1) ; default trigger pulse length
+
+skip_table_base=$(P_SKIP_BASE_ADDR=0)
+
+;#########################
+; User defined initialisation
+; if not using an existing motor kinomatic then add an axis definition 
+; statement to the substitutions (e.g. substitute "DEF1=#1->1000X")
+$(DEF1=)
+$(DEF2=)
+$(DEF3=)
+
+;#########################
+
+OPEN PROG $(PROG)
+CLEAR
+prog_start_servo_count = M100
+prog_run_time = 0
+
+; Rapid mode will use the jog setup in Ixx19,Ixx20,Ixx21 (TA,TS,TM and F commands do nothing in this mode)
+RAPID
+; Linear mode requires times and feedrates to be specified (which set Isx87, Isx88, Isx89)
+; The following linear mode setup works for J05 smaract stages.
+;   LINEAR FRAX(X,Y,Z) TA1 TS0 F1
+; This can be defined as a substitution:
+;   substitute "INIT2=LINEAR FRAX(X,Y,Z) TA1 TS0 F1"
+
+ABS
+
+; User defined commands to execute at start of scan
+$(INIT1=GOSUB 500)
+$(INIT2=)
+$(INIT3=)
+
+m1_scan=0      ; clear scan counters
+m2_scan=0
+m3_scan=0
+m1_point=0
+m2_point=0
+m3_point=0
+scan_order=SCAN_IDLE
+mtr_addr=-1    
+
+error_loc=0    ; clear error id
+abort = 0      ; clear abort flag
+
+progress=0 ; clear progress variable
+skip_table_ptr=0
+
+; Check m[123]_order parameters are valid before continuing
+IF  ((m1_order+m2_order+m3_order) != ((MAX_SCAN_DEFS*(MAX_SCAN_DEFS+1))/2))  ; check m?_order is series 1,2,3,...,MAX_SCAN_DEFS
+    ; looks like the m[123]_order variables are messed up 
+    SETERROR
+    error_loc=2
+    RETURN
+ENDIF
+IF  (m1_order<1 OR m2_order<1 OR m3_order<1)  
+    ; looks like the m[123]_order variables are messed up 
+    SETERROR
+    error_loc=3
+    RETURN
+ENDIF
+
+; setup 3 handy pointers to the motor scan parameters
+IF (m1_order=1) mtr_order1_addr=m1_addr
+IF (m1_order=2) mtr_order2_addr=m1_addr
+IF (m1_order=3) mtr_order3_addr=m1_addr
+IF (m2_order=1) mtr_order1_addr=m2_addr
+IF (m2_order=2) mtr_order2_addr=m2_addr
+IF (m2_order=3) mtr_order3_addr=m2_addr
+IF (m3_order=1) mtr_order1_addr=m3_addr
+IF (m3_order=2) mtr_order2_addr=m3_addr
+IF (m3_order=3) mtr_order3_addr=m3_addr
+
+IF (start_point>1)
+    ; resume scan mid way; calculate start position in each scan.
+    ; calculate inner most (deepest nested) scan first
+    IF (midx_order3_npoints > 0)
+        midx_order3_point = (start_point-1) % midx_order3_npoints
+        midx_order3_scan = INT((start_point-1) / midx_order3_npoints)
+    ENDIF
+    ; calculate middle scan
+    IF (midx_order2_npoints > 0)
+        midx_order2_point = midx_order3_scan % midx_order2_npoints
+        midx_order2_scan = INT(midx_order3_scan / midx_order2_npoints)
+    ENDIF
+    ; calculate outer most scan
+    IF (midx_order1_npoints > 0)
+        midx_order1_point = midx_order2_scan % midx_order1_npoints
+        midx_order1_scan = INT(midx_order2_scan / midx_order1_npoints)
+    ENDIF
+    progress = start_point-1        ; update progress counter
+    skip_table_ptr=INT(progress/32) ; update skip table pointer 
+ENDIF
+
+GOSUB 60  ; do the scan
+
+; User defined commands to execute at end of scan
+$(EXIT1=GOSUB 520)
+$(EXIT2=)
+$(EXIT3=)
+
+; Calculate program run time (NB 2^24 = 16777216 = counter rollover)
+prog_run_time = ((M100-prog_start_servo_count)%16777216)/millisec_conversion
+
+RETURN
+
+;#########################
+; Subroutine called at each inner motor step position
+N50
+
+; do something at this step position 
+; e.g. trigger detector and wait for frame? delay a while? call another PROG
+; Note: If performing a time consuming operation here then check the user abort flag periodically as follows:
+;   GOSUB 90 (or CALL $(PROG).90 if in another PROG that was CALLed from this one)
+
+$(CMD1=GOSUB 510)
+$(CMD2=)
+$(CMD3=)
+RETURN
+
+
+;#########################
+; Subroutine called to select order of motor scanning
+; Note this routine is called recursively.
+N60
+
+; check if abort requested from epics
+GOSUB 90
+
+IF (scan_order = MAX_SCAN_DEFS)
+    ; We are at the deepest level of the motor move scan nest
+    scan_order=scan_order+1   ; increment to indicate to user we are in position at the deepest nesting level
+    GOSUB 50                  ; execute user defined code while at this step position
+    scan_order=scan_order-1
+ELSE    
+    scan_order=scan_order+1
+    GOSUB 70 ; setup mtr_addr to point to the next (more nested) motor to move
+    IF (mtr_addr !< 0) GOSUB 100   ; scan the next motor     
+    scan_order=scan_order-1
+    GOSUB 70 ; restore mtr_addr to point to the previous (less nested) motor
+ENDIF    
+RETURN
+
+;#########################
+; Check the m[123]_order variables to see which motor to move next and
+; setup mtr_addr to point to the relevent block of scan parameters
+N70
+
+mtr_addr=-1
+IF (scan_order = m1_order) mtr_addr=m1_addr
+IF (scan_order = m2_order) mtr_addr=m2_addr
+IF (scan_order = m3_order) mtr_addr=m3_addr
+IF (scan_order > 0)
+    IF (mtr_addr<0)
+        ; looks like the m[123]_order variables are messed up 
+        SETERROR
+        error_loc=1
+    ENDIF
+ENDIF    
+RETURN
+
+;#########################
+; Subroutine to increment progress counter and update skip table pointer accordinngly
+N80
+
+; Only increment progress if this is the deepest nested motor
+IF (scan_order = MAX_SCAN_DEFS)
+    progress=progress+1             ;increment overall progress counter 
+    skip_table_ptr=INT(progress/32) ;update skip table pointer    
+ENDIF
+RETURN
+
+;#########################
+; Subroutine to check for user requested abort and terminate program if necessary
+N90
+
+IF (abort>0) ; check if abort requested from epics
+    scan_order=SCAN_ABORTED  ; set scan order to indicate aborted
+    $(EXIT1=GOSUB 520)
+    $(EXIT2=)
+    $(EXIT3=)
+    STOP
+ENDIF
+RETURN
+   
+;#########################
+; Subroutine to scan the motor defined by mtr_addr
+; Note this routine is called recursively.
+; parameters
+;   midx_start_pos
+;   midx_step_size
+;   midx_num_steps
+;   midx_alternate
+;   midx_dwell
+; local variables
+;   midx_point - the number of completed points in the current scan
+;   midx_scan - the number of completed scans
+N100
+
+IF (midx_npoints=0)
+    GOSUB 60 ; skip moving this motor
+    GOSUB 80 ; increment progress counter if this is the deepest nested motor
+ELSE
+    WHILE (midx_point < midx_npoints )
+    
+        ; check if there is a skip table bit set for this point
+        ; but only skip the inner most motor moves
+        ; NB To implement the y to the power x function we use e to the power (x.ln(y))
+        ; if (skip table) AND (inner most motor) AND (skip bit is set) then skip the motor move
+        IF (skip_table_base > 0)
+            IF (scan_order = MAX_SCAN_DEFS)
+                IF ((idx_skip_table & (EXP(LN(2)*(progress%32)))) != 0)
+                    GOTO 101   ; skip the motor move
+                ENDIF
+            ENDIF        
+        ENDIF
+        
+        ; Calculate the new motor position
+        IF (midx_alternate>0)
+            IF ((INT(midx_scan / midx_alternate)%2)=0)
+                ; move in forward direction
+                scan_demand=(midx_start_pos+(midx_point*midx_step_size))
+            ELSE
+                ; move in reverse direction
+                scan_demand=(midx_start_pos+((midx_npoints-(midx_point+1))*midx_step_size))
+            ENDIF
+        ELSE
+            ; move in forward direction
+            scan_demand=(midx_start_pos+(midx_point*midx_step_size))
+        ENDIF
+       
+        ; move the motor to position in scan_demand
+        ; NB macro substitution doesn't handle $(M1CMD=$(M1=X)(scan_demand)) parentheses correctly hence use of gosubs here
+        IF (mtr_addr=m1_addr) $(M1CMD=GOSUB 110)
+        IF (mtr_addr=m2_addr) $(M2CMD=GOSUB 111)
+        IF (mtr_addr=m3_addr) $(M3CMD=GOSUB 112)
+        ; do optional dwell to ensure motor is stationary
+        IF (midx_dwell !<0) DWELL (midx_dwell)
+    
+        ; do something at this step position
+        GOSUB 60
+                   
+N101        
+        GOSUB 80 ; increment progress counter if this is the deepest nested motor
+            
+        midx_point=midx_point+1 ;increment number of completed points
+    ENDWHILE
+
+    midx_scan=midx_scan+1 ;increment number of completed scans
+    midx_point=0 ;next scan of this motor will start from point zero
+ENDIF
+
+
+RETURN
+
+N110
+    ;default move command for M1
+    $(M1=X)(scan_demand)
+RETURN
+
+N111
+    ;default move command for M2
+    $(M2=Y)(scan_demand)
+RETURN
+
+N112
+    ;default move command for M3
+    $(M3=Z)(scan_demand)
+RETURN
+
+;##########################################################################
+; The following code provides the default camera trigger handling by defining
+; INIT1, CMD1 and EXIT1 subroutines. 
+; The trigger modes implemented are:
+;   extra_ctrl = 0 - no trigger
+;   extra_ctrl = 1 - trigger+dwell (i.e. set Mxx output, dwell, clear Mxx output)
+;   extra_ctrl = 2 - trigger+HW sync (i.e. set Mxx output, wait for Mxx camera active input, clear Mxx output, wait for Mxx camera idle input.
+; The trigger states are:
+;   extra_state = 0 - idle
+;   extra_state = 1 - triggering (trigger output on)
+;   extra_state = 2 - exposure active (trigger output off & camera busy)
+
+; These routines can be replaced with alternative code by including an EXTENSION pmc file
+; containing the new subroutines and using definitions such as follows: 
+;   INIT1=GOSUB 1000
+;   CMD1=GOSUB 1100
+;   EXIT1=GOSUB 1200
+;   EXTENSION=#include \"PROG11_CS_extra.pmc\"
+;
+; Three subroutines are defined. One is called at the start of the scan. The second at each
+; step position of the inner most scan motor. The third is called at completion of the scan
+; for tidying up.
+;
+;#########################
+; Extra subroutine called at start of scan
+N500
+extra_state=0                   ; clear trigger state
+$(TRIG_OUT=M32)=$(TRIG_OFF=0)   ; clear detector trigger output
+$(SCAN_OUT=M33)=$(SCAN_IDLE=0)  ; clear scan busy output
+DWELL($(SCAN_DLY=10))           ; allow time for any (zebra) logic to react
+
+IF (extra_ctrl = 2)                         ; if hardware sync with camera then
+    IF ($(CAM_ACTIVE=M0) = $(CAM_BUSY=1))    ; if camera already busy
+        extra_state=2                       ; indicate camera active state
+        SETERROR                            ; abort scan, camera is already busy!
+        error_loc=4
+        STOP
+    ENDIF
+ENDIF    
+
+$(SCAN_OUT=M33)=$(SCAN_BUSY=1)  ; set scan busy output
+DWELL($(SCAN_DLY=10))           ; allow time for any (zebra) logic to prepare for scan
+
+RETURN
+
+;#########################
+; Extra subroutine called at each inner motor step position
+
+N510
+; If dwell trigger enabled
+IF (extra_ctrl = 1)
+    extra_state=1                 ; indicate trigger active
+    $(TRIG_OUT=M32)==$(TRIG_ON=1) ; set detector trigger output when move (dwell) starts
+    DWELL(trig_pulse_len)         ; wait for minimum period that trigger will be high        
+    $(TRIG_OUT=M32)=$(TRIG_OFF=0) ; clear detector trigger output
+    IF ((extra_long-trig_pulse_len) > 0)
+        DWELL(extra_long-trig_pulse_len) ; wait for additional dwell period
+    ENDIF    
+    extra_state=0                 ; clear trigger state
+ENDIF
+
+; If hardware sync trigger enabled
+; NB Zebra will provide a latched CAM_BUSY signal derived from the cameras output that will be 
+;    acknowledged by clearing the GPIO trigger output.
+IF (extra_ctrl = 2)                             ; if hardware sync with camera then
+    extra_state=1                               ; indicate trigger active
+    $(TRIG_OUT=M32)==$(TRIG_ON=1)               ; set detector trigger output when move (dwell) starts
+    DWELL(trig_pulse_len)                       ; wait for minimum period that trigger will be high        
+    WHILE ($(CAM_ACTIVE=M0) = $(CAM_IDLE=0))    ; wait for camera exposure to start 
+        GOSUB 90                                ; check for abort
+        DWELL1      
+    ENDWHILE
+    $(TRIG_OUT=M32)=$(TRIG_OFF=0)               ; clear detector trigger output
+    extra_state=2                               ; indicate camera active state
+    WHILE ($(CAM_ACTIVE=M0) = $(CAM_BUSY=1))    ; wait for camera exposure to finish
+        GOSUB 90                                ; check for abort
+        DWELL1
+    ENDWHILE
+    extra_state=0                               ; clear trigger state
+ENDIF
+RETURN
+
+;#########################
+; Extra subroutine called at end of scan
+N520
+$(TRIG_OUT=M32)=$(TRIG_OFF=0)           ; clear detector trigger output
+$(SCAN_OUT=M33)=$(SCAN_IDLE=0)          ; clear scan busy output
+RETURN
+
+;##########################################################################
+
+; This is intended for a #include "file" command to add additional subroutines
+; User defines subroutines should be numbered 1000 or above.
+$(EXTENSION=)
+
+CLOSE

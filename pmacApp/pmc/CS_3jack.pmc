@@ -1,0 +1,237 @@
+CLOSE
+
+;###############################################
+;; \file
+;; Define motion of a generic 3 jack system. Jacks should be numbered in a 
+;; clockwise order looking from the top with J1 having the smallest Z value
+;;
+;; Original Author: Tom Cobb
+;;
+;; Defined axes:
+;; - X (addr 6) = Pitch in i15 EGUs
+;; - Y (addr 7) = Roll in i15 EGUs
+;; - Z (addr 8) = Height in same EGUs as jacks
+;;
+;; Macros (and example values):
+;; - COORD = $(COORD)  CS number (only works for CS 1..9), e.g. 2
+;; - PLC = $(PLC)  PLC number, should be CS number+15, e.g. 17
+;; - J1 = $(J1)  Axisnum for jack 1, e.g. 2
+;; - J1X = $(J1X)  global X co-ord of J1 base in mm, e.g. 0
+;; - J1Z = $(J1Z)  global Z co-ord of J1 base in mm, e.g. -100
+;; - J2 = $(J2)  Axisnum for jack 2, e.g. 3
+;; - J2X = $(J2X)  global X co-ord of J2 base in mm, e.g. 50
+;; - J2Z = $(J2Z)  global Z co-ord of J2 base in mm, e.g. 100
+;; - J3 = $(J3)  Axisnum for jack 3, e.g. 4
+;; - J3X = $(J3X)  global X co-ord of J3 base in mm, e.g. -50
+;; - J3Z = $(J3Z)  global Z co-ord of J3 base in mm, e.g. 100
+;; - MD = $(MD)  depth of surface in mm, e.g. 10
+;; - MCX = $(MCX)  global X co-ord of measure point in mm, e.g. 0
+;; - MCZ = $(MCZ)  global Z co-ord of measure in mm, e.g. 10
+;################################################
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+#$(J1)->I
+#$(J2)->I
+#$(J3)->I
+
+; These are set by motor_in_cs.template
+#define J1MOVE P(4700+$(J1))
+#define J1MRES P(4800+$(J1))
+#define J1OFF  P(4900+$(J1))
+#define J2MOVE P(4700+$(J2))
+#define J2MRES P(4800+$(J2))
+#define J2OFF  P(4900+$(J2))
+#define J3MOVE P(4700+$(J3))
+#define J3MRES P(4800+$(J3))
+#define J3OFF  P(4900+$(J3))
+
+; The backlash demand in egu's is set by PROG_CS_motion_backlash.pmc (Q401..408)
+; NB Backlash defaults to zero (for use with PROG_CS_motion.pmc)
+#define BDSTJ1 Q(400+$(J1))
+#define BDSTJ2 Q(400+$(J2))
+#define BDSTJ3 Q(400+$(J3))
+BDSTJ1=0
+BDSTJ2=0
+BDSTJ3=0
+
+; Setup the inputs, all are in i15 EGUs or mm
+; These are the global co-ordinates of J1
+#define J1X Q20
+J1X = $(J1X)
+#define J1Z Q21
+J1Z = $(J1Z)
+; These are the global co-ordinates of J2
+#define J2X Q22
+J2X = $(J2X)
+#define J2Z Q23
+J2Z = $(J2Z)
+; These are the global co-ordinates of J3
+#define J3X Q24
+J3X = $(J3X)
+#define J3Z Q25
+J3Z = $(J3Z)
+; This is the surface depth
+#define MD  Q30
+MD = $(MD)
+; This is the measure point for pitch, roll, Y in global co-ordinates
+#define MCX Q31
+MCX = $(MCX)
+#define MCZ Q32
+MCZ = $(MCZ)
+
+; Calculate Pitch, Roll and Height from jack positions
+#define J1Y (J1MRES*P$(J1)+J1OFF)
+#define J2Y (J2MRES*P$(J2)+J2OFF)
+#define J3Y (J3MRES*P$(J3)+J3OFF)
+#define PITCH Q7
+#define ROLL Q8
+#define HEIGHT Q9
+; Local variables
+#define JP  Q128
+#define JR  Q129
+#define UX  Q130
+#define UY  Q131
+#define UZ  Q132
+#define VX  Q133
+#define VY  Q134
+#define VZ  Q135
+#define WX  Q136
+#define WY  Q137
+#define WZ  Q138
+OPEN FORWARD
+CLEAR
+    ; We calculate vectors U = J3 - J1, V = J2 - J1
+    UX = J3X - J1X
+    UY = J3Y - J1Y
+    UZ = J3Z - J1Z
+    VX = J2X - J1X
+    VY = J2Y - J1Y
+    VZ = J2Z - J1Z
+    ; The cross product of these gives W, the normal to the jack plane
+    WX = UY*VZ-UZ*VY
+    WY = UZ*VX-UX*VZ
+    WZ = UX*VY-UY*VX
+    ; We can calculate the pitch and roll of this normal from the Y+ vector
+    ; WY != 0 as jacks are all in Y direction
+    JP = atan(WZ/WY)
+    JR = -atan(WX/WY)
+    ; Now we have pitch and roll
+    PITCH = JP
+    ROLL = JR
+    ; Now we work out Y
+    ; We already have W, normal to jack plane, so work out a point on the
+    ; surface plane. Start at the top of jack1, then move up by MD
+    VX = J1X
+    VY = J1Y + MD/(cos(JR)*cos(JP))
+    VZ = J1Z
+    ; Now we can calculate the equation of the mirror plane, and so Y
+    HEIGHT = WX*(VX-MCX)/WY + VY + WZ*(VZ-MCZ)/WY
+CLOSE
+
+; Calculate jack positions from Pitch, Roll and Height
+; Local variables
+#define JP  Q228
+#define JR  Q229
+#define UX  Q230
+#define UY  Q231
+#define UZ  Q232
+#define VX  Q233
+#define VY  Q234
+#define VZ  Q235
+#define WX  Q236
+#define WY  Q237
+#define WZ  Q238
+#define J1Y Q239
+#define J2Y Q240
+#define J3Y Q241
+OPEN INVERSE
+CLEAR
+    ; get the jack pitch and roll
+    JP = PITCH
+    JR = ROLL
+    ; define V, normal to jack plane
+    VX = -tan(JR)
+    VY = 1.0
+    VZ = tan(JP)
+    ; define W, the measurement point on the surface plane, moved down by the depth of the surface
+    WX = MCX
+    WY = HEIGHT - MD/(cos(JR)*cos(JP))
+    WZ = MCZ
+    ; we now have W, a point on the jack plane, and a V, the normal, so use equation to work out jack heights in EGUs
+    J1Y = VX*(WX-J1X)/VY + WY + VZ*(WZ-J1Z)/VY
+    J2Y = VX*(WX-J2X)/VY + WY + VZ*(WZ-J2Z)/VY
+    J3Y = VX*(WX-J3X)/VY + WY + VZ*(WZ-J3Z)/VY
+    ; and now in cts
+    P$(J1) = (J1Y + BDSTJ1 - J1OFF) / J1MRES
+    P$(J2) = (J2Y + BDSTJ2 - J2OFF) / J2MRES
+    P$(J3) = (J3Y + BDSTJ3 - J3OFF) / J3MRES
+CLOSE
+
+; A PLC(sx+15) needs to be made to do position reporting
+; Readbacks should be in &{axisnum}Q81..89
+; As forward kinematic, but with Px = mx62/(Ix08*32)
+#define J1Y (J1MRES*m$(J1)62/(I$(J1)08*32)+J1OFF)
+#define J2Y (J2MRES*m$(J2)62/(I$(J2)08*32)+J2OFF)
+#define J3Y (J3MRES*m$(J3)62/(I$(J3)08*32)+J3OFF)
+#define PITCH Q87
+#define ROLL Q88
+#define HEIGHT Q89
+; Local variables
+#define JP  Q328
+#define JR  Q329
+#define UX  Q330
+#define UY  Q331
+#define UZ  Q332
+#define VX  Q333
+#define VY  Q334
+#define VZ  Q335
+#define WX  Q336
+#define WY  Q337
+#define WZ  Q338
+OPEN PLC $(PLC)
+CLEAR
+    ADDRESS&$(COORD)
+    ; We calculate vectors U = J3 - J1, V = J2 - J1
+    UX = J3X - J1X
+    UY = J3Y - J1Y
+    UZ = J3Z - J1Z
+    VX = J2X - J1X
+    VY = J2Y - J1Y
+    VZ = J2Z - J1Z
+    ; The cross product of these gives W, the normal to the jack plane
+    WX = UY*VZ-UZ*VY
+    WY = UZ*VX-UX*VZ
+    WZ = UX*VY-UY*VX
+    ; We can calculate the pitch and roll of this normal from the Y+ vector
+    ; WY != 0 as jacks are all in Y direction
+    JP = atan(WZ/WY)
+    JR = -atan(WX/WY)
+    ; Now we have pitch and roll
+    PITCH = JP
+    ROLL = JR
+    ; Now we work out Y
+    ; We already have W, normal to jack plane, so work out a point on the
+    ; surface plane. Start at the top of jack1, then move up by MD
+    VX = J1X
+    VY = J1Y + MD/(cos(JR)*cos(JP))
+    VZ = J1Z
+    ; Now we can calculate the equation of the mirror plane, and so Y
+    HEIGHT = WX*(VX-MCX)/WY + VY + WZ*(VZ-MCZ)/WY
+    ; If jack motor record did the last move, set demands = readbacks
+    if (J1MOVE = 1)
+    or (J2MOVE = 1)
+    or (J3MOVE = 1)
+        J1MOVE = 0
+        J2MOVE = 0
+        J3MOVE = 0
+        Q77 = Q87
+        Q78 = Q88
+        Q79 = Q89
+    endif
+CLOSE
+ENABLE PLC $(PLC)
+
+

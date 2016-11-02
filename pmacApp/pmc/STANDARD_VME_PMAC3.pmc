@@ -1,0 +1,18 @@
+CLOSE
+
+;#################################################
+; I Variable Settings for PMAC VME communications
+;#################################################
+
+I56 = 1      ;VME DPRAM Communications Interrupt Enable (=0 for old, polled, PMAC driver)
+I58 = 1      ;VME DPRAM ASCII Communications Enable
+I90 = $39    ;VME Address Modifier
+I91 = 4      ;VME Address Modifier Don't Care Bits
+I92 = $FF    ;VME Base Address Bits A31-A24
+I93 = $9F    ;$7F,$8F,$9F for PMAC 1,2,3 = VME Mailbox Address Bits A23-A16,ISA DPRam Address A23-A16
+I94 = $A0    ;VME Mailbox Addr Bits A15-A08,ISA DPRam Addr A15-A14 And Control
+I95 = 5      ;3,4,5 for PMAC 1,2,3 = VME Interrupt Level
+I96 = $C7    ;$C1,$C4,$C7 for PMAC 1,2,3 = VME Interrupt Vector
+I97 = $90    ;$70,$80,$90 for PMAC 1,2,3 = VME DPRAM Base Address Bits A23-A20
+I98 = $E0    ;VME DPRAM Enable
+I99 = $90    ;VME Address Width Control

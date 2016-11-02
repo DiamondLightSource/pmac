@@ -1,0 +1,77 @@
+CLOSE
+
+;################################################
+;; \file
+;; Define motion for flexure slits
+;;
+;; Original Author: Alan Greer
+;;
+;; Defined axes:
+;; - X (addr 6) = gap in same EGUs as actuator
+;;
+;; Macros:
+;; - COORD = $(COORD)  CS number, e.g. 2
+;; - PLC = $(PLC)  PLC number, should be CS number+15, e.g. 17
+;; - AS = $(AS)  Axisnum for actuator stroke, e.g. 1
+;; - LL = $(LL)  Lever length in mm
+;; - SW = $(SW)  Slit width at U=0 in mm
+;################################################
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+#$(AS)->I ; +ve blade
+
+; These are set by motor_in_cs.template
+#define ASMOVE P(4700+$(AS))
+#define ASMRES P(4800+$(AS))
+#define ASOFF  P(4900+$(AS))
+
+; Lever length
+#define LEVERLENGTH Q20
+LEVERLENGTH = $(LL)
+; Slit width
+#define SLITWIDTH Q21
+SLITWIDTH = $(SW)
+
+; Calculate Gap from actuator position
+#define ASPOS (ASMRES*P$(AS)+ASOFF)
+#define GAP Q7
+OPEN FORWARD
+; X = Q7 = gap in mm = (SW + 2LL(1-cos(arcsin(Actuator/LL))))
+; The formula used for this calculation can be found in the document
+; 100208 FAT protocol 301.pdf
+; located in
+; S:\Technical\Engineering\Beamline Eng\I10\Design (AndyM & A Day)\beamline components\14_Exit slits S4\FATS
+CLEAR
+    GAP=SLITWIDTH+2*LEVERLENGTH*(1-COS(ASIN(ASPOS/LEVERLENGTH)))
+CLOSE
+
+OPEN INVERSE
+#define ASPOS Q228
+CLEAR
+    ; calculate actuator pos in EGUs
+    ASPOS = LEVERLENGTH*SIN(ACOS(1-(GAP-SLITWIDTH)/(2*LEVERLENGTH)))
+    ; then in cts
+    P$(AS)=(ASPOS-ASOFF)/ASMRES
+CLOSE
+
+; A PLC(sx+15) needs to be made to do position reporting
+; Readbacks should be in &{axisnum}Q81..89
+; As forward kinematic, but with Px = mx62/(Ix08*32)
+#define ASPOS (ASMRES*m$(AS)62/(I$(AS)08*32)+ASOFF)
+#define GAP Q87
+OPEN PLC$(PLC)
+CLEAR
+    ADDRESS&$(COORD)
+    GAP=SLITWIDTH+2*LEVERLENGTH*(1-COS(ASIN(ASPOS/LEVERLENGTH)))
+    ; If actuator motor record did the last move, set demands = readbacks
+    ; This is not really needed as there is only one axis, but we'll put it
+    ; in just in case
+    if (ASMOVE = 1)
+        ASMOVE = 0
+        Q77 = Q87
+    endif
+CLOSE
+ENABLE PLC$(PLC)

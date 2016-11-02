@@ -1,0 +1,388 @@
+CLOSE
+;##########################################################################
+;
+;; Define motion for a coarse/fine motor stack where the fine motor stage is placed on top of the coarse motor stage.
+;; The fine motor encoder must cover the entire range of travel of the coarse+fine combined stage motion. Typically an 
+;; interferometer might be used as the encoder. The reading from this will change if either the coarse or fine stage is moved.
+;; The coarse motor is expected to have its own encoder or be run open loop with the same engineering units as the fine stage.
+;; The motion program moves the fine stage but will also move the coarse stage if the target position cannot be reached with 
+;; just a fine stage move. The coarse stage will be moved in multiples of FINE_RANGE_X steps (where FINE_RANGE_X <= fineHLM-fineLLM)
+;;    
+;; NB1: Coarse and fine motor should be calibrated so they have the same zero. The PROG below assumes 0 is mid range on the 
+;;      fine stage so calibrate the real motor .OFF fields accordingly.
+;;;
+;; Defined axes:
+;; - pmac X (Addr 6, Q77 demand) - Combined Coarse & Fine motor  
+;; - pmac Y (Addr 7, Q78 demand) - Offset motor (fine mtr - coarse mtr, drives coarse motor only)
+;;
+; Macros:
+;; - COORD          - CS number, e.g. 2
+;; - PLC            - PLC number, should be CS number+15, e.g. 17
+;; - XC             - Axis number for Coarse motor, e.g. 1
+;; - XF             - Axis number for Fine motor, e.g. 2
+;; - FINE_RANGE_X   - Fine stage achievable range of motion (slightly less then HLM-LLM)
+;; - PROG           - PROG to start virtual motor move (NB a PROG10 replacement is defined)
+;; - INCFILE=       - Optional extension file (e.g. INCFILE=\"#include my_include.pmc\")
+;; - EXTFILE=       - Optional extension file (e.g. EXTFILE=\"#include my_extension.pmc\")
+;; - Q_BASE_ADDR = $(Q_BASE_ADDR=400) Optional: Base address for PROG Q variables (default Q400..)
+;;
+;################################################
+
+; INCFILE and EXTFILE substitutions are intended for a #include "file" command to 
+; add additional custom extensions/definitions
+$(INCFILE=)
+
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+#$(XC)->I ; coarse motor
+#$(XF)->I ; fine motor
+
+; error handling
+#define SETERROR M(100*$(COORD)+5082)=1
+; servo cycle to ms conversion factor
+#define millisec_conversion   (8388608/i10)
+#define timer i(5111+($(PLC)&30)*50+$(PLC)%2)
+
+; These are set by motor_in_cs.template
+#define XCMOVE P(4700+$(XC))
+#define XCMRES P(4800+$(XC))
+#define XCOFF  P(4900+$(XC))
+#define XFMOVE P(4700+$(XF))
+#define XFMRES P(4800+$(XF))
+#define XFOFF  P(4900+$(XF))
+
+
+; These are the real motor positions in steps calculated from M variables
+#define M_REAL_XC	((m$(XC)62+m$(XC)69)/(I$(XC)08*32))
+#define M_REAL_XF	((m$(XF)62+m$(XF)69)/(I$(XF)08*32))
+
+#define LAST_FINE_X     Q21
+#define LAST_OFFSET_X   Q22
+#define LAST_XCPOS      Q23
+
+;*****************************
+; Kinematics 
+;
+; NB Definitions of the type &2#1->1000X+45 dont allow for offsets to be changed at runtime
+; so we define the simplest possible kinomatic here instead
+;
+
+; Kinematic Positions 
+; These are the virtual motor positions in egus calculated by the forward kinomatic
+#define FINE_X      	Q7	; (=X demand) Fine X in egus
+#define COARSE_X	    Q8	; (=Y demand) Coarse X in egus
+; These are the real motor positions in steps calculated by the inverse kinomatic
+#define REAL_XC	P$(XC)      ; Real coarse motor in steps  
+#define REAL_XF	P$(XF)      ; Real fine motor in steps  
+
+;
+; Forward Kinematics - Calculate Fine X and Coarse X egus from real coarse and fine motor positions
+;
+
+; Q128-199 Forward Kinematic Temporary Variables
+#define XCPOS Q128
+#define XFPOS Q129
+
+OPEN FORWARD
+CLEAR
+    ; calc real motor positions in egu's
+    XCPOS = ((XCMRES*REAL_XC)+XCOFF)
+    XFPOS = ((XFMRES*REAL_XF)+XFOFF)
+    
+    ; calc virtual motor in egus
+    FINE_X = XFPOS 
+    COARSE_X = XCPOS
+CLOSE
+
+;
+; Inverse Kinematics - Calculate real coarse and fine motor position cts from virtual real coarse and fine motors
+;
+
+; Q228-299 Inverse Kinematic Temporary Variables
+#define XCPOS Q228
+#define XFPOS Q229
+
+OPEN INVERSE
+CLEAR    
+    ; work out the new motor positions in EGUs
+    XCPOS = COARSE_X
+    XFPOS = FINE_X
+
+    ; from the calculated egu demand work out the motor positions in cts
+    REAL_XC=(XCPOS-XCOFF)/XCMRES
+    REAL_XF=(XFPOS-XFOFF)/XFMRES    
+CLOSE
+
+;*****************************
+; A PLC for position reporting
+; as Forward Kinematics - Calculate Virtual X position from real coarse and fine motor positions 
+; Readbacks should be in &{axisnum}Q81..89
+; As forward kinematic, but with Px = (mx62+mx69)/(Ix08*32)
+
+; Q328-399 PLC Temporary Variables
+#define XCPOS Q328
+#define XFPOS Q329
+#define XFFE Q330
+
+#define FINE_X	    Q87	; Virtual fine X position in egus
+#define OFFSET_X	Q88	; Virtual X offset in egus
+
+XFFE=0
+
+OPEN PLC$(PLC)
+CLEAR
+    ADDRESS&$(COORD)
+    ; calc real motor positions in egu's from the M variables
+    XCPOS = ((XCMRES*M_REAL_XC)+XCOFF)
+    XFPOS = ((XFMRES*M_REAL_XF)+XFOFF)
+
+    ; calc virtual motor in egus
+    FINE_X = XFPOS 
+    OFFSET_X = XCPOS - XFPOS  
+ 
+    ; If real motor record did the last move, set demands = readbacks
+    if (XCMOVE = 1)
+    or (XFMOVE = 1)
+        XCMOVE = 0
+        XFMOVE = 0
+        Q77 = Q87
+        Q78 = Q88
+        ; Remember the current demand for comparison during next CS move
+        LAST_FINE_X = Q87
+        LAST_OFFSET_X = Q88
+        LAST_XCPOS = XCPOS
+    endif
+    
+    ; Sometimes applying an offset demand (in prog below) fails. This code restores the following error if
+    ; it looks incorrect because the prog below bombed out when last run.
+    if (i$(XF)11=0)
+        ; check InPosition and DesiredVelocityZero and not RunningProgram before correcting FE setting
+        if (XFFE>0 AND m$(XF)33=1 AND m$(XF)40=1 AND m$(XF)37=0)
+            i$(XF)11=XFFE
+        endif
+    endif
+
+CLOSE
+ENABLE PLC$(PLC)
+
+
+;####################################################
+; Program to initiate and calculate co-ordinate system move
+; Used variables: Q71..Q79, Q81..Q89
+; You should do a $$$ or type the following the first time you load this prog.
+; If you type the commands in, ignore any errors. If you $$$, PLC1 will do it
+; automatically for you at startup:
+;&16 DEFINE LOOKAHEAD 50,10
+;&15 DEFINE LOOKAHEAD 50,10
+;&14 DEFINE LOOKAHEAD 50,10
+;&13 DEFINE LOOKAHEAD 50,10
+;&12 DEFINE LOOKAHEAD 50,10
+;&11 DEFINE LOOKAHEAD 50,10
+;&10 DEFINE LOOKAHEAD 50,10
+;&9 DEFINE LOOKAHEAD 50,10
+;&8 DEFINE LOOKAHEAD 50,10
+;&7 DEFINE LOOKAHEAD 50,10
+;&6 DEFINE LOOKAHEAD 50,10
+;&5 DEFINE LOOKAHEAD 50,10
+;&4 DEFINE LOOKAHEAD 50,10
+;&3 DEFINE LOOKAHEAD 50,10
+;&2 DEFINE LOOKAHEAD 50,10
+;####################################################
+
+;This program defines the program needed to do a move using the motor record
+;on a CS axis
+;to do a move we need to do &{CS}R
+;to stop a move we need to do &{CS}A
+;demand values are in &{CS}Q71..79
+;The following are set by the motor record:
+;Isx87 = Acceleration
+;Isx88 = S curve
+;Isx89 = Feedrate
+
+; Set some defaults for all CS axes
+i5213,15,100=10   ; segmentation time (needed for lookahead)
+i5220,15,100=50   ; lookahead length (needed to limit max velocity to max set in CS)
+i5250,15,100=1    ; Enable kinematics
+
+; This program requires a fast segmentation time (Isx13) for maximum speed
+i($(COORD)*100+5013)=1
+
+; Following not used only works for CS2 (i.e.Y:$2x3f,4,1 where x=CS-1)
+;M5$(COORD)99->Y:$213f,4,1
+;#define PVT_SPLINE_MODE_BIT    M5$(COORD)99
+
+
+; X piezo range parameter
+#define FINE_RANGE_X    Q($(Q_BASE_ADDR=400)+0)
+; some X temporary variables
+#define FINE_X          Q($(Q_BASE_ADDR=400)+1)
+#define OFFSET_X        Q($(Q_BASE_ADDR=400)+2)
+#define RELMOVESTEPS_X  Q($(Q_BASE_ADDR=400)+3)
+#define XCPOS           Q($(Q_BASE_ADDR=400)+4)
+#define DBG             Q($(Q_BASE_ADDR=400)+5)
+
+
+; This is the maximum usable range of the fine stage in egus (a little less than HLM-LLM)
+FINE_RANGE_X = $(FINE_RANGE_X)
+
+OPEN PROG $(PROG)
+CLEAR
+DBG=0
+
+; Sometimes applying an offset demand (GOSUB 110) fails. This code restores the following error if
+; it looks incorrect because the prog bombed out when last run.
+if (i$(XF)11=0)
+    if (XFFE>0)
+        i$(XF)11=XFFE
+    endif
+endif
+
+if (Q77 != LAST_FINE_X)
+    ; Q77 is the new combined demand position 
+    DBG=DBG+1
+    GOSUB 100
+    DWELL0
+else    
+    if (Q78 != LAST_OFFSET_X)
+        ; Q78 is the new offset demand position  
+        DBG=DBG+2
+        GOSUB 110
+        DWELL0
+    endif
+endif  
+DBG=DBG+4  
+RETURN
+
+;####################################################
+;; Routines N1xx are for XC and XF real motors:
+;; - pmac X (Addr 6, Q77 demand) - X Combined Coarse & Fine motor  
+;; - pmac Y (Addr 7, Q78 demand) - X Offset motor (fine mtr - coarse mtr, drives coarse motor only)
+
+;  
+; Do epics coordinate system combined COARSE+FINE motor initiated move (i.e called when PROG10 is run directly)
+; This subroutine applies the combined demand to the coarse and fine motors
+; The coarse motor will only be moved if a fine motor move cannot reach the target position.
+; Coarse motor will be moved in multiples of FINE_RANGE_X.
+;
+N100
+
+; Get current coarse position in egus
+; NB for the moment we remember the last demand value so we don't worry about encoder jitter
+; which may be a problem if we use the following...
+;LAST_XCPOS = ((XCMRES*M_REAL_XC)+XCOFF)
+
+; Get target position in egus
+FINE_X = Q77
+
+; FINE_X is the new demand position  
+; Calculate how many FINE_RANGE_X steps we need to apply to the coarse stepper motor
+RELMOVESTEPS_X = int((FINE_X + (FINE_RANGE_X/2) - LAST_XCPOS) /FINE_RANGE_X)   
+
+if (RELMOVESTEPS_X != 0)
+    ; large move so move both coarse and fine motors
+    GOSUB 109
+else
+    ; move fine motor only
+    ; test move size, if (ABS(LAST_FINE_X - FINE_X)>0.001)
+    if (ABS((XFMRES*M_REAL_XF)+XFOFF - FINE_X)>0.001)
+        ; for longer moves
+        LINEAR FRAX(X) TA200 TS50 F0.256
+    else    
+        ; for short fast moves
+        ; NB for linear mode max speed use a short segmentation time Isx13=1 (i.e. i5213=1 for CS2)
+        LINEAR FRAX(X) TA1 TS0 F0.256
+    endif    
+    X(FINE_X)
+    ; Remember the current demand for comparison during next CS move
+    LAST_FINE_X = FINE_X
+endif    
+RETURN
+
+
+;
+; This subroutine applies the demand to the coarse and fine motors (none PVT move)
+; Called when large move requires the coarse as well as the fine motor to move.
+; On entry RELMOVESTEPS_X and FINE_X must have been setup.
+;
+N109
+
+; disable fine motor following error
+if (i$(XF)11!=0)
+    XFFE=i$(XF)11
+endif  
+i$(XF)11=0  
+; move coarse motor and then the fine motor
+RAPID
+ABS
+FRAX(Y)
+XCPOS=(LAST_XCPOS + (RELMOVESTEPS_X * FINE_RANGE_X))
+Y(XCPOS)
+FRAX(X)
+X(FINE_X)    
+; Remember the current demand for comparison during next CS move
+LAST_XCPOS = XCPOS
+LAST_FINE_X = FINE_X
+; restore fine motor following error setting
+if (XFFE!=0) 
+    timer = 20 * millisec_conversion ; delay to ensure move started
+    while (timer > 0)
+    endwhile
+    timer = 5000 * millisec_conversion
+    ; do a delay while FE reduces to below ixx11 setting (and motor is closed loop)
+    ; the counter ensures we drop out eventally if move fails
+    ; (We dont use dwell here because it seems to make the prog less reliable???)
+    while (abs((m$(XF)62-m$(XF)61)/(i$(XF)08*32)) > XFFE/16 AND m$(XF)38=0 AND timer > 0)
+    endwhile
+    i$(XF)11=XFFE
+endif
+RETURN
+
+
+;
+; Do epics coordinate system OFFSET motor initiated moves (i.e called when PROG10 is run directly)
+; This subroutine applies the offset demand to the coarse motor only (none PVT move)
+;
+N110
+
+; Get target position in egus
+FINE_X = Q77
+OFFSET_X= Q78
+
+; OFFSET_X is the new demand position
+if (abs(OFFSET_X) !> (FINE_RANGE_X/2))
+    ; disable piezo following error
+    if (i$(XF)11!=0)
+        XFFE=i$(XF)11
+    endif  
+    i$(XF)11=0  
+    ; move coarse motor
+    RAPID
+    ABS
+    FRAX(Y)
+    XCPOS=(FINE_X+OFFSET_X)
+    Y(XCPOS)
+    ; Remember the current demand for comparison during next CS move
+    LAST_XCPOS = XCPOS
+    LAST_OFFSET_X = OFFSET_X
+    ; restore piezo following error setting  
+    if (XFFE!=0) 
+        i$(XF)11=XFFE
+    endif        
+else
+    ; can't move coarse motor because fine motor would go out of range
+    SETERROR    
+endif
+RETURN
+
+
+; INCFILE and EXTFILE substitutions are intended for a #include "file" command to 
+; add additional custom extensions/definitions
+$(EXTFILE=)
+
+
+
+CLOSE
+

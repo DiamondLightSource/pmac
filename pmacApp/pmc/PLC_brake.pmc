@@ -1,0 +1,46 @@
+CLOSE
+
+;###############################################################################
+; Operate a brake controlled through an output bit.
+; Original Author: Jonathan Thompson
+; Macros:
+;   PLC = $(PLC)              ; The PLC to use
+;   BRAKE = $(BRAKE)          ; The memory variable that points to the brake output bit
+;   MOTOR = $(MOTOR)          ; The motor that the brake operates on
+;   APPLY = $(APPLY)          ; The value to write to apply the brake
+;   RELEASE = $(RELEASE)      ; The value to write to release the brake
+;
+; The PLC performs following tasks:
+;     If the motor is killed, the brake is applied
+;     If park mode is requested and the motor is enabled, the motor is killed
+;     If the motor is re-enabled and park mode is not requested, the brake is removed
+;
+; P variable use:
+;    P$(PLC)00    ; The EPICS commanded park state
+;    P$(PLC)01    ; The current brake state
+;     
+;###############################################################################
+
+OPEN PLC $(PLC)
+CLEAR
+
+; Is the motor amplifier enabled?
+IF(M$(MOTOR)39 = 1)
+    ; Is park mode on?
+    IF(P$(PLC)00 = 1)
+        ; Kill the motor
+        CMD"#$(MOTOR)K"
+    ELSE
+        ; Release the brake
+        $(BRAKE) = $(RELEASE)
+        P$(PLC)01 = 0
+    ENDIF
+ELSE
+    ; Engage the brake
+    $(BRAKE) = $(APPLY)
+    P$(PLC)01 = 1
+ENDIF
+
+CLOSE
+
+ENABLE PLC $(PLC)
