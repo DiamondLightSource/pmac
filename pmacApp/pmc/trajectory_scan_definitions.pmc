@@ -2,81 +2,27 @@
 ; Variables
 ; *****************************************************************************************
 
-; Change these values for your PMAC
-#define BlankAdr0           30000           ; Start of user buffer defined on PMAC
-#define AxisAdr             30010           ; BlankAdr + 10 - Location of axes bit mask
-#define BufferAdr           30020           ; BlankAdr + 20 - Start of points buffers
-#define BuffLen             1000
-#define ProgramNum          1
-#define VersionNum          1.1
 
-; EPICS Required Variables
+; *****************************************************************************************
+; Set these values for your PMAC
+; *****************************************************************************************
+#define VarAdr       300   ; Prefix of address (eg VarAdr=300 then $30000 is the start address)
+#define BuffLen      1000  ; Length of buffers
+#define ProgramNum   1     ; Which motion program to use for scanning
+#define VersionNum   1.1   ; Version of this trajectory scan program
 
-#define Status              P4001           ; Status of motion program for EPICS
-                                                    ; 0: Initialised, 1: Active, 2: Idle, 3: Error
-#define Abort               P4002           ; Abort trigger for EPICS
-#define Axes                P4003           ; An int between 1 and 511 specifying which axes to use
-#define BufferLength        P4004           ; Length of a single buffer e.g. AX, AY...
-#define TotalPoints         P4005           ; Total number of points scanned through
 
-#define CurrentIndex        P4006           ; Current index position in buffer
-#define CurrentBuffer       P4007           ; Current buffer specifier - 0: A, 1: B
+; *****************************************************************************************
+; Define memory locations
+; *****************************************************************************************
+#define BlankAdr0    VarAdr30           ; VariableAddress + 30 - Blank addresses for storage
+#define AxisAdr      VarAdr40           ; BlankAdr + 10 - Location of axes bit mask
+#define BufferAdr    VarAdr50           ; BlankAdr + 20 - Start of points buffers
 
-#define BufferAdr_A         P4008           ; Start index of buffer A
-#define BufferAdr_B         P4009           ; Start index of buffer B
-#define CurrentBufferAdr    P4010           ; A or B buffer address
- 
-#define BufferFill_A        P4011           ; Fill level of buffer A
-#define BufferFill_B        P4012           ; Fill level of buffer B
-#define CurrentBufferFill   P4013           ; A or B buffer fill level
-#define PrevBufferFill      P4014           ; Fill level of previous buffer
-#define Error               P4015           ; Error code  0: No error, 1: Invalid axes value,
-                                            ; 2: Move time of 0, 3: Following error/ Run-time error
-#define Version             P4020           ; Version number for motion program
-Version = VersionNum
 
-; Motion Program Variables
-; ************************
-
-#define Prev_A              P4101           ; Previous coordinates for velocity calculations
-#define Prev_B              P4102  
-#define Prev_C              P4103  
-#define Prev_U              P4104  
-#define Prev_V              P4105  
-#define Prev_W              P4106  
-#define Prev_X              P4107  
-#define Prev_Y              P4108  
-#define Prev_Z              P4109  
-
-#define Time                P4110           ; Current coordinate values
-#define Current_A           Q71
-#define Current_B           Q72
-#define Current_C           Q73
-#define Current_U           Q74
-#define Current_V           Q75
-#define Current_W           Q76
-#define Current_X           Q77
-#define Current_Y           Q78
-#define Current_Z           Q79
-#define User                P4120
-#define VelMode             P4121
-
-#define A_Vel               P4131          ; Previous coordinate values
-#define B_Vel               P4132
-#define C_Vel               P4133
-#define U_Vel               P4134
-#define V_Vel               P4135
-#define W_Vel               P4136
-#define X_Vel               P4137
-#define Y_Vel               P4138
-#define Z_Vel               P4139
-
-#define CalculatedBase      P4140           ; Calculated temporary variable for Current base address
-#define TmpTime             P4141           ; Calculated temporary variable for time in velocity calcs
-
+; *****************************************************************************************
 ; Address-Based Variables
-; ***********************
-
+; *****************************************************************************************
 #define Next_Time           M4000                   ; Next coordinate for velocity calculations
 #define Next_A              M4001                   ; These are incremented by changing *_Adr
 #define Next_B              M4002
@@ -95,28 +41,28 @@ Next_User->X:$BlankAdr0,0,4
 Next_Time->Y:$BlankAdr0,0,24
 
 ; These need to be defined to L, doesn't matter where, otherwise the pointer increment doesn't work
-Next_A->L:$BufferAdr,0,48
-Next_B->L:$BufferAdr,0,48
-Next_C->L:$BufferAdr,0,48
-Next_U->L:$BufferAdr,0,48
-Next_V->L:$BufferAdr,0,48
-Next_W->L:$BufferAdr,0,48
-Next_X->L:$BufferAdr,0,48
-Next_Y->L:$BufferAdr,0,48
-Next_Z->L:$BufferAdr,0,48
+Next_A->L:$BufferAdr
+Next_B->L:$BufferAdr
+Next_C->L:$BufferAdr
+Next_U->L:$BufferAdr
+Next_V->L:$BufferAdr
+Next_W->L:$BufferAdr
+Next_X->L:$BufferAdr
+Next_Y->L:$BufferAdr
+Next_Z->L:$BufferAdr
 
-#define Time_Adr            M4020                   ; Pointers to Next_* coordinate addresses
-#define A_Adr               M4021
-#define B_Adr               M4022
-#define C_Adr               M4023
-#define U_Adr               M4024
-#define V_Adr               M4025
-#define W_Adr               M4026
-#define X_Adr               M4027
-#define Y_Adr               M4028
-#define Z_Adr               M4029
-#define User_Adr            M4030
-#define VelMode_Adr         M4031
+#define Time_Adr            M4012                   ; Pointers to Next_* coordinate addresses
+#define A_Adr               M4013
+#define B_Adr               M4014
+#define C_Adr               M4015
+#define U_Adr               M4016
+#define V_Adr               M4017
+#define W_Adr               M4018
+#define X_Adr               M4019
+#define Y_Adr               M4020
+#define Z_Adr               M4021
+#define User_Adr            M4022
+#define VelMode_Adr         M4023
 
 Time_Adr->Y$4FA0,0,24                               ; Assignments for pointers to M address locations
 A_Adr->Y:$4FA1,0,24                                 ; M0 = $4000 -> M4000 = $4FA0
@@ -131,16 +77,16 @@ Z_Adr->Y:$4FA9,0,24
 User_Adr->Y:$4FAA,0,24
 VelMode_Adr->Y:$4FAB,0,24
 
-#define AxesParser          M4040                   ; Specifiers for what axes are activated
-#define A_Axis              M4041
-#define B_Axis              M4042
-#define C_Axis              M4043
-#define U_Axis              M4044
-#define V_Axis              M4045
-#define W_Axis              M4046
-#define X_Axis              M4047
-#define Y_Axis              M4048
-#define Z_Axis              M4049
+#define AxesParser          M4024                   ; Specifiers for what axes are activated
+#define A_Axis              M4025
+#define B_Axis              M4026
+#define C_Axis              M4027
+#define U_Axis              M4028
+#define V_Axis              M4029
+#define W_Axis              M4030
+#define X_Axis              M4031
+#define Y_Axis              M4032
+#define Z_Axis              M4033
 
 AxesParser->Y:$AxisAdr,0,24                         ; Pointers to bits of Axes value
 A_Axis->Y:$AxisAdr,0
@@ -152,3 +98,118 @@ W_Axis->Y:$AxisAdr,5
 X_Axis->Y:$AxisAdr,6
 Y_Axis->Y:$AxisAdr,7
 Z_Axis->Y:$AxisAdr,8
+
+; *****************************************************************************************
+; EPICS Required Variables
+; *****************************************************************************************
+#define Status              M4034           ; Status of motion program for EPICS
+                                                    ; 0: Initialised, 1: Active, 2: Idle, 3: Error
+#define Abort               M4035           ; Abort trigger for EPICS
+#define Axes                M4036           ; An int between 1 and 511 specifying which axes to use
+#define BufferLength        M4037           ; Length of a single buffer e.g. AX, AY...
+#define TotalPoints         M4038           ; Total number of points scanned through
+
+#define CurrentIndex        M4039           ; Current index position in buffer
+#define CurrentBuffer       M4040           ; Current buffer specifier - 0: A, 1: B
+
+#define BufferAdr_A         M4041           ; Start index of buffer A
+#define BufferAdr_B         M4042           ; Start index of buffer B
+#define CurrentBufferAdr    M4043           ; A or B buffer address
+ 
+#define BufferFill_A        M4044           ; Fill level of buffer A
+#define BufferFill_B        M4045           ; Fill level of buffer B
+#define CurrentBufferFill   M4046           ; A or B buffer fill level
+#define PrevBufferFill      M4047           ; Fill level of previous buffer
+#define Error               M4048           ; Error code  0: No error, 1: Invalid axes value,
+                                            ; 2: Move time of 0, 3: Following error/ Run-time error
+#define Version             M4049           ; Version number for motion program
+
+
+; *****************************************************************************************
+; Motion Program Variables
+; *****************************************************************************************
+#define Prev_A              M4050           ; Previous coordinates for velocity calculations
+#define Prev_B              M4051  
+#define Prev_C              M4052  
+#define Prev_U              M4053  
+#define Prev_V              M4054  
+#define Prev_W              M4055  
+#define Prev_X              M4056  
+#define Prev_Y              M4057  
+#define Prev_Z              M4058  
+
+#define Time                M4059           ; Current coordinate values
+#define Current_A           Q71
+#define Current_B           Q72
+#define Current_C           Q73
+#define Current_U           Q74
+#define Current_V           Q75
+#define Current_W           Q76
+#define Current_X           Q77
+#define Current_Y           Q78
+#define Current_Z           Q79
+#define User                M4060
+#define VelMode             M4061
+
+#define A_Vel               M4062          ; Previous coordinate values
+#define B_Vel               M4063
+#define C_Vel               M4064
+#define U_Vel               M4065
+#define V_Vel               M4066
+#define W_Vel               M4067
+#define X_Vel               M4068
+#define Y_Vel               M4069
+#define Z_Vel               M4070
+
+#define CalculatedBase      M4071           ; Calculated temporary variable for Current base address
+#define TmpTime             M4072           ; Calculated temporary variable for time in velocity calcs
+
+
+; *****************************************************************************************
+; Progran variable assignments
+; *****************************************************************************************
+Status->Y:$VarAdr00,0,24
+Abort->Y:$VarAdr01,0,24
+Axes->Y:$VarAdr02,0,24
+BufferLength->Y:$VarAdr03,0,24
+TotalPoints->Y:$VarAdr04,0,24
+CurrentIndex->Y:$VarAdr05,0,24
+CurrentBuffer->Y:$VarAdr06,0,24
+BufferAdr_A->Y:$VarAdr07,0,24
+BufferAdr_B->Y:$VarAdr08,0,24
+CurrentBufferAdr->Y:$VarAdr09,0,24
+BufferFill_A->Y:$VarAdr0A,0,24
+BufferFill_B->Y:$VarAdr0B,0,24
+CurrentBufferFill->Y:$VarAdr0C,0,24
+PrevBufferFill->Y:$VarAdr0D,0,24
+Error->Y:$VarAdr0E,0,24
+Version->L:$VarAdr0F
+Prev_A->L:$VarAdr10
+Prev_B->L:$VarAdr11
+Prev_C->L:$VarAdr12
+Prev_U->L:$VarAdr13
+Prev_V->L:$VarAdr14
+Prev_W->L:$VarAdr15
+Prev_X->L:$VarAdr16
+Prev_Y->L:$VarAdr17
+Prev_Z->L:$VarAdr18
+Time->L:$VarAdr19
+User->L:$VarAdr1A
+VelMode->L:$VarAdr1B
+A_Vel->L:$VarAdr1C
+B_Vel->L:$VarAdr1D
+C_Vel->L:$VarAdr1E
+U_Vel->L:$VarAdr1F
+V_Vel->L:$VarAdr20
+W_Vel->L:$VarAdr21
+X_Vel->L:$VarAdr22
+Y_Vel->L:$VarAdr23
+Z_Vel->L:$VarAdr24
+CalculatedBase->L:$VarAdr25
+TmpTime->L:$VarAdr26
+
+
+; *****************************************************************************************
+; Set the version number
+; *****************************************************************************************
+Version = VersionNum
