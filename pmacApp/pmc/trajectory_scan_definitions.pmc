@@ -168,21 +168,21 @@ Z_Axis->Y:$AxisAdr,8
 ; *****************************************************************************************
 ; Progran variable assignments
 ; *****************************************************************************************
-Status->Y:$VarAdr00
-Abort->Y:$VarAdr01
-Axes->Y:$VarAdr02
-BufferLength->Y:$VarAdr03
-TotalPoints->Y:$VarAdr04
-CurrentIndex->Y:$VarAdr05
-CurrentBuffer->Y:$VarAdr06
-BufferAdr_A->Y:$VarAdr07
-BufferAdr_B->Y:$VarAdr08
-CurrentBufferAdr->Y:$VarAdr09
-BufferFill_A->Y:$VarAdr0A
-BufferFill_B->Y:$VarAdr0B
-CurrentBufferFill->Y:$VarAdr0C
-PrevBufferFill->Y:$VarAdr0D
-Error->Y:$VarAdr0E
+Status->Y:$VarAdr00,0,24
+Abort->Y:$VarAdr01,0,24
+Axes->Y:$VarAdr02,0,24
+BufferLength->Y:$VarAdr03,0,24
+TotalPoints->Y:$VarAdr04,0,24
+CurrentIndex->Y:$VarAdr05,0,24
+CurrentBuffer->Y:$VarAdr06,0,24
+BufferAdr_A->Y:$VarAdr07,0,24
+BufferAdr_B->Y:$VarAdr08,0,24
+CurrentBufferAdr->Y:$VarAdr09,0,24
+BufferFill_A->Y:$VarAdr0A,0,24
+BufferFill_B->Y:$VarAdr0B,0,24
+CurrentBufferFill->Y:$VarAdr0C,0,24
+PrevBufferFill->Y:$VarAdr0D,0,24
+Error->Y:$VarAdr0E,0,24
 Version->L:$VarAdr0F
 Prev_A->L:$VarAdr10
 Prev_B->L:$VarAdr11
