@@ -61,8 +61,10 @@ asynStatus pmacHardwarePower::parseGlobalStatus(const std::string& statusString,
       debug(DEBUG_ERROR, functionName, "    response", statusString);
       status = asynError;
     }
-    globStatus.stat1_ = 0;
-    globStatus.stat2_ = 0;
+    nvals = sscanf(statusString.c_str(), "%4x%4x", &globStatus.stat1_, &globStatus.stat2_);
+    if (nvals != 2){
+      status = asynError;
+    }
     globStatus.stat3_ = 0;
   }
   return status;
