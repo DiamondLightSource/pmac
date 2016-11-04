@@ -164,22 +164,20 @@
 #define DEFERRED_FAST_MOVES 1
 #define DEFERRED_COORDINATED_MOVES 2
 
-#define PMAC_TRAJ_STATUS         "P4001" // Status of motion program for EPICS - 0: Idle, 1: Running, 2: Finished, 3: Error
-#define PMAC_TRAJ_ABORT          "P4002" // Abort trigger for EPICS
-#define PMAC_TRAJ_AXES           "P4003" // An int between 1 and 511 specifying which axes to use
-#define PMAC_TRAJ_BUFFER_LENGTH  "P4004" // Length of a single buffer e.g. AX, AY
-#define PMAC_TRAJ_TOTAL_POINTS   "P4005" // Total number of points scanned through
-#define PMAC_TRAJ_CURRENT_INDEX  "P4006" // Current index position in buffers
-#define PMAC_TRAJ_CURRENT_BUFFER "P4007" // Current buffer specifier - 0: A, 1: B
-#define PMAC_TRAJ_BUFF_ADR_A     "P4008" // Start index of buffer A
-#define PMAC_TRAJ_BUFF_ADR_B     "P4009" // Start index of buffer B
-#define PMAC_TRAJ_CURR_ADR       "P4010" // A or B buffer address
-#define PMAC_TRAJ_BUFF_FILL_A    "P4011" // Fill level of buffer A
-#define PMAC_TRAJ_BUFF_FILL_B    "P4012" // Fill level of buffer B
-#define PMAC_TRAJ_CURR_FILL      "P4013" // The indexes that current buffer has been filled up to
-#define PMAC_TRAJ_PROG_VERSION   "P4020" // The indexes that current buffer has been filled up to
-#define PMAC_TRAJ_CURR_POS       4111    // The current position P variable base index
-#define PMAC_TRAJ_CURR_DMD       4001    // The current position M variable base index
+#define PMAC_TRAJ_STATUS         "M4034" // Status of motion program for EPICS - 0: Idle, 1: Running, 2: Finished, 3: Error
+#define PMAC_TRAJ_ABORT          "M4035" // Abort trigger for EPICS
+#define PMAC_TRAJ_AXES           "M4036" // An int between 1 and 511 specifying which axes to use
+#define PMAC_TRAJ_BUFFER_LENGTH  "M4037" // Length of a single buffer e.g. AX, AY
+#define PMAC_TRAJ_TOTAL_POINTS   "M4038" // Total number of points scanned through
+#define PMAC_TRAJ_CURRENT_INDEX  "M4039" // Current index position in buffers
+#define PMAC_TRAJ_CURRENT_BUFFER "M4040" // Current buffer specifier - 0: A, 1: B
+#define PMAC_TRAJ_BUFF_ADR_A     "M4041" // Start index of buffer A
+#define PMAC_TRAJ_BUFF_ADR_B     "M4042" // Start index of buffer B
+#define PMAC_TRAJ_CURR_ADR       "M4043" // A or B buffer address
+#define PMAC_TRAJ_BUFF_FILL_A    "M4044" // Fill level of buffer A
+#define PMAC_TRAJ_BUFF_FILL_B    "M4045" // Fill level of buffer B
+#define PMAC_TRAJ_CURR_FILL      "M4046" // The indexes that current buffer has been filled up to
+#define PMAC_TRAJ_PROG_VERSION   "M4049" // The indexes that current buffer has been filled up to
 
 #define PMAC_TRAJ_BUFFER_A 0
 #define PMAC_TRAJ_BUFFER_B 1
