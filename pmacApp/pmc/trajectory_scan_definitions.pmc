@@ -95,15 +95,15 @@ Next_User->X:$BlankAdr0,0,4
 Next_Time->Y:$BlankAdr0,0,24
 
 ; These need to be defined to L, doesn't matter where, otherwise the pointer increment doesn't work
-Next_A->L:$BufferAdr,0,48
-Next_B->L:$BufferAdr,0,48
-Next_C->L:$BufferAdr,0,48
-Next_U->L:$BufferAdr,0,48
-Next_V->L:$BufferAdr,0,48
-Next_W->L:$BufferAdr,0,48
-Next_X->L:$BufferAdr,0,48
-Next_Y->L:$BufferAdr,0,48
-Next_Z->L:$BufferAdr,0,48
+Next_A->L:$BufferAdr
+Next_B->L:$BufferAdr
+Next_C->L:$BufferAdr
+Next_U->L:$BufferAdr
+Next_V->L:$BufferAdr
+Next_W->L:$BufferAdr
+Next_X->L:$BufferAdr
+Next_Y->L:$BufferAdr
+Next_Z->L:$BufferAdr
 
 #define Time_Adr            M4020                   ; Pointers to Next_* coordinate addresses
 #define A_Adr               M4021
