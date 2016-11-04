@@ -1289,6 +1289,10 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
       }
       break;
 
+    case PMAC_CID_POWER_:
+      // TODO: Currently this is not implemented but it should be
+      break;
+
     default:
       // As we couldn't read the cid from the PMAC we don't know which m-vars to read
       debug(DEBUG_ERROR, functionName, "Unable to read GPIO M-vars, unknown Card ID");
