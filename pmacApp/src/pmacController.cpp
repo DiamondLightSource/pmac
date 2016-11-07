@@ -2826,6 +2826,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
   int userValue = 0;
   int timeValue = 0;
   char response[1024];
+  char cstr[1024];
   const char *functionName = "sendTrajectoryDemands";
 
   debug(DEBUG_TRACE, functionName);
@@ -2846,6 +2847,10 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
   debug(DEBUG_VARIABLE, functionName, "tScanPmacBufferSize_", tScanPmacBufferSize_);
   debug(DEBUG_VARIABLE, functionName, "tScanPointCtr_", tScanPointCtr_);
   debug(DEBUG_VARIABLE, functionName, "tScanNumPoints_", tScanNumPoints_);
+
+  // Supress the status reading within the message broker
+  pBroker_->supressStatusReads();
+
   // Check the number of points we have, if greater than the buffer size
   // then fill the buffer, else fill up to the number of points
   while (epicsBufferPtr < tScanPmacBufferSize_ && tScanPointCtr_ < tScanNumPoints_ && status == asynSuccess){
@@ -2910,8 +2915,6 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
     }
 
     if (status == asynSuccess){
-      // Construct the final cmd string
-      char cstr[1024];
       // First send the times/user buffer
       sprintf(cstr, "%s", cmd[9]);
       debug(DEBUG_VARIABLE, functionName, "Command", cstr);
@@ -2925,17 +2928,6 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
         }
       }
 
-      // Finally send the current buffer pointer to the PMAC
-      if (buffer == PMAC_TRAJ_BUFFER_A){
-        sprintf(cstr, "%s=%d", PMAC_TRAJ_BUFF_FILL_A, epicsBufferPtr);
-      } else if (buffer == PMAC_TRAJ_BUFFER_B){
-        sprintf(cstr, "%s=%d", PMAC_TRAJ_BUFF_FILL_B, epicsBufferPtr);
-      } else {
-        debug(DEBUG_ERROR, functionName, "Out of range buffer pointer", buffer);
-        status = asynError;
-      }
-      debug(DEBUG_TRACE, functionName, "Command", cstr);
-      status = this->immediateWriteRead(cstr, response);
       // Set the parameter according to the filled points
       if (buffer == PMAC_TRAJ_BUFFER_A){
         setIntegerParam(PMAC_C_TrajBuffFillA_, epicsBufferPtr);
@@ -2947,6 +2939,22 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer)
       }
     }
   }
+
+  // Finally send the current buffer pointer to the PMAC
+  if (buffer == PMAC_TRAJ_BUFFER_A){
+    sprintf(cstr, "%s=%d", PMAC_TRAJ_BUFF_FILL_A, epicsBufferPtr);
+  } else if (buffer == PMAC_TRAJ_BUFFER_B){
+    sprintf(cstr, "%s=%d", PMAC_TRAJ_BUFF_FILL_B, epicsBufferPtr);
+  } else {
+    debug(DEBUG_ERROR, functionName, "Out of range buffer pointer", buffer);
+    status = asynError;
+  }
+  debug(DEBUG_TRACE, functionName, "Command", cstr);
+  status = this->immediateWriteRead(cstr, response);
+
+  // Reinstate the status reading within the message broker
+  pBroker_->reinstateStatusReads();
+
   stopTimer(DEBUG_TIMING, functionName, "Time taken to send trajectory demand");
 
   return status;

@@ -12,6 +12,8 @@ const epicsFloat64 pmacMessageBroker::PMAC_TIMEOUT_ = 5.0;
 
 pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
   pmacDebugger("pmacMessageBroker"),
+  suppressStatus_(false),
+  suppressCounter_(0),
   ownerAsynUser_(pasynUser),
   lowLevelPortUser_(0),
   noOfMessages_(0),
@@ -119,23 +121,28 @@ asynStatus pmacMessageBroker::updateVariables(int type)
   startTimer(DEBUG_TIMING, functionName);
 
   if (type == PMAC_FAST_READ){
-    if (fastStore_.size() > 0){
-      // Send the command string and read the response
-      noOfCmds = fastStore_.countCommandStrings();
-      debug(DEBUG_VARIABLE, functionName, "Fast Store command string count", noOfCmds);
-      for (int index = 0; index < noOfCmds; index++){
-        cmd = fastStore_.readCommandString(index);
-        if (cmd.length() > 0){
-          this->immediateWriteRead(cmd.c_str(), response);
-          debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int)strlen(response));
-          // Update the store with the response
-          fastStore_.updateReply(cmd, response);
-        }
-      }
-      // Perform the necessary callbacks
-      fastCallbacks_->callCallbacks(&fastStore_);
+    if (suppressStatus_){
+      suppressCounter_++;
     }
-  } else if (type == PMAC_MEDIUM_READ){
+    if (!suppressStatus_ || suppressCounter_%4 == 0){
+      if (fastStore_.size() > 0){
+        // Send the command string and read the response
+        noOfCmds = fastStore_.countCommandStrings();
+        debug(DEBUG_VARIABLE, functionName, "Fast Store command string count", noOfCmds);
+        for (int index = 0; index < noOfCmds; index++){
+          cmd = fastStore_.readCommandString(index);
+          if (cmd.length() > 0){
+            this->immediateWriteRead(cmd.c_str(), response);
+            debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int)strlen(response));
+            // Update the store with the response
+            fastStore_.updateReply(cmd, response);
+          }
+        }
+        // Perform the necessary callbacks
+        fastCallbacks_->callCallbacks(&fastStore_);
+      }
+    }
+  } else if (type == PMAC_MEDIUM_READ && !suppressStatus_){
     if (mediumStore_.size() > 0){
       // Send the command string and read the response
       noOfCmds = mediumStore_.countCommandStrings();
@@ -150,7 +157,7 @@ asynStatus pmacMessageBroker::updateVariables(int type)
       // Perform the necessary callbacks
       mediumCallbacks_->callCallbacks(&mediumStore_);
     }
-  } else if (type == PMAC_SLOW_READ){
+  } else if (type == PMAC_SLOW_READ && !suppressStatus_){
     if (slowStore_.size() > 0){
       // Send the command string and read the response
       noOfCmds = slowStore_.countCommandStrings();
@@ -179,6 +186,29 @@ asynStatus pmacMessageBroker::updateVariables(int type)
   updateTime_ = 1000.0 * epicsTimeDiffInSeconds(&ts2, &ts1);
 
   return asynSuccess;
+}
+
+asynStatus pmacMessageBroker::supressStatusReads()
+{
+  asynStatus status = asynSuccess;
+  // Lock the mutex
+  mutex_.lock();
+  suppressStatus_ = true;
+  suppressCounter_ = 0;
+  // Unlock the mutex
+  mutex_.unlock();
+  return status;
+}
+
+asynStatus pmacMessageBroker::reinstateStatusReads()
+{
+  asynStatus status = asynSuccess;
+  // Lock the mutex
+  mutex_.lock();
+  suppressStatus_ = false;
+  // Unlock the mutex
+  mutex_.unlock();
+  return status;
 }
 
 asynStatus pmacMessageBroker::registerForUpdates(pmacCallbackInterface *cbPtr, int type)
