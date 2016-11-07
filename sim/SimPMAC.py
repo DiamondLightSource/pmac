@@ -8,6 +8,18 @@ import npyscreen
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 
+# Trajectory scanning M variable definitions
+M_TRAJ_STATUS = 4034
+M_TRAJ_VERSION = 4049
+M_TRAJ_BUFSIZE = 4037
+M_TRAJ_A_ADR = 4041
+M_TRAJ_B_ADR = 4042
+M_TRAJ_TOTAL_PTS = 4038
+M_TRAJ_C_INDEX = 4039
+M_TRAJ_C_BUF = 4040
+M_TRAJ_BUF_FILL_A = 4044
+M_TRAJ_BUF_FILL_B = 4045
+
 class SimulatedPmacApp(npyscreen.NPSAppManaged):
     def __init__(self):
         super(SimulatedPmacApp, self).__init__()
@@ -158,8 +170,7 @@ class PMACAxis():
         # print "position: " + str(self.position)
         # print "dmd_position: " + str(self.dmd_position)
 
-        # FUDGE Divide by 20 and *1000 as 0.1 second update
-        self.velocity = self.ivars[22] * 50
+        self.velocity = self.ivars[22]
         if self.position < (self.dmd_position - self.velocity):
             self.position = self.position + self.velocity
             self.done = "0"
@@ -181,12 +192,12 @@ class CoordinateSystem():
     def run_program(self):
         logging.debug("Running motion program")
         self.in_position = 0
-        self.controller.set_p_var(4001, 1)  # Set status to active
-        self.controller.set_p_var(4005, 0)  # total points
-        self.controller.set_p_var(4006, 0)  # current index
-        self.controller.set_p_var(4007, 0)  # current buffer
+        self.controller.set_m_var(M_TRAJ_STATUS, 1)  # Set status to active
+        self.controller.set_m_var(M_TRAJ_TOTAL_PTS, 0)  # total points
+        self.controller.set_m_var(M_TRAJ_C_INDEX, 0)  # current index
+        self.controller.set_m_var(M_TRAJ_C_BUF, 0)  # current buffer
         self.time_at_last_point = current_milli_time()
-        buffer_memory_address = self.controller.get_p_var(4008)
+        buffer_memory_address = self.controller.get_m_var(M_TRAJ_A_ADR)
         self.delta_time = self.controller.read_memory_address(buffer_memory_address) / 1000
         self.running_scan = True
 
@@ -194,7 +205,7 @@ class CoordinateSystem():
         # Check if we are running the trajectory scan
         if self.running_scan:
             # Check for an abort
-            status = self.controller.get_p_var(4001)  # Set status to active
+            status = self.controller.get_m_var(M_TRAJ_STATUS)  # Set status to active
             if status != 1:
                 # Aborted to stop the scan
                 self.running_scan = False
@@ -206,45 +217,44 @@ class CoordinateSystem():
                 # Work out if we should be moving to the next point
                 if current_time > (self.time_at_last_point + self.delta_time):
                     # Get the point
-                    point_index = self.controller.get_p_var(4006)
+                    point_index = self.controller.get_m_var(M_TRAJ_C_INDEX)
                     # increment the point
                     point_index = point_index + 1
                     # Check to see if we have crossed buffer
-                    if point_index == self.controller.get_p_var(4004):
+                    if point_index == self.controller.get_m_var(M_TRAJ_BUFSIZE):
                         point_index = 0
-                        if self.controller.get_p_var(4007) == 0:
-                            self.controller.set_p_var(4007, 1)
-                            self.controller.set_p_var(4011, 0)
+                        if self.controller.get_m_var(M_TRAJ_C_BUF) == 0:
+                            self.controller.set_m_var(M_TRAJ_C_BUF, 1)
+                            self.controller.set_m_var(M_TRAJ_BUF_FILL_A, 0)
                         else:
-                            self.controller.set_p_var(4007, 0)
-                            self.controller.set_p_var(4012, 0)
+                            self.controller.set_m_var(M_TRAJ_C_BUF, 0)
+                            self.controller.set_m_var(M_TRAJ_BUF_FILL_B, 0)
 
                     # Read the buffer A or B
-                    current_buffer = self.controller.get_p_var(4007)
+                    current_buffer = self.controller.get_m_var(M_TRAJ_C_BUF)
                     if current_buffer == 0:
                         # We are in buffer A
-                        current_buffer_fill = 4011
-                        current_buffer_address = 4008
+                        current_buffer_fill = M_TRAJ_BUF_FILL_A
+                        current_buffer_address = M_TRAJ_A_ADR
                     else:
                         # We are in buffer B
-                        current_buffer_fill = 4012
-                        current_buffer_address = 4009
+                        current_buffer_fill = M_TRAJ_BUF_FILL_B
+                        current_buffer_address = M_TRAJ_B_ADR
 
                     # Set the new point index
-                    self.controller.set_p_var(4006, point_index)
+                    self.controller.set_m_var(M_TRAJ_C_INDEX, point_index)
                     # Increment the total points
-                    total_points = self.controller.get_p_var(4005)+1
-                    self.controller.set_p_var(4005, total_points)
+                    total_points = self.controller.get_m_var(M_TRAJ_TOTAL_PTS)+1
+                    self.controller.set_m_var(M_TRAJ_TOTAL_PTS, total_points)
                     logging.debug("Total points: %d", total_points)
-                    logging.debug("Current fill level of A: %d", self.controller.get_p_var(4011))
-                    if point_index == self.controller.get_p_var(current_buffer_fill):
+                    if point_index == self.controller.get_m_var(current_buffer_fill):
                         # Scan has finished, we caught up
                         self.running_scan = False
                         self.in_position = 1
-                        self.controller.set_p_var(4001, 2)  # Set status to IDLE
+                        self.controller.set_m_var(M_TRAJ_STATUS, 2)  # Set status to IDLE
                     else:
                         # Work out delta time
-                        buffer_memory_address = self.controller.get_p_var(current_buffer_address) + point_index
+                        buffer_memory_address = self.controller.get_m_var(current_buffer_address) + point_index
                         self.delta_time = self.controller.read_memory_address(buffer_memory_address) / 1000
                         self.time_at_last_point = current_time
                         for axis in range(1,9):
@@ -281,6 +291,7 @@ class PMACSimulator():
         self.running = True
         self.ivars = {}
         self.pvars = [0] * 16000
+        self.mvars = [0] * 16000
         self.memory = [0] * 1000000
         self.caxis = 1
         self.ccs = 1
@@ -317,12 +328,12 @@ class PMACSimulator():
         self.setup_trajectory_interface()
 
     def setup_trajectory_interface(self):
-        self.pvars[4020] = 1.1
+        self.mvars[M_TRAJ_VERSION] = 1.1
         # Number of points in a buffer
-        self.pvars[4004] = 1000
+        self.mvars[M_TRAJ_BUFSIZE] = 1000
         # Address of A and B buffers
-        self.pvars[4008] = 0x10020
-        self.pvars[4009] = 0x12730
+        self.mvars[M_TRAJ_A_ADR] = 0x10020
+        self.mvars[M_TRAJ_B_ADR] = 0x12730
 
     def update(self):
         # print "Updating simulator"
@@ -406,7 +417,21 @@ class PMACSimulator():
                 if 'Q' in word:
                     resp = "0"
                 if 'M' in word:
-                    resp = "0"
+                    index = word.find('M')
+                    # Search for the number
+                    num = word[index:]
+                    index = word.find('=')
+                    writing = False
+                    if index > -1:
+                        value = num[index + 1:]
+                        num = num[:index + 1]
+                        writing = True
+                    mvar = int(filter(str.isdigit, num))
+                    if writing:
+                        logging.debug("Writing M[%d] = %s", mvar, value)
+                        self.mvars[mvar] = float(value)
+                    else:
+                        resp = str(self.mvars[int(filter(str.isdigit, num))])
                 if 'P' in word:
                     if '#' in word:
                         resp = str(self.axes[self.caxis].readPosition())
@@ -463,6 +488,12 @@ class PMACSimulator():
         self.lastResponse = self.lastResponse + resp + " "
 
         return self.response
+
+    def set_m_var(self, index, value):
+        self.mvars[index] = value
+
+    def get_m_var(self, index):
+        return self.mvars[index]
 
     def set_p_var(self, index, value):
         self.pvars[index] = value
