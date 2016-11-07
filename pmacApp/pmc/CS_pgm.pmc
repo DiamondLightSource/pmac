@@ -1,0 +1,146 @@
+CLOSE
+
+;##############################################################################
+;
+; Define Motion for Energy with PGM
+;
+; Original Author: James O'Hea
+;
+; Defined axes:
+;        X (Addr 6) = Energy in eV
+;        Y (Addr 7) = Cff
+;
+; Macros (and example values):
+;        COORD = $(COORD)        CS number (only works for CS 1..9), e.g. 2
+;        PLC = $(PLC)            PLC number, should be CS number+15, e.g. 17
+;        BETA = $(BETA)          Axis Number for Beta, e.g. 1
+;        THETA = $(THETA)        Axis Number for Theta, e.g. 2
+;
+;        ORDER = $(ORDER=Q22)    Order function parameter set to -1 to
+;                                remove need to set Q22
+;        GRT_OFFSET	= $(GRT_OFFSET=Q23)	; Grating Offset: set to 0 to just
+;                                         use CS motor offset
+;        MIR_OFFSET	= $(MIR_OFFSET=Q24)	; Mirror Offset: set to 0 to just
+;                                         use CS motor offset
+;        UNITS = $(UNITS=DEG)    units of angle : set to DEG or MRAD
+#define MIR_OFFSET	Q24
+;##############################################################################
+
+; Set trig calculations to be performed in degrees
+i15 = 0
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+&$(COORD)#$(BETA)->I
+&$(COORD)#$(THETA)->I
+
+; Define resolution, offset, and move flag variables
+; These are set by motor_in_cs.template (from spreadsheet)
+#define BMOVE P(4700+$(BETA))
+#define BMRES P(4800+$(BETA))
+#define BOFF  P(4900+$(BETA))
+#define TMOVE P(4700+$(THETA))
+#define TMRES P(4800+$(THETA))
+#define TOFF  P(4900+$(THETA))
+
+; Constants 
+
+; Plank's Constant (eV/s) = 4.135667749 * 10^-15
+; Speed of Light is stated in mm/s as the gratings are defined in mm
+; Speed of Light (mm/s) = 299792458000
+; hc = Plank's Constant * Speed of Light
+#define HC	0.001239842	; Plank's Constant * Speed of Light
+
+;#define R2D  57.29577951	    ; Radians to Degrees Conversion Factor
+;#define D2R  0.01745329	    ; Degrees to Radians Conversion Factor
+#define MRAD1  0.05729577951	; milliRadians to Degrees Conversion Factor
+#define MRAD2  17.45329	        ; Degrees to milliRadians Conversion Factor
+#define DEG1    1		        ; Radians to Degrees Conversion Factor
+#define DEG2    1		        ; Degrees to Radians Conversion Factor
+
+#define R2D    $(UNITS=DEG)1	; choose mrads, degrees
+#define D2R    $(UNITS=DEG)2    ; choose mrads, degrees
+
+; Q1-9 Kinematic Positions (Temporary variables used in kinematic calculations by PMAC)
+
+#define ENERGY        Q7        ; Desired energy
+#define CFF           Q8        ; Desired Cff 
+
+; Q128-199 Forward Kinematic Temporary Variables
+
+; None needed
+
+; Q228-299 Inverse Kinematic Temporary Variables
+
+#define LAMBDA		Q228	; Wavelength
+#define SASB		Q229	; Sin(Alpha) + Sin(Beta) Calculation
+#define CFF2		Q230	; Constant Fixed Focus Squared
+#define SIN_ALPHA	Q231	; Sin(Alpha) Calculation
+
+; Q20-70 EPICS Variables
+
+;#define CFF             Q20        ; Fixed Focus Constant
+#define LINES		Q21	            ; Number of Grating Lines
+#define ORDER		$(ORDER=Q22)	; Diffraction Order (all specified as negative)
+#define GRT_OFFSET	$(GRT_OFFSET=Q23) ; Grating Offset
+#define MIR_OFFSET	$(MIR_OFFSET=Q24) ; Mirror Offset
+
+#define BETA		P$(BETA)	; Beta Calculation
+#define THETA		P$(THETA)	; Theta Calculation
+
+; Forward Kinematics - Calculate energy from beta, theta, grating, diffraction order, and hc
+#define BPOS (BMRES*BETA+BOFF)
+#define TPOS (TMRES*THETA+TOFF)
+
+OPEN FORWARD
+CLEAR
+        ENERGY = ((LINES * ORDER * HC) / (sin((BPOS-GRT_OFFSET)*D2R)-sin(D2R*(2*(TPOS-MIR_OFFSET)-(BPOS-GRT_OFFSET)))))
+        CFF = ((cos(BPOS)) / (cos((2 * TPOS) - BPOS)))
+CLOSE
+
+; Inverse Kinematics - Calculate beta and theta from energy, grating, and diffraction order
+#define BPOS		Q232
+#define TPOS		Q233
+
+OPEN INVERSE
+CLEAR
+	CFF2 = (CFF * CFF)
+	LAMBDA = (HC / ENERGY)
+	SASB = (LINES * ORDER * LAMBDA)
+	SIN_ALPHA = (SASB / (CFF2 - 1)) + sqrt((((SASB * CFF) / (CFF2 - 1)) * ((SASB * CFF) / (CFF2 - 1))) + 1)
+
+	; Beta and Theta calculated in degrees
+	BPOS = (((asin(SIN_ALPHA + SASB)) * R2D) + GRT_OFFSET)
+	TPOS = (((BPOS - GRT_OFFSET + ((asin(SIN_ALPHA)) * R2D)) / 2) + MIR_OFFSET)
+
+	; Beta and Theta calculated in motor counts
+        P$(BETA)  = ((BPOS - BOFF) / BMRES)
+        P$(THETA) = ((TPOS - TOFF) / TMRES)
+	;P6 = ((((asin(SIN_ALPHA + SASB)) * R2D) + GRT_OFFSET - BOFF) / BMRES)
+	;P2 = ((((BPOS - GRT_OFFSET + ((asin(SIN_ALPHA)) * R2D)) / 2) + MIR_OFFSET -TOFF) / TMRES)
+CLOSE
+
+; A PLC for position reporting
+#define ENERGY		Q87     ; Desired energy
+#define CFF         Q88     ; Desired Cff
+#define BPOS		(BMRES*(m$(BETA)62/(I$(BETA)08*32))+BOFF)
+#define TPOS		(TMRES*(m$(THETA)62/(I$(THETA)08*32))+TOFF)
+
+OPEN PLC $(PLC)
+CLEAR
+    ADDRESS&$(COORD)
+    ENERGY = ((LINES * ORDER * HC) / (sin((BPOS-GRT_OFFSET)*D2R)-sin(D2R*(2*(TPOS-MIR_OFFSET)-(BPOS-GRT_OFFSET)))))
+    CFF = ((cos(BPOS)) / (cos((2 * TPOS) - BPOS)))
+    ; If beta or theta motor records did the last move, set demands = readbacks
+    if (BMOVE = 1)
+    or (TMOVE = 1)
+        BMOVE = 0
+        TMOVE = 0
+        Q77 = Q87
+        Q78 = Q88
+    endif
+CLOSE
+
+ENABLE PLC $(PLC)

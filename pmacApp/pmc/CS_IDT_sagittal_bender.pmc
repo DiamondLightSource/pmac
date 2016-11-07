@@ -1,0 +1,152 @@
+CLOSE
+;################################################
+;; \file
+;; Define motion for IDT Sagittal Bender on B21. Assumes that both bend motors
+;; are in open loop mode and encoders come back on different axes
+;;
+;; Original Author: Tom Cobb
+;;
+;; Defined axes:
+;; - X (addr 6) = Radius of curvature in m
+;; - Y (addr 7) = Fraction of the angle contributed by bend1 in %
+;;
+;; Macros:
+;; - COORD = $(COORD)  CS number, e.g. 2
+;; - PLC = $(PLC)  PLC number, should be CS number+15, e.g. 17
+;; - BEND1 = $(BEND1) Axisnum for bender 1
+;; - BEND2 = $(BEND2) Axisnum for bender 2
+;; - ENC1 = $(ENC1) Axisnum for bender 1 encoder
+;; - ENC2 = $(ENC2) Axisnum for bender 2 encoder
+;; - ARM_LENGTH = $(ARM_LENGTH) Length of the levers in mm
+;; - CRYSTAL_LENGTH = $(CRYSTAL_LENGTH) Length of the crystal in mm
+;; - MAX_DIFF = $(MAX_DIFF) Maximum difference in mm between bend motors
+;################################################
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+#$(BEND1)->I
+#$(BEND2)->I
+
+; These are set by motor_in_cs.template
+#define B1MOVE P(4700+$(BEND1))
+#define B1MRES P(4800+$(BEND1))
+#define B1OFF  P(4900+$(BEND1))
+#define B2MOVE P(4700+$(BEND2))
+#define B2MRES P(4800+$(BEND2))
+#define B2OFF  P(4900+$(BEND2))
+#define E1MRES P(4800+$(ENC1))
+#define E1OFF  P(4900+$(ENC1))
+#define E2MRES P(4800+$(ENC2))
+#define E2OFF  P(4900+$(ENC2))
+
+; Define some global variables
+#define SETERROR M(100*$(COORD)+5082)=1
+#define CRYSTAL_LENGTH Q20
+CRYSTAL_LENGTH = $(CRYSTAL_LENGTH)
+#define ARM_LENGTH Q21
+ARM_LENGTH = $(ARM_LENGTH)
+#define MAX_DIFF Q22
+MAX_DIFF = $(MAX_DIFF)
+#define STATE Q23
+STATE = 0
+
+; Calculate radius of curvature from motor positions
+#define B1POS (B1MRES*P$(BEND1)+B1OFF)
+#define B2POS (B2MRES*P$(BEND2)+B2OFF)
+#define RADIUSPOS Q128
+#define FRACPOS Q129
+#define B1ANG Q130
+#define B2ANG Q131
+OPEN FORWARD
+CLEAR
+    B1ANG = ATAN(B1POS / ARM_LENGTH)
+    B2ANG = ATAN(B2POS / ARM_LENGTH)
+    ; Fraction of bend to be produced by BEND1
+    FRACPOS = B1POS / (B1POS + B2POS)
+    ; Calc value in %
+    Q8 = FRACPOS * 100
+    if (B1POS > 0)
+    and (B2POS > 0)    
+        ; Radius from chord length and angle
+        RADIUSPOS = CRYSTAL_LENGTH / (2 * SIN((B1ANG + B2ANG) / 2))
+        ; Calc value in EGUs
+        Q7 = RADIUSPOS / 1000
+    else
+        ; Zero or negative angle is an error
+        SETERROR
+    endif
+CLOSE
+
+; Calculate motor positions from radius of curvature
+#define RADIUSPOS (Q7*1000)
+#define FRACPOS (Q8/100)
+#define B1POS Q228
+#define B2POS Q229
+#define THETA Q230
+#define B1ANG Q231
+#define B2ANG Q232
+OPEN INVERSE
+CLEAR
+    if (RADIUSPOS > CRYSTAL_LENGTH / 2)
+        THETA = 2 * ASIN(CRYSTAL_LENGTH / (2 * RADIUSPOS))
+        ; Motor arm angles from full angle
+        B1ANG = FRACPOS * THETA
+        B2ANG = (1 - FRACPOS) * THETA
+        B1POS = ARM_LENGTH * TAN(B1ANG)
+        B2POS = ARM_LENGTH * TAN(B2ANG)
+        ; Calc values in cts
+        P$(BEND1) = (B1POS - B1OFF) / B1MRES
+        P$(BEND2) = (B2POS - B2OFF) / B2MRES
+    else
+        ; Zero or negative distance is an error
+        SETERROR
+    endif
+CLOSE
+
+#define B1POS (B1MRES*m$(BEND1)62/(I$(BEND1)08*32)+B1OFF)
+#define B2POS (B2MRES*m$(BEND2)62/(I$(BEND2)08*32)+B2OFF)
+#define RADIUSPOS Q328
+#define FRACPOS Q329
+#define E1POS (E1MRES*m$(ENC1)62/(I$(ENC1)08*32)+E1OFF)
+#define E2POS (E2MRES*m$(ENC2)62/(I$(ENC2)08*32)+E2OFF)
+#define DIFF Q330
+#define B1ANG Q333
+#define B2ANG Q334
+OPEN PLC$(PLC)
+CLEAR
+    ADDRESS&$(COORD)
+    B1ANG = ATAN(B1POS / ARM_LENGTH)
+    B2ANG = ATAN(B2POS / ARM_LENGTH)
+    ; Fraction of bend to be produced by BEND1
+    FRACPOS = B1POS / (B1POS + B2POS)
+    ; Calc value in %
+    Q88 = FRACPOS * 100
+    if  (B1POS > 0)
+    and (B2POS > 0)
+        ; Radius from chord length and angle
+        RADIUSPOS = CRYSTAL_LENGTH / (2 * SIN((B1ANG + B2ANG) / 2))
+        ; Calc value in EGUs
+        Q87 = RADIUSPOS / 1000
+    endif
+
+    ; Reset demand = readback if a raw motor is moved
+    if (B1MOVE = 1)
+    or (B2MOVE = 1)
+        B1MOVE = 0
+        B2MOVE = 0
+        Q77 = Q87
+        Q78 = Q88
+    endif
+
+    ; Safety code, requires PLC4 to look at STATE pv
+    DIFF = ABS(E2POS - E1POS)
+    if (DIFF > MAX_DIFF)
+        STATE = 1
+    else
+        STATE = 0
+    endif
+
+CLOSE
+ENABLE PLC$(PLC)

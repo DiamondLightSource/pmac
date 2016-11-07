@@ -1,0 +1,164 @@
+CLOSE
+
+;###########################################################
+; PLC_power_down_when_idle.pmc
+; Original Author: Pete Leicester
+;
+; PLC to kill or reduce power on a motor after a defined period of inactivity.
+; *** THIS PLC IS INTENDED FOR USE ON A GEOBRICK **** 
+;
+; Note1: Geobrick coontrollers when killed effectively short the motor cables together providing an
+; brake due to back EMF when the motor is rotated. Most axis can be safely killed without losing 
+; position, this is certainly the case for most lead screw drives (ball screws may require a 
+; holding current).
+;
+; Note2: When using this PLC make sure the standard kill PLC (usually PLC7, sometimes PLC3) is removed from the geobrick.
+;
+; Macros:
+; NAXIS
+;   The number of axis on the controller 1..16 (8 for a standard geobrick)
+;   This defines the highest numbered axis that may be powered down.  
+; TM1..TM16 
+;   Define timeout period in milliseconds after which the axis will be powered 
+;   down provided it has been idle for the whole period (note clock resolution below).
+;   Set to zero to leave the amp powered continously. 
+;   Set to one for (almost) immediate power down on motor stop.
+;   Set to number of milliseconds for delayed power down after motor stops.
+;   Typically this should be set to a few seconds.
+; DCM1..DCM16 
+;   Drive current & percentage for each axis.
+;   Set to zero for axis that are to be killed or if controller is not a geobrick (i.e. does not support Ixx77 amp current).
+;   For axis requiring a reduced holding current this contains ' normal_drive_current * 100 + power_down_percentage '
+;   Note the drive current is defined in milliamps.
+;   e.g. For motor axis 1 with 2000 milliamp drive current and 33% holding current define DCM1 as 200033
+;###########################################################
+
+
+; Define timeout period in milliseconds
+P701 = $(TM1)
+P702 = $(TM2)
+P703 = $(TM3)
+P704 = $(TM4)
+P705 = $(TM5)
+P706 = $(TM6)
+P707 = $(TM7)
+P708 = $(TM8)
+P709 = $(TM9)
+P710 = $(TM10)
+P711 = $(TM11)
+P712 = $(TM12)
+P713 = $(TM13)
+P714 = $(TM14)
+P715 = $(TM15)
+P716 = $(TM16)
+
+; Drive current & percentage for each axis
+P733 = $(DCM1)
+P734 = $(DCM2)
+P735 = $(DCM3)
+P736 = $(DCM4)
+P737 = $(DCM5)
+P738 = $(DCM6)
+P739 = $(DCM7)
+P740 = $(DCM8)
+P741 = $(DCM9)
+P742 = $(DCM10)
+P743 = $(DCM11)
+P744 = $(DCM12)
+P745 = $(DCM13)
+P746 = $(DCM14)
+P747 = $(DCM15)
+P748 = $(DCM16)
+
+; used for storing current axis number
+#define axis_number           P700
+
+; defines timeout period in milliseconds (note clock resolution below)
+; use axis_number to calculate the P variable to look in to get timeout period.
+#define timeout_period        P(axis_number + 700)
+
+; defines drive current in milliamps
+; use axis_number to calculate the P variable to look in to get drive current & power down percentage.
+#define drive_current         P(axis_number + 732)
+
+; zero velocity bit Mxx33
+#define zero_velocity_bit     M(axis_number*100 + 33)
+
+; amplifier enabled bit Mxx39
+#define amplifier_enabled     M(axis_number*100 + 39)
+
+; in position bit Mxx40
+#define in_position_bit       M(axis_number*100 + 40)
+
+; amplifier_current Ixx77
+#define amplifier_current     I(axis_number*100 + 77)
+
+; time counters on P765-P796, one per axis
+#define time_counter          P(axis_number + 764)
+
+; timer
+#define timer i(5111+(7&30)*50+7%2)
+#define millisec_conversion   8388608/i10
+
+#define kill_axis             &COMMAND"K"
+#define full_current          INT(drive_current/100)
+#define hold_current          full_current/100*(drive_current%100)
+
+; define clock resolution in milliseconds
+#define clock_tick              50
+
+
+open plc 7
+clear
+
+if (timer < 0)
+	; Run this code once every clock tick
+	timer = clock_tick * millisec_conversion
+	 
+	; Check for axis stationary with amp on
+	; Loop through all axis
+	axis_number = 1
+	WHILE(axis_number !> $(NAXIS))
+		if (timeout_period>0)
+			if (in_position_bit = 1 And amplifier_enabled = 1)
+				; motor is stationary with amp on
+				time_counter = time_counter + clock_tick
+				if (time_counter !< timeout_period)
+					; motor was stationary and enabled for whole timeout period so kill the motor or reduce amp power
+					if (drive_current=0)
+						ADDRESS#axis_number
+						kill_axis
+					else
+						; reduce the drive current
+                        ; NB this will be written repeatedly every timeout period
+						amplifier_current=hold_current
+					endif
+					time_counter=0
+				endif
+			else
+				; motor not stationary or amp is off so reset the time counter
+				time_counter=0
+			endif
+		endif
+		
+		axis_number=axis_number+1
+	ENDWHILE
+endif
+
+; Check for axis moving and increase drive current if necessary
+; Loop through all axis
+axis_number = 1
+WHILE(axis_number !> $(NAXIS))
+	if (drive_current!=0)
+		if (in_position_bit=0 And amplifier_enabled = 1)
+			if (amplifier_current<full_current)
+				amplifier_current=full_current
+			endif
+		endif
+	endif	
+	axis_number=axis_number+1
+ENDWHILE
+
+CLOSE
+
+ENABLE PLC 7

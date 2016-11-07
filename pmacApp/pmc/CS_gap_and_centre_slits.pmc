@@ -1,0 +1,87 @@
+CLOSE
+
+;##################################################################
+;; \file
+;; Define motion for 2 slit blades driven by one axis that moves them both to 
+;; adjust the position, and another that moves only one to adjust the gap.
+;;
+;; Original Author: Emma Shepherd
+;;
+;; Defined axes:
+;; - X (addr 6) = centre in same EGUs as blade
+;; - Y (addr 7) = size in same EGUs as blade
+;;
+;; Macros:
+;; - COORD = $(COORD)  CS number, e.g. 2
+;; - PLC = $(PLC)  PLC number, should be CS number+15, e.g. 17
+;; - CENT = $(CENT)  Axisnum for centre motor, e.g. 1
+;; - GAP = $(GAP)  Axisnum for gap motor, e.g. 3
+;; - DIR = $(DIR)  Set to 1 if aperture is opened by driving positively,
+;; -               and -1 if negatively.
+;##################################################################
+
+; Change to CS$(COORD)
+&$(COORD)
+
+; Set relevant axes to use kinematics
+#$(CENT)->I ; centre motor
+#$(GAP)->I  ; gap motor
+
+; These are set by motor_in_cs.template
+#define CENTMOVE P(4700+$(CENT))
+#define CENTMRES P(4800+$(CENT))
+#define CENTOFF  P(4900+$(CENT))
+#define GAPMOVE P(4700+$(GAP))
+#define GAPMRES P(4800+$(GAP))
+#define GAPOFF  P(4900+$(GAP))
+
+; Direction
+#define DIRECTION Q20
+DIRECTION = $(DIR)
+
+; Calculate tool-tip centre position (gap is obtained directly from motor readback)
+#define CENTPOS (CENTMRES*P$(CENT)+CENTOFF)
+#define GAPPOS (GAPMRES*P$(GAP)+GAPOFF)
+#define CENTCS Q7
+#define GAPCS Q8
+OPEN FORWARD
+CLEAR
+    CENTCS = CENTPOS + GAPPOS/2
+    GAPCS = DIRECTION*GAPPOS
+CLOSE
+
+; Calculate centre motor position from tool-tip co-ordinates
+#define CENTPOS Q228
+#define GAPPOS Q229
+OPEN INVERSE
+CLEAR
+    ; calculate motor positions in EGUs
+    CENTPOS = CENTCS-DIRECTION*GAPCS/2
+    GAPPOS = DIRECTION*GAPCS
+    ; then in cts
+    P$(CENT)=(CENTPOS-CENTOFF)/CENTMRES
+    P$(GAP)=(GAPPOS-GAPOFF)/GAPMRES
+CLOSE
+
+; A PLC(sx+15) needs to be made to do position reporting
+; Readbacks should be in &{axisnum}Q81..89
+; As forward kinematic, but with Px = mx62/(Ix08*32)
+#define CENTPOS (CENTMRES*m$(CENT)62/(I$(CENT)08*32)+CENTOFF)
+#define GAPPOS (GAPMRES*m$(GAP)62/(I$(GAP)08*32)+GAPOFF)
+#define CENTCS Q87
+#define GAPCS Q88
+OPEN PLC$(PLC)
+CLEAR
+    ADDRESS&$(COORD)
+    CENTCS = CENTPOS + GAPPOS/2
+    GAPCS = DIRECTION*GAPPOS
+    ; If raw motor record did the last move, set demands = readbacks
+    if (CENTMOVE = 1)
+    or (GAPMOVE = 1)
+        CENTMOVE = 0
+        GAPMOVE = 0
+        Q77 = Q87
+        Q78 = Q88
+    endif
+CLOSE
+ENABLE PLC$(PLC)

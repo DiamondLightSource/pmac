@@ -1,0 +1,80 @@
+# Take the list of all variables that make knows about and strip out the
+# variables we have defined as not for msi
+# do the subst so we get rid of the % characters that act as wildcards in filter-out expressions
+MSI_DIRS := $(sort $(filter-out NON_MSI_VARS $(subst %,_,$(NON_MSI_VARS)),$(subst %,_,$(.VARIABLES))))
+
+# Create a colon separated list of their data dirs
+MSI_INCLUDES := $(subst : ,:,$(foreach dir,$(MSI_DIRS),$($(dir))/data:)).
+
+# location of configure
+ifeq (,$(CONFIGURE))
+CONFIGURE := ../configure
+endif
+
+# homing script location
+ifneq ($(wildcard configure/generate_homing_plcs.py),)
+    # if controller specific generate_homing_plcs.py exists use it
+    GENERATE_HOMING := configure/generate_homing_plcs.py
+else
+    # otherwise use the global one
+    GENERATE_HOMING := ../configure/generate_homing_plcs.py
+endif
+
+# make sure that we look for files to copy from all MSI_INCULDES dirs
+vpath %.pmc $(MSI_INCLUDES)
+
+# work out all the files that Master.pmc needs to include
+PO :=(
+PC :=)
+# hack needed to get brackets into a make shell expansion
+NEEDED := $(shell egrep "^\#include" Master*.pmc | sed -r 's/[^"]*"$(PO)[^"]+$(PC).*/\1/' || exit)
+
+# make sure all the needed files are generated
+install: $(NEEDED)
+
+# define a header that should go on all generated files
+define print_header
+	@echo ';####################################################' > $$@
+	@echo '; DO NOT MODIFY: File created from' $$< >> $$@
+	@echo ';####################################################' >> $$@
+	@echo >> $$@
+endef
+
+# rule to make a homing plc from generate_homing_plcs.py
+PLCs/%_HM.pmc: $(GENERATE_HOMING) $(CONFIGURE)/RELEASE
+	@echo '***' Autogenerating homing plc \"$@\"
+	PYTHONPATH=$(PMACUTIL)/pmacUtilApp/src ./$< $@
+
+# define general rules to make a pmc from a psub file
+# or copy a file from one in an MSI_INCLUDES dir
+# these need to be instantiated for each dir
+define RULES
+$1%.pmc: src/%.psub $(CONFIGURE)/RELEASE
+	@echo '***' Preprocessing \"$$@\" from psub src
+	$(print_header)
+	msi -I$$(MSI_INCLUDES):src $$< >> $$@
+
+$1%.pmc: src/%.json $(CONFIGURE)/RELEASE
+	@echo '***' Generating \"$$@\" from json src
+	$(print_header)
+	$(DLS_PMCGENERATOR)/prefix/bin/dls-pmc-from-json.py $$< >> $$@
+
+$1%.pmc: %.pmc $(CONFIGURE)/RELEASE
+	@echo '***' Copying across pmacUtil file \"$$@\"
+	$(print_header)
+	cat $$< >> $$@
+
+endef
+
+# find all the dirnames of the needed files. 
+# Filter out ./ files so we don't duplicate the rules above
+# Filter out ../ files so we don't create anything in a level above this dir
+DIRS := $(sort $(filter-out ./% ../%, $(dir $(NEEDED))))
+
+# now evaluate the rules for each dir
+$(eval $(foreach dir,$(DIRS),$(call RULES,$(dir))))
+
+# rule to tidy up			
+clean: 
+	@echo '***' Removing generated files
+	rm -rf *~ */*~ */*.PMA */*.56K */*.LOG */*.TBL */*.MAP */PewinSessionLog.Txt *.PMA *.56K *.LOG *.TBL *.MAP PewinSessionLog.Txt $(shell grep -l -r "DO NOT MODIFY" . | grep -v .svn)
