@@ -32,6 +32,8 @@ public:
   asynStatus immediateWriteRead(const char *command, char *response);
   asynStatus addReadVariable(int type, const char *variable);
   asynStatus updateVariables(int type);
+  asynStatus supressStatusReads();
+  asynStatus reinstateStatusReads();
   asynStatus registerForUpdates(pmacCallbackInterface *cbPtr, int type);
   double readUpdateTime();
   asynStatus readStatistics(int *noOfMsgs,
@@ -50,6 +52,10 @@ private:
 
   // Mutex required for locking across threads
   epicsMutex mutex_;
+
+  // Status suppression
+  bool suppressStatus_;
+  int suppressCounter_;
 
   asynUser* ownerAsynUser_;
   asynUser* lowLevelPortUser_;
