@@ -198,7 +198,21 @@ class CoordinateSystem():
         self.controller.set_m_var(M_TRAJ_C_BUF, 0)  # current buffer
         self.time_at_last_point = current_milli_time()
         buffer_memory_address = self.controller.get_m_var(M_TRAJ_A_ADR)
-        self.delta_time = self.controller.read_memory_address(buffer_memory_address) / 1000
+        self.delta_time = (self.controller.read_memory_address(buffer_memory_address)&0xFFFFFF) / 1000
+        logging.debug("self.delta_time: %f", self.delta_time)
+        for axis in range(1, 9):
+            position_memory_address = buffer_memory_address + (1000 * axis)
+            current_position = self.controller.axes[axis].readPosition()
+            new_position = self.controller.read_position(position_memory_address)
+            if self.delta_time == 0:
+                logging.debug("Zero delta time for CS")
+                velocity = 1.0
+            else:
+                velocity = (new_position - current_position) / self.delta_time
+            if velocity < 0.0:
+                velocity *= -1.0
+            self.controller.axes[axis].writeIVar(22, velocity)
+            self.controller.axes[axis].move(float(new_position))
         self.running_scan = True
 
     def update(self):
@@ -255,7 +269,7 @@ class CoordinateSystem():
                     else:
                         # Work out delta time
                         buffer_memory_address = self.controller.get_m_var(current_buffer_address) + point_index
-                        self.delta_time = self.controller.read_memory_address(buffer_memory_address) / 1000
+                        self.delta_time = (self.controller.read_memory_address(buffer_memory_address)&0xFFFFFF) / 1000
                         self.time_at_last_point = current_time
                         for axis in range(1,9):
                             position_memory_address = buffer_memory_address + (1000*axis)
