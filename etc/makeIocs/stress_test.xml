@@ -1,0 +1,25 @@
+<?xml version="1.0" ?>
+<components arch="linux-x86_64">
+	<pmac.pmacAsynIPPort IP="127.0.0.1:1025" name="BRICK1port"/>
+	<pmac.GeoBrick IdlePoll="1000" Port="BRICK1port" name="BRICK1"/>
+	<pmac.GeoBrickTrajectoryControlT NAXES="8" NPOINTS="10000" P="S_T:" PORT="BRICK1" R="GB1:" name="BRICK1.TRAJ"/>
+	<pmac.pmacStatus DEVICE="S_T" NAXES="8" PLC="5" PORT="BRICK1" name="BRICK1.STAT"/>
+	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1" DHLM="1000" DLLM="-1000" EGU="mm" M=":M1" MRES="0.001" P="S_T" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="20" name="BRICK1.MOTORS.M1"/>
+	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2" DHLM="1000" DLLM="-1000" EGU="mm" M=":M2" MRES="0.001" P="S_T" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="20" name="BRICK1.MOTORS.M2"/>
+	<pmac.dls_pmac_asyn_motor ADDR="3" DESC="Motor 3" DHLM="1000" DLLM="-1000" EGU="mm" M=":M3" MRES="0.001" P="S_T" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M3"/>
+	<pmac.dls_pmac_asyn_motor ADDR="4" DESC="Motor 4" DHLM="1000" DLLM="-1000" EGU="mm" M=":M4" MRES="0.001" P="S_T" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M4"/>
+	<pmac.dls_pmac_asyn_motor ADDR="5" DESC="Motor 5" DHLM="1000" DLLM="-1000" EGU="mm" M=":M5" MRES="0.001" P="S_T" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M5"/>
+	<pmac.dls_pmac_asyn_motor ADDR="6" DESC="Motor 6" DHLM="1000" DLLM="-1000" EGU="mm" M=":M6" MRES="0.001" P="S_T" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M6"/>
+	<pmac.dls_pmac_asyn_motor ADDR="7" DESC="Motor 7" DHLM="1000" DLLM="-1000" EGU="mm" M=":M7" MRES="0.001" P="S_T" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M7"/>
+	<pmac.dls_pmac_asyn_motor ADDR="8" DESC="Motor 8" DHLM="1000" DLLM="-1000" EGU="mm" M=":M8" MRES="0.001" P="S_T" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M8"/>
+	<pmac.pmacDisableLimitsCheck Axis="1" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="2" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="3" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="4" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="5" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="6" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="7" Controller="BRICK1"/>
+	<pmac.pmacDisableLimitsCheck Axis="8" Controller="BRICK1"/>
+	<pmac.CS CS="1" Controller="BRICK1" IdlePoll="1000" name="CS1"/>
+	<pmac.GeoBrickGlobalControl P="S_T:" PORT="BRICK1" R="GB1:" name="BRICK1.CTRL"/>
+</components>
