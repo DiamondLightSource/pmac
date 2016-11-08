@@ -49,6 +49,7 @@ asynStatus pmacHardwarePower::parseGlobalStatus(const std::string& statusString,
   int nvals = 0;
   static const char *functionName = "parseGlobalStatus";
 
+  debug(DEBUG_VARIABLE, functionName, "Status string", statusString);
   if (statusString == ""){
     debug(DEBUG_ERROR, functionName, "Problem reading global status command, returned", statusString);
     status = asynError;
@@ -59,10 +60,16 @@ asynStatus pmacHardwarePower::parseGlobalStatus(const std::string& statusString,
       debug(DEBUG_ERROR, functionName, "Error reading global status", GLOBAL_STATUS);
       debug(DEBUG_ERROR, functionName, "    nvals", nvals);
       debug(DEBUG_ERROR, functionName, "    response", statusString);
+      globStatus.status_ = 0;
       status = asynError;
     }
-    nvals = sscanf(statusString.c_str(), "%4x%4x", &globStatus.stat1_, &globStatus.stat2_);
+    nvals = sscanf(statusString.c_str(), " $%4x%4x", &globStatus.stat1_, &globStatus.stat2_);
     if (nvals != 2){
+      debug(DEBUG_ERROR, functionName, "Error reading global status (16 bit)", GLOBAL_STATUS);
+      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+      debug(DEBUG_ERROR, functionName, "    response", statusString);
+      globStatus.stat1_ = 0;
+      globStatus.stat2_ = 0;
       status = asynError;
     }
     globStatus.stat3_ = 0;
@@ -80,20 +87,35 @@ std::string pmacHardwarePower::getAxisStatusCmd(int axis)
   return std::string(cmd);
 }
 
-asynStatus pmacHardwarePower::parseAxisStatus(const std::string& statusString, axisStatus &axStatus)
+asynStatus pmacHardwarePower::parseAxisStatus(const std::string& statusString, axisStatus& axStatus)
 {
   asynStatus status = asynSuccess;
   int nvals = 0;
+  int dummyVal = 0;
   static const char *functionName = "parseAxisStatus";
 
   // Response parsed for PowerPMAC
+  debug(DEBUG_VARIABLE, functionName, "Status string", statusString);
   nvals = sscanf(statusString.c_str(), " $%8x%8x", &axStatus.status24Bit1_, &axStatus.status24Bit2_);
   if (nvals != 2){
-    debug(DEBUG_ERROR, functionName, "Failed to parse axis status", statusString);
+    debug(DEBUG_ERROR, functionName, "Failed to parse axis status (24 bit)", statusString);
+    axStatus.status24Bit1_ = 0;
+    axStatus.status24Bit2_ = 0;
     status = asynError;
   }
-  debug(DEBUG_VARIABLE, functionName, "Read status[0]", axStatus.status24Bit1_);
-  debug(DEBUG_VARIABLE, functionName, "Read status[1]", axStatus.status24Bit2_);
+  nvals = sscanf(statusString.c_str(), " $%4x%4x%4x%4x", &axStatus.status16Bit1_, &axStatus.status16Bit2_, &axStatus.status16Bit3_, &dummyVal);
+  if (nvals != 4){
+    debug(DEBUG_ERROR, functionName, "Failed to parse axis status (16 bit)", statusString);
+    axStatus.status16Bit1_ = 0;
+    axStatus.status16Bit2_ = 0;
+    axStatus.status16Bit3_ = 0;
+    status = asynError;
+  }
+  debug(DEBUG_VARIABLE, functionName, "Read status 24[0]", axStatus.status24Bit1_);
+  debug(DEBUG_VARIABLE, functionName, "Read status 24[1]", axStatus.status24Bit2_);
+  debug(DEBUG_VARIABLE, functionName, "Read status 16[0]", axStatus.status16Bit1_);
+  debug(DEBUG_VARIABLE, functionName, "Read status 16[1]", axStatus.status16Bit2_);
+  debug(DEBUG_VARIABLE, functionName, "Read status 16[2]", axStatus.status16Bit3_);
 
   if (status == asynSuccess){
     axStatus.home_ = ((axStatus.status24Bit1_ & PMAC_STATUS1_HOME_COMPLETE) != 0);
