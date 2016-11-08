@@ -20,6 +20,7 @@ DB += pmacStatus32Axes.template
 DB += pmacTrajectoryAxis.template
 DB += pmacTrajectory8Axes.template
 DB += pmacTrajectory32Axes.template
+DB += powerPmacStatus.template
 DB += pmac_cs_axis.template
 DB += dls_pmac_asyn_motor.template
 DB += motor_in_cs.template
