@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 288
-y 81
+x 290
+y 59
 w 575
 h 886
 font "arial-medium-r-16.0"
@@ -687,90 +687,6 @@ fill
 fillColor index 5
 endObjectProperties
 
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 800
-w 120
-h 12
-controlPv "$(pmac):VME_ADDR_MODE"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 800
-w 126
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "VME Address Modifier (I90)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 815
-w 117
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "VME Interrupt Level (I95)"
-}
-autoSize
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 815
-w 120
-h 12
-controlPv "$(pmac):VME_INTLVL"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
 # (Static Text)
 object activeXTextClass
 beginObjectProperties
@@ -779,207 +695,15 @@ minor 1
 release 1
 x 270
 y 725
-w 118
-h 11
-font "arial-medium-r-10.0"
+w 135
+h 20
+font "arial-bold-r-14.0"
 fgColor index 14
 bgColor index 3
 useDisplayBg
 value {
-  "PLC Program Control (I5)"
+  "Response (ECHO)"
 }
-autoSize
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 725
-w 120
-h 12
-controlPv "$(pmac):PLC_CONTROL"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-autoHeight
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 755
-w 120
-h 12
-controlPv "$(pmac):ERRREPMODE"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 740
-w 120
-h 12
-controlPv "$(pmac):IO_HANDSHAKE"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 740
-w 123
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "I/O Handshake Control (I3)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 755
-w 119
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Error Reporting Mode (I6)"
-}
-autoSize
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 770
-w 120
-h 12
-controlPv "$(pmac):DPRAM_COMMS_INT"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 785
-w 120
-h 12
-controlPv "$(pmac):DPRAM_COMMS"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 785
-w 129
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "DPRAM ASCII Comms (I58)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 770
-w 173
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "DPRAM ASCII Comms Interrupt (I56)"
-}
-autoSize
 endObjectProperties
 
 # (Static Text)
@@ -1001,49 +725,6 @@ value {
 }
 autoSize
 border
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 830
-w 120
-h 12
-controlPv "$(pmac):VME_DPRAMBASE"
-format "hex"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 830
-w 153
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "VME DPRAM Base Address (I97)"
-}
-autoSize
 endObjectProperties
 
 # (Rectangle)
@@ -1299,7 +980,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS1"
@@ -1384,7 +1065,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS2"
@@ -1469,7 +1150,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS3"
@@ -1554,7 +1235,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS4"
@@ -1639,7 +1320,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS5"
@@ -1724,7 +1405,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS6"
@@ -1809,7 +1490,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS7"
@@ -1894,7 +1575,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS8"
@@ -1979,7 +1660,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS9"
@@ -2064,7 +1745,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS10"
@@ -2149,7 +1830,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS11"
@@ -2234,7 +1915,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS12"
@@ -2319,7 +2000,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS13"
@@ -2404,7 +2085,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS14"
@@ -2489,7 +2170,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS15"
@@ -2574,7 +2255,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS16"
@@ -2659,7 +2340,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS17"
@@ -2744,7 +2425,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS18"
@@ -2829,7 +2510,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS19"
@@ -2914,7 +2595,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS20"
@@ -2999,7 +2680,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS29"
@@ -3084,7 +2765,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS28"
@@ -3169,7 +2850,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS27"
@@ -3254,7 +2935,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS26"
@@ -3339,7 +3020,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS25"
@@ -3424,7 +3105,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS24"
@@ -3509,7 +3190,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS23"
@@ -3594,7 +3275,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS22"
@@ -3679,7 +3360,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS21"
@@ -3764,7 +3445,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS30"
@@ -3849,7 +3530,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS32"
@@ -3934,7 +3615,7 @@ font "arial-bold-r-12.0"
 numPvs 4
 numDsps 1
 displayFileName {
-  0 "pmacStatusAxis.edl"
+  0 "powerPmacStatusAxis.edl"
 }
 symbols {
   0 "M=$(pmac),A=AXIS31"
@@ -4734,5 +4415,24 @@ endObjectProperties
 
 endGroup
 
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 415
+y 725
+w 145
+h 20
+controlPv "$(pmac):READ_ECHO"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
 endObjectProperties
 
