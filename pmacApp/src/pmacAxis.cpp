@@ -116,6 +116,10 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
     // Request ixx24 readback
     sprintf(var, "i%d24", axisNo);
     pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+
+    // Setup any specific hardware status items
+    pC_->pHardware_->setupAxisStatus(axisNo);
+
     pC_->registerForCallbacks(this, pmacMessageBroker::PMAC_FAST_READ);
   }
 
@@ -498,12 +502,12 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     // Parse the status
     //sprintf(key, "#%d?", axisNo_);
     //debug(DEBUG_ERROR, functionName, "Checking axis status", pC_->pHardware_->getAxisStatusCmd(axisNo_));
-    value = sPtr->readValue(pC_->pHardware_->getAxisStatusCmd(axisNo_));
+    //value = sPtr->readValue(pC_->pHardware_->getAxisStatusCmd(axisNo_));
 
     axisStatus axStatus;
 
     // Parse the axis status
-    retStatus = pC_->pHardware_->parseAxisStatus(value, axStatus);
+    retStatus = pC_->pHardware_->parseAxisStatus(axisNo_, sPtr, axStatus);
 
     //nvals = sscanf(value.c_str(), "%6x%6x", &status[0], &status[1]);
     //if (nvals != 2){
