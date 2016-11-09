@@ -6,9 +6,12 @@
  */
 
 #include "pmacHardwarePower.h"
+#include "pmacController.h"
 
 const std::string pmacHardwarePower::GLOBAL_STATUS = "?";
 const std::string pmacHardwarePower::AXIS_STATUS = "#%d?";
+const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
+const std::string pmacHardwarePower::CS_STATUS = "&%d?";
 
 const int pmacHardwarePower::PMAC_STATUS1_TRIGGER_MOVE           = (0x1<<31);
 const int pmacHardwarePower::PMAC_STATUS1_HOMING                 = (0x1<<30);
@@ -87,12 +90,30 @@ std::string pmacHardwarePower::getAxisStatusCmd(int axis)
   return std::string(cmd);
 }
 
-asynStatus pmacHardwarePower::parseAxisStatus(const std::string& statusString, axisStatus& axStatus)
+asynStatus pmacHardwarePower::setupAxisStatus(int axis)
+{
+  asynStatus status = asynSuccess;
+  char var[16];
+  static const char *functionName = "setupAxisStatus";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  // Request coordinate system readback
+  sprintf(var, AXIS_CS_NUMBER.c_str(), axis);
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+  return status;
+}
+
+asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus& axStatus)
 {
   asynStatus status = asynSuccess;
   int nvals = 0;
   int dummyVal = 0;
+  std::string statusString = "";
+  std::string csString = "";
+  char var[16];
   static const char *functionName = "parseAxisStatus";
+
+  statusString = sPtr->readValue(this->getAxisStatusCmd(axis));
 
   // Response parsed for PowerPMAC
   debug(DEBUG_VARIABLE, functionName, "Status string", statusString);
@@ -134,6 +155,69 @@ asynStatus pmacHardwarePower::parseAxisStatus(const std::string& statusString, a
 
     // Set amplifier enabled bit.
     axStatus.ampEnabled_ = ((axStatus.status24Bit1_ & PMAC_STATUS1_AMP_ENABLED) != 0);
+  }
+
+  // Now read the coordinate system number for this axis
+  sprintf(var, AXIS_CS_NUMBER.c_str(), axis);
+  csString = sPtr->readValue(var);
+  nvals = sscanf(csString.c_str(), "%d", &axStatus.currentCS_);
+  if (nvals != 1){
+    debug(DEBUG_ERROR, functionName, "Failed to parse CS number", csString);
+    axStatus.currentCS_ = 0;
+    status = asynError;
+  }
+
+  return status;
+}
+
+asynStatus pmacHardwarePower::setupCSStatus(int csNo)
+{
+  asynStatus status = asynSuccess;
+  char var[16];
+  static const char *functionName = "setupAxisStatus";
+
+  debug(DEBUG_TRACE, functionName, "CS Number", csNo);
+  // Add the CS status item to the fast update
+  sprintf(var, CS_STATUS.c_str(), csNo);
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+
+  return status;
+}
+
+asynStatus pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus)
+{
+  asynStatus status = asynSuccess;
+  int nvals = 0;
+  std::string statusString = "";
+  char var[16];
+  static const char *functionName = "parseCSStatus";
+
+  sprintf(var, CS_STATUS.c_str(), csNo);
+  statusString = sPtr->readValue(var);
+  // Parse the status
+  nvals = sscanf(statusString.c_str(), " $%8x%8x", &coordStatus.stat1_, &coordStatus.stat2_);
+  if (nvals != 2){
+    debug(DEBUG_ERROR, functionName, "Failed to parse CS status. ", statusString);
+    coordStatus.stat1_ = 0;
+    coordStatus.stat2_ = 0;
+    coordStatus.stat3_ = 0;
+    status = asynError;
+  }
+  coordStatus.stat3_ = 0;
+  if (status == asynSuccess){
+    coordStatus.done_ = ((coordStatus.stat1_ & PMAC_STATUS1_IN_POSITION) != 0);
+    coordStatus.highLimit_ = ((coordStatus.stat1_ & PMAC_STATUS1_POS_LIMIT_SET) != 0);
+    coordStatus.lowLimit_ = ((coordStatus.stat1_ & PMAC_STATUS1_NEG_LIMIT_SET)!=0);
+    coordStatus.followingError_ = ((coordStatus.stat1_ & PMAC_STATUS1_ERR_FOLLOW_ERR) != 0);
+    coordStatus.moving_ = ((coordStatus.stat1_ & PMAC_STATUS1_IN_POSITION) == 0);
+    coordStatus.problem_ = ((coordStatus.stat1_ & PMAC_STATUS1_AMP_FAULT) != 0);
+  } else {
+    coordStatus.done_ = 0;
+    coordStatus.highLimit_ = 0;
+    coordStatus.lowLimit_ = 0;
+    coordStatus.followingError_ = 0;
+    coordStatus.moving_ = 0;
+    coordStatus.problem_ = 0;
   }
   return status;
 }

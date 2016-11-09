@@ -6,11 +6,18 @@
  */
 
 #include "pmacHardwareInterface.h"
+#include "pmacController.h"
 
-pmacHardwareInterface::pmacHardwareInterface()
+pmacHardwareInterface::pmacHardwareInterface() :
+  pC_(0)
 {
 }
 
 pmacHardwareInterface::~pmacHardwareInterface()
 {
+}
+
+void pmacHardwareInterface::registerController(pmacController *pController)
+{
+  pC_ = pController;
 }

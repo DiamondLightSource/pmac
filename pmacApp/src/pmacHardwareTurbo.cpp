@@ -6,9 +6,11 @@
  */
 
 #include "pmacHardwareTurbo.h"
+#include "pmacController.h"
 
 const std::string pmacHardwareTurbo::GLOBAL_STATUS = "???";
 const std::string pmacHardwareTurbo::AXIS_STATUS = "#%d?";
+const std::string pmacHardwareTurbo::CS_STATUS = "&%d??";
 
 const int pmacHardwareTurbo::PMAC_STATUS1_MAXRAPID_SPEED    = (0x1<<0);
 const int pmacHardwareTurbo::PMAC_STATUS1_ALT_CMNDOUT_MODE  = (0x1<<1);
@@ -51,6 +53,58 @@ const int pmacHardwareTurbo::PMAC_STATUS2_DESIRED_STOP      = (0x1<<12);
 const int pmacHardwareTurbo::PMAC_STATUS2_FORE_IN_POS       = (0x1<<13);
 const int pmacHardwareTurbo::PMAC_STATUS2_NA14              = (0x1<<14);
 const int pmacHardwareTurbo::PMAC_STATUS2_ASSIGNED_CS       = (0x1<<15);
+
+const int pmacHardwareTurbo::CS_STATUS1_RUNNING_PROG        = (0x1<<0);
+const int pmacHardwareTurbo::CS_STATUS1_SINGLE_STEP_MODE    = (0x1<<1);
+const int pmacHardwareTurbo::CS_STATUS1_CONTINUOUS_MODE     = (0x1<<2);
+const int pmacHardwareTurbo::CS_STATUS1_MOVE_BY_TIME_MODE   = (0x1<<3);
+const int pmacHardwareTurbo::CS_STATUS1_CONTINUOUS_REQUEST  = (0x1<<4);
+const int pmacHardwareTurbo::CS_STATUS1_RADIUS_INC_MODE     = (0x1<<5);
+const int pmacHardwareTurbo::CS_STATUS1_A_INC               = (0x1<<6);
+const int pmacHardwareTurbo::CS_STATUS1_A_FEEDRATE          = (0x1<<7);
+const int pmacHardwareTurbo::CS_STATUS1_B_INC               = (0x1<<8);
+const int pmacHardwareTurbo::CS_STATUS1_B_FEEDRATE          = (0x1<<9);
+const int pmacHardwareTurbo::CS_STATUS1_C_INC               = (0x1<<10);
+const int pmacHardwareTurbo::CS_STATUS1_C_FEEDRATE          = (0x1<<11);
+const int pmacHardwareTurbo::CS_STATUS1_U_INC               = (0x1<<12);
+const int pmacHardwareTurbo::CS_STATUS1_U_FEEDRATE          = (0x1<<13);
+const int pmacHardwareTurbo::CS_STATUS1_V_INC               = (0x1<<14);
+const int pmacHardwareTurbo::CS_STATUS1_V_FEEDRATE          = (0x1<<15);
+const int pmacHardwareTurbo::CS_STATUS1_W_INC               = (0x1<<16);
+const int pmacHardwareTurbo::CS_STATUS1_W_FEEDRATE          = (0x1<<17);
+const int pmacHardwareTurbo::CS_STATUS1_X_INC               = (0x1<<18);
+const int pmacHardwareTurbo::CS_STATUS1_X_FEEDRATE          = (0x1<<19);
+const int pmacHardwareTurbo::CS_STATUS1_Y_INC               = (0x1<<20);
+const int pmacHardwareTurbo::CS_STATUS1_Y_FEEDRATE          = (0x1<<21);
+const int pmacHardwareTurbo::CS_STATUS1_Z_INC               = (0x1<<22);
+const int pmacHardwareTurbo::CS_STATUS1_Z_FEEDRATE          = (0x1<<23);
+
+const int pmacHardwareTurbo::CS_STATUS2_CIRCLE_SPLINE_MODE  = (0x1<<0);
+const int pmacHardwareTurbo::CS_STATUS2_CCW_RAPID_MODE      = (0x1<<1);
+const int pmacHardwareTurbo::CS_STATUS2_2D_CUTTER_COMP      = (0x1<<2);
+const int pmacHardwareTurbo::CS_STATUS2_2D_LEFT_3D_CUTTER   = (0x1<<3);
+const int pmacHardwareTurbo::CS_STATUS2_PVT_SPLINE_MODE     = (0x1<<4);
+const int pmacHardwareTurbo::CS_STATUS2_SEG_STOPPING        = (0x1<<5);
+const int pmacHardwareTurbo::CS_STATUS2_SEG_ACCEL           = (0x1<<6);
+const int pmacHardwareTurbo::CS_STATUS2_SEG_MOVING          = (0x1<<7);
+const int pmacHardwareTurbo::CS_STATUS2_PRE_JOG             = (0x1<<8);
+const int pmacHardwareTurbo::CS_STATUS2_CUTTER_MOVE_BUFFD   = (0x1<<9);
+const int pmacHardwareTurbo::CS_STATUS2_CUTTER_STOP         = (0x1<<10);
+const int pmacHardwareTurbo::CS_STATUS2_CUTTER_COMP_OUTSIDE = (0x1<<11);
+const int pmacHardwareTurbo::CS_STATUS2_DWELL_MOVE_BUFFD    = (0x1<<12);
+const int pmacHardwareTurbo::CS_STATUS2_SYNCH_M_ONESHOT     = (0x1<<13);
+const int pmacHardwareTurbo::CS_STATUS2_EOB_STOP            = (0x1<<14);
+const int pmacHardwareTurbo::CS_STATUS2_DELAYED_CALC        = (0x1<<15);
+const int pmacHardwareTurbo::CS_STATUS2_ROTARY_BUFF         = (0x1<<16);
+const int pmacHardwareTurbo::CS_STATUS2_IN_POSITION         = (0x1<<17);
+const int pmacHardwareTurbo::CS_STATUS2_FOLLOW_WARN         = (0x1<<18);
+const int pmacHardwareTurbo::CS_STATUS2_FOLLOW_ERR          = (0x1<<19);
+const int pmacHardwareTurbo::CS_STATUS2_AMP_FAULT           = (0x1<<20);
+const int pmacHardwareTurbo::CS_STATUS2_MOVE_IN_STACK       = (0x1<<21);
+const int pmacHardwareTurbo::CS_STATUS2_RUNTIME_ERR         = (0x1<<22);
+const int pmacHardwareTurbo::CS_STATUS2_LOOKAHEAD           = (0x1<<23);
+
+const int pmacHardwareTurbo::CS_STATUS3_LIMIT               = (0x1<<1);
 
 pmacHardwareTurbo::pmacHardwareTurbo() : pmacDebugger("pmacHardwareTurbo")
 {
@@ -101,11 +155,24 @@ std::string pmacHardwareTurbo::getAxisStatusCmd(int axis)
   return std::string(cmd);
 }
 
-asynStatus pmacHardwareTurbo::parseAxisStatus(const std::string& statusString, axisStatus &axStatus)
+asynStatus pmacHardwareTurbo::setupAxisStatus(int axis)
+{
+  asynStatus status = asynSuccess;
+  static const char *functionName = "setupAxisStatus";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  // No-op for turbo
+  return status;
+}
+
+asynStatus pmacHardwareTurbo::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus)
 {
   asynStatus status = asynSuccess;
   int nvals = 0;
+  std::string statusString = "";
   static const char *functionName = "parseAxisStatus";
+
+  statusString = sPtr->readValue(this->getAxisStatusCmd(axis));
 
   nvals = sscanf(statusString.c_str(), "%6x%6x", &axStatus.status24Bit1_, &axStatus.status24Bit2_);
   if (nvals != 2){
@@ -153,3 +220,53 @@ asynStatus pmacHardwareTurbo::parseAxisStatus(const std::string& statusString, a
   return status;
 }
 
+asynStatus pmacHardwareTurbo::setupCSStatus(int csNo)
+{
+  asynStatus status = asynSuccess;
+  char var[16];
+  static const char *functionName = "setupAxisStatus";
+
+  debug(DEBUG_TRACE, functionName, "CS Number", csNo);
+  // Add the CS status item to the fast update
+  sprintf(var, CS_STATUS.c_str(), csNo);
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+
+  return status;
+}
+
+asynStatus pmacHardwareTurbo::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus)
+{
+  asynStatus status = asynSuccess;
+  int nvals = 0;
+  std::string statusString = "";
+  char var[16];
+  static const char *functionName = "parseCSStatus";
+
+  sprintf(var, CS_STATUS.c_str(), csNo);
+  statusString = sPtr->readValue(var);
+  // Parse the status
+  nvals = sscanf(statusString.c_str(), "%6x%6x%6x", &coordStatus.stat1_, &coordStatus.stat2_, &coordStatus.stat3_);
+  if (nvals != 3){
+    debug(DEBUG_ERROR, functionName, "Failed to parse CS status. ", statusString);
+    coordStatus.stat1_ = 0;
+    coordStatus.stat2_ = 0;
+    coordStatus.stat3_ = 0;
+    status = asynError;
+  }
+  if (status == asynSuccess){
+    coordStatus.done_ = ((coordStatus.stat1_ & CS_STATUS1_RUNNING_PROG) == 0)&&((coordStatus.stat2_ & CS_STATUS2_IN_POSITION) != 0);
+    coordStatus.highLimit_ = ((coordStatus.stat3_ & CS_STATUS3_LIMIT) != 0);
+    coordStatus.lowLimit_ = ((coordStatus.stat3_ & CS_STATUS3_LIMIT)!=0);
+    coordStatus.followingError_ = ((coordStatus.stat2_ & CS_STATUS2_FOLLOW_ERR) != 0);
+    coordStatus.moving_ = ((coordStatus.stat2_ & CS_STATUS2_IN_POSITION) == 0);
+    coordStatus.problem_ = (((coordStatus.stat2_ & CS_STATUS2_AMP_FAULT) != 0) || ((coordStatus.stat2_ & CS_STATUS2_RUNTIME_ERR) != 0));
+  } else {
+    coordStatus.done_ = 0;
+    coordStatus.highLimit_ = 0;
+    coordStatus.lowLimit_ = 0;
+    coordStatus.followingError_ = 0;
+    coordStatus.moving_ = 0;
+    coordStatus.problem_ = 0;
+  }
+  return status;
+}
