@@ -20,6 +20,7 @@
 #include "pmacCSAxis.h"
 #include "pmacCallbackInterface.h"
 #include "pmacDebugger.h"
+#include "pmacHardwareInterface.h"
 
 #define PMAC_C_ProfileUserString       "PMAC_PROFILE_USER"    // User buffer for trajectory scan
 #define PMAC_C_ProfileVelModeString    "PMAC_PROFILE_VELMODE" // Velocity mode buffer for trajectory scan
@@ -37,6 +38,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     bool getMoving();
     int getCSNumber();
     int getProgramNumber();
+    csStatus getStatus();
 
     void callback(pmacCommandStore *sPtr, int type);
 
@@ -79,6 +81,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     int csNumber_;
     int progNumber_;
     int status_[3];
+    csStatus cStatus_;
     void *pC_;
     bool profileInitialized_;
     int *profileUser_;
