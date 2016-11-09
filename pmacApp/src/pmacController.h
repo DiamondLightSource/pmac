@@ -552,6 +552,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
 
   friend class pmacAxis;
   friend class pmacCsGroups;
+  friend class pmacCSController;
+  friend class pmacHardwareInterface;
 };
 
 #define NUM_PMAC_PARAMS (&LAST_PMAC_PARAM - &FIRST_PMAC_PARAM + 1 + PMAC_MAX_PARAMETERS)

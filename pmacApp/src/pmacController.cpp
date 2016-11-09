@@ -1005,6 +1005,8 @@ asynStatus pmacController::initialiseConnection()
         } else {
           pHardware_ = new pmacHardwareTurbo();
         }
+        // Register this controller with the hardware class
+        pHardware_->registerController(this);
       }
       if (status == asynSuccess){
         // Initialisation successful
@@ -1319,29 +1321,31 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
     }
   }
 
-  // For each axis read try to read the assignment
-  for (int axis = 1; axis <= this->numAxes_-1; axis++){
-    if (this->getAxis(axis) != NULL){
-      axisCs = this->getAxis(axis)->getAxisCSNo();
-    }
-    if (axisCs > 0){
-      if (pCSControllers_[axisCs]){
-        setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, axisCs);
-        //setStringParam(axis, PMAC_C_GroupCSPortRBV_, (pCSControllers_[axisCs]->getPortName()).c_str());
+  if (cid_ != PMAC_CID_POWER_){
+    // For each axis read try to read the assignment
+    for (int axis = 1; axis <= this->numAxes_-1; axis++){
+      if (this->getAxis(axis) != NULL){
+        axisCs = this->getAxis(axis)->getAxisCSNo();
+      }
+      if (axisCs > 0){
+        if (pCSControllers_[axisCs]){
+          setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, axisCs);
+          //setStringParam(axis, PMAC_C_GroupCSPortRBV_, (pCSControllers_[axisCs]->getPortName()).c_str());
+        } else {
+          setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
+          //setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
+        }
+        sprintf(command, "&%d#%d->,", axisCs, axis);
+        if (sPtr->checkForItem(command)){
+          debugf(DEBUG_VARIABLE, functionName, "Axis %d CS %d assignment: %s", axis, axisCs, (sPtr->readValue(command)).c_str());
+          setStringParam(axis, PMAC_C_GroupAssignRBV_, (sPtr->readValue(command)).c_str());
+        } else {
+          sPtr->addItem(command);
+        }
       } else {
+        setStringParam(axis, PMAC_C_GroupAssignRBV_, "");
         setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
-        //setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
       }
-      sprintf(command, "&%d#%d->,", axisCs, axis);
-      if (sPtr->checkForItem(command)){
-        debugf(DEBUG_VARIABLE, functionName, "Axis %d CS %d assignment: %s", axis, axisCs, (sPtr->readValue(command)).c_str());
-        setStringParam(axis, PMAC_C_GroupAssignRBV_, (sPtr->readValue(command)).c_str());
-      } else {
-        sPtr->addItem(command);
-      }
-    } else {
-      setStringParam(axis, PMAC_C_GroupAssignRBV_, "");
-      setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
     }
   }
 
@@ -3283,8 +3287,7 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
   pAxisZero->registerCS(csPtr, csNo);
 
   // First add the CS status item to the fast update
-  sprintf(statVar, "&%d??", csNo);
-  this->pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, statVar);
+  this->pHardware_->setupCSStatus(csNo);
 
   // Now register the CS object for callbacks from the broker
   this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
