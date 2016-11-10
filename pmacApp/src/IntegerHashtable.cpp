@@ -99,7 +99,7 @@ std::string IntegerHashtable::nextKey()
 
 void *IntegerHashtable::copy_key(const void *key)
 {
-  char *retKey = (char *)malloc(strlen((char *)key) * sizeof(char));
+  char *retKey = (char *)malloc((strlen((char *)key)+1) * sizeof(char));
   strcpy(retKey, (char *)key);
   return retKey;
 }
