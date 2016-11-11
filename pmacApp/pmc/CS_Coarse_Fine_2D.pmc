@@ -269,11 +269,16 @@ i5220,15,100=50   ; lookahead length (needed to limit max velocity to max set in
 i5250,15,100=1    ; Enable kinematics
 
 ; This program requires a fast segmentation time (Isx13) for maximum speed
-i($(COORD)*100+5013)=1
+; Reliability test suggest set this to 1 for a 160MHz brick and 10 for a 240MHz brick
+;i($(COORD)*100+5013)=1
 
 ; Following not used only works for CS2 (i.e.Y:$2x3f,4,1 where x=CS-1)
 ;M5$(COORD)99->Y:$213f,4,1
 ;#define PVT_SPLINE_MODE_BIT    M5$(COORD)99
+
+; Following not used only works for CS2 (i.e.Y:$2x14,24 where x=CS-1)
+;M5$(COORD)98->Y:$2114,24
+;#define CS2_ERR                M5$(COORD)98
 
 
 ; X piezo range parameter
@@ -380,12 +385,15 @@ else
     ; test move size, if (ABS(LAST_FINE_X - FINE_X)>0.001)
     if (ABS((XFMRES*M_REAL_XF)+XFOFF - FINE_X)>0.001)
         ; for longer moves
+        DBG=DBG+32
         LINEAR FRAX(X) TA200 TS50 F0.256
     else    
         ; for short fast moves
         ; NB for linear mode max speed use a short segmentation time Isx13=1 (i.e. i5213=1 for CS2)
+        DBG=DBG+64
         LINEAR FRAX(X) TA1 TS0 F0.256
     endif    
+    DBG=DBG+128
     X(FINE_X)
     ; Remember the current demand for comparison during next CS move
     LAST_FINE_X = FINE_X
@@ -502,12 +510,15 @@ else
     ; test move size, if (ABS(LAST_FINE_Y - FINE_Y)>0.001)
     if (ABS((YFMRES*M_REAL_YF)+YFOFF - FINE_Y)>0.001)
         ; for longer moves
+        DBG=DBG+32
         LINEAR FRAX(U) TA200 TS50 F0.256
     else    
         ; for short fast moves
         ; NB for linear mode max speed use a short segmentation time Isx13=1 (i.e. i5213=1 for CS2)
+        DBG=DBG+64
         LINEAR FRAX(U) TA1 TS0 F0.256
     endif    
+    DBG=DBG+128
     U(FINE_Y)
     ; Remember the current demand for comparison during next CS move
     LAST_FINE_Y = FINE_Y
