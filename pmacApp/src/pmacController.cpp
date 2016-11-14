@@ -3273,7 +3273,6 @@ asynStatus pmacController::monitorPMACVariable(int poll_speed, const char *var)
 
 asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portName, int csNo)
 {
-  char statVar[8];
   static const char *functionName = "registerCS";
 
   debug(DEBUG_VARIABLE, functionName, "Registering CS", csNo);
