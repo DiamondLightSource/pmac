@@ -464,14 +464,9 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     char command[PMAC_MAXBUF] = {0};
     char response[PMAC_MAXBUF] = {0};
     int cmdStatus = 0;;
-    int done = 0;
     double position = 0;
     double enc_position = 0;
     int nvals = 0;
-    int aStat1 = 0;
-    int aStat2 = 0;
-    int aStat3 = 0;
-    epicsUInt32 status[2] = {0};
     int axisProblemFlag = 0;
     int limitsDisabledBit = 0;
     bool printErrors = true;
@@ -555,10 +550,6 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
 
 
     if (retStatus == asynSuccess){
-//      printf("Axis %d status[0]: %d\n", axisNo_, status[0]);
-//      printf("Axis %d status[1]: %d\n", axisNo_, status[1]);
-//      printf("Axis %d enc_position: %f\n", axisNo_, enc_position);
-//      printf("Axis %d position: %f\n", axisNo_, position);
 
       //int homeSignal = ((status[1] & pC_->PMAC_STATUS2_HOME_COMPLETE) != 0);
       int direction = 0;
@@ -587,16 +578,6 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
       previous_position_ = position;
       previous_direction_ = direction;
 
-      //if(deferredMove_ != 0) {
-      //  done = 0;
-      //} else {
-      //  done = (((status[1] & pC_->PMAC_STATUS2_IN_POSITION) != 0) || ((status[0] & pC_->PMAC_STATUS1_MOTOR_ON) == 0));
-      //  // If we are not done, but amp has been disabled, then set done (to stop when we get following errors).
-      //  if ((done == 0) && ((status[0] & pC_->PMAC_STATUS1_AMP_ENABLED) == 0)) {
-      //    done = 1;
-      //  }
-      //}
-
       if (!axStatus.done_) {
         moving_ = true;
       } else {
@@ -604,15 +585,6 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
       }
 
       // Read the currently assigned CS for the axis, and whether it is assigned at all
-      //if ((status[1] & pC_->PMAC_STATUS2_ASSIGNED_CS) != 0){
-      //  int currentCS = status[1] >> 20;
-      //  currentCS++;
-      //  assignedCS_ = currentCS;
-      //  debugf(DEBUG_VARIABLE, functionName, "Axis %d assigned to CS %d", axisNo_, currentCS);
-      //} else {
-      //  debugf(DEBUG_VARIABLE, functionName, "Axis %d not assigned to a CS", axisNo_);
-      //  assignedCS_ = 0;
-      //}
       assignedCS_ = axStatus.currentCS_;
 
       // Set the currently assigned CS number
