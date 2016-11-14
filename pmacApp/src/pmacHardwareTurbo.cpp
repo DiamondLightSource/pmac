@@ -11,6 +11,7 @@
 const std::string pmacHardwareTurbo::GLOBAL_STATUS = "???";
 const std::string pmacHardwareTurbo::AXIS_STATUS = "#%d?";
 const std::string pmacHardwareTurbo::CS_STATUS = "&%d??";
+const std::string pmacHardwareTurbo::CS_VEL_CMD = "I%d89=%f ";
 
 const int pmacHardwareTurbo::PMAC_STATUS1_MAXRAPID_SPEED    = (0x1<<0);
 const int pmacHardwareTurbo::PMAC_STATUS1_ALT_CMNDOUT_MODE  = (0x1<<1);
@@ -269,4 +270,15 @@ asynStatus pmacHardwareTurbo::parseCSStatus(int csNo, pmacCommandStore *sPtr, cs
     coordStatus.problem_ = 0;
   }
   return status;
+}
+
+std::string pmacHardwareTurbo::getCSVelocityCmd(int csNo, double velocity)
+{
+  char cmd[64];
+  static const char *functionName = "getCSVelocityCmd";
+
+  debug(DEBUG_TRACE, functionName, "CS Number", csNo);
+  debug(DEBUG_TRACE, functionName, "Velocity", velocity);
+  sprintf(cmd, CS_VEL_CMD.c_str(), csNo+50, velocity);
+  return std::string(cmd);
 }

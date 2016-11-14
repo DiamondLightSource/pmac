@@ -12,6 +12,7 @@ const std::string pmacHardwarePower::GLOBAL_STATUS = "?";
 const std::string pmacHardwarePower::AXIS_STATUS = "#%d?";
 const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
 const std::string pmacHardwarePower::CS_STATUS = "&%d?";
+const std::string pmacHardwarePower::CS_VEL_CMD = "I%d89=-%f ";
 
 const int pmacHardwarePower::PMAC_STATUS1_TRIGGER_MOVE           = (0x1<<31);
 const int pmacHardwarePower::PMAC_STATUS1_HOMING                 = (0x1<<30);
@@ -220,4 +221,15 @@ asynStatus pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, cs
     coordStatus.problem_ = 0;
   }
   return status;
+}
+
+std::string pmacHardwarePower::getCSVelocityCmd(int csNo, double velocity)
+{
+  char cmd[64];
+  static const char *functionName = "getCSVelocityCmd";
+
+  debug(DEBUG_TRACE, functionName, "CS Number", csNo);
+  debug(DEBUG_TRACE, functionName, "Velocity", velocity);
+  sprintf(cmd, CS_VEL_CMD.c_str(), csNo+50, velocity);
+  return std::string(cmd);
 }

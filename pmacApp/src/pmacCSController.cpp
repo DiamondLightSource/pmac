@@ -287,6 +287,11 @@ csStatus pmacCSController::getStatus()
   return cStatus_;
 }
 
+std::string pmacCSController::getVelocityCmd(double velocity)
+{
+  return ((pmacController *)pC_)->pHardware_->getCSVelocityCmd(csNumber_, velocity);
+}
+
 void pmacCSController::callback(pmacCommandStore *sPtr, int type)
 {
   std::string value = "";

@@ -67,7 +67,7 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
 
   if (max_velocity != 0) {
       /* Isx89 = default feedrate in EGU/s */
-      sprintf(vel_buff, "I%d89=-%f ", (pC_->getCSNumber()+50), max_velocity / (double)scale_);
+      strcpy(vel_buff, pC_->getVelocityCmd(max_velocity / (double)scale_).c_str());
   }
   if (acceleration != 0) {
       if (max_velocity != 0) {

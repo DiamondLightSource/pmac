@@ -67,6 +67,7 @@ class pmacHardwareInterface
     virtual asynStatus parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &status) = 0;
     virtual asynStatus setupCSStatus(int csNo) = 0;
     virtual asynStatus parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &status) = 0;
+    virtual std::string getCSVelocityCmd(int csNo, double velocity) = 0;
 
   protected:
     pmacController *pC_;

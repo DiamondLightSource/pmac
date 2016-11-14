@@ -39,6 +39,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     int getCSNumber();
     int getProgramNumber();
     csStatus getStatus();
+    std::string getVelocityCmd(double velocity);
 
     void callback(pmacCommandStore *sPtr, int type);
 
