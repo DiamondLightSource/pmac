@@ -45,3 +45,9 @@ ls /usr/lib
 echo "== ls /usr/lib/x86_64-linux-gnu =="
 ls /usr/lib/x86_64-linux-gnu
 
+echo "== ls /usr/lib/openssh =="
+ls /usr/lib/openssh
+
+echo "== ls /usr/include =="
+ls /usr/include
+
