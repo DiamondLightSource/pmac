@@ -1,0 +1,4 @@
+# Placeholder for dls CS axes. Specific records can be added to 
+# this template if necessary.
+
+include "basic_asyn_motor.template"
