@@ -39,9 +39,10 @@ struct PMACCsGroupsFixture
     std::string pmacport("PMAC");
     uniqueAsynPortName(pmacport);
 
-    pMock = new MockPMACAsynDriver(mockport.c_str(), 0.01, 1);
+    pMock = new MockPMACAsynDriver(mockport.c_str(), 0.0, 1);
     // Set the response to error for initial messages
-    pMock->setResponse("\007ERR003\006");
+    pMock->setResponse("604020\006");
+    //pMock->setResponse("\007ERR003\006");
     pPmac = new pmacController(pmacport.c_str(), mockport.c_str(), 0, 8, 0.2, 1.0);
     pGroups = new pmacCsGroups(pPmac);
     // Clear the response
