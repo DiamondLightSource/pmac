@@ -282,27 +282,28 @@ int pmacCSController::getProgramNumber()
   return progNumber_;
 }
 
+csStatus pmacCSController::getStatus()
+{
+  return cStatus_;
+}
+
+std::string pmacCSController::getVelocityCmd(double velocity)
+{
+  return ((pmacController *)pC_)->pHardware_->getCSVelocityCmd(csNumber_, velocity);
+}
+
 void pmacCSController::callback(pmacCommandStore *sPtr, int type)
 {
-  char key[32];
-  int nvals = 0;
   std::string value = "";
-  epicsUInt32 status[3] = {0, 0, 0};
   static const char *functionName = "callback";
 
   debug(DEBUG_TRACE, functionName, "Coordinate system status callback");
 
   // Parse the status
-  sprintf(key, "&%d??", csNumber_);
-  value = sPtr->readValue(key);
-  nvals = sscanf(value.c_str(), "%6x%6x%6x", &status[0], &status[1], &status[2]);
-  if (nvals != 3){
-    debugf(DEBUG_ERROR, functionName, "Failed to parse status. Key: %s  Value: %s", key, value.c_str());
-  } else{
-    status_[0] = status[0];
-    status_[1] = status[1];
-    status_[2] = status[2];
-  }
+  ((pmacController *)pC_)->pHardware_->parseCSStatus(csNumber_, sPtr, cStatus_);
+  status_[0] = cStatus_.stat1_;
+  status_[1] = cStatus_.stat2_;
+  status_[2] = cStatus_.stat3_;
 }
 
 asynStatus pmacCSController::immediateWriteRead(const char *command, char *response)

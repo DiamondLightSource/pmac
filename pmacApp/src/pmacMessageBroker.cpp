@@ -14,6 +14,7 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
   pmacDebugger("pmacMessageBroker"),
   suppressStatus_(false),
   suppressCounter_(0),
+  powerPMAC_(false),
   ownerAsynUser_(pasynUser),
   lowLevelPortUser_(0),
   noOfMessages_(0),
@@ -309,6 +310,11 @@ asynStatus pmacMessageBroker::report(int type)
   return status;
 }
 
+void pmacMessageBroker::markAsPowerPMAC()
+{
+  powerPMAC_ = true;
+}
+
 /**
  * Connect to the underlying low level Asyn port that is used for comms.
  * This uses the asynOctetSyncIO interface, and also sets the input and output terminators.
@@ -405,6 +411,10 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   if (status != asynSuccess) {
     asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
   } else {
+    // Replace any carriage returns with spaces
+    if (powerPMAC_){
+      replace(response, '\n', ' ');
+    }
     // Update statistics
     this->noOfMessages_++;
     this->totalBytesWritten_ += strlen(command);
@@ -422,3 +432,15 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   return status;
 }
 
+int pmacMessageBroker::replace(char *str, char ch1, char ch2)
+{
+  int changes=0;
+  while(*str!='\0'){
+    if(*str==ch1){
+      *str=ch2;
+      changes++;
+    }
+    str++;
+  }
+  return changes;
+}

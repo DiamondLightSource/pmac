@@ -45,10 +45,12 @@ public:
                             int *lastMsgTime);
   asynStatus readStoreSize(int type, int *size);
   asynStatus report(int type);
+  void markAsPowerPMAC();
 
 private:
   asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
   asynStatus lowLevelWriteRead(const char *command, char *response);
+  int replace(char *str, char ch1, char ch2);
 
   // Mutex required for locking across threads
   epicsMutex mutex_;
@@ -56,6 +58,8 @@ private:
   // Status suppression
   bool suppressStatus_;
   int suppressCounter_;
+  // Power PMAC
+  bool powerPMAC_;
 
   asynUser* ownerAsynUser_;
   asynUser* lowLevelPortUser_;

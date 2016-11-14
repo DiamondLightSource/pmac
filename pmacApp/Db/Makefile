@@ -20,6 +20,7 @@ DB += pmacStatus32Axes.template
 DB += pmacTrajectoryAxis.template
 DB += pmacTrajectory8Axes.template
 DB += pmacTrajectory32Axes.template
+DB += powerPmacStatus.template
 DB += pmac_cs_axis.template
 DB += dls_pmac_asyn_motor.template
 DB += motor_in_cs.template
@@ -27,6 +28,7 @@ DB += eloss_kill_autohome_records.template
 DB += pmacVariableWrite.template
 DB += autohome.template
 # The following templates are used for Coordinate Systems
+DB += dls_pmac_cs_asyn_motor.template
 DB += 1jack_compensated.template
 DB += 2jack.template
 DB += 3jack_mirror.template

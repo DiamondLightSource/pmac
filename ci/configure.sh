@@ -9,6 +9,7 @@ echo "EPICS_BASE=/usr/lib/epics"             >> configure/RELEASE.local
 echo "BOOST=/usr"                            >> configure/CONFIG_SITE.linux-x86_64.Common
 echo "BOOST_LIB=/usr/lib/x86_64-linux-gnu"   >> configure/CONFIG_SITE.linux-x86_64.Common
 echo "BOOST_INCLUDE=-I/usr/include"          >> configure/CONFIG_SITE.linux-x86_64.Common
+echo "SSH="                                  >> configure/CONFIG_SITE.linux-x86_64.Common
 echo "HOST_OPT=NO"                           >> configure/CONFIG_SITE.linux-x86_64.Common 
 echo "USR_CXXFLAGS_Linux=--coverage"         >> configure/CONFIG_SITE.linux-x86_64.Common 
 echo "USR_LDFLAGS_Linux=--coverage"          >> configure/CONFIG_SITE.linux-x86_64.Common 
@@ -44,4 +45,10 @@ ls /usr/lib
 
 echo "== ls /usr/lib/x86_64-linux-gnu =="
 ls /usr/lib/x86_64-linux-gnu
+
+echo "== ls /usr/lib/openssh =="
+ls /usr/lib/openssh
+
+echo "== ls /usr/include =="
+ls /usr/include
 
