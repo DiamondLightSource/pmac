@@ -94,11 +94,22 @@ $(INCFILE=)
 #define COARSE_X	    Q8	; (=Y demand) Coarse X in egus
 #define FINE_Y      	Q4	; (=U demand) Fine Y in egus
 #define COARSE_Y	    Q5	; (=V demand) Coarse Y in egus
-; These are the real motor positions in steps calculated by the inverse kinomatic
+; These are the virtual motor velocities in egus required for PVT mode (Q10=1) moves
+#define FINE_VEL_X      	Q17	; (=X demand) Fine X vel in egus
+#define COARSE_VEL_X	    Q18	; (=Y demand) Coarse X vel in egus
+#define FINE_VEL_Y      	Q14	; (=U demand) Fine Y vel in egus
+#define COARSE_VEL_Y	    Q15	; (=V demand) Coarse Y vel in egus
+
+; These are the real motor positions/velocities in steps calculated by the inverse kinomatic
 #define REAL_XC	P$(XC)      ; Real X coarse motor in steps  
 #define REAL_XF	P$(XF)      ; Real X fine motor in steps  
 #define REAL_YC	P$(YC)      ; Real Y coarse motor in steps  
-#define REAL_YF	P$(YF)      ; Real Y fine motor in steps  
+#define REAL_YF	P$(YF)      ; Real Y fine motor in steps
+; These are the real motor velocities in steps calculated by the inverse kinomatic required for PVT mode (Q10=1) moves  
+#define REAL_VEL_XC P(100+$(XC))  ; Real XC velocity in steps
+#define REAL_VEL_XF P(100+$(XF))  ; Real XF velocity in steps
+#define REAL_VEL_YC P(100+$(YC))  ; Real YC velocity in steps
+#define REAL_VEL_YF P(100+$(YF))  ; Real YF velocity in steps
 
 ;
 ; Forward Kinematics - Calculate Fine X and Coarse X egus from real coarse and fine motor positions
@@ -147,7 +158,15 @@ CLEAR
     REAL_XC=(XCPOS-XCOFF)/XCMRES
     REAL_XF=(XFPOS-XFOFF)/XFMRES    
     REAL_YC=(YCPOS-YCOFF)/YCMRES
-    REAL_YF=(YFPOS-YFOFF)/YFMRES    
+    REAL_YF=(YFPOS-YFOFF)/YFMRES
+    ; if PVT mode move
+    if (Q10=1)
+        ; calculate velocities in steps
+        REAL_VEL_XC=COARSE_VEL_X/XCMRES
+        REAL_VEL_XF=FINE_VEL_X/XFMRES
+        REAL_VEL_YC=COARSE_VEL_Y/YCMRES
+        REAL_VEL_YF=FINE_VEL_Y/YFMRES
+    endif            
 CLOSE
 
 ;*****************************
