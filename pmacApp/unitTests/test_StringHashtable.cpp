@@ -112,6 +112,15 @@ BOOST_AUTO_TEST_CASE(test_Hashtable)
   value = t1.lookup("I5");
   BOOST_CHECK_EQUAL(value, "");
 
+  // Verify large inserts do not trash memory
+  // Unit test for problem discovered with powerPMAC reading position
+  // of CS axes (9th Nov 2016).
+  BOOST_CHECK_NO_THROW(t1.insert("&1Q89", "-0.123456789876543212345"));
+  BOOST_CHECK_NO_THROW(t1.insert("&1Q89", "-0.123456789876543212345"));
+  BOOST_CHECK_NO_THROW(t1.insert("&1Q87654321", "-0.1234567892352647214876543212345"));
+  BOOST_CHECK_NO_THROW(t1.insert("&1Q87654321", "-0.123243242242235252235797"));
+  BOOST_CHECK_NO_THROW(t1.insert("&1Q89", "-0.12345678987"));
+  BOOST_CHECK_NO_THROW(t1.insert("&1Q89", "-0.123456789876543212345"));
 }
 
 BOOST_AUTO_TEST_CASE(test_HashtableMemory)

@@ -31,7 +31,7 @@ std::string StringHashtable::insert(const std::string& key, const std::string& v
 {
   std::string returnString = "";
   if (key != ""){
-    char *val = (char *)malloc((int)value.length() * sizeof(char));
+    char *val = (char *)malloc(((int)value.length()+1) * sizeof(char));
     strcpy(val, value.c_str());
     void *vPtr = Hashtable::insert((const void *)key.c_str(), (void *)val);
     if (vPtr != NULL){
@@ -98,7 +98,7 @@ std::string StringHashtable::nextKey()
 
 void *StringHashtable::copy_key(const void *key)
 {
-  char *retKey = (char *)malloc(strlen((char *)key) * sizeof(char));
+  char *retKey = (char *)malloc((strlen((char *)key)+1) * sizeof(char));
   strcpy(retKey, (char *)key);
   return retKey;
 }
