@@ -2792,6 +2792,8 @@ void pmacController::setBuildStatus(int state, int status, const std::string& me
   setIntegerParam(profileBuildStatus_, status);
   // Set the status message
   setStringParam(profileBuildMessage_, message.c_str());
+  // Call callbacks
+  callParamCallbacks();
 }
 
 void pmacController::setAppendStatus(int state, int status, const std::string& message)
@@ -2802,6 +2804,8 @@ void pmacController::setAppendStatus(int state, int status, const std::string& m
   setIntegerParam(PMAC_C_ProfileAppendStatus_, status);
   // Set the append message
   setStringParam(PMAC_C_ProfileAppendMessage_, message.c_str());
+  // Call callbacks
+  callParamCallbacks();
 }
 
 void pmacController::setProfileStatus(int state, int status, const std::string& message)
@@ -2812,6 +2816,8 @@ void pmacController::setProfileStatus(int state, int status, const std::string& 
   setIntegerParam(profileExecuteStatus_, status);
   // Set the status message
   setStringParam(profileExecuteMessage_, message.c_str());
+  // Call callbacks
+  callParamCallbacks();
 }
 
 asynStatus pmacController::sendTrajectoryDemands(int buffer)
