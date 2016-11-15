@@ -50,6 +50,7 @@ const epicsUInt32 pmacController::PMAC_ERROR_ = 1;
 const epicsUInt32 pmacController::PMAC_FEEDRATE_DEADBAND_ = 1;
 const epicsInt32 pmacController::PMAC_CID_PMAC_ = 602413;
 const epicsInt32 pmacController::PMAC_CID_GEOBRICK_ = 603382;
+const epicsInt32 pmacController::PMAC_CID_POWER_ = 604020;
 
 const epicsUInt32 pmacController::PMAC_STATUS1_MAXRAPID_SPEED    = (0x1<<0);
 const epicsUInt32 pmacController::PMAC_STATUS1_ALT_CMNDOUT_MODE  = (0x1<<1);
@@ -477,7 +478,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   }
  
   // Add the items required for global status
-  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, "???");
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, pHardware_->getGlobalStatusCmd().c_str());
+  debug(DEBUG_ERROR, functionName, "global status", pHardware_->getGlobalStatusCmd().c_str());
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, "%");
 
   // Add the PMAC P variables required for trajectory scanning
@@ -977,6 +979,7 @@ asynStatus pmacController::checkConnection()
 asynStatus pmacController::initialiseConnection()
 {
   asynStatus status = asynSuccess;
+  char response[1024];
   static const char *functionName = "initialiseConnection";
   debug(DEBUG_FLOW, functionName);
 
@@ -992,10 +995,26 @@ asynStatus pmacController::initialiseConnection()
       status = this->readDeviceType();
 
       if (status == asynSuccess){
+        // Check for powerPMAC connection
+        if (cid_ == PMAC_CID_POWER_){
+          pHardware_ = new pmacHardwarePower();
+          // Mark the connection
+          pBroker_->markAsPowerPMAC();
+          // set the echo to 7
+          this->lowLevelWriteRead("echo 7", response);
+        } else {
+          pHardware_ = new pmacHardwareTurbo();
+        }
+        // Register this controller with the hardware class
+        pHardware_->registerController(this);
+      }
+      if (status == asynSuccess){
         // Initialisation successful
         initialised_ = 1;
-        // Read the kinematics
-        status = this->storeKinematics();
+        // Read the kinematics if we aren't a power pmac
+        if (cid_ != PMAC_CID_POWER_){
+          status = this->storeKinematics();
+        }
       }
     } else {
       status = asynError;
@@ -1272,6 +1291,10 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
       }
       break;
 
+    case PMAC_CID_POWER_:
+      // TODO: Currently this is not implemented but it should be
+      break;
+
     default:
       // As we couldn't read the cid from the PMAC we don't know which m-vars to read
       debug(DEBUG_ERROR, functionName, "Unable to read GPIO M-vars, unknown Card ID");
@@ -1298,29 +1321,31 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
     }
   }
 
-  // For each axis read try to read the assignment
-  for (int axis = 1; axis <= this->numAxes_-1; axis++){
-    if (this->getAxis(axis) != NULL){
-      axisCs = this->getAxis(axis)->getAxisCSNo();
-    }
-    if (axisCs > 0){
-      if (pCSControllers_[axisCs]){
-        setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, axisCs);
-        //setStringParam(axis, PMAC_C_GroupCSPortRBV_, (pCSControllers_[axisCs]->getPortName()).c_str());
+  if (cid_ != PMAC_CID_POWER_){
+    // For each axis read try to read the assignment
+    for (int axis = 1; axis <= this->numAxes_-1; axis++){
+      if (this->getAxis(axis) != NULL){
+        axisCs = this->getAxis(axis)->getAxisCSNo();
+      }
+      if (axisCs > 0){
+        if (pCSControllers_[axisCs]){
+          setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, axisCs);
+          //setStringParam(axis, PMAC_C_GroupCSPortRBV_, (pCSControllers_[axisCs]->getPortName()).c_str());
+        } else {
+          setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
+          //setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
+        }
+        sprintf(command, "&%d#%d->,", axisCs, axis);
+        if (sPtr->checkForItem(command)){
+          debugf(DEBUG_VARIABLE, functionName, "Axis %d CS %d assignment: %s", axis, axisCs, (sPtr->readValue(command)).c_str());
+          setStringParam(axis, PMAC_C_GroupAssignRBV_, (sPtr->readValue(command)).c_str());
+        } else {
+          sPtr->addItem(command);
+        }
       } else {
+        setStringParam(axis, PMAC_C_GroupAssignRBV_, "");
         setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
-        //setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
       }
-      sprintf(command, "&%d#%d->,", axisCs, axis);
-      if (sPtr->checkForItem(command)){
-        debugf(DEBUG_VARIABLE, functionName, "Axis %d CS %d assignment: %s", axis, axisCs, (sPtr->readValue(command)).c_str());
-        setStringParam(axis, PMAC_C_GroupAssignRBV_, (sPtr->readValue(command)).c_str());
-      } else {
-        sPtr->addItem(command);
-      }
-    } else {
-      setStringParam(axis, PMAC_C_GroupAssignRBV_, "");
-      setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
     }
   }
 
@@ -1340,7 +1365,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
 asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
 {
   asynStatus status = asynSuccess;
-  epicsUInt32 globalStatus = 0;
+  int gStatus = 0;
   int gStat1 = 0;
   int gStat2 = 0;
   int gStat3 = 0;
@@ -1450,10 +1475,23 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
   }
 
   // Lookup the value of global status
-  std::string globStatus = sPtr->readValue("???");
-  debug(DEBUG_VARIABLE, functionName, "Global status [???]", globStatus);
+  std::string globStatus = sPtr->readValue(pHardware_->getGlobalStatusCmd());
+  debug(DEBUG_VARIABLE, functionName, "Global status", globStatus);
 
-  // Check the global status value is valid
+  globalStatus gs;
+  status = pHardware_->parseGlobalStatus(globStatus, gs);
+  //parseGlobalStatus(globStatus, &globalStatus, &gStat1, &gStat2, &gStat3);
+  if (status == asynSuccess){
+    gStatus = gs.status_;
+    gStat1 = gs.stat1_;
+    gStat2 = gs.stat2_;
+    gStat3 = gs.stat3_;
+    setIntegerParam(PMAC_C_StatusBits01_, gStat1);
+    setIntegerParam(PMAC_C_StatusBits02_, gStat2);
+    setIntegerParam(PMAC_C_StatusBits03_, gStat3);
+  }
+
+  /*// Check the global status value is valid
   if (globStatus == ""){
     debug(DEBUG_ERROR, functionName, "Problem reading global status command ???");
     status = asynError;
@@ -1471,7 +1509,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
       setIntegerParam(PMAC_C_StatusBits02_, gStat2);
       setIntegerParam(PMAC_C_StatusBits03_, gStat3);
     }
-  }
+  }*/
 
   // Lookup the value of the feedrate
   std::string feedRate = sPtr->readValue("%");
@@ -1494,10 +1532,10 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
   //Set any controller specific parameters.
   //Some of these may be used by the axis poll to set axis problem bits.
   if (status == asynSuccess){
-    hardwareProblem = ((globalStatus & PMAC_HARDWARE_PROB) != 0);
+    hardwareProblem = ((gStatus & PMAC_HARDWARE_PROB) != 0);
     status = setIntegerParam(this->PMAC_C_GlobalStatus_, hardwareProblem);
     if(hardwareProblem){
-      debug(DEBUG_ERROR, functionName, "*** Hardware Problem *** global status [???]", (int)globalStatus);
+      debug(DEBUG_ERROR, functionName, "*** Hardware Problem *** global status [???]", (int)gStatus);
     }
   }
   if (status == asynSuccess){
@@ -3235,7 +3273,6 @@ asynStatus pmacController::monitorPMACVariable(int poll_speed, const char *var)
 
 asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portName, int csNo)
 {
-  char statVar[8];
   static const char *functionName = "registerCS";
 
   debug(DEBUG_VARIABLE, functionName, "Registering CS", csNo);
@@ -3249,8 +3286,7 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
   pAxisZero->registerCS(csPtr, csNo);
 
   // First add the CS status item to the fast update
-  sprintf(statVar, "&%d??", csNo);
-  this->pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, statVar);
+  this->pHardware_->setupCSStatus(csNo);
 
   // Now register the CS object for callbacks from the broker
   this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);

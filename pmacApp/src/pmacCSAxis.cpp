@@ -21,27 +21,11 @@ pmacCSAxis::pmacCSAxis(pmacCSController *pController, int axisNo)
     pC_(pController)
 {
   //Initialize non-static data members
-//  setpointPosition_ = 0.0;
-//  encoderPosition_ = 0.0;
-//  currentVelocity_ = 0.0;
-//  velocity_ = 0.0;
-//  accel_ = 0.0;
-//  highLimit_ = 0.0;
-//  lowLimit_ = 0.0;
-//  limitsDisabled_ = 0;
-//  stepSize_ = 1; //Don't need?
-//  deferredPosition_ = 0.0;
   deferredMove_ = 0;
-//  deferredRelative_ = 0;
-//  deferredTime_ = 0;
   scale_ = 10000;
   position_ = 0.0;
   previous_position_ = 0.0;
   previous_direction_ = 0;
-//  amp_enabled_ = 0;
-//  fatal_following_ = 0;
-//  encoder_axis_ = 0;
-//  limitsCheckDisable_ = 0;
   nowTimeSecs_ = 0.0;
   lastTimeSecs_ = 0.0;
   printNextError_ = false;
@@ -53,20 +37,12 @@ pmacCSAxis::pmacCSAxis(pmacCSController *pController, int axisNo)
     sprintf(var, "&%dQ8%d", pC_->getCSNumber(), axisNo_);
     pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
 
-    // Request position readback
-    //sprintf(var, "#%dP", axisNo);
-    //pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
-    // Request following error readback
-    //sprintf(var, "#%dF", axisNo);
-    //pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
-    // Request ixx24 readback
-    //sprintf(var, "i%d24", axisNo);
-    //pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+    // Register for callbacks
     pC_->registerForCallbacks(this, pmacMessageBroker::PMAC_FAST_READ);
   }
 
-  /* Wake up the poller task which will make it do a poll,
-   * updating values for this axis to use the new resolution (stepSize_) */
+  // Wake up the poller task which will make it do a poll,
+  // updating values for this axis to use the new resolution (stepSize_)
   pC_->wakeupPoller();
 
 }
@@ -91,7 +67,7 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
 
   if (max_velocity != 0) {
       /* Isx89 = default feedrate in EGU/s */
-      sprintf(vel_buff, "I%d89=%f ", (pC_->getCSNumber()+50), max_velocity / (double)scale_);
+      strcpy(vel_buff, pC_->getVelocityCmd(max_velocity / (double)scale_).c_str());
   }
   if (acceleration != 0) {
       if (max_velocity != 0) {
@@ -173,7 +149,7 @@ void pmacCSAxis::callback(pmacCommandStore *sPtr, int type)
   static const char *functionName = "callback";
 
   if (type == pmacMessageBroker::PMAC_FAST_READ){
-    status = this->newGetAxisStatus(sPtr);
+    status = this->getAxisStatus(sPtr);
     if (status != asynSuccess) {
       asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
                 "Controller %s Axis %d. %s: getAxisStatus failed to return asynSuccess.\n",
@@ -189,12 +165,11 @@ void pmacCSAxis::callback(pmacCommandStore *sPtr, int type)
  * to indcate to the polling thread how quickly to poll for status.
  * @return asynStatus
  */
-asynStatus pmacCSAxis::newGetAxisStatus(pmacCommandStore *sPtr)
+asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr)
 {
     int done = 0;
     double position = 0;
     int nvals = 0;
-    epicsUInt32 status[3] = {0, 0, 0};
     int axisProblemFlag = 0;
     bool printErrors = true;
     char key[16];
@@ -204,8 +179,6 @@ asynStatus pmacCSAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     int retStatus = asynSuccess;
 
     static const char *functionName = "pmacCSAxis::newGetAxisStatus";
-
-//    printf("*** axis get status called\n");
 
     asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
@@ -223,16 +196,8 @@ asynStatus pmacCSAxis::newGetAxisStatus(pmacCommandStore *sPtr)
       printErrors = 1;
     }
 
-    // Parse the status
-    sprintf(key, "&%d??", pC_->getCSNumber());
-    value = sPtr->readValue(key);
-    nvals = sscanf(value.c_str(), "%6x%6x%6x", &status[0], &status[1], &status[2]);
-    if (nvals != 3){
-      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-                "%s: Failed to parse status. Key: %s  Value: %s\n",
-                functionName, key, value.c_str());
-      retStatus |= asynError;
-    }
+    // Read in the status
+    csStatus cStatus = pC_->getStatus();
 
     // Parse the position
     sprintf(key, "&%dQ8%d", pC_->getCSNumber(), axisNo_);
@@ -273,7 +238,7 @@ asynStatus pmacCSAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     if(deferredMove_ != 0){
       done = 0;
     } else {
-      done = ((status[0] & pC_->CS_STATUS1_RUNNING_PROG) == 0)&&((status[1] & pC_->CS_STATUS2_IN_POSITION) != 0);
+      done = cStatus.done_;
     }
 
     if (!done) {
@@ -283,19 +248,19 @@ asynStatus pmacCSAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     }
 
     setIntegerParam(pC_->motorStatusDone_, done);
-    setIntegerParam(pC_->motorStatusHighLimit_, ((status[2] & pC_->CS_STATUS3_LIMIT) != 0) );
+    setIntegerParam(pC_->motorStatusHighLimit_, cStatus.highLimit_);
     setIntegerParam(pC_->motorStatusHomed_, homeSignal);
-    setIntegerParam(pC_->motorStatusMoving_, ((status[1] & pC_->CS_STATUS2_IN_POSITION) == 0) );
-    setIntegerParam(pC_->motorStatusLowLimit_, ((status[2] & pC_->CS_STATUS3_LIMIT)!=0) );
-    setIntegerParam(pC_->motorStatusFollowingError_,((status[1] & pC_->CS_STATUS2_FOLLOW_ERR) != 0) );
-    setIntegerParam(pC_->motorStatusProblem_, ((status[1] & pC_->CS_STATUS2_AMP_FAULT) != 0) || ((status[1] & pC_->CS_STATUS2_RUNTIME_ERR) != 0));
+    setIntegerParam(pC_->motorStatusMoving_, cStatus.moving_);
+    setIntegerParam(pC_->motorStatusLowLimit_, cStatus.lowLimit_);
+    setIntegerParam(pC_->motorStatusFollowingError_, cStatus.followingError_);
+    setIntegerParam(pC_->motorStatusProblem_, cStatus.problem_);
 
     axisProblemFlag = 0;
-    if (((status[1] & pC_->CS_STATUS2_AMP_FAULT) != 0) || ((status[1] & pC_->CS_STATUS2_RUNTIME_ERR) != 0)){
+    if (cStatus.problem_){
       if(printErrors){
         asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
           "*** Warning *** Coordinate System [%d] axis %d problem status0=%x status1=%x status3=%x\n",
-          pC_->csNumber_, axisNo_, status[0], status[1], status[2]);
+          pC_->csNumber_, axisNo_, cStatus.stat1_, cStatus.stat2_, cStatus.stat3_);
         printNextError_ = false;
       }
       axisProblemFlag = 1;

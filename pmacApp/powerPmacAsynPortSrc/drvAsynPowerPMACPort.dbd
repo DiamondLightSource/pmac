@@ -1,0 +1,3 @@
+registrar(drvAsynPowerPMACPortRegisterCommands)
+include "asyn.dbd"
+
