@@ -17,6 +17,11 @@ class DeltaTauCommsPort(AsynPort):
     pass
 
 
+class DeltaTauSSHCommsPort(AsynPort):
+    "AsynPort that communicates with a delta tau PowerPMAC motor controller"
+    pass
+
+
 class DeltaTau(AsynPort):
     "Asyn Motor Port that we can attach motor records to"
     pass
@@ -51,6 +56,39 @@ def pmacAsynIPPort_sim(name, IP, simulation=None, pmacAsynIPPort=pmacAsynIPPort)
     if simulation:
         return pmacAsynIPPort(name, simulation)
 SetSimulation(pmacAsynIPPort, pmacAsynIPPort_sim)
+
+
+class pmacAsynSSHPort(DeltaTauSSHCommsPort):
+    """This will create an AsynPort connecting to a PowerPMAC over SSH"""
+    LibFileList = ['powerPmacAsynPort']
+    DbdFileList = ['drvAsynPowerPMACPort']
+    _Cards = []
+
+    def __init__(self, name, IP, USERNAME='root', PASSWORD='deltatau', PRIORITY=0, NOAUTOCONNECT=0, NOEOS=0, simulation=None):
+        self.IP = IP
+        self.USERNAME = USERNAME
+        self.PASSWORD = PASSWORD
+        self.PRIORITY = PRIORITY
+        self.NOAUTOCONNECT = NOAUTOCONNECT
+        self.NOEOS = NOEOS
+        self.name = name
+        # init the AsynPort superclass
+        self.__super.__init__(name)
+
+    def Initialise(self):
+        print '# Create SSH Port (PortName, IPAddress, Username, Password, Priority, DisableAutoConnect, noProcessEos)'
+        print 'drvAsynPowerPMACPortConfigure("%(name)s", "%(IP)s", "%(USERNAME)s", "%(PASSWORD)s", "%(PRIORITY)d", "%(NOAUTOCONNECT)d", "%(NOEOS)d")' % \
+            self.__dict__
+
+    ArgInfo = makeArgInfo(__init__,
+        name   = Simple('Port Name, normally something like SSH_PORT', str),
+        IP     = Simple('IP address of the powerPMAC', str),
+        USERNAME = Simple('Username for the SSH connection', str),
+        PASSWORD = Simple('Password for the SSH connection', str),
+        PRIORITY = Simple('Priority of the port', int),
+        NOAUTOCONNECT = Simple('Disable autoconnect if set to 1', int),
+        NOEOS = Simple('No EOS used if set to 1', int),
+        simulation   = Simple('IP port to connect to if in simulation mode', str))
 
 
 class GeoBrick(DeltaTau):
@@ -88,10 +126,52 @@ class GeoBrick(DeltaTau):
         MovingPoll = Simple('Moving Poll Period in ms', int))
 
     def Initialise(self):
-        print '# Configure Model 3 Controller Driver (Controler Port,Asyn Motor Port, ADDR, Axes, MOVE_POLL, IDLE_POLL)'
+        print '# Configure Model 3 Controller Driver (ControlerPort, LowLevelDriverPort, Address, Axes, MovingPoll, IdlePoll)'
         print 'pmacCreateController("%(name)s", "%(PortName)s", 0, %(NAxes)d, %(MovingPoll)d, %(IdlePoll)d)' % self.__dict__
         print '# Configure Model 3 Axes Driver (Controler Port, Axis Count)'
         print 'pmacCreateAxes("%(name)s", %(NAxes)d)' % self.__dict__
+
+
+class PowerPMAC(DeltaTau):
+    """This will create an asyn motor port for a PowerPMAC that we can attach
+    motor records to using the model 3 driver"""
+    LibFileList = ['pmacAsynMotorPort']
+    DbdFileList = ['pmacAsynMotorPort']
+    Dependencies = (Pmac,)
+    _Cards = []
+
+    def __init__(self, Port, name = None, NAxes = 8, IdlePoll = 1000, MovingPoll = 100):        
+        # init a list of groupnames for each pmacCreateCsGroup to add to
+        self.CsGroupNamesList = {}
+        # First create an asyn IP port to connect to
+        self.PortName = Port.DeviceName()
+        # Now add self to list of cards
+        self.Card = len(self._Cards)
+        self._Cards.append(self)
+        if name is None:
+            name = "PPMAC%d" % (self.Card + 1)
+        self.name = name
+        # Store other attributes
+        self.NAxes = NAxes
+        self.IdlePoll = IdlePoll
+        self.MovingPoll = MovingPoll
+        # init the AsynPort superclass
+        self.__super.__init__(name)
+
+    # __init__ arguments
+    ArgInfo = makeArgInfo(__init__,
+        name = Simple('Name to use for the asyn port', str),
+        Port       = Ident('pmacAsynSSHPort to connect to', pmacAsynSSHPort),
+        NAxes      = Simple('Number of axes', int),
+        IdlePoll   = Simple('Idle Poll Period in ms', int),
+        MovingPoll = Simple('Moving Poll Period in ms', int))
+
+    def Initialise(self):
+        print '# Configure Model 3 Controller Driver (ControlerPort, LowLevelDriverPort, Address, Axes, MovingPoll, IdlePoll)'
+        print 'pmacCreateController("%(name)s", "%(PortName)s", 0, %(NAxes)d, %(MovingPoll)d, %(IdlePoll)d)' % self.__dict__
+        print '# Configure Model 3 Axes Driver (Controler Port, Axis Count)'
+        print 'pmacCreateAxes("%(name)s", %(NAxes)d)' % self.__dict__
+
 
 class _GeoBrickGlobalControlT(AutoSubstitution):
     """Creates some PVs for global control of the pmac controller, 
@@ -120,7 +200,35 @@ class GeoBrickGlobalControl(_GeoBrickGlobalControlT, Device):
         for i in GeoBrickGlobalControl.removeThese:
             if i in self.PORT.CsGroupNamesList:
                 self.args[i] = self.PORT.CsGroupNamesList[i]
-                    
+
+
+class _PowerPMACGlobalControlT(AutoSubstitution):
+    """Creates some PVs for global control of the pmac controller, 
+    namely global feed rate and axis coordinate system assignment"""
+    TemplateFile = "pmacController.template"
+    Dependencies = (PowerPMAC,)
+    
+
+class PowerPMACGlobalControl(_PowerPMACGlobalControlT, Device):
+    def __init__(self, **args):
+        self.__super.__init__(**args)
+        self.__dict__.update(**args)
+    
+    # Remove from Arginfo, the (AutoSubstitution) CSG macros since these will be taken from 
+    # instances of pmacCreateCsGroup
+    removeThese = [ 'CSG%d' % i for i in range(8) ]    
+    # Also Instruct Arginfo that PORT is a Geobrick or PMac Controller Port
+    ArgInfo = makeArgInfo(__init__,
+                          PORT = Ident ('Underlying PMAC or GeoBrick object', DeltaTau)) + \
+                          _PowerPMACGlobalControlT.ArgInfo.filtered(without = removeThese + ['PORT'])  
+    
+    def Finalise(self):
+        # create the args needed for the gui - these are taken from instances of pmacCreateCsGroup
+        for i in PowerPMACGlobalControl.removeThese:
+            if i in self.PORT.CsGroupNamesList:
+                self.args[i] = self.PORT.CsGroupNamesList[i]
+
+
 class pmacDeferMoves(AutoSubstitution):
     TemplateFile = 'pmacDeferMoves.template'
     Dependencies = (GeoBrick,)
@@ -257,6 +365,27 @@ class pmacStatus(AutoSubstitution):
 pmacStatus.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 
 
+class PowerPmacStatus(AutoSubstitution):
+    Dependencies = (Pmac,)
+#    ProtocolFiles = ['pmac.proto']
+    TemplateFile = 'powerPmacStatus.template'
+
+    def __init__(self, **args):
+        # init the super class
+        self.__super.__init__(**args)
+        self.axes = []
+        NAXES = int(args["NAXES"])
+        assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
+        # for each axis
+        for i in range(1, NAXES + 1):
+            args["AXIS"] = i
+            # make a _pmacStatusAxis instance
+            self.axes.append(
+                _pmacStatusAxis(
+                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
+PowerPmacStatus.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
+
+
 class CS(DeltaTau):
     Dependencies = (Pmac,)
     _CSs = []
@@ -301,16 +430,10 @@ class CS(DeltaTau):
         MovingPoll = Simple('Moving Poll Period in ms', int))
     
     def Initialise(self):
-        print '# Create CS (ControllerPort, Addr, CSNumber, CSRef, Prog)'
+        print '# Create CS (CSPortName, ControllerPort, CSNumber, ProgramNumber)'
         print 'pmacCreateCS("%(asyn_name)s", "%(Controller)s", %(CS)d, %(Program)s)' % self.__dict__
-        print '# Configure Model 3 CS Axes Driver (Controler Port, Axis Count)'
+        print '# Configure Model 3 CS Axes Driver (CSPortName, CSAxisCount)'
         print 'pmacCreateCSAxes("%(asyn_name)s", %(NAxes)d)' % self.__dict__
-#        print 'pmacAsynCoordCreate("%(PortName)s", 0, %(CS)d, %(Ref)d, %(Program)s)' % self.__dict__
-#        print '# Configure CS (PortName, DriverName, CSRef, NAxes)'
-#        print 'drvAsynMotorConfigure("%s", "pmacAsynCoord", %d, %d)' % (self.DeviceName(), self.Ref, self.NAxes)                 
-#        print '# Set Idle and Moving poll periods (CS_Ref, PeriodMilliSeconds)'
-#        print 'pmacSetCoordIdlePollPeriod(%(Ref)d, %(IdlePoll)d)' % self.__dict__
-#        print 'pmacSetCoordMovingPollPeriod(%(Ref)d, %(MovingPoll)d)' % self.__dict__
 
 class pmacSetCoordStepsPerUnit(Device):
     """Apply an integer scale factor to an axis on the PMAC"""
