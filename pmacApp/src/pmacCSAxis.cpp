@@ -87,7 +87,7 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
 //  else if (pAxis->program != 0) {
     if (pC_->getProgramNumber() != 0){
       // Abort current move to make sure axes are enabled
-      sprintf(commandtemp, "&%dA", pC_->getCSNumber());
+      sprintf(commandtemp, "&%dE", pC_->getCSNumber());
       debug(DEBUG_TRACE, functionName, "Sending command to PMAC", commandtemp);
       status = pC_->axisWriteRead(commandtemp, response);
       /* If the program specified is non-zero, add a command to run the program.
