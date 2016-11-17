@@ -14,10 +14,13 @@ This guide assumes an IOC setup with the following:
 * Delta Tau geobrick with 8 motors.
 * Single coordinate system with kinematics.
 
+In each of the sections below, the original method using tpmac, pmacUtil and pmacCoord is presented first, and then the equivalent for the pmac module is presented.  The sections below cover setting up the RELEASE file for referencing modules, the Makefile requirements for including libraries and dbd files, template substitutions for creating EPICS records and finally the startup script lines required to create the driver and control objects.
+
+
 configure/RELEASE
 -----------------
 
-Using tpmac
+Original IOC using tpmac, pmacUtil and pmacCoord
 
 ::
 
@@ -25,6 +28,7 @@ Using tpmac
   BUSY         = $(SUPPORT)/busy
   GENSUB       = $(SUPPORT)/genSub
   MOTOR        = $(SUPPORT)/motor
+  PMACCOORD    = $(SUPPORT)/pmacCoord
   PMACUTIL     = $(SUPPORT)/pmacUtil
   SEQ          = $(SUPPORT)/seq
   STREAMDEVICE = $(SUPPORT)/streamDevice
@@ -40,64 +44,64 @@ Using pmac
   MOTOR        = $(SUPPORT)/motor
   PMAC         = $(SUPPORT)/pmac
 
-Note that tpmac, pmacUtil and pmacCoord are no longer required.  Calc is required by the pmac module.
+Note that tpmac, pmacUtil and pmacCoord are no longer required.  Calc is required by the pmac module.  All of the existing templates, screens and pmc files from pmacUtil and pmacCoord are available from the pmac module.
 
 
 src/Makefile
 ------------
 
-Using tpmac
+Original IOC using tpmac, pmacUtil and pmacCoord
 
 ::
 
-  tpmac_DBD += base.dbd
-  tpmac_DBD += asyn.dbd
-  tpmac_DBD += pmacAsynIPPort.dbd
-  tpmac_DBD += motorSupport.dbd
-  tpmac_DBD += devSoftMotor.dbd
-  tpmac_DBD += pmacAsynMotor.dbd
-  tpmac_DBD += stream.dbd
-  tpmac_DBD += genSubRecord.dbd
-  tpmac_DBD += pmacUtilSupport.dbd
-  tpmac_DBD += pmacAsynCoord.dbd
-  tpmac_DBD += busySupport.dbd
-  tpmac_SRCS += tpmac_registerRecordDeviceDriver.cpp
-  tpmac_LIBS += busy
-  tpmac_LIBS += pmacAsynCoord
-  tpmac_LIBS += pmacUtil
-  tpmac_LIBS += seq
-  tpmac_LIBS += pv
-  tpmac_LIBS += genSub
-  tpmac_LIBS += stream
-  tpmac_LIBS += pcre
-  tpmac_LIBS += pmacAsynMotor
-  tpmac_LIBS += softMotor
-  tpmac_LIBS += motor
-  tpmac_LIBS += pmacAsynIPPort
-  tpmac_LIBS += asyn
-  tpmac_LIBS += $(EPICS_BASE_IOC_LIBS)
+  example_DBD += base.dbd
+  example_DBD += asyn.dbd
+  example_DBD += pmacAsynIPPort.dbd
+  example_DBD += motorSupport.dbd
+  example_DBD += devSoftMotor.dbd
+  example_DBD += pmacAsynMotor.dbd
+  example_DBD += stream.dbd
+  example_DBD += genSubRecord.dbd
+  example_DBD += pmacUtilSupport.dbd
+  example_DBD += pmacAsynCoord.dbd
+  example_DBD += busySupport.dbd
+  example_SRCS += tpmac_registerRecordDeviceDriver.cpp
+  example_LIBS += busy
+  example_LIBS += pmacAsynCoord
+  example_LIBS += pmacUtil
+  example_LIBS += seq
+  example_LIBS += pv
+  example_LIBS += genSub
+  example_LIBS += stream
+  example_LIBS += pcre
+  example_LIBS += pmacAsynMotor
+  example_LIBS += softMotor
+  example_LIBS += motor
+  example_LIBS += pmacAsynIPPort
+  example_LIBS += asyn
+  example_LIBS += $(EPICS_BASE_IOC_LIBS)
   
 Using pmac
 
 ::
 
-  pmac_DBD += base.dbd
-  pmac_DBD += asyn.dbd
-  pmac_DBD += pmacAsynIPPort.dbd
-  pmac_DBD += motorSupport.dbd
-  pmac_DBD += devSoftMotor.dbd
-  pmac_DBD += pmacAsynMotorPort.dbd
-  pmac_DBD += busySupport.dbd
-  pmac_DBD += calcSupport.dbd
-  pmac_SRCS += pmac_registerRecordDeviceDriver.cpp
-  pmac_LIBS += calc
-  pmac_LIBS += busy
-  pmac_LIBS += pmacAsynMotorPort
-  pmac_LIBS += softMotor
-  pmac_LIBS += motor
-  pmac_LIBS += pmacAsynIPPort
-  pmac_LIBS += asyn
-  pmac_LIBS += $(EPICS_BASE_IOC_LIBS)
+  example_DBD += base.dbd
+  example_DBD += asyn.dbd
+  example_DBD += pmacAsynIPPort.dbd
+  example_DBD += motorSupport.dbd
+  example_DBD += devSoftMotor.dbd
+  example_DBD += pmacAsynMotorPort.dbd
+  example_DBD += busySupport.dbd
+  example_DBD += calcSupport.dbd
+  example_SRCS += pmac_registerRecordDeviceDriver.cpp
+  example_LIBS += calc
+  example_LIBS += busy
+  example_LIBS += pmacAsynMotorPort
+  example_LIBS += softMotor
+  example_LIBS += motor
+  example_LIBS += pmacAsynIPPort
+  example_LIBS += asyn
+  example_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 The pmac module no longer requires (dbd or lib):
 
@@ -111,7 +115,7 @@ Note pmacAsynMotor has been replaced with pmacAsynMotorPort.
 Db/substitutions
 ----------------
 
-Using tpmac for status records
+Original IOC using tpmac, pmacUtil and pmacCoord for status records
 
 ::
 
@@ -130,7 +134,7 @@ Using tpmac for status records
   file $(PMACUTIL)/db/pmacStatus.template
   {
   pattern { DEVICE, VERSION, PLC, PORT, NAXES, name, DESC, MOIOC, CTLIP, CTLPORT, CTLMODE }
-    { "PMAC_TEST", "1", "5", "BRICK1port", "8", "BRICK1.STAT", "", "", "", "", "" }
+    { "PMAC_TEST", "1", "5", "BRICK1_IP", "8", "BRICK1.STAT", "", "", "", "", "" }
   }
   
   # Macros:
@@ -185,9 +189,9 @@ Using pmac for status records
     { "PMAC_TEST", "8", "BRICK1" }
   }
 
-Note that for tpmac the PORT macro is set to the low level asyn driver port name, but for pmac it is now set to the controller port name.  All communications in the pmac driver are handled through the controller classes.
+Note that for tpmac the PORT macro is set to the low level asyn driver port name (*BRICK1_IP* in the example above), but for pmac it is now set to the controller port name (*BRICK1*).  All communications in the pmac driver are handled through the controller classes.
 
-Using tpmac for motor records
+Original IOC using tpmac, pmacUtil and pmacCoord for motor records
 
 ::
 
@@ -331,15 +335,15 @@ Note for the pmac module the addition of SPORT and PMAC macros.
 Startup Script
 --------------
 
-Using tpmac
+Original IOC using tpmac, pmacUtil and pmacCoord
 
 ::
 
   # Create IP Port (PortName, IPAddr)
-  pmacAsynIPConfigure("BRICK1port", "172.23.253.11:1025")
+  pmacAsynIPConfigure("BRICK1_IP", "172.23.253.11:1025")
   
   # Create asyn motor port (AsynPort, Addr, BrickNum, NAxes)
-  pmacAsynMotorCreate("BRICK1port", 0, 0, 8)
+  pmacAsynMotorCreate("BRICK1_IP", 0, 0, 8)
   # Configure GeoBrick (MotorPort, DriverName, BrickNum, NAxes+1)
   drvAsynMotorConfigure("BRICK1", "pmacAsynMotor", 0, 9)
   pmacSetIdlePollPeriod(0, 1000)
@@ -349,7 +353,7 @@ Using tpmac
   epicsEnvSet "STREAM_PROTOCOL_PATH", "/dls_sw/prod/R3.14.12.3/support/pmacCoord/1-41/data:/dls_sw/prod/R3.14.12.3/support/pmacUtil/4-36/data"
   
   # Create CS (ControllerPort, Addr, CSNumber, CSRef, Prog)
-  pmacAsynCoordCreate("BRICK1port", 0, 2, 0, 10)
+  pmacAsynCoordCreate("BRICK1_IP", 0, 2, 0, 10)
   # Configure CS (PortName, DriverName, CSRef, NAxes)
   drvAsynMotorConfigure("BRICK1CS2", "pmacAsynCoord", 0, 9)
   # Set Idle and Moving poll periods (CS_Ref, PeriodMilliSeconds)
@@ -361,16 +365,16 @@ Using pmac
 ::
 
   # Create IP Port (PortName, IPAddr)
-  pmacAsynIPConfigure("BRICK1port", "172.23.253.11:1025")
-  
-  # Configure Model 3 Controller Driver (Controler Port,Asyn Motor Port, ADDR, Axes, MOVE_POLL, IDLE_POLL)
-  pmacCreateController("BRICK1", "BRICK1port", 0, 8, 100, 1000)
+  pmacAsynIPConfigure("BRICK1_IP", "172.23.253.11:1025")
+
+  # Configure Model 3 Controller Driver (ControllerPort, LowLevelDriverPort, Address, Axes, MovingPoll, IdlePoll)
+  pmacCreateController("BRICK1", "BRICK1_IP", 0, 8, 100, 1000)
   # Configure Model 3 Axes Driver (Controler Port, Axis Count)
   pmacCreateAxes("BRICK1", 8)
-  
-  # Create CS (CS Port, Controller Port, CSNumber, Prog)
+
+  # Create CS (CSPortName, ControllerPort, CSNumber, ProgramNumber)
   pmacCreateCS("BRICK1CS2", "BRICK1", 2, 10)
-  # Configure Model 3 CS Axes Driver (Controller Port, Axis Count)
+  # Configure Model 3 CS Axes Driver (CSPortName, CSAxisCount)
   pmacCreateCSAxes("BRICK1CS2", 9)
 
 There are some differences in these boot files, they are listed below:
@@ -380,3 +384,6 @@ There are some differences in these boot files, they are listed below:
 * There is no need to set STREAM_PROTOCOL_PATH for the pmac module, all communications occur through the controller.
 * pmacAsynCoordCreate and drvAsynMotorConfigure have been replace with pmacCreateCS and pmacCreateCSAxes.
 * Polling is controlled by the motor controller and so there are no pmacSetCoordIdlePollPeriod or pmacSetCoordMovingPollPeriod calls.
+
+The startup script for the pmac module involves first creating the underlying Asyn IP port driver, called "BRICK1_IP" in the example above.  The controller classes are then created with a port name, and the name of the underlying Asyn IP port driver.  When creating the controller the number of motors is specified, along with the idle and moving poll rates.  The axes are then created for the real motors by calling pmacCreateAxes.  For the coordinate system, note that pmacCreateCS is called with the port name for the coordinate system and then the port name of the controller, NOT the port name of the low level driver.  This is because in the pmac module all of the communication with the PMAC hardware is managed by the controller.  When creating axes for a coordinate system there are 9 available (A,B,C,U,V,W,X,Y,Z) and these will have Asyn addresses starting from 1.  When using pmacCoord the coordinate system Asyn addresses started from 0.
+
