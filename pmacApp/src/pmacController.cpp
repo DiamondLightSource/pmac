@@ -2629,8 +2629,8 @@ void pmacController::trajectoryTask()
       // Record the scan start time
       epicsTimeGetCurrent(&startTime);
 
-      // Abort any current move to make sure axes are enabled
-      sprintf(cmd, "&%dA", tScanCSNo_);
+      // Make sure axes are enabled
+      sprintf(cmd, "&%dE", tScanCSNo_);
       debug(DEBUG_TRACE, functionName, "Sending command to abort previous move", cmd);
       this->immediateWriteRead(cmd, response);
 
