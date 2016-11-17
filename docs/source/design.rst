@@ -27,7 +27,7 @@ For each axis (X,Y etc, not motor) within a coordinate system, a specified block
 Each memory block shall be split in to two halves, forming buffer A and buffer B.
 
 
-[Alan Greer > PMAC Design > PMAC_Buffers.png]
+.. image:: PMAC_Buffer_Layout.png
 
 Each buffer of memory shall be filled with either demand positions, times or triggers for a trajectory scan.  A single PMAC command will fill as much of a buffer as possible, but it is expected that the entire buffer (A or B) cannot be filled by one single PMAC command due to limitations on the size of messages (assumed 1024 bytes).
 
@@ -46,57 +46,89 @@ The motion program can trigger output signals after certain trajectory points ha
 2.1 EPICS Software Interface
 ****************************
 
-A set of P variables has been defined that can be used by the EPICS driver to control and monitor trajectory scanning.  The base P value (Traj_Base) is currently defined as ......
+A set of M variables have been defined that can be used by the EPICS driver to control and monitor trajectory scanning.  The M variable numbers and a description are presented below:
 
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| PMAC Definition   | P Variable        | Description                                                                       |
+| PMAC Definition   | M Variable        | Description                                                                       |
 +===================+===================+===================================================================================+
-| Status            | P(Traj_Base + 1)  | Status of motion program for EPICS - 0: Initialised, 1: Active, 2: Idle, 3: Error |
+| Status            | M4034             | Status of motion program for EPICS - 0: Initialised, 1: Active, 2: Idle, 3: Error |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| Abort             | P(Traj_Base + 2)  | Abort trigger for EPICS                                                           |
+| Abort             | M4035             | Abort trigger for EPICS                                                           |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| Axes              | P(Traj_Base + 3)  | An int between 1 and 511 specifying which axes to use                             |
+| Axes              | M4036             | An int between 1 and 511 specifying which axes to use                             |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| BufferLength      | P(Traj_Base + 4)  | Length of a single buffer e.g. AX, AY                                             |
+| BufferLength      | M4037             | Length of a single buffer e.g. AX, AY                                             |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| TotalPoints       | P(Traj_Base + 5)  | Total number of points scanned through                                            |
+| TotalPoints       | M4038             | Total number of points scanned through                                            |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| CurrentIndex      | P(Traj_Base + 6)  | Current index position in buffers                                                 |
+| CurrentIndex      | M4039             | Current index position in buffers                                                 |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| CurrentBuffer     | P(Traj_Base + 7)  | Current buffer specifier - 0: A, 1: B                                             |
+| CurrentBuffer     | M4040             | Current buffer specifier - 0: A, 1: B                                             |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| BufferAdr_A       | P(Traj_Base + 8)  | Start index of buffer A                                                           |
+| BufferAdr_A       | M4041             | Start index of buffer A                                                           |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| BufferAdr_B       | P(Traj_Base + 9)  | Start index of buffer B                                                           |
+| BufferAdr_B       | M4042             | Start index of buffer B                                                           |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| CurrentBufferAdr  | P(Traj_Base + 10) | A or B buffer address                                                             |
+| CurrentBufferAdr  | M4043             | A or B buffer address                                                             |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| BufferFill_A      | P(Traj_Base + 11) | Fill level of buffer A                                                            |
+| BufferFill_A      | M4044             | Fill level of buffer A                                                            |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| BufferFill_B      | P(Traj_Base + 12) | Fill level of buffer B                                                            |
+| BufferFill_B      | M4045             | Fill level of buffer B                                                            |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| CurrentBufferFill | P(Traj_Base + 13) | The indexes that current buffer has been filled up to                             |
+| CurrentBufferFill | M4046             | The indexes that current buffer has been filled up to                             |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| PrevBufferFill    | P(Traj_Base + 14) | Fill of previous buffer to decide whether to end scan (if it wasn't full)         |
+| PrevBufferFill    | M4047             | Fill of previous buffer to decide whether to end scan (if it wasn't full)         |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| Error             | P(Traj_Base + 15) | Error message 0: None, 1: Invalid axes value, 2: Move time of 0                   |
+| Error             | M4048             | Error message 0: None, 1: Invalid axes value, 2: Move time of 0                   |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
-| Version           | P(Traj_Base + 20) | Version of the code executing on the PMAC.                                        |
+| Version           | M4049             | Version of the code executing on the PMAC.                                        |
 +-------------------+-------------------+-----------------------------------------------------------------------------------+
 
 
 The User and VelocityMode variables exist in the X memory and the time in the Y memory of the same address. They will be all be set by writing a single L value. Time is just written as required and will be the same when the Y memory is read. User and VelMode will be written to bits 25-28 and 29-32 by adding the following values to the time:
-Setting Bits to Set Value Description
-VelMode 1 29  10000000  Calculate velocity using Prev->Current section
-VelMode 0 None  0 (Default) Calculate velocity using Prev->Next section
-VelMode 2 30  20000000  Calculate velocity using Current->Next section
-GoSub 10  25-28 to 1010 A000000 Run Subroutine 10
 
-Example - Move Time of 100, VelMode 2, Run Subroutine 5
-Time  VelMode GoSub L Value 
++------------+-------------+-------------+--------------------------------------------------------+
+| Setting    | Bits to Set | Value       | Description                                            |
++============+=============+=============+========================================================+
+| Time       | 1-24        | 0x00xxxxxxx | Time in microseconds (0 - 16777215)                    |
++------------+-------------+-------------+--------------------------------------------------------+
+| VelMode 0  | None        | 0x000000000 | (Default) Calculate velocity using Prev->Next section  |
++------------+-------------+-------------+--------------------------------------------------------+
+| VelMode 1  | 29          | 0x100000000 | Calculate velocity using Prev->Current section         |
++------------+-------------+-------------+--------------------------------------------------------+
+| VelMode 2  | 30          | 0x200000000 | Calculate velocity using Current->Next section         |
++------------+-------------+-------------+--------------------------------------------------------+
+| GoSub 1    | 25-28       | 0x010000000 | Run Subroutine 1                                       |
++------------+-------------+-------------+--------------------------------------------------------+
+| GoSub 2    | 25-28       | 0x020000000 | Run Subroutine 2                                       |
++------------+-------------+-------------+--------------------------------------------------------+
+| GoSub 3    | 25-28       | 0x030000000 | Run Subroutine 3                                       |
++------------+-------------+-------------+--------------------------------------------------------+
+| GoSub 4    | 25-28       | 0x040000000 | Run Subroutine 4                                       |
++------------+-------------+-------------+--------------------------------------------------------+
+| GoSub 5    | 25-28       | 0x050000000 | Run Subroutine 5                                       |
++------------+-------------+-------------+--------------------------------------------------------+
+| GoSub 6    | 25-28       | 0x060000000 | Run Subroutine 6                                       |
++------------+-------------+-------------+--------------------------------------------------------+
+| GoSub 7    | 25-28       | 0x070000000 | Run Subroutine 7                                       |
++------------+-------------+-------------+--------------------------------------------------------+
 
-Write Command (for address $30000)
-100 (64 in hex) 20000000  5000000 25000064  WL$30000,$25000064
+Example - Move Time of 100ms, VelMode 2, Run Subroutine 5
+
++---------+-------------+--------------+-------------------+
+| Time    | VelMode     | GoSub        | Value to write    |
++=========+=============+==============+===================+
+| 0x186A0 | 0x200000000 | 0x050000000  | 0x2500186A0       |
++---------+-------------+--------------+-------------------+
+
+Example - Move Time of 2.5ms, VelMode 0, Run Subroutine 1
+
++---------+-------------+--------------+-------------------+
+| Time    | VelMode     | GoSub        | Value to write    |
++=========+=============+==============+===================+
+| 0x9C4   | 0x000000000 | 0x010000000  | 0x0100009C4       |
++---------+-------------+--------------+-------------------+
+
 
 This interface is not yet complete, and will evolve as testing is carried out on the PMAC code.  Eventually this should present a table of specific items where appropriate (P,Q numbers, memory address writes WX, WY, WD, WI etc).
 
