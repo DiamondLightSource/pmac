@@ -159,7 +159,7 @@ connectIt(void *drvPvt, asynUser *pasynUser)
     // Start up the remote gpascii application
     char buff[512];
     size_t bytes = 0;
-    const static char *gpascii_txt = "gpascii\n";
+    const static char *gpascii_txt = "gpascii -2\n";
     ssh->fd->write(gpascii_txt, strlen(gpascii_txt), &bytes, 1000);
     ssh->fd->read(buff, sizeof(buff), &bytes, '\n', 1000);
     ssh->fd->syncInteractive("#\n", "\006");
