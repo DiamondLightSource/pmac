@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 386
-y 204
+x 388
+y 230
 w 1096
 h 676
 font "arial-bold-r-12.0"
@@ -1330,30 +1330,6 @@ useDisplayBg
 value {
   "CS Assignment"
 }
-endObjectProperties
-
-# (Message Button)
-object activeMessageButtonClass
-beginObjectProperties
-major 4
-minor 1
-release 0
-x 475
-y 245
-w 135
-h 25
-fgColor index 25
-onColor index 4
-offColor index 3
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P)$(R)CsManualAssign.PROC"
-pressValue "0"
-onLabel "Manual Assignment"
-offLabel "Manual Assignment"
-3d
-useEnumNumeric
-font "helvetica-bold-r-12.0"
 endObjectProperties
 
 # (Menu Button)
