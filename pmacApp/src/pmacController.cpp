@@ -1875,6 +1875,13 @@ asynStatus pmacController::writeOctet(asynUser *pasynUser, const char *value, si
   //Call base class method. This will handle callCallbacks even if the function was handled here.
   status = asynMotorController::writeOctet(pasynUser, value, nChars, nActual);
 
+  if (status == asynSuccess){
+    if (function == PMAC_C_GroupAssign_){
+      // Force an immediate manual group update
+      status = this->executeManualGroup();
+    }
+  }
+
   if (status != asynSuccess){
     epicsSnprintf(pasynUser->errorMessage, pasynUser->errorMessageSize,
                   "%s:%s: status=%d, function=%d, value=%s",
@@ -1969,8 +1976,9 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     this->setDebugLevel(level, axisNo, csNo);
   } else if (function == PMAC_C_GroupExecute_){
     status = (this->executeManualGroup() == asynSuccess) && status;
+  } else if (function == PMAC_C_GroupCSPort_) {
+    status = (this->executeManualGroup() == asynSuccess) && status;
   }
-
   //Call base class method. This will handle callCallbacks even if the function was handled here.
   status = (asynMotorController::writeInt32(pasynUser, value) == asynSuccess) && status;
 
@@ -3537,6 +3545,14 @@ asynStatus pmacController::executeManualGroup()
 
   // Execute the manual assignment
   status = pGroupList->manualGroup(cmd);
+
+  // Force updates of the fast loop to pickup any new CS numbers
+  pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+  // Force two updates of the medium loop to pickup any new axis assignments
+  // The first update adds any extra assignment variables to the store if required
+  pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+  // The second update picks up the assigned axis values for each motor
+  pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
 
   return status;
 }
