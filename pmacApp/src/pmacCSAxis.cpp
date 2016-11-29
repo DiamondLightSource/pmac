@@ -80,24 +80,19 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
   deviceUnits = position / (double)scale_;
   sprintf( command, "&%d%s%s"DEMAND"=%.12f", pC_->getCSNumber(), vel_buff, acc_buff, axisNo_, deviceUnits );
 
-  debug(DEBUG_ERROR, functionName, "TODO: FIX Deferred Move");
-//  if (pC_->movesDeferred){
-//      deferredMove_ = 1;
-//  }
-//  else if (pAxis->program != 0) {
-    if (pC_->getProgramNumber() != 0){
-      // Abort current move to make sure axes are enabled
-      sprintf(commandtemp, "&%dE", pC_->getCSNumber());
-      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", commandtemp);
-      status = pC_->axisWriteRead(commandtemp, response);
-      /* If the program specified is non-zero, add a command to run the program.
-       * If program number is zero, then the move will have to be started by some
-       * external process, which is a mechanism of allowing coordinated starts to
-       * movement. */
-      sprintf(buff, " B%dR", pC_->getProgramNumber());
-      strcat(command, buff);
-      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
-      status = pC_->axisWriteRead(command, response);
+  if (pC_->getProgramNumber() != 0){
+    // Abort current move to make sure axes are enabled
+    sprintf(commandtemp, "&%dE", pC_->getCSNumber());
+    debug(DEBUG_TRACE, functionName, "Sending command to PMAC", commandtemp);
+    status = pC_->axisWriteRead(commandtemp, response);
+    /* If the program specified is non-zero, add a command to run the program.
+     * If program number is zero, then the move will have to be started by some
+     * external process, which is a mechanism of allowing coordinated starts to
+     * movement. */
+    sprintf(buff, " B%dR", pC_->getProgramNumber());
+    strcat(command, buff);
+    debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
+    status = pC_->axisWriteRead(command, response);
   }
 
   return status;
