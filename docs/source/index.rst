@@ -13,7 +13,8 @@ This documentation provides the following sections:
 * An :ref:`introduction` to the module.
 * A :ref:`migration` document, how to migrate from tpmac, pmacCoord and pmacUtil.
 * A :ref:`user_guide` which describes how to setup an IOC, and how to execute various motions.
-* Detailed :ref:`design_doc` documentation and auto-generated documentation from the source code.
+* Detailed :ref:`design_doc` documentation.
+* :ref:`code_doc`.
 
 Contents:
 
@@ -24,6 +25,7 @@ Contents:
    migration
    user
    design
+   code
 
 
 Indices and tables
