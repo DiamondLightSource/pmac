@@ -26,15 +26,6 @@ record(ai, "$(P)$(R)DriverVersion_RBV") {
   field(SCAN, "I/O Intr")  
 }
 
-##
-## Record to manually assign coordinate systems
-##
-record(longout, "$(P)$(R)CsManualAssign") {
-  field(DTYP, "asynInt32")
-  field(OUT, "@asyn($(PORT),0)PMAC_C_GROUP_EXECUTE")
-}
-
-
 record(longin, "$(P)$(R)ProfileNaxes") {
   field(PINI, "YES")
   field(VAL, "$(NAXES)")
