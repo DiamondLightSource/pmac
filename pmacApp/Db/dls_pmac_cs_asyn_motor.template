@@ -2,3 +2,8 @@
 # this template if necessary.
 
 include "basic_asyn_motor.template"
+
+record(stringin, "$(P)$(M):CS_PORT_NAME") {
+  field(DESC, "Port name for CS")
+  field(VAL, "$(PORT)")
+}
