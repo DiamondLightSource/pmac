@@ -39,6 +39,28 @@ record(ai, "$(DEVICE):CPULOAD") {
   field(HHSV, "MAJOR")
 }
 
+record(longin, "$(DEVICE):I10") {
+  field(DESC, "Servo Interrupt Time")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_I10")
+  field(SCAN, "I/O Intr")
+}
+
+record(calcout, "$(DEVICE):CALC_SERVO_FREQ") {
+  field(SCAN, "Passive")
+  field(DTYP, "Soft Channel")
+  field(CALC, "8388608000.0/A")
+  field(INPA, "$(DEVICE):I10 CP")
+  field(OOPT, "On Change")
+  field(DOPT, "Use CALC")
+  field(OUT, "$(DEVICE):SERVO_FREQ PP")
+}
+
+record(ai, "$(DEVICE):SERVO_FREQ") {
+  field(EGU, "Hz")
+  field(PREC, "1")
+}
+
 record(longin, "$(DEVICE):READ_CTRLSTAT1") {
   field(DTYP, "asynInt32")
   field(SCAN, "I/O Intr")

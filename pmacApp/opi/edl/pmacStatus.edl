@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 753
-y 88
+x 755
+y 59
 w 575
 h 886
 font "arial-medium-r-16.0"
@@ -394,7 +394,7 @@ major 4
 minor 1
 release 1
 x 10
-y 55
+y 50
 w 85
 h 30
 font "arial-bold-r-14.0"
@@ -413,7 +413,7 @@ major 4
 minor 1
 release 1
 x 10
-y 90
+y 75
 w 85
 h 30
 font "arial-bold-r-14.0"
@@ -1554,7 +1554,7 @@ release 0
 x 100
 y 55
 w 155
-h 30
+h 20
 controlPv "$(pmac):PMACTYPE"
 fgColor index 16
 fgAlarm
@@ -1571,9 +1571,9 @@ major 10
 minor 0
 release 0
 x 100
-y 90
+y 80
 w 155
-h 30
+h 20
 controlPv "$(pmac):CPULOAD"
 fgColor index 16
 fgAlarm
@@ -5087,6 +5087,44 @@ bgColor index 0
 useDisplayBg
 value {
   "Controller Problem:"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 100
+y 105
+w 155
+h 20
+controlPv "$(pmac):SERVO_FREQ"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 100
+w 85
+h 30
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Servo Freq:"
 }
 endObjectProperties
 
