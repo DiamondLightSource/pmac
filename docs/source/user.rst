@@ -36,6 +36,16 @@ If one of the buttons is clicked next to the motor name then a detailed edm scre
 Status (PowerPMAC)
 ******************
 
+
+.. image:: PMAC_PowerStatus.png
+
+
+If one of the buttons is clicked next to the motor name then a detailed edm screen is opened for the motor.
+
+
+.. image:: PMAC_PowerMotorStatus.png
+
+
 Status Details and Debug
 ------------------------
 
