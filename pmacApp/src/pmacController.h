@@ -166,6 +166,8 @@
 #define DEFERRED_FAST_MOVES 1
 #define DEFERRED_COORDINATED_MOVES 2
 
+#define PMAC_PVT_TIME_MODE       "I42"   // PVT Time Control Mode (0=4,095 ms max time, 1=8,388,607 ms max time)
+
 #define PMAC_TRAJ_STATUS         "M4034" // Status of motion program for EPICS - 0: Idle, 1: Running, 2: Finished, 3: Error
 #define PMAC_TRAJ_ABORT          "M4035" // Abort trigger for EPICS
 #define PMAC_TRAJ_AXES           "M4036" // An int between 1 and 511 specifying which axes to use
@@ -430,6 +432,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   double idlePollPeriod_;
 
   // Trajectory scan variables
+  int pvtTimeMode_;
   bool profileInitialized_;
   bool profileBuilt_;
   bool appendAvailable_;

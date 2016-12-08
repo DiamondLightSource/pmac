@@ -234,6 +234,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   feedRatePoll_ = false;
   movingPollPeriod_ = movingPollPeriod;
   idlePollPeriod_ = idlePollPeriod;
+  pvtTimeMode_ = 0;
   profileInitialized_ = false;
   profileBuilt_ = false;
   appendAvailable_ = false;
@@ -481,6 +482,9 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, pHardware_->getGlobalStatusCmd().c_str());
   debug(DEBUG_ERROR, functionName, "global status", pHardware_->getGlobalStatusCmd().c_str());
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, "%");
+
+  // Add I42 to the slow loop to monitor PVT time control mode
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_PVT_TIME_MODE);
 
   // Add the PMAC P variables required for trajectory scanning
   // Fast readout required of these values
@@ -1110,6 +1114,23 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr)
       // Save the value into the parameter
       setDoubleParam(PMAC_C_TrajProgVersion_, tScanPmacProgVersion_);
       debugf(DEBUG_VARIABLE, functionName, "Slow read trajectory motion program version [%s] => %X", PMAC_TRAJ_PROG_VERSION, tScanPmacProgVersion_);
+    }
+  }
+
+  // Read the value of PVT time control mode
+  trajPtr = sPtr->readValue(PMAC_PVT_TIME_MODE);
+  if (trajPtr == ""){
+    debug(DEBUG_ERROR, functionName, "Problem reading PVT time control mode", PMAC_PVT_TIME_MODE);
+    status = asynError;
+  } else {
+    nvals = sscanf(trajPtr.c_str(), "%d", &pvtTimeMode_);
+    if (nvals != 1) {
+      debug(DEBUG_ERROR, functionName, "Error reading PVT time control mode", PMAC_PVT_TIME_MODE);
+      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+      debug(DEBUG_ERROR, functionName, "    response", trajPtr);
+      status = asynError;
+    } else {
+      debugf(DEBUG_VARIABLE, functionName, "PVT time control mode [%s] => %X", PMAC_PVT_TIME_MODE, pvtTimeMode_);
     }
   }
 
@@ -2273,10 +2294,17 @@ asynStatus pmacController::buildProfile(int csNo)
     getIntegerParam(PMAC_C_ProfileNumBuild_, &numPointsToBuild);
 
     // Check for any invalid times
+    int maxValue = 0xFFFFFF;
+    if (pvtTimeMode_ == 0){
+      // In this mode the maximum time is 4095 ms
+      maxValue = 0x3E7C18;
+    }
     while (counter < numPointsToBuild){
       // Profile times must be less than 24bit
-      if (profileTimes_[counter] > 0xFFFFFF){
-        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Invalid profile time value (> 24 bit)");
+      if (profileTimes_[counter] > maxValue){
+        char errMsg[128];
+        sprintf(errMsg, "Invalid profile time value (> %d microseconds)", maxValue);
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, errMsg);
         status = asynError;
       }
       counter++;
