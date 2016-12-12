@@ -109,7 +109,7 @@ Return
 ; AxesParser and therefore represent axis activation
 ; *************************************************************************************************
 N101
-    If(Axes > 511 or Axes < 1)
+    If(Axes > 511)
         Status = 3
         Error = 1
     Else
@@ -288,8 +288,10 @@ Return
 ; *************************************************************************************************
 
 N109
-    PVT (Time * 0.001)                        ; Set move time
-    GoSub110
+    if (Axes > 0)
+        PVT (Time * 0.001)                        ; Set move time
+        $(MOVECMD=GoSub110)
+    End If
     TotalPoints = TotalPoints + 1
     If(User > 0)
         GoSub(User)                     ; Run any required subroutine
