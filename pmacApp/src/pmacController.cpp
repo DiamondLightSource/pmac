@@ -2596,7 +2596,8 @@ asynStatus pmacController::abortProfile()
   asynStatus status = asynSuccess;
   char cmd[1024];
   char response[1024];
-  const char *functionName = "trajectoryTask";
+  int progRunning = 1;
+  const char *functionName = "abortProfile";
 
   debug(DEBUG_TRACE, functionName);
 
@@ -2614,7 +2615,19 @@ asynStatus pmacController::abortProfile()
   // Send the signal to the trajectory thread
   epicsEventSignal(this->stopEventId_);
 
+  // Now wait for the trajectory scan axes to stop
+  while (progRunning == 1){
+    pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning);
+    if (progRunning == 1){
+      // Check again in 100ms
+      this->unlock();
+      epicsThreadSleep(0.1);
+      this->lock();
+    }
+  }
+
   // Set the status to aborted
+  setIntegerParam(profileAbort_, 0);
   this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_ABORT, "Trajectory scan aborted");
   callParamCallbacks();
 

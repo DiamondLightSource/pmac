@@ -372,9 +372,12 @@ record(waveform, "$(P)$(R)ProfileExecuteMessage_RBV")
 #                                                                 #
 ###################################################################
 
-record(bo, "$(P)$(R)ProfileAbort") {
-  field(DTYP, "asynInt32")
-  field(OUT, "@asyn($(PORT),0)PROFILE_ABORT")
+record(busy,"$(P)$(R)ProfileAbort") {
+    field(DESC,"Abort currently executing profile")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PROFILE_ABORT")
+    field(ZNAM, "Done")
+    field(ONAM, "Abort")
 }
 
 ###################################################################
