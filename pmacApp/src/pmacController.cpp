@@ -221,6 +221,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   connected_ = 0;
   initialised_ = 0;
   cid_ = 0;
+  cpu_ = "";
   parameterIndex_ = 0;
   lowLevelPortUser_ = NULL;
   movesDeferred_ = 0;
@@ -2248,6 +2249,48 @@ asynStatus pmacController::buildProfile(int csNo)
     }
   }
 
+  // Important to check the type of hardware and the memory locations
+  // specified to hold the trajectory scan data
+  if (status == asynSuccess){
+    if (!strcmp(cpu_.c_str(), PMAC_CPU_GEO_240MHZ)){
+      // New Geobrick with additional memory.
+      // Check memory addresses are greater than 0x30000
+      if (tScanPmacBufferAddressA_ < 0x30000){
+        // Set the status to failure
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Buffer A memory address invalid");
+        status = asynError;
+      }
+      if (tScanPmacBufferAddressB_ < 0x30000){
+        // Set the status to failure
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Buffer B memory address invalid");
+        status = asynError;
+      }
+      if (tScanPmacBufferAddressA_ == tScanPmacBufferAddressB_){
+        // Set the status to failure
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Buffer memory addresses invalid");
+        status = asynError;
+      }
+    } else {
+      // Old Geobrick without additional memory.
+      // Check memory addresses are less than of equal to (0x10800-18*buffer_size)
+      if (tScanPmacBufferAddressA_ > (0x10800-(18*tScanPmacBufferSize_))){
+        // Set the status to failure
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Buffer A memory address invalid");
+        status = asynError;
+      }
+      if (tScanPmacBufferAddressB_ > (0x10800-(18*tScanPmacBufferSize_))){
+        // Set the status to failure
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Buffer B memory address invalid");
+        status = asynError;
+      }
+      if (tScanPmacBufferAddressA_ == tScanPmacBufferAddressB_){
+        // Set the status to failure
+        this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Buffer memory addresses invalid");
+        status = asynError;
+      }
+    }
+  }
+
   // Check the version numbers are matching
   if (tScanPmacProgVersion_ != PMAC_TRAJECTORY_VERSION){
     debug(DEBUG_ERROR, functionName, "Motion program and driver versions do not match");
@@ -3364,7 +3407,22 @@ asynStatus pmacController::readDeviceType()
       status = asynError;
     }
   }
-  debug(DEBUG_ERROR, functionName, "Read device ID", cid_);
+  debug(DEBUG_VARIABLE, functionName, "Read device ID", cid_);
+  if (status == asynSuccess){
+    strcpy(cmd, "cpu");
+    status = pBroker_->immediateWriteRead(cmd, reply);
+    if (status == asynSuccess){
+      cpu_.assign(reply);
+      // Remove any CR characters
+      if (cpu_.find("\r") != std::string::npos){
+        cpu_ = cpu_.substr(0, cpu_.find("\r"));
+      }
+    } else {
+      debug(DEBUG_ERROR, functionName, "Error reading card cpu");
+      debug(DEBUG_ERROR, functionName, "    response", reply);
+    }
+  }
+  debug(DEBUG_VARIABLE, functionName, "Read device CPU", cpu_);
   return status;
 }
 
