@@ -149,6 +149,8 @@
 
 #define PMAC_TRAJECTORY_VERSION 1.1
 
+#define PMAC_CPU_GEO_240MHZ               "DSP56321"            // Approved geobrick for trajectory scans
+
 #define PMAC_MAXBUF 1024
 
 #define PMAC_MAX_PARAMETERS 1000
@@ -407,6 +409,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int connected_;
   int initialised_;
   int cid_;
+  std::string cpu_;
   int parameterIndex_;
   pmacMessageBroker *pBroker_;
   pmacTrajectory *pTrajectory_;
