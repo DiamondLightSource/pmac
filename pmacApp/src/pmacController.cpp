@@ -2658,14 +2658,17 @@ asynStatus pmacController::abortProfile()
   // Send the signal to the trajectory thread
   epicsEventSignal(this->stopEventId_);
 
-  // Now wait for the trajectory scan axes to stop
-  while (progRunning == 1){
-    pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning);
-    if (progRunning == 1){
-      // Check again in 100ms
-      this->unlock();
-      epicsThreadSleep(0.1);
-      this->lock();
+  // Check CS number is not zero
+  if (tScanCSNo_ != 0){
+    // Now wait for the trajectory scan axes to stop
+    while (progRunning == 1){
+      pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning);
+      if (progRunning == 1){
+        // Check again in 100ms
+        this->unlock();
+        epicsThreadSleep(0.1);
+        this->lock();
+      }
     }
   }
 
