@@ -267,6 +267,9 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   // Register a coordinate system with this controller
   asynStatus registerCS(pmacCSController *csPtr, const char *portName, int csNo);
 
+  // Ensure CS demands (Q71..9) are consistent after a motor move or CS change
+  asynStatus makeCSDemandsConsistent();
+
   // Read out the device type (cid)
   asynStatus readDeviceType();
 

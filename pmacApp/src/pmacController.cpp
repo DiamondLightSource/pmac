@@ -1901,6 +1901,8 @@ asynStatus pmacController::writeOctet(asynUser *pasynUser, const char *value, si
     if (function == PMAC_C_GroupAssign_){
       // Force an immediate manual group update
       status = this->executeManualGroup();
+      // Now ensure the CS demands are consistent
+      makeCSDemandsConsistent();
     }
   }
 
@@ -1968,6 +1970,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   }
   else if (function == PMAC_C_CoordSysGroup_) {
 	  status = (pGroupList->switchToGroup(value) == asynSuccess) && status;
+    // Now ensure the CS demands are consistent
+	  makeCSDemandsConsistent();
   } else if (pWriteParams_->hasKey(*name)){
     // This is an integer write of a parameter, so send the immediate write/read
     sprintf(command, "%s=%d", pWriteParams_->lookup(*name).c_str(), value);
@@ -3387,6 +3391,73 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
   this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
 
   return asynSuccess;
+}
+
+asynStatus pmacController::makeCSDemandsConsistent()
+{
+  static const char *functionName = "makeCSDemandsConsistent";
+  int index = 0;
+  int axisIndex = 0;
+  int qvar = 0;
+  int qvars_assigned = 0;
+  char axisAssignment[PMAC_MAXBUF_];
+  char command[PMAC_MAXBUF_];
+  char reply[PMAC_MAXBUF_];
+  std::string axesString = "ABCUVWXYZ";
+  asynStatus status = asynSuccess;
+
+  debug(DEBUG_TRACE, functionName);
+
+  // Loop over all CS
+  for (index = 0; index < PMAC_MAX_CS; index++){
+    if (pCSControllers_[index] != NULL){
+      // set qvars assigned = 0 none have been set yet
+      qvars_assigned = 0;
+      // Valid CS, check the motors which are present in this CS
+      for (axisIndex = 1; axisIndex <= numAxes_; axisIndex++){
+        pmacAxis *aPtr = this->getAxis(axisIndex);
+        if (aPtr != NULL){
+          // Check the motor CS assignment
+          if (index == aPtr->getAxisCSNo()){
+            getStringParam(axisIndex, PMAC_C_GroupAssignRBV_, PMAC_MAXBUF_, axisAssignment);
+            if (axesString.find(axisAssignment) != std::string::npos){
+              debug(DEBUG_TRACE, functionName, "Found motor assignment for CS", index);
+              debug(DEBUG_TRACE, functionName, "Motor assignment for motor", axisIndex);
+              debug(DEBUG_TRACE, functionName, "Motor assignment", axisAssignment);
+              debug(DEBUG_TRACE, functionName, "Axis index", (int)axesString.find(axisAssignment));
+              qvar = 71 + (int)axesString.find(axisAssignment);
+              debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
+              // Set the qvars assigned flag and send the relevant demand position
+              qvars_assigned = qvars_assigned | 1<<(int)(axesString.find(axisAssignment));
+              debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
+              sprintf(command, "&%dQ%d=%f", index, qvar, aPtr->getCachedPosition());
+              debug(DEBUG_TRACE, functionName, "Sending command", command);
+              if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
+                debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+                status = asynError;
+              }
+            }
+          }
+        }
+      }
+      // Now loop over each CS axis and set any demands that haven't already been set
+      for (axisIndex = 1; axisIndex <= numAxes_; axisIndex++){
+        if ((qvars_assigned & (1<<(axisIndex-1))) == 0){
+          // This axis has not already had its demand set.
+          qvar = 70 + axisIndex;
+          debug(DEBUG_TRACE, functionName, "Axis demand not yet set for Q variable", qvar);
+          sprintf(command, "&%dQ%d=Q%d", index, qvar, (qvar + 10));
+          debug(DEBUG_TRACE, functionName, "Sending command", command);
+          if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
+            debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+            status = asynError;
+          }
+        }
+      }
+    }
+  }
+
+  return status;
 }
 
 asynStatus pmacController::readDeviceType()
