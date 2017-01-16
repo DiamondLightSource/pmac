@@ -43,6 +43,7 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   asynStatus getAxisStatus(bool *moving);
   asynStatus getAxisInitialStatus(void);
   int getAxisCSNo();
+  double getCachedPosition();
 
   int assignedCS_;
   double setpointPosition_;
@@ -55,6 +56,7 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   int limitsDisabled_;
   double stepSize_;
   double deferredPosition_;
+  double cachedPosition_;
   int deferredMove_;
   int deferredRelative_;
   double deferredTime_;

@@ -76,6 +76,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   limitsDisabled_ = 0;
   stepSize_ = 1; //Don't need?
   deferredPosition_ = 0.0;
+  cachedPosition_ = 0.0;
   deferredMove_ = 0;
   deferredRelative_ = 0;
   deferredTime_ = 0;
@@ -169,6 +170,11 @@ asynStatus pmacAxis::getAxisInitialStatus(void)
       setIntegerParam(pC_->motorStatusGainSupport_, 1);
     }
     
+    // Read back the current position and store as cached position
+    sprintf(command, "#%dP", axisNo_);
+    cmdStatus = pC_->lowLevelWriteRead(command, response);
+    nvals = sscanf(response, "%lf", &cachedPosition_);
+
     setIntegerParam(pC_->motorStatusGainSupport_, 1);
   }
   return asynSuccess;
@@ -228,7 +234,13 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   }
 #endif
   status = pC_->axisWriteRead(command, response);
+
+  // Update the cached position
+  cachedPosition_ = position / scale_;
   
+  // Make any CS demands consistent with this move
+  pC_->makeCSDemandsConsistent();
+
   return status;
 }
 
@@ -903,5 +915,10 @@ asynStatus pmacAxis::getAxisStatus(bool *moving)
 int pmacAxis::getAxisCSNo()
 {
   return assignedCS_;
+}
+
+double pmacAxis::getCachedPosition()
+{
+  return cachedPosition_;
 }
 
