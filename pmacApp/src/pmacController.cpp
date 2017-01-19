@@ -1746,9 +1746,6 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
       //The lowLevelWriteRead will be done at the end of this function.
     }
 
-    /*Now do an update, to get the new position from the controller.*/
-    bool moving = true;
-    pAxis->getAxisStatus(&moving);
   }
   else if (function == motorLowLimit_) {
     sprintf(command, "I%d14=%f", pAxis->axisNo_, value/pAxis->scale_);

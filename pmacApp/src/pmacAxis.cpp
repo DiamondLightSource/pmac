@@ -84,6 +84,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   previous_position_ = 0.0;
   previous_direction_ = 0;
   amp_enabled_ = 0;
+  amp_enabled_prev_ = 0;
   fatal_following_ = 0;
   encoder_axis_ = 0;
   limitsCheckDisable_ = 0;
@@ -194,7 +195,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
 {
   double distance = 0;
   asynStatus status = asynError;
-  static const char *functionName = "pmacAxis::move";
+  static const char *functionName = "move";
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
@@ -233,6 +234,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
     limitsDisabled_ = 0;
   }
 #endif
+  debug(DEBUG_TRACE, functionName, "Axis Move command", command);
   status = pC_->axisWriteRead(command, response);
 
   // Update the cached position
@@ -253,7 +255,7 @@ asynStatus pmacAxis::home(double min_velocity, double max_velocity, double accel
   asynStatus status = asynError;
   char command[PMAC_MAXBUF] = {0};
   char response[PMAC_MAXBUF] = {0};
-  static const char *functionName = "pmacAxis::home";
+  static const char *functionName = "home";
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
@@ -342,6 +344,7 @@ asynStatus pmacAxis::home(double min_velocity, double max_velocity, double accel
 	      functionName, pC_->portName, axisNo_, home_type, home_flag, home_velocity, flag_mode, home_offset);
   }
 #endif
+  debug(DEBUG_TRACE, functionName, "Axis Home command", command);
   status = pC_->axisWriteRead(command, response);
 
   return status;
@@ -357,7 +360,7 @@ asynStatus pmacAxis::moveVelocity(double min_velocity, double max_velocity, doub
   char vel_buff[PMAC_MAXBUF] = {0};
   char command[PMAC_MAXBUF]  = {0};
   char response[PMAC_MAXBUF] = {0};
-  static const char *functionName = "pmacAxis::moveVelocity";
+  static const char *functionName = "moveVelocity";
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
@@ -380,6 +383,7 @@ asynStatus pmacAxis::moveVelocity(double min_velocity, double max_velocity, doub
     limitsDisabled_ = 0;
   }
 #endif
+  debug(DEBUG_TRACE, functionName, "Axis MoveVelocity command", command);
   status = pC_->axisWriteRead(command, response);
 
   return status;
@@ -391,7 +395,7 @@ asynStatus pmacAxis::moveVelocity(double min_velocity, double max_velocity, doub
 asynStatus pmacAxis::setPosition(double position)
 {
   //int status = 0;
-  static const char *functionName = "pmacAxis::setPosition";
+  static const char *functionName = "setPosition";
   
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
@@ -404,7 +408,7 @@ asynStatus pmacAxis::setPosition(double position)
 asynStatus pmacAxis::stop(double acceleration)
 {
   asynStatus status = asynError;
-  static const char *functionName = "pmacAxis::stopAxis";
+  static const char *functionName = "stop";
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
@@ -422,6 +426,7 @@ asynStatus pmacAxis::stop(double acceleration)
   }
   deferredMove_ = 0;
 
+  debug(DEBUG_TRACE, functionName, "Axis Stop command", command);
   status = pC_->axisWriteRead(command, response);
   return status;
 }
@@ -432,7 +437,7 @@ asynStatus pmacAxis::stop(double acceleration)
 asynStatus pmacAxis::setClosedLoop(bool closedLoop)
 {
   asynStatus status = asynError;
-  static const char *functionName = "pmacAxis::setClosedLoop";
+  static const char *functionName = "setClosedLoop";
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
@@ -444,6 +449,7 @@ asynStatus pmacAxis::setClosedLoop(bool closedLoop)
   } else {
     sprintf(command, "#%d K",  axisNo_);
   }
+  debug(DEBUG_TRACE, functionName, "Axis Set Closed Loop command", command);
   status = pC_->axisWriteRead(command, response);
   return status;
 }
@@ -455,7 +461,7 @@ void pmacAxis::callback(pmacCommandStore *sPtr, int type)
 //  debug()
 
   if (type == pmacMessageBroker::PMAC_FAST_READ){
-    status = this->newGetAxisStatus(sPtr);
+    status = this->getAxisStatus(sPtr);
     if (status != asynSuccess) {
       asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
                 "Controller %s Axis %d. %s: getAxisStatus failed to return asynSuccess.\n",
@@ -471,7 +477,7 @@ void pmacAxis::callback(pmacCommandStore *sPtr, int type)
  * to indcate to the polling thread how quickly to poll for status.
  * @return asynStatus
  */
-asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
+asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr)
 {
     char command[PMAC_MAXBUF] = {0};
     char response[PMAC_MAXBUF] = {0};
@@ -486,9 +492,7 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
     std::string value = "";
     int retStatus = asynSuccess;
 
-    static const char *functionName = "newGetAxisStatus";
-
-//    printf("*** axis get status called\n");
+    static const char *functionName = "getAxisStatus";
 
     asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
@@ -506,31 +510,13 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
       printErrors = 1;
     }
 
-    // Parse the status
-    //sprintf(key, "#%d?", axisNo_);
-    //debug(DEBUG_ERROR, functionName, "Checking axis status", pC_->pHardware_->getAxisStatusCmd(axisNo_));
-    //value = sPtr->readValue(pC_->pHardware_->getAxisStatusCmd(axisNo_));
-
-    axisStatus axStatus;
-
     // Parse the axis status
+    axisStatus axStatus;
     retStatus = pC_->pHardware_->parseAxisStatus(axisNo_, sPtr, axStatus);
 
-    //nvals = sscanf(value.c_str(), "%6x%6x", &status[0], &status[1]);
-    //if (nvals != 2){
-    //  asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-    //            "%s: Failed to parse status. Key: %s  Value: %s\n",
-    //            functionName, key, value.c_str());
-    //  retStatus |= asynError;
-    //}
-    //debug(DEBUG_VARIABLE, functionName, "Read status[0]", (int)status[0]);
-    //debug(DEBUG_VARIABLE, functionName, "Read status[1]", (int)status[1]);
-    //nvals = sscanf(value.c_str(), "%4x%4x%4x", &aStat1, &aStat2, &aStat3);
-    //if (nvals == 3){
     setIntegerParam(pC_->PMAC_C_AxisBits01_, axStatus.status16Bit1_);
     setIntegerParam(pC_->PMAC_C_AxisBits02_, axStatus.status16Bit2_);
     setIntegerParam(pC_->PMAC_C_AxisBits03_, axStatus.status16Bit3_);
-    //}
 
     // Parse the position
     sprintf(key, "#%dP", axisNo_);
@@ -682,6 +668,14 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
 #endif
     // Set amplifier enabled bit.
     setIntegerParam(pC_->motorStatusPowerOn_, axStatus.ampEnabled_);
+    amp_enabled_ = axStatus.ampEnabled_;
+
+    if (amp_enabled_ != amp_enabled_prev_)
+    {
+        debugf(DEBUG_TRACE, functionName, "Axis %d amp enabled changed ==> %d",
+                axisNo_, amp_enabled_);
+        amp_enabled_prev_ = amp_enabled_;
+    }
 
     return asynSuccess;
 }
@@ -692,225 +686,16 @@ asynStatus pmacAxis::newGetAxisStatus(pmacCommandStore *sPtr)
 asynStatus pmacAxis::poll(bool *moving)
 {
   asynStatus status = asynSuccess;
-  static const char *functionName = "pmacAxis::poll";
-
-  //printf("*** Axis Poll is called [%d]\n", axisNo_);
-
-  asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s Polling axis: %d\n", functionName, this->axisNo_);
+  static const char *functionName = "poll";
+  debug(DEBUG_TIMING, functionName, "Poll called");
 
   if (axisNo_ != 0) {
     *moving = moving_;
-
-    //if (!pC_->lowLevelPortUser_) {
-    //  setIntegerParam(pC_->motorStatusCommsError_, 1);
-    //  return asynError;
-    //}
-    
-    //Now poll axis status
-//    if ((status = getAxisStatus(moving)) != asynSuccess) {
-//      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-//		"Controller %s Axis %d. %s: getAxisStatus failed to return asynSuccess.\n", pC_->portName, axisNo_, functionName);
-//    }
   }
   
-//  callParamCallbacks();
   return status;
 }
 
-
-/**
- * Read the axis status and set axis related parameters.
- * @param moving Boolean flag to indicate if the axis is moving. This is set by this function
- * to indcate to the polling thread how quickly to poll for status.
- * @return asynStatus
- */
-asynStatus pmacAxis::getAxisStatus(bool *moving)
-{
-    char command[PMAC_MAXBUF] = {0};
-    char response[PMAC_MAXBUF] = {0};
-    int cmdStatus = 0;; 
-    int done = 0;
-    double position = 0; 
-    double enc_position = 0;
-    int nvals = 0;
-    epicsUInt32 status[2] = {0};
-    int axisProblemFlag = 0;
-    int limitsDisabledBit = 0;
-    bool printErrors = true;
-
-    static const char *functionName = "pmacAxis::getAxisStatus";
-    
-    //printf("*** axis get status called\n");
-
-    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
-    
-    /* Get the time and decide if we want to print errors.*/
-    epicsTimeGetCurrent(&nowTime_);
-    nowTimeSecs_ = nowTime_.secPastEpoch;
-    if ((nowTimeSecs_ - lastTimeSecs_) < pC_->PMAC_ERROR_PRINT_TIME_) {
-      printErrors = 0;
-    } else {
-      printErrors = 1;
-      lastTimeSecs_ = nowTimeSecs_;
-    }
-    
-    if (printNextError_) {
-      printErrors = 1;
-    }
-            
-    /* Read all the status for this axis in one go */
-    if (encoder_axis_ != 0) {
-      /* Encoder position comes back on a different axis */
-      sprintf(command, "#%d ? P #%d P", axisNo_,  encoder_axis_);
-    } else {
-      /* Encoder position comes back on this axis - note we initially read 
-	 the following error into the position variable */
-      sprintf(command, "#%d ? F P", axisNo_);
-    }
-    
-    //printf("About to send command %s\n", command);
-    cmdStatus = pC_->lowLevelWriteRead(command, response);
-    nvals = sscanf( response, "%6x%6x %lf %lf", &status[0], &status[1], &position, &enc_position );
-	
-    if ( cmdStatus || nvals != 4) {
-      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-		"drvPmacAxisGetStatus: not all status values returned. Status: %d\nCommand :%s\nResponse:%s",
-		cmdStatus, command, response );
-    } else {
-      int homeSignal = ((status[1] & pC_->PMAC_STATUS2_HOME_COMPLETE) != 0);
-      int direction = 0;
-      
-      /* For closed loop axes, position is actually following error up to this point */ 
-      if ( encoder_axis_ == 0 ) {
-	position += enc_position;
-      }
-      
-      position *= scale_;
-      enc_position  *= scale_;
-      
-      setDoubleParam(pC_->motorPosition_, position);
-      setDoubleParam(pC_->motorEncoderPosition_, enc_position);
-      
-      /* Use previous position and current position to calculate direction.*/
-      if ((position - previous_position_) > 0) {
-	direction = 1;
-      } else if (position - previous_position_ == 0.0) {
-	direction = previous_direction_;
-      } else {
-	direction = 0;
-      }
-      setIntegerParam(pC_->motorStatusDirection_, direction);
-      /*Store position to calculate direction for next poll.*/
-      previous_position_ = position;
-      previous_direction_ = direction;
-
-      if(deferredMove_ != 0) {
-    	  done = 0;
-      } else {
-	done = (((status[1] & pC_->PMAC_STATUS2_IN_POSITION) != 0) || ((status[0] & pC_->PMAC_STATUS1_MOTOR_ON) == 0)); 
-	/*If we are not done, but amp has been disabled, then set done (to stop when we get following errors).*/
-	if ((done == 0) && ((status[0] & pC_->PMAC_STATUS1_AMP_ENABLED) == 0)) {
-	  done = 1;
-	}
-      }
-
-      if (!done) {
-    	  moving_ = *moving = true;
-      } else {
-    	  moving_ = *moving = false;
-      }
-
-      setIntegerParam(pC_->motorStatusDone_, done);
-      setIntegerParam(pC_->motorStatusHighLimit_, ((status[0] & pC_->PMAC_STATUS1_POS_LIMIT_SET) != 0) );
-      setIntegerParam(pC_->motorStatusHomed_, homeSignal);
-      /*If desired_vel_zero is false && motor activated (ix00=1) && amplifier enabled, set moving=1.*/
-      setIntegerParam(pC_->motorStatusMoving_, ((status[0] & pC_->PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) && ((status[0] & pC_->PMAC_STATUS1_MOTOR_ON) != 0) && ((status[0] & pC_->PMAC_STATUS1_AMP_ENABLED) != 0) );
-      setIntegerParam(pC_->motorStatusLowLimit_, ((status[0] & pC_->PMAC_STATUS1_NEG_LIMIT_SET)!=0) );
-      setIntegerParam(pC_->motorStatusFollowingError_,((status[1] & pC_->PMAC_STATUS2_ERR_FOLLOW_ERR) != 0) );
-      fatal_following_ = ((status[1] & pC_->PMAC_STATUS2_ERR_FOLLOW_ERR) != 0);
-
-      /* Need to make sure that we can write the CNEN flag, by setting the gain support flag in the status word */
-      setIntegerParam( pC_->motorStatusGainSupport_,  1 );
-      /* Reflect PMAC_STATUS1_OPEN_LOOP in the CNEN Flag. CNEN can be set from the (user) motor record via the motorAxisClosedLoop command */
-      setIntegerParam( pC_->motorStatusPowerOn_, !(status[0] & pC_->PMAC_STATUS1_OPEN_LOOP));
-            
-      axisProblemFlag = 0;
-      /*Set any axis specific general problem bits.*/
-      if ( ((status[0] & pC_->PMAX_AXIS_GENERAL_PROB1) != 0) || ((status[1] & pC_->PMAX_AXIS_GENERAL_PROB2) != 0) ) {
-			if(printErrors)
-			{
-				asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-						"*** Warning *** axis %d problem status0=%x status1=%x \n",
-						axisNo_, status[0], status[1]);
-				printNextError_ = false;
-			}
-			axisProblemFlag = 1;
-      }
-
-      int globalStatus = 0;
-      int feedrate_problem = 0;
-      pC_->getIntegerParam(0, pC_->PMAC_C_GlobalStatus_, &globalStatus);
-      pC_->getIntegerParam(0, pC_->PMAC_C_FeedRateProblem_, &feedrate_problem);
-      if (globalStatus || feedrate_problem) {
-			if(printErrors)
-			{
-				asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-						"*** Warning *** %d problem globalStatus=%x feedrate_problem=%x \n",
-						axisNo_, globalStatus, feedrate_problem);
-				printNextError_ = false;
-			}
-			axisProblemFlag = 1;
-      }
-      /*Check limits disabled bit in ix24, and if we haven't intentially disabled limits
-	because we are homing, set the motorAxisProblem bit. Also check the limitsCheckDisable
-	flag, which the user can set to disable this feature.*/
-      if (!limitsCheckDisable_) {
-	/*Check we haven't intentially disabled limits for homing.*/
-	if (!limitsDisabled_) {
-	  sprintf(command, "i%d24", axisNo_);
-	  cmdStatus = pC_->lowLevelWriteRead(command, response);
-	  if (cmdStatus == asynSuccess) {
-	    sscanf(response, "$%x", &limitsDisabledBit);
-	    limitsDisabledBit = ((0x20000 & limitsDisabledBit) >> 17);
-	    if (limitsDisabledBit) {
-	      axisProblemFlag = 1;
-	      if (printErrors) {
-		asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR, "*** WARNING *** Limits are disabled on controller %s, axis %d\n", pC_->portName, axisNo_);
-		printNextError_ = false;
-	      }
-
-	    }
-	  }
-	}
-      }
-      setIntegerParam(pC_->motorStatusProblem_, axisProblemFlag);
-      
-      /* Clear error print flag for this axis if problem has been removed.*/
-      if (axisProblemFlag == 0) {
-	printNextError_ = true;
-      }
-            
-
-    }
-
-#ifdef REMOVE_LIMITS_ON_HOME
-    if (limitsDisabled_ && (status[1] & pC_->PMAC_STATUS2_HOME_COMPLETE) && (status[0] & pC_->PMAC_STATUS1_DESIRED_VELOCITY_ZERO) ) {
-      /* Re-enable limits */
-      sprintf(command, "i%d24=i%d24&$FDFFFF", axisNo_, axisNo_);
-      cmdStatus = pC_->lowLevelWriteRead(command, response);
-      limitsDisabled_ = (cmdStatus != 0);
-    }
-#endif
-    /*Set amplifier enabled bit.*/
-    if ((status[0] & pC_->PMAC_STATUS1_AMP_ENABLED) != 0) {
-      amp_enabled_ = 1;
-    } else {
-      amp_enabled_ = 0;
-    }
-    setIntegerParam(pC_->motorStatusPowerOn_, amp_enabled_);
-    
-    return asynSuccess;
-}
 
 int pmacAxis::getAxisCSNo()
 {
