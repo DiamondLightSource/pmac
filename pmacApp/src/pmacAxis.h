@@ -39,8 +39,7 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   private:
   pmacController *pC_;
   
-  asynStatus newGetAxisStatus(pmacCommandStore *sPtr);
-  asynStatus getAxisStatus(bool *moving);
+  asynStatus getAxisStatus(pmacCommandStore *sPtr);
   asynStatus getAxisInitialStatus(void);
   int getAxisCSNo();
   double getCachedPosition();
