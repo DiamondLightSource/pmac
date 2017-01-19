@@ -63,6 +63,7 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   double previous_position_;
   int previous_direction_;
   int amp_enabled_;
+  int amp_enabled_prev_;
   int fatal_following_;
   int encoder_axis_;
   int limitsCheckDisable_;
