@@ -9,4 +9,7 @@ db
 dbd
 data
 iocs
+.idea
+CMakeLists.txt
+cmake-build-debug/
 
