@@ -1975,8 +1975,6 @@ asynStatus pmacController::writeOctet(asynUser *pasynUser, const char *value, si
     if (function == PMAC_C_GroupAssign_){
       // Force an immediate manual group update
       status = this->executeManualGroup();
-      // Now ensure the CS demands are consistent
-      makeCSDemandsConsistent();
     }
   }
 
@@ -2044,8 +2042,6 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   }
   else if (function == PMAC_C_CoordSysGroup_) {
 	  status = (pGroupList->switchToGroup(value) == asynSuccess) && status;
-    // Now ensure the CS demands are consistent
-	  makeCSDemandsConsistent();
   } else if (pWriteParams_->hasKey(*name)){
     // This is an integer write of a parameter, so send the immediate write/read
     sprintf(command, "%s=%d", pWriteParams_->lookup(*name).c_str(), value);
@@ -2479,6 +2475,10 @@ asynStatus pmacController::buildProfile(int csNo)
       // Set the status to failure
       this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to write enough points, check quantities");
     }
+  }
+
+  if (status == asynSuccess){
+    makeCSDemandsConsistent();
   }
 
   // Finally if the profile build has completed then set the status accordingly
@@ -3494,29 +3494,31 @@ asynStatus pmacController::makeCSDemandsConsistent()
           // Check the motor CS assignment
           if (index == aPtr->getAxisCSNo()){
             getStringParam(axisIndex, PMAC_C_GroupAssignRBV_, PMAC_MAXBUF_, axisAssignment);
-            if (axesString.find(axisAssignment) != std::string::npos){
-              debug(DEBUG_TRACE, functionName, "Found motor assignment for CS", index);
-              debug(DEBUG_TRACE, functionName, "Motor assignment for motor", axisIndex);
-              debug(DEBUG_TRACE, functionName, "Motor assignment", axisAssignment);
-              debug(DEBUG_TRACE, functionName, "Axis index", (int)axesString.find(axisAssignment));
-              qvar = 71 + (int)axesString.find(axisAssignment);
-              debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
-              // Set the qvars assigned flag and send the relevant demand position
-              qvars_assigned = qvars_assigned | 1<<(int)(axesString.find(axisAssignment));
-              debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
-              sprintf(command, "&%dQ%d=%f", index, qvar, aPtr->getCachedPosition());
-              debug(DEBUG_TRACE, functionName, "Sending command", command);
-              if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
-                debug(DEBUG_ERROR, functionName, "Failed to send command", command);
-                status = asynError;
-              }
-              qvar = 1 + (int)axesString.find(axisAssignment);
-              debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
-              sprintf(command, "&%dQ%d=%f", index, qvar, aPtr->getPosition());
-              debug(DEBUG_TRACE, functionName, "Sending command", command);
-              if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
-                debug(DEBUG_ERROR, functionName, "Failed to send command", command);
-                status = asynError;
+            if (strcmp(axisAssignment, "")){
+              if (axesString.find(axisAssignment) != std::string::npos){
+                debug(DEBUG_TRACE, functionName, "Found motor assignment for CS", index);
+                debug(DEBUG_TRACE, functionName, "Motor assignment for motor", axisIndex);
+                debug(DEBUG_TRACE, functionName, "Motor assignment", axisAssignment);
+                debug(DEBUG_TRACE, functionName, "Axis index", (int)axesString.find(axisAssignment));
+                qvar = 71 + (int)axesString.find(axisAssignment);
+                debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
+                // Set the qvars assigned flag and send the relevant demand position
+                qvars_assigned = qvars_assigned | 1<<(int)(axesString.find(axisAssignment));
+                debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
+                sprintf(command, "&%dQ%d=%f", index, qvar, aPtr->getCachedPosition());
+                debug(DEBUG_TRACE, functionName, "Sending command", command);
+                if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
+                  debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+                  status = asynError;
+                }
+                qvar = 1 + (int)axesString.find(axisAssignment);
+                debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
+                sprintf(command, "&%dQ%d=%f", index, qvar, aPtr->getPosition());
+                debug(DEBUG_TRACE, functionName, "Sending command", command);
+                if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
+                  debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+                  status = asynError;
+                }
               }
             }
           }
@@ -3526,6 +3528,14 @@ asynStatus pmacController::makeCSDemandsConsistent()
       for (axisIndex = 1; axisIndex <= numAxes_; axisIndex++){
         if ((qvars_assigned & (1<<(axisIndex-1))) == 0){
           // This axis has not already had its demand set.
+          qvar = axisIndex;
+          debug(DEBUG_TRACE, functionName, "Axis demand not yet set for Q variable", qvar);
+          sprintf(command, "&%dQ%d=Q%d", index, qvar, (qvar + 80));
+          debug(DEBUG_TRACE, functionName, "Sending command", command);
+          if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
+            debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+            status = asynError;
+          }
           qvar = 70 + axisIndex;
           debug(DEBUG_TRACE, functionName, "Axis demand not yet set for Q variable", qvar);
           sprintf(command, "&%dQ%d=Q%d", index, qvar, (qvar + 10));
