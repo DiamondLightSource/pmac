@@ -49,6 +49,7 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   asynStatus getAxisInitialStatus(void);
   int getAxisCSNo();
   double getCachedPosition();
+  double getPosition();
 
   int assignedCS_;
   double setpointPosition_;
@@ -66,6 +67,8 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   int deferredRelative_;
   double deferredTime_;
   int scale_;
+  double rawPosition_;
+  bool initiatedMove_;
   double previous_position_;
   int previous_direction_;
   int amp_enabled_;

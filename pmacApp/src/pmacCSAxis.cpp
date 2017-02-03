@@ -65,6 +65,9 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
   char commandtemp[128];
   double deviceUnits = 0.0;
 
+  // Make any CS demands consistent with this move
+  pC_->makeCSDemandsConsistent();
+
   if (max_velocity != 0) {
       /* Isx89 = default feedrate in EGU/s */
       strcpy(vel_buff, pC_->getVelocityCmd(max_velocity / (double)scale_).c_str());

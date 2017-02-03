@@ -52,6 +52,9 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     asynStatus tScanCheckForErrors();
     asynStatus tScanCheckProgramRunning(int *running);
 
+    // Ensure CS demands (Q71..9) are consistent after a motor move or CS change
+    asynStatus makeCSDemandsConsistent();
+
     asynStatus pmacSetAxisScale(int axis, int scale);
 
     asynStatus wakeupPoller();

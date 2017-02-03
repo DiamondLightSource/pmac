@@ -3510,6 +3510,14 @@ asynStatus pmacController::makeCSDemandsConsistent()
                 debug(DEBUG_ERROR, functionName, "Failed to send command", command);
                 status = asynError;
               }
+              qvar = 1 + (int)axesString.find(axisAssignment);
+              debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
+              sprintf(command, "&%dQ%d=%f", index, qvar, aPtr->getPosition());
+              debug(DEBUG_TRACE, functionName, "Sending command", command);
+              if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
+                debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+                status = asynError;
+              }
             }
           }
         }
