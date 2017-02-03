@@ -54,6 +54,8 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
 
     asynStatus pmacSetAxisScale(int axis, int scale);
 
+    asynStatus wakeupPoller();
+
   protected:
     pmacCSAxis **pAxes_; // Array of pointers to axis objects
 

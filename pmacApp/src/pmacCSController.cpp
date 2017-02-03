@@ -375,6 +375,11 @@ asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale)
   return asynSuccess;
 }
 
+asynStatus pmacCSController::wakeupPoller()
+{
+  // We need to wake up the real motor controller polling task
+  return ((pmacController *)pC_)->wakeupPoller();
+}
 
 /*************************************************************************************/
 /** The following functions have C linkage, and can be called directly or from iocsh */
