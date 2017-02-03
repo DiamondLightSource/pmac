@@ -23,6 +23,7 @@
 #include "pmacController.h"
 #include "pmacHardwareInterface.h"
 #include <iostream>
+#include <sstream>
 using std::cout;
 using std::endl;
 
@@ -81,6 +82,8 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   deferredRelative_ = 0;
   deferredTime_ = 0;
   scale_ = 1;
+  rawPosition_ = 0.0;
+  initiatedMove_ = false;
   previous_position_ = 0.0;
   previous_direction_ = 0;
   amp_enabled_ = 0;
@@ -239,10 +242,9 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
 
   // Update the cached position
   cachedPosition_ = position / scale_;
+  // Notify that a move has been initiated
+  initiatedMove_ = true;
   
-  // Make any CS demands consistent with this move
-  pC_->makeCSDemandsConsistent();
-
   return status;
 }
 
@@ -471,6 +473,41 @@ void pmacAxis::callback(pmacCommandStore *sPtr, int type)
   }
 }
 
+void pmacAxis::debug(int level, const std::string& method)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str());
+}
+
+void pmacAxis::debug(int level, const std::string& method, const std::string& message)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str(), message);
+}
+
+void pmacAxis::debug(int level, const std::string& method, const std::string& message, const std::string& value)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str(), message, value);
+}
+
+void pmacAxis::debug(int level, const std::string& method, const std::string& message, int value)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str(), message, value);
+}
+
+void pmacAxis::debug(int level, const std::string& method, const std::string& message, double value)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str(), message, value);
+}
+
 /**
  * Read the axis status and set axis related parameters.
  * @param moving Boolean flag to indicate if the axis is moving. This is set by this function
@@ -557,6 +594,9 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr)
         position += enc_position;
       }
 
+      // Store the raw position
+      rawPosition_ = position;
+
       position *= scale_;
       enc_position  *= scale_;
 
@@ -575,6 +615,15 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr)
       // Store position to calculate direction for next poll.
       previous_position_ = position;
       previous_direction_ = direction;
+
+      // Test that we initiated a move, were moving and have now
+      // stopped moving.  In this case we must update the cached
+      // position.
+      if (moving_ && initiatedMove_ && axStatus.done_){
+        initiatedMove_ = false;
+        cachedPosition_ = rawPosition_;
+        debug(DEBUG_TRACE, functionName, "Updating cached position after move complete", cachedPosition_);
+      }
 
       if (!axStatus.done_) {
         moving_ = true;
@@ -707,3 +756,7 @@ double pmacAxis::getCachedPosition()
   return cachedPosition_;
 }
 
+double pmacAxis::getPosition()
+{
+  return rawPosition_;
+}

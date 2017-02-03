@@ -36,6 +36,12 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   
   virtual void callback(pmacCommandStore *sPtr, int type);
 
+  void debug(int level, const std::string& method);
+  void debug(int level, const std::string& method, const std::string& message);
+  void debug(int level, const std::string& method, const std::string& message, const std::string& value);
+  void debug(int level, const std::string& method, const std::string& message, int value);
+  void debug(int level, const std::string& method, const std::string& message, double value);
+
   private:
   pmacController *pC_;
   
@@ -43,6 +49,7 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   asynStatus getAxisInitialStatus(void);
   int getAxisCSNo();
   double getCachedPosition();
+  double getPosition();
 
   int assignedCS_;
   double setpointPosition_;
@@ -60,6 +67,8 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   int deferredRelative_;
   double deferredTime_;
   int scale_;
+  double rawPosition_;
+  bool initiatedMove_;
   double previous_position_;
   int previous_direction_;
   int amp_enabled_;

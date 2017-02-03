@@ -340,6 +340,12 @@ asynStatus pmacCSController::tScanCheckProgramRunning(int *running)
   return status;
 }
 
+asynStatus pmacCSController::makeCSDemandsConsistent()
+{
+  // Simply forward the request to the main controller
+  return ((pmacController *)pC_)->makeCSDemandsConsistent();
+}
+
 /**
  * Set the PMAC axis scale factor to increase resolution in the motor record.
  * Default value is 1.
@@ -375,6 +381,11 @@ asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale)
   return asynSuccess;
 }
 
+asynStatus pmacCSController::wakeupPoller()
+{
+  // We need to wake up the real motor controller polling task
+  return ((pmacController *)pC_)->wakeupPoller();
+}
 
 /*************************************************************************************/
 /** The following functions have C linkage, and can be called directly or from iocsh */
