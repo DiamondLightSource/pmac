@@ -229,6 +229,9 @@ asynStatus pmacCsGroups::switchToGroup(int id)
         }
 			}
 		}
+		if (cmdStatus == asynSuccess){
+		  cmdStatus = this->redefineLookaheads();
+		}
 	}
 	return cmdStatus;
 }
@@ -313,6 +316,11 @@ asynStatus pmacCsGroups::manualGroup(const std::string& groupDef)
   if (status == asynSuccess){
     sprintf(command, "%s", groupDef.c_str());
     status = pC_->lowLevelWriteRead(command, response);
+  }
+
+  // Now re-define the lookaheads
+  if (status == asynSuccess){
+    status = this->redefineLookaheads();
   }
 
   return status;
@@ -488,3 +496,36 @@ asynStatus pmacCsGroups::processDeferredCoordMoves(void)
 	}
 	return status;
 }
+
+asynStatus pmacCsGroups::redefineLookaheads()
+{
+  asynStatus status = asynSuccess;
+  char reply[PMAC_MAXBUF];
+  char cmd[PMAC_MAXBUF];
+  int cs = 0;
+  static const char *functionName = "refefineLookaheads";
+
+  debug(DEBUG_TRACE, functionName);
+  // First any gather buffer must be deleted along with any defined lookaheads
+  strcpy(cmd, "DELETE ALL TEMPS");
+  debug(DEBUG_TRACE, functionName, "Sending command", cmd);
+  if (pC_->lowLevelWriteRead(cmd, reply) != asynSuccess){
+    debug(DEBUG_ERROR, functionName, "Failed to send command", cmd);
+    status = asynError;
+  }
+
+  // Next we must re-define the lookaheads
+  if (status == asynSuccess){
+    for (cs = 16; cs > 0; cs--){
+      sprintf(cmd, "&%dDEFINE LOOKAHEAD 50,10", cs);
+      debug(DEBUG_TRACE, functionName, "Sending command", cmd);
+      if (pC_->lowLevelWriteRead(cmd, reply) != asynSuccess){
+        debug(DEBUG_ERROR, functionName, "Failed to send command", cmd);
+        status = asynError;
+      }
+    }
+  }
+
+  return status;
+}
+
