@@ -23,6 +23,7 @@
 #include "pmacController.h"
 #include "pmacHardwareInterface.h"
 #include <iostream>
+#include <sstream>
 using std::cout;
 using std::endl;
 
@@ -469,6 +470,41 @@ void pmacAxis::callback(pmacCommandStore *sPtr, int type)
     }
     callParamCallbacks();
   }
+}
+
+void pmacAxis::debug(int level, const std::string& method)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str());
+}
+
+void pmacAxis::debug(int level, const std::string& method, const std::string& message)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str(), message);
+}
+
+void pmacAxis::debug(int level, const std::string& method, const std::string& message, const std::string& value)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str(), message, value);
+}
+
+void pmacAxis::debug(int level, const std::string& method, const std::string& message, int value)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str(), message, value);
+}
+
+void pmacAxis::debug(int level, const std::string& method, const std::string& message, double value)
+{
+  std::stringstream sstr;
+  sstr << method << " [Motor " << axisNo_ << "]";
+  pmacDebugger::debug(level, sstr.str(), message, value);
 }
 
 /**

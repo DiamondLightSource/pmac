@@ -36,6 +36,12 @@ class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugge
   
   virtual void callback(pmacCommandStore *sPtr, int type);
 
+  void debug(int level, const std::string& method);
+  void debug(int level, const std::string& method, const std::string& message);
+  void debug(int level, const std::string& method, const std::string& message, const std::string& value);
+  void debug(int level, const std::string& method, const std::string& message, int value);
+  void debug(int level, const std::string& method, const std::string& message, double value);
+
   private:
   pmacController *pC_;
   
