@@ -253,6 +253,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   tScanPmacBufferSize_ = 0;
   tScanPositions_ = NULL;
   tScanPmacProgVersion_ = 0.0;
+  i8_ = 0;
+  i7002_ = 0;
 
   // Create the hashtable for storing port to CS number mappings
   pPortToCs_ = new IntegerHashtable();
@@ -297,6 +299,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_DebugCmdString,             asynParamInt32,        &PMAC_C_DebugCmd_);
   createParam(PMAC_C_FastUpdateTimeString,       asynParamFloat64,      &PMAC_C_FastUpdateTime_);
   createParam(PMAC_C_LastParamString,            asynParamInt32,        &PMAC_C_LastParam_);
+  createParam(PMAC_C_CpuUsageString,             asynParamFloat64,      &PMAC_C_CpuUsage_);
   createParam(PMAC_C_AxisCSString,               asynParamInt32,        &PMAC_C_AxisCS_);
   createParam(PMAC_C_AxisReadonlyString,         asynParamInt32,        &PMAC_C_AxisReadonly_);
   createParam(PMAC_C_WriteCmdString,             asynParamOctet,        &PMAC_C_WriteCmd_);
@@ -486,6 +489,14 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   // Add I42 to the slow loop to monitor PVT time control mode
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_PVT_TIME_MODE);
+
+  // CPU Calculation requires a set of I and M variables
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_CPU_PHASE_INTR);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_CPU_PHASE_TIME);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_CPU_SERVO_TIME);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_CPU_RTI_TIME);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_CPU_I8);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_CPU_I7002);
 
   // Add the PMAC P variables required for trajectory scanning
   // Fast readout required of these values
@@ -1135,6 +1146,14 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr)
     }
   }
 
+  // Used for CPU calculation
+  if (status == asynSuccess){
+    status = parseIntegerVariable(PMAC_CPU_I8, sPtr->readValue(PMAC_CPU_I8), "Real-time interrupt period", i8_);
+  }
+  if (status == asynSuccess){
+    status = parseIntegerVariable(PMAC_CPU_I7002, sPtr->readValue(PMAC_CPU_I7002), "Servo clock frequency", i7002_);
+  }
+
   // Read out the size of the pmac command stores
   if (pBroker_->readStoreSize(pmacMessageBroker::PMAC_FAST_READ, &storeSize) == asynSuccess){
     setIntegerParam(PMAC_C_FastStore_, storeSize);
@@ -1551,6 +1570,37 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
     }
   }
 
+  // CPU Calculation
+  int m70 = 0;
+  int m71 = 0;
+  int m72 = 0;
+  int m73 = 0;
+  if (status == asynSuccess){
+    status = parseIntegerVariable(PMAC_CPU_PHASE_INTR, sPtr->readValue(PMAC_CPU_PHASE_INTR), "Phase interrupt", m70);
+  }
+  if (status == asynSuccess){
+    status = parseIntegerVariable(PMAC_CPU_PHASE_TIME, sPtr->readValue(PMAC_CPU_PHASE_TIME), "Phase time", m71);
+  }
+  if (status == asynSuccess){
+    status = parseIntegerVariable(PMAC_CPU_SERVO_TIME, sPtr->readValue(PMAC_CPU_SERVO_TIME), "Servo time", m72);
+  }
+  if (status == asynSuccess){
+    status = parseIntegerVariable(PMAC_CPU_RTI_TIME, sPtr->readValue(PMAC_CPU_RTI_TIME), "RTI time", m73);
+  }
+  if (status == asynSuccess){
+    double P70=i7002_+1;                                                        // phase interrupts per servo interrupt
+    double P71=(double)m71/(double)m70;                                         // Phase task duty cycle
+    double P69=double(m72/m70);                                                 // # of times phase interrupted servo
+    double P72=(m72-P69*m71)/(m70*P70);                                         // Servo task duty cycle
+    double P68=double(m73/m70);                                                 // # of times phase interrupted RTI
+    double P67=double(m73/(m70*(int)P70));                                      // # of times servo interrupted RTI
+    double P73=((double)m73-P68*(double)m71-P67*((double)m72-P69*(double)m71))
+        /((double)m70*P70*double(i8_+1));                                       // RTI duty cycle
+    double P74=100.0*(P71+P72+P73);                                             // Latest total foreground duty cycle
+    debug(DEBUG_TRACE, functionName, "Calculated CPU %", P74);
+    setDoubleParam(PMAC_C_CpuUsage_, P74);
+  }
+
   //Set any controller specific parameters.
   //Some of these may be used by the axis poll to set axis problem bits.
   if (status == asynSuccess){
@@ -1591,6 +1641,33 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
     setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
   }
 
+  return status;
+}
+
+asynStatus pmacController::parseIntegerVariable(const std::string& command,
+                                                const std::string& response,
+                                                const std::string& desc,
+                                                int& value)
+{
+  asynStatus status = asynSuccess;
+  static const char *functionName = "parseIntegerVariable";
+  int iValue = 0;
+  int nvals = 0;
+
+  if (response == ""){
+    debug(DEBUG_ERROR, functionName, "Read Error [" + desc + "]", command);
+    status = asynError;
+  } else {
+    nvals = sscanf(response.c_str(), "%d", &iValue);
+    if (nvals != 1) {
+      debug(DEBUG_ERROR, functionName, "Read Error [" + desc + "]", command);
+      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+      debug(DEBUG_ERROR, functionName, "    response", response);
+      status = asynError;
+    } else {
+      value = iValue;
+    }
+  }
   return status;
 }
 
@@ -1898,8 +1975,6 @@ asynStatus pmacController::writeOctet(asynUser *pasynUser, const char *value, si
     if (function == PMAC_C_GroupAssign_){
       // Force an immediate manual group update
       status = this->executeManualGroup();
-      // Now ensure the CS demands are consistent
-      makeCSDemandsConsistent();
     }
   }
 
@@ -1967,8 +2042,6 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   }
   else if (function == PMAC_C_CoordSysGroup_) {
 	  status = (pGroupList->switchToGroup(value) == asynSuccess) && status;
-    // Now ensure the CS demands are consistent
-	  makeCSDemandsConsistent();
   } else if (pWriteParams_->hasKey(*name)){
     // This is an integer write of a parameter, so send the immediate write/read
     sprintf(command, "%s=%d", pWriteParams_->lookup(*name).c_str(), value);
@@ -2402,6 +2475,10 @@ asynStatus pmacController::buildProfile(int csNo)
       // Set the status to failure
       this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE, "Failed to write enough points, check quantities");
     }
+  }
+
+  if (status == asynSuccess){
+    makeCSDemandsConsistent();
   }
 
   // Finally if the profile build has completed then set the status accordingly
@@ -3417,21 +3494,31 @@ asynStatus pmacController::makeCSDemandsConsistent()
           // Check the motor CS assignment
           if (index == aPtr->getAxisCSNo()){
             getStringParam(axisIndex, PMAC_C_GroupAssignRBV_, PMAC_MAXBUF_, axisAssignment);
-            if (axesString.find(axisAssignment) != std::string::npos){
-              debug(DEBUG_TRACE, functionName, "Found motor assignment for CS", index);
-              debug(DEBUG_TRACE, functionName, "Motor assignment for motor", axisIndex);
-              debug(DEBUG_TRACE, functionName, "Motor assignment", axisAssignment);
-              debug(DEBUG_TRACE, functionName, "Axis index", (int)axesString.find(axisAssignment));
-              qvar = 71 + (int)axesString.find(axisAssignment);
-              debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
-              // Set the qvars assigned flag and send the relevant demand position
-              qvars_assigned = qvars_assigned | 1<<(int)(axesString.find(axisAssignment));
-              debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
-              sprintf(command, "&%dQ%d=%f", index, qvar, aPtr->getCachedPosition());
-              debug(DEBUG_TRACE, functionName, "Sending command", command);
-              if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
-                debug(DEBUG_ERROR, functionName, "Failed to send command", command);
-                status = asynError;
+            if (strcmp(axisAssignment, "")){
+              if (axesString.find(axisAssignment) != std::string::npos){
+                debug(DEBUG_TRACE, functionName, "Found motor assignment for CS", index);
+                debug(DEBUG_TRACE, functionName, "Motor assignment for motor", axisIndex);
+                debug(DEBUG_TRACE, functionName, "Motor assignment", axisAssignment);
+                debug(DEBUG_TRACE, functionName, "Axis index", (int)axesString.find(axisAssignment));
+                qvar = 71 + (int)axesString.find(axisAssignment);
+                debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
+                // Set the qvars assigned flag and send the relevant demand position
+                qvars_assigned = qvars_assigned | 1<<(int)(axesString.find(axisAssignment));
+                debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
+                sprintf(command, "&%dQ%d=%f", index, qvar, aPtr->getCachedPosition());
+                debug(DEBUG_TRACE, functionName, "Sending command", command);
+                if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
+                  debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+                  status = asynError;
+                }
+                qvar = 1 + (int)axesString.find(axisAssignment);
+                debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
+                sprintf(command, "&%dQ%d=%f", index, qvar, aPtr->getPosition());
+                debug(DEBUG_TRACE, functionName, "Sending command", command);
+                if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
+                  debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+                  status = asynError;
+                }
               }
             }
           }
@@ -3441,6 +3528,14 @@ asynStatus pmacController::makeCSDemandsConsistent()
       for (axisIndex = 1; axisIndex <= numAxes_; axisIndex++){
         if ((qvars_assigned & (1<<(axisIndex-1))) == 0){
           // This axis has not already had its demand set.
+          qvar = axisIndex;
+          debug(DEBUG_TRACE, functionName, "Axis demand not yet set for Q variable", qvar);
+          sprintf(command, "&%dQ%d=Q%d", index, qvar, (qvar + 80));
+          debug(DEBUG_TRACE, functionName, "Sending command", command);
+          if (pBroker_->immediateWriteRead(command, reply) != asynSuccess){
+            debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+            status = asynError;
+          }
           qvar = 70 + axisIndex;
           debug(DEBUG_TRACE, functionName, "Axis demand not yet set for Q variable", qvar);
           sprintf(command, "&%dQ%d=Q%d", index, qvar, (qvar + 10));

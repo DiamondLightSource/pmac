@@ -47,6 +47,7 @@
 
 #define PMAC_C_FastUpdateTimeString       "PMAC_C_FAST_UPDATE_TIME"
 
+#define PMAC_C_CpuUsageString             "PMAC_C_CPU_USAGE"
 #define PMAC_C_AxisCSString               "PMAC_C_AXIS_CS"
 #define PMAC_C_AxisReadonlyString         "PMAC_C_AXIS_READONLY"
 #define PMAC_C_WriteCmdString             "PMAC_C_WRITE_CMD"
@@ -170,6 +171,13 @@
 
 #define PMAC_PVT_TIME_MODE       "I42"   // PVT Time Control Mode (0=4,095 ms max time, 1=8,388,607 ms max time)
 
+#define PMAC_CPU_PHASE_INTR      "M70" // Time between phase interrupts (CPU cycles/2)
+#define PMAC_CPU_PHASE_TIME      "M71" // Time for phase tasks (CPU cycles/2)
+#define PMAC_CPU_SERVO_TIME      "M72" // Time for servo tasks (CPU cycles/2)
+#define PMAC_CPU_RTI_TIME        "M73" // Time for RTI tasks (CPU cycles/2)
+#define PMAC_CPU_I8              "I8"
+#define PMAC_CPU_I7002           "I7002"
+
 #define PMAC_TRAJ_STATUS         "M4034" // Status of motion program for EPICS - 0: Idle, 1: Running, 2: Finished, 3: Error
 #define PMAC_TRAJ_ABORT          "M4035" // Abort trigger for EPICS
 #define PMAC_TRAJ_AXES           "M4036" // An int between 1 and 511 specifying which axes to use
@@ -214,6 +222,10 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   asynStatus slowUpdate(pmacCommandStore *sPtr);
   asynStatus mediumUpdate(pmacCommandStore *sPtr);
   asynStatus fastUpdate(pmacCommandStore *sPtr);
+  asynStatus parseIntegerVariable(const std::string& command,
+                                  const std::string& response,
+                                  const std::string& desc,
+                                  int& value);
 
   //asynStatus printConnectedStatus(void);
   asynStatus immediateWriteRead(const char *command, char *response);
@@ -305,6 +317,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_DebugCS_;
   int PMAC_C_DebugCmd_;
   int PMAC_C_FastUpdateTime_;
+  int PMAC_C_CpuUsage_;
   int PMAC_C_AxisCS_;
   int PMAC_C_AxisReadonly_;
   int PMAC_C_WriteCmd_;
@@ -436,6 +449,8 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   bool feedRatePoll_;
   double movingPollPeriod_;
   double idlePollPeriod_;
+  int i8_;
+  int i7002_;
 
   // Trajectory scan variables
   int pvtTimeMode_;
