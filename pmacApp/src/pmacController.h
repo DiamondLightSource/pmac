@@ -32,6 +32,7 @@
 #define PMAC_C_FeedRateLimitString        "PMAC_C_FEEDRATE_LIMIT"
 #define PMAC_C_FeedRatePollString         "PMAC_C_FEEDRATE_POLL"
 #define PMAC_C_FeedRateProblemString      "PMAC_C_FEEDRATE_PROBLEM"
+#define PMAC_C_FeedRateCSString           "PMAC_C_FEEDRATE_CS"
 #define PMAC_C_CoordSysGroup  		        "PMAC_C_COORDINATE_SYS_GROUP"
 
 #define PMAC_C_GroupCSPortString          "PMAC_C_GROUP_CS_PORT"
@@ -306,6 +307,7 @@ class pmacController : public asynMotorController, public pmacCallbackInterface,
   int PMAC_C_FeedRateLimit_;
   int PMAC_C_FeedRatePoll_;
   int PMAC_C_FeedRateProblem_;
+  int PMAC_C_FeedRateCS_;
   int PMAC_C_CoordSysGroup_;
   int PMAC_C_GroupCSPort_;
   int PMAC_C_GroupCSPortRBV_;

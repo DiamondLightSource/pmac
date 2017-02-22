@@ -287,6 +287,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_FeedRateLimitString,        asynParamInt32,        &PMAC_C_FeedRateLimit_);
   createParam(PMAC_C_FeedRatePollString,         asynParamInt32,        &PMAC_C_FeedRatePoll_);
   createParam(PMAC_C_FeedRateProblemString,      asynParamInt32,        &PMAC_C_FeedRateProblem_);
+  createParam(PMAC_C_FeedRateCSString,           asynParamInt32,        &PMAC_C_FeedRateCS_);
   createParam(PMAC_C_CoordSysGroup,              asynParamInt32,        &PMAC_C_CoordSysGroup_);
   createParam(PMAC_C_GroupCSPortString,          asynParamInt32,        &PMAC_C_GroupCSPort_);
   createParam(PMAC_C_GroupCSPortRBVString,       asynParamInt32,        &PMAC_C_GroupCSPortRBV_);
@@ -418,6 +419,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   bool paramStatus = true;
   paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateProblem_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_FeedRateCS_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateLimit_, 100) == asynSuccess) && paramStatus);
   paramStatus = ((setDoubleParam(PMAC_C_FastUpdateTime_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_AxisReadonly_, 0) == asynSuccess) && paramStatus);
@@ -484,8 +486,14 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
  
   // Add the items required for global status
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, pHardware_->getGlobalStatusCmd().c_str());
-  debug(DEBUG_ERROR, functionName, "global status", pHardware_->getGlobalStatusCmd().c_str());
-  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, "%");
+  debug(DEBUG_VARIABLE, functionName, "global status", pHardware_->getGlobalStatusCmd().c_str());
+
+  // Add the feedrate values
+  for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++){
+    sprintf(cmd, "&%d%s", csNo, "%");
+    debug(DEBUG_VARIABLE, functionName, "Adding feedrate check", cmd);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+  }
 
   // Add I42 to the slow loop to monitor PVT time control mode
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_PVT_TIME_MODE);
@@ -1188,8 +1196,27 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
   std::string progString = "";
   int axisCs = 0;
   char command[8];
+  int feedrate = 0;
+  bool printErrors = 0;
+  int feedrate_limit = 0;
+  int min_feedrate = 0;
+  int min_feedrate_cs = 0;
   static const char *functionName = "mediumUpdate";
   debug(DEBUG_FLOW, functionName);
+
+  // Get the time and decide if we want to print errors.
+  epicsTimeGetCurrent(&nowTime_);
+  nowTimeSecs_ = nowTime_.secPastEpoch;
+  if ((nowTimeSecs_ - lastTimeSecs_) < PMAC_ERROR_PRINT_TIME_) {
+    printErrors = 0;
+  } else {
+    printErrors = 1;
+    lastTimeSecs_ = nowTimeSecs_;
+  }
+
+  if (printNextError_) {
+    printErrors = 1;
+  }
 
   // Read the PLC program status variables
   for (plc = 0; plc < 32; plc++){
@@ -1390,6 +1417,58 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
     }
   }
 
+  min_feedrate = 100;
+  min_feedrate_cs = 0;
+  // Lookup the value of the feedrate
+  for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++){
+    sprintf(command, "&%d%s", csNo, "%");
+    std::string feedRate = sPtr->readValue(command);
+    debugf(DEBUG_VARIABLE, functionName, "Feedrate [&%d%s] => %s", csNo, "%", feedRate.c_str());
+    // Check the feedrate value is valid
+    if (feedRate == ""){
+      debug(DEBUG_ERROR, functionName, "Problem reading feed rate command %");
+      status = asynError;
+    } else {
+      nvals = sscanf(feedRate.c_str(), "%d", &feedrate);
+      if (nvals != 1) {
+        debug(DEBUG_ERROR, functionName, "Error reading feedrate [%]");
+        debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+        debug(DEBUG_ERROR, functionName, "    response", feedRate);
+        status = asynError;
+      } else {
+        if (feedrate < min_feedrate){
+          min_feedrate = feedrate;
+          min_feedrate_cs = csNo;
+        }
+      }
+    }
+  }
+  if (status == asynSuccess){
+    status = getIntegerParam(this->PMAC_C_FeedRateLimit_, &feedrate_limit);
+  }
+
+  if (status == asynSuccess){
+    if (min_feedrate < static_cast<int>(feedrate_limit-PMAC_FEEDRATE_DEADBAND_)) {
+      status = setIntegerParam(this->PMAC_C_FeedRateProblem_, PMAC_ERROR_);
+      int prev_min_cs = 0;
+      getIntegerParam(PMAC_C_FeedRateCS_, &prev_min_cs);
+      setIntegerParam(PMAC_C_FeedRateCS_, min_feedrate_cs);
+      if (printErrors || (min_feedrate_cs != prev_min_cs)){
+        printNextError_ = false;
+        debugf(DEBUG_ERROR, functionName, "*** ERROR ***: Coordinate System %d feed rate below limit.", min_feedrate_cs);
+        debug(DEBUG_ERROR,  functionName, "               feedrate", min_feedrate);
+        debug(DEBUG_ERROR,  functionName, "               feedrate limit", feedrate_limit);
+      }
+    } else {
+      status = setIntegerParam(this->PMAC_C_FeedRateProblem_, PMAC_OK_);
+      printNextError_ = true;
+    }
+  }
+  if (status == asynSuccess){
+    status = setIntegerParam(this->PMAC_C_FeedRate_, min_feedrate);
+  }
+
+
   // Call callbacks for PLC program status
   if (status == asynSuccess){
     setIntegerParam(PMAC_C_PLCBits00_, plcBits00);
@@ -1410,27 +1489,11 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
   int gStat1 = 0;
   int gStat2 = 0;
   int gStat3 = 0;
-  int feedrate = 0;
-  int feedrate_limit = 0;
-  bool printErrors = 0;
   bool hardwareProblem;
   int nvals;
   std::string trajBufPtr = "";
   static const char *functionName = "getGlobalStatus";
 
-  // Get the time and decide if we want to print errors.
-  epicsTimeGetCurrent(&nowTime_);
-  nowTimeSecs_ = nowTime_.secPastEpoch;
-  if ((nowTimeSecs_ - lastTimeSecs_) < PMAC_ERROR_PRINT_TIME_) {
-    printErrors = 0;
-  } else {
-    printErrors = 1;
-    lastTimeSecs_ = nowTimeSecs_;
-  }
-
-  if (printNextError_) {
-    printErrors = 1;
-  }
 
 
   // Read the current trajectory status from the PMAC
@@ -1552,23 +1615,6 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
     }
   }*/
 
-  // Lookup the value of the feedrate
-  std::string feedRate = sPtr->readValue("%");
-  debug(DEBUG_VARIABLE, functionName, "Feedrate [%]", feedRate);
-
-  // Check the feedrate value is valid
-  if (feedRate == ""){
-    debug(DEBUG_ERROR, functionName, "Problem reading feed rate command %");
-    status = asynError;
-  } else {
-    nvals = sscanf(feedRate.c_str(), "%d", &feedrate);
-    if (nvals != 1) {
-      debug(DEBUG_ERROR, functionName, "Error reading feedrate [%]");
-      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-      debug(DEBUG_ERROR, functionName, "    response", feedRate);
-      status = asynError;
-    }
-  }
 
   // CPU Calculation
   int m70 = 0;
@@ -1608,27 +1654,6 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
     status = setIntegerParam(this->PMAC_C_GlobalStatus_, hardwareProblem);
     if(hardwareProblem){
       debug(DEBUG_ERROR, functionName, "*** Hardware Problem *** global status [???]", (int)gStatus);
-    }
-  }
-  if (status == asynSuccess){
-    status = setIntegerParam(this->PMAC_C_FeedRate_, feedrate);
-  }
-  if (status == asynSuccess){
-    status = getIntegerParam(this->PMAC_C_FeedRateLimit_, &feedrate_limit);
-  }
-
-  if (status == asynSuccess){
-    if (feedrate < static_cast<int>(feedrate_limit-PMAC_FEEDRATE_DEADBAND_)) {
-      status = setIntegerParam(this->PMAC_C_FeedRateProblem_, PMAC_ERROR_);
-      if (printErrors){
-        debug(DEBUG_ERROR, functionName, "*** ERROR ***: global feed rate below limit.");
-        debug(DEBUG_ERROR, functionName, "               feedrate", feedrate);
-        debug(DEBUG_ERROR, functionName, "               feedrate limit", feedrate_limit);
-        printNextError_ = false;
-      }
-    } else {
-      status = setIntegerParam(this->PMAC_C_FeedRateProblem_, PMAC_OK_);
-      printNextError_ = true;
     }
   }
 
@@ -2026,7 +2051,11 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     }
   }
   else if (function == PMAC_C_FeedRate_) {
-    sprintf(command, "%%%d", value);
+    strcpy(command, "");
+    for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++){
+      sprintf(command, "%s &%d%%%d", command, csNo, value);
+    }
+    debug(DEBUG_VARIABLE, functionName, "Feedrate Command", command);
     if (command[0] != 0) {
       //PMAC does not respond to this command.
       lowLevelWriteRead(command, response);
