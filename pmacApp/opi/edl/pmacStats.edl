@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 385
-y 72
+x 387
+y 98
 w 851
 h 386
 font "arial-bold-r-12.0"
@@ -786,9 +786,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 610
+x 675
 y 280
-w 90
+w 65
 h 20
 controlPv "$(pmac):FEEDRATE"
 fgColor index 25
@@ -805,9 +805,9 @@ beginObjectProperties
 major 4
 minor 6
 release 0
-x 720
+x 745
 y 280
-w 105
+w 80
 h 20
 controlPv "$(pmac):FEEDRATE_RBV"
 font "helvetica-medium-r-14.0"
@@ -831,15 +831,15 @@ major 4
 minor 1
 release 1
 x 445
-y 275
-w 65
+y 280
+w 160
 h 20
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 10
 useDisplayBg
 value {
-  "Feedrate"
+  "Set feedrate for all CS"
 }
 endObjectProperties
 
@@ -849,9 +849,9 @@ beginObjectProperties
 major 4
 minor 6
 release 0
-x 720
+x 745
 y 305
-w 105
+w 80
 h 20
 controlPv "$(pmac):FEEDRATE_LIMIT"
 font "helvetica-medium-r-14.0"
@@ -874,14 +874,14 @@ minor 1
 release 1
 x 445
 y 305
-w 105
+w 215
 h 20
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 10
 useDisplayBg
 value {
-  "Feedrate Limit"
+  "Feedrate error if any CS is below"
 }
 endObjectProperties
 
@@ -891,9 +891,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 610
+x 675
 y 305
-w 90
+w 65
 h 20
 controlPv "$(pmac):FEEDRATE_LIMIT"
 fgColor index 25
