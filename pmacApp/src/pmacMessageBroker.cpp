@@ -52,6 +52,20 @@ asynStatus pmacMessageBroker::connect(const char *port, int addr)
   return status;
 }
 
+asynStatus pmacMessageBroker::disconnect()
+{
+  static const char *functionName = "disconnect";
+  asynStatus status = asynSuccess;
+  debug(DEBUG_FLOW, functionName, "Disconnecting from low level asynOctetSyncIO port");
+
+  //Connect our Asyn user to the low level port that is a parameter to this constructor
+  status = lowLevelPortDisconnect(lowLevelPortUser_);
+  if (status != asynSuccess){
+    debug(DEBUG_ERROR, functionName, "Failed to disconnect from low level asynOctetSyncIO port");
+  }
+  return status;
+}
+
 /**
  * Utilty function to return the connected status of the low level asyn port.
  * @return asynStatus
@@ -339,7 +353,6 @@ asynStatus pmacMessageBroker::lowLevelPortConnect(const char *port, int addr, as
         port);
     return status;
   }
-
   //Do I want to disconnect below? If the IP address comes up, will the driver recover
   //if the poller functions are running? Might have to use asynManager->isConnected to
   //test connection status of low level port (in the pollers). But then autosave
@@ -368,6 +381,25 @@ asynStatus pmacMessageBroker::lowLevelPortConnect(const char *port, int addr, as
     return status;
   }
 
+  return status;
+}
+
+/**
+ * Disconnect from the underlying low level Asyn port that is used for comms.
+ * @param ppasynUser A pointer to the pasynUser structure used by the controller
+ * @return asynStatus
+ */
+asynStatus pmacMessageBroker::lowLevelPortDisconnect(asynUser *ppasynUser)
+{
+  static const char *functionName = "pmacController::lowLevelPortDisconnect";
+  asynStatus status = asynSuccess;
+
+  asynPrint(this->ownerAsynUser_, ASYN_TRACE_FLOW, "%s\n", functionName);
+
+  status = pasynOctetSyncIO->disconnect(ppasynUser);
+  if (status){
+    asynPrint(this->ownerAsynUser_, ASYN_TRACE_ERROR, "%s: unable to disconnect\n", functionName);
+  }
   return status;
 }
 
