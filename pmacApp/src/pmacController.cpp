@@ -212,7 +212,9 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   int plcNo = 0;
   int gpioNo = 0;
   int progNo = 0;
+  int retries = 0;
   char cmd[32];
+  asynStatus status = asynSuccess;
   static const char *functionName = "pmacController::pmacController";
 
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
@@ -414,7 +416,21 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   }
 
   // Initialise the connection
-  this->initialiseConnection();
+  status = this->initialiseConnection();
+  if (status != asynSuccess){
+    debug(DEBUG_ERROR, functionName, "Unable to initialise connection, retrying...");
+    while (status == asynError && retries < 5){
+      retries++;
+      debug(DEBUG_ERROR, functionName, "Connection retry number", retries);
+      pBroker_->disconnect();
+      pBroker_->connect(lowLevelPortName, lowLevelPortAddress);
+      status = this->initialiseConnection();
+    }
+  }
+  if (status == asynError){
+    debug(DEBUG_ERROR, functionName, "Failed to connect after several retries, aborting");
+    return;
+  }
 
   bool paramStatus = true;
   paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
@@ -489,7 +505,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   debug(DEBUG_VARIABLE, functionName, "global status", pHardware_->getGlobalStatusCmd().c_str());
 
   // Add the feedrate values
-  for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++){
+  for (int csNo = 1; csNo <= PMAC_MAX_CS-1; csNo++){
     sprintf(cmd, "&%d%s", csNo, "%");
     debug(DEBUG_VARIABLE, functionName, "Adding feedrate check", cmd);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
@@ -1026,11 +1042,17 @@ asynStatus pmacController::initialiseConnection()
           pBroker_->markAsPowerPMAC();
           // set the echo to 7
           this->lowLevelWriteRead("echo 7", response);
-        } else {
+        } else if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_PMAC_){
           pHardware_ = new pmacHardwareTurbo();
+        } else {
+          // This is bad so output an error and return error status
+          debug(DEBUG_ERROR, functionName, "Unknown hardware CID:", cid_);
+          status = asynError;
         }
-        // Register this controller with the hardware class
-        pHardware_->registerController(this);
+        if (status == asynSuccess){
+          // Register this controller with the hardware class
+          pHardware_->registerController(this);
+        }
       }
       if (status == asynSuccess){
         // Initialisation successful
@@ -1420,7 +1442,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
   min_feedrate = 100;
   min_feedrate_cs = 0;
   // Lookup the value of the feedrate
-  for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++){
+  for (int csNo = 1; csNo <= PMAC_MAX_CS-1; csNo++){
     sprintf(command, "&%d%s", csNo, "%");
     std::string feedRate = sPtr->readValue(command);
     debugf(DEBUG_VARIABLE, functionName, "Feedrate [&%d%s] => %s", csNo, "%", feedRate.c_str());
@@ -1616,37 +1638,38 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr)
   }*/
 
 
-  // CPU Calculation
-  int m70 = 0;
-  int m71 = 0;
-  int m72 = 0;
-  int m73 = 0;
-  if (status == asynSuccess){
-    status = parseIntegerVariable(PMAC_CPU_PHASE_INTR, sPtr->readValue(PMAC_CPU_PHASE_INTR), "Phase interrupt", m70);
+  if (cid_ == PMAC_CID_GEOBRICK_){
+    // CPU Calculation
+    int m70 = 0;
+    int m71 = 0;
+    int m72 = 0;
+    int m73 = 0;
+    if (status == asynSuccess){
+      status = parseIntegerVariable(PMAC_CPU_PHASE_INTR, sPtr->readValue(PMAC_CPU_PHASE_INTR), "Phase interrupt", m70);
+    }
+    if (status == asynSuccess){
+      status = parseIntegerVariable(PMAC_CPU_PHASE_TIME, sPtr->readValue(PMAC_CPU_PHASE_TIME), "Phase time", m71);
+    }
+    if (status == asynSuccess){
+      status = parseIntegerVariable(PMAC_CPU_SERVO_TIME, sPtr->readValue(PMAC_CPU_SERVO_TIME), "Servo time", m72);
+    }
+    if (status == asynSuccess){
+      status = parseIntegerVariable(PMAC_CPU_RTI_TIME, sPtr->readValue(PMAC_CPU_RTI_TIME), "RTI time", m73);
+    }
+    if (status == asynSuccess){
+      double P70=i7002_+1;                                                        // phase interrupts per servo interrupt
+      double P71=(double)m71/(double)m70;                                         // Phase task duty cycle
+      double P69=double(m72/m70);                                                 // # of times phase interrupted servo
+      double P72=(m72-P69*m71)/(m70*P70);                                         // Servo task duty cycle
+      double P68=double(m73/m70);                                                 // # of times phase interrupted RTI
+      double P67=double(m73/(m70*(int)P70));                                      // # of times servo interrupted RTI
+      double P73=((double)m73-P68*(double)m71-P67*((double)m72-P69*(double)m71))
+          /((double)m70*P70*double(i8_+1));                                       // RTI duty cycle
+      double P74=100.0*(P71+P72+P73);                                             // Latest total foreground duty cycle
+      debug(DEBUG_TRACE, functionName, "Calculated CPU %", P74);
+      setDoubleParam(PMAC_C_CpuUsage_, P74);
+    }
   }
-  if (status == asynSuccess){
-    status = parseIntegerVariable(PMAC_CPU_PHASE_TIME, sPtr->readValue(PMAC_CPU_PHASE_TIME), "Phase time", m71);
-  }
-  if (status == asynSuccess){
-    status = parseIntegerVariable(PMAC_CPU_SERVO_TIME, sPtr->readValue(PMAC_CPU_SERVO_TIME), "Servo time", m72);
-  }
-  if (status == asynSuccess){
-    status = parseIntegerVariable(PMAC_CPU_RTI_TIME, sPtr->readValue(PMAC_CPU_RTI_TIME), "RTI time", m73);
-  }
-  if (status == asynSuccess){
-    double P70=i7002_+1;                                                        // phase interrupts per servo interrupt
-    double P71=(double)m71/(double)m70;                                         // Phase task duty cycle
-    double P69=double(m72/m70);                                                 // # of times phase interrupted servo
-    double P72=(m72-P69*m71)/(m70*P70);                                         // Servo task duty cycle
-    double P68=double(m73/m70);                                                 // # of times phase interrupted RTI
-    double P67=double(m73/(m70*(int)P70));                                      // # of times servo interrupted RTI
-    double P73=((double)m73-P68*(double)m71-P67*((double)m72-P69*(double)m71))
-        /((double)m70*P70*double(i8_+1));                                       // RTI duty cycle
-    double P74=100.0*(P71+P72+P73);                                             // Latest total foreground duty cycle
-    debug(DEBUG_TRACE, functionName, "Calculated CPU %", P74);
-    setDoubleParam(PMAC_C_CpuUsage_, P74);
-  }
-
   //Set any controller specific parameters.
   //Some of these may be used by the axis poll to set axis problem bits.
   if (status == asynSuccess){
