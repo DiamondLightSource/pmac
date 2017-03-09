@@ -539,6 +539,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   switch (cid_)
   {
     case PMAC_CID_GEOBRICK_:
+    case PMAC_CID_POWER_:
       // Outputs
       for (gpioNo = 0; gpioNo < 8; gpioNo++){
         sprintf(cmd, "M%d", (gpioNo+32));
@@ -1268,6 +1269,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
   switch (cid_)
   {
     case PMAC_CID_GEOBRICK_:
+    case PMAC_CID_POWER_:
       // Outputs
       for (gpio = 0; gpio < 8; gpio++){
         sprintf(command, "M%d", (gpio+32));
@@ -1379,10 +1381,6 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr)
           }
         }
       }
-      break;
-
-    case PMAC_CID_POWER_:
-      // TODO: Currently this is not implemented but it should be
       break;
 
     default:
