@@ -312,7 +312,7 @@ record(longin, "$(P):HM:TIMER") {
 record(longin, "$(P):HM:I10") {
   field(DESC, "parse timer")
   field(DTYP, "asynInt32")
-  field(INP, "@asyn($(PORT),0)PMAC_VIM_I10")
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_I10")
   field(SCAN, "I/O Intr")
 }
 
