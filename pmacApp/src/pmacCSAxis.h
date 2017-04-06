@@ -37,6 +37,7 @@ private:
   asynStatus getAxisInitialStatus(void);
 
   int deferredMove_;
+  char deferredCommand_[128];
   int scale_;
   double position_;
   double previous_position_;
