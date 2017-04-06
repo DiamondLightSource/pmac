@@ -29,6 +29,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program);
     virtual ~pmacCSController();
     std::string getPortName();
+    asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
     void setDebugLevel(int level, int axis);
     bool getMoving();
     int getCSNumber();
@@ -41,6 +42,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     asynStatus immediateWriteRead(const char *command, char *response);
     asynStatus axisWriteRead(const char *command, char *response);
 
+    pmacCSAxis *getAxis(asynUser *pasynUser);
     pmacCSAxis *getAxis(int axisNo);
 
     // Registration for callbacks
@@ -71,9 +73,12 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     std::string portName_;
     int csNumber_;
     int progNumber_;
+    epicsUInt32 movesDeferred_;
     int status_[3];
     csStatus cStatus_;
     void *pC_;
+
+    asynStatus processDeferredMoves(void);
 
     static const epicsUInt32 PMAC_ERROR_PRINT_TIME_;
 
