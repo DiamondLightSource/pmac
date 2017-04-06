@@ -231,7 +231,7 @@ class PowerPMACGlobalControl(_PowerPMACGlobalControlT, Device):
 
 class pmacDeferMoves(AutoSubstitution):
     TemplateFile = 'pmacDeferMoves.template'
-    Dependencies = (GeoBrick,)
+    Dependencies = (DeltaTau,)
 pmacDeferMoves.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 
 class _pmacTrajectoryAxis(AutoSubstitution):
