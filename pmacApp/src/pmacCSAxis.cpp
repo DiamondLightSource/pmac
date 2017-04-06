@@ -66,7 +66,9 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
   double deviceUnits = 0.0;
 
   // Make any CS demands consistent with this move
-  pC_->makeCSDemandsConsistent();
+  if (pC_->movesDeferred_ == 0) {
+    pC_->makeCSDemandsConsistent();
+  }
 
   if (max_velocity != 0) {
       /* Isx89 = default feedrate in EGU/s */
@@ -81,23 +83,29 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
   }
 
   deviceUnits = position / (double)scale_;
-  sprintf( command, "&%d%s%s"DEMAND"=%.12f", pC_->getCSNumber(), vel_buff, acc_buff, axisNo_, deviceUnits );
 
-  if (pC_->getProgramNumber() != 0){
-    // Abort current move to make sure axes are enabled
-    sprintf(commandtemp, "&%dE", pC_->getCSNumber());
-    debug(DEBUG_TRACE, functionName, "Sending command to PMAC", commandtemp);
-    status = pC_->axisWriteRead(commandtemp, response);
-    /* If the program specified is non-zero, add a command to run the program.
-     * If program number is zero, then the move will have to be started by some
-     * external process, which is a mechanism of allowing coordinated starts to
-     * movement. */
-    sprintf(buff, " B%dR", pC_->getProgramNumber());
-    strcat(command, buff);
-    debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
-    status = pC_->axisWriteRead(command, response);
+
+  if (pC_->movesDeferred_ == 0) {
+    sprintf( command, "&%d%s%s"DEMAND"=%.12f", pC_->getCSNumber(), vel_buff, acc_buff, axisNo_, deviceUnits );
+    if (pC_->getProgramNumber() != 0){
+      // Abort current move to make sure axes are enabled
+      sprintf(commandtemp, "&%dE", pC_->getCSNumber());
+      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", commandtemp);
+      status = pC_->axisWriteRead(commandtemp, response);
+      /* If the program specified is non-zero, add a command to run the program.
+       * If program number is zero, then the move will have to be started by some
+       * external process, which is a mechanism of allowing coordinated starts to
+       * movement. */
+      sprintf(buff, " B%dR", pC_->getProgramNumber());
+      strcat(command, buff);
+      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
+      status = pC_->axisWriteRead(command, response);
+    }
+  } else {
+    sprintf(command, "%s%s"DEMAND"=%.12f", vel_buff, acc_buff, axisNo_, deviceUnits );
+    deferredMove_ = pC_->movesDeferred_;
+    sprintf(deferredCommand_, "%s", command);
   }
-
   return status;
 }
 

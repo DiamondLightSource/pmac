@@ -141,7 +141,8 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   pmacDebugger("pmacCSController"),
   portName_(portName),
   csNumber_(csNo),
-  progNumber_(program)
+  progNumber_(program),
+  movesDeferred_(0)
 {
   asynStatus status = asynSuccess;
   static const char *functionName = "pmacCSController";
@@ -175,6 +176,97 @@ pmacCSController::~pmacCSController()
 std::string pmacCSController::getPortName()
 {
   return portName_;
+}
+
+/**
+ * Deal with controller specific epicsInt32 params.
+ * @param pasynUser
+ * @param value
+ * @param asynStatus
+ */
+asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value)
+{
+  int function = pasynUser->reason;
+  bool status = true;
+  pmacCSAxis *pAxis = NULL;
+  const char *name[128];
+  static const char *functionName = "writeInt32";
+
+  debug(DEBUG_TRACE, functionName);
+
+  getParamName(function, name);
+  debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
+  pAxis = this->getAxis(pasynUser);
+  if (!pAxis) {
+    return asynError;
+  }
+
+  status = (pAxis->setIntegerParam(function, value) == asynSuccess) && status;
+
+  if (function == motorDeferMoves_) {
+    debug(DEBUG_VARIABLE, functionName, "Motor defer value", value);
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s: Setting deferred move mode on PMAC %s to %d\n", functionName, portName, value);
+    if (value == 0){
+      status = (this->processDeferredMoves() == asynSuccess) && status;
+    }
+    this->movesDeferred_ = value;
+  }
+
+  if (!status){
+    return asynError;
+  }
+  return asynSuccess;
+}
+
+asynStatus pmacCSController::processDeferredMoves(void)
+{
+  asynStatus status = asynSuccess;
+  char abort[PMAC_MAXBUF] = {0};
+  char command[PMAC_MAXBUF] = {0};
+  char fullCommand[PMAC_MAXBUF] = {0};
+  char response[PMAC_MAXBUF] = {0};
+  pmacCSAxis *pAxis = NULL;
+  int executeDeferred = 0;
+  static const char *functionName = "processDeferredMoves";
+
+  debug(DEBUG_TRACE, functionName);
+  asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
+
+  //Build up combined move command for all axes involved in the deferred move.
+  for (int axis=0; axis<numAxes_; axis++) {
+    pAxis = getAxis(axis);
+    if (pAxis != NULL) {
+      if (pAxis->deferredMove_) {
+        sprintf(command, "%s %s", command, pAxis->deferredCommand_);
+        executeDeferred = 1;
+      }
+    }
+  }
+
+  if (executeDeferred == 1){
+    this->makeCSDemandsConsistent();
+    if (this->getProgramNumber() != 0){
+      // Abort current move to make sure axes are enabled
+      sprintf(abort, "&%dE", this->getCSNumber());
+      status = this->immediateWriteRead(abort, response);
+
+      sprintf(fullCommand, "&%d%s B%dR", this->getCSNumber(), command, this->getProgramNumber());
+      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", fullCommand);
+      status = this->immediateWriteRead(fullCommand, response);
+    }
+  }
+
+  //Clear deferred move flag for the axes involved.
+  for (int axis=0; axis<numAxes_; axis++) {
+    pAxis = getAxis(axis);
+    if (pAxis!=NULL) {
+      if (pAxis->deferredMove_) {
+        pAxis->deferredMove_ = 0;
+      }
+    }
+  }
+
+  return status;
 }
 
 void pmacCSController::setDebugLevel(int level, int axis)
@@ -278,6 +370,17 @@ asynStatus pmacCSController::axisWriteRead(const char *command, char *response)
   }
 
   return status;
+}
+
+/** Returns a pointer to an pmacAxis object.
+  * Returns NULL if the axis number encoded in pasynUser is invalid.
+  * \param[in] pasynUser asynUser structure that encodes the axis index number. */
+pmacCSAxis* pmacCSController::getAxis(asynUser *pasynUser)
+{
+  int axisNo = 0;
+
+  getAddress(pasynUser, &axisNo);
+  return getAxis(axisNo);
 }
 
 /** Returns a pointer to an pmacAxis object.
