@@ -2527,10 +2527,6 @@ asynStatus pmacController::buildProfile(int csNo)
     }
   }
 
-  if (status == asynSuccess){
-    makeCSDemandsConsistent();
-  }
-
   // Finally if the profile build has completed then set the status accordingly
   if (status == asynSuccess){
     // Set the maximum number of points in the scan
@@ -2747,6 +2743,11 @@ asynStatus pmacController::executeProfile(int csNo)
       status = asynError;
       callParamCallbacks();
     }
+  }
+
+  // Ensure that the demands have been made consistent for the CS axes
+  if (status == asynSuccess){
+    makeCSDemandsConsistent();
   }
 
   if (status == asynSuccess){
