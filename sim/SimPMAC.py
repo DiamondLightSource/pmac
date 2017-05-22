@@ -340,7 +340,15 @@ class PMACSimulator():
                    16: CoordinateSystem(self)}
         # print self.axes
         self.setup_trajectory_interface()
+        self.setup_some_standard_mvars()
 
+    def setup_some_standard_mvars(self):
+        # pmac interupt timings (for processor timing calcs)
+        self.mvars[70] = 11990   
+        self.mvars[71] = 554
+        self.mvars[72] = 2621
+        self.mvars[73] = 76
+        
     def setup_trajectory_interface(self):
         self.mvars[M_TRAJ_VERSION] = 1.1
         # Number of points in a buffer
@@ -418,7 +426,7 @@ class PMACSimulator():
                     self.axes[self.caxis].move(float(num))
                 if "?" in word:
                     resp = self.parse_status_request(word)
-                if word == "%":
+                if "%" in word:
                     resp = "100"
                 if 'LIST' in word:
                     return chr(0x07) + "\r"
