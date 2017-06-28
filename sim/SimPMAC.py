@@ -354,8 +354,10 @@ class PMACSimulator():
         # Number of points in a buffer
         self.mvars[M_TRAJ_BUFSIZE] = 1000
         # Address of A and B buffers
-        self.mvars[M_TRAJ_A_ADR] = 0x10020
-        self.mvars[M_TRAJ_B_ADR] = 0x12730
+        #self.mvars[M_TRAJ_A_ADR] = 0x10020
+        self.mvars[M_TRAJ_A_ADR] = 0x40000
+        #self.mvars[M_TRAJ_B_ADR] = 0x12730
+        self.mvars[M_TRAJ_B_ADR] = 0x30000
 
     def update(self):
         # print "Updating simulator"
@@ -450,11 +452,14 @@ class PMACSimulator():
                         writing = True
                     mvar = int(filter(str.isdigit, num))
                     if writing:
+
                         logging.debug("Writing M[%d] = %s", mvar, value)
                         self.mvars[mvar] = float(value)
                     else:
                         resp = str(self.mvars[int(filter(str.isdigit, num))])
-                if 'P' in word:
+                if 'CPU' in word:
+                    resp = "DSP56321"
+                elif 'P' in word:
                     if '#' in word:
                         resp = str(self.axes[self.caxis].readPosition())
                     else:
@@ -604,7 +609,7 @@ class PMACSimulator():
 
 
 if __name__ == "__main__":
-    #logging.basicConfig(filename="simulator.log", filemode='w', level=logging.DEBUG)
-    logging.basicConfig(filename="simulator.log", filemode='w', level=logging.ERROR)
+    logging.basicConfig(filename="simulator.log", filemode='w', level=logging.DEBUG)
+    #logging.basicConfig(filename="simulator.log", filemode='w', level=logging.ERROR)
     app = SimulatedPmacApp()
     app.run()
