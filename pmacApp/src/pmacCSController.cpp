@@ -212,6 +212,9 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     this->movesDeferred_ = value;
   }
 
+  //Call base class method. This will handle callCallbacks even if the function was handled here.
+  status = (asynMotorController::writeInt32(pasynUser, value) == asynSuccess) && status;
+
   if (!status){
     return asynError;
   }
