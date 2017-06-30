@@ -1,0 +1,43 @@
+This sample IOC connects to the controls lab (G15 Diamond House) Geobrick.
+
+It will run against a base geobrick configuration.
+
+To get the coordinate system axes to work requires downloading lab.pmc onto the brick.
+
+
+i5250=0
+
+OPEN PROG 10
+CLEAR
+LINEAR
+ABS
+; need to think about the consequences of including all axes in frax
+FRAX(A,B,C,U,V,W,X,Y,Z)
+A(Q71)B(Q72)C(Q73)U(Q74)V(Q75)W(Q76)X(Q77)Y(Q78)Z(Q79)
+DWELL0
+CLOSE
+
+#define J1MOVE P(4700+1)
+#define J1MRES P(4800+1)
+#define J1OFF  P(4900+1)
+#define J2MOVE P(4700+2)
+#define J2MRES P(4800+3)
+#define J2OFF  P(4900+3)
+
+#define J1 (J1MRES*m162/(I108*32)+J1OFF)
+#define J2 (J2MRES*m362/(I208*32)+J2OFF)
+
+OPEN PLC 17
+CLEAR
+    ADDRESS&2
+    Q87 = J1
+    Q89 = J2
+    if (J1MOVE = 1)
+    or (J2MOVE = 1)
+        J1MOVE = 0
+        J2MOVE = 0
+        Q77 = Q87
+        Q78 = Q88
+    endif
+CLOSE
+ENABLE PLC 17
