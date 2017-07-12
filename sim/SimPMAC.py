@@ -20,9 +20,46 @@ M_TRAJ_C_BUF = 4040
 M_TRAJ_BUF_FILL_A = 4044
 M_TRAJ_BUF_FILL_B = 4045
 
-class SimulatedPmacApp(npyscreen.NPSAppManaged):
+class SimulatedPmacAppGui(npyscreen.NPSAppManaged):
     def __init__(self):
-        super(SimulatedPmacApp, self).__init__()
+        super(SimulatedPmacAppGui, self).__init__()
+        self.pmac_thread = PmacThread()
+
+    def get_status(self):
+        values = []
+        axes = self.pmac_thread.simulator.axes
+        values.append("Axis 1 : " + str(axes[1].readPosition()))
+        values.append("Axis 2 : " + str(axes[2].readPosition()))
+        values.append("Axis 3 : " + str(axes[3].readPosition()))
+        values.append("Axis 4 : " + str(axes[4].readPosition()))
+        values.append("Axis 5 : " + str(axes[5].readPosition()))
+        values.append("Axis 6 : " + str(axes[6].readPosition()))
+        values.append("Axis 7 : " + str(axes[7].readPosition()))
+        values.append("Axis 8 : " + str(axes[8].readPosition()))
+        return values
+
+    def create_pmac(self, port):
+        self.pmac_thread.create_pmac(port)
+
+    def onStart(self):
+        self.keypress_timeout_default = 100
+        self.registerForm("MAIN", IntroForm())
+        self.registerForm("MAIN_MENU", MainMenu())
+
+class SimulatedPmacAppNoGui():
+    def __init__(self, tcp_port):
+        self.port = tcp_port
+        self.pmac_thread = PmacThread()
+
+    def run(self):
+        print 'launching headless pmac simulator on port', self.port
+        self.pmac_thread.create_pmac(self.port)
+        while True:
+            threading._sleep(.1)
+
+
+class PmacThread():
+    def __init__(self):
         self.server = None
         self.simulator = None
         self.server_thread = None
@@ -44,27 +81,10 @@ class SimulatedPmacApp(npyscreen.NPSAppManaged):
         self.server_thread.daemon = True
         self.server_thread.start()
 
-    def get_status(self):
-        values = []
-        values.append("Axis 1 : " + str(self.simulator.axes[1].readPosition()))
-        values.append("Axis 2 : " + str(self.simulator.axes[2].readPosition()))
-        values.append("Axis 3 : " + str(self.simulator.axes[3].readPosition()))
-        values.append("Axis 4 : " + str(self.simulator.axes[4].readPosition()))
-        values.append("Axis 5 : " + str(self.simulator.axes[5].readPosition()))
-        values.append("Axis 6 : " + str(self.simulator.axes[6].readPosition()))
-        values.append("Axis 7 : " + str(self.simulator.axes[7].readPosition()))
-        values.append("Axis 8 : " + str(self.simulator.axes[8].readPosition()))
-        return values
-
     def update(self):
         while self.simulator.getRunning():
             self.simulator.update()
             sleep(0.001)
-
-    def onStart(self):
-        self.keypress_timeout_default = 100
-        self.registerForm("MAIN", IntroForm())
-        self.registerForm("MAIN_MENU", MainMenu())
 
 
 class IntroForm(npyscreen.Form):
@@ -165,6 +185,9 @@ class PMACAxis():
 
     def move(self, position):
         self.dmd_position = position
+
+    def stop(self):
+        self.dmd_position = self.position
 
     def update(self):
         # print "position: " + str(self.position)
@@ -426,6 +449,8 @@ class PMACSimulator():
                     # print "Pos demand: " + num
                     logging.debug("Pos demand #%d (J=) %f", self.caxis, float(num))
                     self.axes[self.caxis].move(float(num))
+                if '/' in word:
+                    self.axes[self.caxis].stop()
                 if "?" in word:
                     resp = self.parse_status_request(word)
                 if "%" in word:
@@ -609,7 +634,16 @@ class PMACSimulator():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename="simulator.log", filemode='w', level=logging.DEBUG)
-    #logging.basicConfig(filename="simulator.log", filemode='w', level=logging.ERROR)
-    app = SimulatedPmacApp()
+    # logging.basicConfig(filename="simulator.log", filemode='w',
+    #                     level=logging.DEBUG)
+    logging.basicConfig(filename="/tmp/pmac-simulator.log", filemode='w',
+                        level=logging.ERROR)
+
+    # a single command line parameter provides the port and runs with no UI
+    # no parameter means run interactively
+    if len(sys.argv) == 2:
+        app = SimulatedPmacAppNoGui(sys.argv[1])
+    else:
+        app = SimulatedPmacAppGui()
+
     app.run()
