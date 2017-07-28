@@ -46,6 +46,7 @@ DB += multi_beamstop_on_platform.template
 DB += qcm.template
 DB += slit4-gui.template
 DB += symetrie_hexapod.template
+DB += translated_motor.template
 DB += zform.template
 
 #----------------------------------------------------
