@@ -290,7 +290,7 @@ Return
 N109
     if (Axes > 0)
         PVT (Time * 0.001)                        ; Set move time
-        $(MOVECMD=GoSub110)
+        GoSub110
     End If
     TotalPoints = TotalPoints + 1
     If(User > 0)
