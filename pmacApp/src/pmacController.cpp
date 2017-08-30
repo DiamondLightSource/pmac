@@ -2855,75 +2855,20 @@ void pmacController::trajectoryTask()
 
       // Make sure axes are enabled
       sprintf(cmd, "&%dE", tScanCSNo_);
-      debug(DEBUG_TRACE, functionName, "Sending command to abort previous move", cmd);
+      debug(DEBUG_TRACE, functionName, "Sending command to enable axes", cmd);
       this->immediateWriteRead(cmd, response);
 
-
-      // TODO: The current disabled implementation could introduce motor creep from one
-      // trajectory scan to the next and should be investigated further.
-      // Only perform this check if we are scanning coordinate system 1
-      if (tScanCSNo_ == 1){
-        for (int index = 0; index < PMAC_MAX_CS_AXES; index++){
-          if ((1<<index & tScanAxisMask_) == 0){
-            debug(DEBUG_TRACE, functionName, "Checking for disabled axis assignment", axesStrings[index]);
-            // This axis has been disabled, so we need to check to see if it has a valid assignment
-            // Loop through the motor assignments
-            int assigned = 0;
-            // Loop over each real motor
-            for (int axis = 1; axis <= this->numAxes_-1; axis++){
-              // Check the motor exists
-              if (this->getAxis(axis) != NULL){
-                // Read the CS number for the axis
-                int axisCs = this->getAxis(axis)->getAxisCSNo();
-                // Check the axis is in the CS that we are scanning
-                if (axisCs == tScanCSNo_){
-                  debug(DEBUG_TRACE, functionName, "Checking against motor", axis);
-                  // Read the assignment
-                  getStringParam(axis, PMAC_C_GroupAssignRBV_, MAX_STRING_SIZE, assignment);
-                  debug(DEBUG_TRACE, functionName, "Motor assignment", assignment);
-                  // Now verify whether the axis is present in this assignment
-                  std::string strAssign(assignment);
-                  if (strAssign == axesStrings[index]){
-                    // Check if this axis has already been assigned
-                    if (assigned == 1){
-                      debug(DEBUG_TRACE, functionName, "Axes already assigned");
-                      // Error, invalid axis assignment for disabled axis
-                      // Set the message accordingly
-                      sprintf(cmd, "Scan failed - duplicate assignment for disabled axis %s", axesStrings[index].c_str());
-                      // Set the status to failure
-                      this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, cmd);
-                      // Set the executing flag to 0
-                      tScanExecuting_ = 0;
-                      // Notify that EPICS detected the error
-                      epicsErrorDetect = 1;
-                    } else {
-                      // Set the assigment to 1, and write the Q variable down to the pmac
-                      assigned = 1;
-                      // Read the motor demand position
-                      double motorPos = 0.0;
-                      getDoubleParam(axis, motorPosition_, &motorPos);
-                      // Set the Q7x axis demand variable to the motor demand position
-                      sprintf(cmd, "&%dQ7%d=%f", tScanCSNo_, (index+1), motorPos);
-                      debug(DEBUG_TRACE, functionName, "Sending disabled axis position", cmd);
-                      this->immediateWriteRead(cmd, response);
-                    }
-                  } else if (strAssign.find(axesStrings[index]) != std::string::npos){
-                    debug(DEBUG_TRACE, functionName, "Axes invalid assignment");
-                    // Error, invalid axis assignment for disabled axis
-                    // Set the message accordingly
-                    sprintf(cmd, "Scan failed - invalid assignment for disabled axis %s", strAssign.c_str());
-                    // Set the status to failure
-                    this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, cmd);
-                    // Set the executing flag to 0
-                    tScanExecuting_ = 0;
-                    // Notify that EPICS detected the error
-                    epicsErrorDetect = 1;
-                  }
-                }
-              }
-            }
-          }
-        }
+      if (response[0] == 0x7){
+        // Remove the line feed
+        response[strlen(response)-1] = 0;
+        // Set the status to failure
+        char msg[1024];
+        sprintf(msg, "Scan failed to enable axes with %s", response + 1);
+        this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, msg);
+        // Set the executing flag to 0
+        tScanExecuting_ = 0;
+        // Notify that EPICS detected the error
+        epicsErrorDetect = 1;
       }
 
       // We are ready to execute the start demand
@@ -2939,8 +2884,12 @@ void pmacController::trajectoryTask()
         this->immediateWriteRead(cmd, response);
         // Check if this command returned an error
         if (response[0] == 0x7){
+          // Remove the line feed
+          response[strlen(response)-1] = 0;
           // Set the status to failure
-          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Scan failed to start motion program - check motor status");
+          char msg[1024];
+          sprintf(msg, "Scan failed to start motion program with %s", response + 1);
+          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, msg);
           // Set the executing flag to 0
           tScanExecuting_ = 0;
           // Notify that EPICS detected the error
@@ -2987,9 +2936,8 @@ void pmacController::trajectoryTask()
       setDoubleParam(PMAC_C_TrajRunTime_, elapsedTime);
 
       // Check if the scan has stopped/finished (status from PMAC)
-      // Only start checking this value after we have been running for
-      // long enough to be reading the current scan value
-      if (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING){
+      // Only if we still think the scan is running (i.e. we didn't abort it
+      if (tScanExecuting_ == 1 && tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING){
         debug(DEBUG_VARIABLE, functionName, "tScanPmacStatus", tScanPmacStatus_);
         // Something has happened on the PMAC side
         tScanExecuting_ = 0;
