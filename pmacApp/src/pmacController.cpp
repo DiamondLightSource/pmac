@@ -3002,9 +3002,8 @@ void pmacController::trajectoryTask()
       setDoubleParam(PMAC_C_TrajRunTime_, elapsedTime);
 
       // Check if the scan has stopped/finished (status from PMAC)
-      // Only start checking this value after we have been running for
-      // long enough to be reading the current scan value
-      if (tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING){
+      // Only if we still think the scan is running (i.e. we didn't abort it
+      if (tScanExecuting_ == 1 && tScanPmacStatus_ != PMAC_TRAJ_STATUS_RUNNING){
         debug(DEBUG_VARIABLE, functionName, "tScanPmacStatus", tScanPmacStatus_);
         // Something has happened on the PMAC side
         tScanExecuting_ = 0;
