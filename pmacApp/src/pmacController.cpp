@@ -2855,9 +2855,20 @@ void pmacController::trajectoryTask()
 
       // Make sure axes are enabled
       sprintf(cmd, "&%dE", tScanCSNo_);
-      debug(DEBUG_TRACE, functionName, "Sending command to abort previous move", cmd);
+      debug(DEBUG_TRACE, functionName, "Sending command to enable axes", cmd);
       this->immediateWriteRead(cmd, response);
 
+      if (response[0] == 0x7){
+        // Remove the line feed
+        response[strlen(response)-1] = 0;
+        // Set the status to failure
+        char msg[1024];
+        sprintf(msg, "Scan failed to enable axes with %s", response + 1);
+        this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, msg);
+        // Set the executing flag to 0
+        tScanExecuting_ = 0;
+        // Notify that EPICS detected the error
+        epicsErrorDetect = 1;
 
       // TODO: The current disabled implementation could introduce motor creep from one
       // trajectory scan to the next and should be investigated further.
@@ -2939,8 +2950,12 @@ void pmacController::trajectoryTask()
         this->immediateWriteRead(cmd, response);
         // Check if this command returned an error
         if (response[0] == 0x7){
+          // Remove the line feed
+          response[strlen(response)-1] = 0;
           // Set the status to failure
-          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, "Scan failed to start motion program - check motor status");
+          char msg[1024];
+          sprintf(msg, "Scan failed to start motion program with %s", response + 1);
+          this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, msg);
           // Set the executing flag to 0
           tScanExecuting_ = 0;
           // Notify that EPICS detected the error
