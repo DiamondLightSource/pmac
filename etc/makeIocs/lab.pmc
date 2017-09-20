@@ -1,4 +1,46 @@
-i5250=0
+; **************************************************************
+; motion program copied from
+; /dls_sw/prod/R3.14.12.3/support/pmacCoord/1-51/pmacCoordApp/pmc/PROG10_CS_motion.pmc
+; **************************************************************
+
+;####################################################
+; Generic program for moving any co-ordinate system
+; Original Author: Tom Cobb
+; Used variables: Q71..Q79, Q81..Q89
+; You should do a $$$ or type the following the first time you load this prog.
+; If you type the commands in, ignore any errors. If you $$$, PLC1 will do it
+; automatically for you at startup:
+;&16 DEFINE LOOKAHEAD 50,10
+;&15 DEFINE LOOKAHEAD 50,10
+;&14 DEFINE LOOKAHEAD 50,10
+;&13 DEFINE LOOKAHEAD 50,10
+;&12 DEFINE LOOKAHEAD 50,10
+;&11 DEFINE LOOKAHEAD 50,10
+;&10 DEFINE LOOKAHEAD 50,10
+;&9 DEFINE LOOKAHEAD 50,10
+;&8 DEFINE LOOKAHEAD 50,10
+;&7 DEFINE LOOKAHEAD 50,10
+;&6 DEFINE LOOKAHEAD 50,10
+;&5 DEFINE LOOKAHEAD 50,10
+;&4 DEFINE LOOKAHEAD 50,10
+;&3 DEFINE LOOKAHEAD 50,10
+;&2 DEFINE LOOKAHEAD 50,10
+;####################################################
+
+;This program defines the program needed to do a move using the motor record
+;on a CS axis
+;to do a move we need to do &{CS}R
+;to stop a move we need to do &{CS}A
+;demand values are in &{CS}Q71..79
+;The following are set by the motor record:
+;Isx87 = Acceleration
+;Isx88 = S curve
+;Isx89 = Feedrate
+
+; Set some defaults for all CS axes
+i5213,15,100=10   ; segmentation time (needed for lookahead)
+i5220,15,100=50   ; lookahead length (needed to limit max velocity to max set in CS)
+i5250,15,100=1    ; Enable kinematics
 
 OPEN PROG 10
 CLEAR
@@ -6,26 +48,123 @@ LINEAR
 ABS
 ; need to think about the consequences of including all axes in frax
 FRAX(A,B,C,U,V,W,X,Y,Z)
-TM100
 A(Q71)B(Q72)C(Q73)U(Q74)V(Q75)W(Q76)X(Q77)Y(Q78)Z(Q79)
 DWELL0
 CLOSE
 
-#define J1MOVE P(4700+1)
-#define J1MRES P(4800+1)
-#define J1OFF  P(4900+1)
-#define J2MOVE P(4700+2)
-#define J2MRES P(4800+2)
-#define J2OFF  P(4900+2)
+; **************************************************************
+; Coordinate system geberated using following command
+; msi -M"COORD=3,PLC=17,J1=3,J2=4,DIST=1000,PIVOT=500,DEPTH=0" /dls_sw/prod/R3.14.12.3/support/pmacCoord/1-51/pmacCoordApp/pmc/CS_2jack.pmc
+; **************************************************************
+CLOSE
 
-#define J1 (J1MRES*m162/(I108*32)+J1OFF)
-#define J2 (J2MRES*m262/(I208*32)+J2OFF)
+;################################################
+;; \file
+;; Define motion for 2 jack system
+;;
+;; Original Author: Ronaldo Mercado
+;;
+;; Defined axes:
+;; - X (addr 6) = height of surface in EGUs, PIVOT away from J1
+;; - Y (addr 7) = angle of the surface in i15 units
+;;
+;; Macros:
+;; - COORD = 3  CS number, e.g. 2
+;; - PLC = 17  PLC number, should be CS number+15, e.g. 17
+;; - J1 = 3  Axisnum for Jack 1, e.g. 1
+;; - J2 = 4  Axisnum for Jack 2, e.g. 2
+;; - DIST = 1000  Distance between 2 jacks when they are in the zero position
+;; - PIVOT = 500  Distance from jack 1 to pivot point of the surface
+;; - DEPTH = 0  Depth of the surface on the mount
+;################################################
 
-OPEN PLC 17
+; Change to CS3
+&3
+
+; Set relevant axes to use kinematics
+#3->I ; +ve blade
+#4->I ; -ve blade
+
+; These are set by motor_in_cs.template
+#define J1MOVE P(4700+3)
+#define J1MRES P(4800+3)
+#define J1OFF  P(4900+3)
+#define J2MOVE P(4700+4)
+#define J2MRES P(4800+4)
+#define J2OFF  P(4900+4)
+
+; The backlash demand in egu's is set by PROG_CS_motion_backlash.pmc (Q401..408)
+; NB Backlash defaults to zero (for use with PROG_CS_motion.pmc)
+#define BDSTJ1 Q(400+3)
+#define BDSTJ2 Q(400+4)
+BDSTJ1=0
+BDSTJ2=0
+
+;; This is the distance between the 2 jacks when they are in the zero position
+#define DIST Q20
+DIST = 1000
+;; This is the distance from jack 1 to pivot point of the surface
+#define PIVOT Q21
+PIVOT = 500
+;; This is the depth of the surface on the mount
+#define DEPTH Q22
+DEPTH = 0
+
+; Calculate height and angle from jack positions
+#define J1POS (J1MRES*P3+J1OFF)
+#define J2POS (J2MRES*P4+J2OFF)
+#define HEIGHT Q7
+#define ANGLE Q8
+; Local variables
+#define RATIO Q128
+OPEN FORWARD
 CLEAR
-    ADDRESS&2
-    Q87 = J1 
-    Q88 = J2
+    ; this is the difference in height of the jacks divided by their distance apart
+    RATIO=(J2POS-J1POS)/DIST
+    ; this is the angle of the surface
+    ANGLE=atan(RATIO)
+    ; the height of the surface
+    HEIGHT=J1POS+RATIO*PIVOT+DEPTH/cos(ANGLE)
+CLOSE
+
+; Calculate jack positions from height and angle
+#define SURFACE Q228
+#define TANTHETA Q229
+#define J1POS Q230
+#define J2POS Q231
+OPEN INVERSE
+CLEAR
+    ; this is the bottom edge of the surface
+    SURFACE=HEIGHT-DEPTH/cos(ANGLE)
+    ; store tan theta
+    TANTHETA=tan(ANGLE)
+    ; work out the jack positions in EGUs
+    J1POS = SURFACE-PIVOT*TANTHETA
+    J2POS = SURFACE+(DIST-PIVOT)*TANTHETA
+    ; then cts
+    P3=(J1POS+BDSTJ1-J1OFF)/J1MRES
+    P4=(J2POS+BDSTJ2-J2OFF)/J2MRES
+CLOSE
+
+; A PLC(sx+15) needs to be made to do position reporting
+; Readbacks should be in &{axisnum}Q81..89
+; As forward kinematic, but with Px = mx62/(Ix08*32)
+#define J1POS (J1MRES*m362/(I308*32)+J1OFF)
+#define J2POS (J2MRES*m462/(I408*32)+J2OFF)
+#define HEIGHT Q87
+#define ANGLE Q88
+; Local variables
+#define RATIO Q328
+OPEN PLC17
+CLEAR
+    ADDRESS&3
+    ; this is the difference in height of the jacks divided by their distance apart
+    RATIO=(J2POS-J1POS)/DIST
+    ; this is the angle of the surface
+    ANGLE=atan(RATIO)
+    ; the height of the surface
+    HEIGHT=J1POS+RATIO*PIVOT+DEPTH/cos(ANGLE)
+    ; If jack motor record did the last move, set demands = readbacks
     if (J1MOVE = 1)
     or (J2MOVE = 1)
         J1MOVE = 0
@@ -34,4 +173,4 @@ CLEAR
         Q78 = Q88
     endif
 CLOSE
-ENABLE PLC 17
+ENABLE PLC17

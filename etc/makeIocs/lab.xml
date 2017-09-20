@@ -8,14 +8,14 @@
 	<pmac.pmacDeferMoves P="PMAC_BRICK_TEST:GB1" PORT="BRICK1" Q="Defer" name="BRICK1.DEFER"/>
 	<pmac.GeoBrickTrajectoryControlT NAXES="8" NPOINTS="10000" P="PMAC_BRICK_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.TRAJ"/>
 	<pmac.pmacStatus DEVICE="PMAC_BRICK_TEST" NAXES="8" PORT="BRICK1" name="BRICK1.STAT"/>
-	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1" DHLM="1000" DLLM="-1000" EGU="mm" M=":M1" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="20" name="BRICK1.MOTORS.M1"/>
-	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2" DHLM="1000" DLLM="-1000" EGU="mm" M=":M2" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="20" name="BRICK1.MOTORS.M2"/>
-	<pmac.dls_pmac_asyn_motor ADDR="3" DESC="Motor 3" DHLM="1000" DLLM="-1000" EGU="mm" M=":M3" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M3"/>
-	<pmac.dls_pmac_asyn_motor ADDR="4" DESC="Motor 4" DHLM="1000" DLLM="-1000" EGU="mm" M=":M4" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M4"/>
-	<pmac.dls_pmac_asyn_motor ADDR="5" DESC="Motor 5" DHLM="1000" DLLM="-1000" EGU="mm" M=":M5" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M5"/>
-	<pmac.dls_pmac_asyn_motor ADDR="6" DESC="Motor 6" DHLM="1000" DLLM="-1000" EGU="mm" M=":M6" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M6"/>
-	<pmac.dls_pmac_asyn_motor ADDR="7" DESC="Motor 7" DHLM="1000" DLLM="-1000" EGU="mm" M=":M7" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M7"/>
-	<pmac.dls_pmac_asyn_motor ADDR="8" DESC="Motor 8" DHLM="1000" DLLM="-1000" EGU="mm" M=":M8" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="1" VELO="1" name="BRICK1.MOTORS.M8"/>
+	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":M1" MRES="1" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="BRICK1.MOTORS.M1"/>
+	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":M2" MRES="1" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="BRICK1.MOTORS.M2"/>
+	<pmac.dls_pmac_asyn_motor ADDR="3" DESC="Motor 3-&gt;I JACK 1" DHLM="10000" DLLM="-10000" EGU="mm" M=":M3" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="BRICK1.MOTORS.M3"/>
+	<pmac.dls_pmac_asyn_motor ADDR="4" DESC="Motor 4-&gt;I- JACK 2" DHLM="10000" DLLM="-10000" EGU="mm" M=":M4" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="BRICK1.MOTORS.M4"/>
+	<pmac.dls_pmac_asyn_motor ADDR="5" DESC="Motor 5" DHLM="10000" DLLM="-10000" EGU="mm" M=":M5" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="BRICK1.MOTORS.M5"/>
+	<pmac.dls_pmac_asyn_motor ADDR="6" DESC="Motor 6" DHLM="10000" DLLM="-10000" EGU="mm" M=":M6" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="BRICK1.MOTORS.M6"/>
+	<pmac.dls_pmac_asyn_motor ADDR="7" DESC="Motor 7" DHLM="10000" DLLM="-10000" EGU="mm" M=":M7" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="BRICK1.MOTORS.M7"/>
+	<pmac.dls_pmac_asyn_motor ADDR="8" DESC="Motor 8" DHLM="10000" DLLM="-10000" EGU="mm" M=":M8" MRES="0.001" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="BRICK1.MOTORS.M8"/>
 	<pmac.pmacDisableLimitsCheck Axis="1" Controller="BRICK1"/>
 	<pmac.pmacDisableLimitsCheck Axis="2" Controller="BRICK1"/>
 	<pmac.pmacDisableLimitsCheck Axis="3" Controller="BRICK1"/>
@@ -26,23 +26,34 @@
 	<pmac.pmacDisableLimitsCheck Axis="8" Controller="BRICK1"/>
 	<pmac.CS CS="1" Controller="BRICK1" IdlePoll="1000" name="CS1"/>
 	<pmac.CS CS="2" Controller="BRICK1" IdlePoll="1000" name="CS2"/>
-	<!--<pmac.pmacSetCoordStepsPerUnit Axis="8" CS="CS2" Scale="10000"/>-->
-	<!--<pmac.pmacSetCoordStepsPerUnit Axis="7" CS="CS2" Scale="10000"/>-->
-	<motor.basic_asyn_motor ADDR="7" DESC="CS2 X" DHLM="1000" DLLM="-1000" EGU="mm" M=":X" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.X"/>
-	<motor.basic_asyn_motor ADDR="8" DESC="CS2 Y" DHLM="1000" DLLM="-1000" EGU="mm" M=":Y" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.Y"/>
-	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1" GroupName="TestGroup1" GroupNumber="0"/>
-	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1" GroupName="TestGroup2" GroupNumber="1"/>
+	<pmac.CS CS="3" Controller="BRICK1" IdlePoll="1000" name="CS3"/>
+	<!--<pmac.pmacSetCoordStepsPerUnit Axis="1" CS="CS2" Scale="1"/>-->
+	<!--<pmac.pmacSetCoordStepsPerUnit Axis="2" CS="CS2" Scale="1"/>-->
+	<motor.basic_asyn_motor ADDR="1" DESC="CS2 1-&gt;X" DHLM="10000" DLLM="-10000" EGU="mm" M=":X_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.X2"/>
+	<motor.basic_asyn_motor ADDR="2" DESC="CS2 2-&gt;Y" DHLM="10000" DLLM="-10000" EGU="mm" M=":Y_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.Y2"/>
+	<motor.basic_asyn_motor ADDR="7" DESC="CS3 HEIGHT" DHLM="10000" DLLM="-10000" EGU="mm" M=":X_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.X3"/>
+	<motor.basic_asyn_motor ADDR="8" DESC="CS3 ANGLE" DHLM="10000" DLLM="-10000" EGU="deg" M=":Y_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.Y3"/>
+	<motor.basic_asyn_motor ADDR="1" DESC="CS3 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":A_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.A3"/>
+	<motor.basic_asyn_motor ADDR="2" DESC="CS3 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":B_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.B3"/>
+	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1" GroupName="1,2-&gt;A,B" GroupNumber="0"/>
+	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1" GroupName="3,4-&gt;I" GroupNumber="1"/>
+	<pmac.pmacCreateCsGroup AxisCount="4" Controller="BRICK1" GroupName="MIXED" GroupNumber="2"/>
 	<!--This is a 1-1 mapping to motor 1, the 1000X is to include the resolution of motor 1 so that the units match.-->
-	<pmac.pmacCsGroupAddAxis AxisDef="1000X" AxisNumber="1" Controller="BRICK1" CoordSysNumber="2" GroupNumber="0"/>
-	<pmac.pmacCsGroupAddAxis AxisDef="1000Y" AxisNumber="2" Controller="BRICK1" CoordSysNumber="2" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="1" Controller="BRICK1" CoordSysNumber="2" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="BRICK1" CoordSysNumber="2" GroupNumber="0"/>
 	<!--<pmac.pmacCsGroupAddAxis AxisDef="Z" AxisNumber="3" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>-->
 	<!--<pmac.pmacCsGroupAddAxis AxisDef="U" AxisNumber="4" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>-->
 	<!--<pmac.pmacCsGroupAddAxis AxisDef="V" AxisNumber="5" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>-->
 	<!--<pmac.pmacCsGroupAddAxis AxisDef="W" AxisNumber="6" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>-->
 	<!--<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="7" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>-->
 	<!--<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="8" Controller="BRICK1" CoordSysNumber="1" GroupNumber="0"/>-->
-	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="1" Controller="BRICK1" CoordSysNumber="1" GroupNumber="1"/>
-	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="2" Controller="BRICK1" CoordSysNumber="1" GroupNumber="1"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="3" Controller="BRICK1" CoordSysNumber="3" GroupNumber="1"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="4" Controller="BRICK1" CoordSysNumber="3" GroupNumber="1"/>
+	<!--This is a 1-1 mapping to motor 1, the 1000X is to include the resolution of motor 1 so that the units match.-->
+	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="1" Controller="BRICK1" CoordSysNumber="3" GroupNumber="2"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="BRICK1" CoordSysNumber="3" GroupNumber="2"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="3" Controller="BRICK1" CoordSysNumber="3" GroupNumber="2"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="4" Controller="BRICK1" CoordSysNumber="3" GroupNumber="2"/>
 	<pmac.GeoBrickGlobalControl P="PMAC_BRICK_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.CTRL"/>
 	<pmac.autohome CTRL="PMAC_BRICK_TEST:GB1:" GRP2="Axis1" P="PMAC_BRICK_TEST" PLC="10" PORT="BRICK1" name="BRICK1.HOME"/>
 </components>

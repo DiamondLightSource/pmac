@@ -8,7 +8,7 @@ include $(TOP)/etc/makeIocs/Makefile.iocs
 XMLBUILDER := dls-xml-iocbuilder.py
 
 # set to -d to get debugging
-DEBUG := -d
+# DEBUG := -d
 
 # Add the created iocs and sims to the install target
 TARGETS += $(patsubst %, ../../makeIocs/O.Common/%, $(IOCS)) $(IOC_DIRS)
