@@ -20,70 +20,88 @@
 
 class pmacController;
 
-class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugger
-{
-  public:
-  /* These are the methods we override from the base class */
-  pmacAxis(pmacController *pController, int axisNo);
-  virtual ~pmacAxis();
-  asynStatus move(double position, int relative, double min_velocity, double max_velocity, double acceleration);
-  asynStatus moveVelocity(double min_velocity, double max_velocity, double acceleration);
-  asynStatus home(double min_velocity, double max_velocity, double acceleration, int forwards);
-  asynStatus stop(double acceleration);
-  asynStatus poll(bool *moving);
-  asynStatus setPosition(double position);
-  asynStatus setClosedLoop(bool closedLoop);
-  
-  virtual void callback(pmacCommandStore *sPtr, int type);
+class pmacAxis : public asynMotorAxis, pmacCallbackInterface, public pmacDebugger {
+public:
+    /* These are the methods we override from the base class */
+    pmacAxis(pmacController *pController, int axisNo);
 
-  void debug(int level, const std::string& method);
-  void debug(int level, const std::string& method, const std::string& message);
-  void debug(int level, const std::string& method, const std::string& message, const std::string& value);
-  void debug(int level, const std::string& method, const std::string& message, int value);
-  void debug(int level, const std::string& method, const std::string& message, double value);
+    virtual ~pmacAxis();
 
-  private:
-  pmacController *pC_;
-  
-  asynStatus getAxisStatus(pmacCommandStore *sPtr);
-  asynStatus getAxisInitialStatus(void);
-  int getAxisCSNo();
-  double getCachedPosition();
-  double getPosition();
+    asynStatus move(double position, int relative, double min_velocity, double max_velocity,
+                    double acceleration);
 
-  int assignedCS_;
-  double setpointPosition_;
-  double encoderPosition_;
-  double currentVelocity_;
-  double velocity_;
-  double accel_;
-  double highLimit_;
-  double lowLimit_;
-  int limitsDisabled_;
-  double stepSize_;
-  double deferredPosition_;
-  double cachedPosition_;
-  int deferredMove_;
-  int deferredRelative_;
-  double deferredTime_;
-  int scale_;
-  double rawPosition_;
-  bool initiatedMove_;
-  double previous_position_;
-  int previous_direction_;
-  int amp_enabled_;
-  int amp_enabled_prev_;
-  int fatal_following_;
-  int encoder_axis_;
-  int limitsCheckDisable_;
-  epicsTimeStamp nowTime_;
-  epicsFloat64 nowTimeSecs_;
-  epicsFloat64 lastTimeSecs_;
-  bool printNextError_;
-  bool moving_; // only valid within poll time - used as a hint for validating deferred coordinated moves
+    asynStatus moveVelocity(double min_velocity, double max_velocity, double acceleration);
 
-  friend class pmacController;
-  friend class pmacCsGroups;
+    asynStatus home(double min_velocity, double max_velocity, double acceleration, int forwards);
+
+    asynStatus stop(double acceleration);
+
+    asynStatus poll(bool *moving);
+
+    asynStatus setPosition(double position);
+
+    asynStatus setClosedLoop(bool closedLoop);
+
+    virtual void callback(pmacCommandStore *sPtr, int type);
+
+    void debug(int level, const std::string &method);
+
+    void debug(int level, const std::string &method, const std::string &message);
+
+    void debug(int level, const std::string &method, const std::string &message,
+               const std::string &value);
+
+    void debug(int level, const std::string &method, const std::string &message, int value);
+
+    void debug(int level, const std::string &method, const std::string &message, double value);
+
+private:
+    pmacController *pC_;
+
+    asynStatus getAxisStatus(pmacCommandStore *sPtr);
+
+    asynStatus getAxisInitialStatus(void);
+
+    int getAxisCSNo();
+
+    double getCachedPosition();
+
+    double getPosition();
+
+    int assignedCS_;
+    double setpointPosition_;
+    double encoderPosition_;
+    double currentVelocity_;
+    double velocity_;
+    double accel_;
+    double highLimit_;
+    double lowLimit_;
+    int limitsDisabled_;
+    double stepSize_;
+    double deferredPosition_;
+    double cachedPosition_;
+    int deferredMove_;
+    int deferredRelative_;
+    double deferredTime_;
+    int scale_;
+    double rawPosition_;
+    bool initiatedMove_;
+    double previous_position_;
+    int previous_direction_;
+    int amp_enabled_;
+    int amp_enabled_prev_;
+    int fatal_following_;
+    int encoder_axis_;
+    int limitsCheckDisable_;
+    epicsTimeStamp nowTime_;
+    epicsFloat64 nowTimeSecs_;
+    epicsFloat64 lastTimeSecs_;
+    bool printNextError_;
+    bool moving_; // only valid within poll time - used as a hint for validating deferred coordinated moves
+
+    friend class pmacController;
+
+    friend class pmacCsGroups;
 };
 
 

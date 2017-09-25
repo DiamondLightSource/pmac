@@ -7,11 +7,9 @@
 
 #include "pmacCallbackInterface.h"
 
-pmacCallbackInterface::pmacCallbackInterface()
-{
+pmacCallbackInterface::pmacCallbackInterface() {
 }
 
-pmacCallbackInterface::~pmacCallbackInterface()
-{
+pmacCallbackInterface::~pmacCallbackInterface() {
 }
 

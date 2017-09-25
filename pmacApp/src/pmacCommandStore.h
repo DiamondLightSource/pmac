@@ -13,27 +13,36 @@
 #include "StringHashtable.h"
 #include "pmacDebugger.h"
 
-class pmacCommandStore : public pmacDebugger
-{
+class pmacCommandStore : public pmacDebugger {
 public:
-  pmacCommandStore();
-  virtual ~pmacCommandStore();
-  int addItem(const std::string& key);
-  int deleteItem(const std::string& key);
-  bool checkForItem(const std::string& key);
-  std::string readValue(const std::string& key);
-  int size();
-  std::string readCommandString(int index);
-  int countCommandStrings();
-  int updateReply(const std::string& cmd, const std::string& reply);
-  void report();
+    pmacCommandStore();
+
+    virtual ~pmacCommandStore();
+
+    int addItem(const std::string &key);
+
+    int deleteItem(const std::string &key);
+
+    bool checkForItem(const std::string &key);
+
+    std::string readValue(const std::string &key);
+
+    int size();
+
+    std::string readCommandString(int index);
+
+    int countCommandStrings();
+
+    int updateReply(const std::string &cmd, const std::string &reply);
+
+    void report();
 
 private:
-  void buildCommandString();
+    void buildCommandString();
 
-  StringHashtable store;
-  char commandString[100][1024];
-  int qtyCmdStrings;
+    StringHashtable store;
+    char commandString[100][1024];
+    int qtyCmdStrings;
 };
 
 #endif /* PMACAPP_SRC_PMACCOMMANDSTORE_H_ */

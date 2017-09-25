@@ -12,24 +12,25 @@
 #include "asynMotorAxis.h"
 
 class pmacController;
+
 class pmacCSController;
 
-class pmacCSMonitor : public asynMotorAxis
-{
+class pmacCSMonitor : public asynMotorAxis {
 public:
-  pmacCSMonitor(pmacController *pController);
-  virtual ~pmacCSMonitor();
+    pmacCSMonitor(pmacController *pController);
 
-  // Register a coordinate system with this controller
-  asynStatus registerCS(pmacCSController *csPtr, int csNo);
+    virtual ~pmacCSMonitor();
 
-  asynStatus poll(bool *moving);
+    // Register a coordinate system with this controller
+    asynStatus registerCS(pmacCSController *csPtr, int csNo);
+
+    asynStatus poll(bool *moving);
 
 private:
-  pmacCSController **pCSControllers_;
-  bool moving_;
+    pmacCSController **pCSControllers_;
+    bool moving_;
 
-  friend class pmacController;
+    friend class pmacController;
 };
 
 #endif /* PMACAPP_SRC_PMACCSMONITOR_H_ */

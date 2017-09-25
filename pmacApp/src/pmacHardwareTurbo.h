@@ -11,21 +11,29 @@
 #include "pmacHardwareInterface.h"
 #include "pmacDebugger.h"
 
-class pmacHardwareTurbo : public pmacHardwareInterface, pmacDebugger
-{
-  public:
+class pmacHardwareTurbo : public pmacHardwareInterface, pmacDebugger {
+public:
     pmacHardwareTurbo();
+
     virtual ~pmacHardwareTurbo();
+
     std::string getGlobalStatusCmd();
-    asynStatus parseGlobalStatus(const std::string& statusString, globalStatus &globStatus);
+
+    asynStatus parseGlobalStatus(const std::string &statusString, globalStatus &globStatus);
+
     std::string getAxisStatusCmd(int axis);
+
     asynStatus setupAxisStatus(int axis);
+
     asynStatus parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus);
+
     asynStatus setupCSStatus(int csNo);
+
     asynStatus parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus);
+
     std::string getCSVelocityCmd(int csNo, double velocity);
 
-  private:
+private:
     static const std::string GLOBAL_STATUS;
     static const std::string AXIS_STATUS;
     static const std::string CS_STATUS;

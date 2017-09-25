@@ -10,24 +10,31 @@
 
 #include "Hashtable.h"
 
-class CharIntHashtable : public Hashtable
-{
+class CharIntHashtable : public Hashtable {
 public:
-  CharIntHashtable();
-  virtual ~CharIntHashtable();
+    CharIntHashtable();
 
-  int lookup(const char key);
-  int insert(const char key, int value);
-  int remove(const char key);
-  char firstKey();
-  bool hasNextKey();
-  char nextKey();
+    virtual ~CharIntHashtable();
+
+    int lookup(const char key);
+
+    int insert(const char key, int value);
+
+    int remove(const char key);
+
+    char firstKey();
+
+    bool hasNextKey();
+
+    char nextKey();
 
 
 protected:
-  virtual void *copy_key(const void *key);
-  virtual bool compare_key(const void *key1, const void *key2);
-  virtual void release_key(void *key);
+    virtual void *copy_key(const void *key);
+
+    virtual bool compare_key(const void *key1, const void *key2);
+
+    virtual void release_key(void *key);
 
 };
 

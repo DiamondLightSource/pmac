@@ -14,48 +14,46 @@ const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
 const std::string pmacHardwarePower::CS_STATUS = "&%d?";
 const std::string pmacHardwarePower::CS_VEL_CMD = "I%d89=-%f ";
 
-const int pmacHardwarePower::PMAC_STATUS1_TRIGGER_MOVE           = (0x1<<31);
-const int pmacHardwarePower::PMAC_STATUS1_HOMING                 = (0x1<<30);
-const int pmacHardwarePower::PMAC_STATUS1_NEG_LIMIT_SET          = (0x1<<29);
-const int pmacHardwarePower::PMAC_STATUS1_POS_LIMIT_SET          = (0x1<<28);
-const int pmacHardwarePower::PMAC_STATUS1_WARN_FOLLOW_ERR        = (0x1<<27);
-const int pmacHardwarePower::PMAC_STATUS1_ERR_FOLLOW_ERR         = (0x1<<26);
-const int pmacHardwarePower::PMAC_STATUS1_LIMIT_STOP             = (0x1<<25);
-const int pmacHardwarePower::PMAC_STATUS1_AMP_FAULT              = (0x1<<24);
-const int pmacHardwarePower::PMAC_STATUS1_SOFT_MINUS_LIMIT       = (0x1<<23);
-const int pmacHardwarePower::PMAC_STATUS1_SOFT_PLUS_LIMIT        = (0x1<<22);
-const int pmacHardwarePower::PMAC_STATUS1_I2T_AMP_FAULT          = (0x1<<21);
-const int pmacHardwarePower::PMAC_STATUS1_HOME_COMPLETE          = (0x1<<15);
-const int pmacHardwarePower::PMAC_STATUS1_DESIRED_VELOCITY_ZERO  = (0x1<<14);
-const int pmacHardwarePower::PMAC_STATUS1_OPEN_LOOP              = (0x1<<13);
-const int pmacHardwarePower::PMAC_STATUS1_AMP_ENABLED            = (0x1<<12);
-const int pmacHardwarePower::PMAC_STATUS1_IN_POSITION            = (0x1<<11);
-const int pmacHardwarePower::PMAC_STATUS1_BLOCK_REQUEST          = (0x1<<9);
-const int pmacHardwarePower::PMAC_STATUS1_PHASED_MOTOR           = (0x1<<8);
+const int pmacHardwarePower::PMAC_STATUS1_TRIGGER_MOVE = (0x1 << 31);
+const int pmacHardwarePower::PMAC_STATUS1_HOMING = (0x1 << 30);
+const int pmacHardwarePower::PMAC_STATUS1_NEG_LIMIT_SET = (0x1 << 29);
+const int pmacHardwarePower::PMAC_STATUS1_POS_LIMIT_SET = (0x1 << 28);
+const int pmacHardwarePower::PMAC_STATUS1_WARN_FOLLOW_ERR = (0x1 << 27);
+const int pmacHardwarePower::PMAC_STATUS1_ERR_FOLLOW_ERR = (0x1 << 26);
+const int pmacHardwarePower::PMAC_STATUS1_LIMIT_STOP = (0x1 << 25);
+const int pmacHardwarePower::PMAC_STATUS1_AMP_FAULT = (0x1 << 24);
+const int pmacHardwarePower::PMAC_STATUS1_SOFT_MINUS_LIMIT = (0x1 << 23);
+const int pmacHardwarePower::PMAC_STATUS1_SOFT_PLUS_LIMIT = (0x1 << 22);
+const int pmacHardwarePower::PMAC_STATUS1_I2T_AMP_FAULT = (0x1 << 21);
+const int pmacHardwarePower::PMAC_STATUS1_HOME_COMPLETE = (0x1 << 15);
+const int pmacHardwarePower::PMAC_STATUS1_DESIRED_VELOCITY_ZERO = (0x1 << 14);
+const int pmacHardwarePower::PMAC_STATUS1_OPEN_LOOP = (0x1 << 13);
+const int pmacHardwarePower::PMAC_STATUS1_AMP_ENABLED = (0x1 << 12);
+const int pmacHardwarePower::PMAC_STATUS1_IN_POSITION = (0x1 << 11);
+const int pmacHardwarePower::PMAC_STATUS1_BLOCK_REQUEST = (0x1 << 9);
+const int pmacHardwarePower::PMAC_STATUS1_PHASED_MOTOR = (0x1 << 8);
 
-pmacHardwarePower::pmacHardwarePower() : pmacDebugger("pmacHardwareTurbo")
-{
+pmacHardwarePower::pmacHardwarePower() : pmacDebugger("pmacHardwareTurbo") {
 }
 
-pmacHardwarePower::~pmacHardwarePower()
-{
+pmacHardwarePower::~pmacHardwarePower() {
   // TODO Auto-generated destructor stub
 }
 
-std::string pmacHardwarePower::getGlobalStatusCmd()
-{
+std::string pmacHardwarePower::getGlobalStatusCmd() {
   return GLOBAL_STATUS;
 }
 
-asynStatus pmacHardwarePower::parseGlobalStatus(const std::string& statusString, globalStatus &globStatus)
-{
+asynStatus
+pmacHardwarePower::parseGlobalStatus(const std::string &statusString, globalStatus &globStatus) {
   asynStatus status = asynSuccess;
   int nvals = 0;
   static const char *functionName = "parseGlobalStatus";
 
   debug(DEBUG_VARIABLE, functionName, "Status string", statusString);
-  if (statusString == ""){
-    debug(DEBUG_ERROR, functionName, "Problem reading global status command, returned", statusString);
+  if (statusString == "") {
+    debug(DEBUG_ERROR, functionName, "Problem reading global status command, returned",
+          statusString);
     status = asynError;
   } else {
     // PowerPMAC status parsing
@@ -68,7 +66,7 @@ asynStatus pmacHardwarePower::parseGlobalStatus(const std::string& statusString,
       status = asynError;
     }
     nvals = sscanf(statusString.c_str(), " $%4x%4x", &globStatus.stat1_, &globStatus.stat2_);
-    if (nvals != 2){
+    if (nvals != 2) {
       debug(DEBUG_ERROR, functionName, "Error reading global status (16 bit)", GLOBAL_STATUS);
       debug(DEBUG_ERROR, functionName, "    nvals", nvals);
       debug(DEBUG_ERROR, functionName, "    response", statusString);
@@ -81,8 +79,7 @@ asynStatus pmacHardwarePower::parseGlobalStatus(const std::string& statusString,
   return status;
 }
 
-std::string pmacHardwarePower::getAxisStatusCmd(int axis)
-{
+std::string pmacHardwarePower::getAxisStatusCmd(int axis) {
   char cmd[8];
   static const char *functionName = "getAxisStatusCmd";
 
@@ -91,8 +88,7 @@ std::string pmacHardwarePower::getAxisStatusCmd(int axis)
   return std::string(cmd);
 }
 
-asynStatus pmacHardwarePower::setupAxisStatus(int axis)
-{
+asynStatus pmacHardwarePower::setupAxisStatus(int axis) {
   asynStatus status = asynSuccess;
   char var[16];
   static const char *functionName = "setupAxisStatus";
@@ -104,8 +100,8 @@ asynStatus pmacHardwarePower::setupAxisStatus(int axis)
   return status;
 }
 
-asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus& axStatus)
-{
+asynStatus
+pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus) {
   asynStatus status = asynSuccess;
   int nvals = 0;
   int dummyVal = 0;
@@ -118,15 +114,17 @@ asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, 
 
   // Response parsed for PowerPMAC
   debug(DEBUG_VARIABLE, functionName, "Status string", statusString);
-  nvals = sscanf(statusString.c_str(), " $%8x%8x", &axStatus.status24Bit1_, &axStatus.status24Bit2_);
-  if (nvals != 2){
+  nvals = sscanf(statusString.c_str(), " $%8x%8x", &axStatus.status24Bit1_,
+                 &axStatus.status24Bit2_);
+  if (nvals != 2) {
     debug(DEBUG_ERROR, functionName, "Failed to parse axis status (24 bit)", statusString);
     axStatus.status24Bit1_ = 0;
     axStatus.status24Bit2_ = 0;
     status = asynError;
   }
-  nvals = sscanf(statusString.c_str(), " $%4x%4x%4x%4x", &axStatus.status16Bit1_, &axStatus.status16Bit2_, &axStatus.status16Bit3_, &dummyVal);
-  if (nvals != 4){
+  nvals = sscanf(statusString.c_str(), " $%4x%4x%4x%4x", &axStatus.status16Bit1_,
+                 &axStatus.status16Bit2_, &axStatus.status16Bit3_, &dummyVal);
+  if (nvals != 4) {
     debug(DEBUG_ERROR, functionName, "Failed to parse axis status (16 bit)", statusString);
     axStatus.status16Bit1_ = 0;
     axStatus.status16Bit2_ = 0;
@@ -139,7 +137,7 @@ asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, 
   debug(DEBUG_VARIABLE, functionName, "Read status 16[1]", axStatus.status16Bit2_);
   debug(DEBUG_VARIABLE, functionName, "Read status 16[2]", axStatus.status16Bit3_);
 
-  if (status == asynSuccess){
+  if (status == asynSuccess) {
     axStatus.home_ = ((axStatus.status24Bit1_ & PMAC_STATUS1_HOME_COMPLETE) != 0);
 
     axStatus.done_ = ((axStatus.status24Bit1_ & PMAC_STATUS1_IN_POSITION) != 0);
@@ -148,10 +146,13 @@ asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, 
       axStatus.done_ = 1;
     }
 
-    axStatus.highLimit_ = (((axStatus.status24Bit1_ & PMAC_STATUS1_POS_LIMIT_SET) | (axStatus.status24Bit1_ & PMAC_STATUS1_SOFT_PLUS_LIMIT)) != 0);
+    axStatus.highLimit_ = (((axStatus.status24Bit1_ & PMAC_STATUS1_POS_LIMIT_SET) |
+                            (axStatus.status24Bit1_ & PMAC_STATUS1_SOFT_PLUS_LIMIT)) != 0);
     // If desired_vel_zero is false && motor activated (ix00=1) && amplifier enabled, set moving=1.
-    axStatus.moving_ = ((axStatus.status24Bit1_ & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) && ((axStatus.status24Bit1_ & PMAC_STATUS1_AMP_ENABLED) != 0);
-    axStatus.lowLimit_ = (((axStatus.status24Bit1_ & PMAC_STATUS1_NEG_LIMIT_SET) | (axStatus.status24Bit1_ & PMAC_STATUS1_SOFT_MINUS_LIMIT))!=0);
+    axStatus.moving_ = ((axStatus.status24Bit1_ & PMAC_STATUS1_DESIRED_VELOCITY_ZERO) == 0) &&
+                       ((axStatus.status24Bit1_ & PMAC_STATUS1_AMP_ENABLED) != 0);
+    axStatus.lowLimit_ = (((axStatus.status24Bit1_ & PMAC_STATUS1_NEG_LIMIT_SET) |
+                           (axStatus.status24Bit1_ & PMAC_STATUS1_SOFT_MINUS_LIMIT)) != 0);
     axStatus.followingError_ = ((axStatus.status24Bit1_ & PMAC_STATUS1_ERR_FOLLOW_ERR) != 0);
 
     // Set amplifier enabled bit.
@@ -162,7 +163,7 @@ asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, 
   sprintf(var, AXIS_CS_NUMBER.c_str(), axis);
   csString = sPtr->readValue(var);
   nvals = sscanf(csString.c_str(), "%d", &axStatus.currentCS_);
-  if (nvals != 1){
+  if (nvals != 1) {
     debug(DEBUG_ERROR, functionName, "Failed to parse CS number", csString);
     axStatus.currentCS_ = 0;
     status = asynError;
@@ -171,8 +172,7 @@ asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, 
   return status;
 }
 
-asynStatus pmacHardwarePower::setupCSStatus(int csNo)
-{
+asynStatus pmacHardwarePower::setupCSStatus(int csNo) {
   asynStatus status = asynSuccess;
   char var[16];
   static const char *functionName = "setupAxisStatus";
@@ -185,8 +185,8 @@ asynStatus pmacHardwarePower::setupCSStatus(int csNo)
   return status;
 }
 
-asynStatus pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus)
-{
+asynStatus
+pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus) {
   asynStatus status = asynSuccess;
   int nvals = 0;
   std::string statusString = "";
@@ -197,7 +197,7 @@ asynStatus pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, cs
   statusString = sPtr->readValue(var);
   // Parse the status
   nvals = sscanf(statusString.c_str(), " $%8x%8x", &coordStatus.stat1_, &coordStatus.stat2_);
-  if (nvals != 2){
+  if (nvals != 2) {
     debug(DEBUG_ERROR, functionName, "Failed to parse CS status. ", statusString);
     coordStatus.stat1_ = 0;
     coordStatus.stat2_ = 0;
@@ -205,10 +205,10 @@ asynStatus pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, cs
     status = asynError;
   }
   coordStatus.stat3_ = 0;
-  if (status == asynSuccess){
+  if (status == asynSuccess) {
     coordStatus.done_ = ((coordStatus.stat1_ & PMAC_STATUS1_IN_POSITION) != 0);
     coordStatus.highLimit_ = ((coordStatus.stat1_ & PMAC_STATUS1_POS_LIMIT_SET) != 0);
-    coordStatus.lowLimit_ = ((coordStatus.stat1_ & PMAC_STATUS1_NEG_LIMIT_SET)!=0);
+    coordStatus.lowLimit_ = ((coordStatus.stat1_ & PMAC_STATUS1_NEG_LIMIT_SET) != 0);
     coordStatus.followingError_ = ((coordStatus.stat1_ & PMAC_STATUS1_ERR_FOLLOW_ERR) != 0);
     coordStatus.moving_ = ((coordStatus.stat1_ & PMAC_STATUS1_IN_POSITION) == 0);
     coordStatus.problem_ = ((coordStatus.stat1_ & PMAC_STATUS1_AMP_FAULT) != 0);
@@ -223,13 +223,12 @@ asynStatus pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, cs
   return status;
 }
 
-std::string pmacHardwarePower::getCSVelocityCmd(int csNo, double velocity)
-{
+std::string pmacHardwarePower::getCSVelocityCmd(int csNo, double velocity) {
   char cmd[64];
   static const char *functionName = "getCSVelocityCmd";
 
   debug(DEBUG_TRACE, functionName, "CS Number", csNo);
   debug(DEBUG_TRACE, functionName, "Velocity", velocity);
-  sprintf(cmd, CS_VEL_CMD.c_str(), csNo+50, velocity);
+  sprintf(cmd, CS_VEL_CMD.c_str(), csNo + 50, velocity);
   return std::string(cmd);
 }
