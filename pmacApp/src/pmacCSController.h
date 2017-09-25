@@ -22,27 +22,38 @@
 #include "pmacDebugger.h"
 #include "pmacHardwareInterface.h"
 
-class pmacCSController : public asynMotorController, public pmacCallbackInterface, public pmacDebugger
-{
+class pmacCSController
+        : public asynMotorController, public pmacCallbackInterface, public pmacDebugger {
 
-  public:
+public:
     pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program);
+
     virtual ~pmacCSController();
+
     std::string getPortName();
+
     asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
+
     void setDebugLevel(int level, int axis);
+
     bool getMoving();
+
     int getCSNumber();
+
     int getProgramNumber();
+
     csStatus getStatus();
+
     std::string getVelocityCmd(double velocity);
 
     void callback(pmacCommandStore *sPtr, int type);
 
     asynStatus immediateWriteRead(const char *command, char *response);
+
     asynStatus axisWriteRead(const char *command, char *response);
 
     pmacCSAxis *getAxis(asynUser *pasynUser);
+
     pmacCSAxis *getAxis(int axisNo);
 
     // Registration for callbacks
@@ -52,6 +63,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     asynStatus monitorPMACVariable(int poll_speed, const char *var);
 
     asynStatus tScanCheckForErrors();
+
     asynStatus tScanCheckProgramRunning(int *running);
 
     // Ensure CS demands (Q71..9) are consistent after a motor move or CS change
@@ -61,15 +73,15 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
 
     asynStatus wakeupPoller();
 
-  protected:
+protected:
     pmacCSAxis **pAxes_; // Array of pointers to axis objects
 
     int PMAC_CS_FirstParam_;
-    #define FIRST_PMAC_CS_PARAM PMAC_CS_FirstParam_
+#define FIRST_PMAC_CS_PARAM PMAC_CS_FirstParam_
     int PMAC_CS_LastParam_;
-    #define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_
+#define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_
 
-  private:
+private:
     std::string portName_;
     int csNumber_;
     int progNumber_;
@@ -135,6 +147,7 @@ class pmacCSController : public asynMotorController, public pmacCallbackInterfac
     static const epicsUInt32 CS_STATUS3_LIMIT;               // (0x1<<1)
 
     friend class pmacCSAxis;
+
     friend class pmacCsGroups;
 };
 

@@ -69,57 +69,57 @@ pmacSetCoordMovingPollPeriod(0, 100)
 
 const epicsUInt32 pmacCSController::PMAC_ERROR_PRINT_TIME_ = 600; //seconds
 
-const epicsUInt32 pmacCSController::CS_STATUS1_RUNNING_PROG        = (0x1<<0);
-const epicsUInt32 pmacCSController::CS_STATUS1_SINGLE_STEP_MODE    = (0x1<<1);
-const epicsUInt32 pmacCSController::CS_STATUS1_CONTINUOUS_MODE     = (0x1<<2);
-const epicsUInt32 pmacCSController::CS_STATUS1_MOVE_BY_TIME_MODE   = (0x1<<3);
-const epicsUInt32 pmacCSController::CS_STATUS1_CONTINUOUS_REQUEST  = (0x1<<4);
-const epicsUInt32 pmacCSController::CS_STATUS1_RADIUS_INC_MODE     = (0x1<<5);
-const epicsUInt32 pmacCSController::CS_STATUS1_A_INC               = (0x1<<6);
-const epicsUInt32 pmacCSController::CS_STATUS1_A_FEEDRATE          = (0x1<<7);
-const epicsUInt32 pmacCSController::CS_STATUS1_B_INC               = (0x1<<8);
-const epicsUInt32 pmacCSController::CS_STATUS1_B_FEEDRATE          = (0x1<<9);
-const epicsUInt32 pmacCSController::CS_STATUS1_C_INC               = (0x1<<10);
-const epicsUInt32 pmacCSController::CS_STATUS1_C_FEEDRATE          = (0x1<<11);
-const epicsUInt32 pmacCSController::CS_STATUS1_U_INC               = (0x1<<12);
-const epicsUInt32 pmacCSController::CS_STATUS1_U_FEEDRATE          = (0x1<<13);
-const epicsUInt32 pmacCSController::CS_STATUS1_V_INC               = (0x1<<14);
-const epicsUInt32 pmacCSController::CS_STATUS1_V_FEEDRATE          = (0x1<<15);
-const epicsUInt32 pmacCSController::CS_STATUS1_W_INC               = (0x1<<16);
-const epicsUInt32 pmacCSController::CS_STATUS1_W_FEEDRATE          = (0x1<<17);
-const epicsUInt32 pmacCSController::CS_STATUS1_X_INC               = (0x1<<18);
-const epicsUInt32 pmacCSController::CS_STATUS1_X_FEEDRATE          = (0x1<<19);
-const epicsUInt32 pmacCSController::CS_STATUS1_Y_INC               = (0x1<<20);
-const epicsUInt32 pmacCSController::CS_STATUS1_Y_FEEDRATE          = (0x1<<21);
-const epicsUInt32 pmacCSController::CS_STATUS1_Z_INC               = (0x1<<22);
-const epicsUInt32 pmacCSController::CS_STATUS1_Z_FEEDRATE          = (0x1<<23);
+const epicsUInt32 pmacCSController::CS_STATUS1_RUNNING_PROG = (0x1 << 0);
+const epicsUInt32 pmacCSController::CS_STATUS1_SINGLE_STEP_MODE = (0x1 << 1);
+const epicsUInt32 pmacCSController::CS_STATUS1_CONTINUOUS_MODE = (0x1 << 2);
+const epicsUInt32 pmacCSController::CS_STATUS1_MOVE_BY_TIME_MODE = (0x1 << 3);
+const epicsUInt32 pmacCSController::CS_STATUS1_CONTINUOUS_REQUEST = (0x1 << 4);
+const epicsUInt32 pmacCSController::CS_STATUS1_RADIUS_INC_MODE = (0x1 << 5);
+const epicsUInt32 pmacCSController::CS_STATUS1_A_INC = (0x1 << 6);
+const epicsUInt32 pmacCSController::CS_STATUS1_A_FEEDRATE = (0x1 << 7);
+const epicsUInt32 pmacCSController::CS_STATUS1_B_INC = (0x1 << 8);
+const epicsUInt32 pmacCSController::CS_STATUS1_B_FEEDRATE = (0x1 << 9);
+const epicsUInt32 pmacCSController::CS_STATUS1_C_INC = (0x1 << 10);
+const epicsUInt32 pmacCSController::CS_STATUS1_C_FEEDRATE = (0x1 << 11);
+const epicsUInt32 pmacCSController::CS_STATUS1_U_INC = (0x1 << 12);
+const epicsUInt32 pmacCSController::CS_STATUS1_U_FEEDRATE = (0x1 << 13);
+const epicsUInt32 pmacCSController::CS_STATUS1_V_INC = (0x1 << 14);
+const epicsUInt32 pmacCSController::CS_STATUS1_V_FEEDRATE = (0x1 << 15);
+const epicsUInt32 pmacCSController::CS_STATUS1_W_INC = (0x1 << 16);
+const epicsUInt32 pmacCSController::CS_STATUS1_W_FEEDRATE = (0x1 << 17);
+const epicsUInt32 pmacCSController::CS_STATUS1_X_INC = (0x1 << 18);
+const epicsUInt32 pmacCSController::CS_STATUS1_X_FEEDRATE = (0x1 << 19);
+const epicsUInt32 pmacCSController::CS_STATUS1_Y_INC = (0x1 << 20);
+const epicsUInt32 pmacCSController::CS_STATUS1_Y_FEEDRATE = (0x1 << 21);
+const epicsUInt32 pmacCSController::CS_STATUS1_Z_INC = (0x1 << 22);
+const epicsUInt32 pmacCSController::CS_STATUS1_Z_FEEDRATE = (0x1 << 23);
 
-const epicsUInt32 pmacCSController::CS_STATUS2_CIRCLE_SPLINE_MODE  = (0x1<<0);
-const epicsUInt32 pmacCSController::CS_STATUS2_CCW_RAPID_MODE      = (0x1<<1);
-const epicsUInt32 pmacCSController::CS_STATUS2_2D_CUTTER_COMP      = (0x1<<2);
-const epicsUInt32 pmacCSController::CS_STATUS2_2D_LEFT_3D_CUTTER   = (0x1<<3);
-const epicsUInt32 pmacCSController::CS_STATUS2_PVT_SPLINE_MODE     = (0x1<<4);
-const epicsUInt32 pmacCSController::CS_STATUS2_SEG_STOPPING        = (0x1<<5);
-const epicsUInt32 pmacCSController::CS_STATUS2_SEG_ACCEL           = (0x1<<6);
-const epicsUInt32 pmacCSController::CS_STATUS2_SEG_MOVING          = (0x1<<7);
-const epicsUInt32 pmacCSController::CS_STATUS2_PRE_JOG             = (0x1<<8);
-const epicsUInt32 pmacCSController::CS_STATUS2_CUTTER_MOVE_BUFFD   = (0x1<<9);
-const epicsUInt32 pmacCSController::CS_STATUS2_CUTTER_STOP         = (0x1<<10);
-const epicsUInt32 pmacCSController::CS_STATUS2_CUTTER_COMP_OUTSIDE = (0x1<<11);
-const epicsUInt32 pmacCSController::CS_STATUS2_DWELL_MOVE_BUFFD    = (0x1<<12);
-const epicsUInt32 pmacCSController::CS_STATUS2_SYNCH_M_ONESHOT     = (0x1<<13);
-const epicsUInt32 pmacCSController::CS_STATUS2_EOB_STOP            = (0x1<<14);
-const epicsUInt32 pmacCSController::CS_STATUS2_DELAYED_CALC        = (0x1<<15);
-const epicsUInt32 pmacCSController::CS_STATUS2_ROTARY_BUFF         = (0x1<<16);
-const epicsUInt32 pmacCSController::CS_STATUS2_IN_POSITION         = (0x1<<17);
-const epicsUInt32 pmacCSController::CS_STATUS2_FOLLOW_WARN         = (0x1<<18);
-const epicsUInt32 pmacCSController::CS_STATUS2_FOLLOW_ERR          = (0x1<<19);
-const epicsUInt32 pmacCSController::CS_STATUS2_AMP_FAULT           = (0x1<<20);
-const epicsUInt32 pmacCSController::CS_STATUS2_MOVE_IN_STACK       = (0x1<<21);
-const epicsUInt32 pmacCSController::CS_STATUS2_RUNTIME_ERR         = (0x1<<22);
-const epicsUInt32 pmacCSController::CS_STATUS2_LOOKAHEAD           = (0x1<<23);
+const epicsUInt32 pmacCSController::CS_STATUS2_CIRCLE_SPLINE_MODE = (0x1 << 0);
+const epicsUInt32 pmacCSController::CS_STATUS2_CCW_RAPID_MODE = (0x1 << 1);
+const epicsUInt32 pmacCSController::CS_STATUS2_2D_CUTTER_COMP = (0x1 << 2);
+const epicsUInt32 pmacCSController::CS_STATUS2_2D_LEFT_3D_CUTTER = (0x1 << 3);
+const epicsUInt32 pmacCSController::CS_STATUS2_PVT_SPLINE_MODE = (0x1 << 4);
+const epicsUInt32 pmacCSController::CS_STATUS2_SEG_STOPPING = (0x1 << 5);
+const epicsUInt32 pmacCSController::CS_STATUS2_SEG_ACCEL = (0x1 << 6);
+const epicsUInt32 pmacCSController::CS_STATUS2_SEG_MOVING = (0x1 << 7);
+const epicsUInt32 pmacCSController::CS_STATUS2_PRE_JOG = (0x1 << 8);
+const epicsUInt32 pmacCSController::CS_STATUS2_CUTTER_MOVE_BUFFD = (0x1 << 9);
+const epicsUInt32 pmacCSController::CS_STATUS2_CUTTER_STOP = (0x1 << 10);
+const epicsUInt32 pmacCSController::CS_STATUS2_CUTTER_COMP_OUTSIDE = (0x1 << 11);
+const epicsUInt32 pmacCSController::CS_STATUS2_DWELL_MOVE_BUFFD = (0x1 << 12);
+const epicsUInt32 pmacCSController::CS_STATUS2_SYNCH_M_ONESHOT = (0x1 << 13);
+const epicsUInt32 pmacCSController::CS_STATUS2_EOB_STOP = (0x1 << 14);
+const epicsUInt32 pmacCSController::CS_STATUS2_DELAYED_CALC = (0x1 << 15);
+const epicsUInt32 pmacCSController::CS_STATUS2_ROTARY_BUFF = (0x1 << 16);
+const epicsUInt32 pmacCSController::CS_STATUS2_IN_POSITION = (0x1 << 17);
+const epicsUInt32 pmacCSController::CS_STATUS2_FOLLOW_WARN = (0x1 << 18);
+const epicsUInt32 pmacCSController::CS_STATUS2_FOLLOW_ERR = (0x1 << 19);
+const epicsUInt32 pmacCSController::CS_STATUS2_AMP_FAULT = (0x1 << 20);
+const epicsUInt32 pmacCSController::CS_STATUS2_MOVE_IN_STACK = (0x1 << 21);
+const epicsUInt32 pmacCSController::CS_STATUS2_RUNTIME_ERR = (0x1 << 22);
+const epicsUInt32 pmacCSController::CS_STATUS2_LOOKAHEAD = (0x1 << 23);
 
-const epicsUInt32 pmacCSController::CS_STATUS3_LIMIT               = (0x1<<1);
+const epicsUInt32 pmacCSController::CS_STATUS3_LIMIT = (0x1 << 1);
 
 /**
  * Create a driver instance to communicate with a given coordinate system
@@ -131,19 +131,19 @@ const epicsUInt32 pmacCSController::CS_STATUS3_LIMIT               = (0x1<<1);
  * @param ref A unique reference, used by the higher layer software to reference this C.S.
  * @param program The PMAC program number to run to move the C.S.
  */
-pmacCSController::pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program)
-  : asynMotorController(portName, 10, NUM_MOTOR_DRIVER_PARAMS+NUM_PMAC_CS_PARAMS,
-    asynInt32ArrayMask, // For user mode and velocity mode
-    0, // No addition interrupt interfaces
-    ASYN_CANBLOCK | ASYN_MULTIDEVICE,
-    1, // autoconnect
-    0, 0),  // Default priority and stack size
-  pmacDebugger("pmacCSController"),
-  portName_(portName),
-  csNumber_(csNo),
-  progNumber_(program),
-  movesDeferred_(0)
-{
+pmacCSController::pmacCSController(const char *portName, const char *controllerPortName, int csNo,
+                                   int program)
+        : asynMotorController(portName, 10, NUM_MOTOR_DRIVER_PARAMS + NUM_PMAC_CS_PARAMS,
+                              asynInt32ArrayMask, // For user mode and velocity mode
+                              0, // No addition interrupt interfaces
+                              ASYN_CANBLOCK | ASYN_MULTIDEVICE,
+                              1, // autoconnect
+                              0, 0),  // Default priority and stack size
+          pmacDebugger("pmacCSController"),
+          portName_(portName),
+          csNumber_(csNo),
+          progNumber_(program),
+          movesDeferred_(0) {
   asynStatus status = asynSuccess;
   static const char *functionName = "pmacCSController";
 
@@ -154,27 +154,25 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
 
   setIntegerParam(profileBuild_, 0);
 
-  pAxes_ = (pmacCSAxis **)(asynMotorController::pAxes_);
+  pAxes_ = (pmacCSAxis **) (asynMotorController::pAxes_);
 
   pC_ = findAsynPortDriver(controllerPortName);
   if (!pC_) {
-    debug(DEBUG_ERROR,functionName, "ERROR port not found", controllerPortName);
+    debug(DEBUG_ERROR, functionName, "ERROR port not found", controllerPortName);
     status = asynError;
   }
 
   // Registration with the main controller. Register this coordinate system
-  if (status == asynSuccess){
-    ((pmacController *)pC_)->registerCS(this, portName, csNumber_);
+  if (status == asynSuccess) {
+    ((pmacController *) pC_)->registerCS(this, portName, csNumber_);
   }
 }
 
-pmacCSController::~pmacCSController()
-{
+pmacCSController::~pmacCSController() {
 
 }
 
-std::string pmacCSController::getPortName()
-{
+std::string pmacCSController::getPortName() {
   return portName_;
 }
 
@@ -184,8 +182,7 @@ std::string pmacCSController::getPortName()
  * @param value
  * @param asynStatus
  */
-asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value)
-{
+asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   int function = pasynUser->reason;
   bool status = true;
   pmacCSAxis *pAxis = NULL;
@@ -205,8 +202,9 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value)
 
   if (function == motorDeferMoves_) {
     debug(DEBUG_VARIABLE, functionName, "Motor defer value", value);
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s: Setting deferred move mode on PMAC %s to %d\n", functionName, portName, value);
-    if (value == 0){
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+              "%s: Setting deferred move mode on PMAC %s to %d\n", functionName, portName, value);
+    if (value == 0) {
       status = (this->processDeferredMoves() == asynSuccess) && status;
     }
     this->movesDeferred_ = value;
@@ -215,14 +213,13 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   //Call base class method. This will handle callCallbacks even if the function was handled here.
   status = (asynMotorController::writeInt32(pasynUser, value) == asynSuccess) && status;
 
-  if (!status){
+  if (!status) {
     return asynError;
   }
   return asynSuccess;
 }
 
-asynStatus pmacCSController::processDeferredMoves(void)
-{
+asynStatus pmacCSController::processDeferredMoves(void) {
   asynStatus status = asynSuccess;
   char abort[PMAC_MAXBUF] = {0};
   char command[PMAC_MAXBUF] = {0};
@@ -236,7 +233,7 @@ asynStatus pmacCSController::processDeferredMoves(void)
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   //Build up combined move command for all axes involved in the deferred move.
-  for (int axis=0; axis<numAxes_; axis++) {
+  for (int axis = 0; axis < numAxes_; axis++) {
     pAxis = getAxis(axis);
     if (pAxis != NULL) {
       if (pAxis->deferredMove_) {
@@ -246,9 +243,9 @@ asynStatus pmacCSController::processDeferredMoves(void)
     }
   }
 
-  if (executeDeferred == 1){
+  if (executeDeferred == 1) {
     this->makeCSDemandsConsistent();
-    if (this->getProgramNumber() != 0){
+    if (this->getProgramNumber() != 0) {
       // Abort current move to make sure axes are enabled
       sprintf(abort, "&%dE", this->getCSNumber());
       status = this->immediateWriteRead(abort, response);
@@ -260,9 +257,9 @@ asynStatus pmacCSController::processDeferredMoves(void)
   }
 
   //Clear deferred move flag for the axes involved.
-  for (int axis=0; axis<numAxes_; axis++) {
+  for (int axis = 0; axis < numAxes_; axis++) {
     pAxis = getAxis(axis);
-    if (pAxis!=NULL) {
+    if (pAxis != NULL) {
       if (pAxis->deferredMove_) {
         pAxis->deferredMove_ = 0;
       }
@@ -272,104 +269,95 @@ asynStatus pmacCSController::processDeferredMoves(void)
   return status;
 }
 
-void pmacCSController::setDebugLevel(int level, int axis)
-{
+void pmacCSController::setDebugLevel(int level, int axis) {
   // Check if an axis or controller wide debug is to be set
-  if (axis == 0){
+  if (axis == 0) {
     printf("Setting PMAC CS controller debug level to %d\n", level);
     // Set the level for the controller
     this->setLevel(level);
   } else {
-    if (this->getAxis(axis) != NULL){
+    if (this->getAxis(axis) != NULL) {
       printf("Setting PMAC CS axis %d debug level to %d\n", axis, level);
       this->getAxis(axis)->setLevel(level);
     }
   }
 }
 
-bool pmacCSController::getMoving()
-{
+bool pmacCSController::getMoving() {
   pmacCSAxis *pA = NULL;
   bool anyMoving = false;
   static const char *functionName = "getMoving";
   debug(DEBUG_TRACE, functionName, "Called");
 
   this->lock();
-  for (int i=0; i<numAxes_; i++) {
+  for (int i = 0; i < numAxes_; i++) {
     pA = getAxis(i);
     if (!pA) continue;
     anyMoving |= pA->getMoving();
   }
   this->unlock();
-  debug(DEBUG_VARIABLE, functionName, "Any axes moving", (int)anyMoving);
+  debug(DEBUG_VARIABLE, functionName, "Any axes moving", (int) anyMoving);
   return anyMoving;
 }
 
-int pmacCSController::getCSNumber()
-{
+int pmacCSController::getCSNumber() {
   return csNumber_;
 }
 
-int pmacCSController::getProgramNumber()
-{
+int pmacCSController::getProgramNumber() {
   return progNumber_;
 }
 
-csStatus pmacCSController::getStatus()
-{
+csStatus pmacCSController::getStatus() {
   return cStatus_;
 }
 
-std::string pmacCSController::getVelocityCmd(double velocity)
-{
-  return ((pmacController *)pC_)->pHardware_->getCSVelocityCmd(csNumber_, velocity);
+std::string pmacCSController::getVelocityCmd(double velocity) {
+  return ((pmacController *) pC_)->pHardware_->getCSVelocityCmd(csNumber_, velocity);
 }
 
-void pmacCSController::callback(pmacCommandStore *sPtr, int type)
-{
+void pmacCSController::callback(pmacCommandStore *sPtr, int type) {
   std::string value = "";
   static const char *functionName = "callback";
 
   debug(DEBUG_TRACE, functionName, "Coordinate system status callback");
 
   // Parse the status
-  ((pmacController *)pC_)->pHardware_->parseCSStatus(csNumber_, sPtr, cStatus_);
+  ((pmacController *) pC_)->pHardware_->parseCSStatus(csNumber_, sPtr, cStatus_);
   status_[0] = cStatus_.stat1_;
   status_[1] = cStatus_.stat2_;
   status_[2] = cStatus_.stat3_;
 }
 
-asynStatus pmacCSController::immediateWriteRead(const char *command, char *response)
-{
+asynStatus pmacCSController::immediateWriteRead(const char *command, char *response) {
   static const char *functionName = "immediateWriteRead";
   asynStatus status = asynSuccess;
 
-  if (!pC_){
-    debug(DEBUG_ERROR,functionName, "ERROR PMAC controller not found");
+  if (!pC_) {
+    debug(DEBUG_ERROR, functionName, "ERROR PMAC controller not found");
     status = asynError;
   }
 
   // Send the write/read demand to the PMAC controller
-  if (status == asynSuccess){
-    ((pmacController *)pC_)->immediateWriteRead(command, response);
+  if (status == asynSuccess) {
+    ((pmacController *) pC_)->immediateWriteRead(command, response);
   }
 
   return status;
 }
 
-asynStatus pmacCSController::axisWriteRead(const char *command, char *response)
-{
+asynStatus pmacCSController::axisWriteRead(const char *command, char *response) {
   static const char *functionName = "axisWriteRead";
   asynStatus status = asynSuccess;
 
-  if (!pC_){
-    debug(DEBUG_ERROR,functionName, "ERROR PMAC controller not found");
+  if (!pC_) {
+    debug(DEBUG_ERROR, functionName, "ERROR PMAC controller not found");
     status = asynError;
   }
 
   // Send the write/read demand to the PMAC controller
-  if (status == asynSuccess){
-    ((pmacController *)pC_)->axisWriteRead(command, response);
+  if (status == asynSuccess) {
+    ((pmacController *) pC_)->axisWriteRead(command, response);
   }
 
   return status;
@@ -378,8 +366,7 @@ asynStatus pmacCSController::axisWriteRead(const char *command, char *response)
 /** Returns a pointer to an pmacAxis object.
   * Returns NULL if the axis number encoded in pasynUser is invalid.
   * \param[in] pasynUser asynUser structure that encodes the axis index number. */
-pmacCSAxis* pmacCSController::getAxis(asynUser *pasynUser)
-{
+pmacCSAxis *pmacCSController::getAxis(asynUser *pasynUser) {
   int axisNo = 0;
 
   getAddress(pasynUser, &axisNo);
@@ -389,56 +376,51 @@ pmacCSAxis* pmacCSController::getAxis(asynUser *pasynUser)
 /** Returns a pointer to an pmacAxis object.
   * Returns NULL if the axis number is invalid.
   * \param[in] axisNo Axis index number. */
-pmacCSAxis *pmacCSController::getAxis(int axisNo)
-{
+pmacCSAxis *pmacCSController::getAxis(int axisNo) {
   if ((axisNo < 0) || (axisNo >= numAxes_)) return NULL;
   return pAxes_[axisNo];
 }
 
 // Registration for callbacks
-asynStatus pmacCSController::registerForCallbacks(pmacCallbackInterface *cbPtr, int type)
-{
+asynStatus pmacCSController::registerForCallbacks(pmacCallbackInterface *cbPtr, int type) {
   // Simply forward the request to the main controller
-  return ((pmacController *)pC_)->registerForCallbacks(cbPtr, type);
+  return ((pmacController *) pC_)->registerForCallbacks(cbPtr, type);
 }
 
 
-asynStatus pmacCSController::monitorPMACVariable(int poll_speed, const char *var)
-{
+asynStatus pmacCSController::monitorPMACVariable(int poll_speed, const char *var) {
   // Simply forward the request to the main controller
-  return ((pmacController *)pC_)->monitorPMACVariable(poll_speed, var);
+  return ((pmacController *) pC_)->monitorPMACVariable(poll_speed, var);
 }
 
-asynStatus pmacCSController::tScanCheckForErrors()
-{
+asynStatus pmacCSController::tScanCheckForErrors() {
   asynStatus status = asynSuccess;
   static const char *functionName = "tScanCheckForErrors";
 
   debug(DEBUG_TRACE, functionName);
 
-  if ((status_[2] & CS_STATUS3_LIMIT) != 0){
+  if ((status_[2] & CS_STATUS3_LIMIT) != 0) {
     status = asynError;
   }
-  if ((status_[1] & CS_STATUS2_FOLLOW_ERR) != 0){
+  if ((status_[1] & CS_STATUS2_FOLLOW_ERR) != 0) {
     status = asynError;
   }
-  if ((status_[1] & CS_STATUS2_AMP_FAULT) != 0){
+  if ((status_[1] & CS_STATUS2_AMP_FAULT) != 0) {
     status = asynError;
   }
-  if ((status_[1] & CS_STATUS2_RUNTIME_ERR) != 0){
+  if ((status_[1] & CS_STATUS2_RUNTIME_ERR) != 0) {
     status = asynError;
   }
   return status;
 }
 
-asynStatus pmacCSController::tScanCheckProgramRunning(int *running)
-{
+asynStatus pmacCSController::tScanCheckProgramRunning(int *running) {
   asynStatus status = asynSuccess;
   static const char *functionName = "tScanCheckProgramRunning";
 
   debug(DEBUG_TRACE, functionName);
 
-  if ((status_[0] & CS_STATUS1_RUNNING_PROG) != 0){
+  if ((status_[0] & CS_STATUS1_RUNNING_PROG) != 0) {
     *running = 1;
   } else {
     *running = 0;
@@ -446,10 +428,9 @@ asynStatus pmacCSController::tScanCheckProgramRunning(int *running)
   return status;
 }
 
-asynStatus pmacCSController::makeCSDemandsConsistent()
-{
+asynStatus pmacCSController::makeCSDemandsConsistent() {
   // Simply forward the request to the main controller
-  return ((pmacController *)pC_)->makeCSDemandsConsistent();
+  return ((pmacController *) pC_)->makeCSDemandsConsistent();
 }
 
 /**
@@ -458,15 +439,15 @@ asynStatus pmacCSController::makeCSDemandsConsistent()
  * @param axis Axis number to set the PMAC axis scale factor.
  * @param scale Scale factor to set
  */
-asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale)
-{
+asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale) {
   pmacCSAxis *pA = NULL;
   static const char *functionName = "pmacCSController::pmacSetAxisScale";
 
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   if (scale < 1) {
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n", functionName);
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n",
+              functionName);
     return asynError;
   }
 
@@ -480,17 +461,17 @@ asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale)
 
   } else {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-        "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName, axis);
+              "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
+              axis);
     return asynError;
   }
   this->unlock();
   return asynSuccess;
 }
 
-asynStatus pmacCSController::wakeupPoller()
-{
+asynStatus pmacCSController::wakeupPoller() {
   // We need to wake up the real motor controller polling task
-  return ((pmacController *)pC_)->wakeupPoller();
+  return ((pmacController *) pC_)->wakeupPoller();
 }
 
 /*************************************************************************************/
@@ -506,15 +487,14 @@ extern "C" {
 asynStatus pmacCSCreateController(const char *portName,
                                   const char *controllerPortName,
                                   int csNo,
-                                  int program)
-{
-    pmacCSController *ptrpmacCSController = new pmacCSController(portName,
-                                                                 controllerPortName,
-                                                                 csNo,
-                                                                 program);
-    ptrpmacCSController = NULL;
+                                  int program) {
+  pmacCSController *ptrpmacCSController = new pmacCSController(portName,
+                                                               controllerPortName,
+                                                               csNo,
+                                                               program);
+  ptrpmacCSController = NULL;
 
-    return asynSuccess;
+  return asynSuccess;
 }
 
 /**
@@ -530,14 +510,15 @@ asynStatus pmacCreateCSAxis(const char *pmacName, /* specify which controller by
 
   static const char *functionName = "pmacCreateCSAxis";
 
-  pC = (pmacCSController *)findAsynPortDriver(pmacName);
+  pC = (pmacCSController *) findAsynPortDriver(pmacName);
   if (!pC) {
     printf("%s: ERROR Port %s Not Found.\n", functionName, pmacName);
     return asynError;
   }
 
   if (axis == 0) {
-    printf("%s: ERROR Axis Number 0 Not Allowed. This Asyn Address Is Reserved For Controller Specific Parameters.\n", functionName);
+    printf("%s: ERROR Axis Number 0 Not Allowed. This Asyn Address Is Reserved For Controller Specific Parameters.\n",
+           functionName);
     return asynError;
   }
 
@@ -564,14 +545,14 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
 
   static const char *functionName = "pmacCreateCSAxis";
 
-  pC = (pmacCSController *)findAsynPortDriver(pmacName);
+  pC = (pmacCSController *) findAsynPortDriver(pmacName);
   if (!pC) {
     printf("%s: Error port %s not found\n", functionName, pmacName);
     return asynError;
   }
 
   pC->lock();
-  for (int axis=0; axis<=numAxes; axis++) {
+  for (int axis = 0; axis <= numAxes; axis++) {
     pAxis = new pmacCSAxis(pC, axis);
     pAxis = NULL;
   }
@@ -586,12 +567,11 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
  * @param axis Axis number to set the PMAC axis scale factor.
  * @param scale Scale factor to set
  */
-asynStatus pmacCSSetAxisScale(const char *pmacCSName, int axis, int scale)
-{
+asynStatus pmacCSSetAxisScale(const char *pmacCSName, int axis, int scale) {
   pmacCSController *pC;
   static const char *functionName = "pmacSetCSAxisScale";
 
-  pC = (pmacCSController*) findAsynPortDriver(pmacCSName);
+  pC = (pmacCSController *) findAsynPortDriver(pmacCSName);
   if (!pC) {
     printf("%s: Error port %s not found\n", functionName, pmacCSName);
     return asynError;
@@ -608,37 +588,35 @@ static const iocshArg pmacCreateCSControllerArg0 = {"Coordinate system port name
 static const iocshArg pmacCreateCSControllerArg1 = {"PMAC controller port name", iocshArgString};
 static const iocshArg pmacCreateCSControllerArg2 = {"Coordinate system number", iocshArgInt};
 static const iocshArg pmacCreateCSControllerArg3 = {"Motion program execution number", iocshArgInt};
-static const iocshArg * const pmacCreateCSControllerArgs[] = {&pmacCreateCSControllerArg0,
-                  &pmacCreateCSControllerArg1,
-                  &pmacCreateCSControllerArg2,
-                  &pmacCreateCSControllerArg3};
-static const iocshFuncDef configpmacCreateController = {"pmacCreateCS", 4, pmacCreateCSControllerArgs};
-static void configpmacCreateCSControllerCallFunc(const iocshArgBuf *args)
-{
+static const iocshArg *const pmacCreateCSControllerArgs[] = {&pmacCreateCSControllerArg0,
+                                                             &pmacCreateCSControllerArg1,
+                                                             &pmacCreateCSControllerArg2,
+                                                             &pmacCreateCSControllerArg3};
+static const iocshFuncDef configpmacCreateController = {"pmacCreateCS", 4,
+                                                        pmacCreateCSControllerArgs};
+static void configpmacCreateCSControllerCallFunc(const iocshArgBuf *args) {
   pmacCSCreateController(args[0].sval, args[1].sval, args[2].ival, args[3].ival);
 }
 
 /* pmacCreateCSAxis */
 static const iocshArg pmacCreateCSAxisArg0 = {"Controller port name", iocshArgString};
 static const iocshArg pmacCreateCSAxisArg1 = {"Axis number", iocshArgInt};
-static const iocshArg * const pmacCreateCSAxisArgs[] = {&pmacCreateCSAxisArg0,
-                                                        &pmacCreateCSAxisArg1};
+static const iocshArg *const pmacCreateCSAxisArgs[] = {&pmacCreateCSAxisArg0,
+                                                       &pmacCreateCSAxisArg1};
 static const iocshFuncDef configpmacCSAxis = {"pmacCreateCSAxis", 2, pmacCreateCSAxisArgs};
 
-static void configpmacCSAxisCallFunc(const iocshArgBuf *args)
-{
+static void configpmacCSAxisCallFunc(const iocshArgBuf *args) {
   pmacCreateCSAxis(args[0].sval, args[1].ival);
 }
 
 /* pmacCreateAxes */
 static const iocshArg pmacCreateCSAxesArg0 = {"Controller port name", iocshArgString};
 static const iocshArg pmacCreateCSAxesArg1 = {"Num Axes", iocshArgInt};
-static const iocshArg * const pmacCreateCSAxesArgs[] = {&pmacCreateCSAxesArg0,
-                                                        &pmacCreateCSAxesArg1};
+static const iocshArg *const pmacCreateCSAxesArgs[] = {&pmacCreateCSAxesArg0,
+                                                       &pmacCreateCSAxesArg1};
 static const iocshFuncDef configpmacCSAxes = {"pmacCreateCSAxes", 2, pmacCreateCSAxesArgs};
 
-static void configpmacCSAxesCallFunc(const iocshArgBuf *args)
-{
+static void configpmacCSAxesCallFunc(const iocshArgBuf *args) {
   pmacCreateCSAxes(args[0].sval, args[1].ival);
 }
 
@@ -646,27 +624,26 @@ static void configpmacCSAxesCallFunc(const iocshArgBuf *args)
 static const iocshArg pmacCSSetAxisScaleArg0 = {"Controller port name", iocshArgString};
 static const iocshArg pmacCSSetAxisScaleArg1 = {"Axis number", iocshArgInt};
 static const iocshArg pmacCSSetAxisScaleArg2 = {"Scale factor", iocshArgInt};
-static const iocshArg * const pmacCSSetAxisScaleArgs[] = {&pmacCSSetAxisScaleArg0,
-                                                          &pmacCSSetAxisScaleArg1,
-                                                          &pmacCSSetAxisScaleArg2};
-static const iocshFuncDef configpmacCSSetAxisScale = {"pmacSetCoordStepsPerUnit", 3, pmacCSSetAxisScaleArgs};
+static const iocshArg *const pmacCSSetAxisScaleArgs[] = {&pmacCSSetAxisScaleArg0,
+                                                         &pmacCSSetAxisScaleArg1,
+                                                         &pmacCSSetAxisScaleArg2};
+static const iocshFuncDef configpmacCSSetAxisScale = {"pmacSetCoordStepsPerUnit", 3,
+                                                      pmacCSSetAxisScaleArgs};
 
-static void configpmacCSSetAxisScaleFunc(const iocshArgBuf *args)
-{
+static void configpmacCSSetAxisScaleFunc(const iocshArgBuf *args) {
   pmacCSSetAxisScale(args[0].sval, args[1].ival, args[2].ival);
 }
 
-static void pmacCSControllerRegister(void)
-{
-  iocshRegister(&configpmacCreateController,   configpmacCreateCSControllerCallFunc);
-  iocshRegister(&configpmacCSAxis,             configpmacCSAxisCallFunc);
-  iocshRegister(&configpmacCSAxes,             configpmacCSAxesCallFunc);
-  iocshRegister(&configpmacCSSetAxisScale,     configpmacCSSetAxisScaleFunc);
+static void pmacCSControllerRegister(void) {
+  iocshRegister(&configpmacCreateController, configpmacCreateCSControllerCallFunc);
+  iocshRegister(&configpmacCSAxis, configpmacCSAxisCallFunc);
+  iocshRegister(&configpmacCSAxes, configpmacCSAxesCallFunc);
+  iocshRegister(&configpmacCSSetAxisScale, configpmacCSSetAxisScaleFunc);
 }
 epicsExportRegistrar(pmacCSControllerRegister);
 
 #ifdef vxWorks
-  //VxWorks register functions
+//VxWorks register functions
 epicsRegisterFunction(pmacCSCreateController);
 epicsRegisterFunction(pmacCreateCSAxis);
 epicsRegisterFunction(pmacCreateCSAxes);

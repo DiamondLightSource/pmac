@@ -33,7 +33,7 @@
 #define PMAC_C_FeedRatePollString         "PMAC_C_FEEDRATE_POLL"
 #define PMAC_C_FeedRateProblemString      "PMAC_C_FEEDRATE_PROBLEM"
 #define PMAC_C_FeedRateCSString           "PMAC_C_FEEDRATE_CS"
-#define PMAC_C_CoordSysGroup  		        "PMAC_C_COORDINATE_SYS_GROUP"
+#define PMAC_C_CoordSysGroup              "PMAC_C_COORDINATE_SYS_GROUP"
 
 #define PMAC_C_GroupCSPortString          "PMAC_C_GROUP_CS_PORT"
 #define PMAC_C_GroupCSPortRBVString       "PMAC_C_GROUP_CS_PORT_RBV"
@@ -201,385 +201,428 @@
 #define PMAC_TRAJ_STATUS_FINISHED 2
 
 class pmacCSMonitor;
+
 class pmacCSController;
 
-class pmacController : public asynMotorController, public pmacCallbackInterface, public pmacDebugger
-{
+class pmacController
+        : public asynMotorController, public pmacCallbackInterface, public pmacDebugger {
 
- public:
-  pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress, int numAxes, double movingPollPeriod, 
-		 double idlePollPeriod);
+public:
+    pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress,
+                   int numAxes, double movingPollPeriod,
+                   double idlePollPeriod);
 
-  virtual ~pmacController();
+    virtual ~pmacController();
 
-  void startPMACPolling();
+    void startPMACPolling();
 
-  void setDebugLevel(int level, int axis, int csNo);
-  asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
-  asynStatus processDrvInfo(char *input, char *output);
-  virtual void callback(pmacCommandStore *sPtr, int type);
-  asynStatus checkConnection();
-  asynStatus initialiseConnection();
-  asynStatus slowUpdate(pmacCommandStore *sPtr);
-  asynStatus mediumUpdate(pmacCommandStore *sPtr);
-  asynStatus fastUpdate(pmacCommandStore *sPtr);
-  asynStatus parseIntegerVariable(const std::string& command,
-                                  const std::string& response,
-                                  const std::string& desc,
-                                  int& value);
+    void setDebugLevel(int level, int axis, int csNo);
 
-  //asynStatus printConnectedStatus(void);
-  asynStatus immediateWriteRead(const char *command, char *response);
-  asynStatus axisWriteRead(const char *command, char *response);
+    asynStatus
+    drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
 
-  /* These are the methods that we override */
-  asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
-  asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
-  asynStatus writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements);
-  asynStatus writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements);
-  asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t nChars, size_t *nActual);
-  asynStatus readEnum(asynUser *pasynUser, char *strings[], int values[], int severities[], size_t nElements, size_t *nIn);
+    asynStatus processDrvInfo(char *input, char *output);
 
-  void report(FILE *fp, int level);
-  pmacAxis* getAxis(asynUser *pasynUser);
-  pmacAxis* getAxis(int axisNo);
-  asynStatus poll();
+    virtual void callback(pmacCommandStore *sPtr, int type);
 
-  // Trajectory scanning methods
-  asynStatus initializeProfile(size_t maxPoints);
-  asynStatus buildProfile();
-  asynStatus buildProfile(int csNo);
-  asynStatus appendToProfile();
-  asynStatus preparePMAC();
-  asynStatus executeProfile();
-  asynStatus executeProfile(int csNo);
-  asynStatus abortProfile();
-  void trajectoryTask();
-  void setBuildStatus(int state, int status, const std::string& message);
-  void setAppendStatus(int state, int status, const std::string& message);
-  void setProfileStatus(int state, int status, const std::string& message);
-  asynStatus sendTrajectoryDemands(int buffer);
-  asynStatus doubleToPMACFloat(double value, int64_t *representation);
+    asynStatus checkConnection();
 
-  //Disable the check for disabled hardware limits.
-  asynStatus pmacDisableLimitsCheck(int axis);
-  asynStatus pmacDisableLimitsCheck(void);
+    asynStatus initialiseConnection();
 
-  //Set the axis scale factor.
-  asynStatus pmacSetAxisScale(int axis, int scale);
+    asynStatus slowUpdate(pmacCommandStore *sPtr);
 
-  //Set the open loop encoder axis
-  asynStatus pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis);
+    asynStatus mediumUpdate(pmacCommandStore *sPtr);
 
-  // Registration for callbacks
-  asynStatus registerForCallbacks(pmacCallbackInterface *cbPtr, int type);
+    asynStatus fastUpdate(pmacCommandStore *sPtr);
 
-  // Add PMAC variable/status item to monitor
-  asynStatus monitorPMACVariable(int poll_speed, const char *var);
+    asynStatus parseIntegerVariable(const std::string &command,
+                                    const std::string &response,
+                                    const std::string &desc,
+                                    int &value);
 
-  // Register a coordinate system with this controller
-  asynStatus registerCS(pmacCSController *csPtr, const char *portName, int csNo);
+    //asynStatus printConnectedStatus(void);
+    asynStatus immediateWriteRead(const char *command, char *response);
 
-  // Ensure CS demands (Q71..9) are consistent after a motor move or CS change
-  asynStatus makeCSDemandsConsistent();
+    asynStatus axisWriteRead(const char *command, char *response);
 
-  // Read out the device type (cid)
-  asynStatus readDeviceType();
+    /* These are the methods that we override */
+    asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
 
-  // List PLC program
-  asynStatus listPLCProgram(int plcNo, char *buffer, size_t size);
+    asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
 
-  asynStatus storeKinematics();
-  asynStatus listKinematic(int csNo, const std::string& type, char *buffer, size_t size);
+    asynStatus writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements);
 
-  asynStatus executeManualGroup();
-  asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
-  asynStatus tScanIncludedAxes(int *axisMask);
+    asynStatus writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements);
 
- protected:
-  pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
+    asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t nChars, size_t *nActual);
 
-  int PMAC_C_FirstParam_;
-  #define FIRST_PMAC_PARAM PMAC_C_FirstParam_
-  int PMAC_C_GlobalStatus_;
-  int PMAC_C_CommsError_;
-  int PMAC_C_FeedRate_;
-  int PMAC_C_FeedRateLimit_;
-  int PMAC_C_FeedRatePoll_;
-  int PMAC_C_FeedRateProblem_;
-  int PMAC_C_FeedRateCS_;
-  int PMAC_C_CoordSysGroup_;
-  int PMAC_C_GroupCSPort_;
-  int PMAC_C_GroupCSPortRBV_;
-  int PMAC_C_GroupAssign_;
-  int PMAC_C_GroupAssignRBV_;
-  int PMAC_C_GroupExecute_;
-  int PMAC_C_DebugLevel_;
-  int PMAC_C_DebugAxis_;
-  int PMAC_C_DebugCS_;
-  int PMAC_C_DebugCmd_;
-  int PMAC_C_FastUpdateTime_;
-  int PMAC_C_CpuUsage_;
-  int PMAC_C_AxisCS_;
-  int PMAC_C_AxisReadonly_;
-  int PMAC_C_WriteCmd_;
-  int PMAC_C_KillAxis_;
-  int PMAC_C_PLCBits00_;
-  int PMAC_C_PLCBits01_;
-  int PMAC_C_StatusBits01_;
-  int PMAC_C_StatusBits02_;
-  int PMAC_C_StatusBits03_;
-  int PMAC_C_GpioInputs_;
-  int PMAC_C_GpioOutputs_;
-  int PMAC_C_ProgBits_;
-  int PMAC_C_AxisBits01_;
-  int PMAC_C_AxisBits02_;
-  int PMAC_C_AxisBits03_;
-  int PMAC_C_ProfileUseAxisA_;
-  int PMAC_C_ProfileUseAxisB_;
-  int PMAC_C_ProfileUseAxisC_;
-  int PMAC_C_ProfileUseAxisU_;
-  int PMAC_C_ProfileUseAxisV_;
-  int PMAC_C_ProfileUseAxisW_;
-  int PMAC_C_ProfileUseAxisX_;
-  int PMAC_C_ProfileUseAxisY_;
-  int PMAC_C_ProfileUseAxisZ_;
-  int PMAC_C_ProfilePositionsA_;
-  int PMAC_C_ProfilePositionsB_;
-  int PMAC_C_ProfilePositionsC_;
-  int PMAC_C_ProfilePositionsU_;
-  int PMAC_C_ProfilePositionsV_;
-  int PMAC_C_ProfilePositionsW_;
-  int PMAC_C_ProfilePositionsX_;
-  int PMAC_C_ProfilePositionsY_;
-  int PMAC_C_ProfilePositionsZ_;
-  int PMAC_C_ProfileOffsetA_;
-  int PMAC_C_ProfileOffsetB_;
-  int PMAC_C_ProfileOffsetC_;
-  int PMAC_C_ProfileOffsetU_;
-  int PMAC_C_ProfileOffsetV_;
-  int PMAC_C_ProfileOffsetW_;
-  int PMAC_C_ProfileOffsetX_;
-  int PMAC_C_ProfileOffsetY_;
-  int PMAC_C_ProfileOffsetZ_;
-  int PMAC_C_ProfileResA_;
-  int PMAC_C_ProfileResB_;
-  int PMAC_C_ProfileResC_;
-  int PMAC_C_ProfileResU_;
-  int PMAC_C_ProfileResV_;
-  int PMAC_C_ProfileResW_;
-  int PMAC_C_ProfileResX_;
-  int PMAC_C_ProfileResY_;
-  int PMAC_C_ProfileResZ_;
-  int PMAC_C_ProfileAppend_;
-  int PMAC_C_ProfileAppendState_;
-  int PMAC_C_ProfileAppendStatus_;
-  int PMAC_C_ProfileAppendMessage_;
-  int PMAC_C_ProfileNumBuild_;
-  int PMAC_C_ProfileBuiltPoints_;
-  int PMAC_C_ProfileUser_;
-  int PMAC_C_ProfileVelMode_;
-  int PMAC_C_TrajBufferLength_;
-  int PMAC_C_TrajTotalPoints_;
-  int PMAC_C_TrajStatus_;
-  int PMAC_C_TrajCurrentIndex_;
-  int PMAC_C_TrajCurrentBuffer_;
-  int PMAC_C_TrajBuffAdrA_;
-  int PMAC_C_TrajBuffAdrB_;
-  int PMAC_C_TrajBuffFillA_;
-  int PMAC_C_TrajBuffFillB_;
-  int PMAC_C_TrajRunTime_;
-  int PMAC_C_TrajCSNumber_;
-  int PMAC_C_TrajCSPort_;
-  int PMAC_C_TrajPercent_;
-  int PMAC_C_TrajEStatus_;
-  int PMAC_C_TrajProg_;
-  int PMAC_C_TrajProgVersion_;
-  int PMAC_C_TrajCodeVersion_;
-  int PMAC_C_NoOfMsgs_;
-  int PMAC_C_TotalBytesWritten_;
-  int PMAC_C_TotalBytesRead_;
-  int PMAC_C_MsgBytesWritten_;
-  int PMAC_C_MsgBytesRead_;
-  int PMAC_C_MsgTime_;
-  int PMAC_C_MaxBytesWritten_;
-  int PMAC_C_MaxBytesRead_;
-  int PMAC_C_MaxTime_;
-  int PMAC_C_AveBytesWritten_;
-  int PMAC_C_AveBytesRead_;
-  int PMAC_C_AveTime_;
-  int PMAC_C_FastStore_;
-  int PMAC_C_MediumStore_;
-  int PMAC_C_SlowStore_;
-  int PMAC_C_ReportFast_;
-  int PMAC_C_ReportMedium_;
-  int PMAC_C_ReportSlow_;
-  int PMAC_C_ForwardKinematic_[PMAC_MAX_CS];
-  int PMAC_C_InverseKinematic_[PMAC_MAX_CS];
-  int PMAC_C_LastParam_;
-  #define LAST_PMAC_PARAM PMAC_C_LastParam_
-  int parameters[PMAC_MAX_PARAMETERS];
+    asynStatus
+    readEnum(asynUser *pasynUser, char *strings[], int values[], int severities[], size_t nElements,
+             size_t *nIn);
 
- public:
-  pmacCsGroups *pGroupList;
+    void report(FILE *fp, int level);
 
- private:
-  int connected_;
-  int initialised_;
-  int cid_;
-  std::string cpu_;
-  int parameterIndex_;
-  pmacMessageBroker *pBroker_;
-  pmacTrajectory *pTrajectory_;
-  pmacHardwareInterface *pHardware_;
-  IntegerHashtable *pPortToCs_;
-  IntegerHashtable *pIntParams_;
-  IntegerHashtable *pHexParams_;
-  IntegerHashtable *pDoubleParams_;
-  IntegerHashtable *pStringParams_;
-  StringHashtable *pWriteParams_;
-  pmacCSMonitor *pAxisZero;
-  pmacCSController **pCSControllers_;
-  asynUser* lowLevelPortUser_;
-  epicsUInt32 movesDeferred_;
-  epicsTimeStamp nowTime_;
-  epicsFloat64 nowTimeSecs_;
-  epicsFloat64 lastTimeSecs_;
-  epicsTimeStamp lastMediumTime_;
-  epicsTimeStamp lastSlowTime_;
-  bool printNextError_;
-  bool feedRatePoll_;
-  double movingPollPeriod_;
-  double idlePollPeriod_;
-  int i8_;
-  int i7002_;
+    pmacAxis *getAxis(asynUser *pasynUser);
 
-  // Trajectory scan variables
-  int pvtTimeMode_;
-  bool profileInitialized_;
-  bool profileBuilt_;
-  bool appendAvailable_;
-  bool tScanShortScan_;           // Is the scan a short scan (< 3.0 seconds)
-  int tScanExecuting_;            // Is a scan executing
-  int tScanCSNo_;                 // The CS number of the executing scan
-  int tScanNumPoints_;            // Total number of points in the scan
-  int tScanAxisMask_;             // Mask describing which axes are used in the scan
-  int tScanPointCtr_;             // Counter of scan points written
-  int tScanPmacBufferPtr_;
-  int tScanPmacTotalPts_;
-  int tScanPmacStatus_;
-  int tScanPmacBufferNumber_;     // Which half buffer (A=0,B=1) is the PMAC reading
-  int tScanPmacBufferAddressA_;
-  int tScanPmacBufferAddressB_;
-  int tScanPmacBufferSize_;
-  double tScanPmacProgVersion_;
-  double **eguProfilePositions_;  // 2D array of profile positions in EGU (1 array for each axis)
-  double **tScanPositions_;       // 2D array of profile positions (1 array for each axis)
-  int *profileUser_;              // Array of profile user values
-  int *profileVelMode_;           // Array of profile velocity modes
-  epicsEventId startEventId_;
-  epicsEventId stopEventId_;
+    pmacAxis *getAxis(int axisNo);
 
-  asynStatus lowLevelWriteRead(const char *command, char *response);
+    asynStatus poll();
+
+    // Trajectory scanning methods
+    asynStatus initializeProfile(size_t maxPoints);
+
+    asynStatus buildProfile();
+
+    asynStatus buildProfile(int csNo);
+
+    asynStatus appendToProfile();
+
+    asynStatus preparePMAC();
+
+    asynStatus executeProfile();
+
+    asynStatus executeProfile(int csNo);
+
+    asynStatus abortProfile();
+
+    void trajectoryTask();
+
+    void setBuildStatus(int state, int status, const std::string &message);
+
+    void setAppendStatus(int state, int status, const std::string &message);
+
+    void setProfileStatus(int state, int status, const std::string &message);
+
+    asynStatus sendTrajectoryDemands(int buffer);
+
+    asynStatus doubleToPMACFloat(double value, int64_t *representation);
+
+    //Disable the check for disabled hardware limits.
+    asynStatus pmacDisableLimitsCheck(int axis);
+
+    asynStatus pmacDisableLimitsCheck(void);
+
+    //Set the axis scale factor.
+    asynStatus pmacSetAxisScale(int axis, int scale);
+
+    //Set the open loop encoder axis
+    asynStatus pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis);
+
+    // Registration for callbacks
+    asynStatus registerForCallbacks(pmacCallbackInterface *cbPtr, int type);
+
+    // Add PMAC variable/status item to monitor
+    asynStatus monitorPMACVariable(int poll_speed, const char *var);
+
+    // Register a coordinate system with this controller
+    asynStatus registerCS(pmacCSController *csPtr, const char *portName, int csNo);
+
+    // Ensure CS demands (Q71..9) are consistent after a motor move or CS change
+    asynStatus makeCSDemandsConsistent();
+
+    // Read out the device type (cid)
+    asynStatus readDeviceType();
+
+    // List PLC program
+    asynStatus listPLCProgram(int plcNo, char *buffer, size_t size);
+
+    asynStatus storeKinematics();
+
+    asynStatus listKinematic(int csNo, const std::string &type, char *buffer, size_t size);
+
+    asynStatus executeManualGroup();
+
+    asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
+
+    asynStatus tScanIncludedAxes(int *axisMask);
+
+protected:
+    pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
+
+    int PMAC_C_FirstParam_;
+#define FIRST_PMAC_PARAM PMAC_C_FirstParam_
+    int PMAC_C_GlobalStatus_;
+    int PMAC_C_CommsError_;
+    int PMAC_C_FeedRate_;
+    int PMAC_C_FeedRateLimit_;
+    int PMAC_C_FeedRatePoll_;
+    int PMAC_C_FeedRateProblem_;
+    int PMAC_C_FeedRateCS_;
+    int PMAC_C_CoordSysGroup_;
+    int PMAC_C_GroupCSPort_;
+    int PMAC_C_GroupCSPortRBV_;
+    int PMAC_C_GroupAssign_;
+    int PMAC_C_GroupAssignRBV_;
+    int PMAC_C_GroupExecute_;
+    int PMAC_C_DebugLevel_;
+    int PMAC_C_DebugAxis_;
+    int PMAC_C_DebugCS_;
+    int PMAC_C_DebugCmd_;
+    int PMAC_C_FastUpdateTime_;
+    int PMAC_C_CpuUsage_;
+    int PMAC_C_AxisCS_;
+    int PMAC_C_AxisReadonly_;
+    int PMAC_C_WriteCmd_;
+    int PMAC_C_KillAxis_;
+    int PMAC_C_PLCBits00_;
+    int PMAC_C_PLCBits01_;
+    int PMAC_C_StatusBits01_;
+    int PMAC_C_StatusBits02_;
+    int PMAC_C_StatusBits03_;
+    int PMAC_C_GpioInputs_;
+    int PMAC_C_GpioOutputs_;
+    int PMAC_C_ProgBits_;
+    int PMAC_C_AxisBits01_;
+    int PMAC_C_AxisBits02_;
+    int PMAC_C_AxisBits03_;
+    int PMAC_C_ProfileUseAxisA_;
+    int PMAC_C_ProfileUseAxisB_;
+    int PMAC_C_ProfileUseAxisC_;
+    int PMAC_C_ProfileUseAxisU_;
+    int PMAC_C_ProfileUseAxisV_;
+    int PMAC_C_ProfileUseAxisW_;
+    int PMAC_C_ProfileUseAxisX_;
+    int PMAC_C_ProfileUseAxisY_;
+    int PMAC_C_ProfileUseAxisZ_;
+    int PMAC_C_ProfilePositionsA_;
+    int PMAC_C_ProfilePositionsB_;
+    int PMAC_C_ProfilePositionsC_;
+    int PMAC_C_ProfilePositionsU_;
+    int PMAC_C_ProfilePositionsV_;
+    int PMAC_C_ProfilePositionsW_;
+    int PMAC_C_ProfilePositionsX_;
+    int PMAC_C_ProfilePositionsY_;
+    int PMAC_C_ProfilePositionsZ_;
+    int PMAC_C_ProfileOffsetA_;
+    int PMAC_C_ProfileOffsetB_;
+    int PMAC_C_ProfileOffsetC_;
+    int PMAC_C_ProfileOffsetU_;
+    int PMAC_C_ProfileOffsetV_;
+    int PMAC_C_ProfileOffsetW_;
+    int PMAC_C_ProfileOffsetX_;
+    int PMAC_C_ProfileOffsetY_;
+    int PMAC_C_ProfileOffsetZ_;
+    int PMAC_C_ProfileResA_;
+    int PMAC_C_ProfileResB_;
+    int PMAC_C_ProfileResC_;
+    int PMAC_C_ProfileResU_;
+    int PMAC_C_ProfileResV_;
+    int PMAC_C_ProfileResW_;
+    int PMAC_C_ProfileResX_;
+    int PMAC_C_ProfileResY_;
+    int PMAC_C_ProfileResZ_;
+    int PMAC_C_ProfileAppend_;
+    int PMAC_C_ProfileAppendState_;
+    int PMAC_C_ProfileAppendStatus_;
+    int PMAC_C_ProfileAppendMessage_;
+    int PMAC_C_ProfileNumBuild_;
+    int PMAC_C_ProfileBuiltPoints_;
+    int PMAC_C_ProfileUser_;
+    int PMAC_C_ProfileVelMode_;
+    int PMAC_C_TrajBufferLength_;
+    int PMAC_C_TrajTotalPoints_;
+    int PMAC_C_TrajStatus_;
+    int PMAC_C_TrajCurrentIndex_;
+    int PMAC_C_TrajCurrentBuffer_;
+    int PMAC_C_TrajBuffAdrA_;
+    int PMAC_C_TrajBuffAdrB_;
+    int PMAC_C_TrajBuffFillA_;
+    int PMAC_C_TrajBuffFillB_;
+    int PMAC_C_TrajRunTime_;
+    int PMAC_C_TrajCSNumber_;
+    int PMAC_C_TrajCSPort_;
+    int PMAC_C_TrajPercent_;
+    int PMAC_C_TrajEStatus_;
+    int PMAC_C_TrajProg_;
+    int PMAC_C_TrajProgVersion_;
+    int PMAC_C_TrajCodeVersion_;
+    int PMAC_C_NoOfMsgs_;
+    int PMAC_C_TotalBytesWritten_;
+    int PMAC_C_TotalBytesRead_;
+    int PMAC_C_MsgBytesWritten_;
+    int PMAC_C_MsgBytesRead_;
+    int PMAC_C_MsgTime_;
+    int PMAC_C_MaxBytesWritten_;
+    int PMAC_C_MaxBytesRead_;
+    int PMAC_C_MaxTime_;
+    int PMAC_C_AveBytesWritten_;
+    int PMAC_C_AveBytesRead_;
+    int PMAC_C_AveTime_;
+    int PMAC_C_FastStore_;
+    int PMAC_C_MediumStore_;
+    int PMAC_C_SlowStore_;
+    int PMAC_C_ReportFast_;
+    int PMAC_C_ReportMedium_;
+    int PMAC_C_ReportSlow_;
+    int PMAC_C_ForwardKinematic_[PMAC_MAX_CS];
+    int PMAC_C_InverseKinematic_[PMAC_MAX_CS];
+    int PMAC_C_LastParam_;
+#define LAST_PMAC_PARAM PMAC_C_LastParam_
+    int parameters[PMAC_MAX_PARAMETERS];
+
+public:
+    pmacCsGroups *pGroupList;
+
+private:
+    int connected_;
+    int initialised_;
+    int cid_;
+    std::string cpu_;
+    int parameterIndex_;
+    pmacMessageBroker *pBroker_;
+    pmacTrajectory *pTrajectory_;
+    pmacHardwareInterface *pHardware_;
+    IntegerHashtable *pPortToCs_;
+    IntegerHashtable *pIntParams_;
+    IntegerHashtable *pHexParams_;
+    IntegerHashtable *pDoubleParams_;
+    IntegerHashtable *pStringParams_;
+    StringHashtable *pWriteParams_;
+    pmacCSMonitor *pAxisZero;
+    pmacCSController **pCSControllers_;
+    asynUser *lowLevelPortUser_;
+    epicsUInt32 movesDeferred_;
+    epicsTimeStamp nowTime_;
+    epicsFloat64 nowTimeSecs_;
+    epicsFloat64 lastTimeSecs_;
+    epicsTimeStamp lastMediumTime_;
+    epicsTimeStamp lastSlowTime_;
+    bool printNextError_;
+    bool feedRatePoll_;
+    double movingPollPeriod_;
+    double idlePollPeriod_;
+    int i8_;
+    int i7002_;
+
+    // Trajectory scan variables
+    int pvtTimeMode_;
+    bool profileInitialized_;
+    bool profileBuilt_;
+    bool appendAvailable_;
+    bool tScanShortScan_;           // Is the scan a short scan (< 3.0 seconds)
+    int tScanExecuting_;            // Is a scan executing
+    int tScanCSNo_;                 // The CS number of the executing scan
+    int tScanNumPoints_;            // Total number of points in the scan
+    int tScanAxisMask_;             // Mask describing which axes are used in the scan
+    int tScanPointCtr_;             // Counter of scan points written
+    int tScanPmacBufferPtr_;
+    int tScanPmacTotalPts_;
+    int tScanPmacStatus_;
+    int tScanPmacBufferNumber_;     // Which half buffer (A=0,B=1) is the PMAC reading
+    int tScanPmacBufferAddressA_;
+    int tScanPmacBufferAddressB_;
+    int tScanPmacBufferSize_;
+    double tScanPmacProgVersion_;
+    double **eguProfilePositions_;  // 2D array of profile positions in EGU (1 array for each axis)
+    double **tScanPositions_;       // 2D array of profile positions (1 array for each axis)
+    int *profileUser_;              // Array of profile user values
+    int *profileVelMode_;           // Array of profile velocity modes
+    epicsEventId startEventId_;
+    epicsEventId stopEventId_;
+
+    asynStatus lowLevelWriteRead(const char *command, char *response);
 //  asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
 
-  asynStatus updateStatistics();
+    asynStatus updateStatistics();
 
-  asynStatus processDeferredMoves(void);
+    asynStatus processDeferredMoves(void);
 
-  //static class data members
+    //static class data members
 
-  static const epicsUInt32 PMAC_MAXBUF_;
-  static const epicsFloat64 PMAC_TIMEOUT_;
-  static const epicsUInt32 PMAC_FEEDRATE_LIM_;
-  static const epicsUInt32 PMAC_FEEDRATE_DEADBAND_;
-  static const epicsUInt32 PMAC_ERROR_PRINT_TIME_;
-  static const epicsUInt32 PMAC_FORCED_FAST_POLLS_;
-  static const epicsUInt32 PMAC_OK_;
-  static const epicsUInt32 PMAC_ERROR_;
-  static const epicsInt32 PMAC_CID_PMAC_;
-  static const epicsInt32 PMAC_CID_GEOBRICK_;
-  static const epicsInt32 PMAC_CID_POWER_;
-  
-  static const epicsUInt32 PMAC_STATUS1_MAXRAPID_SPEED;    
-  static const epicsUInt32 PMAC_STATUS1_ALT_CMNDOUT_MODE;  
-  static const epicsUInt32 PMAC_STATUS1_SOFT_POS_CAPTURE;
-  static const epicsUInt32 PMAC_STATUS1_ERROR_TRIGGER;
-  static const epicsUInt32 PMAC_STATUS1_FOLLOW_ENABLE;   
-  static const epicsUInt32 PMAC_STATUS1_FOLLOW_OFFSET;   
-  static const epicsUInt32 PMAC_STATUS1_PHASED_MOTOR;   
-  static const epicsUInt32 PMAC_STATUS1_ALT_SRC_DEST;    
-  static const epicsUInt32 PMAC_STATUS1_USER_SERVO;      
-  static const epicsUInt32 PMAC_STATUS1_USER_PHASE;      
-  static const epicsUInt32 PMAC_STATUS1_HOMING;          
-  static const epicsUInt32 PMAC_STATUS1_BLOCK_REQUEST;   
-  static const epicsUInt32 PMAC_STATUS1_DECEL_ABORT;     
-  static const epicsUInt32 PMAC_STATUS1_DESIRED_VELOCITY_ZERO;
-  static const epicsUInt32 PMAC_STATUS1_DATABLKERR;        
-  static const epicsUInt32 PMAC_STATUS1_DWELL;             
-  static const epicsUInt32 PMAC_STATUS1_INTEGRATE_MODE;    
-  static const epicsUInt32 PMAC_STATUS1_MOVE_TIME_ON;      
-  static const epicsUInt32 PMAC_STATUS1_OPEN_LOOP;         
-  static const epicsUInt32 PMAC_STATUS1_AMP_ENABLED;       
-  static const epicsUInt32 PMAC_STATUS1_X_SERVO_ON;        
-  static const epicsUInt32 PMAC_STATUS1_POS_LIMIT_SET;     
-  static const epicsUInt32 PMAC_STATUS1_NEG_LIMIT_SET;     
-  static const epicsUInt32 PMAC_STATUS1_MOTOR_ON;          
+    static const epicsUInt32 PMAC_MAXBUF_;
+    static const epicsFloat64 PMAC_TIMEOUT_;
+    static const epicsUInt32 PMAC_FEEDRATE_LIM_;
+    static const epicsUInt32 PMAC_FEEDRATE_DEADBAND_;
+    static const epicsUInt32 PMAC_ERROR_PRINT_TIME_;
+    static const epicsUInt32 PMAC_FORCED_FAST_POLLS_;
+    static const epicsUInt32 PMAC_OK_;
+    static const epicsUInt32 PMAC_ERROR_;
+    static const epicsInt32 PMAC_CID_PMAC_;
+    static const epicsInt32 PMAC_CID_GEOBRICK_;
+    static const epicsInt32 PMAC_CID_POWER_;
 
-  static const epicsUInt32 PMAC_STATUS2_IN_POSITION;       
-  static const epicsUInt32 PMAC_STATUS2_WARN_FOLLOW_ERR;   
-  static const epicsUInt32 PMAC_STATUS2_ERR_FOLLOW_ERR;    
-  static const epicsUInt32 PMAC_STATUS2_AMP_FAULT;         
-  static const epicsUInt32 PMAC_STATUS2_NEG_BACKLASH;      
-  static const epicsUInt32 PMAC_STATUS2_I2T_AMP_FAULT;     
-  static const epicsUInt32 PMAC_STATUS2_I2_FOLLOW_ERR;     
-  static const epicsUInt32 PMAC_STATUS2_TRIGGER_MOVE;      
-  static const epicsUInt32 PMAC_STATUS2_PHASE_REF_ERR;     
-  static const epicsUInt32 PMAC_STATUS2_PHASE_SEARCH;      
-  static const epicsUInt32 PMAC_STATUS2_HOME_COMPLETE;     
-  static const epicsUInt32 PMAC_STATUS2_POS_LIMIT_STOP;    
-  static const epicsUInt32 PMAC_STATUS2_DESIRED_STOP;      
-  static const epicsUInt32 PMAC_STATUS2_FORE_IN_POS;       
-  static const epicsUInt32 PMAC_STATUS2_NA14;              
-  static const epicsUInt32 PMAC_STATUS2_ASSIGNED_CS;       
+    static const epicsUInt32 PMAC_STATUS1_MAXRAPID_SPEED;
+    static const epicsUInt32 PMAC_STATUS1_ALT_CMNDOUT_MODE;
+    static const epicsUInt32 PMAC_STATUS1_SOFT_POS_CAPTURE;
+    static const epicsUInt32 PMAC_STATUS1_ERROR_TRIGGER;
+    static const epicsUInt32 PMAC_STATUS1_FOLLOW_ENABLE;
+    static const epicsUInt32 PMAC_STATUS1_FOLLOW_OFFSET;
+    static const epicsUInt32 PMAC_STATUS1_PHASED_MOTOR;
+    static const epicsUInt32 PMAC_STATUS1_ALT_SRC_DEST;
+    static const epicsUInt32 PMAC_STATUS1_USER_SERVO;
+    static const epicsUInt32 PMAC_STATUS1_USER_PHASE;
+    static const epicsUInt32 PMAC_STATUS1_HOMING;
+    static const epicsUInt32 PMAC_STATUS1_BLOCK_REQUEST;
+    static const epicsUInt32 PMAC_STATUS1_DECEL_ABORT;
+    static const epicsUInt32 PMAC_STATUS1_DESIRED_VELOCITY_ZERO;
+    static const epicsUInt32 PMAC_STATUS1_DATABLKERR;
+    static const epicsUInt32 PMAC_STATUS1_DWELL;
+    static const epicsUInt32 PMAC_STATUS1_INTEGRATE_MODE;
+    static const epicsUInt32 PMAC_STATUS1_MOVE_TIME_ON;
+    static const epicsUInt32 PMAC_STATUS1_OPEN_LOOP;
+    static const epicsUInt32 PMAC_STATUS1_AMP_ENABLED;
+    static const epicsUInt32 PMAC_STATUS1_X_SERVO_ON;
+    static const epicsUInt32 PMAC_STATUS1_POS_LIMIT_SET;
+    static const epicsUInt32 PMAC_STATUS1_NEG_LIMIT_SET;
+    static const epicsUInt32 PMAC_STATUS1_MOTOR_ON;
 
- /*Global status ???*/
-  static const epicsUInt32 PMAC_GSTATUS_CARD_ADDR;             
-  static const epicsUInt32 PMAC_GSTATUS_ALL_CARD_ADDR;         
-  static const epicsUInt32 PMAC_GSTATUS_RESERVED;              
-  static const epicsUInt32 PMAC_GSTATUS_PHASE_CLK_MISS;        
-  static const epicsUInt32 PMAC_GSTATUS_MACRO_RING_ERRORCHECK; 
-  static const epicsUInt32 PMAC_GSTATUS_MACRO_RING_COMMS;      
-  static const epicsUInt32 PMAC_GSTATUS_TWS_PARITY_ERROR;      
-  static const epicsUInt32 PMAC_GSTATUS_CONFIG_ERROR;          
-  static const epicsUInt32 PMAC_GSTATUS_ILLEGAL_LVAR;          
-  static const epicsUInt32 PMAC_GSTATUS_REALTIME_INTR;         
-  static const epicsUInt32 PMAC_GSTATUS_FLASH_ERROR;           
-  static const epicsUInt32 PMAC_GSTATUS_DPRAM_ERROR;           
-  static const epicsUInt32 PMAC_GSTATUS_CKSUM_ACTIVE;          
-  static const epicsUInt32 PMAC_GSTATUS_CKSUM_ERROR;           
-  static const epicsUInt32 PMAC_GSTATUS_LEADSCREW_COMP;        
-  static const epicsUInt32 PMAC_GSTATUS_WATCHDOG;              
-  static const epicsUInt32 PMAC_GSTATUS_SERVO_REQ;             
-  static const epicsUInt32 PMAC_GSTATUS_DATA_GATHER_START;     
-  static const epicsUInt32 PMAC_GSTATUS_RESERVED2;             
-  static const epicsUInt32 PMAC_GSTATUS_DATA_GATHER_ON;        
-  static const epicsUInt32 PMAC_GSTATUS_SERVO_ERROR;           
-  static const epicsUInt32 PMAC_GSTATUS_CPUTYPE;               
-  static const epicsUInt32 PMAC_GSTATUS_REALTIME_INTR_RE;      
-  static const epicsUInt32 PMAC_GSTATUS_RESERVED3;             
+    static const epicsUInt32 PMAC_STATUS2_IN_POSITION;
+    static const epicsUInt32 PMAC_STATUS2_WARN_FOLLOW_ERR;
+    static const epicsUInt32 PMAC_STATUS2_ERR_FOLLOW_ERR;
+    static const epicsUInt32 PMAC_STATUS2_AMP_FAULT;
+    static const epicsUInt32 PMAC_STATUS2_NEG_BACKLASH;
+    static const epicsUInt32 PMAC_STATUS2_I2T_AMP_FAULT;
+    static const epicsUInt32 PMAC_STATUS2_I2_FOLLOW_ERR;
+    static const epicsUInt32 PMAC_STATUS2_TRIGGER_MOVE;
+    static const epicsUInt32 PMAC_STATUS2_PHASE_REF_ERR;
+    static const epicsUInt32 PMAC_STATUS2_PHASE_SEARCH;
+    static const epicsUInt32 PMAC_STATUS2_HOME_COMPLETE;
+    static const epicsUInt32 PMAC_STATUS2_POS_LIMIT_STOP;
+    static const epicsUInt32 PMAC_STATUS2_DESIRED_STOP;
+    static const epicsUInt32 PMAC_STATUS2_FORE_IN_POS;
+    static const epicsUInt32 PMAC_STATUS2_NA14;
+    static const epicsUInt32 PMAC_STATUS2_ASSIGNED_CS;
 
-  static const epicsUInt32 PMAC_HARDWARE_PROB;
-  static const epicsUInt32 PMAX_AXIS_GENERAL_PROB1;
-  static const epicsUInt32 PMAX_AXIS_GENERAL_PROB2;
+    /*Global status ???*/
+    static const epicsUInt32 PMAC_GSTATUS_CARD_ADDR;
+    static const epicsUInt32 PMAC_GSTATUS_ALL_CARD_ADDR;
+    static const epicsUInt32 PMAC_GSTATUS_RESERVED;
+    static const epicsUInt32 PMAC_GSTATUS_PHASE_CLK_MISS;
+    static const epicsUInt32 PMAC_GSTATUS_MACRO_RING_ERRORCHECK;
+    static const epicsUInt32 PMAC_GSTATUS_MACRO_RING_COMMS;
+    static const epicsUInt32 PMAC_GSTATUS_TWS_PARITY_ERROR;
+    static const epicsUInt32 PMAC_GSTATUS_CONFIG_ERROR;
+    static const epicsUInt32 PMAC_GSTATUS_ILLEGAL_LVAR;
+    static const epicsUInt32 PMAC_GSTATUS_REALTIME_INTR;
+    static const epicsUInt32 PMAC_GSTATUS_FLASH_ERROR;
+    static const epicsUInt32 PMAC_GSTATUS_DPRAM_ERROR;
+    static const epicsUInt32 PMAC_GSTATUS_CKSUM_ACTIVE;
+    static const epicsUInt32 PMAC_GSTATUS_CKSUM_ERROR;
+    static const epicsUInt32 PMAC_GSTATUS_LEADSCREW_COMP;
+    static const epicsUInt32 PMAC_GSTATUS_WATCHDOG;
+    static const epicsUInt32 PMAC_GSTATUS_SERVO_REQ;
+    static const epicsUInt32 PMAC_GSTATUS_DATA_GATHER_START;
+    static const epicsUInt32 PMAC_GSTATUS_RESERVED2;
+    static const epicsUInt32 PMAC_GSTATUS_DATA_GATHER_ON;
+    static const epicsUInt32 PMAC_GSTATUS_SERVO_ERROR;
+    static const epicsUInt32 PMAC_GSTATUS_CPUTYPE;
+    static const epicsUInt32 PMAC_GSTATUS_REALTIME_INTR_RE;
+    static const epicsUInt32 PMAC_GSTATUS_RESERVED3;
 
-  static const char *PMAC_C_ForwardKinematicString[];
-  static const char *PMAC_C_InverseKinematicString[];
+    static const epicsUInt32 PMAC_HARDWARE_PROB;
+    static const epicsUInt32 PMAX_AXIS_GENERAL_PROB1;
+    static const epicsUInt32 PMAX_AXIS_GENERAL_PROB2;
 
-  friend class pmacAxis;
-  friend class pmacCsGroups;
-  friend class pmacCSController;
-  friend class pmacHardwareInterface;
+    static const char *PMAC_C_ForwardKinematicString[];
+    static const char *PMAC_C_InverseKinematicString[];
+
+    friend class pmacAxis;
+
+    friend class pmacCsGroups;
+
+    friend class pmacCSController;
+
+    friend class pmacHardwareInterface;
 };
 
 #define NUM_PMAC_PARAMS (&LAST_PMAC_PARAM - &FIRST_PMAC_PARAM + 1 + PMAC_MAX_PARAMETERS)

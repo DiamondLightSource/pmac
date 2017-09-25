@@ -11,23 +11,33 @@
 #include <asynDriver.h>
 #include "pmacDebugger.h"
 
-class pmacTrajectory: public pmacDebugger
-{
-  public:
+class pmacTrajectory : public pmacDebugger {
+public:
     pmacTrajectory();
+
     virtual ~pmacTrajectory();
+
     asynStatus initialise(int noOfPoints);
+
     asynStatus append(double **positions, double *times, int *user, int *velocity, int noOfPoints);
+
     int getNoOfAxes();
+
     int getTotalNoOfPoints();
+
     int getNoOfValidPoints();
+
     asynStatus getTime(int index, int *time);
+
     asynStatus getUserMode(int index, int *user);
+
     asynStatus getVelocityMode(int index, int *velocity);
+
     asynStatus getPosition(int axis, int index, double *position);
+
     void report();
 
-  private:
+private:
     int noOfAxes_;
     int totalNoOfPoints_;           // Total number of points in the scan
     int noOfValidPoints_;           // Number of prepared points in the scan (based on delta times)

@@ -10,13 +10,13 @@
 
 #include "pmacCommandStore.h"
 
-class pmacCallbackInterface
-{
+class pmacCallbackInterface {
 public:
-  pmacCallbackInterface();
-  virtual ~pmacCallbackInterface();
+    pmacCallbackInterface();
 
-  virtual void callback(pmacCommandStore *sPtr, int type) = 0;
+    virtual ~pmacCallbackInterface();
+
+    virtual void callback(pmacCommandStore *sPtr, int type) = 0;
 };
 
 #endif /* PMACAPP_SRC_PMACCALLBACKINTERFACE_H_ */

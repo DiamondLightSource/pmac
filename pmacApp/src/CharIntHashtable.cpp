@@ -10,86 +10,75 @@
 #include <stdio.h>
 #include <stdexcept>
 
-CharIntHashtable::CharIntHashtable() : Hashtable()
-{
+CharIntHashtable::CharIntHashtable() : Hashtable() {
 }
 
-CharIntHashtable::~CharIntHashtable()
-{
+CharIntHashtable::~CharIntHashtable() {
 }
 
-int CharIntHashtable::lookup(const char key)
-{
+int CharIntHashtable::lookup(const char key) {
   char nkey[2];
   nkey[0] = key;
   nkey[1] = 0;
   void *ptr = Hashtable::lookup(&nkey);
-  if (ptr == NULL){
-    throw(std::out_of_range("No entry in hashtable"));
+  if (ptr == NULL) {
+    throw (std::out_of_range("No entry in hashtable"));
   }
-  return *(int *)ptr;
+  return *(int *) ptr;
 }
 
-int CharIntHashtable::insert(const char key, int value)
-{
+int CharIntHashtable::insert(const char key, int value) {
   char nkey[2];
-  int *val = (int *)malloc(sizeof(int));
+  int *val = (int *) malloc(sizeof(int));
   *val = value;
   nkey[0] = key;
   nkey[1] = 0;
-  void *vPtr = Hashtable::insert(&nkey, (void *)val);
-  if (vPtr != NULL){
-    return *(int *)vPtr;
+  void *vPtr = Hashtable::insert(&nkey, (void *) val);
+  if (vPtr != NULL) {
+    return *(int *) vPtr;
   }
   return NULL;
 }
 
-int CharIntHashtable::remove(const char key)
-{
+int CharIntHashtable::remove(const char key) {
   char nkey[2];
   nkey[0] = key;
   nkey[1] = 0;
-  return *(int *)Hashtable::remove(&nkey);
+  return *(int *) Hashtable::remove(&nkey);
 }
 
-char CharIntHashtable::firstKey()
-{
+char CharIntHashtable::firstKey() {
   char *key = NULL;
   table_entry *entry = this->internal_begin();
-  if (entry != NULL){
-    key = (char *)entry->key;
+  if (entry != NULL) {
+    key = (char *) entry->key;
   }
   return *key;
 }
 
-bool CharIntHashtable::hasNextKey()
-{
+bool CharIntHashtable::hasNextKey() {
   return this->internal_hasNext();
 }
 
-char CharIntHashtable::nextKey()
-{
+char CharIntHashtable::nextKey() {
   char *key = NULL;
   table_entry *entry = this->internal_next();
-  if (entry != NULL){
-    key = (char *)entry->key;
+  if (entry != NULL) {
+    key = (char *) entry->key;
   }
   return *key;
 }
 
-void *CharIntHashtable::copy_key(const void *key)
-{
-  char *retKey = (char *)malloc(sizeof(char));
-  *retKey = *(char *)key;
+void *CharIntHashtable::copy_key(const void *key) {
+  char *retKey = (char *) malloc(sizeof(char));
+  *retKey = *(char *) key;
   return retKey;
 }
 
-bool CharIntHashtable::compare_key(const void *key1, const void *key2)
-{
-  return (*(char *)key1 == *(char *)key2);
+bool CharIntHashtable::compare_key(const void *key1, const void *key2) {
+  return (*(char *) key1 == *(char *) key2);
 }
 
-void CharIntHashtable::release_key(void *key)
-{
+void CharIntHashtable::release_key(void *key) {
   free(key);
 }

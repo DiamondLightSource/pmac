@@ -7,25 +7,24 @@
 
 #include "pmacMessageBroker.h"
 
-const epicsUInt32  pmacMessageBroker::PMAC_MAXBUF_  = 1024;
+const epicsUInt32  pmacMessageBroker::PMAC_MAXBUF_ = 1024;
 const epicsFloat64 pmacMessageBroker::PMAC_TIMEOUT_ = 5.0;
 
 pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
-  pmacDebugger("pmacMessageBroker"),
-  suppressStatus_(false),
-  suppressCounter_(0),
-  powerPMAC_(false),
-  ownerAsynUser_(pasynUser),
-  lowLevelPortUser_(0),
-  noOfMessages_(0),
-  totalBytesWritten_(0),
-  totalBytesRead_(0),
-  totalMsgTime_(0),
-  lastMsgBytesWritten_(0),
-  lastMsgBytesRead_(0),
-  lastMsgTime_(0),
-  updateTime_(0.0)
-{
+        pmacDebugger("pmacMessageBroker"),
+        suppressStatus_(false),
+        suppressCounter_(0),
+        powerPMAC_(false),
+        ownerAsynUser_(pasynUser),
+        lowLevelPortUser_(0),
+        noOfMessages_(0),
+        totalBytesWritten_(0),
+        totalBytesRead_(0),
+        totalMsgTime_(0),
+        lastMsgBytesWritten_(0),
+        lastMsgBytesRead_(0),
+        lastMsgTime_(0),
+        updateTime_(0.0) {
   epicsTimeGetCurrent(&this->writeTime_);
   epicsTimeGetCurrent(&this->startTime_);
   epicsTimeGetCurrent(&this->currentTime_);
@@ -34,33 +33,30 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
   fastCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_FAST_READ);
 }
 
-pmacMessageBroker::~pmacMessageBroker ()
-{
+pmacMessageBroker::~pmacMessageBroker() {
 }
 
-asynStatus pmacMessageBroker::connect(const char *port, int addr)
-{
+asynStatus pmacMessageBroker::connect(const char *port, int addr) {
   static const char *functionName = "connect";
   asynStatus status = asynSuccess;
   debug(DEBUG_FLOW, functionName, "Connecting to low level asynOctetSyncIO port", port);
 
   //Connect our Asyn user to the low level port that is a parameter to this constructor
-  status = lowLevelPortConnect(port, addr, &lowLevelPortUser_, (char*)"\006", (char*)"\r");
-  if (status != asynSuccess){
+  status = lowLevelPortConnect(port, addr, &lowLevelPortUser_, (char *) "\006", (char *) "\r");
+  if (status != asynSuccess) {
     debug(DEBUG_ERROR, functionName, "Failed to connect to low level asynOctetSyncIO port", port);
   }
   return status;
 }
 
-asynStatus pmacMessageBroker::disconnect()
-{
+asynStatus pmacMessageBroker::disconnect() {
   static const char *functionName = "disconnect";
   asynStatus status = asynSuccess;
   debug(DEBUG_FLOW, functionName, "Disconnecting from low level asynOctetSyncIO port");
 
   //Connect our Asyn user to the low level port that is a parameter to this constructor
   status = lowLevelPortDisconnect(lowLevelPortUser_);
-  if (status != asynSuccess){
+  if (status != asynSuccess) {
     debug(DEBUG_ERROR, functionName, "Failed to disconnect from low level asynOctetSyncIO port");
   }
   return status;
@@ -70,24 +66,23 @@ asynStatus pmacMessageBroker::disconnect()
  * Utilty function to return the connected status of the low level asyn port.
  * @return asynStatus
  */
-asynStatus pmacMessageBroker::getConnectedStatus(int *connected)
-{
+asynStatus pmacMessageBroker::getConnectedStatus(int *connected) {
   static const char *functionName = "getConnectedStatus";
   asynStatus status = asynSuccess;
   *connected = 0;
   debug(DEBUG_TRACE, functionName);
 
-  if (lowLevelPortUser_){
+  if (lowLevelPortUser_) {
     status = pasynManager->isConnected(lowLevelPortUser_, connected);
     if (status != asynSuccess) {
-      asynPrint(this->ownerAsynUser_, ASYN_TRACE_ERROR, "pmacController: Error calling pasynManager::isConnected.\n");
+      asynPrint(this->ownerAsynUser_, ASYN_TRACE_ERROR,
+                "pmacController: Error calling pasynManager::isConnected.\n");
     }
   }
   return status;
 }
 
-asynStatus pmacMessageBroker::immediateWriteRead(const char *command, char *response)
-{
+asynStatus pmacMessageBroker::immediateWriteRead(const char *command, char *response) {
   asynStatus status = asynSuccess;
   static const char *functionName = "immediateWriteRead";
   this->startTimer(DEBUG_TIMING, functionName);
@@ -96,18 +91,17 @@ asynStatus pmacMessageBroker::immediateWriteRead(const char *command, char *resp
   return status;
 }
 
-asynStatus pmacMessageBroker::addReadVariable(int type, const char *variable)
-{
+asynStatus pmacMessageBroker::addReadVariable(int type, const char *variable) {
   asynStatus status = asynSuccess;
 
   // Lock the mutex
   mutex_.lock();
 
-  if (type == PMAC_SLOW_READ){
+  if (type == PMAC_SLOW_READ) {
     slowStore_.addItem(variable);
-  } else if (type == PMAC_MEDIUM_READ){
+  } else if (type == PMAC_MEDIUM_READ) {
     mediumStore_.addItem(variable);
-  } else if (type == PMAC_FAST_READ){
+  } else if (type == PMAC_FAST_READ) {
     fastStore_.addItem(variable);
   } else {
     status = asynError;
@@ -119,8 +113,7 @@ asynStatus pmacMessageBroker::addReadVariable(int type, const char *variable)
   return status;
 }
 
-asynStatus pmacMessageBroker::updateVariables(int type)
-{
+asynStatus pmacMessageBroker::updateVariables(int type) {
   asynStatus status = asynSuccess;
   static const char *functionName = "updateVariables";
   char response[1024];
@@ -135,20 +128,20 @@ asynStatus pmacMessageBroker::updateVariables(int type)
 
   startTimer(DEBUG_TIMING, functionName);
 
-  if (type == PMAC_FAST_READ){
-    if (suppressStatus_){
+  if (type == PMAC_FAST_READ) {
+    if (suppressStatus_) {
       suppressCounter_++;
     }
-    if (!suppressStatus_ || suppressCounter_%4 == 0){
-      if (fastStore_.size() > 0){
+    if (!suppressStatus_ || suppressCounter_ % 4 == 0) {
+      if (fastStore_.size() > 0) {
         // Send the command string and read the response
         noOfCmds = fastStore_.countCommandStrings();
         debug(DEBUG_VARIABLE, functionName, "Fast Store command string count", noOfCmds);
-        for (int index = 0; index < noOfCmds; index++){
+        for (int index = 0; index < noOfCmds; index++) {
           cmd = fastStore_.readCommandString(index);
-          if (cmd.length() > 0){
+          if (cmd.length() > 0) {
             this->immediateWriteRead(cmd.c_str(), response);
-            debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int)strlen(response));
+            debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
             // Update the store with the response
             fastStore_.updateReply(cmd, response);
           }
@@ -157,13 +150,13 @@ asynStatus pmacMessageBroker::updateVariables(int type)
         fastCallbacks_->callCallbacks(&fastStore_);
       }
     }
-  } else if (type == PMAC_MEDIUM_READ && !suppressStatus_){
-    if (mediumStore_.size() > 0){
+  } else if (type == PMAC_MEDIUM_READ && !suppressStatus_) {
+    if (mediumStore_.size() > 0) {
       // Send the command string and read the response
       noOfCmds = mediumStore_.countCommandStrings();
-      for (int index = 0; index < noOfCmds; index++){
+      for (int index = 0; index < noOfCmds; index++) {
         cmd = mediumStore_.readCommandString(index);
-        if (cmd.length() > 0){
+        if (cmd.length() > 0) {
           this->immediateWriteRead(cmd.c_str(), response);
           // Update the store with the response
           mediumStore_.updateReply(cmd, response);
@@ -172,13 +165,13 @@ asynStatus pmacMessageBroker::updateVariables(int type)
       // Perform the necessary callbacks
       mediumCallbacks_->callCallbacks(&mediumStore_);
     }
-  } else if (type == PMAC_SLOW_READ && !suppressStatus_){
-    if (slowStore_.size() > 0){
+  } else if (type == PMAC_SLOW_READ && !suppressStatus_) {
+    if (slowStore_.size() > 0) {
       // Send the command string and read the response
       noOfCmds = slowStore_.countCommandStrings();
-      for (int index = 0; index < noOfCmds; index++){
+      for (int index = 0; index < noOfCmds; index++) {
         cmd = slowStore_.readCommandString(index);
-        if (cmd.length() > 0){
+        if (cmd.length() > 0) {
           this->immediateWriteRead(cmd.c_str(), response);
           // Update the store with the response
           slowStore_.updateReply(cmd, response);
@@ -203,8 +196,7 @@ asynStatus pmacMessageBroker::updateVariables(int type)
   return asynSuccess;
 }
 
-asynStatus pmacMessageBroker::supressStatusReads()
-{
+asynStatus pmacMessageBroker::supressStatusReads() {
   asynStatus status = asynSuccess;
   // Lock the mutex
   mutex_.lock();
@@ -215,8 +207,7 @@ asynStatus pmacMessageBroker::supressStatusReads()
   return status;
 }
 
-asynStatus pmacMessageBroker::reinstateStatusReads()
-{
+asynStatus pmacMessageBroker::reinstateStatusReads() {
   asynStatus status = asynSuccess;
   // Lock the mutex
   mutex_.lock();
@@ -226,18 +217,17 @@ asynStatus pmacMessageBroker::reinstateStatusReads()
   return status;
 }
 
-asynStatus pmacMessageBroker::registerForUpdates(pmacCallbackInterface *cbPtr, int type)
-{
+asynStatus pmacMessageBroker::registerForUpdates(pmacCallbackInterface *cbPtr, int type) {
   asynStatus status = asynSuccess;
 
   // Lock the mutex
   mutex_.lock();
 
-  if (type == PMAC_FAST_READ){
+  if (type == PMAC_FAST_READ) {
     fastCallbacks_->registerCallback(cbPtr);
-  } else if (type == PMAC_MEDIUM_READ){
+  } else if (type == PMAC_MEDIUM_READ) {
     mediumCallbacks_->registerCallback(cbPtr);
-  } else if (type == PMAC_SLOW_READ){
+  } else if (type == PMAC_SLOW_READ) {
     slowCallbacks_->registerCallback(cbPtr);
   } else {
     status = asynError;
@@ -249,8 +239,7 @@ asynStatus pmacMessageBroker::registerForUpdates(pmacCallbackInterface *cbPtr, i
   return status;
 }
 
-double pmacMessageBroker::readUpdateTime()
-{
+double pmacMessageBroker::readUpdateTime() {
   return updateTime_;
 }
 
@@ -260,8 +249,7 @@ asynStatus pmacMessageBroker::readStatistics(int *noOfMsgs,
                                              int *totalMsgTime,
                                              int *lastMsgBytesWritten,
                                              int *lastMsgBytesRead,
-                                             int *lastMsgTime)
-{
+                                             int *lastMsgTime) {
   *noOfMsgs = this->noOfMessages_;
   *totalBytesWritten = this->totalBytesWritten_;
   *totalBytesRead = this->totalBytesRead_;
@@ -272,18 +260,17 @@ asynStatus pmacMessageBroker::readStatistics(int *noOfMsgs,
   return asynSuccess;
 }
 
-asynStatus pmacMessageBroker::readStoreSize(int type, int *size)
-{
+asynStatus pmacMessageBroker::readStoreSize(int type, int *size) {
   asynStatus status = asynSuccess;
 
   // Lock the mutex
   mutex_.lock();
 
-  if (type == PMAC_FAST_READ){
+  if (type == PMAC_FAST_READ) {
     *size = fastStore_.size();
-  } else if (type == PMAC_MEDIUM_READ){
+  } else if (type == PMAC_MEDIUM_READ) {
     *size = mediumStore_.size();
-  } else if (type == PMAC_SLOW_READ){
+  } else if (type == PMAC_SLOW_READ) {
     *size = slowStore_.size();
   } else {
     status = asynError;
@@ -295,22 +282,21 @@ asynStatus pmacMessageBroker::readStoreSize(int type, int *size)
   return status;
 }
 
-asynStatus pmacMessageBroker::report(int type)
-{
+asynStatus pmacMessageBroker::report(int type) {
   asynStatus status = asynSuccess;
 
   // Lock the mutex
   mutex_.lock();
 
-  if (type == PMAC_FAST_READ){
+  if (type == PMAC_FAST_READ) {
     printf("Report of PMAC fast store\n");
     printf("=========================\n");
     fastStore_.report();
-  } else if (type == PMAC_MEDIUM_READ){
+  } else if (type == PMAC_MEDIUM_READ) {
     printf("Report of PMAC medium store\n");
     printf("===========================\n");
     mediumStore_.report();
-  } else if (type == PMAC_SLOW_READ){
+  } else if (type == PMAC_SLOW_READ) {
     printf("Report of PMAC slow store\n");
     printf("=========================\n");
     slowStore_.report();
@@ -324,8 +310,7 @@ asynStatus pmacMessageBroker::report(int type)
   return status;
 }
 
-void pmacMessageBroker::markAsPowerPMAC()
-{
+void pmacMessageBroker::markAsPowerPMAC() {
   powerPMAC_ = true;
 }
 
@@ -339,18 +324,18 @@ void pmacMessageBroker::markAsPowerPMAC()
  * @param outputEos The output EOS character
  * @return asynStatus
  */
-asynStatus pmacMessageBroker::lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos)
-{
+asynStatus pmacMessageBroker::lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser,
+                                                  char *inputEos, char *outputEos) {
   static const char *functionName = "pmacController::lowLevelPortConnect";
   asynStatus status = asynSuccess;
 
   asynPrint(this->ownerAsynUser_, ASYN_TRACE_FLOW, "%s\n", functionName);
 
-  status = pasynOctetSyncIO->connect( port, addr, ppasynUser, NULL);
+  status = pasynOctetSyncIO->connect(port, addr, ppasynUser, NULL);
   if (status) {
     asynPrint(this->ownerAsynUser_, ASYN_TRACE_ERROR,
-        "pmacController::motorAxisAsynConnect: unable to connect to port %s\n",
-        port);
+              "pmacController::motorAxisAsynConnect: unable to connect to port %s\n",
+              port);
     return status;
   }
   //Do I want to disconnect below? If the IP address comes up, will the driver recover
@@ -359,11 +344,11 @@ asynStatus pmacMessageBroker::lowLevelPortConnect(const char *port, int addr, as
   //restore doesn't work (and we would save wrong positions). So I need to
   //have a seperate function(s) to deal with connecting after IOC init.
 
-  status = pasynOctetSyncIO->setInputEos(*ppasynUser, inputEos, strlen(inputEos) );
+  status = pasynOctetSyncIO->setInputEos(*ppasynUser, inputEos, strlen(inputEos));
   if (status) {
     asynPrint(this->ownerAsynUser_, ASYN_TRACE_ERROR,
-        "pmacController: unable to set input EOS on %s: %s\n",
-        port, (*ppasynUser)->errorMessage);
+              "pmacController: unable to set input EOS on %s: %s\n",
+              port, (*ppasynUser)->errorMessage);
     pasynOctetSyncIO->disconnect(*ppasynUser);
     //Set my low level pasynUser pointer to NULL
     *ppasynUser = NULL;
@@ -373,8 +358,8 @@ asynStatus pmacMessageBroker::lowLevelPortConnect(const char *port, int addr, as
   status = pasynOctetSyncIO->setOutputEos(*ppasynUser, outputEos, strlen(outputEos));
   if (status) {
     asynPrint(this->ownerAsynUser_, ASYN_TRACE_ERROR,
-        "pmacController: unable to set output EOS on %s: %s\n",
-        port, (*ppasynUser)->errorMessage);
+              "pmacController: unable to set output EOS on %s: %s\n",
+              port, (*ppasynUser)->errorMessage);
     pasynOctetSyncIO->disconnect(*ppasynUser);
     //Set my low level pasynUser pointer to NULL
     *ppasynUser = NULL;
@@ -389,15 +374,14 @@ asynStatus pmacMessageBroker::lowLevelPortConnect(const char *port, int addr, as
  * @param ppasynUser A pointer to the pasynUser structure used by the controller
  * @return asynStatus
  */
-asynStatus pmacMessageBroker::lowLevelPortDisconnect(asynUser *ppasynUser)
-{
+asynStatus pmacMessageBroker::lowLevelPortDisconnect(asynUser *ppasynUser) {
   static const char *functionName = "pmacController::lowLevelPortDisconnect";
   asynStatus status = asynSuccess;
 
   asynPrint(this->ownerAsynUser_, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   status = pasynOctetSyncIO->disconnect(ppasynUser);
-  if (status){
+  if (status) {
     asynPrint(this->ownerAsynUser_, ASYN_TRACE_ERROR, "%s: unable to disconnect\n", functionName);
   }
   return status;
@@ -408,8 +392,7 @@ asynStatus pmacMessageBroker::lowLevelPortDisconnect(asynUser *ppasynUser)
  * @param command - String command to send.
  * @response response - String response back.
  */
-asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *response)
-{
+asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *response) {
   asynStatus status = asynSuccess;
   int eomReason = 0;
   size_t nwrite = 0;
@@ -425,7 +408,7 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
 
   asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: command: %s\n", functionName, command);
 
-  status = pasynOctetSyncIO->writeRead(lowLevelPortUser_ ,
+  status = pasynOctetSyncIO->writeRead(lowLevelPortUser_,
                                        command,
                                        strlen(command),
                                        response,
@@ -436,15 +419,16 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
                                        &eomReason);
 
   // If no bytes read and no eomReason then this is an error
-  if (nread == 0 && eomReason == 0){
+  if (nread == 0 && eomReason == 0) {
     status = asynError;
   }
 
   if (status != asynSuccess) {
-    asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
+    asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR,
+              "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
   } else {
     // Replace any carriage returns with spaces
-    if (powerPMAC_){
+    if (powerPMAC_) {
       replace(response, '\n', ' ');
     }
     // Update statistics
@@ -455,7 +439,7 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
     this->lastMsgBytesRead_ = strlen(response);
     epicsTimeGetCurrent(&this->currentTime_);
     double elapsedTime = epicsTimeDiffInSeconds(&this->currentTime_, &this->writeTime_);
-    this->lastMsgTime_ = (int)(elapsedTime * 1000.0);
+    this->lastMsgTime_ = (int) (elapsedTime * 1000.0);
     this->totalMsgTime_ += this->lastMsgTime_;
   }
 
@@ -464,12 +448,11 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   return status;
 }
 
-int pmacMessageBroker::replace(char *str, char ch1, char ch2)
-{
-  int changes=0;
-  while(*str!='\0'){
-    if(*str==ch1){
-      *str=ch2;
+int pmacMessageBroker::replace(char *str, char ch1, char ch2) {
+  int changes = 0;
+  while (*str != '\0') {
+    if (*str == ch1) {
+      *str = ch2;
       changes++;
     }
     str++;

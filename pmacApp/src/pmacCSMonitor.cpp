@@ -11,37 +11,33 @@
 #include <stdlib.h>
 
 pmacCSMonitor::pmacCSMonitor(pmacController *pController) :
-  asynMotorAxis((asynMotorController *)pController, 0),
-  moving_(false)
-{
+        asynMotorAxis((asynMotorController *) pController, 0),
+        moving_(false) {
   int index = 0;
   // Initialise the table of CS controller pointers
-  pCSControllers_ = (pmacCSController **)malloc(16 * sizeof(pmacCSController *));
-  for (index = 0; index < 16; index++){
+  pCSControllers_ = (pmacCSController **) malloc(16 * sizeof(pmacCSController *));
+  for (index = 0; index < 16; index++) {
     pCSControllers_[index] = NULL;
   }
 }
 
-pmacCSMonitor::~pmacCSMonitor()
-{
+pmacCSMonitor::~pmacCSMonitor() {
 }
 
-asynStatus pmacCSMonitor::registerCS(pmacCSController *csPtr, int csNo)
-{
+asynStatus pmacCSMonitor::registerCS(pmacCSController *csPtr, int csNo) {
   // Add the CS to the list
   pCSControllers_[csNo] = csPtr;
 
   return asynSuccess;
 }
 
-asynStatus pmacCSMonitor::poll(bool *moving)
-{
+asynStatus pmacCSMonitor::poll(bool *moving) {
   int i = 0;
   bool anyMoving = false;
 
-  for (i=0; i<16; i++) {
-      if (!pCSControllers_[i]) continue;
-      if (pCSControllers_[i]->getMoving()) anyMoving = true;
+  for (i = 0; i < 16; i++) {
+    if (!pCSControllers_[i]) continue;
+    if (pCSControllers_[i]->getMoving()) anyMoving = true;
   }
   *moving = anyMoving;
   return asynSuccess;
