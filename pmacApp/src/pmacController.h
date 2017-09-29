@@ -493,6 +493,7 @@ private:
     double idlePollPeriod_;
     int i8_;
     int i7002_;
+    bool csGroupSwitchCalled_;
 
     // Trajectory scan variables
     int pvtTimeMode_;

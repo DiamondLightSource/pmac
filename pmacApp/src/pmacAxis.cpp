@@ -83,6 +83,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   scale_ = 1;
   rawPosition_ = 0.0;
   initiatedMove_ = false;
+  csRawMoveInitiated_ = false;
   previous_position_ = 0.0;
   previous_direction_ = 0;
   amp_enabled_ = 0;
@@ -244,6 +245,10 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   cachedPosition_ = position / scale_;
   // Notify that a move has been initiated
   initiatedMove_ = true;
+  int csNum = this->getAxisCSNo();
+  if (csNum > 0) {
+    csRawMoveInitiated_ = true;
+  }
 
   return status;
 }

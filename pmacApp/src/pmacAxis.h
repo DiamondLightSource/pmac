@@ -86,6 +86,7 @@ private:
     int scale_;
     double rawPosition_;
     bool initiatedMove_;
+    bool csRawMoveInitiated_;
     double previous_position_;
     int previous_direction_;
     int amp_enabled_;
