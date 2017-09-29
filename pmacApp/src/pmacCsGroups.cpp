@@ -209,13 +209,16 @@ asynStatus pmacCsGroups::switchToGroup(int id) {
                 axd->axisNo,
                 axd->axisDefinition.c_str());
         cmdStatus = pC_->lowLevelWriteRead(command, response);
-        while (pAxisDefs->hasNextKey() == true && cmdStatus == asynSuccess) {
+        while (pAxisDefs->hasNextKey() && cmdStatus == asynSuccess) {
           axis = pAxisDefs->nextKey();
           axd = (pmacCsAxisDef *) pAxisDefs->lookup(axis);
           sprintf(command, "&%d #%d->%s", axd->coordSysNumber,
                   axd->axisNo,
                   axd->axisDefinition.c_str());
           cmdStatus = pC_->lowLevelWriteRead(command, response);
+
+          // ensure that the Q7x will be set correctly in pmacController::makeCSDemandsConsistent
+          pC_->csGroupSwitchCalled_ = true;
         }
       }
     }

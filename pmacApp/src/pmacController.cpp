@@ -266,6 +266,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   tScanPmacProgVersion_ = 0.0;
   i8_ = 0;
   i7002_ = 0;
+  csGroupSwitchCalled_ = false;
 
   // Create the hashtable for storing port to CS number mappings
   pPortToCs_ = new IntegerHashtable();
@@ -2887,7 +2888,9 @@ void pmacController::trajectoryTask() {
 
   this->lock();
   // Loop forever
-  while (1) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
+  while (true) {
     // If we are not scanning then wait for a semaphore that is given when a scan is started
     if (!tScanExecuting_) {
       // Set the append flag to false
@@ -3057,6 +3060,7 @@ void pmacController::trajectoryTask() {
       }
     }
   }
+#pragma clang diagnostic pop
 }
 
 void pmacController::setBuildStatus(int state, int status, const std::string &message) {
@@ -3462,7 +3466,7 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale) {
  *
  * @param controller The Asyn port name for the PMAC controller.
  * @param axis Axis number to set the PMAC axis scale factor.
- * @param encoder_axis The axis number that the encoder is fed into.  
+ * @param encoder_axis The axis number that the encoder is fed into.
  */
 asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis) {
   pmacAxis *pA = NULL;
@@ -3534,6 +3538,7 @@ asynStatus pmacController::makeCSDemandsConsistent() {
   char axisAssignment[PMAC_MAXBUF_];
   char command[PMAC_MAXBUF_];
   char reply[PMAC_MAXBUF_];
+  bool csHasRawMovedKinematics;
   std::string axesString = "ABCUVWXYZ";
   asynStatus status = asynSuccess;
 
@@ -3541,17 +3546,20 @@ asynStatus pmacController::makeCSDemandsConsistent() {
 
   // Loop over all CS
   for (csNum = 0; csNum < PMAC_MAX_CS; csNum++) {
+    csHasRawMovedKinematics = false;
     if (pCSControllers_[csNum] != NULL) {
       // set qvars assigned = 0 none have been set yet
       qvars_assigned = 0;
       // Valid CS, check the motors which are present in this CS
+      // in this first loop we are looking for any 1-1 mapped axes
       for (rawAxisIndex = 1; rawAxisIndex <= numAxes_; rawAxisIndex++) {
         pmacAxis *aPtr = this->getAxis(rawAxisIndex);
         if (aPtr != NULL) {
           // Check the motor CS assignment
           if (csNum == aPtr->getAxisCSNo()) {
             getStringParam(rawAxisIndex, PMAC_C_GroupAssignRBV_, PMAC_MAXBUF_, axisAssignment);
-            if (strcmp(axisAssignment, "")) {
+            // is this motor assigned directly to a CS axis ?
+            if (strcmp(axisAssignment, "") != 0) {
               unsigned long uCsAxisNo = axesString.find(axisAssignment);
               if (uCsAxisNo != std::string::npos) {
                 int csAxisAssignmentNo = (int) uCsAxisNo;
@@ -3559,16 +3567,19 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                 debug(DEBUG_TRACE, functionName, "Motor assignment for motor", rawAxisIndex);
                 debug(DEBUG_TRACE, functionName, "Motor assignment", axisAssignment);
                 debug(DEBUG_TRACE, functionName, "Axis index", csAxisAssignmentNo);
-                qvar = 71 + csAxisAssignmentNo;
-                debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
-                // Set the qvars assigned flag and send the relevant demand position
-                qvars_assigned = qvars_assigned | 1 << csAxisAssignmentNo;
-                debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
-                sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getCachedPosition());
-                debug(DEBUG_TRACE, functionName, "Sending command", command);
-                if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
-                  debug(DEBUG_ERROR, functionName, "Failed to send command", command);
-                  status = asynError;
+                if (aPtr->csRawMoveInitiated_ || this->csGroupSwitchCalled_) {
+                  aPtr->csRawMoveInitiated_ = false;
+                  qvar = 71 + csAxisAssignmentNo;
+                  debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
+                  // Set the qvars assigned flag and send the relevant demand position
+                  qvars_assigned = qvars_assigned | 1 << csAxisAssignmentNo;
+                  debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
+                  sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getCachedPosition());
+                  debug(DEBUG_TRACE, functionName, "Sending command", command);
+                  if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
+                    debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+                    status = asynError;
+                  }
                 }
                 qvar = 1 + csAxisAssignmentNo;
                 debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
@@ -3578,26 +3589,34 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                   debug(DEBUG_ERROR, functionName, "Failed to send command", command);
                   status = asynError;
                 }
+              } else if (aPtr->csRawMoveInitiated_) {
+                if (strcmp(axisAssignment, "I") == 0) {
+                  aPtr->csRawMoveInitiated_ = false;
+                  csHasRawMovedKinematics = true;
+                }
+                // Note if axis assignment is not "I" then is not 1-1 and not kinematic so must be
+                // of the form #1->2000*X or similar. We cannot support this form at present.
               }
             }
           }
         }
       }
       // Now loop over each CS axis and set any demands that haven't already been set
+      // This loop covers all kinematic axes (and those that are not assigned)
       for (int csAxisIndex = 1; csAxisIndex <= numAxes_; csAxisIndex++) {
         if ((qvars_assigned & (1 << (csAxisIndex - 1))) == 0) {
           // This axis has not already had its demand set.
-          qvar = csAxisIndex;
-          debug(DEBUG_TRACE, functionName, "Axis demand not yet set for Q variable", qvar);
-          sprintf(command, "&%dQ%d=Q%d", csNum, qvar, (qvar + 80));
-          debug(DEBUG_TRACE, functionName, "Sending command", command);
-          if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
-            debug(DEBUG_ERROR, functionName, "Failed to send command", command);
-            status = asynError;
+          if (csHasRawMovedKinematics) {
+            qvar = 70 + csAxisIndex;
+            sprintf(command, "&%dQ%d=Q%d", csNum, qvar, (qvar + 10));
+            debug(DEBUG_TRACE, functionName, "Sending command", command);
+            if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
+              debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+              status = asynError;
+            }
           }
-          qvar = 70 + csAxisIndex;
-          debug(DEBUG_TRACE, functionName, "Axis demand not yet set for Q variable", qvar);
-          sprintf(command, "&%dQ%d=Q%d", csNum, qvar, (qvar + 10));
+          qvar = csAxisIndex;
+          sprintf(command, "&%dQ%d=Q%d", csNum, qvar, (qvar + 70));
           debug(DEBUG_TRACE, functionName, "Sending command", command);
           if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
             debug(DEBUG_ERROR, functionName, "Failed to send command", command);
@@ -3607,6 +3626,7 @@ asynStatus pmacController::makeCSDemandsConsistent() {
       }
     }
   }
+  this->csGroupSwitchCalled_ = false;
 
   return status;
 }
@@ -4067,7 +4087,7 @@ asynStatus pmacCreateAxes(const char *pmacName,
  * record PROBLEM bit in MSTA, which results in the record going into MAJOR/STATE alarm.
  * @param controller Asyn port name for the controller (const char *)
  * @param axis Axis number to disable the check for.
- * @param allAxes Set to 0 if only dealing with one axis. 
+ * @param allAxes Set to 0 if only dealing with one axis.
  *                Set to 1 to do all axes (in which case the axis parameter is ignored).
  */
 asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes) {
@@ -4124,7 +4144,7 @@ asynStatus pmacSetAxisScale(const char *controller, int axis, int scale) {
  *
  * @param controller The Asyn port name for the PMAC controller.
  * @param axis Axis number to set the PMAC axis scale factor.
- * @param encoder_axis The axis number that the encoder is fed into.  
+ * @param encoder_axis The axis number that the encoder is fed into.
  */
 asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis) {
   pmacController *pC;
