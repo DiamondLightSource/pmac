@@ -155,7 +155,7 @@ CLOSE
 #define ANGLE Q88
 ; Local variables
 #define RATIO Q328
-OPEN PLC17
+OPEN PLC18
 CLEAR
     ADDRESS&3
     ; this is the difference in height of the jacks divided by their distance apart
@@ -164,13 +164,5 @@ CLEAR
     ANGLE=atan(RATIO)
     ; the height of the surface
     HEIGHT=J1POS+RATIO*PIVOT+DEPTH/cos(ANGLE)
-    ; If jack motor record did the last move, set demands = readbacks
-    if (J1MOVE = 1)
-    or (J2MOVE = 1)
-        J1MOVE = 0
-        J2MOVE = 0
-        Q77 = Q87
-        Q78 = Q88
-    endif
 CLOSE
-ENABLE PLC17
+ENABLE PLC18

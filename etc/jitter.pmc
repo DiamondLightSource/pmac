@@ -1,0 +1,34 @@
+; a PLC to simulate jittery axes
+
+; Use a different timer for each PLC
+#define timer             i(5111+(27&30)*50+27%2)
+; Make timer more readable
+#define MilliSeconds      * 8388608/i10
+
+
+OPEN PLC27
+CLEAR
+    timer = 5000 MilliSeconds
+    ; wait for 5000 ms and until motor is in position
+    while (timer > 0 or m140=0)
+    endw
+    cmd "#1J:5"
+
+    timer = 20 MilliSeconds
+    while (timer > 0 or m340=0)
+    endw
+    cmd "#3J:5"
+
+    timer = 1800 MilliSeconds
+    ; wait for 1800 ms and until all motors is in position
+    while (timer > 0 or m140=0)
+    endw
+    cmd "#1J:-4"
+
+    timer = 20 MilliSeconds
+    while (timer > 0 or m340=0)
+    endw
+    cmd "#3J:-4"
+
+CLOSE
+ENABLE PLC27
