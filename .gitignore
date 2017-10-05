@@ -12,4 +12,5 @@ iocs
 .idea
 CMakeLists.txt
 cmake-build-debug/
+*.pyc
 
