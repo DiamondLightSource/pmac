@@ -27,11 +27,13 @@
 ;&2 DEFINE LOOKAHEAD 50,10
 ;####################################################
 
+
 ;This program defines the program needed to do a move using the motor record
 ;on a CS axis
 ;to do a move we need to do &{CS}R
 ;to stop a move we need to do &{CS}A
 ;demand values are in &{CS}Q71..79
+;move time is &{CS}Q70 (see details below)
 ;The following are set by the motor record:
 ;Isx87 = Acceleration
 ;Isx88 = S curve
@@ -46,14 +48,19 @@ OPEN PROG 10
 CLEAR
 LINEAR
 ABS
-; need to think about the consequences of including all axes in frax
 FRAX(A,B,C,U,V,W,X,Y,Z)
+; Q70 is used to set the move time. If it is -1 then then the default CS move time Isx89 is used
+; instead. The pmac driver sets Isx89 based on the highest numbered CS axis' VELO field.
+; The pmac driver sets Q70 based on the PV $(P):CS_MOVE_TIME
+If(Q70 > -1)
+    TM(Q70)
+EndIf
 A(Q71)B(Q72)C(Q73)U(Q74)V(Q75)W(Q76)X(Q77)Y(Q78)Z(Q79)
 DWELL0
 CLOSE
 
 ; **************************************************************
-; Coordinate system geberated using following command
+; Coordinate system generated using following command
 ; msi -M"COORD=3,PLC=17,J1=3,J2=4,DIST=1000,PIVOT=500,DEPTH=0" /dls_sw/prod/R3.14.12.3/support/pmacCoord/1-51/pmacCoordApp/pmc/CS_2jack.pmc
 ; **************************************************************
 CLOSE

@@ -1,28 +1,17 @@
 ##############################################################
 #
 # Records to read asynPortDriver parameters from the param 
-# library. This is for the Asyn model 3 driver pmacController 
-# driver.
+# library for the class pmacController.
 #
 # The Asyn address is set as zero because that's what we use 
 # for controller parameters.
-#
-# Note - the feedrate parms were originally intended to affect
-# the global feedrate by altering CS1 feedrate.
-# TODO: now that we have added coordinate system features to
-# the driver these will need to be moved to an axis based 
-# template. For now all CS defining and global parameters
-# reside in this template. This is temporary while I am 
-# developing the CS additions. gilesK (08/05/15)
 # 
 ##############################################################
 
 # % macro, PORT, The asyn port for the pmac controller
 # % macro, P, PV Prefix
 # % macro, R, PV Suffix
-# % macro, FEEDRATE, Set the global feedrate for this controller
-# % macro, FEEDRATE_POLL, Poll to make sure feedrate does not change, enable=1, disable=0 
-# % macro, TIMEOUT, Timeout for controller communincation 
+# % macro, TIMEOUT, Timeout for controller communication
 # % macro, CSG0, Name for Coordinate System Group 0 
 # % macro, CSG1, Name for Coordinate System Group 1 
 # % macro, CSG2, Name for Coordinate System Group 2 
@@ -30,6 +19,19 @@
 # % macro, CSG4, Name for Coordinate System Group 4 
 # % macro, CSG5, Name for Coordinate System Group 5 
 # % macro, CSG6, Name for Coordinate System Group 6 
+
+##############################################################
+# Control deferred mode for all real 1axes in this brick
+##############################################################
+record(bo, "$(P)$(R)DeferMoves")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+    field(VAL, "0")
+    field(ZNAM, "Defer Off")
+    field(ONAM, "Defer On")
+}
 
 # ///
 # /// Select a group of coordinate systems into the controller.
@@ -110,46 +112,6 @@ record(bi, "$(P)$(R)AxesReadonly_RBV")
     field(ZNAM, "Read/Write")
     field(ONAM, "Readonly")
 }
-
-# ///
-# /// Control deferred moves on the controller
-# ///
-# ///
-# /// Select a group of coordinate systems into th # % autosave 2e controller.
-# ///
-#record(mbbo, "$(P)$(R)MOTOR_DEFER_MOVES")
-#{
-#    field(PINI, "YES")
-#    field(DTYP, "asynInt32")
-#    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
-#    field(VAL, "0")
-#    field(ZRVL, 0)
-#    field(ONVL, 1)
-#    field(TWVL, 2)
-#    field(ZRST, "GO")
-#    field(ONST, "Defer Fast Moves")
-#    field(TWST, "Defer Coordinated")
-#}
-
-# ///
-# /// Read back the current group of coordinate systems into the controller.
-# ///
-#record(mbbi, "$(P)$(R)MOTOR_DEFER_MOVES_RBV")
-#{
-#    field(PINI, "YES")
-#    field(DTYP, "asynInt32")
-#    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
-#    field(SCAN, "I/O Intr")
-#    field(ZRVL, 0)
-#    field(ONVL, 1)
-#    field(TWVL, 2)
-#    field(ZRST, "GO")
-#    field(ONST, "Defer Fast Moves")
-#    field(TWST, "Defer Coordinated")
-#}
-
-
-
 
 ##############################################################
 # Record of the Kinematics on the PMAC

@@ -11,7 +11,6 @@
 #include "pmacMessageBroker.h"
 
 /* Use Q71 - Q79 for motor demand positions */
-#define DEMAND "Q7%d"
 /* Use Q81 - Q89 for motor readback positions */
 #define READBACK "Q8%d"
 
@@ -50,7 +49,7 @@ pmacCSAxis::~pmacCSAxis() {
   // TODO Auto-generated destructor stub
 }
 
-asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, double max_velocity,
+asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_velocity, double max_velocity,
                             double acceleration) {
   asynStatus status = asynSuccess;
   char acc_buff[32] = "\0";
@@ -84,8 +83,8 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
 
 
   if (pC_->movesDeferred_ == 0) {
-    sprintf(command, "&%d%s%s"DEMAND"=%.12f", pC_->getCSNumber(), vel_buff, acc_buff, axisNo_,
-            deviceUnits);
+    sprintf(command, "&%d%s%sQ7%d=%.12f", pC_->getCSNumber(), vel_buff,
+            acc_buff, axisNo_, deviceUnits);
     if (pC_->getProgramNumber() != 0) {
       // Abort current move to make sure axes are enabled
       sprintf(commandtemp, "&%dE", pC_->getCSNumber());
@@ -95,13 +94,13 @@ asynStatus pmacCSAxis::move(double position, int relative, double min_velocity, 
        * If program number is zero, then the move will have to be started by some
        * external process, which is a mechanism of allowing coordinated starts to
        * movement. */
-      sprintf(buff, " B%dR", pC_->getProgramNumber());
+      sprintf(buff, " Q70=%f B%dR", pC_->csMoveTime_, pC_->getProgramNumber());
       strcat(command, buff);
       debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
       status = pC_->axisWriteRead(command, response);
     }
   } else {
-    sprintf(command, "%s%s"DEMAND"=%.12f", vel_buff, acc_buff, axisNo_, deviceUnits);
+    sprintf(command, "%s%sQ7%d=%.12f", vel_buff, acc_buff, axisNo_, deviceUnits);
     deferredMove_ = pC_->movesDeferred_;
     sprintf(deferredCommand_, "%s", command);
   }
@@ -128,7 +127,7 @@ asynStatus pmacCSAxis::stop(double acceleration) {
   char response[128];
   static const char *functionName = "stop";
 
-  sprintf(command, "&%d%sA "DEMAND"="READBACK, pC_->getCSNumber(), acc_buff, axisNo_, axisNo_);
+  sprintf(command, "&%d%sA Q7%d=Q8%d", pC_->getCSNumber(), acc_buff, axisNo_, axisNo_);
   deferredMove_ = 0;
 
   debug(DEBUG_TRACE, functionName, "CS Stop command", command);

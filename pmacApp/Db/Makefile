@@ -11,8 +11,8 @@ include $(TOP)/configure/CONFIG
 # Create and install (or just install) into <top>/db
 # databases, templates, substitutions like this
 DB += pmacController.template
+DB += pmacCsController.template
 DB += pmacControllerTrajectory.template
-DB += pmacDeferMoves.template
 DB += pmacStatus.template
 DB += pmacStatusAxis.template
 DB += pmacStatus8Axes.template

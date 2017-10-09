@@ -5,7 +5,6 @@
 	<!--Controls Lab Test Brick-->
 	<!--<pmac.pmacAsynIPPort IP="localhost:1025" name="BRICK1port"/>-->
 	<pmac.GeoBrick IdlePoll="1000" Port="BRICK1port" name="BRICK1"/>
-	<pmac.pmacDeferMoves P="PMAC_BRICK_TEST:GB1" PORT="BRICK1" Q="Defer" name="BRICK1.DEFER"/>
 	<pmac.GeoBrickTrajectoryControlT NAXES="8" NPOINTS="10000" P="PMAC_BRICK_TEST:" PORT="BRICK1" R="GB1:" name="BRICK1.TRAJ"/>
 	<pmac.pmacStatus DEVICE="PMAC_BRICK_TEST" NAXES="8" PORT="BRICK1" name="BRICK1.STAT"/>
 	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":M1" MRES="1" P="PMAC_BRICK_TEST" PORT="BRICK1" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="BRICK1.MOTORS.M1"/>
@@ -24,17 +23,17 @@
 	<pmac.pmacDisableLimitsCheck Axis="6" Controller="BRICK1"/>
 	<pmac.pmacDisableLimitsCheck Axis="7" Controller="BRICK1"/>
 	<pmac.pmacDisableLimitsCheck Axis="8" Controller="BRICK1"/>
-	<pmac.CS CS="1" Controller="BRICK1" IdlePoll="1000" name="CS1"/>
-	<pmac.CS CS="2" Controller="BRICK1" IdlePoll="1000" name="CS2"/>
-	<pmac.CS CS="3" Controller="BRICK1" IdlePoll="1000" name="CS3"/>
+	<pmac.CS CS="1" Controller="BRICK1" IdlePoll="1000" P="PMAC_BRICK_TEST:" R="CS1:" name="BRICK1.CS1"/>
+	<pmac.CS CS="2" Controller="BRICK1" IdlePoll="1000" P="PMAC_BRICK_TEST:" R="CS2:" name="BRICK1.CS2"/>
+	<pmac.CS CS="3" Controller="BRICK1" IdlePoll="1000" P="PMAC_BRICK_TEST:" R="CS3:" name="BRICK1.CS3"/>
 	<!--<pmac.pmacSetCoordStepsPerUnit Axis="1" CS="CS2" Scale="1"/>-->
 	<!--<pmac.pmacSetCoordStepsPerUnit Axis="2" CS="CS2" Scale="1"/>-->
-	<motor.basic_asyn_motor ADDR="1" DESC="CS2 1-&gt;X" DHLM="10000" DLLM="-10000" EGU="mm" M=":X_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.X2"/>
-	<motor.basic_asyn_motor ADDR="2" DESC="CS2 2-&gt;Y" DHLM="10000" DLLM="-10000" EGU="mm" M=":Y_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.Y2"/>
-	<motor.basic_asyn_motor ADDR="7" DESC="CS3 HEIGHT" DHLM="10000" DLLM="-10000" EGU="mm" M=":X_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.X3"/>
-	<motor.basic_asyn_motor ADDR="8" DESC="CS3 ANGLE" DHLM="10000" DLLM="-10000" EGU="deg" M=":Y_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.Y3"/>
-	<motor.basic_asyn_motor ADDR="1" DESC="CS3 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":A_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.A3"/>
-	<motor.basic_asyn_motor ADDR="2" DESC="CS3 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":B_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.B3"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="1" DESC="CS2 1-&gt;X" DHLM="10000" DLLM="-10000" EGU="mm" M=":X_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="BRICK1.CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.X2"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="2" DESC="CS2 2-&gt;Y" DHLM="10000" DLLM="-10000" EGU="mm" M=":Y_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="BRICK1.CS2" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.Y2"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="7" DESC="CS3 HEIGHT" DHLM="10000" DLLM="-10000" EGU="mm" M=":X_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="BRICK1.CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.X3"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="CS3 ANGLE" DHLM="10000" DLLM="-10000" EGU="deg" M=":Y_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="BRICK1.CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.Y3"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="1" DESC="CS3 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":A_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="BRICK1.CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.A3"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="2" DESC="CS3 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":B_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="BRICK1.CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.B3"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1" GroupName="1,2-&gt;A,B" GroupNumber="0"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1" GroupName="3,4-&gt;I" GroupNumber="1"/>
 	<pmac.pmacCreateCsGroup AxisCount="4" Controller="BRICK1" GroupName="MIXED" GroupNumber="2"/>

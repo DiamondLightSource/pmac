@@ -1,0 +1,56 @@
+##############################################################
+#
+# Records to read asynPortDriver parameters from the param
+# library for the class pmacCsController.
+#
+# The Asyn address is set as zero because that's what we use 
+# for controller parameters.
+# 
+##############################################################
+
+# % macro, PORT, The asyn port for the pmac controller
+# % macro, P, PV Prefix
+# % macro, R, PV Suffix
+# % macro, TIMEOUT, Timeout for controller communication
+
+#
+# This associates an edm screen with the template
+# % gui, $(PORT=), edm, pmacCoord.edl, P=$(P),R=$(R),name=$(PORT)
+#
+
+
+##############################################################
+# Control deferred mode for all axes in this CS
+##############################################################
+record(bo, "$(P)$(R)DeferMoves")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+    field(VAL, "0")
+    field(ZNAM, "Defer Off")
+    field(ONAM, "Defer On")
+}
+
+
+##############################################################
+# Control the time of programmed moves
+# 0 = fast as possible
+# -1 = controlled by CS default feedrate isx89
+# >0 = take at least this many milli-secs to move
+##############################################################
+# % autosave 2
+record(ao, "$(P)$(R)CsMoveTime")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_CS_MOVE_TIME")
+    field(VAL, "-1")
+}
+
+record(ai, "$(P)$(R)CsMoveTime_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_CS_MOVE_TIME")
+    field(SCAN, "I/O Intr")
+}
