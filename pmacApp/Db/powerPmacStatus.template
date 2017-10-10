@@ -459,7 +459,7 @@ record(longin, "$(DEVICE):STAT_TOTAL_WRITE_RBV") {
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_C_TBYTES_WRITE")
   field(SCAN, "I/O Intr")  
-
+}
 
 record(longin, "$(DEVICE):STAT_TOTAL_READ_RBV") {
   field(DESC, "Total bytes read")

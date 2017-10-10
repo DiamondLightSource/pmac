@@ -167,7 +167,7 @@ class PowerPMAC(DeltaTau):
     Dependencies = (Pmac,)
     _Cards = []
 
-    def __init__(self, Port, name = None, NAxes = 8, IdlePoll = 1000, MovingPoll = 100):
+    def __init__(self, Port, name = None, NAxes = 8, IdlePoll = 1000, MovingPoll = 100, **kwargs):
         # init a list of groupnames for each pmacCreateCsGroup to add to
         self.CsGroupNamesList = {}
         # First create an asyn IP port to connect to
@@ -185,13 +185,17 @@ class PowerPMAC(DeltaTau):
         # init the AsynPort superclass
         self.__super.__init__(name)
 
+        # instatiate the template
+        self.template = _GeoBrickControllerT(PORT=name, **kwargs)
+
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
         name = Simple('Name to use for the asyn port', str),
         Port       = Ident('pmacAsynSSHPort to connect to', pmacAsynSSHPort),
         NAxes      = Simple('Number of axes', int),
         IdlePoll   = Simple('Idle Poll Period in ms', int),
-        MovingPoll = Simple('Moving Poll Period in ms', int))
+        MovingPoll = Simple('Moving Poll Period in ms', int))+ \
+              _GeoBrickControllerT.ArgInfo.filtered(without = GeoBrick.removeThese + ['PORT'])
 
     def Initialise(self):
         print '# Configure Model 3 Controller Driver (ControlerPort, LowLevelDriverPort, Address, Axes, MovingPoll, IdlePoll)'
@@ -199,35 +203,17 @@ class PowerPMAC(DeltaTau):
         print '# Configure Model 3 Axes Driver (Controler Port, Axis Count)'
         print 'pmacCreateAxes("%(name)s", %(NAxes)d)' % self.__dict__
 
-
-class _PowerPMACGlobalControlT(AutoSubstitution):
-    """Creates some PVs for global control of the pmac controller, 
-    namely global feed rate and axis coordinate system assignment"""
-    TemplateFile = "pmacController.template"
-    Dependencies = (PowerPMAC,)
-
-
-class PowerPMACGlobalControl(_PowerPMACGlobalControlT, Device):
-    def __init__(self, **args):
-        self.__super.__init__(**args)
-        self.__dict__.update(**args)
-
-    # Remove from Arginfo, the (AutoSubstitution) CSG macros since these will be taken from 
-    # instances of pmacCreateCsGroup
-    removeThese = [ 'CSG%d' % i for i in range(8) ]
-    # Also Instruct Arginfo that PORT is a Geobrick or PMac Controller Port
-    ArgInfo = makeArgInfo(__init__,
-                          PORT = Ident ('Underlying PMAC or GeoBrick object', DeltaTau)) + \
-                          _PowerPMACGlobalControlT.ArgInfo.filtered(without = removeThese + ['PORT'])
-
     def Finalise(self):
         # create the args needed for the gui - these are taken from instances of pmacCreateCsGroup
-        for i in PowerPMACGlobalControl.removeThese:
-            if i in self.PORT.CsGroupNamesList:
-                self.args[i] = self.PORT.CsGroupNamesList[i]
+        # since each pmacCreateCsGroup adds to the CsGroupNames property of its parent Geobrick
+        for i in GeoBrick.removeThese:
+            if i in self.CsGroupNamesList:
+                self.template.args[i] = self.CsGroupNamesList[i]
+
 
 class _pmacTrajectoryAxis(AutoSubstitution):
     TemplateFile = 'pmacTrajectoryAxis.template'
+
 
 class GeoBrickTrajectoryControlT(AutoSubstitution):
     """Creates some PVs for executing trajectory scans on the pmac controller by

@@ -1,20 +1,19 @@
 <?xml version="1.0" ?>
 <components arch="linux-x86_64">
 	<pmac.pmacAsynSSHPort IP="172.23.247.1" name="SSH1"/>
-	<pmac.PowerPMAC Port="SSH1" name="PowerPMAC"/>
-	<pmac.PowerPMACGlobalControl P="POWER:" PORT="PowerPMAC" R="GB1:" name="PowerPMAC.CTRL"/>
-	<pmac.PowerPmacStatus DEVICE="POWER" NAXES="8" PLC="5" PORT="PowerPMAC" name="PowerPMAC.STAT"/>
-	<pmac.CS CS="2" Controller="PowerPMAC" name="PowerPMAC.CS2"/>
-	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1" EGU="mm" M=":M1" MRES="0.001" P="POWER" PORT="PowerPMAC" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M1"/>
-	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2" EGU="mm" M=":M2" MRES="0.001" P="POWER" PORT="PowerPMAC" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M2"/>
-	<pmac.dls_pmac_asyn_motor ADDR="3" DESC="Motor 3" EGU="mm" M=":M3" MRES="0.001" P="POWER" PORT="PowerPMAC" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M3"/>
-	<pmac.dls_pmac_asyn_motor ADDR="4" DESC="Motor 4" EGU="mm" M=":M4" MRES="0.001" P="POWER" PORT="PowerPMAC" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M4"/>
-	<pmac.dls_pmac_asyn_motor ADDR="5" DESC="Motor 5" EGU="mm" M=":M5" MRES="0.001" P="POWER" PORT="PowerPMAC" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M5"/>
-	<pmac.dls_pmac_asyn_motor ADDR="6" DESC="Motor 6" EGU="mm" M=":M6" MRES="0.001" P="POWER" PORT="PowerPMAC" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M6"/>
-	<pmac.dls_pmac_cs_asyn_motor ADDR="7" DESC="Motor X" EGU="" M=":X" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.X"/>
-	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="Motor Y" EGU="" M=":Y" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.Y"/>
-	<pmac.dls_pmac_cs_asyn_motor ADDR="9" DESC="Motor Z" EGU="" M=":Z" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.Z"/>
-	<pmac.dls_pmac_cs_asyn_motor ADDR="4" DESC="Motor U" EGU="" M=":U" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.U"/>
-	<pmac.dls_pmac_cs_asyn_motor ADDR="5" DESC="Motor V" EGU="" M=":V" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.V"/>
-	<pmac.dls_pmac_cs_asyn_motor ADDR="6" DESC="Motor W" EGU="" M=":W" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.W"/>
+	<pmac.PowerPMAC P="POWER:" Port="SSH1" R="PP1:" name="PowerPMAC.pmac"/>
+	<pmac.PowerPmacStatus DEVICE="POWER" NAXES="8" PLC="5" PORT="PowerPMAC.pmac" name="PowerPMAC.STAT"/>
+	<pmac.CS CS="2" Controller="PowerPMAC.pmac" P="POWER:" R="CS2:" name="PowerPMAC.CS2"/>
+	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1" DHLM="1000" DLLM="-1000" EGU="mm" M=":M1" MRES="0.001" P="POWER" PORT="PowerPMAC.pmac" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M1"/>
+	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2" DHLM="1000" DLLM="-1000" EGU="mm" M=":M2" MRES="0.001" P="POWER" PORT="PowerPMAC.pmac" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M2"/>
+	<pmac.dls_pmac_asyn_motor ADDR="3" DESC="Motor 3" DHLM="1000" DLLM="-1000" EGU="mm" M=":M3" MRES="0.001" P="POWER" PORT="PowerPMAC.pmac" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M3"/>
+	<pmac.dls_pmac_asyn_motor ADDR="4" DESC="Motor 4" DHLM="1000" DLLM="-1000" EGU="mm" M=":M4" MRES="0.001" P="POWER" PORT="PowerPMAC.pmac" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M4"/>
+	<pmac.dls_pmac_asyn_motor ADDR="5" DESC="Motor 5" DHLM="1000" DLLM="-1000" EGU="mm" M=":M5" MRES="0.001" P="POWER" PORT="PowerPMAC.pmac" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M5"/>
+	<pmac.dls_pmac_asyn_motor ADDR="6" DESC="Motor 6" DHLM="1000" DLLM="-1000" EGU="mm" M=":M6" MRES="0.001" P="POWER" PORT="PowerPMAC.pmac" PREC="5" SPORT="SSH1" TWV="1" VELO="20" name="PowerPMAC.MOTORS.M6"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="7" DESC="Motor X" DHLM="1000" DLLM="-1000" EGU="" M=":X" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.X"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="Motor Y" DHLM="1000" DLLM="-1000" EGU="" M=":Y" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.Y"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="9" DESC="Motor Z" DHLM="1000" DLLM="-1000" EGU="" M=":Z" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.Z"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="4" DESC="Motor U" DHLM="1000" DLLM="-1000" EGU="" M=":U" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.U"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="5" DESC="Motor V" DHLM="1000" DLLM="-1000" EGU="" M=":V" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.V"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="6" DESC="Motor W" DHLM="1000" DLLM="-1000" EGU="" M=":W" MRES="0.0001" P="POWER" PORT="PowerPMAC.CS2" PREC="5" TWV="1" VELO="10" name="PowerPMAC.MOTORS.W"/>
 </components>
