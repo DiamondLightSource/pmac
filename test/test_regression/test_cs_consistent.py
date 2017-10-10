@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 
 P = 'PMAC_BRICK_TEST:'
 PB = 'PMAC_BRICK_TEST:GB1:'
+CS3 = 'PMAC_BRICK_TEST:CS3:'
 
 
 class TestMakeCsConsistent(TestCase):
@@ -21,12 +22,14 @@ class TestMakeCsConsistent(TestCase):
         """
         command = '&3 Q71=90000'
         ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED')
+        ca.caput(PB+'ProfileCsName', 'BRICK1.CS3')
+        ca.caput(CS3+'CsMoveTime', 0)
         # move affected axes to 0
         ca.caput([P+'M1', P+'M2', P+'M3', P+'M4'], [0, 0, 0, 0], wait=True, timeout=30)
         # make axis 1 demand radically wrong
-        ca.caput('PMAC_BRICK_TEST:SendCmd', command, datatype=ca.DBR_CHAR_STR)
+        ca.caput(PB+'SendCmd', command, datatype=ca.DBR_CHAR_STR)
         # this check is probably not required but leaving it in to verify reliability
-        self. assertEquals(ca.caget('PMAC_BRICK_TEST:SendCmd', datatype=ca.DBR_CHAR_STR), command)
+        self. assertEquals(ca.caget(PB+'SendCmd', datatype=ca.DBR_CHAR_STR), command)
 
         # if this succeeds without error then we are all good
         Trajectory.quick_scan(self)
@@ -41,6 +44,7 @@ class TestMakeCsConsistent(TestCase):
         """
         # set the appropriate coordinate system group
         ca.caput(PB+'COORDINATE_SYS_GROUP', '3,4->I', wait=True)
+        ca.caput(CS3+'CsMoveTime', 0)
         # move affected axes to 0
         ca.caput([P+'M3', P+'M4'], [0, 0], wait=True, timeout=30)
 
@@ -49,7 +53,7 @@ class TestMakeCsConsistent(TestCase):
 
         # pretend that axis 3 moved by itself.
         monitor = MoveMonitor(P+'X_CS3')
-        ca.caput('PMAC_BRICK_TEST:SendCmd', '#3J:1000', datatype=ca.DBR_CHAR_STR)
+        ca.caput(PB+'SendCmd', '#3J:1000', datatype=ca.DBR_CHAR_STR)
         monitor.wait_for_one_move(5)
         # this should make Height 1.5mm
         self.assertEquals(ca.caget(P+'X_CS3.RBV'), 1.5)
@@ -72,12 +76,13 @@ class TestMakeCsConsistent(TestCase):
         cs_move = 10
         # set the appropriate coordinate system group
         ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED', wait=True)
+        ca.caput(CS3+'CsMoveTime', 0)
         # move affected axes to
         ca.caput([P+'M1', P+'M2', P+'M3', P+'M4'], [0, 0, 0, 0], wait=True, timeout=30)
 
         # pretend that axis 1 moved by itself.
         monitor = MoveMonitor(P+'M1')
-        ca.caput('PMAC_BRICK_TEST:SendCmd', '#1J:{}'.format(move), datatype=ca.DBR_CHAR_STR)
+        ca.caput(PB+'SendCmd', '#1J:{}'.format(move), datatype=ca.DBR_CHAR_STR)
         monitor.wait_for_one_move(30)
         # this should make axis 1 to {movement}mm
         self.assertEquals(ca.caget(P+'M1.RBV'), move)
@@ -99,11 +104,12 @@ class TestMakeCsConsistent(TestCase):
         command = '&3 Q75=90000'
         # set the appropriate coordinate system group
         ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED', wait=True)
+        ca.caput(CS3+'CsMoveTime', 0)
         # move affected axes to
         ca.caput([P+'M1', P+'M2', P+'M3', P+'M4'], [0, 0, 0, 0], wait=True, timeout=30)
 
         # make axis 5 demand radically wrong (not in a CS)
-        ca.caput('PMAC_BRICK_TEST:SendCmd', command, datatype=ca.DBR_CHAR_STR)
+        ca.caput(PB+'SendCmd', command, datatype=ca.DBR_CHAR_STR)
 
         # make a CS move and make sure it happens quickly enough
         then = datetime.now()

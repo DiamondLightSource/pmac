@@ -20,6 +20,11 @@
 # % macro, CSG5, Name for Coordinate System Group 5 
 # % macro, CSG6, Name for Coordinate System Group 6 
 
+#
+# This associates an edm screen with the template
+# % gui, $(PORT=), edm, pmacControl.edl, P=$(P),R=$(R),name=$(PORT)
+#
+
 ##############################################################
 # Control deferred mode for all real 1axes in this brick
 ##############################################################
@@ -32,6 +37,19 @@ record(bo, "$(P)$(R)DeferMoves")
     field(ZNAM, "Defer Off")
     field(ONAM, "Defer On")
 }
+
+##############################################################
+# Send arbitrary command to the geobrick controller
+##############################################################
+record(waveform, "$(P)$(R)SendCmd")
+{
+    field(DTYP, "asynOctetWrite")
+    field(FTVL, "CHAR")
+    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_WRITE_CMD")
+    field(NELM, "100")
+    field(SCAN, "Passive")
+}
+
 
 # ///
 # /// Select a group of coordinate systems into the controller.

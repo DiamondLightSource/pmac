@@ -1,7 +1,6 @@
 # These are the IOCs we should create. The IOC should either have the same name
 # as an xml or py file in etc/makeIocs, or be suffixed with _sim to create a
 # simulation from that same file
-IOCS := example
 IOCS += lab
 
 # These are the dirs that each IOC lives in

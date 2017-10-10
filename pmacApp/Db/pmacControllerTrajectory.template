@@ -3,7 +3,7 @@
 # % macro, R, PV Suffix
 # % macro, NPOINTS, Number of points that can be built at any time
 # % macro, MAXPOINTS, Maximum number of points in a scan
-# % macro, NAXES,   Number of axes
+# % macro, NAxes,   Number of axes
 
 # This associates the template with an edm screen
 # % gui, $(name=), edm, pmacTrajectory.edl, P=$(P),R=$(R)
@@ -28,7 +28,7 @@ record(ai, "$(P)$(R)DriverVersion_RBV") {
 
 record(longin, "$(P)$(R)ProfileNaxes") {
   field(PINI, "YES")
-  field(VAL, "$(NAXES)")
+  field(VAL, "$(NAxes)")
 }
 
 ##
