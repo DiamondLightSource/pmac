@@ -288,23 +288,8 @@ def add_eloss_kill_autohome(cls):
     cls.guiTags = eloss_kill_autohome_records.guiTags
     return cls
 
-class motor_in_cs_records(AutoSubstitution):
-    WarnMacros = False
-    TemplateFile = "motor_in_cs.template"
-
-def add_motor_in_cs(cls):
-    """Convenience function to add motor_in_cs_records attributes to a class that
-    includes it via an msi include statement rather than verbatim"""
-    cls.Arguments = motor_in_cs_records.Arguments + [x for x in cls.Arguments if x not in motor_in_cs_records.Arguments]
-    cls.ArgInfo = motor_in_cs_records.ArgInfo + cls.ArgInfo.filtered(without=motor_in_cs_records.ArgInfo.Names())
-    cls.Defaults.update(motor_in_cs_records.Defaults)
-    cls.guiTags = motor_in_cs_records.guiTags
-    return cls
-
-
 @add_basic
 @add_eloss_kill_autohome
-@add_motor_in_cs
 class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
     WarnMacros = False
     TemplateFile = 'dls_pmac_asyn_motor.template'
@@ -320,6 +305,21 @@ class dls_pmac_cs_asyn_motor(AutoSubstitution, MotorRecord):
 
 dls_pmac_cs_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 
+
+class _pmac_direct_motor_templateT(AutoSubstitution):
+    WarnMacros = False
+    TemplateFile = 'pmacDirectMotor.template'
+
+class pmacDirectMotor(Device):
+    def __init__(self, name, Axis):
+        # copy over the relevant motor record arguments to pass to the direct motor template
+        args = { key: Axis.args[key] for key in  _pmac_direct_motor_templateT.Arguments}
+        args['name'] = name
+        self.template = _pmac_direct_motor_templateT(**args)
+
+    ArgInfo = makeArgInfo(__init__,
+                          name = Simple('Name to use for GUI object', str),
+                          Axis = Ident('dls_pmac_asyn_motor or dls_pmac_cd_asyn_motor to connect to', MotorRecord))
 
 class _automhomeT(AutoSubstitution):
     Dependencies = (Calc,)

@@ -1,0 +1,34 @@
+##############################################################
+#
+# A record to sit along side each motor record and give direct
+# access to the driver without any motor record logic
+# may be used with virtual and real motor records
+# All macros except name should match the associated
+# motor record
+#
+# This currently only supports demand but could be extended
+# to totally replace motor record (perhaps)
+#
+##############################################################
+
+# % macro, name, name for the GUI object
+# % macro, PORT, The asyn port for the pmac controller
+# % macro, ADDR, The asyn address (axis number)
+# % macro, DESC, Description
+# % macro, P, PV Prefix
+# % macro, M, PV Suffix
+
+#
+# This associates an edm screen with the template
+# % gui, $(name=), edmembed, pmac-motor-embed.edl, P=$(P),M=$(M),DESC=$(DESC)
+#
+
+
+##############################################################
+# Set immediate demand for this motor
+##############################################################
+record(ao, "$(P)$(M)RawDemand")
+{
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),4)MOTOR_MOVE_ABS")
+}

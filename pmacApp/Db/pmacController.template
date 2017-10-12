@@ -22,7 +22,7 @@
 
 #
 # This associates an edm screen with the template
-# % gui, $(PORT=), edm, pmacControl.edl, P=$(P),R=$(R),name=$(PORT)
+# % gui, $(PORT), edm, pmacControl.edl, P=$(P),R=$(R),name=$(PORT)
 #
 
 ##############################################################

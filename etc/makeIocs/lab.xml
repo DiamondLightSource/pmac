@@ -34,6 +34,20 @@
 	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="CS3 ANGLE" DHLM="10000" DLLM="-10000" EGU="deg" M=":Y_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="BRICK1.CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.Y3"/>
 	<pmac.dls_pmac_cs_asyn_motor ADDR="1" DESC="CS3 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":A_CS3" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="BRICK1.CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.A3"/>
 	<pmac.dls_pmac_cs_asyn_motor ADDR="2" DESC="CS3 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":B_CS2" MRES="0.0001" P="PMAC_BRICK_TEST" PORT="BRICK1.CS3" PREC="3" TWV="1" VELO="20" name="BRICK1.MOTORS.B3"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.M1" name="BRICK1.Direct.M1"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.M2" name="BRICK1.Direct.M2"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.M3" name="BRICK1.Direct.M3"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.M4" name="BRICK1.Direct.M4"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.M5" name="BRICK1.Direct.M5"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.M6" name="BRICK1.Direct.M6"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.M7" name="BRICK1.Direct.M7"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.M8" name="BRICK1.Direct.M8"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.X2" name="BRICK1.Direct.X2"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.Y2" name="BRICK1.Direct.Y2"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.X3" name="BRICK1.Direct.X3"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.Y3" name="BRICK1.Direct.Y3"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.A3" name="BRICK1.Direct.A3"/>
+	<pmac.pmacDirectMotor Axis="BRICK1.MOTORS.B3" name="BRICK1.Direct.B3"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1.Brick" GroupName="1,2-&gt;A,B" GroupNumber="0"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="BRICK1.Brick" GroupName="3,4-&gt;I" GroupNumber="1"/>
 	<pmac.pmacCreateCsGroup AxisCount="4" Controller="BRICK1.Brick" GroupName="MIXED" GroupNumber="2"/>
