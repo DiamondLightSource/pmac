@@ -407,6 +407,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_ReportFastString, asynParamInt32, &PMAC_C_ReportFast_);
   createParam(PMAC_C_ReportMediumString, asynParamInt32, &PMAC_C_ReportMedium_);
   createParam(PMAC_C_ReportSlowString, asynParamInt32, &PMAC_C_ReportSlow_);
+  createParam(PMAC_C_RealMotorNumberString, asynParamInt32, &PMAC_C_RealMotorNumber_);
   for (index = 0; index < PMAC_MAX_CS; index++) {
     createParam(PMAC_C_ForwardKinematicString[index], asynParamOctet,
                 &PMAC_C_ForwardKinematic_[index]);
@@ -514,6 +515,11 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setIntegerParam(PMAC_C_FastStore_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_MediumStore_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_SlowStore_, 0) == asynSuccess) && paramStatus);
+
+  for(index=0; index<numAxes; index++) {
+    paramStatus = ((setIntegerParam(
+            index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
+  }
 
   callParamCallbacks();
 

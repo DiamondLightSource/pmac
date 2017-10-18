@@ -48,7 +48,7 @@ x 9
 y 15
 w 170
 h 31
-controlPv "$(P)$(M)RawDemand"
+controlPv "$(P)$(M):DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25

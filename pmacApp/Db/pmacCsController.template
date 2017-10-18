@@ -9,9 +9,11 @@
 ##############################################################
 
 # % macro, PORT, The asyn port for the pmac controller
-# % macro, P, PV Prefix
+# % macro, P, PV Prefix - NOTE: For standard naming this should be the Geobrick Controller P
 # % macro, R, PV Suffix
+# % macro, CS, Coordinate System Number
 # % macro, TIMEOUT, Timeout for controller communication
+# % macro, CONTROLLER_P, The P prefix for the controller
 
 #
 # This associates an edm screen with the template
@@ -54,3 +56,26 @@ record(ai, "$(P)$(R)CsMoveTime_RBV")
     field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_CS_MOVE_TIME")
     field(SCAN, "I/O Intr")
 }
+
+
+##############################################################
+# Immediate demands for each CS motor
+##############################################################
+substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)A, ADDR=1, DESC=CS Motor A"
+include "pmacDirectMotor.template"
+substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)B, ADDR=2, DESC=CS Motor B"
+include "pmacDirectMotor.template"
+substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)C, ADDR=3, DESC=CS Motor C"
+include "pmacDirectMotor.template"
+substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)U, ADDR=4, DESC=CS Motor U"
+include "pmacDirectMotor.template"
+substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)V, ADDR=5, DESC=CS Motor V"
+include "pmacDirectMotor.template"
+substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)W, ADDR=6, DESC=CS Motor W"
+include "pmacDirectMotor.template"
+substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)X, ADDR=7, DESC=CS Motor X"
+include "pmacDirectMotor.template"
+substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)Y, ADDR=8, DESC=CS Motor Y"
+include "pmacDirectMotor.template"
+substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)Z, ADDR=9, DESC=CS Motor Z"
+include "pmacDirectMotor.template"

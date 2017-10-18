@@ -1,2 +1,22 @@
+# % macro, CONTROLLER_P, The P prefix for the controller
+
 include "basic_asyn_motor.template"
 include "eloss_kill_autohome_records.template"
+
+# add standard motor name aliases for all above PVs
+alias($(P)$(M), $(CONTROLLER_P)M$(ADDR))
+alias($(P)$(M):ADDR, $(CONTROLLER_P)M$(ADDR):ADDR)
+alias($(P)$(M):PORT, $(CONTROLLER_P)M$(ADDR):PORT)
+alias($(P)$(M):SCALE, $(CONTROLLER_P)M$(ADDR):SCALE)
+alias($(P)$(M):USER:SDIS, $(CONTROLLER_P)M$(ADDR):USER:SDIS)
+alias($(P)$(M):SDIS, $(CONTROLLER_P)M$(ADDR):SDIS)
+alias($(P)$(M):KILL, $(CONTROLLER_P)M$(ADDR):KILL)
+alias($(P)$(M):ELOSS, $(CONTROLLER_P)M$(ADDR):ELOSS)
+alias($(P)$(M):ELOSSRC, $(CONTROLLER_P)M$(ADDR):ELOSSRC)
+alias($(P)$(M):CHECK_SYNC, $(CONTROLLER_P)M$(ADDR):CHECK_SYNC)
+alias($(P)$(M):FERROR, $(CONTROLLER_P)M$(ADDR):FERROR)
+alias($(P)$(M):FERRORMAX, $(CONTROLLER_P)M$(ADDR):FERRORMAX)
+alias($(P)$(M):FEMAXRESET, $(CONTROLLER_P)M$(ADDR):FEMAXRESET)
+alias($(P)$(M):HOMEVIS, $(CONTROLLER_P)M$(ADDR):HOMEVIS)
+alias($(P)$(M):HOMEVISSTR, $(CONTROLLER_P)M$(ADDR):HOMEVISSTR)
+

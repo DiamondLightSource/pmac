@@ -27,8 +27,83 @@
 ##############################################################
 # Set immediate demand for this motor
 ##############################################################
-record(ao, "$(P)$(M)RawDemand")
+record(ao, "$(P)$(M):DirectDemand")
+{
+    field(DTYP, "Raw Soft Channel")
+    field(OMSL, "supervisory")
+    field(OUT, "$(P)$(M):RawDirectDemand PP")
+    field(LINR, "LINEAR")
+    field(ASLO, 1)                              # to be overwritten by DirectMres
+    field(AOFF, 0)                              # to be overwritten by DirectOffset
+}
+
+record(ao, "$(P)$(M):RawDirectDemand")
 {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),4)MOTOR_MOVE_ABS")
+    field(DESC, "$(DESC)")
 }
+
+##############################################################
+# Database logic to set the correct ASLO and OFF on
+# DirectDemand so that it can be commanded in EGUs
+#
+# The Mres and Offset are copied into ALSO and OFF from
+# the appropriate real motor determined by DirectMotorNumber.
+#
+# For CS motors DirectMotorNumber is set by the driver when it
+# maps a CS motor directly to a real motor.
+#
+# For real motors DirectMotorNumber is always reported as the
+# motor's own number
+#
+##############################################################
+record(longin, "$(P)$(M):DirectMotorNumber")
+{
+    field(DTYP, "asynInt32")
+    field(SCAN, "I/O Intr")
+    field(INP,  "@asyn($(PORT),$(ADDR),4)PMAC_REAL_MOTOR_NUMBER")
+    field(FLNK, "$(P)$(M):DirectSources")
+}
+
+record(fanout, "$(P)$(M):DirectSources")
+{
+    field(LNK1, "$(P)$(M):MresSource")
+    field(LNK2, "$(P)$(M):OffsetSource")
+}
+
+record(scalcout, "$(P)$(M):DirectMres")
+{
+    field(DTYP, "Soft Channel")
+    field(INPA, "$(P)M1.MRES CPP MS")           # to be overwritten by MresSource
+    field(CALC, "A")
+    field(OUT, "$(P)$(M):DirectDemand.ASLO NPP")
+}
+
+record(scalcout, "$(P)$(M):DirectOffset")
+{
+    field(DTYP, "Soft Channel")
+    field(INPA, "$(P)M1.OFF CPP MS")            # to be overwritten by OffsetSource
+    field(CALC, "A")
+    field(OUT, "$(P)$(M):DirectDemand.AOFF NPP")
+}
+
+record(scalcout, $(P)$(M):MresSource)
+{
+    field(DTYP, "Soft Channel")
+    field(INPA, "$(P)$(M):DirectMotorNumber")
+    field(CALC, "PRINTF('$(P)M%d.MRES CPP MS',A)")
+    field(FLNK, "$(P)$(M):DirectMres")
+    field(OUT, "$(P)$(M):DirectMres.INPA CA")
+}
+
+record(scalcout, $(P)$(M):OffsetSource)
+{
+    field(DTYP, "Soft Channel")
+    field(INPA, "$(P)$(M):DirectMotorNumber")
+    field(CALC, "PRINTF('$(P)M%d.OFF CPP MS',A)")
+    field(FLNK, "$(P)$(M):DirectOffset")
+    field(OUT, "$(P)$(M):DirectOffset.INPA CA")
+}
+
+

@@ -288,12 +288,25 @@ def add_eloss_kill_autohome(cls):
     cls.guiTags = eloss_kill_autohome_records.guiTags
     return cls
 
+def add_eloss_kill_autohome(cls):
+    """Convenience function to add eloss_kill_autohome_records attributes to a class that
+    includes it via an msi include statement rather than verbatim"""
+    cls.Arguments = eloss_kill_autohome_records.Arguments + [x for x in cls.Arguments if x not in eloss_kill_autohome_records.Arguments]
+    cls.ArgInfo = eloss_kill_autohome_records.ArgInfo + cls.ArgInfo.filtered(without=eloss_kill_autohome_records.ArgInfo.Names())
+    cls.Defaults.update(eloss_kill_autohome_records.Defaults)
+    cls.guiTags = eloss_kill_autohome_records.guiTags
+    return cls
+
 @add_basic
 @add_eloss_kill_autohome
 class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
     WarnMacros = False
     TemplateFile = 'dls_pmac_asyn_motor.template'
     Dependencies = (Busy,)
+    def __init__(self, **kwargs):
+        # copy the P macro from controller for creation of standardized aliases for motor PVs
+        kwargs['CONTROLLER_P'] = kwargs['PORT'].P
+        self.__super.__init__(**kwargs)
 
 dls_pmac_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 dls_pmac_asyn_motor.ArgInfo.descriptions["SPORT"] = Ident("Delta tau motor controller comms port", DeltaTauCommsPort)
@@ -312,9 +325,12 @@ class _pmac_direct_motor_templateT(AutoSubstitution):
 
 class pmacDirectMotor(Device):
     def __init__(self, name, Axis):
-        # copy over the relevant motor record arguments to pass to the direct motor template
+        # use the relevant motor record arguments to pass to the direct motor template
         args = { key: Axis.args[key] for key in  _pmac_direct_motor_templateT.Arguments}
+        port = Axis.args['PORT']
+        args['P'] = port.P # we use the geobrick controller's P for all direct motors
         args['name'] = name
+        args['M'] = "M{}".format(Axis.args['ADDR'])
         self.template = _pmac_direct_motor_templateT(**args)
 
     ArgInfo = makeArgInfo(__init__,
@@ -394,12 +410,12 @@ class CS(AsynPort):
         Program = 10, IdlePoll = 500, MovingPoll = 100, **kwargs):
 
         # store all arguments as properties for use in Initialise
-        self.__dict__.update(locals())
         self.__dict__.update(kwargs)
+        self.__dict__.update(locals())
         self.PortName = Controller.name
         # PLC number for position reporting
         if PLCNum is None:
-            self.PLCNum = CS + 15
+            self.PLCNum = int(CS) + 15
         else:
             self.PLCNum = PLCNum
         # reference for linking pmacAsynCoordCreate and drvAsynMotorConfigure
@@ -412,7 +428,7 @@ class CS(AsynPort):
         # init the AsynPort
         self.__super.__init__(name)
         # instatiate the template
-        template = _CsControlT(PORT=name, P=self.P, R=self.R)
+        template = _CsControlT(PORT=name, P=self.P, R=self.R, CS=self.CS, CONTROLLER_P=Controller.P)
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
@@ -426,7 +442,7 @@ class CS(AsynPort):
         Program    = Simple('Motion Program to run', int),
         IdlePoll   = Simple('Idle Poll Period in ms', int),
         MovingPoll=Simple('Moving Poll Period in ms', int)) \
-              + _CsControlT.ArgInfo.filtered(without=['PORT'])
+              + _CsControlT.ArgInfo.filtered(without=['PORT', 'CS'])
 
     def Initialise(self):
         print '# Create CS (CSPortName, ControllerPort, CSNumber, ProgramNumber)'
