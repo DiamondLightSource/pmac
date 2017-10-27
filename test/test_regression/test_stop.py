@@ -4,7 +4,8 @@ from test.helper.movemonitor import MoveMonitor
 from cothread import Sleep
 
 P = 'PMAC_BRICK_TEST:'
-PB = 'PMAC_BRICK_TEST:GB1:'
+PCS = 'BRICK1CS3:'
+PB = 'BRICK1:'
 
 # These tests verify that stop works for virtual and real motors
 
@@ -13,7 +14,7 @@ class TestStop(TestCase):
 
     def test_real_stop(self):
         ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED')
-        axis1 = P + 'M1'
+        axis1 = P + 'MOTOR1'
         ca.caput(axis1,  0, wait=True, timeout=30)
         monitor = MoveMonitor(axis1)
         ca.caput(axis1, 1000)
@@ -25,7 +26,7 @@ class TestStop(TestCase):
 
     def test_virtual_stop(self):
         ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED')
-        axis1 = P + 'X_CS3'
+        axis1 = PCS + 'X'
         ca.caput(axis1,  0, wait=True, timeout=30)
         monitor = MoveMonitor(axis1)
         ca.caput(axis1, 1000)

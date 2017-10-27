@@ -97,7 +97,7 @@ x 140
 y 420
 w 75
 h 20
-controlPv "$(P)$(R)BufferAAddress_RBV"
+controlPv "$(PMAC):BufferAAddress_RBV"
 displayMode "hex"
 fgColor index 16
 fgAlarm
@@ -117,7 +117,7 @@ x 140
 y 445
 w 75
 h 20
-controlPv "$(P)$(R)BufferBAddress_RBV"
+controlPv "$(PMAC):BufferBAddress_RBV"
 displayMode "hex"
 fgColor index 16
 fgAlarm
@@ -175,7 +175,7 @@ x 140
 y 470
 w 75
 h 20
-controlPv "$(P)$(R)BufferLength_RBV"
+controlPv "$(PMAC):BufferLength_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -214,7 +214,7 @@ x 140
 y 495
 w 75
 h 20
-controlPv "$(P)$(R)CurrentBuffer_RBV"
+controlPv "$(PMAC):CurrentBuffer_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -234,7 +234,7 @@ x 140
 y 520
 w 75
 h 20
-controlPv "$(P)$(R)CurrentIndex_RBV"
+controlPv "$(PMAC):CurrentIndex_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -292,7 +292,7 @@ x 140
 y 545
 w 75
 h 20
-controlPv "$(P)$(R)TotalPoints_RBV"
+controlPv "$(PMAC):TotalPoints_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -331,7 +331,7 @@ x 140
 y 570
 w 75
 h 20
-controlPv "$(P)$(R)TrajectoryStatus_RBV"
+controlPv "$(PMAC):TrajectoryStatus_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -428,7 +428,7 @@ x 320
 y 165
 w 115
 h 20
-controlPv "$(P)$(R)ProfileBuildState_RBV"
+controlPv "$(PMAC):ProfileBuildState_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -447,7 +447,7 @@ x 15
 y 190
 w 420
 h 20
-controlPv "$(P)$(R)ProfileBuildMessage_RBV"
+controlPv "$(PMAC):ProfileBuildMessage_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -485,7 +485,7 @@ x 165
 y 165
 w 115
 h 20
-controlPv "$(P)$(R)ProfileBuildStatus_RBV"
+controlPv "$(PMAC):ProfileBuildStatus_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -558,7 +558,7 @@ x 320
 y 335
 w 115
 h 20
-controlPv "$(P)$(R)ProfileExecuteState_RBV"
+controlPv "$(PMAC):ProfileExecuteState_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -577,7 +577,7 @@ x 15
 y 360
 w 420
 h 20
-controlPv "$(P)$(R)ProfileExecuteMessage_RBV"
+controlPv "$(PMAC):ProfileExecuteMessage_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -615,7 +615,7 @@ x 170
 y 335
 w 110
 h 20
-controlPv "$(P)$(R)ProfileExecuteStatus_RBV"
+controlPv "$(PMAC):ProfileExecuteStatus_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -669,7 +669,7 @@ x 360
 y 420
 w 75
 h 20
-controlPv "$(P)$(R)EpicsBufferAPtr_RBV"
+controlPv "$(PMAC):EpicsBufferAPtr_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -746,7 +746,7 @@ x 360
 y 495
 w 75
 h 20
-controlPv "$(P)$(R)TscanTime_RBV"
+controlPv "$(PMAC):TscanTime_RBV"
 displayMode "decimal"
 precision 2
 fgColor index 16
@@ -767,7 +767,7 @@ x 360
 y 520
 w 75
 h 20
-controlPv "$(P)$(R)TscanCs_RBV"
+controlPv "$(PMAC):TscanCs_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -825,7 +825,7 @@ x 360
 y 545
 w 75
 h 20
-controlPv "$(P)$(R)TscanPercent_RBV"
+controlPv "$(PMAC):TscanPercent_RBV"
 displayMode "decimal"
 precision 2
 fgColor index 16
@@ -884,7 +884,7 @@ x 360
 y 445
 w 75
 h 20
-controlPv "$(P)$(R)EpicsBufferBPtr_RBV"
+controlPv "$(PMAC):EpicsBufferBPtr_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -909,7 +909,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)ProfileAbort"
+controlPv "$(PMAC):ProfileAbort"
 pressValue "0"
 onLabel "Abort"
 offLabel "Abort"
@@ -928,7 +928,7 @@ x 360
 y 570
 w 75
 h 20
-controlPv "$(P)$(R)TscanExtStatus_RBV"
+controlPv "$(PMAC):TscanExtStatus_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -951,7 +951,7 @@ h 45
 indicatorColor index 25
 fgColor index 14
 bgColor index 3
-indicatorPv "$(P)$(R)TscanPercent_RBV"
+indicatorPv "$(PMAC):TscanPercent_RBV"
 showScale
 font "arial-bold-r-12.0"
 labelTicks "5"
@@ -996,7 +996,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)ProfileBuild.PROC"
+controlPv "$(PMAC):ProfileBuild.PROC"
 pressValue "1"
 onLabel "Build Profile"
 offLabel "Build Profile"
@@ -1020,7 +1020,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)ProfileExecute.PROC"
+controlPv "$(PMAC):ProfileExecute.PROC"
 pressValue "1"
 onLabel "Execute Profile"
 offLabel "Execute Profile"
@@ -1074,7 +1074,7 @@ x 205
 y 85
 w 100
 h 20
-controlPv "$(P)$(R)ProfileCsName_RBV"
+controlPv "$(PMAC):ProfileCsName_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1189,7 +1189,7 @@ x 340
 y 140
 w 95
 h 20
-controlPv "$(P)$(R)ProfileNumPoints_RBV"
+controlPv "$(PMAC):ProfileNumPoints_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1209,7 +1209,7 @@ x 240
 y 140
 w 90
 h 20
-controlPv "$(P)$(R)ProfileNumPoints"
+controlPv "$(PMAC):ProfileNumPoints"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -1347,8 +1347,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)A:UseAxis"
-indicatorPv "$(P)$(R)A:UseAxis"
+controlPv "$(PMAC):A:UseAxis"
+indicatorPv "$(PMAC):A:UseAxis"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -1362,7 +1362,7 @@ x 720
 y 335
 w 75
 h 20
-controlPv "$(P)$(R)A:Positions.NELM"
+controlPv "$(PMAC):A:Positions.NELM"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1382,7 +1382,7 @@ x 630
 y 335
 w 75
 h 20
-controlPv "$(P)$(R)A:NoOfPts"
+controlPv "$(PMAC):A:NoOfPts"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1426,8 +1426,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)B:UseAxis"
-indicatorPv "$(P)$(R)B:UseAxis"
+controlPv "$(PMAC):B:UseAxis"
+indicatorPv "$(PMAC):B:UseAxis"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -1441,7 +1441,7 @@ x 720
 y 360
 w 75
 h 20
-controlPv "$(P)$(R)B:Positions.NELM"
+controlPv "$(PMAC):B:Positions.NELM"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1461,7 +1461,7 @@ x 630
 y 360
 w 75
 h 20
-controlPv "$(P)$(R)B:NoOfPts"
+controlPv "$(PMAC):B:NoOfPts"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1505,8 +1505,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)C:UseAxis"
-indicatorPv "$(P)$(R)C:UseAxis"
+controlPv "$(PMAC):C:UseAxis"
+indicatorPv "$(PMAC):C:UseAxis"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -1520,7 +1520,7 @@ x 720
 y 385
 w 75
 h 20
-controlPv "$(P)$(R)C:Positions.NELM"
+controlPv "$(PMAC):C:Positions.NELM"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1540,7 +1540,7 @@ x 630
 y 385
 w 75
 h 20
-controlPv "$(P)$(R)C:NoOfPts"
+controlPv "$(PMAC):C:NoOfPts"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1584,8 +1584,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)U:UseAxis"
-indicatorPv "$(P)$(R)U:UseAxis"
+controlPv "$(PMAC):U:UseAxis"
+indicatorPv "$(PMAC):U:UseAxis"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -1599,7 +1599,7 @@ x 720
 y 410
 w 75
 h 20
-controlPv "$(P)$(R)U:Positions.NELM"
+controlPv "$(PMAC):U:Positions.NELM"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1619,7 +1619,7 @@ x 630
 y 410
 w 75
 h 20
-controlPv "$(P)$(R)U:NoOfPts"
+controlPv "$(PMAC):U:NoOfPts"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1663,8 +1663,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)V:UseAxis"
-indicatorPv "$(P)$(R)V:UseAxis"
+controlPv "$(PMAC):V:UseAxis"
+indicatorPv "$(PMAC):V:UseAxis"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -1678,7 +1678,7 @@ x 720
 y 435
 w 75
 h 20
-controlPv "$(P)$(R)V:Positions.NELM"
+controlPv "$(PMAC):V:Positions.NELM"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1698,7 +1698,7 @@ x 630
 y 435
 w 75
 h 20
-controlPv "$(P)$(R)V:NoOfPts"
+controlPv "$(PMAC):V:NoOfPts"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1742,8 +1742,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)W:UseAxis"
-indicatorPv "$(P)$(R)W:UseAxis"
+controlPv "$(PMAC):W:UseAxis"
+indicatorPv "$(PMAC):W:UseAxis"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -1757,7 +1757,7 @@ x 720
 y 460
 w 75
 h 20
-controlPv "$(P)$(R)W:Positions.NELM"
+controlPv "$(PMAC):W:Positions.NELM"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1777,7 +1777,7 @@ x 630
 y 460
 w 75
 h 20
-controlPv "$(P)$(R)W:NoOfPts"
+controlPv "$(PMAC):W:NoOfPts"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1821,8 +1821,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)X:UseAxis"
-indicatorPv "$(P)$(R)X:UseAxis"
+controlPv "$(PMAC):X:UseAxis"
+indicatorPv "$(PMAC):X:UseAxis"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -1836,7 +1836,7 @@ x 720
 y 485
 w 75
 h 20
-controlPv "$(P)$(R)X:Positions.NELM"
+controlPv "$(PMAC):X:Positions.NELM"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1856,7 +1856,7 @@ x 630
 y 485
 w 75
 h 20
-controlPv "$(P)$(R)X:NoOfPts"
+controlPv "$(PMAC):X:NoOfPts"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1900,8 +1900,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)Y:UseAxis"
-indicatorPv "$(P)$(R)Y:UseAxis"
+controlPv "$(PMAC):Y:UseAxis"
+indicatorPv "$(PMAC):Y:UseAxis"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -1915,7 +1915,7 @@ x 720
 y 510
 w 75
 h 20
-controlPv "$(P)$(R)Y:Positions.NELM"
+controlPv "$(PMAC):Y:Positions.NELM"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1935,7 +1935,7 @@ x 630
 y 510
 w 75
 h 20
-controlPv "$(P)$(R)Y:NoOfPts"
+controlPv "$(PMAC):Y:NoOfPts"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -1979,8 +1979,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)Z:UseAxis"
-indicatorPv "$(P)$(R)Z:UseAxis"
+controlPv "$(PMAC):Z:UseAxis"
+indicatorPv "$(PMAC):Z:UseAxis"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -1994,7 +1994,7 @@ x 720
 y 535
 w 75
 h 20
-controlPv "$(P)$(R)Z:Positions.NELM"
+controlPv "$(PMAC):Z:Positions.NELM"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -2014,7 +2014,7 @@ x 630
 y 535
 w 75
 h 20
-controlPv "$(P)$(R)Z:NoOfPts"
+controlPv "$(PMAC):Z:NoOfPts"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -2058,8 +2058,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)COORDINATE_SYS_GROUP"
-indicatorPv "$(P)$(R)COORDINATE_SYS_GROUP"
+controlPv "$(PMAC):COORDINATE_SYS_GROUP"
+indicatorPv "$(PMAC):COORDINATE_SYS_GROUP"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -2093,7 +2093,7 @@ x 805
 y 335
 w 60
 h 20
-controlPv "$(P)$(R)A:Resolution"
+controlPv "$(PMAC):A:Resolution"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2113,7 +2113,7 @@ x 940
 y 335
 w 60
 h 20
-controlPv "$(P)$(R)A:Offset"
+controlPv "$(PMAC):A:Offset"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2133,7 +2133,7 @@ x 870
 y 335
 w 65
 h 20
-controlPv "$(P)$(R)A:Resolution_RBV"
+controlPv "$(PMAC):A:Resolution_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2154,7 +2154,7 @@ x 1005
 y 335
 w 65
 h 20
-controlPv "$(P)$(R)A:Offset_RBV"
+controlPv "$(PMAC):A:Offset_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2175,7 +2175,7 @@ x 805
 y 360
 w 60
 h 20
-controlPv "$(P)$(R)B:Resolution"
+controlPv "$(PMAC):B:Resolution"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2195,7 +2195,7 @@ x 940
 y 360
 w 60
 h 20
-controlPv "$(P)$(R)B:Offset"
+controlPv "$(PMAC):B:Offset"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2215,7 +2215,7 @@ x 870
 y 360
 w 65
 h 20
-controlPv "$(P)$(R)B:Resolution_RBV"
+controlPv "$(PMAC):B:Resolution_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2236,7 +2236,7 @@ x 1005
 y 360
 w 65
 h 20
-controlPv "$(P)$(R)B:Offset_RBV"
+controlPv "$(PMAC):B:Offset_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2257,7 +2257,7 @@ x 805
 y 385
 w 60
 h 20
-controlPv "$(P)$(R)C:Resolution"
+controlPv "$(PMAC):C:Resolution"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2277,7 +2277,7 @@ x 940
 y 385
 w 60
 h 20
-controlPv "$(P)$(R)C:Offset"
+controlPv "$(PMAC):C:Offset"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2297,7 +2297,7 @@ x 870
 y 385
 w 65
 h 20
-controlPv "$(P)$(R)C:Resolution_RBV"
+controlPv "$(PMAC):C:Resolution_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2318,7 +2318,7 @@ x 1005
 y 385
 w 65
 h 20
-controlPv "$(P)$(R)C:Offset_RBV"
+controlPv "$(PMAC):C:Offset_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2339,7 +2339,7 @@ x 805
 y 410
 w 60
 h 20
-controlPv "$(P)$(R)U:Resolution"
+controlPv "$(PMAC):U:Resolution"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2359,7 +2359,7 @@ x 940
 y 410
 w 60
 h 20
-controlPv "$(P)$(R)U:Offset"
+controlPv "$(PMAC):U:Offset"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2379,7 +2379,7 @@ x 870
 y 410
 w 65
 h 20
-controlPv "$(P)$(R)U:Resolution_RBV"
+controlPv "$(PMAC):U:Resolution_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2400,7 +2400,7 @@ x 1005
 y 410
 w 65
 h 20
-controlPv "$(P)$(R)U:Offset_RBV"
+controlPv "$(PMAC):U:Offset_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2421,7 +2421,7 @@ x 805
 y 435
 w 60
 h 20
-controlPv "$(P)$(R)V:Resolution"
+controlPv "$(PMAC):V:Resolution"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2441,7 +2441,7 @@ x 940
 y 435
 w 60
 h 20
-controlPv "$(P)$(R)V:Offset"
+controlPv "$(PMAC):V:Offset"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2461,7 +2461,7 @@ x 870
 y 435
 w 65
 h 20
-controlPv "$(P)$(R)V:Resolution_RBV"
+controlPv "$(PMAC):V:Resolution_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2482,7 +2482,7 @@ x 1005
 y 435
 w 65
 h 20
-controlPv "$(P)$(R)V:Offset_RBV"
+controlPv "$(PMAC):V:Offset_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2503,7 +2503,7 @@ x 805
 y 460
 w 60
 h 20
-controlPv "$(P)$(R)W:Resolution"
+controlPv "$(PMAC):W:Resolution"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2523,7 +2523,7 @@ x 940
 y 460
 w 60
 h 20
-controlPv "$(P)$(R)W:Offset"
+controlPv "$(PMAC):W:Offset"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2543,7 +2543,7 @@ x 870
 y 460
 w 65
 h 20
-controlPv "$(P)$(R)W:Resolution_RBV"
+controlPv "$(PMAC):W:Resolution_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2564,7 +2564,7 @@ x 1005
 y 460
 w 65
 h 20
-controlPv "$(P)$(R)W:Offset_RBV"
+controlPv "$(PMAC):W:Offset_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2585,7 +2585,7 @@ x 805
 y 485
 w 60
 h 20
-controlPv "$(P)$(R)X:Resolution"
+controlPv "$(PMAC):X:Resolution"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2605,7 +2605,7 @@ x 940
 y 485
 w 60
 h 20
-controlPv "$(P)$(R)X:Offset"
+controlPv "$(PMAC):X:Offset"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2625,7 +2625,7 @@ x 870
 y 485
 w 65
 h 20
-controlPv "$(P)$(R)X:Resolution_RBV"
+controlPv "$(PMAC):X:Resolution_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2646,7 +2646,7 @@ x 1005
 y 485
 w 65
 h 20
-controlPv "$(P)$(R)X:Offset_RBV"
+controlPv "$(PMAC):X:Offset_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2667,7 +2667,7 @@ x 805
 y 510
 w 60
 h 20
-controlPv "$(P)$(R)Y:Resolution"
+controlPv "$(PMAC):Y:Resolution"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2687,7 +2687,7 @@ x 940
 y 510
 w 60
 h 20
-controlPv "$(P)$(R)Y:Offset"
+controlPv "$(PMAC):Y:Offset"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2707,7 +2707,7 @@ x 870
 y 510
 w 65
 h 20
-controlPv "$(P)$(R)Y:Resolution_RBV"
+controlPv "$(PMAC):Y:Resolution_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2728,7 +2728,7 @@ x 1005
 y 510
 w 65
 h 20
-controlPv "$(P)$(R)Y:Offset_RBV"
+controlPv "$(PMAC):Y:Offset_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2749,7 +2749,7 @@ x 805
 y 535
 w 60
 h 20
-controlPv "$(P)$(R)Z:Resolution"
+controlPv "$(PMAC):Z:Resolution"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2769,7 +2769,7 @@ x 940
 y 535
 w 60
 h 20
-controlPv "$(P)$(R)Z:Offset"
+controlPv "$(PMAC):Z:Offset"
 precision 3
 fgColor index 25
 fgAlarm
@@ -2789,7 +2789,7 @@ x 870
 y 535
 w 65
 h 20
-controlPv "$(P)$(R)Z:Resolution_RBV"
+controlPv "$(PMAC):Z:Resolution_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2810,7 +2810,7 @@ x 1005
 y 535
 w 65
 h 20
-controlPv "$(P)$(R)Z:Offset_RBV"
+controlPv "$(PMAC):Z:Offset_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 16
@@ -2871,7 +2871,7 @@ x 525
 y 45
 w 60
 h 20
-controlPv "$(P)$(R)M1:CsRaw_RBV"
+controlPv "$(PMAC):M1:CsRaw_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -2911,7 +2911,7 @@ x 985
 y 45
 w 90
 h 20
-controlPv "$(P)$(R)M1:CsAxis_RBV"
+controlPv "$(PMAC):M1:CsAxis_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -2931,7 +2931,7 @@ x 750
 y 45
 w 100
 h 20
-controlPv "$(P)$(R)M1:CsPort_RBV"
+controlPv "$(PMAC):M1:CsPort_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -2951,7 +2951,7 @@ x 890
 y 45
 w 90
 h 20
-controlPv "$(P)$(R)M1:CsAxis"
+controlPv "$(PMAC):M1:CsAxis"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -2970,7 +2970,7 @@ x 525
 y 70
 w 60
 h 20
-controlPv "$(P)$(R)M2:CsRaw_RBV"
+controlPv "$(PMAC):M2:CsRaw_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3010,7 +3010,7 @@ x 985
 y 70
 w 90
 h 20
-controlPv "$(P)$(R)M2:CsAxis_RBV"
+controlPv "$(PMAC):M2:CsAxis_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3030,7 +3030,7 @@ x 750
 y 70
 w 100
 h 20
-controlPv "$(P)$(R)M2:CsPort_RBV"
+controlPv "$(PMAC):M2:CsPort_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3050,7 +3050,7 @@ x 890
 y 70
 w 90
 h 20
-controlPv "$(P)$(R)M2:CsAxis"
+controlPv "$(PMAC):M2:CsAxis"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -3069,7 +3069,7 @@ x 525
 y 95
 w 60
 h 20
-controlPv "$(P)$(R)M3:CsRaw_RBV"
+controlPv "$(PMAC):M3:CsRaw_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3109,7 +3109,7 @@ x 985
 y 95
 w 90
 h 20
-controlPv "$(P)$(R)M3:CsAxis_RBV"
+controlPv "$(PMAC):M3:CsAxis_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3129,7 +3129,7 @@ x 750
 y 95
 w 100
 h 20
-controlPv "$(P)$(R)M3:CsPort_RBV"
+controlPv "$(PMAC):M3:CsPort_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3149,7 +3149,7 @@ x 890
 y 95
 w 90
 h 20
-controlPv "$(P)$(R)M3:CsAxis"
+controlPv "$(PMAC):M3:CsAxis"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -3168,7 +3168,7 @@ x 525
 y 120
 w 60
 h 20
-controlPv "$(P)$(R)M4:CsRaw_RBV"
+controlPv "$(PMAC):M4:CsRaw_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3208,7 +3208,7 @@ x 985
 y 120
 w 90
 h 20
-controlPv "$(P)$(R)M4:CsAxis_RBV"
+controlPv "$(PMAC):M4:CsAxis_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3228,7 +3228,7 @@ x 750
 y 120
 w 100
 h 20
-controlPv "$(P)$(R)M4:CsPort_RBV"
+controlPv "$(PMAC):M4:CsPort_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3248,7 +3248,7 @@ x 890
 y 120
 w 90
 h 20
-controlPv "$(P)$(R)M4:CsAxis"
+controlPv "$(PMAC):M4:CsAxis"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -3267,7 +3267,7 @@ x 525
 y 145
 w 60
 h 20
-controlPv "$(P)$(R)M5:CsRaw_RBV"
+controlPv "$(PMAC):M5:CsRaw_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3307,7 +3307,7 @@ x 985
 y 145
 w 90
 h 20
-controlPv "$(P)$(R)M5:CsAxis_RBV"
+controlPv "$(PMAC):M5:CsAxis_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3327,7 +3327,7 @@ x 750
 y 145
 w 100
 h 20
-controlPv "$(P)$(R)M5:CsPort_RBV"
+controlPv "$(PMAC):M5:CsPort_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3347,7 +3347,7 @@ x 890
 y 145
 w 90
 h 20
-controlPv "$(P)$(R)M5:CsAxis"
+controlPv "$(PMAC):M5:CsAxis"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -3366,7 +3366,7 @@ x 525
 y 170
 w 60
 h 20
-controlPv "$(P)$(R)M6:CsRaw_RBV"
+controlPv "$(PMAC):M6:CsRaw_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3406,7 +3406,7 @@ x 985
 y 170
 w 90
 h 20
-controlPv "$(P)$(R)M6:CsAxis_RBV"
+controlPv "$(PMAC):M6:CsAxis_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3426,7 +3426,7 @@ x 750
 y 170
 w 100
 h 20
-controlPv "$(P)$(R)M6:CsPort_RBV"
+controlPv "$(PMAC):M6:CsPort_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3446,7 +3446,7 @@ x 890
 y 170
 w 90
 h 20
-controlPv "$(P)$(R)M6:CsAxis"
+controlPv "$(PMAC):M6:CsAxis"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -3465,7 +3465,7 @@ x 525
 y 195
 w 60
 h 20
-controlPv "$(P)$(R)M7:CsRaw_RBV"
+controlPv "$(PMAC):M7:CsRaw_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3505,7 +3505,7 @@ x 985
 y 195
 w 90
 h 20
-controlPv "$(P)$(R)M7:CsAxis_RBV"
+controlPv "$(PMAC):M7:CsAxis_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3525,7 +3525,7 @@ x 750
 y 195
 w 100
 h 20
-controlPv "$(P)$(R)M7:CsPort_RBV"
+controlPv "$(PMAC):M7:CsPort_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3545,7 +3545,7 @@ x 890
 y 195
 w 90
 h 20
-controlPv "$(P)$(R)M7:CsAxis"
+controlPv "$(PMAC):M7:CsAxis"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -3564,7 +3564,7 @@ x 525
 y 220
 w 60
 h 20
-controlPv "$(P)$(R)M8:CsRaw_RBV"
+controlPv "$(PMAC):M8:CsRaw_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3604,7 +3604,7 @@ x 985
 y 220
 w 90
 h 20
-controlPv "$(P)$(R)M8:CsAxis_RBV"
+controlPv "$(PMAC):M8:CsAxis_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3624,7 +3624,7 @@ x 750
 y 220
 w 100
 h 20
-controlPv "$(P)$(R)M8:CsPort_RBV"
+controlPv "$(PMAC):M8:CsPort_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -3644,7 +3644,7 @@ x 890
 y 220
 w 90
 h 20
-controlPv "$(P)$(R)M8:CsAxis"
+controlPv "$(PMAC):M8:CsAxis"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -3687,8 +3687,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)ProfileCsName"
-indicatorPv "$(P)$(R)ProfileCsName_RBV"
+controlPv "$(PMAC):ProfileCsName"
+indicatorPv "$(PMAC):ProfileCsName_RBV"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -3707,8 +3707,8 @@ bgColor index 3
 inconsistentColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)M1:CsPort"
-indicatorPv "$(P)$(R)M1:CsPort"
+controlPv "$(PMAC):M1:CsPort"
+indicatorPv "$(PMAC):M1:CsPort"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -3727,8 +3727,8 @@ bgColor index 3
 inconsistentColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)M2:CsPort"
-indicatorPv "$(P)$(R)M2:CsPort"
+controlPv "$(PMAC):M2:CsPort"
+indicatorPv "$(PMAC):M2:CsPort"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -3747,8 +3747,8 @@ bgColor index 3
 inconsistentColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)M3:CsPort"
-indicatorPv "$(P)$(R)M3:CsPort"
+controlPv "$(PMAC):M3:CsPort"
+indicatorPv "$(PMAC):M3:CsPort"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -3767,8 +3767,8 @@ bgColor index 3
 inconsistentColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)M4:CsPort"
-indicatorPv "$(P)$(R)M4:CsPort"
+controlPv "$(PMAC):M4:CsPort"
+indicatorPv "$(PMAC):M4:CsPort"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -3787,8 +3787,8 @@ bgColor index 3
 inconsistentColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)M5:CsPort"
-indicatorPv "$(P)$(R)M5:CsPort"
+controlPv "$(PMAC):M5:CsPort"
+indicatorPv "$(PMAC):M5:CsPort"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -3807,8 +3807,8 @@ bgColor index 3
 inconsistentColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)M6:CsPort"
-indicatorPv "$(P)$(R)M6:CsPort"
+controlPv "$(PMAC):M6:CsPort"
+indicatorPv "$(PMAC):M6:CsPort"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -3827,8 +3827,8 @@ bgColor index 3
 inconsistentColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)M7:CsPort"
-indicatorPv "$(P)$(R)M7:CsPort"
+controlPv "$(PMAC):M7:CsPort"
+indicatorPv "$(PMAC):M7:CsPort"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -3847,8 +3847,8 @@ bgColor index 3
 inconsistentColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)M8:CsPort"
-indicatorPv "$(P)$(R)M8:CsPort"
+controlPv "$(PMAC):M8:CsPort"
+indicatorPv "$(PMAC):M8:CsPort"
 font "arial-bold-r-14.0"
 endObjectProperties
 
@@ -3897,7 +3897,7 @@ x 120
 y 25
 w 80
 h 20
-controlPv "$(P)$(R)DriverVersion_RBV"
+controlPv "$(PMAC):DriverVersion_RBV"
 displayMode "decimal"
 precision 1
 fgColor index 16
@@ -3937,7 +3937,7 @@ x 345
 y 25
 w 80
 h 20
-controlPv "$(P)$(R)ProgramVersion_RBV"
+controlPv "$(PMAC):ProgramVersion_RBV"
 displayMode "decimal"
 precision 1
 fgColor index 16
@@ -4031,7 +4031,7 @@ x 320
 y 250
 w 115
 h 20
-controlPv "$(P)$(R)ProfileAppendState_RBV"
+controlPv "$(PMAC):ProfileAppendState_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -4050,7 +4050,7 @@ x 15
 y 275
 w 420
 h 20
-controlPv "$(P)$(R)ProfileAppendMessage_RBV"
+controlPv "$(PMAC):ProfileAppendMessage_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -4088,7 +4088,7 @@ x 165
 y 250
 w 115
 h 20
-controlPv "$(P)$(R)ProfileAppendStatus_RBV"
+controlPv "$(PMAC):ProfileAppendStatus_RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -4112,7 +4112,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)ProfileAppend.PROC"
+controlPv "$(PMAC):ProfileAppend.PROC"
 pressValue "1"
 onLabel "Append Points"
 offLabel "Append Points"
@@ -4131,7 +4131,7 @@ x 830
 y 590
 w 100
 h 20
-controlPv "$(P)$(R)ProfilePointsToBuild_RBV"
+controlPv "$(PMAC):ProfilePointsToBuild_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm
@@ -4151,7 +4151,7 @@ x 735
 y 590
 w 85
 h 20
-controlPv "$(P)$(R)ProfilePointsToBuild"
+controlPv "$(PMAC):ProfilePointsToBuild"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -4189,7 +4189,7 @@ x 360
 y 470
 w 75
 h 20
-controlPv "$(P)$(R)ProfilePointsBuilt_RBV"
+controlPv "$(PMAC):ProfilePointsBuilt_RBV"
 displayMode "decimal"
 fgColor index 16
 fgAlarm

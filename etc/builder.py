@@ -113,7 +113,6 @@ class GeoBrick(DeltaTau):
     # parameters in Finalise below so they can be substituted into the template )
     removeThese = [ 'CSG%d' % i for i in range(8) ]
 
-
     def __init__(self, Port, name = None, NAxes = 8, IdlePoll = 500, MovingPoll = 100, **kwargs):
         # init a list of groupnames for each pmacCreateCsGroup to add to
         self.CsGroupNamesList = {}
@@ -130,11 +129,14 @@ class GeoBrick(DeltaTau):
         self.NAxes = NAxes
         self.IdlePoll = IdlePoll
         self.MovingPoll = MovingPoll
+
         # init the AsynPort superclass
         self.__super.__init__(name)
 
         # instatiate the template
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
+
+        self.TIMEOUT = self.template.args['TIMEOUT']
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
@@ -221,12 +223,12 @@ class GeoBrickTrajectoryControlT(AutoSubstitution):
     TemplateFile = "pmacControllerTrajectory.template"
     Dependencies = (GeoBrick,)
     # the following arguments are copied from the attached Geobrick
-    geobrickArgs = ['P', 'R', 'NAxes']
+    geobrickArgs = ['PMAC', 'NAxes']
 
     def __init__(self, **args):
         # copy the Geobrick object's relevant args into ours
-        for k in self.geobrickArgs:
-            args[k] = getattr(args['PORT'], k)
+        args['PMAC'] = args['PORT'].P
+        args['NAxes'] = args['PORT'].NAxes
         # init the super class
         self.__super.__init__(**args)
         self.axes = []
@@ -295,47 +297,29 @@ class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
     TemplateFile = 'dls_pmac_asyn_motor.template'
     Dependencies = (Busy,)
     def __init__(self, **kwargs):
-        # copy the P macro from controller for creation of standardized aliases for motor PVs
-        kwargs['CONTROLLER_P'] = kwargs['PORT'].P
+        # Pass down the common parameters
+        kwargs['PMAC'] = kwargs['PORT'].P
         self.__super.__init__(**kwargs)
 
 dls_pmac_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 dls_pmac_asyn_motor.ArgInfo.descriptions["SPORT"] = Ident("Delta tau motor controller comms port", DeltaTauCommsPort)
 # we want to copy the controller port name (see above) so do not want it as an argument
-dls_pmac_asyn_motor.ArgInfo = dls_pmac_asyn_motor.ArgInfo.filtered(without=['CONTROLLER_P'])
+dls_pmac_asyn_motor.ArgInfo = dls_pmac_asyn_motor.ArgInfo.filtered(without=['PMAC'])
 
 @add_basic
 class dls_pmac_cs_asyn_motor(AutoSubstitution, MotorRecord):
     WarnMacros = False
     TemplateFile = 'dls_pmac_cs_asyn_motor.template'
     def __init__(self, **kwargs):
-        # create the PV prefix for standardized aliases for CS motor PVs
-        kwargs['CS_P'] = kwargs['PORT'].P
-        kwargs['CS_R'] = kwargs['PORT'].R
+        # Pass down the common parameters
+        kwargs['PMAC'] = kwargs['PORT'].PMAC
+        kwargs['CS'] = kwargs['PORT'].CS
         self.__super.__init__(**kwargs)
 
 dls_pmac_cs_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 # we want to copy the controller port name (see above) so do not want it as an argument
 dls_pmac_cs_asyn_motor.ArgInfo = dls_pmac_cs_asyn_motor.ArgInfo.filtered(
-    without=['CS_P', 'CS_R'])
-
-class _pmac_direct_motor_templateT(AutoSubstitution):
-    WarnMacros = False
-    TemplateFile = 'pmacDirectMotor.template'
-
-class pmacDirectMotor(Device):
-    def __init__(self, name, Axis):
-        # use the relevant motor record arguments to pass to the direct motor template
-        args = { key: Axis.args[key] for key in  _pmac_direct_motor_templateT.Arguments}
-        port = Axis.args['PORT']
-        args['P'] = port.P # we use the geobrick controller's P for all direct motors
-        args['name'] = name
-        args['M'] = "M{}".format(Axis.args['ADDR'])
-        self.template = _pmac_direct_motor_templateT(**args)
-
-    ArgInfo = makeArgInfo(__init__,
-                          name = Simple('Name to use for GUI object', str),
-                          Axis = Ident('dls_pmac_asyn_motor or dls_pmac_cd_asyn_motor to connect to', MotorRecord))
+    without=['PMAC', 'CS'])
 
 class _automhomeT(AutoSubstitution):
     Dependencies = (Calc,)
@@ -346,7 +330,7 @@ _automhomeT.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller por
 class autohome(_automhomeT):
     def __init__(self, **args):
         # build the CTRL prefix for disabling motor records from the P and R of Geobrick object
-        args['CTRL'] = args['PORT'].P + args['PORT'].R
+        args['CTRL'] = args['PORT'].P
         self.__super.__init__(**args)
 
     ArgInfo = _automhomeT.ArgInfo.filtered(without=['CTRL'])
@@ -413,6 +397,7 @@ class CS(AsynPort):
         self.__dict__.update(kwargs)
         self.__dict__.update(locals())
         self.PortName = Controller.name
+        self.PMAC = Controller.P
         # PLC number for position reporting
         if PLCNum is None:
             self.PLCNum = int(CS) + 15
@@ -428,7 +413,9 @@ class CS(AsynPort):
         # init the AsynPort
         self.__super.__init__(name)
         # instatiate the template
-        template = _CsControlT(PORT=name, P=self.P, R=self.R)
+        template = _CsControlT(PORT=name, TIMEOUT=Controller.TIMEOUT, PMAC=Controller.P, CS=CS)
+        # make CS type correct
+        self.CS = int(CS)
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
@@ -442,7 +429,7 @@ class CS(AsynPort):
         Program    = Simple('Motion Program to run', int),
         IdlePoll   = Simple('Idle Poll Period in ms', int),
         MovingPoll=Simple('Moving Poll Period in ms', int)) \
-              + _CsControlT.ArgInfo.filtered(without=['PORT'])
+              + _CsControlT.ArgInfo.filtered(without=['PORT', 'PMAC'])
 
     def Initialise(self):
         print '# Create CS (CSPortName, ControllerPort, CSNumber, ProgramNumber)'

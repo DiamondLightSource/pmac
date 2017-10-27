@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 4
-y 416
+x 583
+y 353
 w 196
 h 139
 font "arial-medium-r-14.0"
@@ -54,8 +54,8 @@ selectColor index 5
 inconsistentColor index 5
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R)DeferMoves"
-indicatorPv "$(P)$(R)DeferMoves"
+controlPv "$(P):DeferMoves"
+indicatorPv "$(P):DeferMoves"
 font "helvetica-bold-r-14.0"
 orientation "horizontal"
 endObjectProperties

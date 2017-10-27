@@ -8,10 +8,10 @@ from datetime import datetime
 # is trying to solve
 
 P = 'PMAC_BRICK_TEST:'
-PB = 'PMAC_BRICK_TEST:GB1:'
-CS3 = 'PMAC_BRICK_TEST:CS3:'
+PCS = 'BRICK1CS3:'
+PB = 'BRICK1:'
+CS3 = 'BRICK1:CS3:'
 DECIMALS = 6
-
 
 class TestMakeCsConsistent(TestCase):
 
@@ -26,7 +26,8 @@ class TestMakeCsConsistent(TestCase):
         ca.caput(PB+'ProfileCsName', 'BRICK1.CS3')
         ca.caput(CS3+'CsMoveTime', 0)
         # move affected axes to 0
-        ca.caput([P+'M1', P+'M2', P+'M3', P+'M4'], [0, 0, 0, 0], wait=True, timeout=30)
+        ca.caput([P+'MOTOR1', P+'MOTOR2', P+'MOTOR3', P+'MOTOR4'], [0, 0, 0, 0], wait=True,
+                 timeout=30)
         # make axis 1 demand radically wrong
         ca.caput(PB+'SendCmd', command, datatype=ca.DBR_CHAR_STR)
         # this check is probably not required but leaving it in to verify reliability
@@ -47,23 +48,23 @@ class TestMakeCsConsistent(TestCase):
         ca.caput(PB+'COORDINATE_SYS_GROUP', '3,4->I', wait=True)
         ca.caput(CS3+'CsMoveTime', 0)
         # move affected axes to 0
-        ca.caput([P+'M3', P+'M4'], [0, 0], wait=True, timeout=30)
+        ca.caput([P+'MOTOR3', P+'MOTOR4'], [0, 0], wait=True, timeout=30)
 
         # do a CS move of Height
-        ca.caput(P+'X_CS3', 1, wait=True, timeout=5)
+        ca.caput(PCS+'X', 1, wait=True, timeout=5)
 
         # pretend that axis 3 moved by itself.
-        monitor = MoveMonitor(P+'X_CS3')
+        monitor = MoveMonitor(PCS+'X')
         ca.caput(PB+'SendCmd', '#3J:1000', datatype=ca.DBR_CHAR_STR)
         monitor.wait_for_one_move(5)
         # this should make Height 1.5mm
-        self.assertAlmostEqual(ca.caget(P+'X_CS3.RBV'), 1.5, DECIMALS)
+        self.assertAlmostEqual(ca.caget(PCS+'X.RBV'), 1.5, DECIMALS)
 
         # now move Angle
-        ca.caput(P+'Y_CS3', 1, wait=True, timeout=5)
-        self.assertAlmostEqual(ca.caget(P+'Y_CS3.RBV'), 1, DECIMALS)
+        ca.caput(PCS+'Y', 1, wait=True, timeout=5)
+        self.assertAlmostEqual(ca.caget(PCS+'Y.RBV'), 1, DECIMALS)
         # Height should return to 1
-        self.assertAlmostEqual(ca.caget(P+'X_CS3.RBV'), 1, DECIMALS)
+        self.assertAlmostEqual(ca.caget(PCS+'X.RBV'), 1, DECIMALS)
 
     def test_direct_axis_creep(self):
         """
@@ -78,21 +79,22 @@ class TestMakeCsConsistent(TestCase):
         # set the appropriate coordinate system group
         ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED', wait=True)
         ca.caput(CS3+'CsMoveTime', 0)
-        # move affected axes to
-        ca.caput([P+'M1', P+'M2', P+'M3', P+'M4'], [0, 0, 0, 0], wait=True, timeout=30)
+        # move affected axes to start
+        ca.caput([P+'MOTOR1', P+'MOTOR2', P+'MOTOR3', P+'MOTOR4'], [0, 0, 0, 0], wait=True,
+                 timeout=30)
 
         # pretend that axis 1 moved by itself.
-        monitor = MoveMonitor(P+'M1')
+        monitor = MoveMonitor(P+'MOTOR1')
         ca.caput(PB+'SendCmd', '#1J:{}'.format(move), datatype=ca.DBR_CHAR_STR)
         monitor.wait_for_one_move(30)
         # this should make axis 1 to {movement}mm
-        self.assertEquals(ca.caget(P+'M1.RBV'), move)
+        self.assertEquals(ca.caget(P+'MOTOR1.RBV'), move)
 
         # now move the CS axis Height
-        ca.caput(P+'X_CS3', cs_move, wait=True, timeout=30)
-        self.assertAlmostEqual(ca.caget(P+'X_CS3.RBV'), cs_move, DECIMALS)
+        ca.caput(PCS+'X', cs_move, wait=True, timeout=30)
+        self.assertAlmostEqual(ca.caget(PCS+'X.RBV'), cs_move, DECIMALS)
         # Axis 1 should return to 0
-        self.assertAlmostEqual(ca.caget(P+'M1.RBV'), 0, DECIMALS)
+        self.assertAlmostEqual(ca.caget(P+'MOTOR1.RBV'), 0, DECIMALS)
 
     def test_very_slow_moves(self):
         """
@@ -106,15 +108,16 @@ class TestMakeCsConsistent(TestCase):
         # set the appropriate coordinate system group
         ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED', wait=True)
         ca.caput(CS3+'CsMoveTime', 0)
-        # move affected axes to
-        ca.caput([P+'M1', P+'M2', P+'M3', P+'M4'], [0, 0, 0, 0], wait=True, timeout=30)
+        # move affected axes to 0
+        ca.caput([P+'MOTOR1', P+'MOTOR2', P+'MOTOR3', P+'MOTOR4'], [0, 0, 0, 0],
+                 wait=True, timeout=30)
 
         # make axis 5 demand radically wrong (not in a CS)
         ca.caput(PB+'SendCmd', command, datatype=ca.DBR_CHAR_STR)
 
         # make a CS move and make sure it happens quickly enough
         then = datetime.now()
-        ca.caput(P+'X_CS3', 1, wait=True, timeout=5)
-        self.assertAlmostEqual(ca.caget(P+'X_CS3.RBV'), 1, DECIMALS)
+        ca.caput(PCS+'X', 1, wait=True, timeout=5)
+        self.assertAlmostEqual(ca.caget(PCS+'X.RBV'), 1, DECIMALS)
         elapsed = datetime.now() - then
         self.assertFalse(elapsed.seconds > 2)

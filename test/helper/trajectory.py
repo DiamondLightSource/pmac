@@ -2,7 +2,7 @@
 from unittest import TestCase
 from cothread import catools as ca
 
-PB = 'PMAC_BRICK_TEST:GB1:'
+PB = 'BRICK1:'
 ALL_AXES = set('ABCUVWXYZ')
 
 
@@ -67,7 +67,7 @@ class Trajectory:
         # setup and execute the scan
         ca.caput(PB + 'ProfilePointsToBuild', points)
         ca.caput(PB + 'ProfileNumPoints', points)
-        ca.caput(PB + 'ProfileCsName', 'BRICK1.CS3')
+        ca.caput(PB + 'ProfileCsName', 'CS3')
         ca.caput(PB + 'ProfileBuild', 1, wait=True, timeout=2)
         assert(ca .caget(PB + 'ProfileBuildStatus_RBV') != 2)
 
@@ -79,7 +79,7 @@ class Trajectory:
         test.assertEquals(
             ca.caget(PB + 'ProfileExecuteMessage_RBV', datatype=ca.DBR_CHAR_STR),
             'Trajectory scan complete')
-        test.assertEquals(ca.caget('PMAC_BRICK_TEST:M1.RBV'), rows[-1])
-        test.assertEquals(ca.caget('PMAC_BRICK_TEST:M2.RBV'), cols[-1])
-        test.assertEquals(ca.caget('PMAC_BRICK_TEST:X_CS3.RBV'), heights[-1])
-        test.assertEquals(ca.caget('PMAC_BRICK_TEST:Y_CS3.RBV'), angles[-1])
+        test.assertEquals(ca.caget('PMAC_BRICK_TEST:MOTOR1.RBV'), rows[-1])
+        test.assertEquals(ca.caget('PMAC_BRICK_TEST:MOTOR2.RBV'), cols[-1])
+        test.assertEquals(ca.caget('BRICK1CS3:X.RBV'), heights[-1])
+        test.assertEquals(ca.caget('BRICK1CS3:Y.RBV'), angles[-1])

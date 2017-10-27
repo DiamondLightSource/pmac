@@ -9,20 +9,20 @@
 ##############################################################
 
 # % macro, PORT, The asyn port for the pmac cs controller
-# % macro, P, PV Prefix - NOTE: For standard naming this should be the Geobrick Controller P
-# % macro, R, PV Suffix - NOTE: for standard naming this should be CS1, CS2, etc.
 # % macro, TIMEOUT, Timeout for controller communication
+# % macro, PMAC, PV Prefix for the motor controller
+# % macro, CS, Coordinate System Number for the cs controller
 
 #
 # This associates an edm screen with the template
-# % gui, $(PORT), edm, pmacCoord.edl, P=$(P),R=$(R),name=$(PORT)
+# % gui, $(PORT), edm, pmacCoord.edl, device=$(PMAC):CS$(CS):
 #
 
 
 ##############################################################
 # Control deferred mode for all axes in this CS
 ##############################################################
-record(bo, "$(P)$(R)DeferMoves")
+record(bo, "$(PMAC):CS$(CS):DeferMoves")
 {
     field(PINI, "YES")
     field(DTYP, "asynInt32")
@@ -40,7 +40,7 @@ record(bo, "$(P)$(R)DeferMoves")
 # >0 = take at least this many milli-secs to move
 ##############################################################
 # % autosave 2
-record(ao, "$(P)$(R)CsMoveTime")
+record(ao, "$(PMAC):CS$(CS):CsMoveTime")
 {
     field(PINI, "YES")
     field(DTYP, "asynFloat64")
@@ -48,7 +48,7 @@ record(ao, "$(P)$(R)CsMoveTime")
     field(VAL, "-1")
 }
 
-record(ai, "$(P)$(R)CsMoveTime_RBV")
+record(ai, "$(PMAC):CS$(CS):CsMoveTime_RBV")
 {
     field(DTYP, "asynFloat64")
     field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_CS_MOVE_TIME")
@@ -59,21 +59,21 @@ record(ai, "$(P)$(R)CsMoveTime_RBV")
 ##############################################################
 # Immediate demands for each CS motor
 ##############################################################
-substitute "M=$(R)M1, ADDR=1, DESC=CS Motor A"
+substitute "P=$(PMAC), M=CS$(CS):M1, ADDR=1, DESC=CS Motor A"
 include "pmacDirectMotor.template"
-substitute "M=$(R)M2, ADDR=2, DESC=CS Motor B"
+substitute "P=$(PMAC), M=CS$(CS):M2, ADDR=2, DESC=CS Motor B"
 include "pmacDirectMotor.template"
-substitute "M=$(R)M3, ADDR=3, DESC=CS Motor C"
+substitute "P=$(PMAC), M=CS$(CS):M3, ADDR=3, DESC=CS Motor C"
 include "pmacDirectMotor.template"
-substitute "M=$(R)M4, ADDR=4, DESC=CS Motor U"
+substitute "P=$(PMAC), M=CS$(CS):M4, ADDR=4, DESC=CS Motor U"
 include "pmacDirectMotor.template"
-substitute "M=$(R)M5, ADDR=5, DESC=CS Motor V"
+substitute "P=$(PMAC), M=CS$(CS):M5, ADDR=5, DESC=CS Motor V"
 include "pmacDirectMotor.template"
-substitute "M=$(R)M6, ADDR=6, DESC=CS Motor W"
+substitute "P=$(PMAC), M=CS$(CS):M6, ADDR=6, DESC=CS Motor W"
 include "pmacDirectMotor.template"
-substitute "M=$(R)M7, ADDR=7, DESC=CS Motor X"
+substitute "P=$(PMAC), M=CS$(CS):M7, ADDR=7, DESC=CS Motor X"
 include "pmacDirectMotor.template"
-substitute "M=$(R)M8, ADDR=8, DESC=CS Motor Y"
+substitute "P=$(PMAC), M=CS$(CS):M8, ADDR=8, DESC=CS Motor Y"
 include "pmacDirectMotor.template"
-substitute "M=$(R), ADDR=9, DESC=CS Motor Z"
+substitute "P=$(PMAC), M=CS$(CS):M9, ADDR=9, DESC=CS Motor Z"
 include "pmacDirectMotor.template"

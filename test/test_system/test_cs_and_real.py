@@ -4,7 +4,8 @@ from test.helper.movemonitor import MoveMonitor
 from cothread import Sleep
 
 P = 'PMAC_BRICK_TEST:'
-PB = 'PMAC_BRICK_TEST:GB1:'
+PCS = 'BRICK1CS3:'
+PB = 'BRICK1:'
 DECIMALS = 3
 
 # These tests verify real and virtual motors interact correctly
@@ -14,10 +15,10 @@ class TestCsAndReal(TestCase):
         """ check that virtual axes update as expected on real axis moves
         """
         ca.caput(PB + 'COORDINATE_SYS_GROUP', 'MIXED')
-        axis_jack1 = P + 'M3'
-        axis_jack2 = P + 'M4'
-        axis_height = P + 'X_CS3'
-        axis_angle = P + 'Y_CS3'
+        axis_jack1 = P + 'MOTOR3'
+        axis_jack2 = P + 'MOTOR4'
+        axis_height = PCS + 'X'
+        axis_angle = PCS + 'Y'
         ca.caput([axis_jack1, axis_jack2, axis_height, axis_angle], [0, 0, 0, 0],
                  wait=True, timeout=30)
         ca.caput([axis_jack1, axis_jack2], [5, 5], wait=True, timeout=30)
@@ -29,10 +30,10 @@ class TestCsAndReal(TestCase):
         """ check that real axes update as expected on virtual axis moves
         """
         ca.caput(PB + 'COORDINATE_SYS_GROUP', 'MIXED')
-        axis_jack1 = P + 'M3'
-        axis_jack2 = P + 'M4'
-        axis_height = P + 'X_CS3'
-        axis_angle = P + 'Y_CS3'
+        axis_jack1 = P + 'MOTOR3'
+        axis_jack2 = P + 'MOTOR4'
+        axis_height = PCS + 'X'
+        axis_angle = PCS + 'Y'
         ca.caput([axis_jack1, axis_jack2, axis_height, axis_angle], [0, 0, 0, 0],
                  wait=True, timeout=30)
         ca.caput(axis_height, 5, wait=True, timeout=30)
@@ -44,10 +45,10 @@ class TestCsAndReal(TestCase):
         """ checks that the internal Q7x demand is updated on a real axis move
         """
         ca.caput(PB + 'COORDINATE_SYS_GROUP', 'MIXED')
-        axis_jack1 = P + 'M3'
-        axis_jack2 = P + 'M4'
-        axis_height = P + 'X_CS3'
-        axis_angle = P + 'Y_CS3'
+        axis_jack1 = P + 'MOTOR3'
+        axis_jack2 = P + 'MOTOR4'
+        axis_height = PCS + 'X'
+        axis_angle = PCS + 'Y'
         ca.caput([axis_jack1, axis_jack2, axis_height, axis_angle], [0, 0, 0, 0],
                  wait=True, timeout=30)
         ca.caput(axis_jack1, 2, wait=True, timeout=30)

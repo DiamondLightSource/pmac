@@ -2,42 +2,37 @@
 #
 # A record to sit along side each motor record and give direct
 # access to the driver without any motor record logic
-# may be used with virtual and real motor records
-# All macros except name should match the associated
-# motor record
+# may be used with virtual and real motors
+#
+# This template requires that all real motors mentioned have
+# a real underlying motor record (to determine MRES) this is
+# not required for virtual motors
 #
 # This currently only supports demand but could be extended
 # to totally replace motor record (perhaps)
 #
 ##############################################################
 
-# % macro, name, name for the GUI object
-# % macro, PORT, The asyn port for the pmac controller
-# % macro, ADDR, The asyn address (axis number)
+# % macro, PORT, The asyn port (motor controller or CS controller)
+# % macro, ADDR, The asyn address (real or CS axis number)
 # % macro, DESC, Description
-# % macro, P, PV Prefix
-# % macro, M, PV Suffix
-
-#
-# This associates an edm screen with the template
-# % gui, $(name=), edmembed, pmac-motor-embed.edl, P=$(P),M=$(M),DESC=$(DESC)
-#
-
+# % macro, PMAC, PV Prefix for the motor controller
+# % macro, M, Motor PV suffix (CSx:My for CS axes)
 
 ##############################################################
 # Set immediate demand for this motor
 ##############################################################
-record(ao, "$(P)$(M):DirectDemand")
+record(ao, "$(PMAC):$(M):DirectDemand")
 {
     field(DTYP, "Raw Soft Channel")
     field(OMSL, "supervisory")
-    field(OUT, "$(P)$(M):RawDirectDemand PP")
+    field(OUT, "$(PMAC):$(M):RawDirectDemand PP")
     field(LINR, "LINEAR")
     field(ASLO, 1)                              # to be overwritten by DirectMres
     field(AOFF, 0)                              # to be overwritten by DirectOffset
 }
 
-record(ao, "$(P)$(M):RawDirectDemand")
+record(ao, "$(PMAC):$(M):RawDirectDemand")
 {
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),4)MOTOR_MOVE_ABS")
@@ -58,52 +53,52 @@ record(ao, "$(P)$(M):RawDirectDemand")
 # motor's own number
 #
 ##############################################################
-record(longin, "$(P)$(M):DirectMotorNumber")
+record(longin, "$(PMAC):$(M):DirectMotorNumber")
 {
     field(DTYP, "asynInt32")
     field(SCAN, "I/O Intr")
     field(INP,  "@asyn($(PORT),$(ADDR),4)PMAC_REAL_MOTOR_NUMBER")
-    field(FLNK, "$(P)$(M):DirectSources")
+    field(FLNK, "$(PMAC):$(M):DirectSources")
 }
 
-record(fanout, "$(P)$(M):DirectSources")
+record(fanout, "$(PMAC):$(M):DirectSources")
 {
-    field(LNK1, "$(P)$(M):MresSource")
-    field(LNK2, "$(P)$(M):OffsetSource")
+    field(LNK1, "$(PMAC):$(M):MresSource")
+    field(LNK2, "$(PMAC):$(M):OffsetSource")
 }
 
-record(scalcout, "$(P)$(M):DirectMres")
+record(scalcout, "$(PMAC):$(M):DirectMres")
 {
     field(DTYP, "Soft Channel")
-    field(INPA, "$(P)M1.MRES CPP MS")           # to be overwritten by MresSource
+    field(INPA, "$(PMAC):M1.MRES CPP MS")           # to be overwritten by MresSource
     field(CALC, "A")
-    field(OUT, "$(P)$(M):DirectDemand.ASLO NPP")
+    field(OUT, "$(PMAC):$(M):DirectDemand.ASLO NPP")
 }
 
-record(scalcout, "$(P)$(M):DirectOffset")
+record(scalcout, "$(PMAC):$(M):DirectOffset")
 {
     field(DTYP, "Soft Channel")
-    field(INPA, "$(P)M1.OFF CPP MS")            # to be overwritten by OffsetSource
+    field(INPA, "$(PMAC):M1.OFF CPP MS")            # to be overwritten by OffsetSource
     field(CALC, "A")
-    field(OUT, "$(P)$(M):DirectDemand.AOFF NPP")
+    field(OUT, "$(PMAC):$(M):DirectDemand.AOFF NPP")
 }
 
-record(scalcout, $(P)$(M):MresSource)
+record(scalcout, $(PMAC):$(M):MresSource)
 {
     field(DTYP, "Soft Channel")
-    field(INPA, "$(P)$(M):DirectMotorNumber")
-    field(CALC, "(PRINTF('$(P)M%d.MRES CPP',A))")
-    field(FLNK, "$(P)$(M):DirectMres")
-    field(OUT, "$(P)$(M):DirectMres.INPA CA")
+    field(INPA, "$(PMAC):$(M):DirectMotorNumber")
+    field(CALC, "(PRINTF('$(PMAC):M%d.MRES CPP',A))")
+    field(FLNK, "$(PMAC):$(M):DirectMres")
+    field(OUT, "$(PMAC):$(M):DirectMres.INPA CA")
 }
 
-record(scalcout, $(P)$(M):OffsetSource)
+record(scalcout, $(PMAC):$(M):OffsetSource)
 {
     field(DTYP, "Soft Channel")
-    field(INPA, "$(P)$(M):DirectMotorNumber")
-    field(CALC, "(PRINTF('$(P)M%d.OFF CPP',A))")
-    field(FLNK, "$(P)$(M):DirectOffset")
-    field(OUT, "$(P)$(M):DirectOffset.INPA CA")
+    field(INPA, "$(PMAC):$(M):DirectMotorNumber")
+    field(CALC, "(PRINTF('$(PMAC):M%d.OFF CPP',A))")
+    field(FLNK, "$(PMAC):$(M):DirectOffset")
+    field(OUT, "$(PMAC):$(M):DirectOffset.INPA CA")
 }
 
 
