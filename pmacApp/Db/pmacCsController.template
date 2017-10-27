@@ -8,12 +8,10 @@
 # 
 ##############################################################
 
-# % macro, PORT, The asyn port for the pmac controller
+# % macro, PORT, The asyn port for the pmac cs controller
 # % macro, P, PV Prefix - NOTE: For standard naming this should be the Geobrick Controller P
-# % macro, R, PV Suffix
-# % macro, CS, Coordinate System Number
+# % macro, R, PV Suffix - NOTE: for standard naming this should be CS1, CS2, etc.
 # % macro, TIMEOUT, Timeout for controller communication
-# % macro, CONTROLLER_P, The P prefix for the controller
 
 #
 # This associates an edm screen with the template
@@ -61,21 +59,21 @@ record(ai, "$(P)$(R)CsMoveTime_RBV")
 ##############################################################
 # Immediate demands for each CS motor
 ##############################################################
-substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)A, ADDR=1, DESC=CS Motor A"
+substitute "M=$(R)M1, ADDR=1, DESC=CS Motor A"
 include "pmacDirectMotor.template"
-substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)B, ADDR=2, DESC=CS Motor B"
+substitute "M=$(R)M2, ADDR=2, DESC=CS Motor B"
 include "pmacDirectMotor.template"
-substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)C, ADDR=3, DESC=CS Motor C"
+substitute "M=$(R)M3, ADDR=3, DESC=CS Motor C"
 include "pmacDirectMotor.template"
-substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)U, ADDR=4, DESC=CS Motor U"
+substitute "M=$(R)M4, ADDR=4, DESC=CS Motor U"
 include "pmacDirectMotor.template"
-substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)V, ADDR=5, DESC=CS Motor V"
+substitute "M=$(R)M5, ADDR=5, DESC=CS Motor V"
 include "pmacDirectMotor.template"
-substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)W, ADDR=6, DESC=CS Motor W"
+substitute "M=$(R)M6, ADDR=6, DESC=CS Motor W"
 include "pmacDirectMotor.template"
-substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)X, ADDR=7, DESC=CS Motor X"
+substitute "M=$(R)M7, ADDR=7, DESC=CS Motor X"
 include "pmacDirectMotor.template"
-substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)Y, ADDR=8, DESC=CS Motor Y"
+substitute "M=$(R)M8, ADDR=8, DESC=CS Motor Y"
 include "pmacDirectMotor.template"
-substitute "P=$(CONTROLLER_P):CS$(CS), M=$(R)Z, ADDR=9, DESC=CS Motor Z"
+substitute "M=$(R), ADDR=9, DESC=CS Motor Z"
 include "pmacDirectMotor.template"

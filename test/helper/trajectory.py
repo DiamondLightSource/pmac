@@ -67,8 +67,10 @@ class Trajectory:
         # setup and execute the scan
         ca.caput(PB + 'ProfilePointsToBuild', points)
         ca.caput(PB + 'ProfileNumPoints', points)
-        ca.caput(PB + 'ProfileCsName', 'CS3')
-        ca.caput(PB + 'ProfileBuild', 1)
+        ca.caput(PB + 'ProfileCsName', 'BRICK1.CS3')
+        ca.caput(PB + 'ProfileBuild', 1, wait=True, timeout=2)
+        assert(ca .caget(PB + 'ProfileBuildStatus_RBV') != 2)
+
         ca.caput(PB + 'ProfileExecute', 1, wait=True, timeout=30)
 
         test.assertEquals(

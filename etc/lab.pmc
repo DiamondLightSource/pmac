@@ -44,6 +44,9 @@ i5213,15,100=10   ; segmentation time (needed for lookahead)
 i5220,15,100=50   ; lookahead length (needed to limit max velocity to max set in CS)
 i5250,15,100=1    ; Enable kinematics
 
+
+i5250=0 ; disable kinematics for direct only CS 2
+
 OPEN PROG 10
 CLEAR
 LINEAR

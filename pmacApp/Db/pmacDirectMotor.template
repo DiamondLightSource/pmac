@@ -92,7 +92,7 @@ record(scalcout, $(P)$(M):MresSource)
 {
     field(DTYP, "Soft Channel")
     field(INPA, "$(P)$(M):DirectMotorNumber")
-    field(CALC, "PRINTF('$(P)M%d.MRES CPP MS',A)")
+    field(CALC, "(PRINTF('$(P)M%d.MRES CPP',A))")
     field(FLNK, "$(P)$(M):DirectMres")
     field(OUT, "$(P)$(M):DirectMres.INPA CA")
 }
@@ -101,7 +101,7 @@ record(scalcout, $(P)$(M):OffsetSource)
 {
     field(DTYP, "Soft Channel")
     field(INPA, "$(P)$(M):DirectMotorNumber")
-    field(CALC, "PRINTF('$(P)M%d.OFF CPP MS',A)")
+    field(CALC, "(PRINTF('$(P)M%d.OFF CPP',A))")
     field(FLNK, "$(P)$(M):DirectOffset")
     field(OUT, "$(P)$(M):DirectOffset.INPA CA")
 }

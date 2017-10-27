@@ -7,3 +7,7 @@ record(stringin, "$(P)$(M):CS_PORT_NAME") {
   field(DESC, "Port name for CS")
   field(VAL, "$(PORT)")
 }
+
+# add alias for standard CS axis name
+# CS_P and CS_R must be the same as P and R for the related pmacCsController.template
+alias($(P)$(M), $(CS_P)$(CS_R)M$(ADDR))

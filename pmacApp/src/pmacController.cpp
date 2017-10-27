@@ -53,6 +53,7 @@ const epicsUInt32 pmacController::PMAC_ERROR_ = 1;
 const epicsUInt32 pmacController::PMAC_FEEDRATE_DEADBAND_ = 1;
 const epicsInt32 pmacController::PMAC_CID_PMAC_ = 602413;
 const epicsInt32 pmacController::PMAC_CID_GEOBRICK_ = 603382;
+const epicsInt32 pmacController::PMAC_CID_CLIPPER_ = 602404;
 const epicsInt32 pmacController::PMAC_CID_POWER_ = 604020;
 
 const epicsUInt32 pmacController::PMAC_STATUS1_MAXRAPID_SPEED = (0x1 << 0);
@@ -516,7 +517,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setIntegerParam(PMAC_C_MediumStore_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_SlowStore_, 0) == asynSuccess) && paramStatus);
 
-  for(index=0; index<numAxes; index++) {
+  for(index=0; index<=numAxes; index++) {
     paramStatus = ((setIntegerParam(
             index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
   }
@@ -1067,7 +1068,8 @@ asynStatus pmacController::initialiseConnection() {
           pBroker_->markAsPowerPMAC();
           // set the echo to 7
           this->lowLevelWriteRead("echo 7", response);
-        } else if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_PMAC_) {
+        } else if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_PMAC_ ||
+                cid_ == PMAC_CID_CLIPPER_) {
           pHardware_ = new pmacHardwareTurbo();
         } else {
           // This is bad so output an error and return error status

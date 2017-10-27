@@ -542,6 +542,7 @@ private:
     static const epicsUInt32 PMAC_ERROR_;
     static const epicsInt32 PMAC_CID_PMAC_;
     static const epicsInt32 PMAC_CID_GEOBRICK_;
+    static const epicsInt32 PMAC_CID_CLIPPER_;
     static const epicsInt32 PMAC_CID_POWER_;
 
     static const epicsUInt32 PMAC_STATUS1_MAXRAPID_SPEED;

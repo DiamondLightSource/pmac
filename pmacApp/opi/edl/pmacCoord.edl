@@ -54,8 +54,8 @@ selectColor index 5
 inconsistentColor index 5
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(P)$(R):DeferMoves"
-indicatorPv "$(P)$(R):DeferMoves"
+controlPv "$(P)$(R)DeferMoves"
+indicatorPv "$(P)$(R)DeferMoves"
 font "helvetica-bold-r-14.0"
 orientation "horizontal"
 endObjectProperties
@@ -125,7 +125,7 @@ x 12
 y 124
 w 83
 h 33
-controlPv "$(P)$(R):CsMoveTime"
+controlPv "$(P)$(R)CsMoveTime"
 displayMode "decimal"
 precision 3
 fgColor index 25
@@ -145,7 +145,7 @@ x 108
 y 132
 w 76
 h 20
-controlPv "$(P)$(R):CsMoveTime_RBV"
+controlPv "$(P)$(R)CsMoveTime_RBV"
 displayMode "decimal"
 precision 3
 fgColor index 15
@@ -307,7 +307,7 @@ x 11
 y 188
 w 170
 h 31
-controlPv "$(P)$(R):A:DirectDemand"
+controlPv "$(P)$(R)M1:DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25
@@ -379,7 +379,7 @@ x 11
 y 247
 w 170
 h 31
-controlPv "$(P)$(R):B:DirectDemand"
+controlPv "$(P)$(R)M2:DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25
@@ -451,7 +451,7 @@ x 11
 y 307
 w 170
 h 31
-controlPv "$(P)$(R):C:DirectDemand"
+controlPv "$(P)$(R)M3:DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25
@@ -523,7 +523,7 @@ x 11
 y 367
 w 170
 h 31
-controlPv "$(P)$(R):U:DirectDemand"
+controlPv "$(P)$(R)M4:DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25
@@ -595,7 +595,7 @@ x 11
 y 427
 w 170
 h 31
-controlPv "$(P)$(R):V:DirectDemand"
+controlPv "$(P)$(R)M5:DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25
@@ -667,7 +667,7 @@ x 11
 y 486
 w 170
 h 31
-controlPv "$(P)$(R):W:DirectDemand"
+controlPv "$(P)$(R)M6:DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25
@@ -739,7 +739,7 @@ x 11
 y 545
 w 170
 h 31
-controlPv "$(P)$(R):X:DirectDemand"
+controlPv "$(P)$(R)M7:DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25
@@ -811,7 +811,7 @@ x 11
 y 605
 w 170
 h 31
-controlPv "$(P)$(R):Y:DirectDemand"
+controlPv "$(P)$(R)M8:DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25
@@ -883,7 +883,7 @@ x 13
 y 664
 w 170
 h 31
-controlPv "$(P)$(R):Z:DirectDemand"
+controlPv "$(P)$(R)M9:DirectDemand"
 displayMode "decimal"
 precision 3
 fgColor index 25

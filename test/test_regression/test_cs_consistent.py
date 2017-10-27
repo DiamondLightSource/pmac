@@ -2,7 +2,7 @@ from unittest import TestCase
 from cothread import catools as ca
 from test.helper.trajectory import Trajectory
 from test.helper.movemonitor import MoveMonitor
-from datetime import datetime, timedelta
+from datetime import datetime
 
 # these are test_regression tests for the set of issues that pmacController::makeCSDemandsConsistent
 # is trying to solve
@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 P = 'PMAC_BRICK_TEST:'
 PB = 'PMAC_BRICK_TEST:GB1:'
 CS3 = 'PMAC_BRICK_TEST:CS3:'
+DECIMALS = 6
 
 
 class TestMakeCsConsistent(TestCase):
@@ -56,13 +57,13 @@ class TestMakeCsConsistent(TestCase):
         ca.caput(PB+'SendCmd', '#3J:1000', datatype=ca.DBR_CHAR_STR)
         monitor.wait_for_one_move(5)
         # this should make Height 1.5mm
-        self.assertEquals(ca.caget(P+'X_CS3.RBV'), 1.5)
+        self.assertAlmostEqual(ca.caget(P+'X_CS3.RBV'), 1.5, DECIMALS)
 
         # now move Angle
         ca.caput(P+'Y_CS3', 1, wait=True, timeout=5)
-        self.assertEquals(ca.caget(P+'Y_CS3.RBV'), 1)
+        self.assertAlmostEqual(ca.caget(P+'Y_CS3.RBV'), 1, DECIMALS)
         # Height should return to 1
-        self.assertEquals(ca.caget(P+'X_CS3.RBV'), 1)
+        self.assertAlmostEqual(ca.caget(P+'X_CS3.RBV'), 1, DECIMALS)
 
     def test_direct_axis_creep(self):
         """
@@ -89,9 +90,9 @@ class TestMakeCsConsistent(TestCase):
 
         # now move the CS axis Height
         ca.caput(P+'X_CS3', cs_move, wait=True, timeout=30)
-        self.assertAlmostEqual(ca.caget(P+'X_CS3.RBV'), cs_move)
+        self.assertAlmostEqual(ca.caget(P+'X_CS3.RBV'), cs_move, DECIMALS)
         # Axis 1 should return to 0
-        self.assertEquals(ca.caget(P+'M1.RBV'), 0)
+        self.assertAlmostEqual(ca.caget(P+'M1.RBV'), 0, DECIMALS)
 
     def test_very_slow_moves(self):
         """
@@ -114,6 +115,6 @@ class TestMakeCsConsistent(TestCase):
         # make a CS move and make sure it happens quickly enough
         then = datetime.now()
         ca.caput(P+'X_CS3', 1, wait=True, timeout=5)
-        self.assertEquals(ca.caget(P+'X_CS3.RBV'), 1)
+        self.assertAlmostEqual(ca.caget(P+'X_CS3.RBV'), 1, DECIMALS)
         elapsed = datetime.now() - then
         self.assertFalse(elapsed.seconds > 2)

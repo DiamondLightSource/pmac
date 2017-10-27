@@ -167,9 +167,14 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   bool paramStatus = true;
   createParam(PMAC_CS_FirstParamString, asynParamInt32, &PMAC_CS_FirstParam_);
   createParam(PMAC_CS_CsMoveTimeString, asynParamFloat64, &PMAC_CS_CsMoveTime_);
+  createParam(PMAC_CS_RealMotorNumberString, asynParamInt32, &PMAC_CS_RealMotorNumber_);
   createParam(PMAC_CS_LastParamString, asynParamInt32, &PMAC_CS_LastParam_);
 
   paramStatus = ((setDoubleParam(PMAC_CS_CsMoveTime_, csMoveTime_) == asynSuccess) && paramStatus);
+  for(int index=0; index<PMAC_CS_AXES_COUNT; index++) {
+    paramStatus = ((setIntegerParam(
+            index, PMAC_CS_RealMotorNumber_, 0) == asynSuccess) && paramStatus);
+  }
 
   if (!paramStatus) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
