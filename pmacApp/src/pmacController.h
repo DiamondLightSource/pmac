@@ -84,7 +84,9 @@
 #define PMAC_C_ReportFastString           "PMAC_C_REPORT_FAST"
 #define PMAC_C_ReportMediumString         "PMAC_C_REPORT_MEDIUM"
 #define PMAC_C_ReportSlowString           "PMAC_C_REPORT_SLOW"
+// the following 2 parameters are axis parameters for both pmacController and pmacCSController
 #define PMAC_C_RealMotorNumberString      "PMAC_REAL_MOTOR_NUMBER"
+#define PMAC_C_MotorScaleString           "PMAC_MOTOR_SCALE"
 
 #define PMAC_C_ProfileUseAxisAString      "PROFILE_USE_AXIS_A"
 #define PMAC_C_ProfileUseAxisBString      "PROFILE_USE_AXIS_B"
@@ -333,6 +335,8 @@ public:
 
     asynStatus executeManualGroup();
 
+    asynStatus updateCsAssignmentParameters();
+
     asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
 
     asynStatus tScanIncludedAxes(int *axisMask);
@@ -456,6 +460,7 @@ protected:
     int PMAC_C_ReportMedium_;
     int PMAC_C_ReportSlow_;
     int PMAC_C_RealMotorNumber_;
+    int PMAC_C_MotorScale_;
     int PMAC_C_ForwardKinematic_[PMAC_MAX_CS];
     int PMAC_C_InverseKinematic_[PMAC_MAX_CS];
     int PMAC_C_LastParam_;

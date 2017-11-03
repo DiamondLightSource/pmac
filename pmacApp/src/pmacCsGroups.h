@@ -37,10 +37,6 @@ public:
 
     asynStatus clearCurrentGroup();
 
-    asynStatus processDeferredCoordMoves(void);
-
-    asynStatus abortMotion(int axis);
-
     asynStatus manualGroup(const std::string &groupDef);
 
     asynStatus redefineLookaheads();

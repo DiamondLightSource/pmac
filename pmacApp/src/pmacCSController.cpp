@@ -168,12 +168,14 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   createParam(PMAC_CS_FirstParamString, asynParamInt32, &PMAC_CS_FirstParam_);
   createParam(PMAC_CS_CsMoveTimeString, asynParamFloat64, &PMAC_CS_CsMoveTime_);
   createParam(PMAC_CS_RealMotorNumberString, asynParamInt32, &PMAC_CS_RealMotorNumber_);
+  createParam(PMAC_CS_MotorScaleString, asynParamInt32, &PMAC_CS_MotorScale_);
   createParam(PMAC_CS_LastParamString, asynParamInt32, &PMAC_CS_LastParam_);
-
   paramStatus = ((setDoubleParam(PMAC_CS_CsMoveTime_, csMoveTime_) == asynSuccess) && paramStatus);
-  for(int index=0; index<PMAC_CS_AXES_COUNT; index++) {
+  for(int index=0; index<=PMAC_CS_AXES_COUNT; index++) {
     paramStatus = ((setIntegerParam(
             index, PMAC_CS_RealMotorNumber_, 0) == asynSuccess) && paramStatus);
+    paramStatus = ((setIntegerParam(
+            index, PMAC_CS_MotorScale_, 10000)  == asynSuccess) &&paramStatus);
   }
 
   if (!paramStatus) {
@@ -513,6 +515,7 @@ asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale) {
   pA = getAxis(axis);
   if (pA) {
     pA->scale_ = scale;
+    setIntegerParam(axis, PMAC_CS_MotorScale_, scale);
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
               "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
               functionName, pA->scale_, pA->axisNo_, portName);
@@ -531,6 +534,29 @@ asynStatus pmacCSController::wakeupPoller() {
   // We need to wake up the real motor controller polling task
   return ((pmacController *) pC_)->wakeupPoller();
 }
+
+
+/**
+ * Set the real axis number that this virtual axis is directly mapped to
+ * This should be zero if there is no direct mapping
+ *
+ * @param axis Axis number to set the PMAC axis scale factor.
+ * @param mappedAxis the real axis this is mapped tp
+ */
+asynStatus pmacCSController::pmacCSSetAxisDirectMapping(int axis, int mappedAxis) {
+  asynStatus status;
+  static const char *functionName = "pmacCSSetAxisDirectMapping";
+
+  debug(DEBUG_TRACE, functionName);
+
+  this->lock();
+  status = setIntegerParam(axis, PMAC_CS_RealMotorNumber_, mappedAxis);
+  this->unlock();
+
+  callParamCallbacks();
+  return status;
+}
+
 
 /*************************************************************************************/
 /** The following functions have C linkage, and can be called directly or from iocsh */
@@ -637,7 +663,6 @@ asynStatus pmacCSSetAxisScale(const char *pmacCSName, int axis, int scale) {
 
   return pC->pmacSetAxisScale(axis, scale);
 }
-
 
 /* Code for iocsh registration */
 

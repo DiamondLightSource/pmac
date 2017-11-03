@@ -7,7 +7,6 @@ include "eloss_kill_autohome_records.template"
 alias($(P)$(M), $(PMAC):M$(ADDR))
 alias($(P)$(M):ADDR, $(PMAC):M$(ADDR):ADDR)
 alias($(P)$(M):PORT, $(PMAC):M$(ADDR):PORT)
-alias($(P)$(M):SCALE, $(PMAC):M$(ADDR):SCALE)
 alias($(P)$(M):USER:SDIS, $(PMAC)M$(ADDR):USER:SDIS)
 alias($(P)$(M):SDIS, $(PMAC):M$(ADDR):SDIS)
 alias($(P)$(M):KILL, $(PMAC):M$(ADDR):KILL)

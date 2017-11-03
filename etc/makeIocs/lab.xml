@@ -46,4 +46,6 @@
 	<pmac.pmacDisableLimitsCheck Axis="7" Controller="Brick"/>
 	<pmac.pmacDisableLimitsCheck Axis="8" Controller="Brick"/>
 	<pmac.autohome GRP2="Axis1" P="PMAC_BRICK_TEST" PLC="10" PORT="Brick" name="HOME"/>
+	<pmac.pmacSetCoordStepsPerUnit Axis="1" CS="CS2" Scale="1000"/>
+	<pmac.pmacSetCoordStepsPerUnit Axis="2" CS="CS2" Scale="100"/>
 </components>

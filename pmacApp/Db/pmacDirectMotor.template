@@ -17,7 +17,7 @@
 # % macro, ADDR, The asyn address (real or CS axis number)
 # % macro, DESC, Description
 # % macro, PMAC, PV Prefix for the motor controller
-# % macro, M, Motor PV suffix (CSx:My for CS axes)
+# % macro, M, Motor PV suffix ('Mx' for real and 'CSx:My' for CS axes)
 
 ##############################################################
 # Set immediate demand for this motor
@@ -37,6 +37,15 @@ record(ao, "$(PMAC):$(M):RawDirectDemand")
     field(DTYP, "asynFloat64")
     field(OUT,  "@asyn($(PORT),$(ADDR),4)MOTOR_MOVE_ABS")
     field(DESC, "$(DESC)")
+}
+
+# record that holds the SCALE
+# this overrides the definition in basic_asyn_motor.template and connects it to the asyn parameter
+# that tracks the scale factor in the driver. This is set by calling
+# pmacSetAxisScale (for CS axes this function is exposed to startup via pmacSetCoordStepsPerUnit)
+record(ao, "$(PMAC):$(M):SCALE") {
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_MOTOR_SCALE")
 }
 
 ##############################################################
@@ -71,7 +80,8 @@ record(scalcout, "$(PMAC):$(M):DirectMres")
 {
     field(DTYP, "Soft Channel")
     field(INPA, "$(PMAC):M1.MRES CPP MS")           # to be overwritten by MresSource
-    field(CALC, "A")
+    field(INPB, "$(PMAC):$(M):SCALE CPP MS")
+    field(CALC, "A/B")
     field(OUT, "$(PMAC):$(M):DirectDemand.ASLO NPP")
 }
 

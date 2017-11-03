@@ -66,6 +66,9 @@ pmacAsynMotorPort_SRCS += pmacHardwarePower.cpp
 pmacAsynMotorPort_SRCS += pmacCallbackStore.cpp
 pmacAsynMotorPort_SRCS += pmacCallbackInterface.cpp
 
+# do debug build
+pmacAsynMotorPort_CXXFLAGS= -g
+
 # specify all source files to be compiled and added to the library
 #pmac_SRCS += xxx
 

@@ -409,6 +409,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_ReportMediumString, asynParamInt32, &PMAC_C_ReportMedium_);
   createParam(PMAC_C_ReportSlowString, asynParamInt32, &PMAC_C_ReportSlow_);
   createParam(PMAC_C_RealMotorNumberString, asynParamInt32, &PMAC_C_RealMotorNumber_);
+  createParam(PMAC_C_MotorScaleString, asynParamInt32, &PMAC_C_MotorScale_);
+
   for (index = 0; index < PMAC_MAX_CS; index++) {
     createParam(PMAC_C_ForwardKinematicString[index], asynParamOctet,
                 &PMAC_C_ForwardKinematic_[index]);
@@ -520,6 +522,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   for(index=0; index<=numAxes; index++) {
     paramStatus = ((setIntegerParam(
             index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
+    paramStatus = ((setIntegerParam(
+            index, PMAC_C_MotorScale_, 1)  == asynSuccess) &&paramStatus);
   }
 
   callParamCallbacks();
@@ -1549,8 +1553,6 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   std::string trajBufPtr = "";
   static const char *functionName = "getGlobalStatus";
 
-
-
   // Read the current trajectory status from the PMAC
   trajBufPtr = sPtr->readValue(PMAC_TRAJ_STATUS);
   if (trajBufPtr == "") {
@@ -2140,6 +2142,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     this->movesDeferred_ = value;
   } else if (function == PMAC_C_CoordSysGroup_) {
     status = (pGroupList->switchToGroup(value) == asynSuccess) && status;
+    updateCsAssignmentParameters();
   } else if (pWriteParams_->hasKey(*name)) {
     // This is an integer write of a parameter, so send the immediate write/read
     sprintf(command, "%s=%d", pWriteParams_->lookup(*name).c_str(), value);
@@ -3448,6 +3451,7 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale) {
   pA = getAxis(axis);
   if (pA) {
     pA->scale_ = scale;
+    setIntegerParam(axis, PMAC_C_MotorScale_, scale);
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
               "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
               functionName, pA->scale_, pA->axisNo_, portName);
@@ -3582,7 +3586,14 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                   // Set the qvars assigned flag and send the relevant demand position
                   qvars_assigned = qvars_assigned | 1 << csAxisAssignmentNo;
                   debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
-                  sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getCachedPosition());
+                  if (this->csGroupSwitchCalled_ ) {
+                    sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getPosition());
+                    printf("actual %s\n", command);
+                  }
+                  else {
+                    sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getCachedPosition());
+                    printf("cached %s\n", command);
+                  }
                   debug(DEBUG_TRACE, functionName, "Sending command", command);
                   if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
                     debug(DEBUG_ERROR, functionName, "Failed to send command", command);
@@ -3872,6 +3883,9 @@ asynStatus pmacController::executeManualGroup() {
       getIntegerParam(axis, PMAC_C_GroupCSPort_, &csPort);
       debug(DEBUG_VARIABLE, functionName, "csPort", csPort);
       if (csPort > 0) {
+        // todo check with Alan what is going on here - csPort is the index to Port Name but
+        // todo pCSControllers_ is indexed by csNo isn't it???
+        // todo - these are likely the same IFF you define CS in order with no gaps from 1
         csPortName = pCSControllers_[csPort]->getPortName();
         debug(DEBUG_VARIABLE, functionName, "Port name to look up", csPortName);
         if (strcmp(csPortName.c_str(), "")) {
@@ -3894,6 +3908,27 @@ asynStatus pmacController::executeManualGroup() {
   // Execute the manual assignment
   status = pGroupList->manualGroup(cmd);
 
+  updateCsAssignmentParameters();
+
+  return status;
+}
+
+/**
+ * update the parameters for the controller and coordinate system axes
+ * to reflect the actual mappings on the pmac. Called every time the coordinate system
+ * mappings are altered. Must be called with the lock
+ *
+ * @return status, asynSuccess if the function succeeds
+ *
+ */
+asynStatus pmacController::updateCsAssignmentParameters() {
+  asynStatus status = asynSuccess;
+  int csNo = 0;
+  char csAssignment[MAX_STRING_SIZE];
+  std::string axesString = "ABCUVWXYZ";
+  static const char *functionName = "updateCsAssignmentParameters";
+
+  debug(DEBUG_TRACE, functionName);
   // Force updates of the fast loop to pickup any new CS numbers
   pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
   // Force two updates of the medium loop to pickup any new axis assignments
@@ -3902,6 +3937,37 @@ asynStatus pmacController::executeManualGroup() {
   // The second update picks up the assigned axis values for each motor
   pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
 
+  callParamCallbacks();
+
+  // reset all CS axes RealMotor assignments before scanning real axes for current assignments
+  for (csNo=1; csNo<PMAC_MAX_CS; csNo++) {
+    pmacCSController* pCS = pCSControllers_[csNo];
+    if(pCS != NULL) {
+      for(int csAxis = 1; csAxis <= 9; csAxis++) {
+        pCS->pmacCSSetAxisDirectMapping(csAxis, 0);
+      }
+    }
+  }
+
+  // Loop over each axis, collecting CS based information
+  for (int axis = 1; axis <= this->numAxes_; axis++) {
+    if (this->getAxis(axis) != NULL) {
+      // Read the current CS port name for this axis
+      getIntegerParam(axis, PMAC_C_AxisCS_, &csNo);
+      if (csNo > 0) {
+        getStringParam(axis, PMAC_C_GroupAssignRBV_, MAX_STRING_SIZE, csAssignment);
+        // determine if the assignment is a direct mapping to one of ABCUVWXYZ
+        unsigned long uCsAxisNo = axesString.find(csAssignment);
+        if (uCsAxisNo != std::string::npos) {
+          // there is a direct mapping, tell the CS axis it has this mapping
+          int csAxisAssignmentNo = (int) uCsAxisNo + 1;
+          pCSControllers_[csNo]->pmacCSSetAxisDirectMapping(csAxisAssignmentNo, axis);
+        }
+      }
+    }
+  }
+
+  callParamCallbacks();
   return status;
 }
 
