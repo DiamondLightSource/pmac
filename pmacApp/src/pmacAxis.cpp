@@ -203,6 +203,8 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
+  setIntegerParam(pC_->motorStatusMoving_, true);
+
   char acc_buff[PMAC_MAXBUF] = {0};
   char vel_buff[PMAC_MAXBUF] = {0};
   char command[PMAC_MAXBUF] = {0};

@@ -62,6 +62,8 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
   char commandtemp[128];
   double deviceUnits = 0.0;
 
+  setIntegerParam(pC_->motorStatusMoving_, true);
+
   // Make any CS demands consistent with this move
   if (pC_->movesDeferred_ == 0) {
     pC_->makeCSDemandsConsistent();

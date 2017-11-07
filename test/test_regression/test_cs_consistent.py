@@ -74,6 +74,10 @@ class TestMakeCsConsistent(TestCase):
             that are not being demanded in this move. i.e. jitter does not accumulate in CS axes
             that are not being demanded.
 
+            This test is the same as test_kinematic_axis_creep except that the initial move and
+            position verification is via real axes. This did raise an interesting
+            issue not seen in the previous test. See comment NOTE below
+
         :return: None
         """
         move = 10
@@ -83,7 +87,7 @@ class TestMakeCsConsistent(TestCase):
         # the first CS move after a coord sys group switch clears the cached real motor positions
         # so this test must do that initial CS move here
         ca.caput(PCS3 + 'X', 0, wait=True, timeout=30)
-        # the above is a little artificial and masks an very minor issue: any axis creep that occurs
+        # NOTE: the above is a little artificial and masks an very minor issue: any axis creep that occurs
         # between changing coordinate system mappings and the first CS move will be kept - fixing
         # this would require
 

@@ -35,9 +35,28 @@ record(ao, "$(PMAC):$(M):DirectDemand")
 record(ao, "$(PMAC):$(M):RawDirectDemand")
 {
     field(DTYP, "asynFloat64")
+    field(FLNK, "$(PMAC):$(M):DirectMotorSeq")
     field(OUT,  "@asyn($(PORT),$(ADDR),4)MOTOR_MOVE_ABS")
     field(DESC, "$(DESC)")
 }
+
+# busy record to make ca_put_callback return only once the motor is done moving
+record(seq, "$(PMAC):$(M):DirectMotorSeq")
+{
+    field(LNK1, "$(PMAC):$(M):DirectMotorBusy PP")
+    field(DO1, "1")
+}
+
+record(busy, "$(PMAC):$(M):DirectMotorBusy")
+{
+   field(DTYP, "asynInt32")
+   field(OUT, "@asyn($(PORT),$(ADDR),4)MOTOR_STATUS_MOVING")
+   field(ZNAM, "Idle")
+   field(ONAM, "Moving")
+   field(PINI, "1")
+   field(VAL,  "0")
+}
+
 
 # record that holds the SCALE
 # this overrides the definition in basic_asyn_motor.template and connects it to the asyn parameter

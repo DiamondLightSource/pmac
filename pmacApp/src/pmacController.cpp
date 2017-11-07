@@ -3588,11 +3588,9 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                   debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
                   if (this->csGroupSwitchCalled_ ) {
                     sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getPosition());
-                    printf("actual %s\n", command);
                   }
                   else {
                     sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getCachedPosition());
-                    printf("cached %s\n", command);
                   }
                   debug(DEBUG_TRACE, functionName, "Sending command", command);
                   if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
