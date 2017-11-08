@@ -95,6 +95,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   lastTimeSecs_ = 0.0;
   printNextError_ = false;
   moving_ = false;
+  movingStatusWasSet_ = false;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
@@ -204,6 +205,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   setIntegerParam(pC_->motorStatusMoving_, true);
+  movingStatusWasSet_ = 1;
 
   char acc_buff[PMAC_MAXBUF] = {0};
   char vel_buff[PMAC_MAXBUF] = {0};
@@ -651,8 +653,10 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
     setIntegerParam(pC_->motorStatusDone_, axStatus.done_);
     setIntegerParam(pC_->motorStatusHighLimit_, axStatus.highLimit_);
     setIntegerParam(pC_->motorStatusHomed_, axStatus.home_);
-    // If desired_vel_zero is false && motor activated (ix00=1) && amplifier enabled, set moving=1.
-    setIntegerParam(pC_->motorStatusMoving_, axStatus.moving_);
+    if (!movingStatusWasSet_) {
+      setIntegerParam(pC_->motorStatusMoving_, axStatus.moving_);
+    }
+    movingStatusWasSet_ = 0;
     setIntegerParam(pC_->motorStatusLowLimit_, axStatus.lowLimit_);
     setIntegerParam(pC_->motorStatusFollowingError_, axStatus.followingError_);
     fatal_following_ = axStatus.followingError_;

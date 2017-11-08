@@ -63,6 +63,7 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
   double deviceUnits = 0.0;
 
   setIntegerParam(pC_->motorStatusMoving_, true);
+  movingStatusWasSet_ = 1;
 
   // Make any CS demands consistent with this move
   if (pC_->movesDeferred_ == 0) {
@@ -250,7 +251,10 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   setIntegerParam(pC_->motorStatusDone_, done);
   setIntegerParam(pC_->motorStatusHighLimit_, cStatus.highLimit_);
   setIntegerParam(pC_->motorStatusHomed_, homeSignal);
-  setIntegerParam(pC_->motorStatusMoving_, cStatus.moving_);
+  if( movingStatusWasSet_) {
+    setIntegerParam(pC_->motorStatusMoving_, cStatus.moving_);
+  }
+  movingStatusWasSet_ = 1;
   setIntegerParam(pC_->motorStatusLowLimit_, cStatus.lowLimit_);
   setIntegerParam(pC_->motorStatusFollowingError_, cStatus.followingError_);
   setIntegerParam(pC_->motorStatusProblem_, cStatus.problem_);

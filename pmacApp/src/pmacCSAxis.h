@@ -55,6 +55,7 @@ private:
     epicsFloat64 lastTimeSecs_;
     bool printNextError_;
     bool moving_; // only valid within poll time - used as a hint for validating deferred coordinated moves
+    bool movingStatusWasSet_;
 
     friend class pmacCSController;
 
