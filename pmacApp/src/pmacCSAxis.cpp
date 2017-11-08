@@ -251,10 +251,10 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   setIntegerParam(pC_->motorStatusDone_, done);
   setIntegerParam(pC_->motorStatusHighLimit_, cStatus.highLimit_);
   setIntegerParam(pC_->motorStatusHomed_, homeSignal);
-  if( movingStatusWasSet_) {
+  if(!movingStatusWasSet_) {
     setIntegerParam(pC_->motorStatusMoving_, cStatus.moving_);
   }
-  movingStatusWasSet_ = 1;
+  movingStatusWasSet_ = 0;
   setIntegerParam(pC_->motorStatusLowLimit_, cStatus.lowLimit_);
   setIntegerParam(pC_->motorStatusFollowingError_, cStatus.followingError_);
   setIntegerParam(pC_->motorStatusProblem_, cStatus.problem_);
