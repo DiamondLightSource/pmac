@@ -22,6 +22,18 @@
 #include "pmacDebugger.h"
 #include "pmacHardwareInterface.h"
 
+// asyn parameter strings
+#define PMAC_CS_FirstParamString           "PMAC_CS_FIRSTPARAM"
+#define PMAC_CS_LastParamString            "PMAC_CS_LASTPARAM"
+#define PMAC_CS_CsMoveTimeString           "PMAC_C_CS_MOVE_TIME"
+#define PMAC_CS_CsMoveTimeString           "PMAC_C_CS_MOVE_TIME"
+// the following 2 parameters are axis parameters for both pmacController and pmacCSController
+#define PMAC_CS_RealMotorNumberString      "PMAC_REAL_MOTOR_NUMBER"
+#define PMAC_CS_MotorScaleString           "PMAC_MOTOR_SCALE"
+
+#define PMAC_CS_MAXBUF 1024
+#define PMAC_CS_AXES_COUNT 9
+
 class pmacCSController
         : public asynMotorController, public pmacCallbackInterface, public pmacDebugger {
 
@@ -33,6 +45,8 @@ public:
     std::string getPortName();
 
     asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
+
+    asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
 
     void setDebugLevel(int level, int axis);
 
@@ -73,11 +87,16 @@ public:
 
     asynStatus wakeupPoller();
 
+    asynStatus pmacCSSetAxisDirectMapping(int axis, int mappedAxis);
+
 protected:
     pmacCSAxis **pAxes_; // Array of pointers to axis objects
 
     int PMAC_CS_FirstParam_;
 #define FIRST_PMAC_CS_PARAM PMAC_CS_FirstParam_
+    int PMAC_CS_CsMoveTime_;
+    int PMAC_CS_RealMotorNumber_;
+    int PMAC_CS_MotorScale_;
     int PMAC_CS_LastParam_;
 #define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_
 
@@ -89,6 +108,12 @@ private:
     int status_[3];
     csStatus cStatus_;
     void *pC_;
+    // csMoveTime_ defines how long a programmed move takes. The value of this parameter is always
+    // put into Q70 before a call to PROG10 on the brick. A value of 0 means that the motion
+    // will execute as fast as possible and the slowest motor will determine the time.
+    // A value of -1 (default) means that the default CS move time is used this is the legacy
+    // behaviour in which the VELO parameters of the CS motors are used
+    double csMoveTime_;
 
     asynStatus processDeferredMoves(void);
 

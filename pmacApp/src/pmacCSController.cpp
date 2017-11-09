@@ -133,7 +133,7 @@ const epicsUInt32 pmacCSController::CS_STATUS3_LIMIT = (0x1 << 1);
  */
 pmacCSController::pmacCSController(const char *portName, const char *controllerPortName, int csNo,
                                    int program)
-        : asynMotorController(portName, 10, NUM_MOTOR_DRIVER_PARAMS + NUM_PMAC_CS_PARAMS,
+        : asynMotorController(portName, 10, (int)NUM_MOTOR_DRIVER_PARAMS + (int)NUM_PMAC_CS_PARAMS,
                               asynInt32ArrayMask, // For user mode and velocity mode
                               0, // No addition interrupt interfaces
                               ASYN_CANBLOCK | ASYN_MULTIDEVICE,
@@ -143,7 +143,8 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
           portName_(portName),
           csNumber_(csNo),
           progNumber_(program),
-          movesDeferred_(0) {
+          movesDeferred_(0),
+          csMoveTime_(-1) {
   asynStatus status = asynSuccess;
   static const char *functionName = "pmacCSController";
 
@@ -160,6 +161,26 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   if (!pC_) {
     debug(DEBUG_ERROR, functionName, "ERROR port not found", controllerPortName);
     status = asynError;
+  }
+
+  //Create controller-specific parameters
+  bool paramStatus = true;
+  createParam(PMAC_CS_FirstParamString, asynParamInt32, &PMAC_CS_FirstParam_);
+  createParam(PMAC_CS_CsMoveTimeString, asynParamFloat64, &PMAC_CS_CsMoveTime_);
+  createParam(PMAC_CS_RealMotorNumberString, asynParamInt32, &PMAC_CS_RealMotorNumber_);
+  createParam(PMAC_CS_MotorScaleString, asynParamInt32, &PMAC_CS_MotorScale_);
+  createParam(PMAC_CS_LastParamString, asynParamInt32, &PMAC_CS_LastParam_);
+  paramStatus = ((setDoubleParam(PMAC_CS_CsMoveTime_, csMoveTime_) == asynSuccess) && paramStatus);
+  for(int index=0; index<=PMAC_CS_AXES_COUNT; index++) {
+    paramStatus = ((setIntegerParam(
+            index, PMAC_CS_RealMotorNumber_, 0) == asynSuccess) && paramStatus);
+    paramStatus = ((setIntegerParam(
+            index, PMAC_CS_MotorScale_, 10000)  == asynSuccess) &&paramStatus);
+  }
+
+  if (!paramStatus) {
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+              "%s Unable To Set Driver Parameters In Constructor.\n", functionName);
   }
 
   // Registration with the main controller. Register this coordinate system
@@ -219,6 +240,44 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   return asynSuccess;
 }
 
+/**
+ * Deal with controller specific epicsInt32 params.
+ * @param pasynUser
+ * @param value
+ * @param asynStatus
+ */
+asynStatus pmacCSController::writeFloat64(asynUser *pasynUser, epicsFloat64 value) {
+  int function = pasynUser->reason;
+  bool status = true;
+  pmacCSAxis *pAxis = NULL;
+  const char *name[128];
+  static const char *functionName = "writeFloat64";
+  char command[PMAC_CS_MAXBUF] = {0};
+  char response[PMAC_CS_MAXBUF] = {0};
+
+  debug(DEBUG_TRACE, functionName);
+
+  getParamName(function, name);
+  debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
+  pAxis = this->getAxis(pasynUser);
+  if (!pAxis) {
+    return asynError;
+  }
+
+  if ((function == PMAC_CS_CsMoveTime_) ) {
+    csMoveTime_ = value;
+    sprintf(command, "&%dQ70=%f",csNumber_, value);
+    debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
+    status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+  }
+
+  //Call base class method. This will handle callCallbacks even if the function was handled here.
+  status = (asynMotorController::writeFloat64(pasynUser, value) == asynSuccess) && status;
+
+  return status ? asynSuccess : asynError;
+}
+
+
 asynStatus pmacCSController::processDeferredMoves(void) {
   asynStatus status = asynSuccess;
   char abort[PMAC_MAXBUF] = {0};
@@ -250,7 +309,8 @@ asynStatus pmacCSController::processDeferredMoves(void) {
       sprintf(abort, "&%dE", this->getCSNumber());
       status = this->immediateWriteRead(abort, response);
 
-      sprintf(fullCommand, "&%d%s B%dR", this->getCSNumber(), command, this->getProgramNumber());
+      sprintf(fullCommand, "&%d%s Q70=%f B%dR", this->getCSNumber(), command, this->csMoveTime_,
+              this->getProgramNumber());
       debug(DEBUG_TRACE, functionName, "Sending command to PMAC", fullCommand);
       status = this->immediateWriteRead(fullCommand, response);
     }
@@ -455,6 +515,7 @@ asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale) {
   pA = getAxis(axis);
   if (pA) {
     pA->scale_ = scale;
+    setIntegerParam(axis, PMAC_CS_MotorScale_, scale);
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
               "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
               functionName, pA->scale_, pA->axisNo_, portName);
@@ -473,6 +534,29 @@ asynStatus pmacCSController::wakeupPoller() {
   // We need to wake up the real motor controller polling task
   return ((pmacController *) pC_)->wakeupPoller();
 }
+
+
+/**
+ * Set the real axis number that this virtual axis is directly mapped to
+ * This should be zero if there is no direct mapping
+ *
+ * @param axis Axis number to set the PMAC axis scale factor.
+ * @param mappedAxis the real axis this is mapped tp
+ */
+asynStatus pmacCSController::pmacCSSetAxisDirectMapping(int axis, int mappedAxis) {
+  asynStatus status;
+  static const char *functionName = "pmacCSSetAxisDirectMapping";
+
+  debug(DEBUG_TRACE, functionName);
+
+  this->lock();
+  status = setIntegerParam(axis, PMAC_CS_RealMotorNumber_, mappedAxis);
+  this->unlock();
+
+  callParamCallbacks();
+  return status;
+}
+
 
 /*************************************************************************************/
 /** The following functions have C linkage, and can be called directly or from iocsh */
@@ -579,7 +663,6 @@ asynStatus pmacCSSetAxisScale(const char *pmacCSName, int axis, int scale) {
 
   return pC->pmacSetAxisScale(axis, scale);
 }
-
 
 /* Code for iocsh registration */
 

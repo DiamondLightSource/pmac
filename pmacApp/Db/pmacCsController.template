@@ -1,0 +1,79 @@
+##############################################################
+#
+# Records to read asynPortDriver parameters from the param
+# library for the class pmacCsController.
+#
+# The Asyn address is set as zero because that's what we use 
+# for controller parameters.
+# 
+##############################################################
+
+# % macro, PORT, The asyn port for the pmac cs controller
+# % macro, TIMEOUT, Timeout for controller communication
+# % macro, PMAC, PV Prefix for the motor controller
+# % macro, CS, Coordinate System Number for the cs controller
+
+#
+# This associates an edm screen with the template
+# % gui, $(PORT), edm, pmacCoord.edl, device=$(PMAC):CS$(CS):
+#
+
+
+##############################################################
+# Control deferred mode for all axes in this CS
+##############################################################
+record(bo, "$(PMAC):CS$(CS):DeferMoves")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+    field(VAL, "0")
+    field(ZNAM, "Defer Off")
+    field(ONAM, "Defer On")
+}
+
+
+##############################################################
+# Control the time of programmed moves
+# 0 = fast as possible
+# -1 = controlled by CS default feedrate isx89
+# >0 = take at least this many milli-secs to move
+##############################################################
+# % autosave 2
+record(ao, "$(PMAC):CS$(CS):CsMoveTime")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_CS_MOVE_TIME")
+    field(VAL, "-1")
+}
+
+record(ai, "$(PMAC):CS$(CS):CsMoveTime_RBV")
+{
+    field(DTYP, "asynFloat64")
+    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_CS_MOVE_TIME")
+    field(SCAN, "I/O Intr")
+}
+
+
+##############################################################
+# Immediate demands for each CS motor
+##############################################################
+substitute "P=$(PMAC), M=CS$(CS):M1, ADDR=1, DESC=CS Motor A"
+include "pmacDirectMotor.template"
+substitute "P=$(PMAC), M=CS$(CS):M2, ADDR=2, DESC=CS Motor B"
+include "pmacDirectMotor.template"
+substitute "P=$(PMAC), M=CS$(CS):M3, ADDR=3, DESC=CS Motor C"
+include "pmacDirectMotor.template"
+substitute "P=$(PMAC), M=CS$(CS):M4, ADDR=4, DESC=CS Motor U"
+include "pmacDirectMotor.template"
+substitute "P=$(PMAC), M=CS$(CS):M5, ADDR=5, DESC=CS Motor V"
+include "pmacDirectMotor.template"
+substitute "P=$(PMAC), M=CS$(CS):M6, ADDR=6, DESC=CS Motor W"
+include "pmacDirectMotor.template"
+substitute "P=$(PMAC), M=CS$(CS):M7, ADDR=7, DESC=CS Motor X"
+include "pmacDirectMotor.template"
+substitute "P=$(PMAC), M=CS$(CS):M8, ADDR=8, DESC=CS Motor Y"
+include "pmacDirectMotor.template"
+substitute "P=$(PMAC), M=CS$(CS):M9, ADDR=9, DESC=CS Motor Z"
+include "pmacDirectMotor.template"

@@ -1,5 +1,8 @@
-# Placeholder for dls CS axes. Specific records can be added to 
-# this template if necessary.
+# A Coordinate system axis.
+
+# macros listed here are those not described in basic_asyn_motor.template
+# % macro, PMAC, The P prefix for the motor controller (must match P in pmacController.template)
+# % macro, CS, The CS num for this axis (must match CS in pmacCsController.template)
 
 include "basic_asyn_motor.template"
 
@@ -7,3 +10,6 @@ record(stringin, "$(P)$(M):CS_PORT_NAME") {
   field(DESC, "Port name for CS")
   field(VAL, "$(PORT)")
 }
+
+# add alias for standard CS axis name
+alias($(P)$(M), $(PMAC):CS$(CS):M$(ADDR))

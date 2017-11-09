@@ -1,9 +1,8 @@
 # % macro, PORT, The asyn port for the pmac controller
-# % macro, P, PV Prefix
-# % macro, R, PV Suffix
+# % macro, PMAC, PV Prefix for the motor controller
 # % macro, MOTOR, Motor axis number
 
-record(ai, "$(P)$(R)M$(MOTOR):CsRaw_RBV")
+record(ai, "$(PMAC):M$(MOTOR):CsRaw_RBV")
 {
     field(DTYP, "asynInt32")
     field(INP, "@asyn($(PORT),$(MOTOR))PMAC_C_AXIS_CS")
@@ -11,23 +10,23 @@ record(ai, "$(P)$(R)M$(MOTOR):CsRaw_RBV")
     field(SCAN, "I/O Intr")
 }
 
-record(mbbo, "$(P)$(R)M$(MOTOR):CsPort") {
+record(mbbo, "$(PMAC):M$(MOTOR):CsPort") {
   field(DTYP, "asynInt32")
   field(OUT, "@asyn($(PORT),$(MOTOR))PMAC_C_GROUP_CS_PORT")
 }
 
-record(mbbi, "$(P)$(R)M$(MOTOR):CsPort_RBV") {
+record(mbbi, "$(PMAC):M$(MOTOR):CsPort_RBV") {
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),$(MOTOR))PMAC_C_GROUP_CS_PORT_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(stringout, "$(P)$(R)M$(MOTOR):CsAxis") {
+record(stringout, "$(PMAC):M$(MOTOR):CsAxis") {
   field(DTYP, "asynOctetWrite")
   field(OUT, "@asyn($(PORT),$(MOTOR))PMAC_C_GROUP_ASSIGN")
 }
 
-record(stringin, "$(P)$(R)M$(MOTOR):CsAxis_RBV") {
+record(stringin, "$(PMAC):M$(MOTOR):CsAxis_RBV") {
   field(DTYP, "asynOctetRead")
   field(INP, "@asyn($(PORT),$(MOTOR))PMAC_C_GROUP_ASSIGN_RBV")
   field(SCAN, "I/O Intr")

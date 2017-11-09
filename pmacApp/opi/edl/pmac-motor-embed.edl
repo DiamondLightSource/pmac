@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 779
-y 820
+x 1727
+y 1115
 w 189
-h 104
+h 50
 font "arial-medium-r-14.0"
 ctlFont "arial-bold-r-14.0"
 btnFont "arial-bold-r-14.0"
@@ -31,33 +31,31 @@ minor 0
 release 0
 x 0
 y 5
-w 189
-h 104
+w 188
+h 44
 lineColor index 14
 fill
 fillColor index 5
 endObjectProperties
 
-# (Choice Button)
-object activeChoiceButtonClass
+# (Textentry)
+object TextentryClass
 beginObjectProperties
-major 4
+major 10
 minor 0
 release 0
-x 31
-y 51
-w 95
-h 20
+x 9
+y 15
+w 170
+h 31
+controlPv "$(P)$(M):DirectDemand"
+displayMode "decimal"
+precision 3
 fgColor index 25
-bgColor index 5
-selectColor index 5
-inconsistentColor index 5
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(P):$(Q)"
-indicatorPv "$(P):$(Q)"
-font "helvetica-bold-r-14.0"
-orientation "horizontal"
+bgColor index 3
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
 endObjectProperties
 
 # (Static Text)
@@ -65,16 +63,16 @@ object activeXTextClass
 beginObjectProperties
 major 4
 minor 1
-release 0
+release 1
 x 0
 y 0
-w 95
+w 63
 h 13
 font "arial-medium-r-12.0"
 fgColor index 14
 bgColor index 8
 value {
-  "  Deferred move  "
+  "  $(DESC)  "
 }
 autoSize
 border

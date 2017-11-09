@@ -6,25 +6,11 @@
  *
  *  This class supports the controller's ability to switch axes in and out of coordinate systems.
  *
- *  It defines a collection of groups which each list axes, and their definition within a Coordinate system.
- *  It also allows for coordinated deferred moves of real axes in a CS where they are directly mapped to
- *  CS axes. This last feature currently requires the following PROG101 installed on the geobrick.
+ *  It defines a collection of groups which each list axes, and their definition within a Coordinate
+ *  system.
  *
- *  It also requires that lookahead buffers are defined for the CS in question + the following (n = CS number)
- *  i5n13=10   ; segmentation time (needed for lookahead)
- *  i5n20=50   ; lookahead length (needed to limit max velocity to max set in CS)
- *  i5n50=0    ; DISable kinematics (unless the CS does have a FORWARD/REVERSE kinematic)
-
- OPEN PROG 101
- CLEAR
- LINEAR
- ABS
- TM(Q70)
- FRAX(A,B,C,U,V,W,X,Y,Z)
- A(Q71)B(Q72)C(Q73)U(Q74)V(Q75)W(Q76)X(Q77)Y(Q78)Z(Q79)
- DWELL0
- CLOSE
-
+ *  It no longer also allows for coordinated deferred moves of real axes in a CS
+ *  Instead, this functionality is now managed through pmacCsController deferred moves
  */
 
 #include "pmacCsGroups.h"
@@ -247,7 +233,7 @@ asynStatus pmacCsGroups::clearCurrentGroup() {
       pmacCsAxisDef *axd = (pmacCsAxisDef *) pAxisDefs->lookup(axis);
       sprintf(command, "&%dA", axd->coordSysNumber);
       cmdStatus = pC_->lowLevelWriteRead(command, response);
-      while (pAxisDefs->hasNextKey() == true && cmdStatus == asynSuccess) {
+      while (pAxisDefs->hasNextKey() && cmdStatus == asynSuccess) {
         axis = pAxisDefs->nextKey();
         axd = (pmacCsAxisDef *) pAxisDefs->lookup(axis);
         sprintf(command, "&%dA", axd->coordSysNumber);
@@ -256,36 +242,11 @@ asynStatus pmacCsGroups::clearCurrentGroup() {
     }
   }
 
-  // Now undefine all cs mappings
+  // Now un-define all cs mappings
   strcpy(command, "undefine all");
   cmdStatus = pC_->lowLevelWriteRead(command, response);
 
   return cmdStatus;
-}
-
-/**
- * Aborts motion programs in the CS for which the given axis is currently mapped,
- * used to stop motion intiated in the deferred coordinated move
- *
- * @param axis the axis to stop
- * @return status
- *
- */
-asynStatus pmacCsGroups::abortMotion(int axis) {
-  static const char *functionName = "abortMotion";
-  char command[PMAC_MAXBUF] = {0};
-  char response[PMAC_MAXBUF] = {0};
-  int coordSysNum = getAxisCoordSys(axis);
-  asynStatus status = asynSuccess;
-  debug(DEBUG_TRACE, functionName);
-
-  if (coordSysNum != 0) {
-    // Abort the motion for the CS
-    sprintf(command, "&%dA", coordSysNum);
-    status = pC_->lowLevelWriteRead(command, response);
-  }
-
-  return status;
 }
 
 asynStatus pmacCsGroups::manualGroup(const std::string &groupDef) {
@@ -312,156 +273,6 @@ asynStatus pmacCsGroups::manualGroup(const std::string &groupDef) {
     status = this->redefineLookaheads();
   }
 
-  return status;
-}
-
-/**
- * Initiates a deferred move where all axes start and stop at the same time.
- * This is done using motion program 101 on the controller. The parameters
- * for the move are extracted from members of the pmaxAxis objects in the same
- * fashion as the already existing standard deferred move.
- *
- * @return status
- *
- */
-asynStatus pmacCsGroups::processDeferredCoordMoves(void) {
-  asynStatus status = asynSuccess;
-  pmacAxis *pAxis = NULL;
-  static const char *functionName = "processDeferredCoordMoves";
-  int coordSysNumber = 0;
-  pmacCsaxisNamesToQ moveList;
-  float maxTimeToMove = 0;
-  debug(DEBUG_TRACE, functionName);
-
-  // Scan all axes and verify that a valid coordinated deferred move can be made.
-  // All real axes with a deferred move request must be in the same coordinate system
-  // and have a one to one mapping to a coordinate system axis
-  for (int axis = 0; axis < pC_->numAxes_ && status == asynSuccess; axis++) {
-    pAxis = pC_->getAxis(axis);
-    if (pAxis != NULL) {
-      if (pAxis->deferredMove_) {
-        if (coordSysNumber == 0) {
-          abortMotion(axis);
-          coordSysNumber = getAxisCoordSys(axis);
-          if (coordSysNumber == 0) {
-            status = asynError;
-            debugf(DEBUG_ERROR,
-                   functionName,
-                   "Deferred coordinated move on real axis %d not in a coordinate system",
-                   axis);
-          }
-        } else {
-          if (getAxisCoordSys(axis) != coordSysNumber) {
-            status = asynError;
-            debugf(DEBUG_ERROR,
-                   functionName,
-                   "Deferred coordinated move on multiple coordinate systems %d and %d",
-                   coordSysNumber,
-                   getAxisCoordSys(axis));
-          }
-        }
-
-        if (status == asynSuccess) {
-//          std::string axisDef = csGroups[currentGroup].axisDefs[axis].axisDefinition;
-          pmacCsAxisDef *axd = (pmacCsAxisDef *) ((pmacCsGroup *) csGroups.lookup(
-                  currentGroup))->axisDefs.lookup(axis);
-          std::string axisDef = axd->axisDefinition;
-          if (axisDef.length() != 1 || axisNamesToQ.lookup(axisDef[0]) != NULL) {
-            status = asynError;
-            debugf(DEBUG_ERROR,
-                   functionName,
-                   "Illegal deferred coordinated move on real axis %d defined as %s in CS %d",
-                   axis,
-                   axisDef.c_str(),
-                   coordSysNumber);
-          } else {
-//            moveList[axisDef[0]] = axis;
-            moveList.insert(axisDef[0], axis);
-            float time = pAxis->deferredTime_;
-            maxTimeToMove = (time > maxTimeToMove) ? time : maxTimeToMove;
-          }
-        }
-      }
-    }
-  }
-
-  // we now have a list of axes that need to move - build the pmac command to do so
-  if (status == asynSuccess && moveList.count() > 0) {
-    char command[PMAC_MAXBUF] = {0};
-    char response[PMAC_MAXBUF] = {0};
-    char moveStr[PMAC_MAXBUF] = {0};
-
-//		pmacCsaxisNamesToQ::iterator it;
-//    for (it = moveList.begin(); it != moveList.end() && status == asynSuccess; it++)
-//    {
-//      char axisDef = it->first;
-//      int axisNum = it->second;
-//
-//      pAxis = pC_->getAxis(axisNum);
-//
-//      sprintf(moveStr, "%s Q%d=%f", moveStr, axisNamesToQ[axisDef], pAxis->deferredPosition_);
-//    }
-
-    char axisDef = moveList.firstKey();
-    int axisNum = moveList.lookup(axisDef);
-    pAxis = pC_->getAxis(axisNum);
-    sprintf(moveStr, "%s Q%d=%f", moveStr, axisNamesToQ.lookup(axisDef), pAxis->deferredPosition_);
-    while (moveList.hasNextKey()) {
-      axisDef = moveList.nextKey();
-      axisNum = moveList.lookup(axisDef);
-      pAxis = pC_->getAxis(axisNum);
-      sprintf(moveStr, "%s Q%d=%f", moveStr, axisNamesToQ.lookup(axisDef),
-              pAxis->deferredPosition_);
-    }
-
-    // add in the axes in this CS that have not had a deferred move - send their current position
-    for (int axis = 0; axis < pC_->numAxes_ && status == asynSuccess; axis++) {
-      if (getAxisCoordSys(axis) == coordSysNumber) {
-        pAxis = pC_->getAxis(axis);
-        if (pAxis != NULL && !pAxis->deferredMove_) {
-          pmacCsAxisDef *axd = (pmacCsAxisDef *) ((pmacCsGroup *) csGroups.lookup(
-                  currentGroup))->axisDefs.lookup(axis);
-          std::string axisDef = axd->axisDefinition;
-//					std::string axisDef = csGroups[currentGroup].axisDefs[axis].axisDefinition;
-          sprintf(moveStr, "%s Q%d=%f", moveStr, axisNamesToQ.lookup(axisDef[0]),
-                  pAxis->previous_position_);
-          if (pAxis->moving_) {
-            /// TODO remove this clause -
-            // status = asynError;
-            debugf(DEBUG_ERROR,
-                   functionName,
-                   "**** WARNING: deferred coordinated move - real axis %d in CS %d is already moving",
-                   axis,
-                   coordSysNumber);
-          }
-        }
-      }
-    }
-
-    if (status == asynSuccess) {
-      sprintf(command, "&%d Q70=%f %s B101R", coordSysNumber, maxTimeToMove, moveStr);
-
-      //Execute the deferred move
-      debug(DEBUG_FLOW, functionName, "Deferred move command", command);
-
-      if (pC_->lowLevelWriteRead(command, response) != asynSuccess) {
-        debug(DEBUG_ERROR, functionName, "ERROR Sending Deferred Move Command.", command);
-        pC_->setIntegerParam(pC_->PMAC_C_CommsError_, pC_->PMAC_ERROR_);
-        status = asynError;
-      } else {
-        pC_->setIntegerParam(pC_->PMAC_C_CommsError_, pC_->PMAC_OK_);
-        status = asynSuccess;
-      }
-    }
-  }
-
-  //Clear deferred move flag for the axes involved (do this even if there was an error)
-  for (int axis = 0; axis < pC_->numAxes_; axis++) {
-    pAxis = pC_->getAxis(axis);
-    if (pAxis != NULL) {
-      pAxis->deferredMove_ = 0;
-    }
-  }
   return status;
 }
 

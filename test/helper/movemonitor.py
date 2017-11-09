@@ -23,6 +23,9 @@ class MoveMonitor:
         else:
             self._moving = True
 
+    def reset(self):
+        self._completed_one_move = False
+
     def wait_for_one_move(self, timeout):
         interval = .1
         waited = 0

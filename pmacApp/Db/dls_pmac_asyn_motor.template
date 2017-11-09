@@ -1,3 +1,23 @@
+# % macro, PMAC, The P prefix for the motor controller (must match P in pmacController.template)
+
 include "basic_asyn_motor.template"
-include "motor_in_cs.template"
 include "eloss_kill_autohome_records.template"
+
+# add standard motor name aliases for all above PVs
+alias($(P)$(M), $(PMAC):M$(ADDR))
+alias($(P)$(M):ADDR, $(PMAC):M$(ADDR):ADDR)
+alias($(P)$(M):PORT, $(PMAC):M$(ADDR):PORT)
+alias($(P)$(M):USER:SDIS, $(PMAC)M$(ADDR):USER:SDIS)
+alias($(P)$(M):SDIS, $(PMAC):M$(ADDR):SDIS)
+alias($(P)$(M):KILL, $(PMAC):M$(ADDR):KILL)
+alias($(P)$(M):ELOSS, $(PMAC):M$(ADDR):ELOSS)
+alias($(P)$(M):ELOSSRC, $(PMAC):M$(ADDR):ELOSSRC)
+alias($(P)$(M):CHECK_SYNC, $(PMAC):M$(ADDR):CHECK_SYNC)
+alias($(P)$(M):FERROR, $(PMAC):M$(ADDR):FERROR)
+alias($(P)$(M):FERRORMAX, $(PMAC):M$(ADDR):FERRORMAX)
+alias($(P)$(M):FEMAXRESET, $(PMAC):M$(ADDR):FEMAXRESET)
+alias($(P)$(M):HOMEVIS, $(PMAC):M$(ADDR):HOMEVIS)
+alias($(P)$(M):HOMEVISSTR, $(PMAC):M$(ADDR):HOMEVISSTR)
+
+substitute "M=M$(ADDR)"
+include "pmacDirectMotor.template"

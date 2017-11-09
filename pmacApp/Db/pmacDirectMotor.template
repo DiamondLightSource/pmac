@@ -1,0 +1,133 @@
+##############################################################
+#
+# A record to sit along side each motor record and give direct
+# access to the driver without any motor record logic
+# may be used with virtual and real motors
+#
+# This template requires that all real motors mentioned have
+# a real underlying motor record (to determine MRES) this is
+# not required for virtual motors
+#
+# This currently only supports demand but could be extended
+# to totally replace motor record (perhaps)
+#
+##############################################################
+
+# % macro, PORT, The asyn port (motor controller or CS controller)
+# % macro, ADDR, The asyn address (real or CS axis number)
+# % macro, DESC, Description
+# % macro, PMAC, PV Prefix for the motor controller
+# % macro, M, Motor PV suffix ('Mx' for real and 'CSx:My' for CS axes)
+
+##############################################################
+# Set immediate demand for this motor
+##############################################################
+record(ao, "$(PMAC):$(M):DirectDemand")
+{
+    field(DTYP, "Raw Soft Channel")
+    field(OMSL, "supervisory")
+    field(OUT, "$(PMAC):$(M):RawDirectDemand PP")
+    field(LINR, "LINEAR")
+    field(ASLO, 1)                              # to be overwritten by DirectMres
+    field(AOFF, 0)                              # to be overwritten by DirectOffset
+}
+
+record(ao, "$(PMAC):$(M):RawDirectDemand")
+{
+    field(DTYP, "asynFloat64")
+    field(FLNK, "$(PMAC):$(M):DirectMotorSeq")
+    field(OUT,  "@asyn($(PORT),$(ADDR),4)MOTOR_MOVE_ABS")
+    field(DESC, "$(DESC)")
+}
+
+# busy record to make ca_put_callback return only once the motor is done moving
+record(seq, "$(PMAC):$(M):DirectMotorSeq")
+{
+    field(LNK1, "$(PMAC):$(M):DirectMotorBusy PP")
+    field(DO1, "1")
+}
+
+record(busy, "$(PMAC):$(M):DirectMotorBusy")
+{
+   field(DTYP, "asynInt32")
+   field(OUT, "@asyn($(PORT),$(ADDR),4)MOTOR_STATUS_MOVING")
+   field(ZNAM, "Idle")
+   field(ONAM, "Moving")
+   field(PINI, "1")
+   field(VAL,  "0")
+}
+
+
+# record that holds the SCALE
+# this overrides the definition in basic_asyn_motor.template and connects it to the asyn parameter
+# that tracks the scale factor in the driver. This is set by calling
+# pmacSetAxisScale (for CS axes this function is exposed to startup via pmacSetCoordStepsPerUnit)
+record(ao, "$(PMAC):$(M):SCALE") {
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_MOTOR_SCALE")
+}
+
+##############################################################
+# Database logic to set the correct ASLO and OFF on
+# DirectDemand so that it can be commanded in EGUs
+#
+# The Mres and Offset are copied into ALSO and OFF from
+# the appropriate real motor determined by DirectMotorNumber.
+#
+# For CS motors DirectMotorNumber is set by the driver when it
+# maps a CS motor directly to a real motor.
+#
+# For real motors DirectMotorNumber is always reported as the
+# motor's own number
+#
+##############################################################
+record(longin, "$(PMAC):$(M):DirectMotorNumber")
+{
+    field(DTYP, "asynInt32")
+    field(SCAN, "I/O Intr")
+    field(INP,  "@asyn($(PORT),$(ADDR),4)PMAC_REAL_MOTOR_NUMBER")
+    field(FLNK, "$(PMAC):$(M):DirectSources")
+}
+
+record(fanout, "$(PMAC):$(M):DirectSources")
+{
+    field(LNK1, "$(PMAC):$(M):MresSource")
+    field(LNK2, "$(PMAC):$(M):OffsetSource")
+}
+
+record(scalcout, "$(PMAC):$(M):DirectMres")
+{
+    field(DTYP, "Soft Channel")
+    field(INPA, "$(PMAC):M1.MRES CPP MS")           # to be overwritten by MresSource
+    field(INPB, "$(PMAC):$(M):SCALE CPP MS")
+    field(CALC, "A/B")
+    field(OUT, "$(PMAC):$(M):DirectDemand.ASLO NPP")
+}
+
+record(scalcout, "$(PMAC):$(M):DirectOffset")
+{
+    field(DTYP, "Soft Channel")
+    field(INPA, "$(PMAC):M1.OFF CPP MS")            # to be overwritten by OffsetSource
+    field(CALC, "A")
+    field(OUT, "$(PMAC):$(M):DirectDemand.AOFF NPP")
+}
+
+record(scalcout, $(PMAC):$(M):MresSource)
+{
+    field(DTYP, "Soft Channel")
+    field(INPA, "$(PMAC):$(M):DirectMotorNumber")
+    field(CALC, "(PRINTF('$(PMAC):M%d.MRES CPP',A))")
+    field(FLNK, "$(PMAC):$(M):DirectMres")
+    field(OUT, "$(PMAC):$(M):DirectMres.INPA CA")
+}
+
+record(scalcout, $(PMAC):$(M):OffsetSource)
+{
+    field(DTYP, "Soft Channel")
+    field(INPA, "$(PMAC):$(M):DirectMotorNumber")
+    field(CALC, "(PRINTF('$(PMAC):M%d.OFF CPP',A))")
+    field(FLNK, "$(PMAC):$(M):DirectOffset")
+    field(OUT, "$(PMAC):$(M):DirectOffset.INPA CA")
+}
+
+

@@ -1,28 +1,16 @@
 ##############################################################
 #
 # Records to read asynPortDriver parameters from the param 
-# library. This is for the Asyn model 3 driver pmacController 
-# driver.
+# library for the class pmacController.
 #
 # The Asyn address is set as zero because that's what we use 
 # for controller parameters.
-#
-# Note - the feedrate parms were originally intended to affect
-# the global feedrate by altering CS1 feedrate.
-# TODO: now that we have added coordinate system features to
-# the driver these will need to be moved to an axis based 
-# template. For now all CS defining and global parameters
-# reside in this template. This is temporary while I am 
-# developing the CS additions. gilesK (08/05/15)
 # 
 ##############################################################
 
 # % macro, PORT, The asyn port for the pmac controller
 # % macro, P, PV Prefix
-# % macro, R, PV Suffix
-# % macro, FEEDRATE, Set the global feedrate for this controller
-# % macro, FEEDRATE_POLL, Poll to make sure feedrate does not change, enable=1, disable=0 
-# % macro, TIMEOUT, Timeout for controller communincation 
+# % macro, TIMEOUT, Timeout for controller communication
 # % macro, CSG0, Name for Coordinate System Group 0 
 # % macro, CSG1, Name for Coordinate System Group 1 
 # % macro, CSG2, Name for Coordinate System Group 2 
@@ -31,11 +19,49 @@
 # % macro, CSG5, Name for Coordinate System Group 5 
 # % macro, CSG6, Name for Coordinate System Group 6 
 
+#
+# This associates an edm screen with the template
+# % gui, $(PORT), edm, pmacControl.edl, P=$(P),name=$(PORT)
+#
+
+##############################################################
+# Control deferred mode for all real 1axes in this brick
+##############################################################
+record(bo, "$(P):DeferMoves")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
+    field(VAL, "0")
+    field(ZNAM, "Defer Off")
+    field(ONAM, "Defer On")
+}
+
+##############################################################
+# Send arbitrary command to the geobrick controller
+##############################################################
+record(waveform, "$(P):SendCmd")
+{
+    field(DTYP, "asynOctetWrite")
+    field(FTVL, "CHAR")
+    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_WRITE_CMD")
+    field(NELM, "100")
+    field(SCAN, "Passive")
+}
+
+
+# a dummy real motor 0 with mres of 1, used by the CS axis mres DB logic in pmacDirectMotor.template
+record(motor,"$(P)M0")
+{
+	field(DTYP,"Soft Channel")
+	field(MRES,"1")
+}
+
 # ///
 # /// Select a group of coordinate systems into the controller.
 # ///
 # % autosave 2
-record(mbbo, "$(P)$(R)COORDINATE_SYS_GROUP")
+record(mbbo, "$(P):COORDINATE_SYS_GROUP")
 {
    field(PINI, "YES")
    field(DTYP, "asynInt32")
@@ -62,7 +88,7 @@ record(mbbo, "$(P)$(R)COORDINATE_SYS_GROUP")
 # ///
 # /// Read back the current group of coordinate systems into the controller.
 # ///
-record(mbbi, "$(P)$(R)COORDINATE_SYS_GROUP_RBV")
+record(mbbi, "$(P):COORDINATE_SYS_GROUP_RBV")
 {
    field(PINI, "YES")
    field(DTYP, "asynInt32")
@@ -89,7 +115,7 @@ record(mbbi, "$(P)$(R)COORDINATE_SYS_GROUP_RBV")
 #
 # Control read only mode for axes
 #
-record(bo, "$(P)$(R)AxesReadonly")
+record(bo, "$(P):AxesReadonly")
 {
     field(PINI, "YES")
     field(DTYP, "asynInt32")
@@ -102,7 +128,7 @@ record(bo, "$(P)$(R)AxesReadonly")
 #
 # Read back the readonly mode for axes
 # 
-record(bi, "$(P)$(R)AxesReadonly_RBV")
+record(bi, "$(P):AxesReadonly_RBV")
 {
     field(DTYP, "asynInt32")
     field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_AXIS_READONLY")
@@ -111,50 +137,10 @@ record(bi, "$(P)$(R)AxesReadonly_RBV")
     field(ONAM, "Readonly")
 }
 
-# ///
-# /// Control deferred moves on the controller
-# ///
-# ///
-# /// Select a group of coordinate systems into th # % autosave 2e controller.
-# ///
-#record(mbbo, "$(P)$(R)MOTOR_DEFER_MOVES")
-#{
-#    field(PINI, "YES")
-#    field(DTYP, "asynInt32")
-#    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
-#    field(VAL, "0")
-#    field(ZRVL, 0)
-#    field(ONVL, 1)
-#    field(TWVL, 2)
-#    field(ZRST, "GO")
-#    field(ONST, "Defer Fast Moves")
-#    field(TWST, "Defer Coordinated")
-#}
-
-# ///
-# /// Read back the current group of coordinate systems into the controller.
-# ///
-#record(mbbi, "$(P)$(R)MOTOR_DEFER_MOVES_RBV")
-#{
-#    field(PINI, "YES")
-#    field(DTYP, "asynInt32")
-#    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))MOTOR_DEFER_MOVES")
-#    field(SCAN, "I/O Intr")
-#    field(ZRVL, 0)
-#    field(ONVL, 1)
-#    field(TWVL, 2)
-#    field(ZRST, "GO")
-#    field(ONST, "Defer Fast Moves")
-#    field(TWST, "Defer Coordinated")
-#}
-
-
-
-
 ##############################################################
 # Record of the Kinematics on the PMAC
 ##############################################################
-record(waveform, "$(P)$(R)FWD_KINEMATIC_1_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_1_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_1")
@@ -163,7 +149,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_1_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_2_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_2_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_2")
@@ -172,7 +158,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_2_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_3_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_3_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_3")
@@ -181,7 +167,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_3_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_4_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_4_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_4")
@@ -190,7 +176,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_4_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_5_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_5_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_5")
@@ -199,7 +185,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_5_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_6_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_6_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_6")
@@ -208,7 +194,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_6_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_7_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_7_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_7")
@@ -217,7 +203,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_7_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_8_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_8_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_8")
@@ -226,7 +212,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_8_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_9_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_9_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_9")
@@ -235,7 +221,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_9_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_10_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_10_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_10")
@@ -244,7 +230,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_10_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_11_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_11_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_11")
@@ -253,7 +239,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_11_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_12_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_12_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_12")
@@ -262,7 +248,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_12_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_13_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_13_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_13")
@@ -271,7 +257,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_13_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_14_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_14_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_14")
@@ -280,7 +266,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_14_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_15_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_15_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_15")
@@ -289,7 +275,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_15_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)FWD_KINEMATIC_16_RBV")
+record(waveform, "$(P):FWD_KINEMATIC_16_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_16")
@@ -298,7 +284,7 @@ record(waveform, "$(P)$(R)FWD_KINEMATIC_16_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_1_RBV")
+record(waveform, "$(P):INV_KINEMATIC_1_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_1")
@@ -307,7 +293,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_1_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_2_RBV")
+record(waveform, "$(P):INV_KINEMATIC_2_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_2")
@@ -316,7 +302,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_2_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_3_RBV")
+record(waveform, "$(P):INV_KINEMATIC_3_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_3")
@@ -325,7 +311,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_3_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_4_RBV")
+record(waveform, "$(P):INV_KINEMATIC_4_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_4")
@@ -334,7 +320,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_4_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_5_RBV")
+record(waveform, "$(P):INV_KINEMATIC_5_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_5")
@@ -343,7 +329,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_5_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_6_RBV")
+record(waveform, "$(P):INV_KINEMATIC_6_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_6")
@@ -352,7 +338,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_6_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_7_RBV")
+record(waveform, "$(P):INV_KINEMATIC_7_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_7")
@@ -361,7 +347,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_7_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_8_RBV")
+record(waveform, "$(P):INV_KINEMATIC_8_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_8")
@@ -370,7 +356,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_8_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_9_RBV")
+record(waveform, "$(P):INV_KINEMATIC_9_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_9")
@@ -379,7 +365,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_9_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_10_RBV")
+record(waveform, "$(P):INV_KINEMATIC_10_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_10")
@@ -388,7 +374,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_10_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_11_RBV")
+record(waveform, "$(P):INV_KINEMATIC_11_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_11")
@@ -397,7 +383,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_11_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_12_RBV")
+record(waveform, "$(P):INV_KINEMATIC_12_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_12")
@@ -406,7 +392,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_12_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_13_RBV")
+record(waveform, "$(P):INV_KINEMATIC_13_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_13")
@@ -415,7 +401,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_13_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_14_RBV")
+record(waveform, "$(P):INV_KINEMATIC_14_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_14")
@@ -424,7 +410,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_14_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_15_RBV")
+record(waveform, "$(P):INV_KINEMATIC_15_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_15")
@@ -433,7 +419,7 @@ record(waveform, "$(P)$(R)INV_KINEMATIC_15_RBV")
   field(SCAN, "I/O Intr")
 }
 
-record(waveform, "$(P)$(R)INV_KINEMATIC_16_RBV")
+record(waveform, "$(P):INV_KINEMATIC_16_RBV")
 {
   field(DTYP, "asynOctetRead")
   field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_16")
