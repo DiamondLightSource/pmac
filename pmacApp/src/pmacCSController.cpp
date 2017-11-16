@@ -229,6 +229,8 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
       status = (this->processDeferredMoves() == asynSuccess) && status;
     }
     this->movesDeferred_ = value;
+  } else if (function == PMAC_CS_MotorScale_) {
+    pAxis->scale_ = value;
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.

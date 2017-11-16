@@ -2122,6 +2122,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     } else {
       this->feedRatePoll_ = false;
     }
+  } else if (function == PMAC_C_MotorScale_) {
+    pAxis->scale_ = value;
   } else if (function == PMAC_C_FeedRate_) {
     strcpy(command, "");
     for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++) {

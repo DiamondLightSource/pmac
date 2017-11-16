@@ -28,6 +28,12 @@
 ;####################################################
 
 
+; these settings make clipper pull in tight to position before reporting 'in position'
+; not required on geobrick and may make move more slowly
+i128,8,100=1   ; in position band 1
+i188,8,100=255   ; 255 cycles in position before move complete
+
+
 ;This program defines the program needed to do a move using the motor record
 ;on a CS axis
 ;to do a move we need to do &{CS}R
@@ -44,8 +50,7 @@ i5213,15,100=10   ; segmentation time (needed for lookahead)
 i5220,15,100=50   ; lookahead length (needed to limit max velocity to max set in CS)
 i5250,15,100=1    ; Enable kinematics
 
-
-i5250=0 ; disable kinematics for direct only CS 2
+i5250=0 ; disable for CS 2 which will use mappings only
 
 OPEN PROG 10
 CLEAR
