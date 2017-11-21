@@ -32,7 +32,7 @@ class TestStop(TestCase):
         ca.caput(axis1, 1000)
         Sleep(1)
         ca.caput(axis1+'.STOP', 1)
-        monitor.wait_for_one_move(2)
+        monitor.wait_for_one_move(5)
 
         self.assertTrue(ca.caget(axis1+'.RBV') < 1000)
 

@@ -10,6 +10,8 @@ class MoveMonitor:
         self._moving = False
         self._completed_one_move = False
         ca.camonitor(self._moving_pv, self.state_changed)
+        # make sure the initial state is passed to the state_changed
+        Sleep(0)
 
     @property
     def completed_one_move(self):

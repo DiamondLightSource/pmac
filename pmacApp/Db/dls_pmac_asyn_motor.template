@@ -1,6 +1,7 @@
 # % macro, PMAC, The P prefix for the motor controller (must match P in pmacController.template)
 
 include "basic_asyn_motor.template"
+include "motor_in_cs.template"
 include "eloss_kill_autohome_records.template"
 
 # add standard motor name aliases for all above PVs

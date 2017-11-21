@@ -5,7 +5,9 @@
 	<!--Local simulator-->
 	<!--<pmac.pmacAsynIPPort IP="localhost:1025" name="BRICK1port"/>-->
 	<!--Lee's test clipper-->
-	<pmac.pmacAsynIPPort IP="172.23.240.97" name="BRICK1port"/>
+	<!--<pmac.pmacAsynIPPort IP="172.23.240.97" name="BRICK1port"/>-->
+	<!--Clipper 3-->
+	<pmac.pmacAsynIPPort IP="172.23.240.86" name="BRICK1port"/>
 	<pmac.GeoBrick IdlePoll="1000" P="BRICK1" Port="BRICK1port" name="Brick"/>
 	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":MOTOR1" MRES="1" P="PMAC_BRICK_TEST" PORT="Brick" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="MOTORS.M1"/>
 	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":MOTOR2" MRES="1" P="PMAC_BRICK_TEST" PORT="Brick" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="MOTORS.M2"/>

@@ -146,7 +146,7 @@ class TestMakeCsConsistent(TestCase):
         ca.caput(PB + 'COORDINATE_SYS_GROUP', '1,2->A,B')
         ca.caput([PCS2+'A', PCS2+'B'], [2, 2], wait=True)
 
-        # scaling of 1000 and 100 or A and B on CS2 axes gives 20, 200 on axes 1, 2
+        # scaling of 1000 and 100 on A and B on CS2 axes gives 20, 200 on axes 1, 2
         self.assertAlmostEqual(ca.caget(PM+'MOTOR1.RBV'), 20)
         self.assertAlmostEqual(ca.caget(PM+'MOTOR2.RBV'), 200)
 
