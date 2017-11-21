@@ -97,7 +97,7 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
        * If program number is zero, then the move will have to be started by some
        * external process, which is a mechanism of allowing coordinated starts to
        * movement. */
-      sprintf(buff, " Q70=%f B%dR", pC_->csMoveTime_, pC_->getProgramNumber());
+      sprintf(buff, " B%dR", pC_->getProgramNumber());
       strcat(command, buff);
       debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
       status = pC_->axisWriteRead(command, response);

@@ -14,7 +14,6 @@ executing pytest in the root of pmac folder
 
 
 To set up a geobrick (with mo motors attached) to run against these tests do the following:-
-
 $$$ ***
 M0..8191->*, P0..8191=0,Q0..8191=0, UNDEFINE ALL
 delete all

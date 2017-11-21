@@ -51,6 +51,7 @@ FRAX(A,B,C,U,V,W,X,Y,Z)
 If(Q70 > -1)
     TM(Q70)
 EndIf
+Q70 = -1 ; require that deferred moves always set Q70 before calling PROG 10
 A(Q71)B(Q72)C(Q73)U(Q74)V(Q75)W(Q76)X(Q77)Y(Q78)Z(Q79)
 DWELL0
 CLOSE
