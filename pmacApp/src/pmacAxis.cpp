@@ -295,7 +295,7 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
   }
   nvals = sscanf(response, "%d", &controller_type);
 
-  if (controller_type == pC_->PMAC_CID_GEOBRICK_) {
+  if (controller_type == pC_->PMAC_CID_GEOBRICK_ || controller_type == pC_->PMAC_CID_CLIPPER_) {
     asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
               "Controller %s Addr %d. %s: This is a Geobrick LV.\n", pC_->portName, axisNo_,
               functionName);
@@ -310,7 +310,7 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
     return asynError;
   }
 
-  if (controller_type == pC_->PMAC_CID_GEOBRICK_) {
+  if (controller_type == pC_->PMAC_CID_GEOBRICK_ || controller_type == pC_->PMAC_CID_CLIPPER_) {
     /* Read home flags and home direction from Geobrick LV */
     if (axisNo_ < 5) {
       sprintf(buffer, "I70%d2 I70%d3 i%d24 i%d23 i%d26", axisNo_, axisNo_, axisNo_, axisNo_,

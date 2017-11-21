@@ -572,6 +572,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   // Medium readout of the GPIO status bits
   switch (cid_) {
     case PMAC_CID_GEOBRICK_:
+    case PMAC_CID_CLIPPER_:
     case PMAC_CID_POWER_:
       // Outputs
       for (gpioNo = 0; gpioNo < 8; gpioNo++) {
@@ -1307,6 +1308,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   // Read the GPIO status variables
   switch (cid_) {
     case PMAC_CID_GEOBRICK_:
+    case PMAC_CID_CLIPPER_:
     case PMAC_CID_POWER_:
       // Outputs
       for (gpio = 0; gpio < 8; gpio++) {
@@ -1683,7 +1685,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   }*/
 
 
-  if (cid_ == PMAC_CID_GEOBRICK_) {
+  if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_CLIPPER_) {
     // CPU Calculation
     int m70 = 0;
     int m71 = 0;
