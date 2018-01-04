@@ -39,6 +39,7 @@ i188,8,100=512    ; count of cycles in position before move complete
 ; Motion Program 10 - command coordinate sys moves
 ; ###################################################
 #include "../pmacApp/pmc/PROG10_CS_motion.pmc"
+i5250=0 ; disable for CS 2 which will use mappings only
 
 ; **************************************************************
 ; Coordinate system generated using following command

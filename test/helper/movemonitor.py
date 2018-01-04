@@ -6,12 +6,10 @@ from cothread import Sleep
 class MoveMonitor:
     def __init__(self, motor_pv):
         self._motor_pv = motor_pv
-        self._moving_pv = motor_pv + '.DMOV'
-        self._moving = False
+        self._done_moving_pv = motor_pv + '.DMOV'
         self._completed_one_move = False
-        ca.camonitor(self._moving_pv, self.state_changed)
-        # make sure the initial state is passed to the state_changed
-        Sleep(0)
+        self._moving = not ca.caget(self._done_moving_pv)
+        ca.camonitor(self._done_moving_pv, self.state_changed)
 
     @property
     def completed_one_move(self):

@@ -1,12 +1,6 @@
 from unittest import TestCase
-from cothread import catools as ca
 from test.helper.movemonitor import MoveMonitor
-
-P = 'BRICK1:'
-PM = 'PMAC_BRICK_TEST:'
-CS2 = 'BRICK1:CS2:'
-CS3 = 'BRICK1:CS3:'
-DD = ':DirectDemand'
+from test.helper.testbrick import TestBrick, DECIMALS
 
 
 class TestSwitchGroup(TestCase):
@@ -16,32 +10,31 @@ class TestSwitchGroup(TestCase):
             when commanding a direct demand to a CS motor. This is a regression test for a problem that
             occurred because Q7x variables were not correctly set after a switch
         """
-        ca.caput([PM+'MOTOR1', PM+'MOTOR2'], [0, 0], wait=True, timeout=30)
-        monitor1 = MoveMonitor(PM+'MOTOR1')
-        ca.caput(P+'COORDINATE_SYS_GROUP', 'MIXED')
-        ca.caput(CS3 + 'M1' + DD, 3)
-        ca.caput(CS3 + 'M2' + DD, 3)
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+        monitor1 = MoveMonitor(tb.m1.pv_root)
+        tb.m1.go_direct(3, wait=False)
+        tb.m2.go_direct(3, wait=False)
         # since this is a CS move - wait for any of the motors
         monitor1.wait_for_one_move(30)
 
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR1.RBV'), 3)
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR2.RBV'), 3)
+        self.assertAlmostEqual(tb.m1.pos, 3, DECIMALS)
+        self.assertAlmostEqual(tb.m2.pos, 3, DECIMALS)
 
         monitor1.reset()
-        ca.caput(P+'COORDINATE_SYS_GROUP', '1,2->A,B')
-        ca.caput(CS2 + 'M1' + DD, 2)
-        ca.caput(CS2 + 'M2' + DD, 2)
+        tb.set_cs_group(tb.g1)
+        tb.A2.go_direct(2, wait=False)
+        tb.B2.go_direct(2, wait=False)
         monitor1.wait_for_one_move(30)
 
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR1.RBV'), 2)
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR2.RBV'), 2)
+        self.assertAlmostEqual(tb.m1.pos, 20, DECIMALS)
+        self.assertAlmostEqual(tb.m2.pos, 200, DECIMALS)
 
         monitor1.reset()
-        # wait here is important since then next move will not see that there has been a switch if called too soon
-        ca.caput(P+'COORDINATE_SYS_GROUP', 'MIXED', wait=True)
-        ca.caput(CS3 + 'M1' + DD, 3)
+        tb.set_cs_group(tb.g3)
+        tb.m1.go_direct(3, wait=False)
         monitor1.wait_for_one_move(30)
 
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR1.RBV'), 3)
+        self.assertAlmostEqual(tb.m1.pos, 3, DECIMALS)
         # if make CS consistent has failed then this will also have moved back to pos 3
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR2.RBV'), 2)
+        self.assertAlmostEqual(tb.m2.pos, 200, DECIMALS)
