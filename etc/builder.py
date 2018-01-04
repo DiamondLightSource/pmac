@@ -135,7 +135,6 @@ class GeoBrick(DeltaTau):
 
         # instatiate the template
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
-
         self.TIMEOUT = self.template.args['TIMEOUT']
 
     # __init__ arguments
@@ -181,14 +180,17 @@ class PowerPMAC(DeltaTau):
             name = "PPMAC%d" % (self.Card + 1)
         self.name = name
         # Store other attributes
+        self.__dict__.update(kwargs)
         self.NAxes = NAxes
         self.IdlePoll = IdlePoll
         self.MovingPoll = MovingPoll
+
         # init the AsynPort superclass
         self.__super.__init__(name)
 
         # instatiate the template
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
+        self.TIMEOUT = self.template.args['TIMEOUT']
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
@@ -310,7 +312,7 @@ def add_motor_in_cs(cls):
 class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
     WarnMacros = False
     TemplateFile = 'dls_pmac_asyn_motor.template'
-    Dependencies = (Busy,)
+    Dependencies = (Busy, Calc)
     def __init__(self, **kwargs):
         # Pass down the common parameters
         kwargs['PMAC'] = kwargs['PORT'].P
@@ -325,6 +327,7 @@ dls_pmac_asyn_motor.ArgInfo = dls_pmac_asyn_motor.ArgInfo.filtered(without=['PMA
 class dls_pmac_cs_asyn_motor(AutoSubstitution, MotorRecord):
     WarnMacros = False
     TemplateFile = 'dls_pmac_cs_asyn_motor.template'
+    Dependencies = (Busy, Calc)
     def __init__(self, **kwargs):
         # Pass down the common parameters
         kwargs['PMAC'] = kwargs['PORT'].PMAC
@@ -612,9 +615,6 @@ class pmacCreateCsGroup(Device):
         self.Controller.CsGroupNamesList['CSG%d' % self.GroupNumber] = self.GroupName
 
     def Initialise(self):
-        assert type(self.Controller) is GeoBrick or type(self.Controller) is Geobrick, \
-            "CsGroup functions are only supported by model 3 drivers Geobrick3, PMAC3"
-            # model 3 version of pmacDisableLimitsCheck uses port instead of card
         print 'pmacCreateCsGroup("%(Controller)s", %(GroupNumber)d, "%(GroupName)s", %(AxisCount)d)' % self.__dict__
 
     ArgInfo = makeArgInfo(__init__,
@@ -635,8 +635,6 @@ class pmacCsGroupAddAxis(Device):
         self.CoordSysNumber = CoordSysNumber
 
     def Initialise(self):
-        assert type(self.Controller) is GeoBrick or type(self.Controller) is Pmac, \
-            "CsGroup functions are only supported by model 3 drivers Geobrick3, PMAC3"
         print 'pmacCsGroupAddAxis(%(Controller)s, %(GroupNumber)d, %(AxisNumber)d, %(AxisDef)s, %(CoordSysNumber)d)' % self.__dict__
 
     ArgInfo = makeArgInfo(__init__,
