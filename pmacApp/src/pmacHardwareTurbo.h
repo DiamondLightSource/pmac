@@ -33,11 +33,14 @@ public:
 
     std::string getCSVelocityCmd(int csNo, double velocity);
 
+    std::string getCSAccTimeCmd(int csNo, double time);
+
 private:
     static const std::string GLOBAL_STATUS;
     static const std::string AXIS_STATUS;
     static const std::string CS_STATUS;
     static const std::string CS_VEL_CMD;
+    static const std::string CS_ACCELERATION_CMD;
 
     static const int PMAC_STATUS1_MAXRAPID_SPEED;
     static const int PMAC_STATUS1_ALT_CMNDOUT_MODE;

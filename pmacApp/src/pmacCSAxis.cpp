@@ -9,6 +9,7 @@
 #include "pmacCSAxis.h"
 #include "pmacCSController.h"
 #include "pmacMessageBroker.h"
+#include "pmacController.h"
 
 /* Use Q71 - Q79 for motor demand positions */
 /* Use Q81 - Q89 for motor readback positions */
@@ -77,8 +78,8 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
   if (acceleration != 0) {
     if (max_velocity != 0) {
       /* Isx87 = accel time in msec */
-      sprintf(acc_buff, "I%d87=%f ", (pC_->getCSNumber() + 50),
-              (fabs(max_velocity / acceleration) * 1000.0));
+      sprintf(acc_buff, pC_->getCSAccTimeCmd(
+              fabs(max_velocity / acceleration) * 1000.0).c_str());
     }
   }
 

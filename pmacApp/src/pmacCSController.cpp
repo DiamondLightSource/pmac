@@ -378,6 +378,10 @@ std::string pmacCSController::getVelocityCmd(double velocity) {
   return ((pmacController *) pC_)->pHardware_->getCSVelocityCmd(csNumber_, velocity);
 }
 
+std::string pmacCSController::getCSAccTimeCmd(double time) {
+  return ((pmacController *) pC_)->pHardware_->getCSAccTimeCmd(csNumber_, time);
+}
+
 void pmacCSController::callback(pmacCommandStore *sPtr, int type) {
   std::string value = "";
   static const char *functionName = "callback";

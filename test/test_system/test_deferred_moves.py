@@ -45,27 +45,27 @@ class TestDeferred(TestCase):
     def test_real_defer(self):
         """ check that real axes update as expected on virtual axis moves
         """
+        for _ in range(4):  # retry for possible occasional race condition
+            tb = TestBrick()
+            tb.set_cs_group(tb.g2)
 
-        tb = TestBrick()
-        tb.set_cs_group(tb.g2)
+            tb.set_deferred_moves(True)
 
-        tb.set_deferred_moves(True)
+            tb.jack1.go(5, wait=False)
+            tb.jack2.go(4, wait=False)
+            Sleep(1)
 
-        tb.jack1.go(5, wait=False)
-        tb.jack2.go(4, wait=False)
-        Sleep(1)
+            # verify no motion yet
+            self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)
+            self.assertAlmostEqual(tb.jack2.pos, 0, DECIMALS)
 
-        # verify no motion yet
-        self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)
-        self.assertAlmostEqual(tb.jack2.pos, 0, DECIMALS)
+            m = MoveMonitor(tb.jack1.pv_root)
+            start = datetime.now()
+            tb.set_deferred_moves(False)
+            m.wait_for_one_move(10)
+            elapsed = datetime.now() - start
 
-        m = MoveMonitor(tb.jack1.pv_root)
-        start = datetime.now()
-        tb.set_deferred_moves(False)
-        m.wait_for_one_move(10)
-        elapsed = datetime.now() - start
-
-        # verify motion
-        self.assertAlmostEqual(tb.jack1.pos, 5, DECIMALS)
-        self.assertAlmostEqual(tb.jack2.pos, 4, DECIMALS)
-        self.assertTrue(elapsed.seconds < 4)
+            # verify motion
+            self.assertAlmostEqual(tb.jack1.pos, 5, DECIMALS)
+            self.assertAlmostEqual(tb.jack2.pos, 4, DECIMALS)
+            self.assertTrue(elapsed.seconds < 4)

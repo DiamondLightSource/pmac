@@ -75,6 +75,8 @@ public:
 
     virtual std::string getCSVelocityCmd(int csNo, double velocity) = 0;
 
+    virtual std::string getCSAccTimeCmd(int csNo, double time) = 0;
+
 protected:
     pmacController *pC_;
 };

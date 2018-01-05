@@ -60,6 +60,8 @@ public:
 
     std::string getVelocityCmd(double velocity);
 
+    std::string getCSAccTimeCmd(double time);
+
     void callback(pmacCommandStore *sPtr, int type);
 
     asynStatus immediateWriteRead(const char *command, char *response);

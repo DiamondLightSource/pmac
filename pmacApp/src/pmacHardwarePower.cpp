@@ -13,6 +13,7 @@ const std::string pmacHardwarePower::AXIS_STATUS = "#%d?";
 const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
 const std::string pmacHardwarePower::CS_STATUS = "&%d?";
 const std::string pmacHardwarePower::CS_VEL_CMD = "I%d89=-%f ";
+const std::string pmacHardwarePower::CS_ACCELERATION_CMD = "Coord[%d].Ta=%f Coord[%d].Td=%f";
 
 const int pmacHardwarePower::PMAC_STATUS1_TRIGGER_MOVE = (0x1 << 31);
 const int pmacHardwarePower::PMAC_STATUS1_HOMING = (0x1 << 30);
@@ -230,5 +231,15 @@ std::string pmacHardwarePower::getCSVelocityCmd(int csNo, double velocity) {
   debug(DEBUG_TRACE, functionName, "CS Number", csNo);
   debug(DEBUG_TRACE, functionName, "Velocity", velocity);
   sprintf(cmd, CS_VEL_CMD.c_str(), csNo + 50, velocity);
+  return std::string(cmd);
+}
+
+std::string pmacHardwarePower::getCSAccTimeCmd(int csNo, double time) {
+  char cmd[64];
+  static const char *functionName = "getCSAccTimeCmd";
+
+  debug(DEBUG_TRACE, functionName, "CS Number", csNo);
+  debug(DEBUG_TRACE, functionName, "time", time);
+  sprintf(cmd, CS_ACCELERATION_CMD.c_str(), csNo, time, csNo, time);
   return std::string(cmd);
 }

@@ -12,6 +12,7 @@ const std::string pmacHardwareTurbo::GLOBAL_STATUS = "???";
 const std::string pmacHardwareTurbo::AXIS_STATUS = "#%d?";
 const std::string pmacHardwareTurbo::CS_STATUS = "&%d??";
 const std::string pmacHardwareTurbo::CS_VEL_CMD = "I%d89=%f ";
+const std::string pmacHardwareTurbo::CS_ACCELERATION_CMD = "I%d87=%f";
 
 const int pmacHardwareTurbo::PMAC_STATUS1_MAXRAPID_SPEED = (0x1 << 0);
 const int pmacHardwareTurbo::PMAC_STATUS1_ALT_CMNDOUT_MODE = (0x1 << 1);
@@ -282,5 +283,15 @@ std::string pmacHardwareTurbo::getCSVelocityCmd(int csNo, double velocity) {
   debug(DEBUG_TRACE, functionName, "CS Number", csNo);
   debug(DEBUG_TRACE, functionName, "Velocity", velocity);
   sprintf(cmd, CS_VEL_CMD.c_str(), csNo + 50, velocity);
+  return std::string(cmd);
+}
+
+std::string pmacHardwareTurbo::getCSAccTimeCmd(int csNo, double time) {
+  char cmd[64];
+  static const char *functionName = "getCSAccTimeCmd";
+
+  debug(DEBUG_TRACE, functionName, "CS Number", csNo);
+  debug(DEBUG_TRACE, functionName, "time", time);
+  sprintf(cmd, CS_ACCELERATION_CMD.c_str(), csNo + 50, time);
   return std::string(cmd);
 }
