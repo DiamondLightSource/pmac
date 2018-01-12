@@ -26,11 +26,15 @@
 	<pmac.dls_pmac_cs_asyn_motor ADDR="2" DESC="CS3 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":B" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="MOTORS.B3"/>
 	<pmac.dls_pmac_cs_asyn_motor ADDR="7" DESC="CS3 HEIGHT" DHLM="10000" DLLM="-10000" EGU="mm" M=":X" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="MOTORS.X3"/>
 	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="CS3 ANGLE" DHLM="10000" DLLM="-10000" EGU="deg" M=":Y" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="MOTORS.Y3"/>
-	<pmac.pmacCreateCsGroup AxisCount="2" Controller="Brick" GroupName="1,2-&gt;A,B" GroupNumber="0"/>
+	<pmac.pmacCreateCsGroup AxisCount="6" Controller="Brick" GroupName="1,2-&gt;A,B" GroupNumber="0"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="Brick" GroupName="3,4-&gt;I" GroupNumber="1"/>
-	<pmac.pmacCreateCsGroup AxisCount="4" Controller="Brick" GroupName="MIXED" GroupNumber="2"/>
+	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED" GroupNumber="2"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="1" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="V" AxisNumber="5" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="W" AxisNumber="6" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="X" AxisNumber="7" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="Y" AxisNumber="8" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="3" Controller="Brick" CoordSysNumber="3" GroupNumber="1"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="4" Controller="Brick" CoordSysNumber="3" GroupNumber="1"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="1" Controller="Brick" CoordSysNumber="3" GroupNumber="2"/>

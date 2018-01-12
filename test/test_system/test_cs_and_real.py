@@ -1,8 +1,10 @@
 from unittest import TestCase
 from test.helper.testbrick import TestBrick, DECIMALS
-
+from datetime import datetime
 
 # These tests verify real and virtual motors interact correctly
+
+
 class TestCsAndReal(TestCase):
     def test_real_moves_cs(self):
         """ check that virtual axes update as expected on real axis moves
@@ -41,3 +43,48 @@ class TestCsAndReal(TestCase):
         self.assertAlmostEqual(tb.height.pos, 1, DECIMALS)
         self.assertAlmostEqual(tb.jack1.pos, 1, DECIMALS)
         self.assertAlmostEqual(tb.jack2.pos, 1, DECIMALS)
+
+    def test_velocity_control(self):
+        """
+        velocity of coordinate system motors should be controlled by the motor record VELO
+        for individual moves but should be limited by max speed in a motion program (ix16)
+        for each real motor in the move
+        """
+
+        tb = TestBrick()
+        tb.set_cs_group(tb.g2)
+
+        tb.height.set_speed(10)
+        start = datetime.now()
+        tb.height.go(10)
+        elapsed = datetime.now() - start
+        print(elapsed)
+        self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
+        self.assertTrue(elapsed.seconds < 2.5)
+
+        tb.height.set_speed(2)
+        start = datetime.now()
+        tb.height.go(0)
+        elapsed = datetime.now() - start
+        print(elapsed)
+        self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
+        self.assertTrue(5 < elapsed.seconds < 6.5)
+
+        tb.height.set_speed(100)
+        # set max motion program speed of jack 1 (axis 3) to 1mm/s
+        tb.send_command('i316=2')
+        start = datetime.now()
+        tb.height.go(10)
+        elapsed = datetime.now() - start
+        print(elapsed)
+        self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
+        self.assertTrue(5 < elapsed.seconds < 6.5)
+
+        # set max motion program speed of jack 1 (axis 3) to 500mm/s
+        tb.send_command('i316=500')
+        start = datetime.now()
+        tb.height.go(0)
+        elapsed = datetime.now() - start
+        print(elapsed)
+        self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
+        self.assertLess(elapsed.seconds, 3)

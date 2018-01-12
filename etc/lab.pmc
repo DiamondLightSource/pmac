@@ -1,33 +1,3 @@
-; **************************************************************
-; motion program copied from
-; /dls_sw/prod/R3.14.12.3/support/pmacCoord/1-51/pmacCoordApp/pmc/PROG10_CS_motion.pmc
-; **************************************************************
-
-;####################################################
-; Generic program for moving any co-ordinate system
-; Original Author: Tom Cobb
-; Used variables: Q71..Q79, Q81..Q89
-; You should do a $$$ or type the following the first time you load this prog.
-; If you type the commands in, ignore any errors. If you $$$, PLC1 will do it
-; automatically for you at startup:
-;&16 DEFINE LOOKAHEAD 50,10
-;&15 DEFINE LOOKAHEAD 50,10
-;&14 DEFINE LOOKAHEAD 50,10
-;&13 DEFINE LOOKAHEAD 50,10
-;&12 DEFINE LOOKAHEAD 50,10
-;&11 DEFINE LOOKAHEAD 50,10
-;&10 DEFINE LOOKAHEAD 50,10
-;&9 DEFINE LOOKAHEAD 50,10
-;&8 DEFINE LOOKAHEAD 50,10
-;&7 DEFINE LOOKAHEAD 50,10
-;&6 DEFINE LOOKAHEAD 50,10
-;&5 DEFINE LOOKAHEAD 50,10
-;&4 DEFINE LOOKAHEAD 50,10
-;&3 DEFINE LOOKAHEAD 50,10
-;&2 DEFINE LOOKAHEAD 50,10
-;####################################################
-
-
 ; ###################################################
 ; RUNNING TESTS ON CLIPPER
 ; ###################################################

@@ -73,7 +73,7 @@ public:
 
     virtual asynStatus parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &status) = 0;
 
-    virtual std::string getCSVelocityCmd(int csNo, double velocity) = 0;
+    virtual std::string getCSVelocityCmd(int csNo, double velocity, double steps) = 0;
 
     virtual std::string getCSAccTimeCmd(int csNo, double time) = 0;
 

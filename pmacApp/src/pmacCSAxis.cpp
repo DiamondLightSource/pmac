@@ -62,6 +62,7 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
   char buff[128];
   char commandtemp[128];
   double deviceUnits = 0.0;
+  double steps = fabs(position - position_);
 
   setIntegerParam(pC_->motorStatusMoving_, true);
   movingStatusWasSet_ = 1;
@@ -71,10 +72,7 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
     pC_->makeCSDemandsConsistent();
   }
 
-  if (max_velocity != 0) {
-    /* Isx89 = default feedrate in EGU/s */
-    strcpy(vel_buff, pC_->getVelocityCmd(max_velocity / (double) scale_).c_str());
-  }
+  strcpy(vel_buff, pC_->getVelocityCmd(max_velocity, steps).c_str());
   if (acceleration != 0) {
     if (max_velocity != 0) {
       /* Isx87 = accel time in msec */
@@ -104,7 +102,8 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
       status = pC_->axisWriteRead(command, response);
     }
   } else {
-    sprintf(command, "%s%sQ7%d=%.12f", vel_buff, acc_buff, axisNo_, deviceUnits);
+    // do not pass the velocity buffer, deferred velocity is controlled separately
+    sprintf(command, "%sQ7%d=%.12f", acc_buff, axisNo_, deviceUnits);
     deferredMove_ = pC_->movesDeferred_;
     sprintf(deferredCommand_, "%s", command);
   }

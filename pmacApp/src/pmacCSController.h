@@ -58,7 +58,7 @@ public:
 
     csStatus getStatus();
 
-    std::string getVelocityCmd(double velocity);
+    std::string getVelocityCmd(double velocity, double steps);
 
     std::string getCSAccTimeCmd(double time);
 

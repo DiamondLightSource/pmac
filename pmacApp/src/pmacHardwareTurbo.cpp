@@ -11,7 +11,7 @@
 const std::string pmacHardwareTurbo::GLOBAL_STATUS = "???";
 const std::string pmacHardwareTurbo::AXIS_STATUS = "#%d?";
 const std::string pmacHardwareTurbo::CS_STATUS = "&%d??";
-const std::string pmacHardwareTurbo::CS_VEL_CMD = "I%d89=%f ";
+const std::string pmacHardwareTurbo::CS_VEL_CMD = "&%dQ70=%f ";
 const std::string pmacHardwareTurbo::CS_ACCELERATION_CMD = "I%d87=%f";
 
 const int pmacHardwareTurbo::PMAC_STATUS1_MAXRAPID_SPEED = (0x1 << 0);
@@ -276,13 +276,20 @@ pmacHardwareTurbo::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coo
   return status;
 }
 
-std::string pmacHardwareTurbo::getCSVelocityCmd(int csNo, double velocity) {
+std::string pmacHardwareTurbo::getCSVelocityCmd(int csNo, double velocity, double steps) {
   char cmd[64];
   static const char *functionName = "getCSVelocityCmd";
+  double move_time = 0;
 
   debug(DEBUG_TRACE, functionName, "CS Number", csNo);
   debug(DEBUG_TRACE, functionName, "Velocity", velocity);
-  sprintf(cmd, CS_VEL_CMD.c_str(), csNo + 50, velocity);
+  // sets Q70 which PROG10 places into a TM command, so units are
+  // converted to milliseconds for entire move
+  // if velocity is 0 then set Q70 to 0 meaning use underlying real motor speeds
+  if(velocity !=0) {
+    move_time = steps/velocity*1000;
+  }
+  sprintf(cmd, CS_VEL_CMD.c_str(), csNo, move_time);
   return std::string(cmd);
 }
 

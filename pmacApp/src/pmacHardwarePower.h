@@ -31,7 +31,7 @@ public:
 
     asynStatus parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus);
 
-    std::string getCSVelocityCmd(int csNo, double velocity);
+    std::string getCSVelocityCmd(int csNo, double velocity, double steps);
 
     std::string getCSAccTimeCmd(int csNo, double time);
 

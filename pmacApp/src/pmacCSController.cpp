@@ -144,7 +144,7 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
           csNumber_(csNo),
           progNumber_(program),
           movesDeferred_(0),
-          csMoveTime_(-1) {
+          csMoveTime_(0) {
   asynStatus status = asynSuccess;
   static const char *functionName = "pmacCSController";
 
@@ -374,8 +374,9 @@ csStatus pmacCSController::getStatus() {
   return cStatus_;
 }
 
-std::string pmacCSController::getVelocityCmd(double velocity) {
-  return ((pmacController *) pC_)->pHardware_->getCSVelocityCmd(csNumber_, velocity);
+std::string pmacCSController::getVelocityCmd(double velocity, double steps) {
+  return ((pmacController *) pC_)->pHardware_->getCSVelocityCmd(csNumber_, velocity,
+                                                                steps);
 }
 
 std::string pmacCSController::getCSAccTimeCmd(double time) {

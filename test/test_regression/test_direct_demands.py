@@ -12,29 +12,20 @@ class TestSwitchGroup(TestCase):
         """
         tb = TestBrick()
         tb.set_cs_group(tb.g3)
-        monitor1 = MoveMonitor(tb.m1.pv_root)
-        tb.m1.go_direct(3, wait=False)
-        tb.m2.go_direct(3, wait=False)
-        # since this is a CS move - wait for any of the motors
-        monitor1.wait_for_one_move(30)
+        tb.all_go_direct([tb.m1, tb.m2], [3, 3])
 
         self.assertAlmostEqual(tb.m1.pos, 3, DECIMALS)
         self.assertAlmostEqual(tb.m2.pos, 3, DECIMALS)
 
-        monitor1.reset()
         tb.set_cs_group(tb.g1)
-        tb.A2.go_direct(2, wait=False)
-        tb.B2.go_direct(2, wait=False)
-        monitor1.wait_for_one_move(30)
+        tb.all_go_direct([tb.A2, tb.B2], [2, 2])
 
-        self.assertAlmostEqual(tb.m1.pos, 20, DECIMALS)
-        self.assertAlmostEqual(tb.m2.pos, 200, DECIMALS)
+        self.assertAlmostEqual(tb.m1.pos, 2, DECIMALS)
+        self.assertAlmostEqual(tb.m2.pos, 2, DECIMALS)
 
-        monitor1.reset()
         tb.set_cs_group(tb.g3)
-        tb.m1.go_direct(3, wait=False)
-        monitor1.wait_for_one_move(30)
+        tb.m1.go_direct(3)
 
         self.assertAlmostEqual(tb.m1.pos, 3, DECIMALS)
         # if make CS consistent has failed then this will also have moved back to pos 3
-        self.assertAlmostEqual(tb.m2.pos, 200, DECIMALS)
+        self.assertAlmostEqual(tb.m2.pos, 2, DECIMALS)

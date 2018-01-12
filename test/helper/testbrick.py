@@ -1,7 +1,9 @@
 from cothread import catools as ca
 
 # number of decimals to use in verifying positions
-DECIMALS = 4
+# cant be very high on a clipper since it seems to
+# set 'in position' a little early
+DECIMALS = 2
 
 
 class Axis:
@@ -19,17 +21,19 @@ class Axis:
             cs_name = 'CS{}:'.format(cs_no)
         else:
             cs_name = ''
-        self.direct_demand = 'BRICK1:{}M{}'.format(cs_name, axis_no)
+        self.direct_demand = 'BRICK1:{}M{}:DirectDemand'.format(cs_name, axis_no)
+        # the following helps to avoid waiting for a timeout when the IOC is down
+        ca.caget(self.direct_demand, timeout=.1)
 
     @property
     def pos(self):
         return ca.caget(self.rbv)
 
     def go(self, position, wait=True):
-        ca.caput(self.demand, position, wait=wait)
+        ca.caput(self.demand, position, wait=wait, timeout=60)
 
     def go_direct(self, position, wait=True):
-        ca.caput(self.direct_demand, position, wait=wait)
+        ca.caput(self.direct_demand, position, wait=wait, timeout=60)
 
     def stop(self):
         ca.caput(self.stop_pv, 1, wait=True)
@@ -138,6 +142,9 @@ class TestBrick:
         values = [150] * len(velo_pvs)
         ca.caput(velo_pvs, values, wait=True, timeout=3)
 
+        # also make motors speed, acceleration in motion programs fast
+        self.send_command('i117,8,100=10 i116,8,100=500')
+
         # move all real motors to zero
         demand_pvs = [axis.demand for axis in r.values()]
         values = [0] * len(demand_pvs)
@@ -159,6 +166,11 @@ class TestBrick:
     @classmethod
     def all_go(cls, axes, values, wait=True, timeout=10):
         pvs = [axis.demand for axis in axes]
+        ca.caput(pvs, values, wait=wait, timeout=timeout)
+
+    @classmethod
+    def all_go_direct(cls, axes, values, wait=True, timeout=10):
+        pvs = [axis.direct_demand for axis in axes]
         ca.caput(pvs, values, wait=wait, timeout=timeout)
 
     def set_cs_group(self, group):
