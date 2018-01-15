@@ -83,6 +83,8 @@ record(ao, "$(PMAC):$(M):SCALE") {
 ##############################################################
 record(longin, "$(PMAC):$(M):DirectMotorNumber")
 {
+    field(PINI, 1)
+    field(VAL, 0)
     field(DTYP, "asynInt32")
     field(SCAN, "I/O Intr")
     field(INP,  "@asyn($(PORT),$(ADDR),4)PMAC_REAL_MOTOR_NUMBER")

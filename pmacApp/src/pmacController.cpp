@@ -519,6 +519,13 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setIntegerParam(PMAC_C_MediumStore_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_SlowStore_, 0) == asynSuccess) && paramStatus);
 
+  // Set individual axes parmeters
+  for(index=0; index<=numAxes; index++) {
+    paramStatus = ((setIntegerParam(
+            index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
+    paramStatus = ((setIntegerParam(
+            index, PMAC_C_MotorScale_, 1)  == asynSuccess) &&paramStatus);
+  }
   callParamCallbacks();
 
   if (!paramStatus) {
@@ -635,17 +642,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                     epicsThreadGetStackSize(epicsThreadStackMedium),
                     (EPICSTHREADFUNC) trajTaskC,
                     this);
-
-  // moved this to the end because DirectMotorNumber PV was not processing
-  for(index=0; index<=numAxes; index++) {
-    paramStatus = ((setIntegerParam(
-            index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
-    paramStatus = ((setIntegerParam(
-            index, PMAC_C_MotorScale_, 1)  == asynSuccess) &&paramStatus);
-  }
-
-  callParamCallbacks();
-
 }
 
 

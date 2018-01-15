@@ -3,6 +3,7 @@ from test.helper.trajectory import Trajectory
 from test.helper.movemonitor import MoveMonitor
 from datetime import datetime
 from test.helper.testbrick import TestBrick, DECIMALS
+from cothread import Sleep
 
 # these are test_regression tests for the set of issues that pmacController::makeCSDemandsConsistent
 # is trying to solve
@@ -75,15 +76,18 @@ class TestMakeCsConsistent(TestCase):
         tb.set_cs_group(tb.g3)
         # the first CS move after a coord sys group switch clears the cached real motor positions
         # so this test must do that initial CS move here
-        tb.height.go(0)
+        # MAKE SURE this actually initiates a move, else makeCSDemandsConsistent wont be called
+        tb.height.go(1)
         # NOTE: the above is a little artificial and masks a very minor issue: any axis creep that occurs
         # between changing coordinate system mappings and the first CS move will be kept - fixing
         # this would require architecture changes for an unlikely event with little consequence
 
-        for retry in range(10):
+        for retry in range(2, 10):
             move = cs_move = retry
             tb.cs3.set_move_time(0)
             # move affected axes to start
+            # note this is also testing that moving the real axes updates the
+            # Q7x variables for the associated virtual axes
             tb.all_go([tb.m1, tb.m2, tb.m3, tb.m4], [0, 0, 0, 0])
 
             # pretend that axis 1 moved by itself.
