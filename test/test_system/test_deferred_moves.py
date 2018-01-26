@@ -70,6 +70,7 @@ class TestDeferred(TestCase):
             tb.set_deferred_moves(False)
             m.wait_for_one_move(10)
             elapsed = datetime.now() - start
+            print(elapsed)
 
             # verify motion
             self.assertAlmostEqual(tb.jack1.pos, 5, DECIMALS)

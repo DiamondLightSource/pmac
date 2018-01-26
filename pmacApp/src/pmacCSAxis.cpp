@@ -235,7 +235,6 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   previous_position_ = position;
   previous_direction_ = direction;
 
-
   if (deferredMove_ != 0) {
     done = 0;
   } else {
@@ -248,13 +247,20 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
     moving_ = false;
   }
 
+  // todo there are currently issues with timing of entering and
+  // exiting the moving state. To support deferred coordinated moves
+  // I am currently using MOVN to control busy status of direct motors
+  // todo need to fix problems with DMOV taking an extra second to
+  // return to 1 on motor motion completing and THEN get attatch
+  // motors' busy status to DMOV instead of MOVN
+  if(!movingStatusWasSet_) {
+    setIntegerParam(pC_->motorStatusMoving_, cStatus.moving_ | deferredMove_);
+  }
+  movingStatusWasSet_ = 0;
+
   setIntegerParam(pC_->motorStatusDone_, done);
   setIntegerParam(pC_->motorStatusHighLimit_, cStatus.highLimit_);
   setIntegerParam(pC_->motorStatusHomed_, homeSignal);
-  if(!movingStatusWasSet_) {
-    setIntegerParam(pC_->motorStatusMoving_, cStatus.moving_);
-  }
-  movingStatusWasSet_ = 0;
   setIntegerParam(pC_->motorStatusLowLimit_, cStatus.lowLimit_);
   setIntegerParam(pC_->motorStatusFollowingError_, cStatus.followingError_);
   setIntegerParam(pC_->motorStatusProblem_, cStatus.problem_);

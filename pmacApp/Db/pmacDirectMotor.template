@@ -77,8 +77,15 @@ record(ao, "$(PMAC):$(M):SCALE") {
 # For CS motors DirectMotorNumber is set by the driver when it
 # maps a CS motor directly to a real motor.
 #
+# If as CS motor is not directly mapped then it wants an
+# mres of 1 but the scaling means this usually translates
+# to 0.0001.
+#
 # For real motors DirectMotorNumber is always reported as the
 # motor's own number
+#
+# The calculation in MresSource handles linking in the
+# correct real_motor mres or the value 1 for kinematic CS axes
 #
 ##############################################################
 record(longin, "$(PMAC):$(M):DirectMotorNumber")
@@ -118,7 +125,7 @@ record(scalcout, $(PMAC):$(M):MresSource)
 {
     field(DTYP, "Soft Channel")
     field(INPA, "$(PMAC):$(M):DirectMotorNumber")
-    field(CALC, "(PRINTF('$(PMAC):M%d.MRES CPP',A))")
+    field(CALC, "A?(PRINTF('$(PMAC):M%d.MRES CPP',A)):1")
     field(FLNK, "$(PMAC):$(M):DirectMres")
     field(OUT, "$(PMAC):$(M):DirectMres.INPA CA")
 }

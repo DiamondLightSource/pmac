@@ -4,12 +4,15 @@ import cothread.catools as ca
 from datetime import datetime
 
 from test.helper.testbrick import TestBrick, DECIMALS
+from cothread import Sleep
+from test.helper.movemonitor import MoveMonitor
 
 
 # These tests verify real and virtual motors interact correctly
 
 
 class TestDirect(TestCase):
+
     def test_quick(self):
         # prove that timings work OK when not using the TesBrick class
         ca.caput('BRICK1:M5.VMAX', 10, wait=True, timeout=60)
@@ -35,6 +38,8 @@ class TestDirect(TestCase):
         tb = TestBrick()
         tb.set_cs_group(tb.g3)
 
+        # tb.jack1.go_direct(5)
+        # tb.jack2.go_direct(5)
         tb.all_go_direct([tb.jack1, tb.jack2], [5, 5])
 
         # check height(x) and angle(y) in CS3
@@ -95,31 +100,137 @@ class TestDirect(TestCase):
         self.assertAlmostEqual(tb.m5.pos, 10, DECIMALS)
         self.assertTrue(5 <= elapsed.seconds < 7)
 
-#  def test_velocity_cs(self):
-# todo
-# tb.height.set_speed(2)
-# start = datetime.now()
-# tb.height.go_direct(0)
-# elapsed = datetime.now() - start
-# print(elapsed)
-# self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
-# self.assertTrue(5 < elapsed.seconds < 6.5)
-#
-# tb.height.set_speed(100)
-# # set max motion program speed of jack 1 (axis 3) to 1mm/s
-# tb.send_command('i316=2')
-# start = datetime.now()
-# tb.height.go(10)
-# elapsed = datetime.now() - start
-# print(elapsed)
-# self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
-# self.assertTrue(5 < elapsed.seconds < 6.5)
-#
-# # set max motion program speed of jack 1 (axis 3) to 500mm/s
-# tb.send_command('i316=500')
-# start = datetime.now()
-# tb.height.go(0)
-# elapsed = datetime.now() - start
-# print(elapsed)
-# self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
-# self.assertTrue(elapsed.seconds < 1.5)
+    def test_velocity_cs(self):
+        """ verify the speed of direct virtual axes
+        """
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+
+        tb.height.set_speed(2)
+        tb.height.go(0.1)
+
+        start = datetime.now()
+        tb.height.go_direct(10)
+        elapsed = datetime.now() - start
+        print(elapsed)
+        self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
+        self.assertTrue(5 < elapsed.seconds < 7)
+
+        tb.height.set_speed(100)
+        tb.height.go(0)
+        # set max motion program speed of jack 1 (axis 3) to 2mm/s
+        # cts/msec is the same as mm/s if mres = .001
+        tb.send_command('i316=2')
+        start = datetime.now()
+        tb.height.go(10)
+        elapsed = datetime.now() - start
+        print(elapsed)
+        self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
+        # the faster velocity should be overridden by max program speed of jack 1
+        self.assertTrue(5 < elapsed.seconds < 7)
+
+        # set max motion program speed of jack 1 (axis 3) to 500mm/s
+        tb.send_command('i316=500')
+        tb.height.go(0)
+        start = datetime.now()
+        tb.height.go(10)
+        elapsed = datetime.now() - start
+        print(elapsed)
+        # this time the motor speed restriction does not apply and the motion is fast
+        self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
+        self.assertTrue(elapsed.seconds < 1.5)
+
+    def moves_done(self, value):
+        self.moving = False
+
+    def reset_done(self):
+        self.moving = True
+
+    def wait_for_done(self):
+        while self.moving:
+            Sleep(.05)
+
+    def test_direct_deferred_moves_cs(self):
+        """ verify coordinated deferred direct moves work in quick succession
+            i16 diffractometer style
+        """
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+
+        for iteration in range(2):
+            for height in range(40, 1, -1):
+                angle = height / 20.0
+                # todo rapidly mixing direct and standard moves seems to cause issues
+                # todo this needs investigation
+                tb.all_go_direct([tb.jack1, tb.jack2], [0, 0])
+                self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
+                self.assertAlmostEqual(tb.angle.pos, 0, DECIMALS)
+
+                tb.cs3.set_deferred_moves(True)
+
+                self.reset_done()
+                tb.height.go_direct(height, callback=self.moves_done, wait=False)
+                tb.angle.go_direct(angle, wait=False)
+                Sleep(.2)
+
+                # verify no motion yet
+                self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
+                self.assertAlmostEqual(tb.angle.pos, 0, DECIMALS)
+
+                start = datetime.now()
+                tb.cs3.set_deferred_moves(False)
+                self.wait_for_done()
+                elapsed = datetime.now() - start
+                print("Iteration {}. Direct Deferred Coordinated to height {} took {}".format(iteration, height, elapsed))
+
+                # verify motion
+                self.assertAlmostEqual(tb.height.pos, height, DECIMALS)
+                self.assertAlmostEqual(tb.angle.pos * 10, angle * 10, DECIMALS)
+
+    def test_direct_deferred_moves(self):
+        """ verify real motor deferred direct moves work in quick succession
+            i16 diffractometer style
+        """
+        # this test cannot work due to lack of put with callback support in real
+        # motors when when deferred -- todo fix this !
+        return
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+        monitor = MoveMonitor(tb.jack1.pv_root)
+
+        for iteration in range(2):
+            for height1 in range(40, 1, -1):
+                height2 = height1 / 2.0
+                # todo mixing direct and standard moves seems to cause issues
+                # tb.all_go([tb.jack1, tb.jack2], [0, 0])
+                tb.all_go_direct([tb.jack1, tb.jack2], [0, 0])
+                self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)
+                self.assertAlmostEqual(tb.jack2.pos, 0, DECIMALS)
+
+                tb.set_deferred_moves(True)
+
+                # todo put with callback for deferred real motors is not yet working
+                # todo this is true of both direct and normal PVs
+                # using MoveMonitor instead of wait_for_done until this is fixed
+                # self.reset_done()
+                monitor.reset()
+                # tb.jack1.go_direct(height1, callback=self.moves_done, wait=False)
+                tb.jack1.go_direct(height1, wait=False)
+                tb.jack2.go_direct(height2, wait=False)
+                Sleep(.2)
+
+                # verify no motion yet
+                self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)
+                self.assertAlmostEqual(tb.jack2.pos, 0, DECIMALS)
+
+                start = datetime.now()
+                tb.set_deferred_moves(False)
+                Sleep(1)
+                monitor.wait_for_one_move(10)
+                # self.wait_for_done()
+                elapsed = datetime.now() - start
+                print("Iteration {}. Direct Deferred real motors to height {} took {}".format(iteration, height1, elapsed))
+
+                # verify motion
+                self.assertAlmostEqual(tb.jack1.pos, height1, DECIMALS)
+                self.assertAlmostEqual(tb.jack2.pos, height2, DECIMALS)

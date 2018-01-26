@@ -3,7 +3,7 @@ from cothread import catools as ca
 # number of decimals to use in verifying positions
 # cant be very high on a clipper since it seems to
 # set 'in position' a little early
-DECIMALS = 2
+DECIMALS = 1
 
 
 class Axis:
@@ -21,6 +21,8 @@ class Axis:
             cs_name = 'CS{}:'.format(cs_no)
         else:
             cs_name = ''
+        self.cs_assignment = 'BRICK1:M{}:CsAxis'.format(axis_no)
+        self.cs_port = 'BRICK1:M{}:CsPort'.format(axis_no)
         self.direct_demand = 'BRICK1:{}M{}:DirectDemand'.format(cs_name, axis_no)
         # the following helps to avoid waiting for a timeout when the IOC is down
         ca.caget(self.direct_demand, timeout=.1)
@@ -32,8 +34,9 @@ class Axis:
     def go(self, position, wait=True):
         ca.caput(self.demand, position, wait=wait, timeout=60)
 
-    def go_direct(self, position, wait=True):
-        ca.caput(self.direct_demand, position, wait=wait, timeout=60)
+    def go_direct(self, position, wait=True, callback=None):
+        ca.caput(self.direct_demand, position, wait=wait, timeout=60,
+                 callback=callback)
 
     def stop(self):
         ca.caput(self.stop_pv, 1, wait=True)
@@ -45,6 +48,17 @@ class Axis:
     def set_acceleration(self, acc):
         ca.caput(self.acc, acc, wait=True)
 
+    def set_cs_assignment(self, mapping):
+        ca.caput(self.cs_assignment, mapping, wait=True)
+
+    def set_cs_port(self, port):
+        ca.caput(self.cs_port, port, wait=True)
+
+    @property
+    def alarm(self):
+        result = ca.caget(self.pv_root, format=ca.FORMAT_CTRL)
+        return result.severity
+
 
 class CoordSys:
     def __init__(self, pv_root, cs_no, port):
@@ -53,6 +67,8 @@ class CoordSys:
         self.port = port
         self.move_time = pv_root + ':CsMoveTime'
         self.defer = pv_root + ':DeferMoves'
+        self.set_move_time(0)
+        self.set_deferred_moves(False)
 
     def set_move_time(self, move_time):
         ca.caput(self.move_time, move_time, wait=True)
@@ -143,7 +159,7 @@ class TestBrick:
         ca.caput(velo_pvs, values, wait=True, timeout=3)
 
         # also make motors speed, acceleration in motion programs fast
-        self.send_command('i117,8,100=10 i116,8,100=500')
+        self.send_command('i117,8,100=10 i116,8,100=200')
 
         # move all real motors to zero
         demand_pvs = [axis.demand for axis in r.values()]
