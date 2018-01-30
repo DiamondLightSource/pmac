@@ -1,5 +1,5 @@
 from unittest import TestCase
-from test.helper.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TestBrick, DECIMALS
 from datetime import datetime
 
 # These tests verify real and virtual motors interact correctly

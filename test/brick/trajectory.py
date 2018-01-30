@@ -1,7 +1,7 @@
 #!/bin/env python
 from unittest import TestCase
 from cothread import catools as ca
-from test.helper.testbrick import TestBrick
+from test.brick.testbrick import TestBrick
 
 ALL_AXES = set('ABCUVWXYZ')
 

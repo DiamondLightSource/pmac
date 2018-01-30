@@ -1,8 +1,8 @@
 from unittest import TestCase
-from test.helper.trajectory import Trajectory
-from test.helper.movemonitor import MoveMonitor
+from test.brick.trajectory import Trajectory
+from test.brick.movemonitor import MoveMonitor
 from datetime import datetime
-from test.helper.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TestBrick, DECIMALS
 from cothread import Sleep
 import cothread.catools as ca
 

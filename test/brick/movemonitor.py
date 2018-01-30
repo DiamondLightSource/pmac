@@ -4,6 +4,9 @@ from cothread import Sleep
 
 
 class MoveMonitor:
+    """ Monitor a motor's DMOV field to determine it as started and then
+        completed motion
+        """
     def __init__(self, motor_pv):
         self._motor_pv = motor_pv
         self._done_moving_pv = motor_pv + '.DMOV'
@@ -34,3 +37,22 @@ class MoveMonitor:
             waited += interval
             if waited > timeout:
                 raise RuntimeError("timeout waiting for motor {}".format(self._motor_pv))
+
+
+class MotorCallback:
+    """ Provide a function for 'put with callback' caput to monitor when motion
+        completes. To use: instantiate an instance and pass its moves_done method
+        as the callback. Then call wait_for_done to block until the motor completes.
+        """
+    def __init__(self):
+        self.moving = False
+
+    def moves_done(self, _):
+        self.moving = False
+
+    def reset_done(self):
+        self.moving = True
+
+    def wait_for_done(self):
+        while self.moving:
+            Sleep(.05)

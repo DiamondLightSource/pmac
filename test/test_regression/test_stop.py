@@ -1,6 +1,6 @@
 from unittest import TestCase
-from test.helper.movemonitor import MoveMonitor
-from test.helper.testbrick import TestBrick
+from test.brick.movemonitor import MoveMonitor
+from test.brick.testbrick import TestBrick
 from cothread import Sleep
 
 # These tests verify that stop works for virtual and real motors

@@ -1,6 +1,6 @@
 from unittest import TestCase
-from test.helper.movemonitor import MoveMonitor
-from test.helper.testbrick import TestBrick, DECIMALS
+from test.brick.movemonitor import MoveMonitor
+from test.brick.testbrick import TestBrick, DECIMALS
 
 
 class TestSwitchGroup(TestCase):

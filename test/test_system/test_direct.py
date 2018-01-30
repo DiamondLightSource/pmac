@@ -3,9 +3,9 @@ from unittest import TestCase
 import cothread.catools as ca
 from datetime import datetime
 
-from test.helper.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TestBrick, DECIMALS
 from cothread import Sleep
-from test.helper.movemonitor import MoveMonitor
+from test.brick.movemonitor import MoveMonitor, MotorCallback
 
 
 # These tests verify real and virtual motors interact correctly
@@ -140,22 +140,13 @@ class TestDirect(TestCase):
         self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
         self.assertTrue(elapsed.seconds < 1.5)
 
-    def moves_done(self, value):
-        self.moving = False
-
-    def reset_done(self):
-        self.moving = True
-
-    def wait_for_done(self):
-        while self.moving:
-            Sleep(.05)
-
     def test_direct_deferred_moves_cs(self):
         """ verify coordinated deferred direct moves work in quick succession
             i16 diffractometer style
         """
         tb = TestBrick()
         tb.set_cs_group(tb.g3)
+        waiter = MotorCallback()
 
         for iteration in range(2):
             for height in range(40, 1, -1):
@@ -168,8 +159,8 @@ class TestDirect(TestCase):
 
                 tb.cs3.set_deferred_moves(True)
 
-                self.reset_done()
-                tb.height.go_direct(height, callback=self.moves_done, wait=False)
+                waiter.reset_done()
+                tb.height.go_direct(height, callback=waiter.moves_done, wait=False)
                 tb.angle.go_direct(angle, wait=False)
                 Sleep(.2)
 
@@ -179,7 +170,7 @@ class TestDirect(TestCase):
 
                 start = datetime.now()
                 tb.cs3.set_deferred_moves(False)
-                self.wait_for_done()
+                waiter.wait_for_done()
                 elapsed = datetime.now() - start
                 print("Iteration {}. Direct Deferred Coordinated to height {} took {}".format(iteration, height, elapsed))
 
