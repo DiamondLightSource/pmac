@@ -24,12 +24,17 @@
 ##############################################################
 record(ao, "$(PMAC):$(M):DirectDemand")
 {
-    field(DTYP, "Raw Soft Channel")
-    field(OMSL, "supervisory")
+    field(FLNK, "$(PMAC):$(M):DirectCountsCalc PP")
+}
+
+record(calcout, "$(PMAC):$(M):DirectCountsCalc")
+{
+    field(INPA, "$(PMAC):$(M):DirectDemand")
+    field(INPB, "$(PMAC):$(M):DirectMres PP")
+    field(INPC, "$(PMAC):$(M):DirectOffset PP")
+    field(INPD, "$(PMAC):$(M):SCALE")
+    field(CALC, "(A-C)/B*D")
     field(OUT, "$(PMAC):$(M):RawDirectDemand PP")
-    field(LINR, "LINEAR")
-    field(ASLO, 1)                              # to be overwritten by DirectMres
-    field(AOFF, 0)                              # to be overwritten by DirectOffset
 }
 
 record(ao, "$(PMAC):$(M):RawDirectDemand")
@@ -104,39 +109,38 @@ record(fanout, "$(PMAC):$(M):DirectSources")
     field(LNK2, "$(PMAC):$(M):OffsetSource")
 }
 
+# note using a scalcout here since its inpa can be set to
+# link or constant and runtime
 record(scalcout, "$(PMAC):$(M):DirectMres")
 {
     field(DTYP, "Soft Channel")
-    field(INPA, "$(PMAC):M1.MRES CPP MS")           # to be overwritten by MresSource
-    field(INPB, "$(PMAC):$(M):SCALE CPP MS")
-    field(CALC, "A/B")
-    field(OUT, "$(PMAC):$(M):DirectDemand.ASLO NPP")
+    field(INPA, "") # to be set by MresSource
+    field(CALC, "A")
 }
 
 record(scalcout, "$(PMAC):$(M):DirectOffset")
 {
     field(DTYP, "Soft Channel")
-    field(INPA, "$(PMAC):M1.OFF CPP MS")            # to be overwritten by OffsetSource
+    field(INPA, "") # to be set by OffsetSource
     field(CALC, "A")
-    field(OUT, "$(PMAC):$(M):DirectDemand.AOFF NPP")
 }
 
 record(scalcout, $(PMAC):$(M):MresSource)
 {
     field(DTYP, "Soft Channel")
     field(INPA, "$(PMAC):$(M):DirectMotorNumber")
-    field(CALC, "A?(PRINTF('$(PMAC):M%d.MRES CPP',A)):1")
-    field(FLNK, "$(PMAC):$(M):DirectMres")
+    field(CALC, "A?(PRINTF('$(PMAC):M%d.MRES',A)):1")
     field(OUT, "$(PMAC):$(M):DirectMres.INPA CA")
+    field(FLNK, "$(PMAC):$(M):DirectMres.PROC CA")
 }
 
 record(scalcout, $(PMAC):$(M):OffsetSource)
 {
     field(DTYP, "Soft Channel")
     field(INPA, "$(PMAC):$(M):DirectMotorNumber")
-    field(CALC, "(PRINTF('$(PMAC):M%d.OFF CPP',A))")
-    field(FLNK, "$(PMAC):$(M):DirectOffset")
+    field(CALC, "(PRINTF('$(PMAC):M%d.OFF',A))")
     field(OUT, "$(PMAC):$(M):DirectOffset.INPA CA")
+    field(FLNK, "$(PMAC):$(M):DirectOffset.PROC CA")
 }
 
 
