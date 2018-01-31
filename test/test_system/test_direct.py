@@ -180,13 +180,13 @@ class TestDirect(TestCase):
 
     def test_direct_deferred_moves(self):
         """ verify real motor deferred direct moves work in quick succession
-            i16 diffractometer style
+            using virtual 1-1 mapped axes which also have a CS motor record
         """
         # this test cannot work due to lack of put with callback support in real
-        # motors when when deferred -- todo fix this !
+        # motors when deferred -- todo fix this !
         return
         tb = TestBrick()
-        tb.set_cs_group(tb.g3)
+        tb.set_cs_group(tb.g1)
         monitor = MoveMonitor(tb.jack1.pv_root)
 
         for iteration in range(2):
@@ -225,3 +225,51 @@ class TestDirect(TestCase):
                 # verify motion
                 self.assertAlmostEqual(tb.jack1.pos, height1, DECIMALS)
                 self.assertAlmostEqual(tb.jack2.pos, height2, DECIMALS)
+
+    def test_small_steps(self):
+        """ verify real motor deferred direct moves work in quick succession
+            using virtual 1-1 mapped axes with CS motor record
+
+            (copied from i16 tests)
+        """
+        tb = TestBrick()
+        tb.set_cs_group(tb.g1)
+        waiter = MotorCallback()
+
+        kphi = tb.kphi.pos
+        kappa = tb.kappa.pos
+        ktheta = tb.ktheta.pos
+        for i in range(1, 100):
+            # set up deferred move
+            waiter.reset_done()
+            tb.cs2.set_deferred_moves(True)
+
+            next_kphi = kphi + 1
+            next_kappa = kappa + .01
+            next_ktheta = ktheta + .01
+
+            print('deferred move to kphi {}, kappa {}, ktheta {}'.format(
+                next_kphi, next_kappa, next_ktheta))
+
+            tb.cs2.kphi.go_direct(next_kphi, callback=waiter.moves_done, wait=False)
+            tb.cs2.kappa.go_direct(next_kappa, wait=False)
+            tb.cs2.ktheta.go_direct(next_ktheta, wait=False)
+            Sleep(.1)
+
+            # verify no motion yet
+            self.assertAlmostEquals(tb.kphi.pos, kphi, DECIMALS)
+            self.assertAlmostEquals(tb.kappa.pos, kappa, DECIMALS)
+            self.assertAlmostEquals(tb.ktheta.pos, ktheta, DECIMALS)
+
+            # make the move
+            tb.cs2.set_deferred_moves(False)
+            waiter.wait_for_done()
+
+            # verify motion
+            self.assertAlmostEquals(tb.kphi.pos, next_kphi, DECIMALS)
+            self.assertAlmostEquals(tb.kappa.pos, next_kappa, DECIMALS)
+            self.assertAlmostEquals(tb.ktheta.pos, next_ktheta, DECIMALS)
+
+            kphi = next_kphi
+            kappa = next_kappa
+            ktheta = next_ktheta

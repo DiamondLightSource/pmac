@@ -932,7 +932,6 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
   }
 
   // Loop over parameter list and search for values
-
   // Check for integer params
   std::string key = this->pIntParams_->firstKey();
   if (key != "") {

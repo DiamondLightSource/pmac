@@ -27,10 +27,10 @@ def make_controller(axes, groups, cs, pv_root):
 
     @add_attributes
     class Controller:
-        def __init__(self):
-            self.startup()
+        def __init__(self, init=True):
+            self.startup(init)
 
-        def startup(self):
+        def startup(self, init):
             """ override this function to put the brick in the initial state required for
                 tests. E.g. set speeds and initial motor positions """
             raise NotImplementedError

@@ -2,7 +2,8 @@ from cothread import catools as ca
 
 
 class Axis:
-    def __init__(self, pv_root, axis_no, cs_no):
+    def __init__(self, brick_pv_root, pv_root, axis_no, cs_no):
+        self.brick_pv_root = brick_pv_root
         self.pv_root = pv_root
         self.axis_no = axis_no
         self.cs_no = cs_no
@@ -16,11 +17,13 @@ class Axis:
             cs_name = 'CS{}:'.format(cs_no)
         else:
             cs_name = ''
-        self.cs_assignment = 'BRICK1:M{}:CsAxis'.format(axis_no)
-        self.cs_port = 'BRICK1:M{}:CsPort'.format(axis_no)
-        self.direct_demand = 'BRICK1:{}M{}:DirectDemand'.format(cs_name, axis_no)
-        # the following helps to avoid waiting for a timeout when the IOC is down
-        ca.caget(self.direct_demand, timeout=.1)
+        self.cs_assignment = brick_pv_root + 'M{}:CsAxis'.format(axis_no)
+        self.cs_port = brick_pv_root + 'M{}:CsPort'.format(axis_no)
+        self.direct_demand = brick_pv_root + '{}M{}:DirectDemand'.format(cs_name,
+                                                                         axis_no)
+
+        # the following helps to avoid waiting for a timeout if the IOC is down
+        ca.caget(self.rbv, timeout=.1)
 
     @property
     def pos(self):

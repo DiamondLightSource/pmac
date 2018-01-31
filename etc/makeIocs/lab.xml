@@ -31,6 +31,8 @@
 	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED" GroupNumber="2"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="1" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="C" AxisNumber="3" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="U" AxisNumber="4" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="V" AxisNumber="5" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="W" AxisNumber="6" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="X" AxisNumber="7" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
