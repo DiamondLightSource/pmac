@@ -149,7 +149,7 @@ class TestDirect(TestCase):
         waiter = MotorCallback()
 
         for iteration in range(2):
-            for height in range(40, 1, -1):
+            for height in range(10, 1, -1):
                 angle = height / 20.0
                 # todo rapidly mixing direct and standard moves seems to cause issues
                 # todo this needs investigation
@@ -190,7 +190,7 @@ class TestDirect(TestCase):
         monitor = MoveMonitor(tb.jack1.pv_root)
 
         for iteration in range(2):
-            for height1 in range(40, 1, -1):
+            for height1 in range(10, 1, -1):
                 height2 = height1 / 2.0
                 # todo mixing direct and standard moves seems to cause issues
                 # tb.all_go([tb.jack1, tb.jack2], [0, 0])
@@ -239,7 +239,7 @@ class TestDirect(TestCase):
         kphi = tb.kphi.pos
         kappa = tb.kappa.pos
         ktheta = tb.ktheta.pos
-        for i in range(1, 100):
+        for i in range(1, 25):
             # set up deferred move
             waiter.reset_done()
             tb.cs2.set_deferred_moves(True)

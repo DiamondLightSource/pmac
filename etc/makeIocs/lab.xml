@@ -28,7 +28,8 @@
 	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="CS3 ANGLE" DHLM="10000" DLLM="-10000" EGU="deg" M=":Y" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="MOTORS.Y3"/>
 	<pmac.pmacCreateCsGroup AxisCount="6" Controller="Brick" GroupName="1,2-&gt;A,B" GroupNumber="0"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="Brick" GroupName="3,4-&gt;I" GroupNumber="1"/>
-	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED" GroupNumber="2"/>
+	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED CS3" GroupNumber="2"/>
+	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED CS2" GroupNumber="3"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="1" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="C" AxisNumber="3" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
@@ -43,6 +44,10 @@
 	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="Brick" CoordSysNumber="3" GroupNumber="2"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="3" Controller="Brick" CoordSysNumber="3" GroupNumber="2"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="4" Controller="Brick" CoordSysNumber="3" GroupNumber="2"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="1" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="3" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="4" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
 	<pmac.GeoBrickTrajectoryControlT NPOINTS="10000" PORT="Brick" name="TRAJ"/>
 	<pmac.pmacStatus DEVICE="PMAC_BRICK_TEST" NAXES="8" PORT="Brick" name="STAT"/>
 	<pmac.pmacDisableLimitsCheck Axis="1" Controller="Brick"/>

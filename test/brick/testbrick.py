@@ -27,7 +27,8 @@ brick_axes = {'m1': Axis(bpr, 'PMAC_BRICK_TEST:MOTOR1', 1, 0),
 
 brick_groups = {'g1': '1,2->A,B',
                 'g2': '3,4->I',
-                'g3': 'MIXED'}
+                'g3': 'MIXED CS3',
+                'g4': 'MIXED CS2'}
 
 brick_cs = {'cs1': CoordSys('BRICK1:CS1', 1, 'CS1'),
             'cs2': CoordSys('BRICK1:CS2', 2, 'CS2'),

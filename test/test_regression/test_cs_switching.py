@@ -23,7 +23,7 @@ class TestCsSwitching(TestCase):
         tb.m3.set_cs_port('CS3')
         tb.m4.set_cs_port('CS3')
 
-        for i in range(30):
+        for i in range(15):
             print('trying CS switch {}'.format(i))
             tb.m3.set_cs_assignment('')
             tb.m4.set_cs_assignment('')

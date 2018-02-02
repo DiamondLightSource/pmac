@@ -12,4 +12,3 @@ pmacCallbackInterface::pmacCallbackInterface() {
 
 pmacCallbackInterface::~pmacCallbackInterface() {
 }
-

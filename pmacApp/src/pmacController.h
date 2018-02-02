@@ -341,6 +341,8 @@ public:
 
     asynStatus tScanIncludedAxes(int *axisMask);
 
+    void registerForLock(asynPortDriver *controller);
+
 protected:
     pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 

@@ -151,12 +151,16 @@ void pmacCSAxis::callback(pmacCommandStore *sPtr, int type) {
   static const char *functionName = "callback";
 
   if (type == pmacMessageBroker::PMAC_FAST_READ) {
+    // todo this locking is more extreme than required
+    // todo factor out the writeXXXParam in getAxisStatus
+    pC_->lock();
     status = this->getAxisStatus(sPtr);
     if (status != asynSuccess) {
       asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
                 "Controller %s Axis %d. %s: getAxisStatus failed to return asynSuccess.\n",
                 pC_->portName, axisNo_, functionName);
     }
+    pC_->unlock();
     callParamCallbacks();
   }
 }
@@ -247,18 +251,12 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
     moving_ = false;
   }
 
-  // todo there are currently issues with timing of entering and
-  // exiting the moving state. To support deferred coordinated moves
-  // I am currently using MOVN to control busy status of direct motors
-  // todo need to fix problems with DMOV taking an extra second to
-  // return to 1 on motor motion completing and THEN get attatch
-  // motors' busy status to DMOV instead of MOVN
   if(!movingStatusWasSet_) {
+    setIntegerParam(pC_->motorStatusDone_, done);
     setIntegerParam(pC_->motorStatusMoving_, cStatus.moving_ | deferredMove_);
   }
   movingStatusWasSet_ = 0;
 
-  setIntegerParam(pC_->motorStatusDone_, done);
   setIntegerParam(pC_->motorStatusHighLimit_, cStatus.highLimit_);
   setIntegerParam(pC_->motorStatusHomed_, homeSignal);
   setIntegerParam(pC_->motorStatusLowLimit_, cStatus.lowLimit_);

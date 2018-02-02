@@ -12,6 +12,7 @@
 #include "pmacCommandStore.h"
 
 #define MAX_REGISTERED_CALLBACKS 128
+#define MAX_REGISTERED_LOCKS 128
 
 class pmacCallbackStore {
 public:

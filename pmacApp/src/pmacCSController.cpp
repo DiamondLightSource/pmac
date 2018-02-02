@@ -163,6 +163,9 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
     status = asynError;
   }
 
+  // tell the broker to lock me when polling the brick
+  ((pmacController *) pC_)->registerForLock(this);
+
   //Create controller-specific parameters
   bool paramStatus = true;
   createParam(PMAC_CS_FirstParamString, asynParamInt32, &PMAC_CS_FirstParam_);
@@ -642,12 +645,12 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
     return asynError;
   }
 
-  pC->lock();
+  // pC->lock();
   for (int axis = 0; axis <= numAxes; axis++) {
     pAxis = new pmacCSAxis(pC, axis);
     pAxis = NULL;
   }
-  pC->unlock();
+  //pC->unlock();
   return asynSuccess;
 }
 

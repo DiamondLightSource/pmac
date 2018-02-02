@@ -479,12 +479,16 @@ void pmacAxis::callback(pmacCommandStore *sPtr, int type) {
 //  debug()
 
   if (type == pmacMessageBroker::PMAC_FAST_READ) {
+    // todo this locking is more extreme than required
+    // todo factor out the writeXXXParam in getAxisStatus
+    pC_->lock();
     status = this->getAxisStatus(sPtr);
     if (status != asynSuccess) {
       asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
                 "Controller %s Axis %d. %s: getAxisStatus failed to return asynSuccess.\n",
                 pC_->portName, axisNo_, functionName);
     }
+    pC_->unlock();
     callParamCallbacks();
   }
 }
@@ -562,6 +566,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
   // Parse the axis status
   axisStatus axStatus;
   retStatus = pC_->pHardware_->parseAxisStatus(axisNo_, sPtr, axStatus);
+
 
   setIntegerParam(pC_->PMAC_C_AxisBits01_, axStatus.status16Bit1_);
   setIntegerParam(pC_->PMAC_C_AxisBits02_, axStatus.status16Bit2_);
@@ -650,11 +655,12 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
     // Set the currently assigned CS number
     setIntegerParam(pC_->PMAC_C_AxisCS_, assignedCS_);
 
-    setIntegerParam(pC_->motorStatusDone_, axStatus.done_);
     setIntegerParam(pC_->motorStatusHighLimit_, axStatus.highLimit_);
     setIntegerParam(pC_->motorStatusHomed_, axStatus.home_);
+
     if (!movingStatusWasSet_) {
       setIntegerParam(pC_->motorStatusMoving_, axStatus.moving_);
+      setIntegerParam(pC_->motorStatusDone_, axStatus.done_);
     }
     movingStatusWasSet_ = 0;
     setIntegerParam(pC_->motorStatusLowLimit_, axStatus.lowLimit_);

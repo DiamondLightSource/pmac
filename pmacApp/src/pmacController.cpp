@@ -269,6 +269,9 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   i7002_ = 0;
   csGroupSwitchCalled_ = false;
 
+  // Create the message broker
+  pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
+
   // Create the hashtable for storing port to CS number mappings
   pPortToCs_ = new IntegerHashtable();
 
@@ -420,9 +423,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   // Create the trajectory store
   pTrajectory_ = new pmacTrajectory();
-
-  // Create the message broker
-  pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
 
   if (pBroker_->connect(lowLevelPortName, lowLevelPortAddress) != asynSuccess) {
     printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName,
@@ -622,6 +622,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
 
   // Register this class for updates
+  pBroker_->registerForLocks(this);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_FAST_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_SLOW_READ);
@@ -644,10 +645,13 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                     this);
 }
 
-
 pmacController::~pmacController(void) {
   //Destructor. Should never get here.
   delete pAxisZero;
+}
+
+void pmacController::registerForLock(asynPortDriver* controller) {
+  pBroker_->registerForLocks(controller);
 }
 
 void pmacController::startPMACPolling() {
@@ -931,6 +935,7 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
     this->slowUpdate(sPtr);
   }
 
+  lock();
   // Loop over parameter list and search for values
   // Check for integer params
   std::string key = this->pIntParams_->firstKey();
@@ -952,7 +957,6 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
         setIntegerParam(this->pIntParams_->lookup(key), val);
       }
     }
-    callParamCallbacks();
   }
 
   // Check for hex integer params
@@ -975,7 +979,6 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
         setIntegerParam(this->pHexParams_->lookup(key), val);
       }
     }
-    callParamCallbacks();
   }
 
   // Check for double params
@@ -998,7 +1001,6 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
         setDoubleParam(this->pDoubleParams_->lookup(key), val);
       }
     }
-    callParamCallbacks();
   }
 
   // Check for string params
@@ -1021,9 +1023,9 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
         setStringParam(this->pDoubleParams_->lookup(key), val);
       }
     }
-    callParamCallbacks();
   }
-
+  unlock();
+  callParamCallbacks();
 }
 
 asynStatus pmacController::checkConnection() {
