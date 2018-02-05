@@ -30,8 +30,8 @@ record(ao, "$(PMAC):$(M):DirectDemand")
 record(scalcout, "$(PMAC):$(M):DirectCountsCalc")
 {
     field(INPA, "$(PMAC):$(M):DirectDemand")
-    field(INPB, "1") # to be overwritten by MresSource
-    field(INPC, "0") # to be overwritten by OffsetSource
+    field(INPB, "$(PMAC):$(M):Mres PP")
+    field(INPC, "$(PMAC):$(M):Offset PP")
     field(INPD, "$(PMAC):$(M):SCALE")
     field(CALC, "(A-C)/B*D")
     field(OUT, "$(PMAC):$(M):RawDirectDemand PP")
@@ -108,16 +108,28 @@ record(scalcout, $(PMAC):$(M):MresSource)
     field(DTYP, "Soft Channel")
     field(INPA, "$(PMAC):$(M):DirectMotorNumber")
     field(CALC, "A?(PRINTF('$(PMAC):M%d.MRES CPP',A)):1")
-    field(OUT, "$(PMAC):$(M):DirectCountsCalc.INPB CA")
+    field(OUT, "$(PMAC):$(M):Mres.INPA CA")
     field(FLNK, "$(PMAC):$(M):OffsetSource")
 }
 
+record(scalcout, "$(PMAC):$(M):Mres")
+{
+    field(INPA, "1") # to be overwritten by MresSource
+    field(CALC, "A")
+}
+
+# todo non zero offset in CS kinematic axes no supported
 record(scalcout, $(PMAC):$(M):OffsetSource)
 {
     field(DTYP, "Soft Channel")
     field(INPA, "$(PMAC):$(M):DirectMotorNumber")
-    field(CALC, "(PRINTF('$(PMAC):M%d.OFF CPP',A))")
-    field(OUT, "$(PMAC):$(M):DirectCountsCalc.INPC CA")
+    field(CALC, "A?(PRINTF('$(PMAC):M%d.OFF CPP',A)):0")
+    field(OUT, "$(PMAC):$(M):Offset.INPA CA")
 }
 
 
+record(scalcout, $(PMAC):$(M):Offset)
+{
+    field(INPA, "0") # to be overwritten by OffsetSource
+    field(CALC, "A")
+}

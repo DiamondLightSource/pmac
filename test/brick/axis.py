@@ -20,7 +20,7 @@ class Axis:
         self.cs_assignment = brick_pv_root + 'M{}:CsAxis'.format(axis_no)
         self.cs_port = brick_pv_root + 'M{}:CsPort'.format(axis_no)
         self.direct_demand = brick_pv_root + '{}M{}:DirectDemand'.format(cs_name,
-                                                                         axis_no)
+                                                                           axis_no)
 
         # the following helps to avoid waiting for a timeout if the IOC is down
         ca.caget(self.rbv, timeout=.1)
