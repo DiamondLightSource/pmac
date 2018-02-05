@@ -24,12 +24,17 @@
 ##############################################################
 record(ao, "$(PMAC):$(M):DirectDemand")
 {
-    field(DTYP, "Raw Soft Channel")
-    field(OMSL, "supervisory")
+    field(FLNK, "$(PMAC):$(M):DirectCountsCalc.PROC")
+}
+
+record(scalcout, "$(PMAC):$(M):DirectCountsCalc")
+{
+    field(INPA, "$(PMAC):$(M):DirectDemand")
+    field(INPB, "1") # to be overwritten by MresSource
+    field(INPC, "0") # to be overwritten by OffsetSource
+    field(INPD, "$(PMAC):$(M):SCALE")
+    field(CALC, "(A-C)/B*D")
     field(OUT, "$(PMAC):$(M):RawDirectDemand PP")
-    field(LINR, "LINEAR")
-    field(ASLO, 1)                              # to be overwritten by DirectMres
-    field(AOFF, 0)                              # to be overwritten by DirectOffset
 }
 
 record(ao, "$(PMAC):$(M):RawDirectDemand")
@@ -95,30 +100,7 @@ record(longin, "$(PMAC):$(M):DirectMotorNumber")
     field(DTYP, "asynInt32")
     field(SCAN, "I/O Intr")
     field(INP,  "@asyn($(PORT),$(ADDR),4)PMAC_REAL_MOTOR_NUMBER")
-    field(FLNK, "$(PMAC):$(M):DirectSources")
-}
-
-record(fanout, "$(PMAC):$(M):DirectSources")
-{
-    field(LNK1, "$(PMAC):$(M):MresSource")
-    field(LNK2, "$(PMAC):$(M):OffsetSource")
-}
-
-record(scalcout, "$(PMAC):$(M):DirectMres")
-{
-    field(DTYP, "Soft Channel")
-    field(INPA, "$(PMAC):M1.MRES CPP MS")           # to be overwritten by MresSource
-    field(INPB, "$(PMAC):$(M):SCALE CPP MS")
-    field(CALC, "A/B")
-    field(OUT, "$(PMAC):$(M):DirectDemand.ASLO NPP")
-}
-
-record(scalcout, "$(PMAC):$(M):DirectOffset")
-{
-    field(DTYP, "Soft Channel")
-    field(INPA, "$(PMAC):M1.OFF CPP MS")            # to be overwritten by OffsetSource
-    field(CALC, "A")
-    field(OUT, "$(PMAC):$(M):DirectDemand.AOFF NPP")
+    field(FLNK, "$(PMAC):$(M):MresSource")
 }
 
 record(scalcout, $(PMAC):$(M):MresSource)
@@ -126,8 +108,8 @@ record(scalcout, $(PMAC):$(M):MresSource)
     field(DTYP, "Soft Channel")
     field(INPA, "$(PMAC):$(M):DirectMotorNumber")
     field(CALC, "A?(PRINTF('$(PMAC):M%d.MRES CPP',A)):1")
-    field(FLNK, "$(PMAC):$(M):DirectMres")
-    field(OUT, "$(PMAC):$(M):DirectMres.INPA CA")
+    field(OUT, "$(PMAC):$(M):DirectCountsCalc.INPB CA")
+    field(FLNK, "$(PMAC):$(M):OffsetSource")
 }
 
 record(scalcout, $(PMAC):$(M):OffsetSource)
@@ -135,8 +117,7 @@ record(scalcout, $(PMAC):$(M):OffsetSource)
     field(DTYP, "Soft Channel")
     field(INPA, "$(PMAC):$(M):DirectMotorNumber")
     field(CALC, "(PRINTF('$(PMAC):M%d.OFF CPP',A))")
-    field(FLNK, "$(PMAC):$(M):DirectOffset")
-    field(OUT, "$(PMAC):$(M):DirectOffset.INPA CA")
+    field(OUT, "$(PMAC):$(M):DirectCountsCalc.INPC CA")
 }
 
 
