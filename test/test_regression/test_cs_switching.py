@@ -23,7 +23,7 @@ class TestCsSwitching(TestCase):
         tb.m3.set_cs_port('CS3')
         tb.m4.set_cs_port('CS3')
 
-        for i in range(15):
+        for i in range(4):
             print('trying CS switch {}'.format(i))
             tb.m3.set_cs_assignment('')
             tb.m4.set_cs_assignment('')
@@ -44,7 +44,7 @@ class TestCsSwitching(TestCase):
             pmacDirectMotor.template"""
         tb = TestBrick()
 
-        for i in range(15):
+        for i in range(2):
             print('trying CS switch {}'.format(i))
             tb.set_cs_group(tb.g3)
             tb.height.go(2)

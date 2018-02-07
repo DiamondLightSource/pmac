@@ -71,7 +71,7 @@ class TestCsAndReal(TestCase):
         self.assertTrue(5 <= elapsed.seconds < 6.5)
 
         tb.height.set_speed(100)
-        # set max motion program speed of jack 1 (axis 3) to 1mm/s
+        # set max motion program speed of jack 1 (axis 3) to 2mm/s
         tb.send_command('i316=2')
         start = datetime.now()
         tb.height.go(10)
@@ -79,7 +79,6 @@ class TestCsAndReal(TestCase):
         print(elapsed)
         self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
         self.assertTrue(5 <= elapsed.seconds < 6.5)
-        # todo is above correct?
 
         # set max motion program speed of jack 1 (axis 3) to 500mm/s
         tb.send_command('i316=500')

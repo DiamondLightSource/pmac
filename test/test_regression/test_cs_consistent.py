@@ -82,8 +82,8 @@ class TestMakeCsConsistent(TestCase):
         # between changing coordinate system mappings and the first CS move will be kept - fixing
         # this would require architecture changes for an unlikely event with little consequence
 
-        for retry in range(2, 10):
-            move = cs_move = retry
+        for cs_move in range(6, 10):
+            move = cs_move
             tb.cs3.set_move_time(0)
             # move affected axes to start
             # note this is also testing that moving the real axes updates the
@@ -115,7 +115,7 @@ class TestMakeCsConsistent(TestCase):
         tb.set_cs_group(tb.g3)
         tb.cs3.set_move_time(0)
 
-        for retry in range(10):
+        for retry in range(5):
             # move affected axes to 0
             tb.all_go([tb.m1, tb.m2, tb.m3, tb.m4], [0, 0, 0, 0])
             # make axis 5 demand radically wrong (not in a CS)
