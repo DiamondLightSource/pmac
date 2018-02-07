@@ -434,18 +434,25 @@ asynStatus pmacAxis::stop(double acceleration) {
   char response[PMAC_MAXBUF] = {0};
 
   /*Only send a J/ if the amplifier output is enabled. When we send a stop, 
-    we don't want to power on axes that have been powered off for a reason.*/
+    we don't want to power on axes that have been powered off for a reason. */
   if ((amp_enabled_ == 1) || (fatal_following_ == 1)) {
-    // sprintf(command, "#%d J/ M%d40=1 &%dA", axisNo_, axisNo_, assignedCS_);
-    sprintf(command, "#%d J/ M%d40=1", axisNo_, axisNo_);
+      sprintf(command, "#%d J/ M%d40=1", axisNo_, axisNo_);
   } else {
-    /*Just set the inposition bit in this case.*/
+    /*Just set the in position bit in this case.*/
     sprintf(command, "M%d40=1", axisNo_);
   }
   deferredMove_ = 0;
 
   debug(DEBUG_TRACE, functionName, "Axis Stop command", command);
   status = pC_->axisWriteRead(command, response);
+
+  // Also abort the CS so that stopping a real motor will stop CS motion
+  // This needs to be separate command for some reason
+  if(assignedCS_) {
+    sprintf(command, "&%dA Q7%d=Q8%d", assignedCS_, axisNo_, axisNo_);
+  }
+  pC_->axisWriteRead(command, response);
+
   return status;
 }
 

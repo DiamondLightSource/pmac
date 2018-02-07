@@ -31,12 +31,12 @@ class Axis:
 
     def go(self, position, wait=True):
         ca.caput(self.demand, position, wait=wait, timeout=60)
-        Sleep(.1)  # test clipper reports in position a little early sometimes
+        Sleep(.05)  # test clipper reports in position a little early sometimes
 
     def go_direct(self, position, wait=True, callback=None):
         ca.caput(self.direct_demand, position, wait=wait, timeout=60,
                  callback=callback)
-        Sleep(.1)  # test clipper reports in position a little early sometimes
+        Sleep(.05)  # test clipper reports in position a little early sometimes
 
     def stop(self):
         ca.caput(self.stop_pv, 1, wait=True)
