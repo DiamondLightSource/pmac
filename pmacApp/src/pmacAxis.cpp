@@ -95,7 +95,6 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   lastTimeSecs_ = 0.0;
   printNextError_ = false;
   moving_ = false;
-  movingStatusWasSet_ = false;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
@@ -205,7 +204,6 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   setIntegerParam(pC_->motorStatusMoving_, true);
-  movingStatusWasSet_ = 1;
 
   char acc_buff[PMAC_MAXBUF] = {0};
   char vel_buff[PMAC_MAXBUF] = {0};
@@ -438,7 +436,7 @@ asynStatus pmacAxis::stop(double acceleration) {
   /*Only send a J/ if the amplifier output is enabled. When we send a stop, 
     we don't want to power on axes that have been powered off for a reason.*/
   if ((amp_enabled_ == 1) || (fatal_following_ == 1)) {
-//	pC_->pGroupList->abortMotion(axisNo_);
+    // sprintf(command, "#%d J/ M%d40=1 &%dA", axisNo_, axisNo_, assignedCS_);
     sprintf(command, "#%d J/ M%d40=1", axisNo_, axisNo_);
   } else {
     /*Just set the inposition bit in this case.*/
@@ -643,11 +641,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
             cachedPosition_);
     }
 
-    if (!axStatus.done_) {
-      moving_ = true;
-    } else {
-      moving_ = false;
-    }
+    moving_ = !axStatus.done_ || deferredMove_;
 
     // Read the currently assigned CS for the axis, and whether it is assigned at all
     assignedCS_ = axStatus.currentCS_;
@@ -658,11 +652,9 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
     setIntegerParam(pC_->motorStatusHighLimit_, axStatus.highLimit_);
     setIntegerParam(pC_->motorStatusHomed_, axStatus.home_);
 
-    if (!movingStatusWasSet_) {
-      setIntegerParam(pC_->motorStatusMoving_, axStatus.moving_);
-      setIntegerParam(pC_->motorStatusDone_, axStatus.done_);
-    }
-    movingStatusWasSet_ = 0;
+    setIntegerParam(pC_->motorStatusMoving_, moving_);
+    setIntegerParam(pC_->motorStatusDone_, !moving_);
+
     setIntegerParam(pC_->motorStatusLowLimit_, axStatus.lowLimit_);
     setIntegerParam(pC_->motorStatusFollowingError_, axStatus.followingError_);
     fatal_following_ = axStatus.followingError_;

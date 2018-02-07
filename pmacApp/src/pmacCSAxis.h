@@ -42,8 +42,6 @@ private:
 
     asynStatus getAxisStatus(pmacCommandStore *sPtr);
 
-    asynStatus getAxisInitialStatus(void);
-
     int deferredMove_;
     char deferredCommand_[128];
     int scale_;
@@ -55,7 +53,6 @@ private:
     epicsFloat64 lastTimeSecs_;
     bool printNextError_;
     bool moving_; // only valid within poll time - used as a hint for validating deferred coordinated moves
-    bool movingStatusWasSet_;
 
     friend class pmacCSController;
 

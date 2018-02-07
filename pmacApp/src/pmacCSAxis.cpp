@@ -65,7 +65,6 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
   double steps = fabs(position - position_);
 
   setIntegerParam(pC_->motorStatusMoving_, true);
-  movingStatusWasSet_ = 1;
 
   // Make any CS demands consistent with this move
   if (pC_->movesDeferred_ == 0) {
@@ -239,23 +238,10 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   previous_position_ = position;
   previous_direction_ = direction;
 
-  if (deferredMove_ != 0) {
-    done = 0;
-  } else {
-    done = cStatus.done_;
-  }
+  moving_ = !cStatus.done_ || deferredMove_;
 
-  if (!done) {
-    moving_ = true;
-  } else {
-    moving_ = false;
-  }
-
-  if(!movingStatusWasSet_) {
-    setIntegerParam(pC_->motorStatusDone_, done);
-    setIntegerParam(pC_->motorStatusMoving_, cStatus.moving_ | deferredMove_);
-  }
-  movingStatusWasSet_ = 0;
+  setIntegerParam(pC_->motorStatusDone_, !moving_);
+  setIntegerParam(pC_->motorStatusMoving_, moving_);
 
   setIntegerParam(pC_->motorStatusHighLimit_, cStatus.highLimit_);
   setIntegerParam(pC_->motorStatusHomed_, homeSignal);
