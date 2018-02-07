@@ -114,7 +114,7 @@ class TestDirect(TestCase):
         elapsed = datetime.now() - start
         print(elapsed)
         self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
-        self.assertTrue(5 < elapsed.seconds < 7)
+        self.assertTrue(5 <= elapsed.seconds < 7)
 
         tb.height.set_speed(100)
         tb.height.go(0)
@@ -127,7 +127,7 @@ class TestDirect(TestCase):
         print(elapsed)
         self.assertAlmostEqual(tb.height.pos, 10, DECIMALS)
         # the faster velocity should be overridden by max program speed of jack 1
-        self.assertTrue(5 < elapsed.seconds < 7)
+        self.assertTrue(5 <= elapsed.seconds < 7)
 
         # set max motion program speed of jack 1 (axis 3) to 500mm/s
         tb.send_command('i316=500')
@@ -151,8 +151,7 @@ class TestDirect(TestCase):
         for iteration in range(2):
             for height in range(10, 1, -1):
                 angle = height / 20.0
-                # todo rapidly mixing direct and standard moves seems to cause issues
-                # todo this needs investigation
+                # todo mixing direct and standard moves to check for race conditions FAILS
                 tb.all_go_direct([tb.jack1, tb.jack2], [0, 0])
                 self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
                 self.assertAlmostEqual(tb.angle.pos, 0, DECIMALS)
@@ -182,30 +181,27 @@ class TestDirect(TestCase):
         """ verify real motor deferred direct moves work in quick succession
             using virtual 1-1 mapped axes which also have a CS motor record
         """
-        # this test cannot work due to lack of put with callback support in real
-        # motors when deferred -- todo fix this !
-        return
         tb = TestBrick()
         tb.set_cs_group(tb.g1)
-        monitor = MoveMonitor(tb.jack1.pv_root)
+        waiter = MotorCallback()
 
         for iteration in range(2):
             for height1 in range(10, 1, -1):
                 height2 = height1 / 2.0
-                # todo mixing direct and standard moves seems to cause issues
+                # todo mixing direct and standard moves to verify no race conditions FAILS
+                # todo   the occasional failure is probably due to the two separate busy records
+                # todo   interaction - I think this is noncritical since it is not a required
+                # todo   use case
                 # tb.all_go([tb.jack1, tb.jack2], [0, 0])
                 tb.all_go_direct([tb.jack1, tb.jack2], [0, 0])
+                # tb.all_go_direct([tb.jack1, tb.jack2], [0, 0])
                 self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)
                 self.assertAlmostEqual(tb.jack2.pos, 0, DECIMALS)
 
                 tb.set_deferred_moves(True)
+                waiter.reset_done()
 
-                # todo put with callback for deferred real motors is not yet working
-                # todo this is true of both direct and normal PVs
-                # using MoveMonitor instead of wait_for_done until this is fixed
-                # self.reset_done()
-                monitor.reset()
-                # tb.jack1.go_direct(height1, callback=self.moves_done, wait=False)
+                tb.jack1.go_direct(height1, callback=waiter.moves_done, wait=False)
                 tb.jack1.go_direct(height1, wait=False)
                 tb.jack2.go_direct(height2, wait=False)
                 Sleep(.2)
@@ -216,9 +212,8 @@ class TestDirect(TestCase):
 
                 start = datetime.now()
                 tb.set_deferred_moves(False)
-                Sleep(1)
-                monitor.wait_for_one_move(10)
-                # self.wait_for_done()
+                Sleep(.1)
+                waiter.wait_for_done()
                 elapsed = datetime.now() - start
                 print("Iteration {}. Direct Deferred real motors to height {} took {}".format(iteration, height1, elapsed))
 

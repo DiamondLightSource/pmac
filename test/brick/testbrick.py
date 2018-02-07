@@ -6,7 +6,7 @@ from controller import make_controller
 # number of decimals to use in verifying positions
 # cant be very high on a clipper since it seems to
 # set 'in position' a little early
-DECIMALS = 1
+DECIMALS = 2
 
 brick_pv_root = bpr = 'BRICK1:'
 

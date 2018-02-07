@@ -2,8 +2,8 @@
 ; RUNNING TESTS ON CLIPPER
 ; ###################################################
 ; these settings make clipper pull in tight to position before reporting 'in position'
-i128,8,100=1      ; in position band
-i188,8,100=512    ; count of cycles in position before move complete
+i128,8,100=32      ; in position band
+i188,8,100=100    ; count of cycles in position before move complete
 
 ; ###################################################
 ; Motion Program 10 - command coordinate sys moves

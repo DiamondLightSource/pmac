@@ -29,14 +29,17 @@ class MoveMonitor:
     def reset(self):
         self._completed_one_move = False
 
-    def wait_for_one_move(self, timeout):
+    def wait_for_one_move(self, timeout, throw=True):
         interval = .1
         waited = 0
         while not self._completed_one_move:
             Sleep(interval)
             waited += interval
             if waited > timeout:
-                raise RuntimeError("timeout waiting for motor {}".format(self._motor_pv))
+                if throw:
+                    raise RuntimeError("timeout waiting for motor {}".format(self._motor_pv))
+                else:
+                    break
 
 
 class MotorCallback:

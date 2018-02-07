@@ -93,7 +93,7 @@ class TestMakeCsConsistent(TestCase):
             # pretend that axis 1 moved by itself.
             monitor = MoveMonitor(tb.m1.pv_root)
             tb.send_command('#1J:{}'.format(move))
-            monitor.wait_for_one_move(30)
+            monitor.wait_for_one_move(1, throw=False)
             # this should put axis 1 at {move}mm
             self.assertEquals(tb.m1.pos, move)
 

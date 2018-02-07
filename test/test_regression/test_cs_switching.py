@@ -39,9 +39,9 @@ class TestCsSwitching(TestCase):
             self.assertAlmostEqual(tb.m3.pos, 1, DECIMALS)
 
     def test_group_switch(self):
-        """ This issue showed up after adding parameter library locking on broker polling
-            switching cs group causes motion due to make_cs_consistent and next move
-            fails since the switch induced move is still happening"""
+        """ This issue showed up after adding parameter library locking on broker polling.
+            switching cs group caused motion due to record processing in
+            pmacDirectMotor.template"""
         tb = TestBrick()
 
         for i in range(15):
