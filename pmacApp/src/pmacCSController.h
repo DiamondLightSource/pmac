@@ -26,7 +26,7 @@
 #define PMAC_CS_FirstParamString           "PMAC_CS_FIRSTPARAM"
 #define PMAC_CS_LastParamString            "PMAC_CS_LASTPARAM"
 #define PMAC_CS_CsMoveTimeString           "PMAC_C_CS_MOVE_TIME"
-#define PMAC_CS_CsMoveTimeString           "PMAC_C_CS_MOVE_TIME"
+#define PMAC_CS_CsAbortString              "PMAC_C_ABORT"
 // the following 2 parameters are axis parameters for both pmacController and pmacCSController
 #define PMAC_CS_RealMotorNumberString      "PMAC_REAL_MOTOR_NUMBER"
 #define PMAC_CS_MotorScaleString           "PMAC_MOTOR_SCALE"
@@ -99,6 +99,7 @@ protected:
     int PMAC_CS_CsMoveTime_;
     int PMAC_CS_RealMotorNumber_;
     int PMAC_CS_MotorScale_;
+    int PMAC_CS_Abort_;
     int PMAC_CS_LastParam_;
 #define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_
 

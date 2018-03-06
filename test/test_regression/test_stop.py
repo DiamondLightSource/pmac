@@ -73,7 +73,17 @@ class TestStop(TestCase):
 
         self.assertTrue(0 < tb.height.pos < big_move)
 
+    def test_virtual_abort(self):
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+        big_move = 1000
 
+        monitor = MoveMonitor(tb.height.pv_root)
+        tb.height.go(big_move, wait=False)
+        Sleep(.2)
+        tb.cs3.abort()
+        monitor.wait_for_one_move(2)
 
+        self.assertTrue(0 < tb.height.pos < big_move)
 
 

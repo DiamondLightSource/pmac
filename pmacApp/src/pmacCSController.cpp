@@ -172,6 +172,7 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   createParam(PMAC_CS_CsMoveTimeString, asynParamFloat64, &PMAC_CS_CsMoveTime_);
   createParam(PMAC_CS_RealMotorNumberString, asynParamInt32, &PMAC_CS_RealMotorNumber_);
   createParam(PMAC_CS_MotorScaleString, asynParamInt32, &PMAC_CS_MotorScale_);
+  createParam(PMAC_CS_CsAbortString, asynParamInt32, &PMAC_CS_Abort_);
   createParam(PMAC_CS_LastParamString, asynParamInt32, &PMAC_CS_LastParam_);
   paramStatus = ((setDoubleParam(PMAC_CS_CsMoveTime_, csMoveTime_) == asynSuccess) && paramStatus);
   for(int index=0; index<=PMAC_CS_AXES_COUNT; index++) {
@@ -211,6 +212,8 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   bool status = true;
   pmacCSAxis *pAxis = NULL;
   const char *name[128];
+  char command[PMAC_CS_MAXBUF] = {0};
+  char response[PMAC_CS_MAXBUF] = {0};
   static const char *functionName = "writeInt32";
 
   debug(DEBUG_TRACE, functionName);
@@ -234,6 +237,10 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     this->movesDeferred_ = value;
   } else if (function == PMAC_CS_MotorScale_) {
     pAxis->scale_ = value;
+  } else if (function == PMAC_CS_Abort_) {
+    sprintf(command, "&%dA", csNumber_, value);
+    debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
+    status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.

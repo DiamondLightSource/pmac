@@ -215,10 +215,6 @@ class PowerPMAC(DeltaTau):
                 self.template.args[i] = self.CsGroupNamesList[i]
 
 
-class _pmacTrajectoryAxis(AutoSubstitution):
-    TemplateFile = 'pmacTrajectoryAxis.template'
-
-
 class GeoBrickTrajectoryControlT(AutoSubstitution):
     """Creates some PVs for executing trajectory scans on the pmac controller by
        instantiating an instance of pmacTrajectoryAxis.template for each axis"""
@@ -233,16 +229,6 @@ class GeoBrickTrajectoryControlT(AutoSubstitution):
         args['NAxes'] = args['PORT'].NAxes
         # init the super class
         self.__super.__init__(**args)
-        self.axes = []
-        NAXES = int(args["NAxes"])
-        assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
-        # for each axis
-        for i in range(1, NAXES + 1):
-            args["MOTOR"] = i
-            # make a _pmacTrajectoryAxis instance
-            self.axes.append(
-                _pmacTrajectoryAxis(
-                    **filter_dict(args, _pmacTrajectoryAxis.ArgInfo.Names())))
 
 GeoBrickTrajectoryControlT.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 GeoBrickTrajectoryControlT.ArgInfo = GeoBrickTrajectoryControlT.ArgInfo.filtered(

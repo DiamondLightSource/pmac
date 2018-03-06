@@ -20,6 +20,7 @@ class CoordSys:
         self.port = port
         self.move_time = pv_root + ':CsMoveTime'
         self.defer = pv_root + ':DeferMoves'
+        self.pv_abort = pv_root + ':Abort'
 
         # add CS axis alias PVs (these are REQUIRED to control motors that have
         # a CS mapping but no motor record. Usually 1-1 CS-real mapped axes.
@@ -36,5 +37,8 @@ class CoordSys:
 
     def set_deferred_moves(self, defer):
         ca.caput(self.defer, defer, wait=True)
+
+    def abort(self):
+        ca.caput(self.pv_abort, 1, wait=True)
 
 

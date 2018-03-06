@@ -18,6 +18,23 @@
 # % gui, $(PORT), edm, pmacCoord.edl, device=$(PMAC):CS$(CS):
 #
 
+#
+# allow query of this CS controller's Port Name
+#
+record(stringout, "$(PMAC):CS$(CS):Port")
+{
+    field(VAL, "$(PORT)")
+    field(PINI, "YES")
+}
+
+#
+# abort motion in this CS
+#
+record(bo, "$(PMAC):CS$(CS):Abort")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_ABORT")
+}
 
 ##############################################################
 # Control deferred mode for all axes in this CS
@@ -59,21 +76,22 @@ record(ai, "$(PMAC):CS$(CS):CsMoveTime_RBV")
 ##############################################################
 # Immediate demands for each CS motor
 ##############################################################
-substitute "P=$(PMAC), M=CS$(CS):M1, ADDR=1, DESC=CS Motor A"
+substitute "P=$(PMAC):, M=CS$(CS):M1, ADDR=1, DESC=CS Motor A"
 include "pmacDirectMotor.template"
-substitute "P=$(PMAC), M=CS$(CS):M2, ADDR=2, DESC=CS Motor B"
+substitute "P=$(PMAC):, M=CS$(CS):M2, ADDR=2, DESC=CS Motor B"
 include "pmacDirectMotor.template"
-substitute "P=$(PMAC), M=CS$(CS):M3, ADDR=3, DESC=CS Motor C"
+substitute "P=$(PMAC):, M=CS$(CS):M3, ADDR=3, DESC=CS Motor C"
 include "pmacDirectMotor.template"
-substitute "P=$(PMAC), M=CS$(CS):M4, ADDR=4, DESC=CS Motor U"
+substitute "P=$(PMAC):, M=CS$(CS):M4, ADDR=4, DESC=CS Motor U"
 include "pmacDirectMotor.template"
-substitute "P=$(PMAC), M=CS$(CS):M5, ADDR=5, DESC=CS Motor V"
+substitute "P=$(PMAC):, M=CS$(CS):M5, ADDR=5, DESC=CS Motor V"
 include "pmacDirectMotor.template"
-substitute "P=$(PMAC), M=CS$(CS):M6, ADDR=6, DESC=CS Motor W"
+substitute "P=$(PMAC):, M=CS$(CS):M6, ADDR=6, DESC=CS Motor W"
 include "pmacDirectMotor.template"
-substitute "P=$(PMAC), M=CS$(CS):M7, ADDR=7, DESC=CS Motor X"
+substitute "P=$(PMAC):, M=CS$(CS):M7, ADDR=7, DESC=CS Motor X"
 include "pmacDirectMotor.template"
-substitute "P=$(PMAC), M=CS$(CS):M8, ADDR=8, DESC=CS Motor Y"
+substitute "P=$(PMAC):, M=CS$(CS):M8, ADDR=8, DESC=CS Motor Y"
 include "pmacDirectMotor.template"
-substitute "P=$(PMAC), M=CS$(CS):M9, ADDR=9, DESC=CS Motor Z"
+substitute "P=$(PMAC):, M=CS$(CS):M9, ADDR=9, DESC=CS Motor Z"
 include "pmacDirectMotor.template"
+
