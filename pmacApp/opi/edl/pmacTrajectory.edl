@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 388
-y 230
+x 390
+y 255
 w 1096
 h 676
 font "arial-bold-r-12.0"
@@ -996,7 +996,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(PMAC):ProfileBuild.PROC"
+controlPv "$(PMAC):ProfileBuild"
 pressValue "1"
 onLabel "Build Profile"
 offLabel "Build Profile"
@@ -1020,7 +1020,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(PMAC):ProfileExecute.PROC"
+controlPv "$(PMAC):ProfileExecute"
 pressValue "1"
 onLabel "Execute Profile"
 offLabel "Execute Profile"
@@ -4112,7 +4112,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "$(PMAC):ProfileAppend.PROC"
+controlPv "$(PMAC):ProfileAppend"
 pressValue "1"
 onLabel "Append Points"
 offLabel "Append Points"

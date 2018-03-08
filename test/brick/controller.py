@@ -1,24 +1,28 @@
 from cothread import catools as ca
+from trajectory import Trajectory
+
+# use dynamic class since many instances of this class will be created during a test suite
+# and this way add_attributes is only called once
 
 
-def make_controller(axes, groups, cs, pv_root):
+def make_controller(c_axes, c_groups, c_cs, pv_root):
     def add_attributes(cls):
         """ add a dictionary of axes and CS groups to the controller and also add each entry in
         the dictionary as an attribute of the controller.
 
         also add items for controlling trajectory scans on the test IOC
         """
-        cls.axes = axes
+        cls.axes = c_axes
         cls.real_axes = {k: v for k, v in cls.axes.items() if v.cs_no == 0}
-        cls.groups = groups
-        cls.cs = cs
+        cls.groups = c_groups
+        cls.cs = c_cs
 
         cls.pv_root = pv_root
         cls.defer = pv_root + 'DeferMoves'
         cls.pv_cs_group = pv_root + 'COORDINATE_SYS_GROUP'
         cls.pv_command = pv_root + 'SendCmd'
 
-        cls.pv_trajectory_cs = pv_root + 'ProfileCsName'
+        cls.trajectory = Trajectory(pv_root)
 
         for name, value in cls.axes.items() + cls.groups.items() + cls.cs.items():
             setattr(cls, name, value)
@@ -57,9 +61,6 @@ def make_controller(axes, groups, cs, pv_root):
 
         def set_cs_group(self, group):
             ca.caput(self.pv_cs_group, group, wait=True)
-
-        def set_trajectory_cs(self, cs):
-            ca.caput(self.pv_trajectory_cs, cs.port, wait=True)
 
         def send_command(self, command):
             ca.caput(self.pv_command, command, wait=True, datatype=ca.DBR_CHAR_STR)

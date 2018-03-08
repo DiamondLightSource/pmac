@@ -3,7 +3,7 @@ from test.brick.trajectory import Trajectory
 from test.brick.movemonitor import MoveMonitor
 from datetime import datetime
 from test.brick.testbrick import TestBrick, DECIMALS
-from cothread import Sleep
+from test.test_system.trajectories import trajectory_quick_scan
 
 # these are test_regression tests for the set of issues that pmacController::makeCSDemandsConsistent
 # is trying to solve
@@ -19,7 +19,6 @@ class TestMakeCsConsistent(TestCase):
         """
         tb = TestBrick()
         tb.set_cs_group(tb.g3)
-        tb.set_trajectory_cs(tb.cs3)
         tb.cs3.set_move_time(0)
 
         # make axis 1 demand cache Q71 radically wrong
@@ -29,7 +28,7 @@ class TestMakeCsConsistent(TestCase):
         self. assertEquals(tb.get_command(), command)
 
         # if this succeeds without error then we are all good
-        Trajectory.quick_scan(self)
+        trajectory_quick_scan(self, tb)
 
     def test_kinematic_axis_creep(self):
         """

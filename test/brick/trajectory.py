@@ -1,88 +1,99 @@
 #!/bin/env python
-from unittest import TestCase
 from cothread import catools as ca
-from test.brick.testbrick import TestBrick
 
 ALL_AXES = set('ABCUVWXYZ')
 
 
-class Trajectory:
+class AxisSetup:
     def __init__(self):
-        pass
+        self.use = False
+        self.points = 0
+        self.max_points = 10000
+        self.resolution = 1
+        self.offset = 0
+        self.positions = []
 
-    @classmethod
-    def set_list(cls, prefix, postfix, middle_list, value):
-        for middle in middle_list:
-            pv = prefix + middle + ':' + postfix
-            ca.caput(pv, value)
 
-    @classmethod
-    def quick_scan(cls, test):
-        """
-        Do a short scan involving 2 1-1 motors and 2 virtual axes of two jack CS
-        :param (TestCase) test:
-        """
-        axes = set('ABXY')
+def add_attributes(cls):
+    cls.execute_OK = 'Trajectory scan complete'
 
-        tb = TestBrick()
-        pb = tb.pv_root
-        # switch to correct CS mappings
-        tb.set_cs_group(tb.g3)
+    for axis in ALL_AXES:
+        setattr(cls, "axis{}".format(axis), AxisSetup())
 
-        # set up the axis parameters
-        ca.caput(pb + 'A:Resolution', "1")
-        ca.caput(pb + 'B:Resolution', "1")
-        ca.caput(pb + 'X:Resolution', "1")
-        ca.caput(pb + 'Y:Resolution', "1")
-        cls.set_list(pb, 'Offset', axes, 0)
-        cls.set_list(pb, 'UseAxis', axes, 'Yes')
-        cls.set_list(pb, 'UseAxis', ALL_AXES - axes, 'No')
+    return cls
 
-        # build trajectories (its a 4d raster)
-        heights = []
-        rows = []
-        cols = []
-        angles = []
-        points = 0
+@add_attributes
+class Trajectory:
+    def __init__(self, pv_root):
+        self.pv_root = pv_root
 
-        for angle in [-1, 0]:
-            for height in range(2):
-                for col_b in range(3):
-                    for row_a in range(4):
-                        points += 1
-                        heights.append(height)
-                        rows.append(row_a)
-                        cols.append(col_b)
-                        angles.append(angle)
-        ca.caput(pb + 'A:Positions', rows)
-        ca.caput(pb + 'B:Positions', cols)
-        ca.caput(pb + 'X:Positions', heights)
-        ca.caput(pb + 'Y:Positions', angles)
-
-        times = [100000] * points
-        modes = [0] * points
-        for i in range(0, points, 5):
-            modes[i] = 2
-
-        ca.caput(pb + 'ProfileTimeArray', times)
-        ca.caput(pb + 'VelocityMode', modes)
+    def setup_scan(self, times, modes, points, max_points, cs_port):
+        self.configure_axes()
+        self.setProfileTimeArray(times)
+        self.setVelocityMode(modes)
 
         # setup and execute the scan
-        ca.caput(pb + 'ProfilePointsToBuild', points)
-        ca.caput(pb + 'ProfileNumPoints', points)
-        ca.caput(pb + 'ProfileCsName', 'CS3')
-        ca.caput(pb + 'ProfileBuild', 1, wait=True, timeout=2)
-        assert(ca .caget(pb + 'ProfileBuildStatus_RBV') != 2)
+        self.setProfilePointsToBuild(points)
+        self.setProfileNumPoints(max_points)
+        self.setProfileCsName(cs_port)
+        self.ProfileBuild()
 
-        ca.caput(pb + 'ProfileExecute', 1, wait=True, timeout=30)
+    def configure_axes(self):
 
-        test.assertEquals(
-            ca.caget(pb + 'ProfileBuildStatus_RBV', datatype=ca.DBR_STRING),
-            'Success')
-        test.assertEquals(
-            ca.caget(pb + 'ProfileExecuteMessage_RBV', datatype=ca.DBR_CHAR_STR),
-            'Trajectory scan complete')
-        test.assertEquals(tb.m1.pos, rows[-1])
-        test.assertEquals(tb.m2.pos, cols[-1])
-        test.assertEquals(tb.height.pos, heights[-1])
-        test.assertEquals(tb.angle.pos, angles[-1])
+        for axis in ALL_AXES:
+            this_axis = getattr(self, 'axis'+axis)
+            ca.caput("{}{}:UseAxis".format(self.pv_root, axis), this_axis.use)
+            ca.caput("{}{}:Resolution".format(self.pv_root, axis), this_axis.resolution)
+            ca.caput("{}{}:Offset".format(self.pv_root, axis), this_axis.offset)
+
+            if this_axis.use:
+                ca.caput("{}{}:Positions".format(self.pv_root, axis), this_axis.positions,
+                         wait=True)
+
+    def setProfileTimeArray(self, value):
+        ca.caput(self.pv_root + 'ProfileTimeArray', value, wait=True)
+
+    def setVelocityMode(self, value):
+        ca.caput(self.pv_root + 'VelocityMode', value, wait=True)
+
+    def setProfileNumPoints(self, value):
+        ca.caput(self.pv_root + 'ProfileNumPoints', value, wait=True)
+
+    def setProfilePointsToBuild(self, value):
+        ca.caput(self.pv_root + 'ProfilePointsToBuild', value, wait=True)
+
+    def setProfileCsName(self, value):
+        ca.caput(self.pv_root + 'ProfileCsName', value, wait=True)
+
+    def ProfileBuild(self):
+        ca.caput(self.pv_root + 'ProfileBuild', 1, wait=True)
+
+    def ProfileExecute(self, wait=True, timeout=10):
+        ca.caput(self.pv_root + 'ProfileExecute', 1, timeout=timeout, wait=wait)
+
+    def AppendPoints(self):
+        ca.caput(self.pv_root + 'ProfileAppend', 1, wait=True)
+
+    @property
+    def ProfileBuildStatus(self):
+        return ca.caget(self.pv_root + 'ProfileBuildStatus_RBV', datatype=ca.DBR_STRING)
+
+    @property
+    def ProfileExecuteMessage(self):
+        return ca.caget(self.pv_root + 'ProfileExecuteMessage_RBV', datatype=ca.DBR_CHAR_STR)
+
+    @property
+    def ProfileExecuteState(self):
+        return ca.caget(self.pv_root + 'ProfileExecuteState_RBV', datatype=ca.DBR_STRING)
+
+    @property
+    def build_OK(self):
+        return self.ProfileBuildStatus == 'Success'
+
+    @property
+    def execute_OK(self):
+        return self.ProfileBuildStatus == 'Trajectory scan complete'
+
+    @property
+    def execute_done(self):
+        return self.ProfileExecuteState == 'Done'

@@ -92,3 +92,5 @@ class TestBrick(MyBrick):
 
             # choose a default coordinate system group
             self.set_cs_group(self.g3)
+
+
