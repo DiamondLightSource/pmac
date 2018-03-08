@@ -577,12 +577,12 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
       // Outputs
       for (gpioNo = 0; gpioNo < 8; gpioNo++) {
         sprintf(cmd, "M%d", (gpioNo + 32));
-        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, cmd);
       }
       // Inputs
       for (gpioNo = 0; gpioNo < 16; gpioNo++) {
         sprintf(cmd, "M%d", gpioNo);
-        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, cmd);
       }
       break;
 
@@ -590,16 +590,16 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
       // Outputs
       for (gpioNo = 0; gpioNo < 8; gpioNo++) {
         sprintf(cmd, "M%d", (gpioNo + 7716));
-        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, cmd);
         sprintf(cmd, "M%d", (gpioNo + 7740));
-        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, cmd);
       }
       // Inputs
       for (gpioNo = 0; gpioNo < 8; gpioNo++) {
         sprintf(cmd, "M%d", (gpioNo + 7616));
-        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, cmd);
         sprintf(cmd, "M%d", (gpioNo + 7640));
-        pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+        pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, cmd);
       }
       break;
 
@@ -1248,11 +1248,6 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   int plcBits00 = 0;
   int plcBits01 = 0;
   std::string plcString = "";
-  int gpio = 0;
-  int gpioBit = 0;
-  int gpioOutputs = 0;
-  int gpioInputs = 0;
-  std::string gpioString = "";
   int prog = 0;
   int progBit = 0;
   int progBits = 0;
@@ -1303,130 +1298,6 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
         }
       }
     }
-  }
-
-  // Read the GPIO status variables
-  switch (cid_) {
-    case PMAC_CID_GEOBRICK_:
-    case PMAC_CID_CLIPPER_:
-    case PMAC_CID_POWER_:
-      // Outputs
-      for (gpio = 0; gpio < 8; gpio++) {
-        sprintf(command, "M%d", (gpio + 32));
-        gpioString = sPtr->readValue(command);
-        if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
-          status = asynError;
-        } else {
-          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
-          if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
-            status = asynError;
-          } else {
-            gpioOutputs += gpioBit << gpio;
-          }
-        }
-      }
-      // Inputs
-      for (gpio = 0; gpio < 16; gpio++) {
-        sprintf(command, "M%d", gpio);
-        gpioString = sPtr->readValue(command);
-        if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
-          status = asynError;
-        } else {
-          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
-          if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
-            status = asynError;
-          } else {
-            gpioInputs += gpioBit << gpio;
-          }
-        }
-      }
-      break;
-
-    case PMAC_CID_PMAC_:
-      // Outputs
-      for (gpio = 0; gpio < 8; gpio++) {
-        sprintf(command, "M%d", (gpio + 7716));
-        gpioString = sPtr->readValue(command);
-        if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
-          status = asynError;
-        } else {
-          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
-          if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
-            status = asynError;
-          } else {
-            gpioOutputs += gpioBit << (gpio + 8);
-          }
-        }
-        sprintf(command, "M%d", (gpio + 7740));
-        gpioString = sPtr->readValue(command);
-        if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
-          status = asynError;
-        } else {
-          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
-          if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
-            status = asynError;
-          } else {
-            gpioOutputs += gpioBit << gpio;
-          }
-        }
-      }
-      // Inputs
-      for (gpio = 0; gpio < 8; gpio++) {
-        sprintf(command, "M%d", (gpio + 7616));
-        gpioString = sPtr->readValue(command);
-        if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
-          status = asynError;
-        } else {
-          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
-          if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
-            status = asynError;
-          } else {
-            gpioInputs += gpioBit << (gpio + 8);
-          }
-        }
-        sprintf(command, "M%d", (gpio + 7640));
-        gpioString = sPtr->readValue(command);
-        if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
-          status = asynError;
-        } else {
-          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
-          if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
-            status = asynError;
-          } else {
-            gpioInputs += gpioBit << gpio;
-          }
-        }
-      }
-      break;
-
-    default:
-      // As we couldn't read the cid from the PMAC we don't know which m-vars to read
-      debug(DEBUG_ERROR, functionName, "Unable to read GPIO M-vars, unknown Card ID");
-
   }
 
   // Read the motion program status variables
@@ -1535,8 +1406,6 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   if (status == asynSuccess) {
     setIntegerParam(PMAC_C_PLCBits00_, plcBits00);
     setIntegerParam(PMAC_C_PLCBits01_, plcBits01);
-    setIntegerParam(PMAC_C_GpioInputs_, gpioInputs);
-    setIntegerParam(PMAC_C_GpioOutputs_, gpioOutputs);
     setIntegerParam(PMAC_C_ProgBits_, progBits);
     callParamCallbacks();
   }
@@ -1550,6 +1419,12 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   int gStat1 = 0;
   int gStat2 = 0;
   int gStat3 = 0;
+  int gpio = 0;
+  int gpioBit = 0;
+  int gpioOutputs = 0;
+  int gpioInputs = 0;
+  std::string gpioString = "";
+  char command[8];
   bool hardwareProblem;
   int nvals;
   std::string trajBufPtr = "";
@@ -1729,6 +1604,131 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       setDoubleParam(PMAC_C_CpuUsage_, P74);
     }
   }
+
+  // Read the GPIO status variables
+  switch (cid_) {
+    case PMAC_CID_GEOBRICK_:
+    case PMAC_CID_CLIPPER_:
+    case PMAC_CID_POWER_:
+      // Outputs
+      for (gpio = 0; gpio < 8; gpio++) {
+        sprintf(command, "M%d", (gpio + 32));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == "") {
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioOutputs += gpioBit << gpio;
+          }
+        }
+      }
+      // Inputs
+      for (gpio = 0; gpio < 16; gpio++) {
+        sprintf(command, "M%d", gpio);
+        gpioString = sPtr->readValue(command);
+        if (gpioString == "") {
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioInputs += gpioBit << gpio;
+          }
+        }
+      }
+      break;
+
+    case PMAC_CID_PMAC_:
+      // Outputs
+      for (gpio = 0; gpio < 8; gpio++) {
+        sprintf(command, "M%d", (gpio + 7716));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == "") {
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioOutputs += gpioBit << (gpio + 8);
+          }
+        }
+        sprintf(command, "M%d", (gpio + 7740));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == "") {
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioOutputs += gpioBit << gpio;
+          }
+        }
+      }
+      // Inputs
+      for (gpio = 0; gpio < 8; gpio++) {
+        sprintf(command, "M%d", (gpio + 7616));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == "") {
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioInputs += gpioBit << (gpio + 8);
+          }
+        }
+        sprintf(command, "M%d", (gpio + 7640));
+        gpioString = sPtr->readValue(command);
+        if (gpioString == "") {
+          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          status = asynError;
+        } else {
+          nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
+          if (nvals != 1) {
+            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            status = asynError;
+          } else {
+            gpioInputs += gpioBit << gpio;
+          }
+        }
+      }
+      break;
+
+    default:
+      // As we couldn't read the cid from the PMAC we don't know which m-vars to read
+      debug(DEBUG_ERROR, functionName, "Unable to read GPIO M-vars, unknown Card ID");
+
+  }
+
   //Set any controller specific parameters.
   //Some of these may be used by the axis poll to set axis problem bits.
   if (status == asynSuccess) {
@@ -1740,6 +1740,11 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
     }
   }
 
+  // update GPIO parameters
+  if (status == asynSuccess) {
+    setIntegerParam(PMAC_C_GpioInputs_, gpioInputs);
+    setIntegerParam(PMAC_C_GpioOutputs_, gpioOutputs);
+  }
   callParamCallbacks();
 
   if (status != asynSuccess) {
