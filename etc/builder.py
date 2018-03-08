@@ -366,11 +366,11 @@ class PowerPmacStatus(AutoSubstitution):
         assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
         # for each axis
         for i in range(1, NAXES + 1):
-            args["AXIS"] = i
+            axis_args = {'PMAC':args['DEVICE'], 'AXIS':i, 'PORT':args['PORT']}
             # make a _pmacStatusAxis instance
             self.axes.append(
                 _pmacStatusAxis(
-                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
+                    **filter_dict(axis_args, _pmacStatusAxis.ArgInfo.Names())))
 PowerPmacStatus.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 
 
