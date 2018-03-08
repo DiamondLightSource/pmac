@@ -13,7 +13,6 @@ include $(TOP)/configure/CONFIG
 DB += pmacController.template
 DB += pmacCsController.template
 DB += pmacControllerTrajectory.template
-DB += pmacStatus.template
 DB += pmacStatusAxis.template
 DB += pmacStatus8Axes.template
 DB += pmacStatus32Axes.template

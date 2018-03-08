@@ -113,7 +113,7 @@ class GeoBrick(DeltaTau):
     # parameters in Finalise below so they can be substituted into the template )
     removeThese = [ 'CSG%d' % i for i in range(8) ]
 
-    def __init__(self, Port, name = None, NAxes = 8, IdlePoll = 500, MovingPoll = 100, **kwargs):
+    def __init__(self, Port, name = None, IdlePoll = 500, MovingPoll = 100, **kwargs):
         # init a list of groupnames for each pmacCreateCsGroup to add to
         self.CsGroupNamesList = {}
         # First create an asyn IP port to connect to
@@ -125,8 +125,9 @@ class GeoBrick(DeltaTau):
             name = "BRICK%d" % (self.Card + 1)
         self.name = name
         # Store other attributes
+        self.NAxes = int(kwargs['NAXES'])
+        self.P = kwargs['P']
         self.__dict__.update(kwargs)
-        self.NAxes = NAxes
         self.IdlePoll = IdlePoll
         self.MovingPoll = MovingPoll
 
@@ -137,11 +138,21 @@ class GeoBrick(DeltaTau):
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
         self.TIMEOUT = self.template.args['TIMEOUT']
 
+        # instantiate an axis status template for each axis
+        assert self.NAxes in range(1,33), "Number of axes (%d) must be in range 1..32" % self.NAxes
+        self.axes = []
+        # for each axis
+        for i in range(1, self.NAxes + 1):
+            args = {'PMAC':self.P, 'AXIS':i, 'PORT':name}
+            # make a _pmacStatusAxis instance
+            self.axes.append(
+                _pmacStatusAxis(
+                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
+
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
         name = Simple('Name to use for the asyn port', str),
         Port       = Ident('pmacAsynIPPort/pmacVmeConfig to connect to', pmacAsynIPPort),
-        NAxes      = Simple('Number of axes', int),
         IdlePoll   = Simple('Idle Poll Period in ms', int),
         MovingPoll = Simple('Moving Poll Period in ms', int)) + \
               _GeoBrickControllerT.ArgInfo.filtered(without = removeThese + ['PORT'])
@@ -340,29 +351,7 @@ class autohome(_automhomeT):
     ArgInfo = _automhomeT.ArgInfo.filtered(without=['CTRL'])
 
 class _pmacStatusAxis(AutoSubstitution):
-#    ProtocolFiles = ['pmac.proto']
     TemplateFile = 'pmacStatusAxis.template'
-
-class pmacStatus(AutoSubstitution):
-    Dependencies = (Pmac,)
-#    ProtocolFiles = ['pmac.proto']
-    TemplateFile = 'pmacStatus.template'
-
-    def __init__(self, **args):
-        # init the super class
-        self.__super.__init__(**args)
-        self.axes = []
-        NAXES = int(args["NAXES"])
-        assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
-        # for each axis
-        for i in range(1, NAXES + 1):
-            args["AXIS"] = i
-            # make a _pmacStatusAxis instance
-            self.axes.append(
-                _pmacStatusAxis(
-                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
-pmacStatus.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
-
 
 class PowerPmacStatus(AutoSubstitution):
     Dependencies = (Pmac,)

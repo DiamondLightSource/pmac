@@ -1,8 +1,10 @@
+# % macro, name, name of GUI object
 # % macro, PORT, The asyn port for the pmac controller
 # % macro, PMAC, PV Prefix for the motor controller
 # % macro, NPOINTS, Number of points that can be built at any time
 # % macro, MAXPOINTS, Maximum number of points in a scan
 # % macro, NAxes,   Number of axes
+# % macro, PREC, precision of axis defnitions
 
 # This associates the template with an edm screen
 # % gui, $(name=), edm, pmacTrajectory.edl, PMAC=$(PMAC)

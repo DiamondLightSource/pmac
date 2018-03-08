@@ -1,10 +1,12 @@
 # These define the macros to be passed to the template
 # % macro, name,    Object and gui association name
 # % macro, DEVICE,  Pmac/Geobrick name
-# % macro, VERSION, 0 for Pmac, 1 for Geobrick
 # % macro, PLC,     PLC for CPU load monitoring, e.g. 5
 # % macro, PORT,    Asyn port
 # % macro, NAXES,   Number of axes
+# % macro, PORT, The asyn port for the pmac controller
+# % macro, FEEDRATE, feedrate below which we go into error
+# % macro, TIMEOUT, timeout for brick communications
 #
 # This associates an edm screen with the template
 # % gui, $(name=), edm, powerPmacStatus.edl, pmac=$(DEVICE)

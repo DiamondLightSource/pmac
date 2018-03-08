@@ -1,36 +1,36 @@
-# % macro, DEVICE,  Pmac/Geobrick name
+# % macro, PMAC,  Pmac/Geobrick name
 # % macro, AXIS,    Axis number
 # % macro, PORT,    Asyn port
-record(stringout, "$(DEVICE):AXIS$(AXIS):DESC") {
+record(stringout, "$(PMAC):AXIS$(AXIS):DESC") {
   field(PINI, "YES")
 }
 
-record(ai, "$(DEVICE):AXIS$(AXIS):POSITION") {
+record(ai, "$(PMAC):AXIS$(AXIS):POSITION") {
   field(DTYP, "asynFloat64")
   field(SCAN, "I/O Intr")
   field(INP, "@asyn($(PORT),0)PMAC_VDF_#$(AXIS)P")
   field(PREC, "2")
 }
 
-record(ai, "$(DEVICE):AXIS$(AXIS):FOLL_ERROR") {
+record(ai, "$(PMAC):AXIS$(AXIS):FOLL_ERROR") {
   field(DTYP, "asynFloat64")
   field(SCAN, "I/O Intr")
   field(INP, "@asyn($(PORT),0)PMAC_VDF_#$(AXIS)F")
   field(PREC, "2")
 }
 
-record(ai, "$(DEVICE):AXIS$(AXIS):VELOCITY") {
+record(ai, "$(PMAC):AXIS$(AXIS):VELOCITY") {
   field(DTYP, "asynFloat64")
   field(SCAN, "I/O Intr")
   field(INP, "@asyn($(PORT),0)PMAC_VDF_#$(AXIS)V")
   field(PREC, "2")
 }
 
-record(seq, "$(DEVICE):AXIS$(AXIS):ReadBack") {
-  field(LNK1, "$(DEVICE):AXIS$(AXIS):POSITION.PROC PP")
-  field(LNK2, "$(DEVICE):AXIS$(AXIS):FOLL_ERROR.PROC PP")
-  field(LNK3, "$(DEVICE):AXIS$(AXIS):VELOCITY.PROC PP")
-  field(LNK4, "$(DEVICE):AXIS$(AXIS):status1.PROC PP")
+record(seq, "$(PMAC):AXIS$(AXIS):ReadBack") {
+  field(LNK1, "$(PMAC):AXIS$(AXIS):POSITION.PROC PP")
+  field(LNK2, "$(PMAC):AXIS$(AXIS):FOLL_ERROR.PROC PP")
+  field(LNK3, "$(PMAC):AXIS$(AXIS):VELOCITY.PROC PP")
+  field(LNK4, "$(PMAC):AXIS$(AXIS):status1.PROC PP")
   field(DLY1, "0")
   field(DLY2, "0.5")
   field(DLY3, "0.5")
@@ -41,38 +41,38 @@ record(seq, "$(DEVICE):AXIS$(AXIS):ReadBack") {
   field(DOL4, "1")
 }
 
-record(longin, "$(DEVICE):AXIS$(AXIS):READ_STAT1") {
+record(longin, "$(PMAC):AXIS$(AXIS):READ_STAT1") {
   field(DTYP, "asynInt32")
   field(SCAN, "I/O Intr")
   field(INP, "@asyn($(PORT),$(AXIS))PMAC_C_AXIS_BITS01")
-  field(FLNK, "$(DEVICE):AXIS$(AXIS):status1")
+  field(FLNK, "$(PMAC):AXIS$(AXIS):status1")
 }
 
 #% archiver 10 Monitor
-record(mbbiDirect, "$(DEVICE):AXIS$(AXIS):status1") {
-  field(INP, "$(DEVICE):AXIS$(AXIS):READ_STAT1")
+record(mbbiDirect, "$(PMAC):AXIS$(AXIS):status1") {
+  field(INP, "$(PMAC):AXIS$(AXIS):READ_STAT1")
 }
 
-record(longin, "$(DEVICE):AXIS$(AXIS):READ_STAT2") {
+record(longin, "$(PMAC):AXIS$(AXIS):READ_STAT2") {
   field(DTYP, "asynInt32")
   field(SCAN, "I/O Intr")
   field(INP, "@asyn($(PORT),$(AXIS))PMAC_C_AXIS_BITS02")
-  field(FLNK, "$(DEVICE):AXIS$(AXIS):status2")
+  field(FLNK, "$(PMAC):AXIS$(AXIS):status2")
 }
 
 #% archiver 10 Monitor
-record(mbbiDirect, "$(DEVICE):AXIS$(AXIS):status2") {
-  field(INP, "$(DEVICE):AXIS$(AXIS):READ_STAT2")
+record(mbbiDirect, "$(PMAC):AXIS$(AXIS):status2") {
+  field(INP, "$(PMAC):AXIS$(AXIS):READ_STAT2")
 }
 
-record(longin, "$(DEVICE):AXIS$(AXIS):READ_STAT3") {
+record(longin, "$(PMAC):AXIS$(AXIS):READ_STAT3") {
   field(DTYP, "asynInt32")
   field(SCAN, "I/O Intr")
   field(INP, "@asyn($(PORT),$(AXIS))PMAC_C_AXIS_BITS03")
-  field(FLNK, "$(DEVICE):AXIS$(AXIS):status3")
+  field(FLNK, "$(PMAC):AXIS$(AXIS):status3")
 }
 
 #% archiver 10 Monitor
-record(mbbiDirect, "$(DEVICE):AXIS$(AXIS):status3") {
-  field(INP, "$(DEVICE):AXIS$(AXIS):READ_STAT3")
+record(mbbiDirect, "$(PMAC):AXIS$(AXIS):status3") {
+  field(INP, "$(PMAC):AXIS$(AXIS):READ_STAT3")
 }

@@ -17,7 +17,6 @@
 # % macro, __doc__, Supporting template that allows setting of variables for a 
 # set of gap and slits
 # % macro, P, Pv Prefix
-# % macro, PORT, Motor controller serial port
 # % macro, COORD, Co-ordinate system number
 # % macro, name, Object name and gui association name
 # This associates an edm screen with the template

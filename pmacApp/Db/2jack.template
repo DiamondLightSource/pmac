@@ -15,7 +15,6 @@
 # % macro, __doc__, Supporting template that allows setting of variables for a 
 # 2jack CS 
 # % macro, P, Pv Prefix
-# % macro, PORT, Motor controller serial port
 # % macro, COORD, Co-ordinate system number
 # % macro, PREC, Precision to display variables
 # % macro, J1PV, Pv of real Jack1 motor, e.g. $(P):J1

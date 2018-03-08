@@ -18,7 +18,6 @@
 # % macro, __doc__, Supporting template that allows setting of variables for a 
 # 3jack mirror CS 
 # % macro, P, Pv Prefix
-# % macro, PORT, Motor controller serial port
 # % macro, COORD, Co-ordinate system number
 # % macro, PREC, Precision to display variables
 # % macro, AEGU, EGU for angular variables
