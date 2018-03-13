@@ -48,7 +48,7 @@ class TestMakeCsConsistent(TestCase):
         # pretend that axis 3 moved by itself and monitor change in height.
         monitor = MoveMonitor(tb.height.pv_root)
         tb.send_command('#3J:1000')
-        monitor.wait_for_one_move(5)
+        monitor.wait_for_one_move(10)
         # this should make Height 1.5mm
         self.assertAlmostEqual(tb.height.pos, 1.5, DECIMALS)
 

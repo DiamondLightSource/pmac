@@ -2,6 +2,7 @@ from unittest import TestCase
 from test.brick.testbrick import DECIMALS
 from test.brick.trajectory import Trajectory
 from cothread import Sleep
+from datetime import datetime
 
 
 def trajectory_quick_scan(test, test_brick):
@@ -76,14 +77,14 @@ def trajectory_fast_scan(test, test_brick):
     # build trajectory
     heights = []
     points = 0
-    for height in range(100):
+    for height in range(10):
         points += 1
-        heights.append(height/100.0)
+        heights.append(height/10.0)
 
     tr.axisX.positions = heights
 
     # each point takes 5 milli sec
-    times = [5000] * points
+    times = [50000] * points
     # all points are interpolated
     modes = [0] * points
 
@@ -112,8 +113,8 @@ def trajectory_scan_appending(test, test_brick):
     # build trajectory
     ascend = []
     descend = []
-    points = 500
-    total_points = 4000
+    points = 200
+    total_points = 2000
     for height in range(points):
         ascend.append(height/100.0)
         descend.append((points-height)/100.0)
@@ -121,7 +122,7 @@ def trajectory_scan_appending(test, test_brick):
     tr.axisX.positions = ascend
 
     # each point takes 50 milli sec
-    times = [50000] * points
+    times = [5000] * points
     # all points are interpolated
     modes = [0] * points
 
@@ -138,8 +139,11 @@ def trajectory_scan_appending(test, test_brick):
         tr.AppendPoints()
         Sleep(.5)
 
+    start = datetime.now()
     while not tr.execute_done:
         Sleep(.5)
+        elapsed = datetime.now() - start
+        test.assertLess(elapsed.seconds, 120)
 
     test.assertTrue(tr.execute_OK)
 

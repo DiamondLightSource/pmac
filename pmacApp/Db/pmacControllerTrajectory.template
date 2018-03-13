@@ -212,7 +212,7 @@ record(mbbi, "$(PMAC):ProfileCsName_RBV")
 #                                                                 #
 ###################################################################
 
-record(busy,"$(PMAC):ProfileBuild") {
+record(bo,"$(PMAC):ProfileBuild") {
     field(DESC,"Build and check profile")
     field(DTYP, "asynInt32")
     field(OUT,  "@asyn($(PORT),0)PROFILE_BUILD")
@@ -262,7 +262,7 @@ record(waveform, "$(PMAC):ProfileBuildMessage_RBV")
 #  only be appended after a scan has been built)                  #
 ###################################################################
 
-record(busy,"$(PMAC):ProfileAppend") {
+record(bo,"$(PMAC):ProfileAppend") {
     field(DESC,"Append points to profile")
     field(DTYP, "asynInt32")
     field(OUT,  "@asyn($(PORT),0)PROFILE_APPEND")

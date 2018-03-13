@@ -574,7 +574,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
     sprintf(cmd, "M%d", ((progNo * 100) + 5180));
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
   }
-  
+
   // Medium readout of the GPIO status bits
   switch (cid_) {
     case PMAC_CID_GEOBRICK_:
@@ -2163,11 +2163,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   } else if (function == PMAC_C_ReportSlow_) {
     status = (this->pBroker_->report(pmacMessageBroker::PMAC_SLOW_READ) == asynSuccess) && status;
   } else if (function == PMAC_C_ProfileAppend_) {
-    if (value == 1) {
-      status = (this->appendToProfile() == asynSuccess) && status;
-      // Reset the value to complete any caput callback
-      value = 0;
-    }
+    status = (this->appendToProfile() == asynSuccess) && status;
   } else if (function == PMAC_C_DebugCmd_) {
     // Read the level, axis number and CS number
     int level = 0;
@@ -2397,7 +2393,6 @@ asynStatus pmacController::buildProfile() {
     status = asynError;
   }
 
-  setIntegerParam(profileBuild_, 0);
   return status;
 }
 
@@ -2667,6 +2662,7 @@ asynStatus pmacController::appendToProfile() {
                           "Cannot append points, is the scan built?");
     status = asynError;
   }
+
   return status;
 }
 

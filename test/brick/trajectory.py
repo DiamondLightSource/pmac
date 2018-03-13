@@ -15,8 +15,6 @@ class AxisSetup:
 
 
 def add_attributes(cls):
-    cls.execute_OK = 'Trajectory scan complete'
-
     for axis in ALL_AXES:
         setattr(cls, "axis{}".format(axis), AxisSetup())
 
@@ -87,12 +85,17 @@ class Trajectory:
         return ca.caget(self.pv_root + 'ProfileExecuteState_RBV', datatype=ca.DBR_STRING)
 
     @property
+    def ProfileExecuteStatus(self):
+        return ca.caget(self.pv_root + 'ProfileExecuteStatus_RBV', datatype=ca.DBR_STRING)
+
+    @property
     def build_OK(self):
         return self.ProfileBuildStatus == 'Success'
 
     @property
     def execute_OK(self):
-        return self.ProfileBuildStatus == 'Trajectory scan complete'
+        result = self.ProfileExecuteStatus == 'Success'
+        return result
 
     @property
     def execute_done(self):

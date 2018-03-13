@@ -1,13 +1,13 @@
 <?xml version="1.0" ?>
 <components arch="linux-x86_64">
 	<!--Controls Lab Test Brick-->
-	<!--<pmac.pmacAsynIPPort IP="172.23.253.11:1025" name="BRICK1port"/>-->
+	<pmac.pmacAsynIPPort IP="172.23.253.11:1025" name="BRICK1port"/>
 	<!--Local simulator-->
 	<!--<pmac.pmacAsynIPPort IP="localhost:1025" name="BRICK1port"/>-->
 	<!--Lee's test clipper-->
 	<!--<pmac.pmacAsynIPPort IP="172.23.240.97" name="BRICK1port"/>-->
 	<!--Clipper 3-->
-	<pmac.pmacAsynIPPort IP="172.23.240.86" name="BRICK1port"/>
+	<!--<pmac.pmacAsynIPPort IP="172.23.240.86" name="BRICK1port"/>-->
 	<pmac.GeoBrick IdlePoll="200" MovingPoll="100" NAXES="8" P="BRICK1" Port="BRICK1port" name="Brick"/>
 	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":MOTOR1" MRES="1" P="PMAC_BRICK_TEST" PORT="Brick" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="MOTORS.M1"/>
 	<pmac.dls_pmac_asyn_motor ADDR="2" DESC="Motor 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":MOTOR2" MRES="1" P="PMAC_BRICK_TEST" PORT="Brick" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="MOTORS.M2"/>
@@ -60,4 +60,6 @@
 	<pmac.autohome GRP2="Axis1" P="PMAC_BRICK_TEST" PLC="10" PORT="Brick" name="HOME"/>
 	<pmac.pmacSetCoordStepsPerUnit Axis="1" CS="CS2" Scale="1000"/>
 	<pmac.pmacSetCoordStepsPerUnit Axis="2" CS="CS2" Scale="100"/>
+	<records.ai DTYP="asynInt32" INP="@asyn(Brick,0,1)PMAC_VIF_RY:$002114" SCAN="I/O Intr" record="BRICK1:CS2:Error"/>
+	<records.ai DTYP="asynInt32" INP="@asyn(Brick,0,1)PMAC_VIF_RY:$002214" SCAN="I/O Intr" record="BRICK1:CS3:Error"/>
 </components>
