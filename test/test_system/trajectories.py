@@ -128,9 +128,9 @@ def trajectory_scan_appending(test, test_brick):
 
     tr.axisX.positions = ascend
 
-    is_clipper = buff_len < 500
-    time_period = 40000 if is_clipper else 2000
-    # each point takes 2 milli sec for brick and 40 for clipper
+    is_clipper = buff_len < 1000
+    time_period = 3000 if is_clipper else 2000
+    # each point takes 2 milli sec for brick and 3 for clipper
     times = [time_period] * points
 
     # all points are interpolated
