@@ -13,6 +13,7 @@ class Axis:
         self.stop_pv = pv_root + '.STOP'
         self.velo = pv_root + '.VELO'
         self.vmax = pv_root + '.VMAX'
+        self.pv_done_moving = pv_root + '.DMOV'
         if cs_no > 0:
             cs_name = 'CS{}:'.format(cs_no)
         else:
@@ -58,3 +59,7 @@ class Axis:
     def alarm(self):
         result = ca.caget(self.pv_root, format=ca.FORMAT_CTRL)
         return result.severity
+
+    @property
+    def moving(self):
+        return not ca.caget(self.pv_done_moving)

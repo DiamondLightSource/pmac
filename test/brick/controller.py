@@ -22,8 +22,6 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
         cls.pv_cs_group = pv_root + 'COORDINATE_SYS_GROUP'
         cls.pv_command = pv_root + 'SendCmd'
 
-        cls.trajectory = Trajectory(pv_root)
-
         for name, value in cls.axes.items() + cls.groups.items() + cls.cs.items():
             setattr(cls, name, value)
 

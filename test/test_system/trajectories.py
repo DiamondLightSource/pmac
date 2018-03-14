@@ -44,7 +44,8 @@ def trajectory_quick_scan(test, test_brick):
     tr.axisX.positions = heights
     tr.axisY.positions = angles
 
-    times = [100000] * points
+    # each step is 50 mill secs
+    times = [50000] * points
     modes = [0] * points
     for i in range(0, points, 5):
         modes[i] = 2
@@ -53,6 +54,8 @@ def trajectory_quick_scan(test, test_brick):
 
     tr.ProfileExecute(timeout=30)
     test.assertTrue(tr.execute_OK)
+    while test_brick.height.moving:
+        Sleep(.01)  # allow deceleration todo need to put this in the driver itself
 
     test.assertEquals(test_brick.m1.pos, rows[-1])
     test.assertEquals(test_brick.m2.pos, cols[-1])
@@ -84,7 +87,7 @@ def trajectory_fast_scan(test, test_brick):
     tr.axisX.positions = heights
 
     # each point takes 5 milli sec
-    times = [50000] * points
+    times = [5000] * points
     # all points are interpolated
     modes = [0] * points
 
@@ -92,6 +95,8 @@ def trajectory_fast_scan(test, test_brick):
 
     tr.ProfileExecute(timeout=30)
     test.assertTrue(tr.execute_OK)
+    while test_brick.height.moving:
+        Sleep(.01)  # allow deceleration todo need to put this in the driver itself
 
     test.assertAlmostEqual(test_brick.height.pos, heights[-1], 1)
 
@@ -103,6 +108,8 @@ def trajectory_scan_appending(test, test_brick):
     :param (TestCase) test: the calling test object, used to make assertions
     """
     tr = test_brick.trajectory
+    buff_len = tr.BufferLength
+
     assert isinstance(tr, Trajectory)
     # switch to correct CS mappings
     test_brick.set_cs_group(test_brick.g3)
@@ -113,31 +120,38 @@ def trajectory_scan_appending(test, test_brick):
     # build trajectory
     ascend = []
     descend = []
-    points = 200
-    total_points = 2000
+    points = int(buff_len * 1.1)  # must start with > 1 buffer of points
+    total_points = points * 4
     for height in range(points):
         ascend.append(height/100.0)
         descend.append((points-height)/100.0)
 
     tr.axisX.positions = ascend
 
-    # each point takes 50 milli sec
-    times = [5000] * points
+    is_clipper = buff_len < 500
+    time_period = 40000 if is_clipper else 2000
+    # each point takes 2 milli sec for brick and 40 for clipper
+    times = [time_period] * points
+
     # all points are interpolated
     modes = [0] * points
 
     tr.setup_scan(times, modes, points, total_points, 'CS3')
+    tr.axisX.positions = descend
+    tr.configure_axes()
+    tr.AppendPoints()
     tr.ProfileExecute(wait=False)
+    Sleep(0)
 
-    for iteration in range(total_points/points/2):
-        if iteration > 0:
-            tr.axisX.positions = ascend
-            tr.configure_axes()
-            tr.AppendPoints()
+    for iteration in range(total_points/points/2 - 1):
+        tr.axisX.positions = ascend
+        tr.configure_axes()
+        tr.AppendPoints()
+        Sleep(1)
         tr.axisX.positions = descend
         tr.configure_axes()
         tr.AppendPoints()
-        Sleep(.5)
+        Sleep(1)
 
     start = datetime.now()
     while not tr.execute_done:
@@ -146,5 +160,7 @@ def trajectory_scan_appending(test, test_brick):
         test.assertLess(elapsed.seconds, 120)
 
     test.assertTrue(tr.execute_OK)
+    while test_brick.height.moving:
+        Sleep(.01)  # allow deceleration todo need to put this in the driver itself
 
     test.assertAlmostEqual(test_brick.height.pos, descend[-1], 1)

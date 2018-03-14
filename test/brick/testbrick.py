@@ -2,6 +2,7 @@ from cothread import catools as ca
 from axis import Axis
 from coordsys import CoordSys
 from controller import make_controller
+from trajectory import Trajectory
 
 # number of decimals to use in verifying positions
 # cant be very high on a clipper since it seems to
@@ -70,6 +71,8 @@ class TestBrick(MyBrick):
         self.cs1.set_deferred_moves(False)
         self.cs2.set_deferred_moves(False)
         self.cs3.set_deferred_moves(False)
+
+        self.trajectory = Trajectory(self.pv_root)
 
         if init:
             # make all motors fast to speed up tests

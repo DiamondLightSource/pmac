@@ -1,7 +1,8 @@
-from unittest import TestCase
+from unittest import TestCase, skip
 from test.brick.testbrick import TestBrick
-from test.test_system.trajectories import trajectory_fast_scan, trajectory_scan_appending
+from test.test_system.trajectories import trajectory_fast_scan, trajectory_scan_appending, trajectory_quick_scan
 from cothread import Sleep
+
 # Tests for historical issues with trajectory scanning
 
 
@@ -27,6 +28,10 @@ class TestTrajectory(TestCase):
         """ ensure that appended points are not added twice
         (due to busy record handling)
         """
-        tb = TestBrick()
-        trajectory_scan_appending(self, tb)
+        tb2 = TestBrick()
+        trajectory_scan_appending(self, tb2)
 
+    def test_4_dimension_trajectory(self):
+        tb = TestBrick()
+        # if this succeeds without error then we are all good
+        trajectory_quick_scan(self, tb)

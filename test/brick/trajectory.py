@@ -14,16 +14,11 @@ class AxisSetup:
         self.positions = []
 
 
-def add_attributes(cls):
-    for axis in ALL_AXES:
-        setattr(cls, "axis{}".format(axis), AxisSetup())
-
-    return cls
-
-@add_attributes
 class Trajectory:
     def __init__(self, pv_root):
         self.pv_root = pv_root
+        for axis in ALL_AXES:
+            setattr(self, "axis{}".format(axis), AxisSetup())
 
     def setup_scan(self, times, modes, points, max_points, cs_port):
         self.configure_axes()
@@ -71,6 +66,10 @@ class Trajectory:
 
     def AppendPoints(self):
         ca.caput(self.pv_root + 'ProfileAppend', 1, wait=True)
+
+    @property
+    def BufferLength(self):
+        return ca.caget(self.pv_root + 'BufferLength_RBV')
 
     @property
     def ProfileBuildStatus(self):
