@@ -6,10 +6,6 @@
 # % macro, NAxes,   Number of axes
 # % macro, PREC, precision of axis defnitions
 
-# This associates the template with an edm screen
-# % gui, $(name=), edm, pmacTrajectory.edl, PMAC=$(PMAC)
-
-
 ##
 ## Records to read the motion program and driver versions
 ##

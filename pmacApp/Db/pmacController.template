@@ -24,7 +24,7 @@
 
 #
 # This associates an edm screen with the template
-# % gui, $(PORT), edm, pmacStatus.edl, pmac=$(P)
+# % gui, $(PORT), edm, pmacController.edl, pmac=$(P)
 #
 
 ##############################################################

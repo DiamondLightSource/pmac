@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1228
-y 104
+x 1331
+y 62
 w 584
 h 886
 font "arial-medium-r-16.0"
@@ -330,14 +330,14 @@ minor 1
 release 1
 x 270
 y 35
-w 38
+w 78
 h 13
 font "arial-medium-r-12.0"
 fontAlign "center"
 fgColor index 14
 bgColor index 8
 value {
-  "  Misc  "
+  "  Error Status  "
 }
 autoSize
 border
@@ -2489,11 +2489,13 @@ y 570
 w 70
 h 20
 controlPv "$(pmac):FEEDRATE_LIMIT"
+displayMode "decimal"
+precision 2
 fgColor index 25
 fgAlarm
 bgColor index 3
 fill
-font "arial-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -2546,11 +2548,13 @@ y 520
 w 70
 h 20
 controlPv "$(pmac):FEEDRATE"
+displayMode "decimal"
+precision 2
 fgColor index 25
 fgAlarm
 bgColor index 3
 fill
-font "arial-medium-r-14.0"
+font "arial-bold-r-14.0"
 fontAlign "center"
 endObjectProperties
 
@@ -2574,29 +2578,6 @@ numPvs 4
 numDsps 1
 displayFileName {
   0 "pmacDebug"
-}
-endObjectProperties
-
-# (Related Display)
-object relatedDisplayClass
-beginObjectProperties
-major 4
-minor 4
-release 0
-x 20
-y 420
-w 105
-h 25
-fgColor index 43
-bgColor index 3
-topShadowColor index 1
-botShadowColor index 11
-font "arial-bold-r-14.0"
-buttonLabel "Coord Sys"
-numPvs 4
-numDsps 1
-displayFileName {
-  0 "pmacCoordSys"
 }
 endObjectProperties
 
@@ -2706,7 +2687,7 @@ w 70
 h 20
 controlPv "$(pmac):FEEDRATE_RBV"
 displayMode "decimal"
-precision 3
+precision 2
 fgColor index 15
 fgAlarm
 bgColor index 10
@@ -2825,5 +2806,49 @@ onColor index 20
 offColor index 24
 lineWidth 2
 numBits 1
+endObjectProperties
+
+# (Extended Related Display)
+object ExtendedRelatedDisplayClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 20
+y 420
+w 105
+h 25
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-14.0"
+buttonLabel "Coord Sys"
+numPvs 4
+numDsps 6
+displayFileName {
+  0 "pmacCsAxes"
+  1 "pmacCsAxes"
+  2 "pmacCsAxes"
+  3 "pmacCsAxes"
+  4 "pmacCsAxes"
+  5 "pmacCsAxes"
+}
+menuLabel {
+  0 "CS1"
+  1 "CS2"
+  2 "CS3"
+  3 "CS4"
+  4 "CS5"
+  5 "CS6"
+}
+symbols {
+  0 "CS=1"
+  1 "CS=2"
+  2 "CS=3"
+  3 "CS=4"
+  4 "CS=5"
+  5 "CS=6"
+}
 endObjectProperties
 

@@ -14,11 +14,6 @@
 # % macro, CS, Coordinate System Number for the cs controller
 
 #
-# This associates an edm screen with the template
-# % gui, $(PORT), edm, pmacCoord.edl, device=$(PMAC):CS$(CS):
-#
-
-#
 # allow query of this CS controller's Port Name
 #
 record(stringout, "$(PMAC):CS$(CS):Port")
