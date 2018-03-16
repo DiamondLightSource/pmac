@@ -125,7 +125,7 @@ class GeoBrick(DeltaTau):
             name = "BRICK%d" % (self.Card + 1)
         self.name = name
         # Store other attributes
-        self.NAxes = int(kwargs['NAXES'])
+        self.NAxes = 8 if kwargs['NAXES'] == '' else int(kwargs['NAXES'])
         self.P = kwargs['P']
         self.__dict__.update(kwargs)
         self.IdlePoll = IdlePoll
