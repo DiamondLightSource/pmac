@@ -120,7 +120,12 @@ record(scalcout, "$(P)$(M):Mres")
     field(CALC, "A")
     field(VAL, 1)
     field(PINI, "YES")
-    field(OUT,  "@asyn($(PORT),0)PMAC_C_MRES_$(ADDR)")
+    field(OUT,  "$(P)$(M):MresDrv PP")
+}
+
+record(ao,"$(P)$(M):MresDrv") {
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_MRES")
 }
 
 # todo non zero offset in CS kinematic axes no supported
@@ -138,5 +143,11 @@ record(scalcout, $(P)$(M):Offset)
     field(INPA, "0") # to be overwritten by OffsetSource
     field(CALC, "A")
     field(PINI, "YES")
-    field(OUT,  "@asyn($(PORT),0)PMAC_C_OFFSET_$(ADDR)")
+    field(OUT,  "$(P)$(M):OffsetDrv PP")
+}
+
+
+record(ao,"$(P)$(M):OffsetDrv") {
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_OFFSET")
 }

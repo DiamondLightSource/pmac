@@ -30,6 +30,8 @@
 // the following 2 parameters are axis parameters for both pmacController and pmacCSController
 #define PMAC_CS_RealMotorNumberString      "PMAC_REAL_MOTOR_NUMBER"
 #define PMAC_CS_MotorScaleString           "PMAC_MOTOR_SCALE"
+#define PMAC_CS_MotorResString             "PMAC_MRES"
+#define PMAC_CS_MotorOffsetString          "PMAC_OFFSET"
 
 #define PMAC_CS_MAXBUF 1024
 #define PMAC_CS_AXES_COUNT 9
@@ -53,6 +55,10 @@ public:
     bool getMoving();
 
     int getCSNumber();
+
+    double getAxisResolution(int axis);
+
+    double getAxisOffset(int axis);
 
     int getProgramNumber();
 
@@ -99,6 +105,8 @@ protected:
     int PMAC_CS_CsMoveTime_;
     int PMAC_CS_RealMotorNumber_;
     int PMAC_CS_MotorScale_;
+    int PMAC_CS_MotorRes_;
+    int PMAC_CS_MotorOffset_;
     int PMAC_CS_Abort_;
     int PMAC_CS_LastParam_;
 #define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_

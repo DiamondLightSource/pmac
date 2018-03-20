@@ -172,6 +172,8 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   createParam(PMAC_CS_CsMoveTimeString, asynParamFloat64, &PMAC_CS_CsMoveTime_);
   createParam(PMAC_CS_RealMotorNumberString, asynParamInt32, &PMAC_CS_RealMotorNumber_);
   createParam(PMAC_CS_MotorScaleString, asynParamInt32, &PMAC_CS_MotorScale_);
+  createParam(PMAC_CS_MotorResString, asynParamFloat64, &PMAC_CS_MotorRes_);
+  createParam(PMAC_CS_MotorOffsetString, asynParamFloat64, &PMAC_CS_MotorOffset_);
   createParam(PMAC_CS_CsAbortString, asynParamInt32, &PMAC_CS_Abort_);
   createParam(PMAC_CS_LastParamString, asynParamInt32, &PMAC_CS_LastParam_);
   paramStatus = ((setDoubleParam(PMAC_CS_CsMoveTime_, csMoveTime_) == asynSuccess) && paramStatus);
@@ -574,6 +576,24 @@ asynStatus pmacCSController::pmacCSSetAxisDirectMapping(int axis, int mappedAxis
   return status;
 }
 
+
+double pmacCSController::getAxisResolution(int axis) {
+  double resolution = 0;
+
+  getDoubleParam(axis, PMAC_CS_MotorRes_, &resolution);
+  printf("resolution for axis %d on cs %s is %f\n", axis, this->portName, resolution);
+  if(resolution == 0) {
+    resolution = 1;  // guard against asyn issues causing div by zero
+  }
+  return resolution;
+}
+
+double pmacCSController::getAxisOffset(int axis) {
+  double offset = 0;
+
+  getDoubleParam(axis, PMAC_CS_MotorOffset_, &offset);
+  return offset;
+}
 
 /*************************************************************************************/
 /** The following functions have C linkage, and can be called directly or from iocsh */

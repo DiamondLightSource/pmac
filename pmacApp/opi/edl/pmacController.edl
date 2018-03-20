@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1333
-y 87
+x 1334
+y 52
 w 584
 h 886
 font "arial-medium-r-16.0"
@@ -2621,10 +2621,10 @@ topShadowColor index 1
 botShadowColor index 11
 controlPv "$(pmac):StopAll"
 pressValue "1"
-releaseValue "0"
 onLabel "STOP"
 offLabel "STOP"
 3d
+useEnumNumeric
 font "arial-bold-r-14.0"
 visMin "0"
 visMax "1"
@@ -2668,10 +2668,10 @@ topShadowColor index 1
 botShadowColor index 11
 controlPv "$(pmac):KillAll"
 pressValue "1"
-releaseValue "0"
 onLabel "KILL"
 offLabel "KILL"
 3d
+useEnumNumeric
 font "arial-bold-r-14.0"
 visMin "0"
 visMax "1"

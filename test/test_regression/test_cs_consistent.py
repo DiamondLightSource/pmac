@@ -28,7 +28,7 @@ class TestMakeCsConsistent(TestCase):
         self. assertEquals(tb.get_command(), command)
 
         # if this succeeds without error then we are all good
-        trajectory_quick_scan(self, tb)
+        trajectory_quick_scan(self, tb, tb.g3)
 
     def test_kinematic_axis_creep(self):
         """

@@ -19,8 +19,6 @@
 
 #include <iostream>
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 using std::cout;
 using std::endl;
 using std::dec;
@@ -415,6 +413,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_ReportSlowString, asynParamInt32, &PMAC_C_ReportSlow_);
   createParam(PMAC_C_RealMotorNumberString, asynParamInt32, &PMAC_C_RealMotorNumber_);
   createParam(PMAC_C_MotorScaleString, asynParamInt32, &PMAC_C_MotorScale_);
+  createParam(PMAC_C_MotorResString, asynParamFloat64, &PMAC_C_MotorRes_);
+  createParam(PMAC_C_MotorOffsetString, asynParamFloat64, &PMAC_C_MotorOffset_);
 
   for (index = 0; index < PMAC_MAX_CS; index++) {
     createParam(PMAC_C_ForwardKinematicString[index], asynParamOctet,
@@ -2757,7 +2757,7 @@ asynStatus pmacController::executeProfile() {
       csNo = pPortToCs_->lookup(csPortName.c_str());
       // If the axis has an assigned CS no then we will use it
       if (csNo != 0) {
-        // Execute the trajectory scan for the CS
+        // Execute the trajectory scan for the CSthe port name for CS to execute
         status = this->executeProfile(csNo);
       } else {
         debug(DEBUG_ERROR, functionName, "Invalid Coordinate System specified");
@@ -2915,8 +2915,6 @@ void pmacController::trajectoryTask() {
 
   this->lock();
   // Loop forever
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
   while (true) {
     // If we are not scanning then wait for a semaphore that is given when a scan is started
     if (!tScanExecuting_) {
@@ -3087,7 +3085,6 @@ void pmacController::trajectoryTask() {
       }
     }
   }
-#pragma clang diagnostic pop
 }
 
 void pmacController::setBuildStatus(int state, int status, const std::string &message) {
@@ -3988,6 +3985,7 @@ asynStatus pmacController::updateCsAssignmentParameters() {
 asynStatus pmacController::tScanBuildProfileArray(double *positions, int axis, int numPoints) {
   asynStatus status = asynSuccess;
   int index = 0;
+  int csEnum = 0;
   double resolution = 1.0;
   double offset = 0.0;
   static const char *functionName = "tScanBuildProfileArray";
@@ -3999,47 +3997,14 @@ asynStatus pmacController::tScanBuildProfileArray(double *positions, int axis, i
     status = asynError;
   }
 
-  if (status == asynSuccess) {
-    // Read in the resolution and offset
-    switch (axis) {
-      case 0:
-        getDoubleParam(PMAC_C_ProfileResA_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetA_, &offset);
-        break;
-      case 1:
-        getDoubleParam(PMAC_C_ProfileResB_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetB_, &offset);
-        break;
-      case 2:
-        getDoubleParam(PMAC_C_ProfileResC_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetC_, &offset);
-        break;
-      case 3:
-        getDoubleParam(PMAC_C_ProfileResU_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetU_, &offset);
-        break;
-      case 4:
-        getDoubleParam(PMAC_C_ProfileResV_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetV_, &offset);
-        break;
-      case 5:
-        getDoubleParam(PMAC_C_ProfileResW_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetW_, &offset);
-        break;
-      case 6:
-        getDoubleParam(PMAC_C_ProfileResX_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetX_, &offset);
-        break;
-      case 7:
-        getDoubleParam(PMAC_C_ProfileResY_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetY_, &offset);
-        break;
-      case 8:
-        getDoubleParam(PMAC_C_ProfileResZ_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetZ_, &offset);
-        break;
-    }
+  // Determine which CS we currently are using for trajectory scans
+  getIntegerParam(PMAC_C_TrajCSPort_, &csEnum);
 
+  // ask the CS for its axis resolution (axis no.s of CS are 1 based)
+  resolution = pCSControllers_[csEnum]->getAxisResolution(axis+1);
+  offset = pCSControllers_[csEnum]->getAxisOffset(axis+1);
+
+  if (status == asynSuccess) {
     debug(DEBUG_VARIABLE, functionName, "Resolution", resolution);
     debug(DEBUG_VARIABLE, functionName, "Offset", offset);
 
@@ -4484,6 +4449,3 @@ epicsRegisterFunction(pmacSetOpenLoopEncoderAxis);
 epicsRegisterFunction(pmacDebug);
 #endif
 } // extern "C"
-
-
-#pragma clang diagnostic pop

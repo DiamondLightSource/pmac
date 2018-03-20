@@ -5,7 +5,7 @@ from cothread import Sleep
 from datetime import datetime
 
 
-def trajectory_quick_scan(test, test_brick):
+def trajectory_quick_scan(test, test_brick, cs_group):
     """
     Do a short 4D grid scan involving 2 1-1 motors and 2 virtual axes of two jack CS
     :param test_brick: the test brick instance to run against
@@ -14,7 +14,7 @@ def trajectory_quick_scan(test, test_brick):
     tr = test_brick.trajectory
     assert isinstance(tr, Trajectory)
     # switch to correct CS mappings
-    test_brick.set_cs_group(test_brick.g3)
+    test_brick.set_cs_group(cs_group)
 
     # set up the axis parameters
     tr.axisA.use = 'Yes'
@@ -63,16 +63,15 @@ def trajectory_quick_scan(test, test_brick):
     test.assertEquals(test_brick.angle.pos, angles[-1])
 
 
-def trajectory_fast_scan(test, test_brick):
+def trajectory_fast_scan(test, test_brick, n_axes):
     """
     Do a short 4D grid scan involving 2 1-1 motors and 2 virtual axes of two jack CS
+    :param n_axes: no. of axes to include in trajectory
     :param test_brick: the test brick instance to run against
     :param (TestCase) test: the calling test object, used to make assertions
     """
     tr = test_brick.trajectory
     assert isinstance(tr, Trajectory)
-    # switch to correct CS mappings
-    test_brick.set_cs_group(test_brick.g3)
 
     # set up the axis parameters
     tr.axisX.use = 'Yes'
@@ -84,10 +83,11 @@ def trajectory_fast_scan(test, test_brick):
         points += 1
         heights.append(height/10.0)
 
+
     tr.axisX.positions = heights
 
-    # each point takes 5 milli sec
-    times = [5000] * points
+    # each point takes 5 milli sec per axis
+    times = [5000 * n_axes] * points
     # all points are interpolated
     modes = [0] * points
 
