@@ -36,8 +36,6 @@ class Trajectory:
         for axis in ALL_AXES:
             this_axis = getattr(self, 'axis'+axis)
             ca.caput("{}{}:UseAxis".format(self.pv_root, axis), this_axis.use)
-            ca.caput("{}{}:Resolution".format(self.pv_root, axis), this_axis.resolution)
-            ca.caput("{}{}:Offset".format(self.pv_root, axis), this_axis.offset)
 
             if this_axis.use:
                 ca.caput("{}{}:Positions".format(self.pv_root, axis), this_axis.positions,

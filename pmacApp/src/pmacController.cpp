@@ -350,30 +350,12 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_ProfilePositionsXString, asynParamFloat64Array, &PMAC_C_ProfilePositionsX_);
   createParam(PMAC_C_ProfilePositionsYString, asynParamFloat64Array, &PMAC_C_ProfilePositionsY_);
   createParam(PMAC_C_ProfilePositionsZString, asynParamFloat64Array, &PMAC_C_ProfilePositionsZ_);
-  createParam(PMAC_C_ProfileOffsetAString, asynParamFloat64, &PMAC_C_ProfileOffsetA_);
-  createParam(PMAC_C_ProfileOffsetBString, asynParamFloat64, &PMAC_C_ProfileOffsetB_);
-  createParam(PMAC_C_ProfileOffsetCString, asynParamFloat64, &PMAC_C_ProfileOffsetC_);
-  createParam(PMAC_C_ProfileOffsetUString, asynParamFloat64, &PMAC_C_ProfileOffsetU_);
-  createParam(PMAC_C_ProfileOffsetVString, asynParamFloat64, &PMAC_C_ProfileOffsetV_);
-  createParam(PMAC_C_ProfileOffsetWString, asynParamFloat64, &PMAC_C_ProfileOffsetW_);
-  createParam(PMAC_C_ProfileOffsetXString, asynParamFloat64, &PMAC_C_ProfileOffsetX_);
-  createParam(PMAC_C_ProfileOffsetYString, asynParamFloat64, &PMAC_C_ProfileOffsetY_);
-  createParam(PMAC_C_ProfileOffsetZString, asynParamFloat64, &PMAC_C_ProfileOffsetZ_);
   createParam(PMAC_C_ProfileAppendString, asynParamInt32, &PMAC_C_ProfileAppend_);
   createParam(PMAC_C_ProfileAppendStateString, asynParamInt32, &PMAC_C_ProfileAppendState_);
   createParam(PMAC_C_ProfileAppendStatusString, asynParamInt32, &PMAC_C_ProfileAppendStatus_);
   createParam(PMAC_C_ProfileAppendMessageString, asynParamOctet, &PMAC_C_ProfileAppendMessage_);
   createParam(PMAC_C_ProfileNumBuildString, asynParamInt32, &PMAC_C_ProfileNumBuild_);
   createParam(PMAC_C_ProfileBuiltPointsString, asynParamInt32, &PMAC_C_ProfileBuiltPoints_);
-  createParam(PMAC_C_ProfileResAString, asynParamFloat64, &PMAC_C_ProfileResA_);
-  createParam(PMAC_C_ProfileResBString, asynParamFloat64, &PMAC_C_ProfileResB_);
-  createParam(PMAC_C_ProfileResCString, asynParamFloat64, &PMAC_C_ProfileResC_);
-  createParam(PMAC_C_ProfileResUString, asynParamFloat64, &PMAC_C_ProfileResU_);
-  createParam(PMAC_C_ProfileResVString, asynParamFloat64, &PMAC_C_ProfileResV_);
-  createParam(PMAC_C_ProfileResWString, asynParamFloat64, &PMAC_C_ProfileResW_);
-  createParam(PMAC_C_ProfileResXString, asynParamFloat64, &PMAC_C_ProfileResX_);
-  createParam(PMAC_C_ProfileResYString, asynParamFloat64, &PMAC_C_ProfileResY_);
-  createParam(PMAC_C_ProfileResZString, asynParamFloat64, &PMAC_C_ProfileResZ_);
   createParam(PMAC_C_ProfileUserString, asynParamInt32Array, &PMAC_C_ProfileUser_);
   createParam(PMAC_C_ProfileVelModeString, asynParamInt32Array, &PMAC_C_ProfileVelMode_);
   createParam(PMAC_C_TrajBufferLengthString, asynParamInt32, &PMAC_C_TrajBufferLength_);
@@ -470,24 +452,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                    paramStatus);
   }
   // Initialise the trajectory interface
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResA_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResB_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResC_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResU_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResV_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResW_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResX_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResY_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResZ_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetA_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetB_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetC_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetU_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetV_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetW_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetX_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetY_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetZ_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE) == asynSuccess) &&
                  paramStatus);
   paramStatus = ((setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE) == asynSuccess) &&

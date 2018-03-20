@@ -581,7 +581,6 @@ double pmacCSController::getAxisResolution(int axis) {
   double resolution = 0;
 
   getDoubleParam(axis, PMAC_CS_MotorRes_, &resolution);
-  printf("resolution for axis %d on cs %s is %f\n", axis, this->portName, resolution);
   if(resolution == 0) {
     resolution = 1;  // guard against asyn issues causing div by zero
   }

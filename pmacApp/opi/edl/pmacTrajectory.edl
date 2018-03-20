@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 47
-y 336
-w 1080
-h 560
+x 29
+y 408
+w 890
+h 535
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
 btnFont "arial-bold-r-12.0"
@@ -33,7 +33,7 @@ release 0
 x 10
 y 130
 w 430
-h 90
+h 125
 lineColor index 14
 fill
 fillColor index 3
@@ -66,7 +66,7 @@ major 4
 minor 1
 release 1
 x 125
-y 165
+y 200
 w 40
 h 20
 font "helvetica-medium-r-10.0"
@@ -85,7 +85,7 @@ major 10
 minor 0
 release 0
 x 320
-y 165
+y 200
 w 115
 h 20
 controlPv "$(pmac):ProfileBuildState_RBV"
@@ -104,7 +104,7 @@ major 10
 minor 0
 release 0
 x 15
-y 190
+y 225
 w 420
 h 20
 controlPv "$(pmac):ProfileBuildMessage_RBV"
@@ -123,7 +123,7 @@ major 4
 minor 1
 release 1
 x 285
-y 165
+y 200
 w 35
 h 20
 font "helvetica-medium-r-10.0"
@@ -142,7 +142,7 @@ major 10
 minor 0
 release 0
 x 165
-y 165
+y 200
 w 115
 h 20
 controlPv "$(pmac):ProfileBuildStatus_RBV"
@@ -161,7 +161,7 @@ major 4
 minor 0
 release 0
 x 10
-y 320
+y 355
 w 430
 h 70
 lineColor index 14
@@ -176,7 +176,7 @@ major 4
 minor 1
 release 1
 x 10
-y 315
+y 350
 w 165
 h 12
 font "helvetica-medium-r-10.0"
@@ -196,7 +196,7 @@ major 4
 minor 1
 release 1
 x 125
-y 335
+y 370
 w 45
 h 20
 font "helvetica-medium-r-10.0"
@@ -215,7 +215,7 @@ major 10
 minor 0
 release 0
 x 320
-y 335
+y 370
 w 115
 h 20
 controlPv "$(pmac):ProfileExecuteState_RBV"
@@ -234,7 +234,7 @@ major 10
 minor 0
 release 0
 x 15
-y 360
+y 395
 w 420
 h 20
 controlPv "$(pmac):ProfileExecuteMessage_RBV"
@@ -253,7 +253,7 @@ major 4
 minor 1
 release 1
 x 285
-y 335
+y 370
 w 35
 h 20
 font "helvetica-medium-r-10.0"
@@ -272,7 +272,7 @@ major 10
 minor 0
 release 0
 x 170
-y 335
+y 370
 w 110
 h 20
 controlPv "$(pmac):ProfileExecuteStatus_RBV"
@@ -291,9 +291,9 @@ major 4
 minor 1
 release 0
 x 350
-y 400
+y 445
 w 90
-h 55
+h 45
 fgColor index 21
 onColor index 4
 offColor index 3
@@ -315,7 +315,7 @@ major 4
 minor 1
 release 1
 x 10
-y 410
+y 445
 w 325
 h 45
 indicatorColor index 25
@@ -338,7 +338,7 @@ major 4
 minor 1
 release 1
 x 10
-y 400
+y 435
 w 169
 h 12
 font "helvetica-medium-r-10.0"
@@ -358,7 +358,7 @@ major 4
 minor 1
 release 0
 x 15
-y 165
+y 200
 w 105
 h 20
 fgColor index 25
@@ -382,7 +382,7 @@ major 4
 minor 1
 release 0
 x 15
-y 335
+y 370
 w 105
 h 20
 fgColor index 25
@@ -462,8 +462,8 @@ minor 0
 release 0
 x 455
 y 10
-w 620
-h 325
+w 430
+h 265
 lineColor index 14
 fill
 fillColor index 3
@@ -475,9 +475,9 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 710
+x 760
 y 20
-w 75
+w 95
 h 20
 font "helvetica-bold-r-12.0"
 fontAlign "center"
@@ -495,9 +495,9 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 620
+x 645
 y 20
-w 75
+w 95
 h 20
 font "helvetica-bold-r-12.0"
 fontAlign "center"
@@ -517,7 +517,7 @@ minor 1
 release 1
 x 530
 y 20
-w 75
+w 95
 h 20
 font "helvetica-bold-r-12.0"
 fontAlign "center"
@@ -615,7 +615,7 @@ minor 0
 release 0
 x 530
 y 45
-w 75
+w 95
 h 20
 fgColor index 14
 bgColor index 3
@@ -633,9 +633,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 710
+x 760
 y 45
-w 75
+w 95
 h 20
 controlPv "$(pmac):A:Positions.NELM"
 displayMode "decimal"
@@ -653,9 +653,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 620
+x 645
 y 45
-w 75
+w 95
 h 20
 controlPv "$(pmac):A:NoOfPts"
 displayMode "decimal"
@@ -694,7 +694,7 @@ minor 0
 release 0
 x 530
 y 70
-w 75
+w 95
 h 20
 fgColor index 14
 bgColor index 3
@@ -712,9 +712,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 710
+x 760
 y 70
-w 75
+w 95
 h 20
 controlPv "$(pmac):B:Positions.NELM"
 displayMode "decimal"
@@ -732,9 +732,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 620
+x 645
 y 70
-w 75
+w 95
 h 20
 controlPv "$(pmac):B:NoOfPts"
 displayMode "decimal"
@@ -773,7 +773,7 @@ minor 0
 release 0
 x 530
 y 95
-w 75
+w 95
 h 20
 fgColor index 14
 bgColor index 3
@@ -791,9 +791,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 710
+x 760
 y 95
-w 75
+w 95
 h 20
 controlPv "$(pmac):C:Positions.NELM"
 displayMode "decimal"
@@ -811,9 +811,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 620
+x 645
 y 95
-w 75
+w 95
 h 20
 controlPv "$(pmac):C:NoOfPts"
 displayMode "decimal"
@@ -852,7 +852,7 @@ minor 0
 release 0
 x 530
 y 120
-w 75
+w 95
 h 20
 fgColor index 14
 bgColor index 3
@@ -870,9 +870,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 710
+x 760
 y 120
-w 75
+w 95
 h 20
 controlPv "$(pmac):U:Positions.NELM"
 displayMode "decimal"
@@ -890,9 +890,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 620
+x 645
 y 120
-w 75
+w 95
 h 20
 controlPv "$(pmac):U:NoOfPts"
 displayMode "decimal"
@@ -931,7 +931,7 @@ minor 0
 release 0
 x 530
 y 145
-w 75
+w 95
 h 20
 fgColor index 14
 bgColor index 3
@@ -949,9 +949,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 710
+x 760
 y 145
-w 75
+w 95
 h 20
 controlPv "$(pmac):V:Positions.NELM"
 displayMode "decimal"
@@ -969,9 +969,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 620
+x 645
 y 145
-w 75
+w 95
 h 20
 controlPv "$(pmac):V:NoOfPts"
 displayMode "decimal"
@@ -1010,7 +1010,7 @@ minor 0
 release 0
 x 530
 y 170
-w 75
+w 95
 h 20
 fgColor index 14
 bgColor index 3
@@ -1028,9 +1028,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 710
+x 760
 y 170
-w 75
+w 95
 h 20
 controlPv "$(pmac):W:Positions.NELM"
 displayMode "decimal"
@@ -1048,9 +1048,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 620
+x 645
 y 170
-w 75
+w 95
 h 20
 controlPv "$(pmac):W:NoOfPts"
 displayMode "decimal"
@@ -1089,7 +1089,7 @@ minor 0
 release 0
 x 530
 y 195
-w 75
+w 95
 h 20
 fgColor index 14
 bgColor index 3
@@ -1107,9 +1107,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 710
+x 760
 y 195
-w 75
+w 95
 h 20
 controlPv "$(pmac):X:Positions.NELM"
 displayMode "decimal"
@@ -1127,9 +1127,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 620
+x 645
 y 195
-w 75
+w 95
 h 20
 controlPv "$(pmac):X:NoOfPts"
 displayMode "decimal"
@@ -1168,7 +1168,7 @@ minor 0
 release 0
 x 530
 y 220
-w 75
+w 95
 h 20
 fgColor index 14
 bgColor index 3
@@ -1186,9 +1186,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 710
+x 760
 y 220
-w 75
+w 95
 h 20
 controlPv "$(pmac):Y:Positions.NELM"
 displayMode "decimal"
@@ -1206,9 +1206,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 620
+x 645
 y 220
-w 75
+w 95
 h 20
 controlPv "$(pmac):Y:NoOfPts"
 displayMode "decimal"
@@ -1247,7 +1247,7 @@ minor 0
 release 0
 x 530
 y 245
-w 75
+w 95
 h 20
 fgColor index 14
 bgColor index 3
@@ -1265,9 +1265,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 710
+x 760
 y 245
-w 75
+w 95
 h 20
 controlPv "$(pmac):Z:Positions.NELM"
 displayMode "decimal"
@@ -1285,9 +1285,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 620
+x 645
 y 245
-w 75
+w 95
 h 20
 controlPv "$(pmac):Z:NoOfPts"
 displayMode "decimal"
@@ -1318,792 +1318,14 @@ value {
 }
 endObjectProperties
 
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 795
-y 45
-w 60
-h 20
-controlPv "$(pmac):A:Resolution"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 930
-y 45
-w 60
-h 20
-controlPv "$(pmac):A:Offset"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 860
-y 45
-w 65
-h 20
-controlPv "$(pmac):A:Resolution_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 995
-y 45
-w 65
-h 20
-controlPv "$(pmac):A:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 795
-y 70
-w 60
-h 20
-controlPv "$(pmac):B:Resolution"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 930
-y 70
-w 60
-h 20
-controlPv "$(pmac):B:Offset"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 860
-y 70
-w 65
-h 20
-controlPv "$(pmac):B:Resolution_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 995
-y 70
-w 65
-h 20
-controlPv "$(pmac):B:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 795
-y 95
-w 60
-h 20
-controlPv "$(pmac):C:Resolution"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 930
-y 95
-w 60
-h 20
-controlPv "$(pmac):C:Offset"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 860
-y 95
-w 65
-h 20
-controlPv "$(pmac):C:Resolution_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 995
-y 95
-w 65
-h 20
-controlPv "$(pmac):C:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 795
-y 120
-w 60
-h 20
-controlPv "$(pmac):U:Resolution"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 930
-y 120
-w 60
-h 20
-controlPv "$(pmac):U:Offset"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 860
-y 120
-w 65
-h 20
-controlPv "$(pmac):U:Resolution_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 995
-y 120
-w 65
-h 20
-controlPv "$(pmac):U:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 795
-y 145
-w 60
-h 20
-controlPv "$(pmac):V:Resolution"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 930
-y 145
-w 60
-h 20
-controlPv "$(pmac):V:Offset"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 860
-y 145
-w 65
-h 20
-controlPv "$(pmac):V:Resolution_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 995
-y 145
-w 65
-h 20
-controlPv "$(pmac):V:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 795
-y 170
-w 60
-h 20
-controlPv "$(pmac):W:Resolution"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 930
-y 170
-w 60
-h 20
-controlPv "$(pmac):W:Offset"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 860
-y 170
-w 65
-h 20
-controlPv "$(pmac):W:Resolution_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 995
-y 170
-w 65
-h 20
-controlPv "$(pmac):W:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 795
-y 195
-w 60
-h 20
-controlPv "$(pmac):X:Resolution"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 930
-y 195
-w 60
-h 20
-controlPv "$(pmac):X:Offset"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 860
-y 195
-w 65
-h 20
-controlPv "$(pmac):X:Resolution_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 995
-y 195
-w 65
-h 20
-controlPv "$(pmac):X:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 795
-y 220
-w 60
-h 20
-controlPv "$(pmac):Y:Resolution"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 930
-y 220
-w 60
-h 20
-controlPv "$(pmac):Y:Offset"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 860
-y 220
-w 65
-h 20
-controlPv "$(pmac):Y:Resolution_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 995
-y 220
-w 65
-h 20
-controlPv "$(pmac):Y:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 795
-y 245
-w 60
-h 20
-controlPv "$(pmac):Z:Resolution"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 930
-y 245
-w 60
-h 20
-controlPv "$(pmac):Z:Offset"
-precision 3
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 860
-y 245
-w 65
-h 20
-controlPv "$(pmac):Z:Resolution_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 995
-y 245
-w 65
-h 20
-controlPv "$(pmac):Z:Offset_RBV"
-displayMode "decimal"
-precision 3
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "helvetica-medium-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 795
-y 20
-w 130
-h 20
-font "helvetica-bold-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Resolution"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 930
-y 20
-w 130
-h 20
-font "helvetica-bold-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Offset"
-}
-endObjectProperties
-
 # (Exit Button)
 object activeExitButtonClass
 beginObjectProperties
 major 4
 minor 1
 release 0
-x 940
-y 520
+x 755
+y 500
 w 130
 h 25
 fgColor index 46
@@ -2257,7 +1479,7 @@ major 4
 minor 0
 release 0
 x 10
-y 235
+y 270
 w 430
 h 70
 lineColor index 14
@@ -2272,7 +1494,7 @@ major 4
 minor 1
 release 1
 x 10
-y 230
+y 265
 w 155
 h 12
 font "helvetica-medium-r-10.0"
@@ -2292,7 +1514,7 @@ major 4
 minor 1
 release 1
 x 125
-y 250
+y 285
 w 40
 h 20
 font "helvetica-medium-r-10.0"
@@ -2311,7 +1533,7 @@ major 10
 minor 0
 release 0
 x 320
-y 250
+y 285
 w 115
 h 20
 controlPv "$(pmac):ProfileAppendState_RBV"
@@ -2330,7 +1552,7 @@ major 10
 minor 0
 release 0
 x 15
-y 275
+y 310
 w 420
 h 20
 controlPv "$(pmac):ProfileAppendMessage_RBV"
@@ -2349,7 +1571,7 @@ major 4
 minor 1
 release 1
 x 285
-y 250
+y 285
 w 35
 h 20
 font "helvetica-medium-r-10.0"
@@ -2368,7 +1590,7 @@ major 10
 minor 0
 release 0
 x 165
-y 250
+y 285
 w 115
 h 20
 controlPv "$(pmac):ProfileAppendStatus_RBV"
@@ -2387,7 +1609,7 @@ major 4
 minor 1
 release 0
 x 15
-y 250
+y 285
 w 105
 h 20
 fgColor index 25
@@ -2410,8 +1632,8 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 820
-y 300
+x 335
+y 170
 w 100
 h 20
 controlPv "$(pmac):ProfilePointsToBuild_RBV"
@@ -2430,8 +1652,8 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 725
-y 300
+x 240
+y 170
 w 85
 h 20
 controlPv "$(pmac):ProfilePointsToBuild"
@@ -2449,8 +1671,8 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 470
-y 300
+x 15
+y 170
 w 255
 h 20
 font "helvetica-bold-r-12.0"
@@ -2458,7 +1680,7 @@ fgColor index 14
 bgColor index 3
 useDisplayBg
 value {
-  "Number of points to build/append to scan"
+  "No. of points to build/append to scan"
 }
 endObjectProperties
 
@@ -2469,7 +1691,7 @@ major 4
 minor 0
 release 0
 x 455
-y 345
+y 290
 w 210
 h 200
 
@@ -2482,7 +1704,7 @@ major 4
 minor 0
 release 0
 x 455
-y 350
+y 295
 w 210
 h 195
 lineColor index 14
@@ -2497,7 +1719,7 @@ major 4
 minor 1
 release 1
 x 455
-y 345
+y 290
 w 150
 h 12
 font "helvetica-medium-r-10.0"
@@ -2517,7 +1739,7 @@ major 10
 minor 0
 release 0
 x 585
-y 365
+y 310
 w 75
 h 20
 controlPv "$(pmac):BufferAAddress_RBV"
@@ -2537,7 +1759,7 @@ major 10
 minor 0
 release 0
 x 585
-y 390
+y 335
 w 75
 h 20
 controlPv "$(pmac):BufferBAddress_RBV"
@@ -2557,7 +1779,7 @@ major 4
 minor 1
 release 1
 x 460
-y 365
+y 310
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2576,7 +1798,7 @@ major 4
 minor 1
 release 1
 x 460
-y 390
+y 335
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2595,7 +1817,7 @@ major 10
 minor 0
 release 0
 x 585
-y 415
+y 360
 w 75
 h 20
 controlPv "$(pmac):BufferLength_RBV"
@@ -2615,7 +1837,7 @@ major 4
 minor 1
 release 1
 x 460
-y 415
+y 360
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2634,7 +1856,7 @@ major 10
 minor 0
 release 0
 x 585
-y 440
+y 385
 w 75
 h 20
 controlPv "$(pmac):CurrentBuffer_RBV"
@@ -2654,7 +1876,7 @@ major 10
 minor 0
 release 0
 x 585
-y 465
+y 410
 w 75
 h 20
 controlPv "$(pmac):CurrentIndex_RBV"
@@ -2674,7 +1896,7 @@ major 4
 minor 1
 release 1
 x 460
-y 440
+y 385
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2693,7 +1915,7 @@ major 4
 minor 1
 release 1
 x 460
-y 465
+y 410
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2712,7 +1934,7 @@ major 10
 minor 0
 release 0
 x 585
-y 490
+y 435
 w 75
 h 20
 controlPv "$(pmac):TotalPoints_RBV"
@@ -2732,7 +1954,7 @@ major 4
 minor 1
 release 1
 x 460
-y 490
+y 435
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2751,7 +1973,7 @@ major 10
 minor 0
 release 0
 x 585
-y 515
+y 460
 w 75
 h 20
 controlPv "$(pmac):TrajectoryStatus_RBV"
@@ -2771,7 +1993,7 @@ major 4
 minor 1
 release 1
 x 460
-y 515
+y 460
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2794,7 +2016,7 @@ major 4
 minor 0
 release 0
 x 675
-y 350
+y 295
 w 210
 h 195
 lineColor index 14
@@ -2809,7 +2031,7 @@ major 4
 minor 1
 release 1
 x 675
-y 345
+y 290
 w 109
 h 12
 font "helvetica-medium-r-10.0"
@@ -2829,7 +2051,7 @@ major 10
 minor 0
 release 0
 x 805
-y 365
+y 310
 w 75
 h 20
 controlPv "$(pmac):EpicsBufferAPtr_RBV"
@@ -2849,7 +2071,7 @@ major 4
 minor 1
 release 1
 x 680
-y 365
+y 310
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2868,7 +2090,7 @@ major 4
 minor 1
 release 1
 x 680
-y 390
+y 335
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2887,7 +2109,7 @@ major 4
 minor 1
 release 1
 x 680
-y 415
+y 360
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2906,7 +2128,7 @@ major 10
 minor 0
 release 0
 x 805
-y 440
+y 385
 w 75
 h 20
 controlPv "$(pmac):TscanTime_RBV"
@@ -2927,7 +2149,7 @@ major 10
 minor 0
 release 0
 x 805
-y 465
+y 410
 w 75
 h 20
 controlPv "$(pmac):TscanCs_RBV"
@@ -2947,7 +2169,7 @@ major 4
 minor 1
 release 1
 x 680
-y 440
+y 385
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2966,7 +2188,7 @@ major 4
 minor 1
 release 1
 x 680
-y 465
+y 410
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2985,7 +2207,7 @@ major 10
 minor 0
 release 0
 x 805
-y 490
+y 435
 w 75
 h 20
 controlPv "$(pmac):TscanPercent_RBV"
@@ -3006,7 +2228,7 @@ major 4
 minor 1
 release 1
 x 680
-y 490
+y 435
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -3025,7 +2247,7 @@ major 4
 minor 1
 release 1
 x 680
-y 515
+y 460
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -3044,7 +2266,7 @@ major 10
 minor 0
 release 0
 x 805
-y 390
+y 335
 w 75
 h 20
 controlPv "$(pmac):EpicsBufferBPtr_RBV"
@@ -3064,7 +2286,7 @@ major 10
 minor 0
 release 0
 x 805
-y 515
+y 460
 w 75
 h 20
 controlPv "$(pmac):TscanExtStatus_RBV"
@@ -3084,7 +2306,7 @@ major 10
 minor 0
 release 0
 x 805
-y 415
+y 360
 w 75
 h 20
 controlPv "$(pmac):ProfilePointsBuilt_RBV"

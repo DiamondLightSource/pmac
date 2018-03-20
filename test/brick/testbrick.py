@@ -91,7 +91,7 @@ class TestBrick(MyBrick):
             # reset all real mres
             mres_pvs = [axis.demand + ".MRES" for axis in r.values()]
             mres_val = [0.001] * len(mres_pvs)
-            ca.caput(mres_pvs, mres_val, wait=True, timeout=1)
+            ca.caput(mres_pvs, mres_val, wait=True, timeout=3)
             ca.caput(["BRICK1:M1.MRES", "BRICK1:M2.MRES"], [1, 1], wait=True)
 
             # reset all real offset

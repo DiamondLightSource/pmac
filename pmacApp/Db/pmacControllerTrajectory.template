@@ -545,38 +545,6 @@ record(longout,"$(PMAC):A:NoOfPts") {
     field(DOL,  "$(PMAC):A:Positions.NORD")
 }
 
-# Motor offset for this axis
-record(ao,"$(PMAC):A:Offset") {
-    field(DESC, "Axis A offset")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_A")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):A:Offset_RBV") {
-  field(DESC, "Axis A offset")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_A")
-  field(SCAN, "I/O Intr")  
-}
-
-# Motor resolution for this axis
-record(ao,"$(PMAC):A:Resolution") {
-    field(DESC, "Axis A resolution")
-    field(VAL,  "1.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_A")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):A:Resolution_RBV") {
-  field(DESC, "Axis A resolution")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_A")
-  field(SCAN, "I/O Intr")  
-}
-
 ###################################################################
 #  Axis B Trajectory Scan Records                                 # 
 #                                                                 #
@@ -610,37 +578,6 @@ record(longout,"$(PMAC):B:NoOfPts") {
     field(DOL,  "$(PMAC):B:Positions.NORD")
 }
 
-# Motor offset for this axis
-record(ao,"$(PMAC):B:Offset") {
-    field(DESC, "Axis B offset")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_B")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):B:Offset_RBV") {
-  field(DESC, "Axis B offset")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_B")
-  field(SCAN, "I/O Intr")  
-}
-
-# Motor resolution for this axis
-record(ao,"$(PMAC):B:Resolution") {
-    field(DESC, "Axis B resolution")
-    field(VAL,  "1.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_B")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):B:Resolution_RBV") {
-  field(DESC, "Axis B resolution")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_B")
-  field(SCAN, "I/O Intr")  
-}
 
 ###################################################################
 #  Axis C Trajectory Scan Records                                 # 
@@ -675,37 +612,6 @@ record(longout,"$(PMAC):C:NoOfPts") {
     field(DOL,  "$(PMAC):C:Positions.NORD")
 }
 
-# Motor offset for this axis
-record(ao,"$(PMAC):C:Offset") {
-    field(DESC, "Axis C offset")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_C")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):C:Offset_RBV") {
-  field(DESC, "Axis C offset")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_C")
-  field(SCAN, "I/O Intr")  
-}
-
-# Motor resolution for this axis
-record(ao,"$(PMAC):C:Resolution") {
-    field(DESC, "Axis C resolution")
-    field(VAL,  "1.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_C")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):C:Resolution_RBV") {
-  field(DESC, "Axis C resolution")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_C")
-  field(SCAN, "I/O Intr")  
-}
 
 ###################################################################
 #  Axis U Trajectory Scan Records                                 # 
@@ -740,37 +646,6 @@ record(longout,"$(PMAC):U:NoOfPts") {
     field(DOL,  "$(PMAC):U:Positions.NORD")
 }
 
-# Motor offset for this axis
-record(ao,"$(PMAC):U:Offset") {
-    field(DESC, "Axis U offset")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_U")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):U:Offset_RBV") {
-  field(DESC, "Axis U offset")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_U")
-  field(SCAN, "I/O Intr")  
-}
-
-# Motor resolution for this axis
-record(ao,"$(PMAC):U:Resolution") {
-    field(DESC, "Axis U resolution")
-    field(VAL,  "1.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_U")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):U:Resolution_RBV") {
-  field(DESC, "Axis U resolution")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_U")
-  field(SCAN, "I/O Intr")  
-}
 
 ###################################################################
 #  Axis V Trajectory Scan Records                                 # 
@@ -803,38 +678,6 @@ record(longout,"$(PMAC):V:NoOfPts") {
     field(SCAN, "1 second")
     field(OMSL, "closed_loop")
     field(DOL,  "$(PMAC):V:Positions.NORD")
-}
-
-# Motor offset for this axis
-record(ao,"$(PMAC):V:Offset") {
-    field(DESC, "Axis V offset")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_V")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):V:Offset_RBV") {
-  field(DESC, "Axis V offset")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_V")
-  field(SCAN, "I/O Intr")  
-}
-
-# Motor resolution for this axis
-record(ao,"$(PMAC):V:Resolution") {
-    field(DESC, "Axis V resolution")
-    field(VAL,  "1.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_V")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):V:Resolution_RBV") {
-  field(DESC, "Axis V resolution")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_V")
-  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -870,38 +713,6 @@ record(longout,"$(PMAC):W:NoOfPts") {
     field(DOL,  "$(PMAC):W:Positions.NORD")
 }
 
-# Motor offset for this axis
-record(ao,"$(PMAC):W:Offset") {
-    field(DESC, "Axis W offset")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_W")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):W:Offset_RBV") {
-  field(DESC, "Axis W offset")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_W")
-  field(SCAN, "I/O Intr")  
-}
-
-# Motor resolution for this axis
-record(ao,"$(PMAC):W:Resolution") {
-    field(DESC, "Axis W resolution")
-    field(VAL,  "1.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_W")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):W:Resolution_RBV") {
-  field(DESC, "Axis W resolution")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_W")
-  field(SCAN, "I/O Intr")  
-}
-
 ###################################################################
 #  Axis X Trajectory Scan Records                                 # 
 #                                                                 #
@@ -933,38 +744,6 @@ record(longout,"$(PMAC):X:NoOfPts") {
     field(SCAN, "1 second")
     field(OMSL, "closed_loop")
     field(DOL,  "$(PMAC):X:Positions.NORD")
-}
-
-# Motor offset for this axis
-record(ao,"$(PMAC):X:Offset") {
-    field(DESC, "Axis X offset")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_X")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):X:Offset_RBV") {
-  field(DESC, "Axis X offset")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_X")
-  field(SCAN, "I/O Intr")  
-}
-
-# Motor resolution for this axis
-record(ao,"$(PMAC):X:Resolution") {
-    field(DESC, "Axis X resolution")
-    field(VAL,  "1.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_X")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):X:Resolution_RBV") {
-  field(DESC, "Axis X resolution")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_X")
-  field(SCAN, "I/O Intr")  
 }
 
 ###################################################################
@@ -1000,38 +779,6 @@ record(longout,"$(PMAC):Y:NoOfPts") {
     field(DOL,  "$(PMAC):Y:Positions.NORD")
 }
 
-# Motor offset for this axis
-record(ao,"$(PMAC):Y:Offset") {
-    field(DESC, "Axis Y offset")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_Y")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):Y:Offset_RBV") {
-  field(DESC, "Axis Y offset")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_Y")
-  field(SCAN, "I/O Intr")  
-}
-
-# Motor resolution for this axis
-record(ao,"$(PMAC):Y:Resolution") {
-    field(DESC, "Axis Y resolution")
-    field(VAL,  "1.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_Y")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):Y:Resolution_RBV") {
-  field(DESC, "Axis Y resolution")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_Y")
-  field(SCAN, "I/O Intr")  
-}
-
 ###################################################################
 #  Axis Z Trajectory Scan Records                                 # 
 #                                                                 #
@@ -1065,34 +812,3 @@ record(longout,"$(PMAC):Z:NoOfPts") {
     field(DOL,  "$(PMAC):Z:Positions.NORD")
 }
 
-# Motor offset for this axis
-record(ao,"$(PMAC):Z:Offset") {
-    field(DESC, "Axis Z offset")
-    field(VAL,  "0.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_OFFSET_Z")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):Z:Offset_RBV") {
-  field(DESC, "Axis Z offset")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_OFFSET_Z")
-  field(SCAN, "I/O Intr")  
-}
-
-# Motor resolution for this axis
-record(ao,"$(PMAC):Z:Resolution") {
-    field(DESC, "Axis Z resolution")
-    field(VAL,  "1.0")
-    field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),0)PROFILE_RESOLUTION_Z")
-    field(PREC, "$(PREC=3)")
-}
-
-record(ai, "$(PMAC):Z:Resolution_RBV") {
-  field(DESC, "Axis Z resolution")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PROFILE_RESOLUTION_Z")
-  field(SCAN, "I/O Intr")  
-}

@@ -78,8 +78,6 @@ int main()
   pIntArrayClient->write(trajUser, 2000);
   pIntArrayClient = std::tr1::shared_ptr<asynInt32ArrayClient>(new asynInt32ArrayClient(PMAC_PORT, 0, PMAC_C_ProfileVelModeString));
   pIntArrayClient->write(trajVel, 2000);
-  pFloatClient = std::tr1::shared_ptr<asynFloat64Client>(new asynFloat64Client(PMAC_PORT, 0, PMAC_C_ProfileResAString));
-  pFloatClient->write(0.001);
   pIntClient = std::tr1::shared_ptr<asynInt32Client>(new asynInt32Client(PMAC_PORT, 0, PMAC_C_ProfileUseAxisAString));
   pIntClient->write(1);
   pIntClient = std::tr1::shared_ptr<asynInt32Client>(new asynInt32Client(PMAC_PORT, 0, profileNumPointsString));
