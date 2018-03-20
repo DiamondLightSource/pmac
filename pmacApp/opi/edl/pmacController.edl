@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1331
-y 62
+x 1333
+y 87
 w 584
 h 886
 font "arial-medium-r-16.0"
@@ -2619,8 +2619,9 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BRICK1CS3:Y.STOP"
+controlPv "$(pmac):StopAll"
 pressValue "1"
+releaseValue "0"
 onLabel "STOP"
 offLabel "STOP"
 3d
@@ -2665,8 +2666,9 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BRICK1CS3:Y.STOP"
+controlPv "$(pmac):KillAll"
 pressValue "1"
+releaseValue "0"
 onLabel "KILL"
 offLabel "KILL"
 3d

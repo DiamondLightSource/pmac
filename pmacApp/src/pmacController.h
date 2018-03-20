@@ -25,6 +25,8 @@
 #define PMAC_C_FirstParamString           "PMAC_C_FIRSTPARAM"
 #define PMAC_C_LastParamString            "PMAC_C_LASTPARAM"
 
+#define PMAC_C_StopAllString              "PMAC_C_STOPALL"
+#define PMAC_C_KillAllString              "PMAC_C_KILLALL"
 #define PMAC_C_GlobalStatusString         "PMAC_C_GLOBALSTATUS"
 #define PMAC_C_CommsErrorString           "PMAC_C_COMMSERROR"
 
@@ -170,9 +172,6 @@
 
 #define PMAC_MEDIUM_LOOP_TIME 2000
 #define PMAC_SLOW_LOOP_TIME   5000
-
-#define DEFERRED_FAST_MOVES 1
-#define DEFERRED_COORDINATED_MOVES 2
 
 #define PMAC_PVT_TIME_MODE       "I42"   // PVT Time Control Mode (0=4,095 ms max time, 1=8,388,607 ms max time)
 
@@ -349,6 +348,8 @@ protected:
 
     int PMAC_C_FirstParam_;
 #define FIRST_PMAC_PARAM PMAC_C_FirstParam_
+    int PMAC_C_StopAll_;
+    int PMAC_C_KillAll_;
     int PMAC_C_GlobalStatus_;
     int PMAC_C_CommsError_;
     int PMAC_C_FeedRate_;

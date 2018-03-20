@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 4
-y 75
-w 947
-h 280
+x 197
+y 50
+w 951
+h 295
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
 btnFont "arial-bold-r-12.0"
@@ -32,9 +32,9 @@ major 4
 minor 0
 release 0
 x 5
-y 10
+y 35
 w 935
-h 995
+h 985
 lineColor index 14
 fill
 fillColor index 5
@@ -46,28 +46,8 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 5
-y 5
-w 140
-h 13
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 8
-value {
-  "  Axis status for $(pmac)  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
 x 480
-y 20
+y 35
 w 185
 h 20
 font "helvetica-medium-r-10.0"
@@ -87,7 +67,7 @@ major 4
 minor 1
 release 1
 x 315
-y 20
+y 35
 w 60
 h 20
 font "helvetica-medium-r-10.0"
@@ -107,7 +87,7 @@ major 4
 minor 1
 release 1
 x 345
-y 20
+y 35
 w 205
 h 20
 font "helvetica-medium-r-10.0"
@@ -127,7 +107,7 @@ major 4
 minor 1
 release 1
 x 600
-y 20
+y 35
 w 185
 h 20
 font "helvetica-medium-r-10.0"
@@ -147,7 +127,7 @@ major 4
 minor 1
 release 1
 x 140
-y 20
+y 35
 w 60
 h 20
 font "helvetica-medium-r-10.0"
@@ -167,7 +147,7 @@ major 4
 minor 1
 release 1
 x 735
-y 20
+y 35
 w 185
 h 20
 font "helvetica-medium-r-10.0"
@@ -187,7 +167,7 @@ major 4
 minor 0
 release 0
 x 10
-y 40
+y 55
 w 920
 h 25
 
@@ -200,7 +180,7 @@ major 4
 minor 1
 release 0
 x 10
-y 40
+y 55
 w 920
 h 25
 fgColor index 14
@@ -236,7 +216,7 @@ major 4
 minor 0
 release 0
 x 10
-y 70
+y 85
 w 920
 h 25
 
@@ -249,7 +229,7 @@ major 4
 minor 1
 release 0
 x 10
-y 70
+y 85
 w 920
 h 25
 fgColor index 14
@@ -285,7 +265,7 @@ major 4
 minor 0
 release 0
 x 10
-y 100
+y 115
 w 920
 h 25
 
@@ -298,7 +278,7 @@ major 4
 minor 1
 release 0
 x 10
-y 100
+y 115
 w 920
 h 25
 fgColor index 14
@@ -334,7 +314,7 @@ major 4
 minor 0
 release 0
 x 10
-y 130
+y 145
 w 920
 h 25
 
@@ -347,7 +327,7 @@ major 4
 minor 1
 release 0
 x 10
-y 130
+y 145
 w 920
 h 25
 fgColor index 14
@@ -383,7 +363,7 @@ major 4
 minor 0
 release 0
 x 10
-y 160
+y 175
 w 920
 h 25
 
@@ -396,7 +376,7 @@ major 4
 minor 1
 release 0
 x 10
-y 160
+y 175
 w 920
 h 25
 fgColor index 14
@@ -432,7 +412,7 @@ major 4
 minor 0
 release 0
 x 10
-y 190
+y 205
 w 920
 h 25
 
@@ -445,7 +425,7 @@ major 4
 minor 1
 release 0
 x 10
-y 190
+y 205
 w 920
 h 25
 fgColor index 14
@@ -481,7 +461,7 @@ major 4
 minor 0
 release 0
 x 10
-y 220
+y 235
 w 920
 h 25
 
@@ -494,7 +474,7 @@ major 4
 minor 1
 release 0
 x 10
-y 220
+y 235
 w 920
 h 25
 fgColor index 14
@@ -530,7 +510,7 @@ major 4
 minor 0
 release 0
 x 10
-y 250
+y 265
 w 920
 h 25
 
@@ -543,7 +523,7 @@ major 4
 minor 1
 release 0
 x 10
-y 250
+y 265
 w 920
 h 25
 fgColor index 14
@@ -579,7 +559,7 @@ major 4
 minor 0
 release 0
 x 10
-y 280
+y 295
 w 920
 h 25
 
@@ -592,7 +572,7 @@ major 4
 minor 1
 release 0
 x 10
-y 280
+y 295
 w 920
 h 25
 fgColor index 14
@@ -628,7 +608,7 @@ major 4
 minor 0
 release 0
 x 10
-y 310
+y 325
 w 920
 h 25
 
@@ -641,7 +621,7 @@ major 4
 minor 1
 release 0
 x 10
-y 310
+y 325
 w 920
 h 25
 fgColor index 14
@@ -677,7 +657,7 @@ major 4
 minor 0
 release 0
 x 10
-y 340
+y 355
 w 920
 h 25
 
@@ -690,7 +670,7 @@ major 4
 minor 1
 release 0
 x 10
-y 340
+y 355
 w 920
 h 25
 fgColor index 14
@@ -726,7 +706,7 @@ major 4
 minor 0
 release 0
 x 10
-y 370
+y 385
 w 920
 h 25
 
@@ -739,7 +719,7 @@ major 4
 minor 1
 release 0
 x 10
-y 370
+y 385
 w 920
 h 25
 fgColor index 14
@@ -775,7 +755,7 @@ major 4
 minor 0
 release 0
 x 10
-y 400
+y 415
 w 920
 h 25
 
@@ -788,7 +768,7 @@ major 4
 minor 1
 release 0
 x 10
-y 400
+y 415
 w 920
 h 25
 fgColor index 14
@@ -824,7 +804,7 @@ major 4
 minor 0
 release 0
 x 10
-y 430
+y 445
 w 920
 h 25
 
@@ -837,7 +817,7 @@ major 4
 minor 1
 release 0
 x 10
-y 430
+y 445
 w 920
 h 25
 fgColor index 14
@@ -873,7 +853,7 @@ major 4
 minor 0
 release 0
 x 10
-y 460
+y 475
 w 920
 h 25
 
@@ -886,7 +866,7 @@ major 4
 minor 1
 release 0
 x 10
-y 460
+y 475
 w 920
 h 25
 fgColor index 14
@@ -922,7 +902,7 @@ major 4
 minor 0
 release 0
 x 10
-y 610
+y 625
 w 920
 h 25
 
@@ -935,7 +915,7 @@ major 4
 minor 1
 release 0
 x 10
-y 610
+y 625
 w 920
 h 25
 fgColor index 14
@@ -971,7 +951,7 @@ major 4
 minor 0
 release 0
 x 10
-y 580
+y 595
 w 920
 h 25
 
@@ -984,7 +964,7 @@ major 4
 minor 1
 release 0
 x 10
-y 580
+y 595
 w 920
 h 25
 fgColor index 14
@@ -1020,7 +1000,7 @@ major 4
 minor 0
 release 0
 x 10
-y 550
+y 565
 w 920
 h 25
 
@@ -1033,7 +1013,7 @@ major 4
 minor 1
 release 0
 x 10
-y 550
+y 565
 w 920
 h 25
 fgColor index 14
@@ -1069,7 +1049,7 @@ major 4
 minor 0
 release 0
 x 10
-y 520
+y 535
 w 920
 h 25
 
@@ -1082,7 +1062,7 @@ major 4
 minor 1
 release 0
 x 10
-y 520
+y 535
 w 920
 h 25
 fgColor index 14
@@ -1118,7 +1098,7 @@ major 4
 minor 0
 release 0
 x 10
-y 490
+y 505
 w 920
 h 25
 
@@ -1131,7 +1111,7 @@ major 4
 minor 1
 release 0
 x 10
-y 490
+y 505
 w 920
 h 25
 fgColor index 14
@@ -1167,7 +1147,7 @@ major 4
 minor 0
 release 0
 x 10
-y 640
+y 655
 w 920
 h 25
 
@@ -1180,7 +1160,7 @@ major 4
 minor 1
 release 0
 x 10
-y 640
+y 655
 w 920
 h 25
 fgColor index 14
@@ -1216,7 +1196,7 @@ major 4
 minor 0
 release 0
 x 10
-y 670
+y 685
 w 920
 h 25
 
@@ -1229,7 +1209,7 @@ major 4
 minor 1
 release 0
 x 10
-y 670
+y 685
 w 920
 h 25
 fgColor index 14
@@ -1265,7 +1245,7 @@ major 4
 minor 0
 release 0
 x 10
-y 700
+y 715
 w 920
 h 25
 
@@ -1278,7 +1258,7 @@ major 4
 minor 1
 release 0
 x 10
-y 700
+y 715
 w 920
 h 25
 fgColor index 14
@@ -1314,7 +1294,7 @@ major 4
 minor 0
 release 0
 x 10
-y 730
+y 745
 w 920
 h 25
 
@@ -1327,7 +1307,7 @@ major 4
 minor 1
 release 0
 x 10
-y 730
+y 745
 w 920
 h 25
 fgColor index 14
@@ -1363,7 +1343,7 @@ major 4
 minor 0
 release 0
 x 10
-y 760
+y 775
 w 920
 h 25
 
@@ -1376,7 +1356,7 @@ major 4
 minor 1
 release 0
 x 10
-y 760
+y 775
 w 920
 h 25
 fgColor index 14
@@ -1412,7 +1392,7 @@ major 4
 minor 0
 release 0
 x 10
-y 790
+y 805
 w 920
 h 25
 
@@ -1425,7 +1405,7 @@ major 4
 minor 1
 release 0
 x 10
-y 790
+y 805
 w 920
 h 25
 fgColor index 14
@@ -1461,7 +1441,7 @@ major 4
 minor 0
 release 0
 x 10
-y 820
+y 835
 w 920
 h 25
 
@@ -1474,7 +1454,7 @@ major 4
 minor 1
 release 0
 x 10
-y 820
+y 835
 w 920
 h 25
 fgColor index 14
@@ -1510,7 +1490,7 @@ major 4
 minor 0
 release 0
 x 10
-y 850
+y 865
 w 920
 h 25
 
@@ -1523,7 +1503,7 @@ major 4
 minor 1
 release 0
 x 10
-y 850
+y 865
 w 920
 h 25
 fgColor index 14
@@ -1559,7 +1539,7 @@ major 4
 minor 0
 release 0
 x 10
-y 880
+y 895
 w 920
 h 25
 
@@ -1572,7 +1552,7 @@ major 4
 minor 1
 release 0
 x 10
-y 880
+y 895
 w 920
 h 25
 fgColor index 14
@@ -1608,7 +1588,7 @@ major 4
 minor 0
 release 0
 x 10
-y 910
+y 925
 w 920
 h 25
 
@@ -1621,7 +1601,7 @@ major 4
 minor 1
 release 0
 x 10
-y 910
+y 925
 w 920
 h 25
 fgColor index 14
@@ -1657,7 +1637,7 @@ major 4
 minor 0
 release 0
 x 10
-y 940
+y 955
 w 920
 h 25
 
@@ -1670,7 +1650,7 @@ major 4
 minor 1
 release 0
 x 10
-y 940
+y 955
 w 920
 h 25
 fgColor index 14
@@ -1706,7 +1686,7 @@ major 4
 minor 0
 release 0
 x 10
-y 970
+y 985
 w 920
 h 25
 
@@ -1719,7 +1699,7 @@ major 4
 minor 1
 release 0
 x 10
-y 970
+y 985
 w 920
 h 25
 fgColor index 14
@@ -1746,5 +1726,106 @@ endGroup
 visPv "$(pmac):NAXES"
 visMin "32"
 visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 0
+w 935
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 0
+w 935
+h 31
+lineColor index 3
+fill
+fillColor index 3
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 5
+y 3
+w 935
+h 25
+lineColor index 11
+fillColor index 0
+numPoints 3
+xPoints {
+  0 5
+  1 940
+  2 940
+}
+yPoints {
+  0 28
+  1 28
+  2 3
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 3
+w 935
+h 25
+font "arial-bold-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 48
+value {
+  "Axis Status for $(pmac)"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 5
+y 3
+w 935
+h 25
+lineColor index 1
+fillColor index 0
+numPoints 3
+xPoints {
+  0 5
+  1 5
+  2 940
+}
+yPoints {
+  0 28
+  1 3
+  2 3
+}
+endObjectProperties
+
+endGroup
+
 endObjectProperties
 

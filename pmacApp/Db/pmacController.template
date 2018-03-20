@@ -41,6 +41,24 @@ record(bo, "$(P):DeferMoves")
 }
 
 ##############################################################
+# Send stop all command
+##############################################################
+record(bo, "$(P):StopAll")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_STOPALL")
+}
+
+##############################################################
+# Control deferred mode for all real 1axes in this brick
+##############################################################
+record(bo, "$(P):KillAll")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_KILLALL")
+}
+
+##############################################################
 # Send arbitrary command to the geobrick controller
 ##############################################################
 record(waveform, "$(P):SendCmd")

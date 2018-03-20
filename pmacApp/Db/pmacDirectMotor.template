@@ -118,6 +118,9 @@ record(scalcout, "$(P)$(M):Mres")
 {
     field(INPA, "1") # to be overwritten by MresSource
     field(CALC, "A")
+    field(VAL, 1)
+    field(PINI, "YES")
+    field(OUT,  "@asyn($(PORT),0)PMAC_C_MRES_$(ADDR)")
 }
 
 # todo non zero offset in CS kinematic axes no supported
@@ -134,4 +137,6 @@ record(scalcout, $(P)$(M):Offset)
 {
     field(INPA, "0") # to be overwritten by OffsetSource
     field(CALC, "A")
+    field(PINI, "YES")
+    field(OUT,  "@asyn($(PORT),0)PMAC_C_OFFSET_$(ADDR)")
 }

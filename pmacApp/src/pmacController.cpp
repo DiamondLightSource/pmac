@@ -297,6 +297,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   //Create controller-specific parameters
   createParam(PMAC_C_FirstParamString, asynParamInt32, &PMAC_C_FirstParam_);
+  createParam(PMAC_C_StopAllString, asynParamInt32, &PMAC_C_StopAll_);
+  createParam(PMAC_C_KillAllString, asynParamInt32, &PMAC_C_KillAll_);
   createParam(PMAC_C_GlobalStatusString, asynParamInt32, &PMAC_C_GlobalStatus_);
   createParam(PMAC_C_CommsErrorString, asynParamInt32, &PMAC_C_CommsError_);
   createParam(PMAC_C_FeedRateString, asynParamInt32, &PMAC_C_FeedRate_);
@@ -450,6 +452,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   }
 
   bool paramStatus = true;
+  paramStatus = ((setIntegerParam(PMAC_C_StopAll_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_KillAll_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateProblem_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateCS_, 0) == asynSuccess) && paramStatus);
@@ -2118,7 +2122,13 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 
   status = (pAxis->setIntegerParam(function, value) == asynSuccess) && status;
 
-  if (function == PMAC_C_FeedRatePoll_) {
+  if (function == PMAC_C_StopAll_) {
+    // Send the abort all command to the PMAC immediately
+    status = (this->immediateWriteRead("\x01", response) == asynSuccess) && status;
+  } else if (function == PMAC_C_KillAll_) {
+    // Send the kill all command to the PMAC immediately
+    status = (this->immediateWriteRead("\x0b", response) == asynSuccess) && status;
+  } else if (function == PMAC_C_FeedRatePoll_) {
     if (value) {
       this->feedRatePoll_ = true;
     } else {
@@ -2153,6 +2163,10 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   } else if (function == PMAC_C_KillAxis_) {
+    // call stop so that this kill can stop CS moves too
+    // this is to get around unexpected behaviour that kill does not stop real axes
+    // which are currently moving in a CS
+    pAxis->stop(0);
     // Send the kill command to the PMAC immediately
     sprintf(command, "#%dk", pAxis->axisNo_);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
