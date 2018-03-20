@@ -5,7 +5,7 @@ from cothread import Sleep
 from datetime import datetime
 
 
-def trajectory_quick_scan(test, test_brick, cs_group):
+def trajectory_quick_scan(test, test_brick):
     """
     Do a short 4D grid scan involving 2 1-1 motors and 2 virtual axes of two jack CS
     :param test_brick: the test brick instance to run against
@@ -13,8 +13,6 @@ def trajectory_quick_scan(test, test_brick, cs_group):
     """
     tr = test_brick.trajectory
     assert isinstance(tr, Trajectory)
-    # switch to correct CS mappings
-    test_brick.set_cs_group(cs_group)
 
     # set up the axis parameters
     tr.axisA.use = 'Yes'
@@ -63,9 +61,9 @@ def trajectory_quick_scan(test, test_brick, cs_group):
     test.assertEquals(test_brick.angle.pos, angles[-1])
 
 
-def trajectory_fast_scan(test, test_brick, n_axes):
+def trajectory_fast_scan(test, test_brick, n_axes, cs='CS3'):
     """
-    Do a short 4D grid scan involving 2 1-1 motors and 2 virtual axes of two jack CS
+    Do a fast scan involving n_axes motors
     :param n_axes: no. of axes to include in trajectory
     :param test_brick: the test brick instance to run against
     :param (TestCase) test: the calling test object, used to make assertions
@@ -73,32 +71,31 @@ def trajectory_fast_scan(test, test_brick, n_axes):
     tr = test_brick.trajectory
     assert isinstance(tr, Trajectory)
 
-    # set up the axis parameters
-    tr.axisX.use = 'Yes'
-
-    # build trajectory
+    # build simple trajectory
     heights = []
     points = 0
-    for height in range(10):
+    for height in range(11):
         points += 1
         heights.append(height/10.0)
 
-
-    tr.axisX.positions = heights
+    # set up the axis parameters
+    axis_count = 0
+    while axis_count < n_axes:
+        tr.axes[axis_count].use = 'Yes'
+        tr.axes[axis_count].positions = heights
+        axis_count += 1
 
     # each point takes 5 milli sec per axis
     times = [5000 * n_axes] * points
     # all points are interpolated
     modes = [0] * points
 
-    tr.setup_scan(times, modes, points, points, 'CS3')
+    tr.setup_scan(times, modes, points, points, cs)
 
     tr.ProfileExecute(timeout=30)
     test.assertTrue(tr.execute_OK)
     while test_brick.height.moving:
         Sleep(.01)  # allow deceleration todo need to put this in the driver itself
-
-    test.assertAlmostEqual(test_brick.height.pos, heights[-1], 1)
 
 
 def trajectory_scan_appending(test, test_brick):

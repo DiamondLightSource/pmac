@@ -13,6 +13,8 @@ class Axis:
         self.stop_pv = pv_root + '.STOP'
         self.velo = pv_root + '.VELO'
         self.vmax = pv_root + '.VMAX'
+        self.off = pv_root + '.OFF'
+        self.mres = pv_root + '.MRES'
         self.pv_done_moving = pv_root + '.DMOV'
         if cs_no > 0:
             cs_name = 'CS{}:'.format(cs_no)

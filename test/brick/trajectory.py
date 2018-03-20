@@ -17,8 +17,11 @@ class AxisSetup:
 class Trajectory:
     def __init__(self, pv_root):
         self.pv_root = pv_root
+        self.axes = []
         for axis in ALL_AXES:
-            setattr(self, "axis{}".format(axis), AxisSetup())
+            this_axis = AxisSetup()
+            setattr(self, "axis{}".format(axis), this_axis)
+            self.axes.append(this_axis)
 
     def setup_scan(self, times, modes, points, max_points, cs_port):
         self.configure_axes()
@@ -38,6 +41,7 @@ class Trajectory:
             ca.caput("{}{}:UseAxis".format(self.pv_root, axis), this_axis.use)
 
             if this_axis.use:
+                print("PUTTING positions {} TO {}{}:Positions".format(this_axis.positions, self.pv_root, axis))
                 ca.caput("{}{}:Positions".format(self.pv_root, axis), this_axis.positions,
                          wait=True)
 
