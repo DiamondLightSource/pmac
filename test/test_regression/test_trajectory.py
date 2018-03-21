@@ -20,7 +20,7 @@ class TestTrajectory(TestCase):
             # todo   VMXI needed just this sleep - I feel that fixing it will slow those scans
             # todo   that do not require CS group switching (but only by a tiny bit)
             # Sleep(1) todo it turns out this is not required here but that just means we
-            # todo       cannot reproduce the VMXi issue on the test equipment
+            # todo       cannot reproduce the VMXi issue on the test equipment (probably)
             self.assertAlmostEqual(tb.m1.pos, 1, 1)
 
             tb.set_cs_group(tb.g2)

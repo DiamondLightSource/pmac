@@ -194,7 +194,7 @@ record(busy, "$(P):HM:HOMING") {
 record(calcout, "$(P):HM:READONLY") {
   field(CALC, "A")
   field(INPA, "$(P):HM:HOMING CP")
-  field(OUT, "$(CTRL)AxesReadonly PP")
+  field(OUT, "$(CTRL):AxesReadonly PP")
 }
 
 record(bo, "$(P):HM:HOME") {
