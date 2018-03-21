@@ -10,6 +10,8 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------------------
 # Create and install (or just install) into <top>/db
 # databases, templates, substitutions like this
+
+
 DB += pmacController.template
 DB += pmacCsController.template
 DB += pmacControllerTrajectory.template
@@ -17,6 +19,7 @@ DB += pmacStatusAxis.template
 DB += pmacStatus8Axes.template
 DB += pmacStatus32Axes.template
 DB += powerPmacStatus.template
+DB += pmacStatus.template
 DB += pmacDirectMotor.template
 DB += pmac_cs_axis.template
 DB += dls_pmac_asyn_motor.template
@@ -24,6 +27,8 @@ DB += motor_in_cs.template
 DB += eloss_kill_autohome_records.template
 DB += pmacVariableWrite.template
 DB += autohome.template
+
+
 # The following templates are used for Coordinate Systems
 DB += dls_pmac_cs_asyn_motor.template
 DB += 1jack_compensated.template

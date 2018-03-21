@@ -92,6 +92,16 @@ class pmacAsynSSHPort(DeltaTauSSHCommsPort):
         NOEOS = Simple('No EOS used if set to 1', int),
         simulation   = Simple('IP port to connect to if in simulation mode', str))
 
+class _pmacStatusT(AutoSubstitution):
+    """Creates some PVs for monitoring status of the pmac controller,
+    not compatible with power Pmac"""
+    TemplateFile = "pmacStatus.template"
+
+class _powerPmacStatusT(AutoSubstitution):
+    """Creates some PVs for monitoring status of the power pmac controller,
+    not compatible with pmac"""
+    TemplateFile = "powerPmacStatus.template"
+
 class _GeoBrickControllerT(AutoSubstitution):
     """Creates some PVs for global control of the pmac controller,
     namely global feed rate and axis coordinate system assignment"""
@@ -137,6 +147,8 @@ class GeoBrick(DeltaTau):
         # instatiate the template
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
         self.TIMEOUT = self.template.args['TIMEOUT']
+        # and device specific status PVs
+        self.statusT = _pmacStatusT(PORT=name, P=self.P)
 
         # instantiate an axis status template for each axis
         assert self.NAxes in range(1,33), "Number of axes (%d) must be in range 1..32" % self.NAxes
@@ -202,6 +214,8 @@ class PowerPMAC(DeltaTau):
         # instatiate the template
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
         self.TIMEOUT = self.template.args['TIMEOUT']
+        # and device specific status PVs
+        self.template = _powerPmacStatusT(PORT=name, P=self.P)
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
@@ -352,27 +366,6 @@ class autohome(_automhomeT):
 
 class _pmacStatusAxis(AutoSubstitution):
     TemplateFile = 'pmacStatusAxis.template'
-
-class PowerPmacStatus(AutoSubstitution):
-    Dependencies = (Pmac,)
-#    ProtocolFiles = ['pmac.proto']
-    TemplateFile = 'powerPmacStatus.template'
-
-    def __init__(self, **args):
-        # init the super class
-        self.__super.__init__(**args)
-        self.axes = []
-        NAXES = int(args["NAXES"])
-        assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
-        # for each axis
-        for i in range(1, NAXES + 1):
-            axis_args = {'PMAC':args['DEVICE'], 'AXIS':i, 'PORT':args['PORT']}
-            # make a _pmacStatusAxis instance
-            self.axes.append(
-                _pmacStatusAxis(
-                    **filter_dict(axis_args, _pmacStatusAxis.ArgInfo.Names())))
-PowerPmacStatus.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
-
 
 class _CsControlT(AutoSubstitution):
     TemplateFile = "pmacCsController.template"

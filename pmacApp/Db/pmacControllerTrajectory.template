@@ -1,4 +1,3 @@
-# % macro, name, name of GUI object
 # % macro, PORT, The asyn port for the pmac controller
 # % macro, PMAC, PV Prefix for the motor controller
 # % macro, NPOINTS, Number of points that can be built at any time

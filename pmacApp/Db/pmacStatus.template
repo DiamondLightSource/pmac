@@ -1,0 +1,125 @@
+# pmacStatus.template - device specific status PVs not compatible with
+# power PMAC
+# % macro, PORT, The asyn port for the pmac controller
+# % macro, P, PV Prefix
+
+
+record(longin, "$(P):I10") {
+  field(DESC, "Servo Interrupt Time")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_I10")
+  field(SCAN, "I/O Intr")
+}
+
+record(calcout, "$(P):CALC_SERVO_FREQ") {
+  field(SCAN, "Passive")
+  field(DTYP, "Soft Channel")
+  field(CALC, "8388608000.0/A")
+  field(INPA, "$(P):I10 CP")
+  field(OOPT, "On Change")
+  field(DOPT, "Use CALC")
+  field(OUT, "$(P):SERVO_FREQ PP")
+}
+
+# I3 value 0 to 3 I/O Handshake control
+record(mbbi, "$(P):IO_HANDSHAKE") {
+  field(PINI, "YES")
+  field(DTYP, "asynInt32")
+  field(ZRVL, "0")
+  field(ONVL, "1")
+  field(TWVL, "2")
+  field(THVL, "3")
+  field(ZRST, "No Ack (0)")
+  field(ONST, "Dumb term (1)")
+  field(TWST, "Fast comms (2)")
+  field(THST, "Fastcomms+LF(3)")
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_I3")
+  field(SCAN, "I/O Intr")
+}
+
+# I5 PLC Program Control
+record(mbbi, "$(P):PLC_CONTROL") {
+  field(PINI, "YES")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_I5")
+  field(ZRVL, "0")
+  field(ZRST, "NONE (0)")
+  field(ONVL, "1")
+  field(ONST, "PLC 0 (1)")
+  field(TWVL, "2")
+  field(TWST, "PLC 1-31 (2)")
+  field(THVL, "3")
+  field(THST, "ALL (3)")
+  field(SCAN, "I/O Intr")
+}
+
+# I6 Error reporting mode
+record(mbbi, "$(P):ERRREPMODE") {
+  field(PINI, "YES")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_I6")
+  field(SCAN, "I/O Intr")
+  field(ZRVL, "0")
+  field(ONVL, "1")
+  field(TWVL, "2")
+  field(THVL, "3")
+# the <BELL> character is given for invalid commands
+  field(ZRST, "BELL(0)")
+#the form of the error message is <BELL>{error message}
+  field(ONST, "BELL+ERR(1)")
+#the <BELL> character is given only for invalid commands from the host;
+# there is no response to invalid commands issued from Turbo PMAC programs.
+  field(TWST, "BELL-PRG(2)")
+#<BELL><CR>{error message}
+  field(THST, "BELL+CR+ERR(3)")
+}
+
+# I56 DPRAM ASCII Communications Interrupt
+record(bi, "$(P):DPRAM_COMMS_INT") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_I56")
+  field(ONAM, "ENABLED")
+  field(PINI, "YES")
+  field(SCAN, "I/O Intr")
+  field(ZNAM, "DISABLED")
+}
+
+# I58 DPRAM ASCII Communications Enable
+record(bi, "$(P):DPRAM_COMMS") {
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VIS_I58")
+  field(ZNAM, "DISABLED")
+  field(ONAM, "ENABLED")
+}
+
+# I90 VME Address modifier
+record(mbbi, "$(P):VME_ADDR_MODE") {
+  field(SCAN, "I/O Intr")
+  field(PINI, "YES")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VHS_I90")
+  field(ZRVL, "0x29")
+  field(ONVL, "0x39")
+  field(TWVL, "0x09")
+  field(ZRST, "16-bit addr")
+  field(ONST, "24-bit addr")
+  field(TWST, "32-bit addr")
+}
+
+# I97 VME DPRAM Base Address Bits A23-A20
+record(longin, "$(P):VME_DPRAMBASE") {
+  field(SCAN, "I/O Intr")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VHS_I97")
+  field(PINI, "YES")
+}
+
+# I95 VME Interrupt Level
+record(longin, "$(P):VME_INTLVL") {
+  field(SCAN, "I/O Intr")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VHS_I95")
+  field(PINI, "YES")
+}

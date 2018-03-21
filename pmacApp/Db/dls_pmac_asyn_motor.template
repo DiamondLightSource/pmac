@@ -8,6 +8,7 @@
 # the PVs all point to the same ASYN parameters and improves maintainability of this
 # file
 
+# include motor record from the motor module
 include "basic_asyn_motor.template"
 
 # numbered name aliases for all PVs in basic_asyn_motor.template

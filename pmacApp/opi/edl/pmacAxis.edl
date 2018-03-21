@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 190
-y 153
+x 133
+y 466
 w 920
 h 20
 font "arial-bold-r-12.0"
@@ -23,6 +23,98 @@ showGrid
 snapToGrid
 gridSize 5
 endScreenProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 865
+y 0
+w 20
+h 20
+
+beginGroup
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 4
+release 0
+x 865
+y 0
+w 20
+h 20
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-12.0"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "powerPmacStatusAxis.edl"
+}
+symbols {
+  0 "M=$(pmac),A=AXIS$(axis)"
+}
+icon
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):PMACTYPE"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 865
+y 0
+w 20
+h 20
+
+beginGroup
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 4
+release 0
+x 865
+y 0
+w 20
+h 20
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-12.0"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "pmacStatusAxis.edl"
+}
+symbols {
+  0 "M=$(pmac),A=AXIS$(axis)"
+}
+icon
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):PMACTYPE"
+visMin "1"
+visMax "100"
+endObjectProperties
 
 # (Textupdate)
 object TextupdateClass
@@ -207,32 +299,6 @@ offLabel "Kill"
 3d
 useEnumNumeric
 font "helvetica-bold-r-12.0"
-endObjectProperties
-
-# (Related Display)
-object relatedDisplayClass
-beginObjectProperties
-major 4
-minor 4
-release 0
-x 865
-y 0
-w 20
-h 20
-fgColor index 43
-bgColor index 3
-topShadowColor index 1
-botShadowColor index 11
-font "arial-bold-r-12.0"
-numPvs 4
-numDsps 1
-displayFileName {
-  0 "pmacStatusAxis.edl"
-}
-symbols {
-  0 "M=$(pmac),A=AXIS1"
-}
-icon
 endObjectProperties
 
 # (Textupdate)
