@@ -4,6 +4,8 @@ from test.brick.movemonitor import MoveMonitor
 from datetime import datetime
 from test.brick.testbrick import TestBrick, DECIMALS
 from test.test_system.trajectories import trajectory_quick_scan
+import pytest
+import os
 
 # these are test_regression tests for the set of issues that pmacController::makeCSDemandsConsistent
 # is trying to solve
@@ -11,6 +13,7 @@ from test.test_system.trajectories import trajectory_quick_scan
 
 class TestMakeCsConsistent(TestCase):
 
+    @pytest.mark.skipif(os.environ['PPMAC'] == 'TRUE', reason="not supported on PPMAC yet")
     def test_ffe_trajectory_scan(self):
         """
             Do we get fatal following error when doing a traj scan if one of the

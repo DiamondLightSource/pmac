@@ -215,7 +215,7 @@ class PowerPMAC(DeltaTau):
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
         self.TIMEOUT = self.template.args['TIMEOUT']
         # and device specific status PVs
-        self.template = _powerPmacStatusT(PORT=name, P=self.P)
+        self.statusT = _powerPmacStatusT(PORT=name, P=self.P)
 
         # instantiate an axis status template for each axis
         assert self.NAxes in range(1,33), "Number of axes (%d) must be in range 1..32" % self.NAxes
@@ -245,7 +245,7 @@ class PowerPMAC(DeltaTau):
 
     def Finalise(self):
         # create the args needed for the gui - these are taken from instances of pmacCreateCsGroup
-        # since each pmacCreateCsGroup adds to the CsGroupNames property of its parent Geobrick
+        # since each pmacCreateCsGroup adds to the CsGroupNames property of its parent Controller
         for i in GeoBrick.removeThese:
             if i in self.CsGroupNamesList:
                 self.template.args[i] = self.CsGroupNamesList[i]
@@ -255,7 +255,7 @@ class GeoBrickTrajectoryControlT(AutoSubstitution):
     """Creates some PVs for executing trajectory scans on the pmac controller by
        instantiating an instance of pmacTrajectoryAxis.template for each axis"""
     TemplateFile = "pmacControllerTrajectory.template"
-    Dependencies = (GeoBrick,)
+    Dependencies = (DeltaTau,)
     # the following arguments are copied from the attached Geobrick
     geobrickArgs = ['PMAC', 'NAxes']
 
