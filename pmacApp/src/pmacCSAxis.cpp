@@ -53,12 +53,12 @@ pmacCSAxis::~pmacCSAxis() {
 asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_velocity, double max_velocity,
                             double acceleration) {
   asynStatus status = asynSuccess;
-  char acc_buff[32] = "\0";
+  char acc_buff[128] = "\0";
   char command[128];
   char response[128];
   static const char *functionName = "move";
 
-  char vel_buff[32] = "";
+  char vel_buff[128] = "";
   char buff[128];
   char commandtemp[128];
   double deviceUnits = 0.0;
