@@ -2,10 +2,13 @@ from unittest import TestCase, skip
 from test.brick.testbrick import TestBrick
 from test.test_system.trajectories import trajectory_fast_scan, trajectory_scan_appending, trajectory_quick_scan
 from cothread import Sleep, catools as ca
+import pytest
+import os
 
 # Tests for historical issues with trajectory scanning
 
 
+@pytest.mark.skipif(os.environ['PPMAC'] == 'TRUE', reason="not supported on PPMAC yet")
 class TestTrajectory(TestCase):
     def test_cs_switched_trajectory(self):
         """ test problem seen on VMXI where switching CS right after a traj
