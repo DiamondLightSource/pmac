@@ -95,7 +95,6 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   lastTimeSecs_ = 0.0;
   printNextError_ = false;
   moving_ = false;
-  movingStatusWasSet_ = false;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
@@ -205,7 +204,6 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   setIntegerParam(pC_->motorStatusMoving_, true);
-  movingStatusWasSet_ = 1;
 
   char acc_buff[PMAC_MAXBUF] = {0};
   char vel_buff[PMAC_MAXBUF] = {0};
@@ -295,7 +293,7 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
   }
   nvals = sscanf(response, "%d", &controller_type);
 
-  if (controller_type == pC_->PMAC_CID_GEOBRICK_) {
+  if (controller_type == pC_->PMAC_CID_GEOBRICK_ || controller_type == pC_->PMAC_CID_CLIPPER_) {
     asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
               "Controller %s Addr %d. %s: This is a Geobrick LV.\n", pC_->portName, axisNo_,
               functionName);
@@ -310,7 +308,7 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
     return asynError;
   }
 
-  if (controller_type == pC_->PMAC_CID_GEOBRICK_) {
+  if (controller_type == pC_->PMAC_CID_GEOBRICK_ || controller_type == pC_->PMAC_CID_CLIPPER_) {
     /* Read home flags and home direction from Geobrick LV */
     if (axisNo_ < 5) {
       sprintf(buffer, "I70%d2 I70%d3 i%d24 i%d23 i%d26", axisNo_, axisNo_, axisNo_, axisNo_,
@@ -436,18 +434,25 @@ asynStatus pmacAxis::stop(double acceleration) {
   char response[PMAC_MAXBUF] = {0};
 
   /*Only send a J/ if the amplifier output is enabled. When we send a stop, 
-    we don't want to power on axes that have been powered off for a reason.*/
+    we don't want to power on axes that have been powered off for a reason. */
   if ((amp_enabled_ == 1) || (fatal_following_ == 1)) {
-//	pC_->pGroupList->abortMotion(axisNo_);
-    sprintf(command, "#%d J/ M%d40=1", axisNo_, axisNo_);
+      sprintf(command, "#%d J/ M%d40=1", axisNo_, axisNo_);
   } else {
-    /*Just set the inposition bit in this case.*/
+    /*Just set the in position bit in this case.*/
     sprintf(command, "M%d40=1", axisNo_);
   }
   deferredMove_ = 0;
 
   debug(DEBUG_TRACE, functionName, "Axis Stop command", command);
   status = pC_->axisWriteRead(command, response);
+
+  // Also abort the CS so that stopping a real motor will stop CS motion
+  // This needs to be separate command for some reason
+  if(assignedCS_) {
+    sprintf(command, "&%dA Q7%d=Q8%d", assignedCS_, axisNo_, axisNo_);
+  }
+  pC_->axisWriteRead(command, response);
+
   return status;
 }
 
@@ -479,12 +484,16 @@ void pmacAxis::callback(pmacCommandStore *sPtr, int type) {
 //  debug()
 
   if (type == pmacMessageBroker::PMAC_FAST_READ) {
+    // todo this locking is more extreme than required
+    // todo factor out the writeXXXParam in getAxisStatus
+    pC_->lock();
     status = this->getAxisStatus(sPtr);
     if (status != asynSuccess) {
       asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
                 "Controller %s Axis %d. %s: getAxisStatus failed to return asynSuccess.\n",
                 pC_->portName, axisNo_, functionName);
     }
+    pC_->unlock();
     callParamCallbacks();
   }
 }
@@ -563,6 +572,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
   axisStatus axStatus;
   retStatus = pC_->pHardware_->parseAxisStatus(axisNo_, sPtr, axStatus);
 
+
   setIntegerParam(pC_->PMAC_C_AxisBits01_, axStatus.status16Bit1_);
   setIntegerParam(pC_->PMAC_C_AxisBits02_, axStatus.status16Bit2_);
   setIntegerParam(pC_->PMAC_C_AxisBits03_, axStatus.status16Bit3_);
@@ -638,11 +648,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
             cachedPosition_);
     }
 
-    if (!axStatus.done_) {
-      moving_ = true;
-    } else {
-      moving_ = false;
-    }
+    moving_ = !axStatus.done_ || deferredMove_;
 
     // Read the currently assigned CS for the axis, and whether it is assigned at all
     assignedCS_ = axStatus.currentCS_;
@@ -650,13 +656,12 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
     // Set the currently assigned CS number
     setIntegerParam(pC_->PMAC_C_AxisCS_, assignedCS_);
 
-    setIntegerParam(pC_->motorStatusDone_, axStatus.done_);
     setIntegerParam(pC_->motorStatusHighLimit_, axStatus.highLimit_);
     setIntegerParam(pC_->motorStatusHomed_, axStatus.home_);
-    if (!movingStatusWasSet_) {
-      setIntegerParam(pC_->motorStatusMoving_, axStatus.moving_);
-    }
-    movingStatusWasSet_ = 0;
+
+    setIntegerParam(pC_->motorStatusMoving_, moving_);
+    setIntegerParam(pC_->motorStatusDone_, !moving_);
+
     setIntegerParam(pC_->motorStatusLowLimit_, axStatus.lowLimit_);
     setIntegerParam(pC_->motorStatusFollowingError_, axStatus.followingError_);
     fatal_following_ = axStatus.followingError_;

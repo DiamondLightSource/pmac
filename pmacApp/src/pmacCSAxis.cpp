@@ -9,6 +9,7 @@
 #include "pmacCSAxis.h"
 #include "pmacCSController.h"
 #include "pmacMessageBroker.h"
+#include "pmacController.h"
 
 /* Use Q71 - Q79 for motor demand positions */
 /* Use Q81 - Q89 for motor readback positions */
@@ -52,33 +53,30 @@ pmacCSAxis::~pmacCSAxis() {
 asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_velocity, double max_velocity,
                             double acceleration) {
   asynStatus status = asynSuccess;
-  char acc_buff[32] = "\0";
+  char acc_buff[128] = "\0";
   char command[128];
   char response[128];
   static const char *functionName = "move";
 
-  char vel_buff[32] = "";
+  char vel_buff[128] = "";
   char buff[128];
   char commandtemp[128];
   double deviceUnits = 0.0;
+  double steps = fabs(position - position_);
 
   setIntegerParam(pC_->motorStatusMoving_, true);
-  movingStatusWasSet_ = 1;
 
   // Make any CS demands consistent with this move
   if (pC_->movesDeferred_ == 0) {
     pC_->makeCSDemandsConsistent();
   }
 
-  if (max_velocity != 0) {
-    /* Isx89 = default feedrate in EGU/s */
-    strcpy(vel_buff, pC_->getVelocityCmd(max_velocity / (double) scale_).c_str());
-  }
+  strcpy(vel_buff, pC_->getVelocityCmd(max_velocity, steps).c_str());
   if (acceleration != 0) {
     if (max_velocity != 0) {
       /* Isx87 = accel time in msec */
-      sprintf(acc_buff, "I%d87=%f ", (pC_->getCSNumber() + 50),
-              (fabs(max_velocity / acceleration) * 1000.0));
+      sprintf(acc_buff, pC_->getCSAccTimeCmd(
+              fabs(max_velocity / acceleration) * 1000.0).c_str());
     }
   }
 
@@ -97,13 +95,14 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
        * If program number is zero, then the move will have to be started by some
        * external process, which is a mechanism of allowing coordinated starts to
        * movement. */
-      sprintf(buff, " Q70=%f B%dR", pC_->csMoveTime_, pC_->getProgramNumber());
+      sprintf(buff, " B%dR", pC_->getProgramNumber());
       strcat(command, buff);
       debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
       status = pC_->axisWriteRead(command, response);
     }
   } else {
-    sprintf(command, "%s%sQ7%d=%.12f", vel_buff, acc_buff, axisNo_, deviceUnits);
+    // do not pass the velocity buffer, deferred velocity is controlled separately
+    sprintf(command, "%sQ7%d=%.12f", acc_buff, axisNo_, deviceUnits);
     deferredMove_ = pC_->movesDeferred_;
     sprintf(deferredCommand_, "%s", command);
   }
@@ -151,12 +150,16 @@ void pmacCSAxis::callback(pmacCommandStore *sPtr, int type) {
   static const char *functionName = "callback";
 
   if (type == pmacMessageBroker::PMAC_FAST_READ) {
+    // todo this locking is more extreme than required
+    // todo factor out the writeXXXParam in getAxisStatus
+    pC_->lock();
     status = this->getAxisStatus(sPtr);
     if (status != asynSuccess) {
       asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
                 "Controller %s Axis %d. %s: getAxisStatus failed to return asynSuccess.\n",
                 pC_->portName, axisNo_, functionName);
     }
+    pC_->unlock();
     callParamCallbacks();
   }
 }
@@ -235,26 +238,13 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   previous_position_ = position;
   previous_direction_ = direction;
 
+  moving_ = !cStatus.done_ || deferredMove_;
 
-  if (deferredMove_ != 0) {
-    done = 0;
-  } else {
-    done = cStatus.done_;
-  }
+  setIntegerParam(pC_->motorStatusDone_, !moving_);
+  setIntegerParam(pC_->motorStatusMoving_, moving_);
 
-  if (!done) {
-    moving_ = true;
-  } else {
-    moving_ = false;
-  }
-
-  setIntegerParam(pC_->motorStatusDone_, done);
   setIntegerParam(pC_->motorStatusHighLimit_, cStatus.highLimit_);
   setIntegerParam(pC_->motorStatusHomed_, homeSignal);
-  if(!movingStatusWasSet_) {
-    setIntegerParam(pC_->motorStatusMoving_, cStatus.moving_);
-  }
-  movingStatusWasSet_ = 0;
   setIntegerParam(pC_->motorStatusLowLimit_, cStatus.lowLimit_);
   setIntegerParam(pC_->motorStatusFollowingError_, cStatus.followingError_);
   setIntegerParam(pC_->motorStatusProblem_, cStatus.problem_);

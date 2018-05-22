@@ -8,11 +8,41 @@ from lab.xml. This IOC connects to the controls lab geobrick.
 To run these tests have an instance of the lab IOC running and its PVs contactable
 from the machine running the tests.
 
-The controls lab geobrick should have the standard m variable mappings and also:-
-pmac/pmacApp/pmc/trajectory_scan.pmc
-pmacApp/pmc/trajectory_scan_definitions.pmc
-etc/lab.pmc
 
 Run the tests from a virtual env that has installed tests/requirements.txt by
 executing pytest in the root of pmac folder
-.
+
+
+To set up a geobrick (with mo motors attached) to run against these tests do the following:-
+$$$ ***
+M0..8191->*, P0..8191=0,Q0..8191=0, UNDEFINE ALL
+delete all
+load /dls_sw/work/motion/Common/BRICK_M_variables.pmc
+load /dls_sw/work/motion/Common/GB_Startup.pmc
+ena plc1
+load pmac/pmacApp/pmc/trajectory_scan.pmc
+load etc/lab.pmc
+i124,8,100=$820401
+
+For the clipper:-
+$$$ ***
+M0..8191->*, P0..8191=0,Q0..8191=0, UNDEFINE ALL
+delete all
+def ubuf $1000
+load /dls_sw/work/motion/Common/PMAC_CLIPPER_M_variables.pmc
+load /dls_sw/work/motion/Common/PMAC_CLIPPER_Startup.pmc
+ena plc1
+load pmacApp/pmc/trajectory_scan_clipper.pmc
+load etc/lab.pmc
+i124,8,100=$820401
+
+
+buffer info
+===========
+end of clipper memory space is $10800
+after def ubuf $1000 setting it is $f800
+i4908 should reflect the above
+to redo buffer allocation:-
+  delete all
+  def ubuf $1000
+  ena plc 1 ; recreates the look-ahead buffers

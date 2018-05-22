@@ -1,42 +1,37 @@
 from unittest import TestCase
-from cothread import catools as ca
-from test.helper.trajectory import Trajectory
-from test.helper.movemonitor import MoveMonitor
+from test.brick.trajectory import Trajectory
+from test.brick.movemonitor import MoveMonitor
 from datetime import datetime
+from test.brick.testbrick import TestBrick, DECIMALS
+from test.test_system.trajectories import trajectory_quick_scan
+import pytest
+import os
 
 # these are test_regression tests for the set of issues that pmacController::makeCSDemandsConsistent
 # is trying to solve
 
-PM = 'PMAC_BRICK_TEST:'
-PCS3 = 'BRICK1CS3:'
-PCS2 = 'BRICK1CS2:'
-PB = 'BRICK1:'
-CS3 = 'BRICK1:CS3:'
-DECIMALS = 6
-
 
 class TestMakeCsConsistent(TestCase):
 
+    @pytest.mark.skipif(os.environ['PPMAC'] == 'TRUE', reason="not supported on PPMAC yet")
     def test_ffe_trajectory_scan(self):
         """
             Do we get fatal following error when doing a traj scan if one of the
             motors has a radically incorrect Q7x ?
         :return: None
         """
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+        tb.cs3.set_move_time(0)
+
+        # make axis 1 demand cache Q71 radically wrong
         command = '&3 Q71=90000'
-        ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED')
-        ca.caput(PB+'ProfileCsName', 'BRICK1.CS3')
-        ca.caput(CS3+'CsMoveTime', 0)
-        # move affected axes to 0
-        ca.caput([PM + 'MOTOR1', PM + 'MOTOR2', PM + 'MOTOR3', PM + 'MOTOR4'], [0, 0, 0, 0], wait=True,
-                 timeout=30)
-        # make axis 1 demand radically wrong
-        ca.caput(PB+'SendCmd', command, datatype=ca.DBR_CHAR_STR)
+        tb.send_command(command)
         # this check is probably not required but leaving it in to verify reliability
-        self. assertEquals(ca.caget(PB+'SendCmd', datatype=ca.DBR_CHAR_STR), command)
+        self. assertEquals(tb.get_command(), command)
 
         # if this succeeds without error then we are all good
-        Trajectory.quick_scan(self)
+        trajectory_quick_scan(self, tb)
 
     def test_kinematic_axis_creep(self):
         """
@@ -46,27 +41,25 @@ class TestMakeCsConsistent(TestCase):
 
         :return: None
         """
-        # set the appropriate coordinate system group
-        ca.caput(PB+'COORDINATE_SYS_GROUP', '3,4->I', wait=True)
-        ca.caput(CS3+'CsMoveTime', 0)
-        # move affected axes to 0
-        ca.caput([PM + 'MOTOR3', PM + 'MOTOR4'], [0, 0], wait=True, timeout=30)
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+        tb.cs3.set_move_time(0)
 
         # do a CS move of Height
-        ca.caput(PCS3 + 'X', 1, wait=True, timeout=5)
+        tb.height.go(1)
 
-        # pretend that axis 3 moved by itself.
-        monitor = MoveMonitor(PCS3 + 'X')
-        ca.caput(PB+'SendCmd', '#3J:1000', datatype=ca.DBR_CHAR_STR)
-        monitor.wait_for_one_move(5)
+        # pretend that axis 3 moved by itself and monitor change in height.
+        monitor = MoveMonitor(tb.height.pv_root)
+        tb.send_command('#3J:1000')
+        monitor.wait_for_one_move(10)
         # this should make Height 1.5mm
-        self.assertAlmostEqual(ca.caget(PCS3 + 'X.RBV'), 1.5, DECIMALS)
+        self.assertAlmostEqual(tb.height.pos, 1.5, DECIMALS)
 
         # now move Angle
-        ca.caput(PCS3 + 'Y', 1, wait=True, timeout=5)
-        self.assertAlmostEqual(ca.caget(PCS3 + 'Y.RBV'), 1, DECIMALS)
+        tb.angle.go(1)
+        self.assertAlmostEqual(tb.angle.pos, 1, DECIMALS)
         # Height should return to 1
-        self.assertAlmostEqual(ca.caget(PCS3 + 'X.RBV'), 1, DECIMALS)
+        self.assertAlmostEqual(tb.height.pos, 1, DECIMALS)
 
     def test_direct_axis_creep(self):
         """
@@ -80,34 +73,37 @@ class TestMakeCsConsistent(TestCase):
 
         :return: None
         """
-        move = 10
-        cs_move = 10
+        tb = TestBrick()
         # set the appropriate coordinate system group
-        ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED', wait=True)
+        tb.set_cs_group(tb.g3)
         # the first CS move after a coord sys group switch clears the cached real motor positions
         # so this test must do that initial CS move here
-        ca.caput(PCS3 + 'X', 0, wait=True, timeout=30)
-        # NOTE: the above is a little artificial and masks an very minor issue: any axis creep that occurs
+        # MAKE SURE this actually initiates a move, else makeCSDemandsConsistent wont be called
+        tb.height.go(1)
+        # NOTE: the above is a little artificial and masks a very minor issue: any axis creep that occurs
         # between changing coordinate system mappings and the first CS move will be kept - fixing
-        # this would require
+        # this would require architecture changes for an unlikely event with little consequence
 
-        ca.caput(CS3+'CsMoveTime', 0)
-        # move affected axes to start
-        ca.caput([PM + 'MOTOR1', PM + 'MOTOR2', PM + 'MOTOR3', PM + 'MOTOR4'], [0, 0, 0, 0], wait=True,
-                 timeout=30)
+        for cs_move in range(6, 10):
+            move = cs_move
+            tb.cs3.set_move_time(0)
+            # move affected axes to start
+            # note this is also testing that moving the real axes updates the
+            # Q7x variables for the associated virtual axes
+            tb.all_go([tb.m1, tb.m2, tb.m3, tb.m4], [0, 0, 0, 0])
 
-        # pretend that axis 1 moved by itself.
-        monitor = MoveMonitor(PM + 'MOTOR1')
-        ca.caput(PB+'SendCmd', '#1J:{}'.format(move), datatype=ca.DBR_CHAR_STR)
-        monitor.wait_for_one_move(30)
-        # this should make axis 1 to {move}mm
-        self.assertEquals(ca.caget(PM + 'MOTOR1.RBV'), move)
+            # pretend that axis 1 moved by itself.
+            monitor = MoveMonitor(tb.m1.pv_root)
+            tb.send_command('#1J:{}'.format(move))
+            monitor.wait_for_one_move(1, throw=False)
+            # this should put axis 1 at {move}mm
+            self.assertEquals(tb.m1.pos, move)
 
-        # now move the CS axis Height
-        ca.caput(PCS3 + 'X', cs_move, wait=True, timeout=30)
-        self.assertAlmostEqual(ca.caget(PCS3 + 'X.RBV'), cs_move, DECIMALS)
-        # Axis 1 should return to 0
-        self.assertAlmostEqual(ca.caget(PM + 'MOTOR1.RBV'), 0, DECIMALS)
+            # now move the CS axis Height
+            tb.height.go(cs_move)
+            self.assertAlmostEqual(tb.height.pos, cs_move, DECIMALS)
+            # Axis 1 should return to 0
+            self.assertAlmostEqual(tb.m1.pos, 0, DECIMALS)
 
     def test_very_slow_moves(self):
         """
@@ -117,43 +113,60 @@ class TestMakeCsConsistent(TestCase):
 
         :return: None
         """
-        command = '&3 Q75=90000'
-        # set the appropriate coordinate system group
-        ca.caput(PB+'COORDINATE_SYS_GROUP', 'MIXED', wait=True)
-        ca.caput(CS3+'CsMoveTime', 0)
-        # move affected axes to 0
-        ca.caput([PM + 'MOTOR1', PM + 'MOTOR2', PM + 'MOTOR3', PM + 'MOTOR4'], [0, 0, 0, 0],
-                 wait=True, timeout=30)
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+        tb.cs3.set_move_time(0)
 
-        # make axis 5 demand radically wrong (not in a CS)
-        ca.caput(PB+'SendCmd', command, datatype=ca.DBR_CHAR_STR)
+        for retry in range(5):
+            # move affected axes to 0
+            tb.all_go([tb.m1, tb.m2, tb.m3, tb.m4], [0, 0, 0, 0])
+            # make axis 5 demand radically wrong (not in a CS)
+            tb.send_command('&3 Q75=900000')
 
-        # make a CS move and make sure it happens quickly enough
-        then = datetime.now()
-        ca.caput(PCS3 + 'X', 1, wait=True, timeout=5)
-        self.assertAlmostEqual(ca.caget(PCS3 + 'X.RBV'), 1, DECIMALS)
-        elapsed = datetime.now() - then
-        self.assertFalse(elapsed.seconds > 2)
+            # make a CS move and make sure it happens quickly enough
+            then = datetime.now()
+            tb.height.go(1)
+            self.assertAlmostEqual(tb.height.pos, 1, DECIMALS)
+            elapsed = datetime.now() - then
+            self.assertLess(elapsed.seconds, 4)
 
     def test_switch_cs_group(self):
-        ca.caput([PM+'MOTOR1', PM+'MOTOR2'], [0, 0], wait=True, timeout=30)
-        ca.caput(PB + 'COORDINATE_SYS_GROUP', 'MIXED')
-        ca.caput([PCS3+'A', PCS3+'B'], [3, 3], wait=True)
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+        tb.all_go([tb.A3, tb.B3], [3, 3])
 
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR1.RBV'), 3)
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR2.RBV'), 3)
+        self.assertAlmostEqual(tb.m1.pos, 3)
+        self.assertAlmostEqual(tb.m2.pos, 3)
 
-        ca.caput(PB + 'COORDINATE_SYS_GROUP', '1,2->A,B')
-        ca.caput([PCS2+'A', PCS2+'B'], [2, 2], wait=True)
+        tb.set_cs_group(tb.g1)
+        tb.all_go([tb.A2, tb.B2], [2, 2])
 
-        # scaling of 1000 and 100 or A and B on CS2 axes gives 20, 200 on axes 1, 2
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR1.RBV'), 20)
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR2.RBV'), 200)
+        # scaling of 1000 and 100 on A and B on CS2 axes gives 20, 200 on axes 1, 2
+        self.assertAlmostEqual(tb.m1.pos, 20)
+        self.assertAlmostEqual(tb.m2.pos, 200)
 
-        # wait here is important since then next move will not see that there has been a switch if called too soon
-        ca.caput(PB + 'COORDINATE_SYS_GROUP', 'MIXED', wait=True)
-        ca.caput(PCS3+'A', 3, wait=True)
+        tb.set_cs_group(tb.g3)
+        tb.all_go([tb.A3], [3])
 
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR1.RBV'), 3)
+        self.assertAlmostEqual(tb.m1.pos, 3)
         # if make CS consistent has failed then this will also have moved back to pos 3
-        self.assertAlmostEqual(ca.caget(PM+'MOTOR2.RBV'), 200)
+        self.assertAlmostEqual(tb.m2.pos, 200)
+
+    def test_return_to_zero(self):
+        """ look for a bug where having the angle set in CS 3 means that both jacks cannot return to
+            zero when another test is initialized. This was a bug in the test framework, not pmac
+        """
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+
+        tb.all_go([tb.jack1, tb.jack2], [5, 5])
+
+        # check height(x) and angle(y) in CS3
+        self.assertAlmostEqual(tb.height.pos, 5, DECIMALS)
+        self.assertAlmostEqual(tb.angle.pos, 0, DECIMALS)
+
+        tb.jack1.go(6)
+
+        tb2 = TestBrick()
+        self.assertAlmostEqual(tb2.m3.pos, 0, DECIMALS)
+        self.assertAlmostEqual(tb2.m4.pos, 0, DECIMALS)

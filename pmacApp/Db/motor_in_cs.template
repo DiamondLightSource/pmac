@@ -1,0 +1,80 @@
+############################################################
+#
+# Template to allow coordinate system kinematics to know
+# the resolution of each real motor
+#
+# Also to allow control of CS mappings of real motors
+#
+###############################################################
+
+
+###############################################################
+# Mres and Offset
+###############################################################
+
+#calc mres to be written
+record(calcout, "$(P)$(M):MRES_CALC") {
+  field(CALC, "B?-A*C:A*C")
+  field(INPA, "$(P)$(M).MRES CP")
+  field(INPB, "$(P)$(M).DIR CP")
+  field(INPC, "$(P)$(M):SCALE")
+  field(OUT, "$(P)$(M):MRES_SET PP")
+  field(OOPT, "When Non-zero")
+}
+
+record(ao, "$(P)$(M):MRES_SET") {
+  field(DTYP, "asynFloat64")
+  field(OUT, "@asyn($(PORT),0)PMAC_WD_P`4800+$(ADDR)`")
+  field(FLNK, "$(P)$(M):MR_MOVE_WRITE")
+}
+
+#calc offset to be written
+record(calcout, "$(P)$(M):OFF_SET_CALC") {
+  field(CALC, "A")
+  field(INPA, "$(P)$(M).OFF CP")
+  field(OUT, "$(P)$(M):OFF_SET PP")
+}
+
+record(ao, "$(P)$(M):OFF_SET") {
+  field(DTYP, "asynFloat64")
+  field(OUT, "@asyn($(PORT),0)PMAC_WD_P`4900+$(ADDR)`")
+  field(FLNK, "$(P)$(M):MR_MOVE_WRITE")
+}
+
+
+###############################################################
+# Coordinate System mapping control
+###############################################################
+
+# Read back which CS number the axis is in
+record(ai, "$(P)$(M):CsRaw_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP, "@asyn($(PORT),$(ADDR))PMAC_C_AXIS_CS")
+    field(PINI, "NO")
+    field(SCAN, "I/O Intr")
+}
+
+# Set which CS the axis is in via CSController Port Name
+record(mbbo, "$(P)$(M):CsPort") {
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),$(ADDR))PMAC_C_GROUP_CS_PORT")
+}
+
+record(mbbi, "$(P)$(M):CsPort_RBV") {
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),$(ADDR))PMAC_C_GROUP_CS_PORT_RBV")
+  field(SCAN, "I/O Intr")
+}
+
+# set the axis' CS assignment (one of A B C U V W X Y Z I)
+record(stringout, "$(P)$(M):CsAxis") {
+  field(DTYP, "asynOctetWrite")
+  field(OUT, "@asyn($(PORT),$(ADDR))PMAC_C_GROUP_ASSIGN")
+}
+
+record(stringin, "$(P)$(M):CsAxis_RBV") {
+  field(DTYP, "asynOctetRead")
+  field(INP, "@asyn($(PORT),$(ADDR))PMAC_C_GROUP_ASSIGN_RBV")
+  field(SCAN, "I/O Intr")
+}

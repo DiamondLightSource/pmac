@@ -15,7 +15,6 @@
 # % macro, __doc__, Supporting template that allows setting of variables for an 
 # IDT sagittal DCM CS 
 # % macro, P, Pv Prefix
-# % macro, PORT, Motor controller serial port
 # % macro, COORD, Co-ordinate system number
 # % macro, name, Object name and gui association name
 # This associates an edm screen with the template

@@ -22,32 +22,37 @@
 ##############################################################
 # Set immediate demand for this motor
 ##############################################################
-record(ao, "$(PMAC):$(M):DirectDemand")
+record(ao, "$(P)$(M):DirectDemand")
 {
-    field(DTYP, "Raw Soft Channel")
-    field(OMSL, "supervisory")
-    field(OUT, "$(PMAC):$(M):RawDirectDemand PP")
-    field(LINR, "LINEAR")
-    field(ASLO, 1)                              # to be overwritten by DirectMres
-    field(AOFF, 0)                              # to be overwritten by DirectOffset
+    field(FLNK, "$(P)$(M):DirectCountsCalc.PROC")
 }
 
-record(ao, "$(PMAC):$(M):RawDirectDemand")
+record(scalcout, "$(P)$(M):DirectCountsCalc")
+{
+    field(INPA, "$(P)$(M):DirectDemand")
+    field(INPB, "$(P)$(M):Mres PP")
+    field(INPC, "$(P)$(M):Offset PP")
+    field(INPD, "$(P)$(M):SCALE")
+    field(CALC, "(A-C)/B*D")
+    field(OUT, "$(P)$(M):RawDirectDemand PP")
+}
+
+record(ao, "$(P)$(M):RawDirectDemand")
 {
     field(DTYP, "asynFloat64")
-    field(FLNK, "$(PMAC):$(M):DirectMotorSeq")
+    field(FLNK, "$(P)$(M):DirectMotorSeq")
     field(OUT,  "@asyn($(PORT),$(ADDR),4)MOTOR_MOVE_ABS")
     field(DESC, "$(DESC)")
 }
 
 # busy record to make ca_put_callback return only once the motor is done moving
-record(seq, "$(PMAC):$(M):DirectMotorSeq")
+record(seq, "$(P)$(M):DirectMotorSeq")
 {
-    field(LNK1, "$(PMAC):$(M):DirectMotorBusy PP")
+    field(LNK1, "$(P)$(M):DirectMotorBusy PP")
     field(DO1, "1")
 }
 
-record(busy, "$(PMAC):$(M):DirectMotorBusy")
+record(busy, "$(P)$(M):DirectMotorBusy")
 {
    field(DTYP, "asynInt32")
    field(OUT, "@asyn($(PORT),$(ADDR),4)MOTOR_STATUS_MOVING")
@@ -59,10 +64,12 @@ record(busy, "$(PMAC):$(M):DirectMotorBusy")
 
 
 # record that holds the SCALE
-# this overrides the definition in basic_asyn_motor.template and connects it to the asyn parameter
-# that tracks the scale factor in the driver. This is set by calling
-# pmacSetAxisScale (for CS axes this function is exposed to startup via pmacSetCoordStepsPerUnit)
-record(ao, "$(PMAC):$(M):SCALE") {
+# this overrides the definition in basic_asyn_motor.template and connects it to the
+# asyn parameter that tracks the scale factor in the driver. This is set by calling
+# pmacSetAxisScale (for CS axes this function is exposed to startup via
+# pmacSetCoordStepsPerUnit)
+
+record(ao, "$(P)$(M):SCALE") {
     field(DTYP, "asynInt32")
     field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_MOTOR_SCALE")
 }
@@ -77,57 +84,70 @@ record(ao, "$(PMAC):$(M):SCALE") {
 # For CS motors DirectMotorNumber is set by the driver when it
 # maps a CS motor directly to a real motor.
 #
+# If as CS motor is not directly mapped then it wants an
+# mres of 1 but the scaling means this usually translates
+# to 0.0001.
+#
 # For real motors DirectMotorNumber is always reported as the
 # motor's own number
 #
+# The calculation in MresSource handles linking in the
+# correct real_motor mres or the value 1 for kinematic CS axes
+#
 ##############################################################
-record(longin, "$(PMAC):$(M):DirectMotorNumber")
+record(longin, "$(P)$(M):DirectMotorNumber")
 {
+    field(PINI, 1)
+    field(VAL, 0)
     field(DTYP, "asynInt32")
     field(SCAN, "I/O Intr")
     field(INP,  "@asyn($(PORT),$(ADDR),4)PMAC_REAL_MOTOR_NUMBER")
-    field(FLNK, "$(PMAC):$(M):DirectSources")
+    field(FLNK, "$(P)$(M):MresSource")
 }
 
-record(fanout, "$(PMAC):$(M):DirectSources")
-{
-    field(LNK1, "$(PMAC):$(M):MresSource")
-    field(LNK2, "$(PMAC):$(M):OffsetSource")
-}
-
-record(scalcout, "$(PMAC):$(M):DirectMres")
+record(scalcout, $(P)$(M):MresSource)
 {
     field(DTYP, "Soft Channel")
-    field(INPA, "$(PMAC):M1.MRES CPP MS")           # to be overwritten by MresSource
-    field(INPB, "$(PMAC):$(M):SCALE CPP MS")
-    field(CALC, "A/B")
-    field(OUT, "$(PMAC):$(M):DirectDemand.ASLO NPP")
+    field(INPA, "$(P)$(M):DirectMotorNumber")
+    field(CALC, "A?(PRINTF('$(PMAC):M%d.MRES CPP',A)):1")
+    field(OUT, "$(P)$(M):Mres.INPA CA")
+    field(FLNK, "$(P)$(M):OffsetSource")
 }
 
-record(scalcout, "$(PMAC):$(M):DirectOffset")
+record(scalcout, "$(P)$(M):Mres")
 {
-    field(DTYP, "Soft Channel")
-    field(INPA, "$(PMAC):M1.OFF CPP MS")            # to be overwritten by OffsetSource
+    field(INPA, "1") # to be overwritten by MresSource
     field(CALC, "A")
-    field(OUT, "$(PMAC):$(M):DirectDemand.AOFF NPP")
+    field(VAL, 1)
+    field(PINI, "YES")
+    field(OUT,  "$(P)$(M):MresDrv PP")
 }
 
-record(scalcout, $(PMAC):$(M):MresSource)
+record(ao,"$(P)$(M):MresDrv") {
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_MRES")
+}
+
+# todo non zero offset in CS kinematic axes no supported
+record(scalcout, $(P)$(M):OffsetSource)
 {
     field(DTYP, "Soft Channel")
-    field(INPA, "$(PMAC):$(M):DirectMotorNumber")
-    field(CALC, "(PRINTF('$(PMAC):M%d.MRES CPP',A))")
-    field(FLNK, "$(PMAC):$(M):DirectMres")
-    field(OUT, "$(PMAC):$(M):DirectMres.INPA CA")
+    field(INPA, "$(P)$(M):DirectMotorNumber")
+    field(CALC, "A?(PRINTF('$(PMAC):M%d.OFF CPP',A)):0")
+    field(OUT, "$(P)$(M):Offset.INPA CA")
 }
 
-record(scalcout, $(PMAC):$(M):OffsetSource)
+
+record(scalcout, $(P)$(M):Offset)
 {
-    field(DTYP, "Soft Channel")
-    field(INPA, "$(PMAC):$(M):DirectMotorNumber")
-    field(CALC, "(PRINTF('$(PMAC):M%d.OFF CPP',A))")
-    field(FLNK, "$(PMAC):$(M):DirectOffset")
-    field(OUT, "$(PMAC):$(M):DirectOffset.INPA CA")
+    field(INPA, "0") # to be overwritten by OffsetSource
+    field(CALC, "A")
+    field(PINI, "YES")
+    field(OUT,  "$(P)$(M):OffsetDrv PP")
 }
 
 
+record(ao,"$(P)$(M):OffsetDrv") {
+    field(DTYP, "asynFloat64")
+    field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_OFFSET")
+}

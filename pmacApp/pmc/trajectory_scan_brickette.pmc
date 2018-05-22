@@ -1,0 +1,8 @@
+; *****************************************************************************************
+; Set these values for your PMAC
+; *****************************************************************************************
+#define VarAdr       300   ; Prefix of address (eg VarAdr=300 then $30000 is the start address)
+#define BuffLen      1000  ; Length of buffers
+
+#include "./trajectory_scan_definitions.pmc"
+#include "./trajectory_scan_code.pmc"

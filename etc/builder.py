@@ -92,6 +92,16 @@ class pmacAsynSSHPort(DeltaTauSSHCommsPort):
         NOEOS = Simple('No EOS used if set to 1', int),
         simulation   = Simple('IP port to connect to if in simulation mode', str))
 
+class _pmacStatusT(AutoSubstitution):
+    """Creates some PVs for monitoring status of the pmac controller,
+    not compatible with power Pmac"""
+    TemplateFile = "pmacStatus.template"
+
+class _powerPmacStatusT(AutoSubstitution):
+    """Creates some PVs for monitoring status of the power pmac controller,
+    not compatible with pmac"""
+    TemplateFile = "powerPmacStatus.template"
+
 class _GeoBrickControllerT(AutoSubstitution):
     """Creates some PVs for global control of the pmac controller,
     namely global feed rate and axis coordinate system assignment"""
@@ -113,7 +123,7 @@ class GeoBrick(DeltaTau):
     # parameters in Finalise below so they can be substituted into the template )
     removeThese = [ 'CSG%d' % i for i in range(8) ]
 
-    def __init__(self, Port, name = None, NAxes = 8, IdlePoll = 500, MovingPoll = 100, **kwargs):
+    def __init__(self, Port, name = None, IdlePoll = 500, MovingPoll = 100, **kwargs):
         # init a list of groupnames for each pmacCreateCsGroup to add to
         self.CsGroupNamesList = {}
         # First create an asyn IP port to connect to
@@ -125,8 +135,9 @@ class GeoBrick(DeltaTau):
             name = "BRICK%d" % (self.Card + 1)
         self.name = name
         # Store other attributes
+        self.NAxes = 8 if kwargs['NAXES'] == '' else int(kwargs['NAXES'])
+        self.P = kwargs['P']
         self.__dict__.update(kwargs)
-        self.NAxes = NAxes
         self.IdlePoll = IdlePoll
         self.MovingPoll = MovingPoll
 
@@ -135,14 +146,25 @@ class GeoBrick(DeltaTau):
 
         # instatiate the template
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
-
         self.TIMEOUT = self.template.args['TIMEOUT']
+        # and device specific status PVs
+        self.statusT = _pmacStatusT(PORT=name, P=self.P)
+
+        # instantiate an axis status template for each axis
+        assert self.NAxes in range(1,33), "Number of axes (%d) must be in range 1..32" % self.NAxes
+        self.axes = []
+        # for each axis
+        for i in range(1, self.NAxes + 1):
+            args = {'PMAC':self.P, 'AXIS':i, 'PORT':name}
+            # make a _pmacStatusAxis instance
+            self.axes.append(
+                _pmacStatusAxis(
+                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
         name = Simple('Name to use for the asyn port', str),
         Port       = Ident('pmacAsynIPPort/pmacVmeConfig to connect to', pmacAsynIPPort),
-        NAxes      = Simple('Number of axes', int),
         IdlePoll   = Simple('Idle Poll Period in ms', int),
         MovingPoll = Simple('Moving Poll Period in ms', int)) + \
               _GeoBrickControllerT.ArgInfo.filtered(without = removeThese + ['PORT'])
@@ -181,14 +203,30 @@ class PowerPMAC(DeltaTau):
             name = "PPMAC%d" % (self.Card + 1)
         self.name = name
         # Store other attributes
+        self.__dict__.update(kwargs)
         self.NAxes = NAxes
         self.IdlePoll = IdlePoll
         self.MovingPoll = MovingPoll
+
         # init the AsynPort superclass
         self.__super.__init__(name)
 
         # instatiate the template
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
+        self.TIMEOUT = self.template.args['TIMEOUT']
+        # and device specific status PVs
+        self.statusT = _powerPmacStatusT(PORT=name, P=self.P)
+
+        # instantiate an axis status template for each axis
+        assert self.NAxes in range(1,33), "Number of axes (%d) must be in range 1..32" % self.NAxes
+        self.axes = []
+        # for each axis
+        for i in range(1, self.NAxes + 1):
+            args = {'PMAC':self.P, 'AXIS':i, 'PORT':name}
+            # make a _pmacStatusAxis instance
+            self.axes.append(
+                _pmacStatusAxis(
+                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
@@ -207,21 +245,17 @@ class PowerPMAC(DeltaTau):
 
     def Finalise(self):
         # create the args needed for the gui - these are taken from instances of pmacCreateCsGroup
-        # since each pmacCreateCsGroup adds to the CsGroupNames property of its parent Geobrick
+        # since each pmacCreateCsGroup adds to the CsGroupNames property of its parent Controller
         for i in GeoBrick.removeThese:
             if i in self.CsGroupNamesList:
                 self.template.args[i] = self.CsGroupNamesList[i]
-
-
-class _pmacTrajectoryAxis(AutoSubstitution):
-    TemplateFile = 'pmacTrajectoryAxis.template'
 
 
 class GeoBrickTrajectoryControlT(AutoSubstitution):
     """Creates some PVs for executing trajectory scans on the pmac controller by
        instantiating an instance of pmacTrajectoryAxis.template for each axis"""
     TemplateFile = "pmacControllerTrajectory.template"
-    Dependencies = (GeoBrick,)
+    Dependencies = (DeltaTau,)
     # the following arguments are copied from the attached Geobrick
     geobrickArgs = ['PMAC', 'NAxes']
 
@@ -231,16 +265,6 @@ class GeoBrickTrajectoryControlT(AutoSubstitution):
         args['NAxes'] = args['PORT'].NAxes
         # init the super class
         self.__super.__init__(**args)
-        self.axes = []
-        NAXES = int(args["NAxes"])
-        assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
-        # for each axis
-        for i in range(1, NAXES + 1):
-            args["MOTOR"] = i
-            # make a _pmacTrajectoryAxis instance
-            self.axes.append(
-                _pmacTrajectoryAxis(
-                    **filter_dict(args, _pmacTrajectoryAxis.ArgInfo.Names())))
 
 GeoBrickTrajectoryControlT.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 GeoBrickTrajectoryControlT.ArgInfo = GeoBrickTrajectoryControlT.ArgInfo.filtered(
@@ -290,12 +314,27 @@ def add_eloss_kill_autohome(cls):
     cls.guiTags = eloss_kill_autohome_records.guiTags
     return cls
 
+class motor_in_cs_records(AutoSubstitution):
+    WarnMacros = False
+    TemplateFile = "motor_in_cs.template"
+
+def add_motor_in_cs(cls):
+    """Convenience function to add motor_in_cs_records attributes to a class that
+    includes it via an msi include statement rather than verbatim"""
+    cls.Arguments = motor_in_cs_records.Arguments + [x for x in cls.Arguments if x not in motor_in_cs_records.Arguments]
+    cls.ArgInfo = motor_in_cs_records.ArgInfo + cls.ArgInfo.filtered(without=motor_in_cs_records.ArgInfo.Names())
+    cls.Defaults.update(motor_in_cs_records.Defaults)
+    cls.guiTags = motor_in_cs_records.guiTags
+    return cls
+
+
 @add_basic
 @add_eloss_kill_autohome
+@add_motor_in_cs
 class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
     WarnMacros = False
     TemplateFile = 'dls_pmac_asyn_motor.template'
-    Dependencies = (Busy,)
+    Dependencies = (Busy, Calc)
     def __init__(self, **kwargs):
         # Pass down the common parameters
         kwargs['PMAC'] = kwargs['PORT'].P
@@ -310,6 +349,7 @@ dls_pmac_asyn_motor.ArgInfo = dls_pmac_asyn_motor.ArgInfo.filtered(without=['PMA
 class dls_pmac_cs_asyn_motor(AutoSubstitution, MotorRecord):
     WarnMacros = False
     TemplateFile = 'dls_pmac_cs_asyn_motor.template'
+    Dependencies = (Busy, Calc)
     def __init__(self, **kwargs):
         # Pass down the common parameters
         kwargs['PMAC'] = kwargs['PORT'].PMAC
@@ -336,50 +376,7 @@ class autohome(_automhomeT):
     ArgInfo = _automhomeT.ArgInfo.filtered(without=['CTRL'])
 
 class _pmacStatusAxis(AutoSubstitution):
-#    ProtocolFiles = ['pmac.proto']
     TemplateFile = 'pmacStatusAxis.template'
-
-class pmacStatus(AutoSubstitution):
-    Dependencies = (Pmac,)
-#    ProtocolFiles = ['pmac.proto']
-    TemplateFile = 'pmacStatus.template'
-
-    def __init__(self, **args):
-        # init the super class
-        self.__super.__init__(**args)
-        self.axes = []
-        NAXES = int(args["NAXES"])
-        assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
-        # for each axis
-        for i in range(1, NAXES + 1):
-            args["AXIS"] = i
-            # make a _pmacStatusAxis instance
-            self.axes.append(
-                _pmacStatusAxis(
-                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
-pmacStatus.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
-
-
-class PowerPmacStatus(AutoSubstitution):
-    Dependencies = (Pmac,)
-#    ProtocolFiles = ['pmac.proto']
-    TemplateFile = 'powerPmacStatus.template'
-
-    def __init__(self, **args):
-        # init the super class
-        self.__super.__init__(**args)
-        self.axes = []
-        NAXES = int(args["NAXES"])
-        assert NAXES in range(1,33), "Number of axes (%d) must be in range 1..32" % NAXES
-        # for each axis
-        for i in range(1, NAXES + 1):
-            args["AXIS"] = i
-            # make a _pmacStatusAxis instance
-            self.axes.append(
-                _pmacStatusAxis(
-                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
-PowerPmacStatus.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
-
 
 class _CsControlT(AutoSubstitution):
     TemplateFile = "pmacCsController.template"
@@ -597,9 +594,6 @@ class pmacCreateCsGroup(Device):
         self.Controller.CsGroupNamesList['CSG%d' % self.GroupNumber] = self.GroupName
 
     def Initialise(self):
-        assert type(self.Controller) is GeoBrick or type(self.Controller) is Geobrick, \
-            "CsGroup functions are only supported by model 3 drivers Geobrick3, PMAC3"
-            # model 3 version of pmacDisableLimitsCheck uses port instead of card
         print 'pmacCreateCsGroup("%(Controller)s", %(GroupNumber)d, "%(GroupName)s", %(AxisCount)d)' % self.__dict__
 
     ArgInfo = makeArgInfo(__init__,
@@ -620,8 +614,6 @@ class pmacCsGroupAddAxis(Device):
         self.CoordSysNumber = CoordSysNumber
 
     def Initialise(self):
-        assert type(self.Controller) is GeoBrick or type(self.Controller) is Pmac, \
-            "CsGroup functions are only supported by model 3 drivers Geobrick3, PMAC3"
         print 'pmacCsGroupAddAxis(%(Controller)s, %(GroupNumber)d, %(AxisNumber)d, %(AxisDef)s, %(CoordSysNumber)d)' % self.__dict__
 
     ArgInfo = makeArgInfo(__init__,

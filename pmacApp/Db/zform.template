@@ -1,7 +1,6 @@
 # # \file
 # # optical light focussing for Cyrille
 # % macro, P, Pv Prefix
-# % macro, PORT, Motor controller serial port
 # % macro, name, Object name and gui association name
 # This associates an edm screen with the template
 # % gui, $(name=), edm, zform.edl, zform=$(P)

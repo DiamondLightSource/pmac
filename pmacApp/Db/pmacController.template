@@ -10,18 +10,21 @@
 
 # % macro, PORT, The asyn port for the pmac controller
 # % macro, P, PV Prefix
+# % macro, NAXES, Number of axes
 # % macro, TIMEOUT, Timeout for controller communication
-# % macro, CSG0, Name for Coordinate System Group 0 
-# % macro, CSG1, Name for Coordinate System Group 1 
-# % macro, CSG2, Name for Coordinate System Group 2 
-# % macro, CSG3, Name for Coordinate System Group 3 
-# % macro, CSG4, Name for Coordinate System Group 4 
-# % macro, CSG5, Name for Coordinate System Group 5 
-# % macro, CSG6, Name for Coordinate System Group 6 
+# % macro, FEEDRATE, feedrate below which we go into error
+# % macro, CSG0, Name for Coordinate System Group 0
+# % macro, CSG1, Name for Coordinate System Group 1
+# % macro, CSG2, Name for Coordinate System Group 2
+# % macro, CSG3, Name for Coordinate System Group 3
+# % macro, CSG4, Name for Coordinate System Group 4
+# % macro, CSG5, Name for Coordinate System Group 5
+# % macro, CSG6, Name for Coordinate System Group 6
+# % macro, CSG7, Name for Coordinate System Group 7
 
 #
 # This associates an edm screen with the template
-# % gui, $(PORT), edm, pmacControl.edl, P=$(P),name=$(PORT)
+# % gui, $(PORT), edm, pmacController.edl, pmac=$(P)
 #
 
 ##############################################################
@@ -35,6 +38,24 @@ record(bo, "$(P):DeferMoves")
     field(VAL, "0")
     field(ZNAM, "Defer Off")
     field(ONAM, "Defer On")
+}
+
+##############################################################
+# Send stop all command
+##############################################################
+record(bo, "$(P):StopAll")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_STOPALL")
+}
+
+##############################################################
+# Control deferred mode for all real 1axes in this brick
+##############################################################
+record(bo, "$(P):KillAll")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_KILLALL")
 }
 
 ##############################################################
@@ -429,4 +450,595 @@ record(waveform, "$(P):INV_KINEMATIC_16_RBV")
 }
 
 
+#####################################################
+# Below are the records originally from
+#    pmacStatus.template
+#####################################################
 
+# pmac type record
+record(mbbi, "$(P):PMACTYPE") {
+  field(PINI, "YES")
+  field(DTYP, "asynInt32")
+  field(ZRVL, "604020")
+  field(ONVL, "602413")
+  field(TWVL, "603382")
+  field(THVL, "602404")
+  field(ZRST, "Power PMAC")
+  field(ONST, "Turbo PMAC2")
+  field(TWST, "Geobrick LV")
+  field(THST, "PMAC Clipper")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_VIM_cid")
+}
+
+# % archiver 10 Monitor
+# This makes the component icon reflect the severity
+# % gui, $(PORT), sevr
+record(ai, "$(P):CPULOAD") {
+  field(DTYP, "asynFloat64")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_CPU_USAGE")
+  field(PREC, "2")
+  field(EGU, "%")
+  field(HIGH, "60")
+  field(HSV, "MINOR")
+  field(HIHI, "80")
+  field(HHSV, "MAJOR")
+}
+
+record(ai, "$(P):SERVO_FREQ") {
+  field(EGU, "Hz")
+  field(PREC, "1")
+}
+
+record(longin, "$(P):READ_CTRLSTAT1") {
+  field(DTYP, "asynInt32")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_STATUS_BITS01")
+  field(FLNK, "$(P):CTRLSTAT:status1")
+}
+
+# % archiver 10 Monitor
+record(mbbiDirect, "$(P):CTRLSTAT:status1") {
+  field(INP, "$(P):READ_CTRLSTAT1")
+}
+
+record(longin, "$(P):READ_CTRLSTAT2") {
+  field(DTYP, "asynInt32")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_STATUS_BITS02")
+  field(FLNK, "$(P):CTRLSTAT:status2")
+}
+
+# % archiver 10 Monitor
+record(mbbiDirect, "$(P):CTRLSTAT:status2") {
+  field(INP, "$(P):READ_CTRLSTAT2")
+}
+
+record(longin, "$(P):READ_CTRLSTAT3") {
+  field(DTYP, "asynInt32")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_STATUS_BITS03")
+  field(FLNK, "$(P):CTRLSTAT:status3")
+}
+
+# % archiver 10 Monitor
+record(mbbiDirect, "$(P):CTRLSTAT:status3") {
+  field(INP, "$(P):READ_CTRLSTAT3")
+}
+
+
+record(longin, "$(P):READ_PLCBITS00") {
+  field(DTYP, "asynInt32")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_PLC_BITS00")
+  field(FLNK, "$(P):PLCDISBITS00")
+}
+
+# % archiver 10 Monitor
+record(mbbiDirect, "$(P):PLCDISBITS00") {
+  field(INP, "$(P):READ_PLCBITS00")
+}
+
+record(longin, "$(P):READ_PLCBITS01") {
+  field(DTYP, "asynInt32")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_PLC_BITS01")
+  field(FLNK, "$(P):PLCDISBITS01")
+}
+
+# % archiver 10 Monitor
+record(mbbiDirect, "$(P):PLCDISBITS01") {
+  field(INP, "$(P):READ_PLCBITS01")
+}
+
+record(longin, "$(P):READ_GPIO_INP") {
+  field(DTYP, "asynInt32")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_GPIO_INPUTS")
+  field(FLNK, "$(P):GPIO_INP_BITS")
+}
+
+# % archiver 10 Monitor
+record(mbbiDirect, "$(P):GPIO_INP_BITS") {
+  field(INP, "$(P):READ_GPIO_INP")
+}
+
+record(longin, "$(P):READ_GPIO_OUT") {
+  field(DTYP, "asynInt32")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_GPIO_OUTPUTS")
+  field(FLNK, "$(P):GPIO_OP_BITS")
+}
+
+# % archiver 10 Monitor
+record(mbbiDirect, "$(P):GPIO_OP_BITS") {
+  field(INP, "$(P):READ_GPIO_OUT")
+}
+
+record(longin, "$(P):READ_PROGBITS") {
+  field(DTYP, "asynInt32")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_PROG_BITS")
+  field(FLNK, "$(P):PROGBITS")
+}
+
+# % archiver 10 Monitor
+record(mbbiDirect, "$(P):PROGBITS") {
+  field(INP, "$(P):READ_PROGBITS")
+}
+
+record(ai, "$(P):MACROERRS") {
+  field(DTYP, "asynFloat64")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_VDM_M5035")
+}
+
+record(seq, "$(P):AXIS1:ReadBack") {
+}
+
+record(seq, "$(P):AXIS2:ReadBack") {
+}
+
+record(seq, "$(P):AXIS3:ReadBack") {
+}
+
+record(seq, "$(P):AXIS4:ReadBack") {
+}
+
+record(seq, "$(P):AXIS5:ReadBack") {
+}
+
+record(seq, "$(P):AXIS6:ReadBack") {
+}
+
+record(seq, "$(P):AXIS7:ReadBack") {
+}
+
+record(seq, "$(P):AXIS8:ReadBack") {
+}
+
+record(seq, "$(P):AXIS9:ReadBack") {
+}
+
+record(seq, "$(P):AXIS10:ReadBack") {
+}
+
+record(seq, "$(P):AXIS11:ReadBack") {
+}
+
+record(seq, "$(P):AXIS12:ReadBack") {
+}
+
+record(seq, "$(P):AXIS13:ReadBack") {
+}
+
+record(seq, "$(P):AXIS14:ReadBack") {
+}
+
+record(seq, "$(P):AXIS15:ReadBack") {
+}
+
+record(seq, "$(P):AXIS16:ReadBack") {
+}
+
+record(seq, "$(P):AXIS17:ReadBack") {
+}
+
+record(seq, "$(P):AXIS18:ReadBack") {
+}
+
+record(seq, "$(P):AXIS19:ReadBack") {
+}
+
+record(seq, "$(P):AXIS20:ReadBack") {
+}
+
+record(seq, "$(P):AXIS21:ReadBack") {
+}
+
+record(seq, "$(P):AXIS22:ReadBack") {
+}
+
+record(seq, "$(P):AXIS23:ReadBack") {
+}
+
+record(seq, "$(P):AXIS24:ReadBack") {
+}
+
+record(seq, "$(P):AXIS25:ReadBack") {
+}
+
+record(seq, "$(P):AXIS26:ReadBack") {
+}
+
+record(seq, "$(P):AXIS27:ReadBack") {
+}
+
+record(seq, "$(P):AXIS28:ReadBack") {
+}
+
+record(seq, "$(P):AXIS29:ReadBack") {
+}
+
+record(seq, "$(P):AXIS30:ReadBack") {
+}
+
+record(seq, "$(P):AXIS31:ReadBack") {
+}
+
+record(seq, "$(P):AXIS32:ReadBack") {
+}
+
+record(seq, "$(P):AxisRB") {
+  field(LNK1, "$(P):AXIS1:ReadBack.PROC PP")
+  field(LNK2, "$(P):AXIS2:ReadBack.PROC PP")
+  field(LNK3, "$(P):AXIS3:ReadBack.PROC PP")
+  field(LNK4, "$(P):AXIS4:ReadBack.PROC PP")
+  field(LNK5, "$(P):AXIS5:ReadBack.PROC PP")
+  field(LNK6, "$(P):AXIS6:ReadBack.PROC PP")
+  field(LNK7, "$(P):AXIS7:ReadBack.PROC PP")
+  field(LNK8, "$(P):AXIS8:ReadBack.PROC PP")
+  field(LNK9, "$(P):AxisRB2.PROC PP")
+  field(DLY1, "0")
+  field(DLY2, "0.5")
+  field(DLY3, "0.5")
+  field(DLY4, "0.5")
+  field(DLY5, "0.5")
+  field(DLY6, "0.5")
+  field(DLY7, "0.5")
+  field(DLY8, "0.5")
+  field(DLY9, "0.5")
+  field(DOL1, "1")
+  field(DOL2, "1")
+  field(DOL3, "1")
+  field(DOL4, "1")
+  field(DOL5, "1")
+  field(DOL6, "1")
+  field(DOL7, "1")
+  field(DOL8, "1")
+  field(DOL9, "1")
+}
+
+record(seq, "$(P):AxisRB2") {
+  field(LNK1, "$(P):AXIS9:ReadBack.PROC PP")
+  field(LNK2, "$(P):AXIS10:ReadBack.PROC PP")
+  field(LNK3, "$(P):AXIS11:ReadBack.PROC PP")
+  field(LNK4, "$(P):AXIS12:ReadBack.PROC PP")
+  field(LNK5, "$(P):AXIS13:ReadBack.PROC PP")
+  field(LNK6, "$(P):AXIS14:ReadBack.PROC PP")
+  field(LNK7, "$(P):AXIS15:ReadBack.PROC PP")
+  field(LNK8, "$(P):AXIS16:ReadBack.PROC PP")
+  field(LNK9, "$(P):AxisRB3.PROC PP")
+  field(DLY1, "0")
+  field(DLY2, "0.5")
+  field(DLY3, "0.5")
+  field(DLY4, "0.5")
+  field(DLY5, "0.5")
+  field(DLY6, "0.5")
+  field(DLY7, "0.5")
+  field(DLY8, "0.5")
+  field(DLY9, "0.5")
+  field(DOL1, "1")
+  field(DOL2, "1")
+  field(DOL3, "1")
+  field(DOL4, "1")
+  field(DOL5, "1")
+  field(DOL6, "1")
+  field(DOL7, "1")
+  field(DOL8, "1")
+  field(DOL9, "1")
+}
+
+record(seq, "$(P):AxisRB3") {
+  field(LNK1, "$(P):AXIS17:ReadBack.PROC PP")
+  field(LNK2, "$(P):AXIS18:ReadBack.PROC PP")
+  field(LNK3, "$(P):AXIS19:ReadBack.PROC PP")
+  field(LNK4, "$(P):AXIS20:ReadBack.PROC PP")
+  field(LNK5, "$(P):AXIS21:ReadBack.PROC PP")
+  field(LNK6, "$(P):AXIS22:ReadBack.PROC PP")
+  field(LNK7, "$(P):AXIS23:ReadBack.PROC PP")
+  field(LNK8, "$(P):AXIS24:ReadBack.PROC PP")
+  field(LNK9, "$(P):AxisRB4.PROC PP")
+  field(DLY1, "0")
+  field(DLY2, "0.5")
+  field(DLY3, "0.5")
+  field(DLY4, "0.5")
+  field(DLY5, "0.5")
+  field(DLY6, "0.5")
+  field(DLY7, "0.5")
+  field(DLY8, "0.5")
+  field(DLY9, "0.5")
+  field(DOL1, "1")
+  field(DOL2, "1")
+  field(DOL3, "1")
+  field(DOL4, "1")
+  field(DOL5, "1")
+  field(DOL6, "1")
+  field(DOL7, "1")
+  field(DOL8, "1")
+  field(DOL9, "1")
+}
+
+record(seq, "$(P):AxisRB4") {
+  field(LNK1, "$(P):AXIS25:ReadBack.PROC PP")
+  field(LNK2, "$(P):AXIS26:ReadBack.PROC PP")
+  field(LNK3, "$(P):AXIS27:ReadBack.PROC PP")
+  field(LNK4, "$(P):AXIS28:ReadBack.PROC PP")
+  field(LNK5, "$(P):AXIS29:ReadBack.PROC PP")
+  field(LNK6, "$(P):AXIS30:ReadBack.PROC PP")
+  field(LNK7, "$(P):AXIS31:ReadBack.PROC PP")
+  field(LNK8, "$(P):AXIS32:ReadBack.PROC PP")
+  field(DLY1, "0")
+  field(DLY2, "0.5")
+  field(DLY3, "0.5")
+  field(DLY4, "0.5")
+  field(DLY5, "0.5")
+  field(DLY6, "0.5")
+  field(DLY7, "0.5")
+  field(DLY8, "0.5")
+  field(DOL1, "1")
+  field(DOL2, "1")
+  field(DOL3, "1")
+  field(DOL4, "1")
+  field(DOL5, "1")
+  field(DOL6, "1")
+  field(DOL7, "1")
+  field(DOL8, "1")
+}
+
+record(longin, "$(P):NAXES") {
+  field(PINI, "YES")
+  field(VAL, "$(NAXES=8)")
+}
+
+##############################################################
+# This record indicates if we have a controller problem
+##############################################################
+
+# ///
+# /// Record used to indicate if the controller has a problem. This is set in the
+# /// controller poll loop, and is used to set the motor record axis status.
+# ///
+record(bi, "$(P):GLOBAL_PROBLEM_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_GLOBALSTATUS")
+   field(SCAN, "I/O Intr")
+   field(ZNAM, "Status OK")
+   field(ONAM, "Status Problem")
+}
+
+##############################################################
+# Monitor and set the PMAC feedrate
+##############################################################
+
+# ///
+# /// Get the PMAC feedrate. This is read in the controller poll loop.
+# ///
+record(ai, "$(P):FEEDRATE_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE")
+   field(SCAN, "I/O Intr")
+   field(PREC, "2")
+}
+
+# ///
+# /// Set the PMAC feedrate limit. This determins if the current feedrate
+# /// read from the controller is out of range, and will be used to set axis alarms.
+# ///
+record(longout, "$(P):FEEDRATE_LIMIT")
+{
+   field(PINI, "YES")
+   field(VAL, "$(FEEDRATE=100)")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE_LIMIT")
+   field(DRVH, "100")
+   field(DRVL, "0")
+}
+
+# ///
+# /// Set the PMAC feedrate limit. This writes a new feedrate to
+# /// the controller.
+# ///
+record(longout, "$(P):FEEDRATE")
+{
+   field(PINI, "YES")
+   field(VAL, "$(FEEDRATE=100)")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE")
+   field(DRVH, "100")
+   field(DRVL, "0")
+}
+
+# ///
+# /// Record used to indicate if the feedrate is below the limit. This is set from the
+# /// controller poll loop, and is used to set the motor record axis status.
+# ///
+record(bi, "$(P):FEEDRATE_PROBLEM_RBV")
+{
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE_PROBLEM")
+   field(SCAN, "I/O Intr")
+   field(ZNAM, "Feedrate OK")
+   field(ONAM, "Feedrate Problem")
+}
+
+###################################################################
+#  These records report the current comms statistics              #
+#                                                                 #
+###################################################################
+
+record(longin, "$(P):STAT_MSG_NO_RBV") {
+  field(DESC, "Number of messages sent")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_NO_OF_MSGS")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_TOTAL_WRITE_RBV") {
+  field(DESC, "Total bytes written")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TBYTES_WRITE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_TOTAL_READ_RBV") {
+  field(DESC, "Total bytes read")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_TBYTES_READ")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_MSG_WRITE_RBV") {
+  field(DESC, "Last message bytes written")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MBYTES_WRITE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_MSG_READ_RBV") {
+  field(DESC, "Last message bytes read")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MBYTES_READ")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_MSG_TIME_RBV") {
+  field(DESC, "Last message time (ms)")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MSG_TIME")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_MAX_WRITE_RBV") {
+  field(DESC, "Maximum written bytes")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MAX_BYTES_WRITE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_MAX_READ_RBV") {
+  field(DESC, "Maximum read bytes")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MAX_BYTES_READ")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_MAX_TIME_RBV") {
+  field(DESC, "Maximum time for message")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MAX_TIME")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_AVE_WRITE_RBV") {
+  field(DESC, "Average written bytes")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_AVE_BYTES_WRITE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_AVE_READ_RBV") {
+  field(DESC, "Average read bytes")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_AVE_BYTES_READ")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):STAT_AVE_TIME_RBV") {
+  field(DESC, "Average time for message")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_AVE_TIME")
+  field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P):FAST_SIZE_RBV") {
+  field(DESC, "Size of fast PMAC store")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_FAST_STORE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P):REPORT_FAST") {
+  field(DESC, "Report the contents of fast store")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_REPORT_FAST")
+}
+
+record(longin, "$(P):MEDIUM_SIZE_RBV") {
+  field(DESC, "Size of medium PMAC store")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_MEDIUM_STORE")
+  field(SCAN, "I/O Intr")
+}
+
+###################################################################
+#  These records support debugging                                #
+#                                                                 #
+###################################################################
+
+record(longout, "$(P):REPORT_MEDIUM") {
+  field(DESC, "Report the contents of medium store")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_REPORT_MEDIUM")
+}
+
+record(longin, "$(P):SLOW_SIZE_RBV") {
+  field(DESC, "Size of slow PMAC store")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_C_SLOW_STORE")
+  field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P):REPORT_SLOW") {
+  field(DESC, "Report the contents of slow store")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_REPORT_SLOW")
+}
+
+record(longout, "$(P):DEBUG_LEVEL"){
+  field(DESC, "Set the debug level")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_DEBUG_LEVEL")
+}
+
+record(longout, "$(P):DEBUG_AXISNO"){
+  field(DESC, "Debug which axis (0 is controller)")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_DEBUG_AXIS")
+}
+
+record(longout, "$(P):DEBUG_CSNO"){
+  field(DESC, "Debug which CS (0 is main controller)")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_DEBUG_CS")
+}
+
+record(longout, "$(P):DEBUG_EXECUTE"){
+  field(DESC, "Apply the debug settings")
+  field(DTYP, "asynInt32")
+  field(OUT, "@asyn($(PORT),0)PMAC_C_DEBUG_CMD")
+}

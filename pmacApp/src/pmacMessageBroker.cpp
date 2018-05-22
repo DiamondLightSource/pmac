@@ -24,13 +24,17 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
         lastMsgBytesWritten_(0),
         lastMsgBytesRead_(0),
         lastMsgTime_(0),
-        updateTime_(0.0) {
+        updateTime_(0.0),
+        lock_count(0){
   epicsTimeGetCurrent(&this->writeTime_);
   epicsTimeGetCurrent(&this->startTime_);
   epicsTimeGetCurrent(&this->currentTime_);
   slowCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_SLOW_READ);
   mediumCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_MEDIUM_READ);
   fastCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_FAST_READ);
+
+  locks = (asynPortDriver **) malloc(
+          MAX_REGISTERED_LOCKS * sizeof(asynPortDriver *));
 }
 
 pmacMessageBroker::~pmacMessageBroker() {
@@ -125,6 +129,10 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
   epicsTimeGetCurrent(&ts1);
   // Lock the mutex
   mutex_.lock();
+  // Lock the registered locks for the Asyn Parameter Libraries
+  for(int i=0; i<lock_count; i++) {
+    locks[i]->lock();
+  }
 
   startTimer(DEBUG_TIMING, functionName);
 
@@ -187,6 +195,10 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
 
   // Unlock the mutex
   mutex_.unlock();
+  // Unlock the registered locks for the Asyn Parameter Libraries
+  for(int i=0; i<lock_count; i++) {
+    locks[i]->unlock();
+  }
 
   // Record the end time for the update
   epicsTimeGetCurrent(&ts2);
@@ -212,6 +224,19 @@ asynStatus pmacMessageBroker::reinstateStatusReads() {
   // Lock the mutex
   mutex_.lock();
   suppressStatus_ = false;
+  // Unlock the mutex
+  mutex_.unlock();
+  return status;
+}
+
+asynStatus pmacMessageBroker::registerForLocks(asynPortDriver *lockPtr) {
+  asynStatus status = asynSuccess;
+  // Lock the mutex
+  mutex_.lock();
+
+  locks[lock_count] = lockPtr;
+  lock_count++;
+
   // Unlock the mutex
   mutex_.unlock();
   return status;

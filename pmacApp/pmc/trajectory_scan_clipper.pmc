@@ -1,0 +1,18 @@
+; *****************************************************************************************
+; Set these values for your PMAC
+; *****************************************************************************************
+#define VarAdr       B8     ; Prefix of address (eg VarAdr=300 then $30000 is the start address)
+#define BuffLen      950    ; Length of buffers
+
+; make sure the ubuffer is defined
+delete all
+define ubuffer $5000
+; restore lookahead buffers
+ena plc1
+; make sure that interrupt handling has enough time to complete
+; only interrupt every 4 servo cycles instead of 2
+I8=4
+
+
+#include "./trajectory_scan_definitions.pmc"
+#include "./trajectory_scan_code.pmc"

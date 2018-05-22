@@ -25,6 +25,8 @@
 #define PMAC_C_FirstParamString           "PMAC_C_FIRSTPARAM"
 #define PMAC_C_LastParamString            "PMAC_C_LASTPARAM"
 
+#define PMAC_C_StopAllString              "PMAC_C_STOPALL"
+#define PMAC_C_KillAllString              "PMAC_C_KILLALL"
 #define PMAC_C_GlobalStatusString         "PMAC_C_GLOBALSTATUS"
 #define PMAC_C_CommsErrorString           "PMAC_C_COMMSERROR"
 
@@ -84,9 +86,11 @@
 #define PMAC_C_ReportFastString           "PMAC_C_REPORT_FAST"
 #define PMAC_C_ReportMediumString         "PMAC_C_REPORT_MEDIUM"
 #define PMAC_C_ReportSlowString           "PMAC_C_REPORT_SLOW"
-// the following 2 parameters are axis parameters for both pmacController and pmacCSController
+// the following 4 parameters are axis parameters for both pmacController and pmacCSController
 #define PMAC_C_RealMotorNumberString      "PMAC_REAL_MOTOR_NUMBER"
 #define PMAC_C_MotorScaleString           "PMAC_MOTOR_SCALE"
+#define PMAC_C_MotorResString             "PMAC_MRES"
+#define PMAC_C_MotorOffsetString          "PMAC_OFFSET"
 
 #define PMAC_C_ProfileUseAxisAString      "PROFILE_USE_AXIS_A"
 #define PMAC_C_ProfileUseAxisBString      "PROFILE_USE_AXIS_B"
@@ -106,24 +110,6 @@
 #define PMAC_C_ProfilePositionsXString    "PROFILE_POSITIONS_X"
 #define PMAC_C_ProfilePositionsYString    "PROFILE_POSITIONS_Y"
 #define PMAC_C_ProfilePositionsZString    "PROFILE_POSITIONS_Z"
-#define PMAC_C_ProfileOffsetAString       "PROFILE_OFFSET_A"
-#define PMAC_C_ProfileOffsetBString       "PROFILE_OFFSET_B"
-#define PMAC_C_ProfileOffsetCString       "PROFILE_OFFSET_C"
-#define PMAC_C_ProfileOffsetUString       "PROFILE_OFFSET_U"
-#define PMAC_C_ProfileOffsetVString       "PROFILE_OFFSET_V"
-#define PMAC_C_ProfileOffsetWString       "PROFILE_OFFSET_W"
-#define PMAC_C_ProfileOffsetXString       "PROFILE_OFFSET_X"
-#define PMAC_C_ProfileOffsetYString       "PROFILE_OFFSET_Y"
-#define PMAC_C_ProfileOffsetZString       "PROFILE_OFFSET_Z"
-#define PMAC_C_ProfileResAString          "PROFILE_RESOLUTION_A"
-#define PMAC_C_ProfileResBString          "PROFILE_RESOLUTION_B"
-#define PMAC_C_ProfileResCString          "PROFILE_RESOLUTION_C"
-#define PMAC_C_ProfileResUString          "PROFILE_RESOLUTION_U"
-#define PMAC_C_ProfileResVString          "PROFILE_RESOLUTION_V"
-#define PMAC_C_ProfileResWString          "PROFILE_RESOLUTION_W"
-#define PMAC_C_ProfileResXString          "PROFILE_RESOLUTION_X"
-#define PMAC_C_ProfileResYString          "PROFILE_RESOLUTION_Y"
-#define PMAC_C_ProfileResZString          "PROFILE_RESOLUTION_Z"
 #define PMAC_C_ProfileAppendString        "PROFILE_APPEND"
 #define PMAC_C_ProfileAppendStateString   "PROFILE_APPEND_STATE"
 #define PMAC_C_ProfileAppendStatusString  "PROFILE_APPEND_STATUS"
@@ -155,6 +141,7 @@
 #define PMAC_TRAJECTORY_VERSION 1.1
 
 #define PMAC_CPU_GEO_240MHZ               "DSP56321"            // Approved geobrick for trajectory scans
+#define PMAC_CPU_CLIPPER                  "DSP56303"            // Allowed for trajectory scans
 
 #define PMAC_MAXBUF 1024
 
@@ -169,9 +156,6 @@
 
 #define PMAC_MEDIUM_LOOP_TIME 2000
 #define PMAC_SLOW_LOOP_TIME   5000
-
-#define DEFERRED_FAST_MOVES 1
-#define DEFERRED_COORDINATED_MOVES 2
 
 #define PMAC_PVT_TIME_MODE       "I42"   // PVT Time Control Mode (0=4,095 ms max time, 1=8,388,607 ms max time)
 
@@ -341,11 +325,15 @@ public:
 
     asynStatus tScanIncludedAxes(int *axisMask);
 
+    void registerForLock(asynPortDriver *controller);
+
 protected:
     pmacAxis **pAxes_;       /**< Array of pointers to axis objects */
 
     int PMAC_C_FirstParam_;
 #define FIRST_PMAC_PARAM PMAC_C_FirstParam_
+    int PMAC_C_StopAll_;
+    int PMAC_C_KillAll_;
     int PMAC_C_GlobalStatus_;
     int PMAC_C_CommsError_;
     int PMAC_C_FeedRate_;
@@ -398,24 +386,6 @@ protected:
     int PMAC_C_ProfilePositionsX_;
     int PMAC_C_ProfilePositionsY_;
     int PMAC_C_ProfilePositionsZ_;
-    int PMAC_C_ProfileOffsetA_;
-    int PMAC_C_ProfileOffsetB_;
-    int PMAC_C_ProfileOffsetC_;
-    int PMAC_C_ProfileOffsetU_;
-    int PMAC_C_ProfileOffsetV_;
-    int PMAC_C_ProfileOffsetW_;
-    int PMAC_C_ProfileOffsetX_;
-    int PMAC_C_ProfileOffsetY_;
-    int PMAC_C_ProfileOffsetZ_;
-    int PMAC_C_ProfileResA_;
-    int PMAC_C_ProfileResB_;
-    int PMAC_C_ProfileResC_;
-    int PMAC_C_ProfileResU_;
-    int PMAC_C_ProfileResV_;
-    int PMAC_C_ProfileResW_;
-    int PMAC_C_ProfileResX_;
-    int PMAC_C_ProfileResY_;
-    int PMAC_C_ProfileResZ_;
     int PMAC_C_ProfileAppend_;
     int PMAC_C_ProfileAppendState_;
     int PMAC_C_ProfileAppendStatus_;
@@ -461,6 +431,8 @@ protected:
     int PMAC_C_ReportSlow_;
     int PMAC_C_RealMotorNumber_;
     int PMAC_C_MotorScale_;
+    int PMAC_C_MotorRes_;
+    int PMAC_C_MotorOffset_;
     int PMAC_C_ForwardKinematic_[PMAC_MAX_CS];
     int PMAC_C_InverseKinematic_[PMAC_MAX_CS];
     int PMAC_C_LastParam_;

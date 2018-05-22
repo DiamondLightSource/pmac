@@ -1,0 +1,1831 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 197
+y 50
+w 951
+h 295
+font "arial-bold-r-12.0"
+ctlFont "arial-bold-r-12.0"
+btnFont "arial-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 25
+ctlBgColor1 index 3
+ctlBgColor2 index 3
+topShadowColor index 1
+botShadowColor index 11
+showGrid
+snapToGrid
+gridSize 5
+disableScroll
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 35
+w 935
+h 985
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 480
+y 35
+w 185
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "CS Assignment"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 315
+y 35
+w 60
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "CS No"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 345
+y 35
+w 205
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "CS Port Name"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 600
+y 35
+w 185
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  " Direct Demand  "
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 140
+y 35
+w 60
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Description"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 735
+y 35
+w 185
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  " Amplifier  "
+}
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 55
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 55
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=1"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "1"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 85
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 85
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=2"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "2"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 115
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 115
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=3"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "3"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 145
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 145
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=4"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "4"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 175
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 175
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=5"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "5"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 205
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 205
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=6"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "6"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 235
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 235
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=7"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "7"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 265
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 265
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=8"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "8"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 295
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 295
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=9"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "9"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 325
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 325
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=10"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "10"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 355
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 355
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=11"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "11"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 385
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 385
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=12"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "12"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 415
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 415
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=13"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "13"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 445
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 445
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=14"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "14"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 475
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 475
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=15"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "15"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 625
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 625
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=16"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "16"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 595
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 595
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=17"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "17"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 565
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 565
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=18"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "18"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 535
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 535
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=19"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "19"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 505
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 505
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=20"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "20"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 655
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 655
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=21"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "21"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 685
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 685
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=22"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "22"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 715
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 715
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=23"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "23"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 745
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 745
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=24"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "24"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 775
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 775
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=25"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "25"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 805
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 805
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=26"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "26"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 835
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 835
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=27"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "27"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 865
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 865
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=28"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "28"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 895
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 895
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=29"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "29"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 925
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 925
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=30"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "30"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 955
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 955
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=31"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "31"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 985
+w 920
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 985
+w 920
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacAxis.edl"
+}
+symbols {
+  0 "axis=32"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "32"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 0
+w 935
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 0
+w 935
+h 31
+lineColor index 3
+fill
+fillColor index 3
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 5
+y 3
+w 935
+h 25
+lineColor index 11
+fillColor index 0
+numPoints 3
+xPoints {
+  0 5
+  1 940
+  2 940
+}
+yPoints {
+  0 28
+  1 28
+  2 3
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 3
+w 935
+h 25
+font "arial-bold-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 48
+value {
+  "Axis Status for $(pmac)"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 5
+y 3
+w 935
+h 25
+lineColor index 1
+fillColor index 0
+numPoints 3
+xPoints {
+  0 5
+  1 5
+  2 940
+}
+yPoints {
+  0 28
+  1 3
+  2 3
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+

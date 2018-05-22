@@ -13,4 +13,5 @@ iocs
 CMakeLists.txt
 cmake-build-debug/
 *.pyc
-
+deleteme
+.pytest_cache

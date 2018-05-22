@@ -144,7 +144,7 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
           csNumber_(csNo),
           progNumber_(program),
           movesDeferred_(0),
-          csMoveTime_(-1) {
+          csMoveTime_(0) {
   asynStatus status = asynSuccess;
   static const char *functionName = "pmacCSController";
 
@@ -163,12 +163,18 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
     status = asynError;
   }
 
+  // tell the broker to lock me when polling the brick
+  ((pmacController *) pC_)->registerForLock(this);
+
   //Create controller-specific parameters
   bool paramStatus = true;
   createParam(PMAC_CS_FirstParamString, asynParamInt32, &PMAC_CS_FirstParam_);
   createParam(PMAC_CS_CsMoveTimeString, asynParamFloat64, &PMAC_CS_CsMoveTime_);
   createParam(PMAC_CS_RealMotorNumberString, asynParamInt32, &PMAC_CS_RealMotorNumber_);
   createParam(PMAC_CS_MotorScaleString, asynParamInt32, &PMAC_CS_MotorScale_);
+  createParam(PMAC_CS_MotorResString, asynParamFloat64, &PMAC_CS_MotorRes_);
+  createParam(PMAC_CS_MotorOffsetString, asynParamFloat64, &PMAC_CS_MotorOffset_);
+  createParam(PMAC_CS_CsAbortString, asynParamInt32, &PMAC_CS_Abort_);
   createParam(PMAC_CS_LastParamString, asynParamInt32, &PMAC_CS_LastParam_);
   paramStatus = ((setDoubleParam(PMAC_CS_CsMoveTime_, csMoveTime_) == asynSuccess) && paramStatus);
   for(int index=0; index<=PMAC_CS_AXES_COUNT; index++) {
@@ -208,6 +214,8 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   bool status = true;
   pmacCSAxis *pAxis = NULL;
   const char *name[128];
+  char command[PMAC_CS_MAXBUF] = {0};
+  char response[PMAC_CS_MAXBUF] = {0};
   static const char *functionName = "writeInt32";
 
   debug(DEBUG_TRACE, functionName);
@@ -229,6 +237,12 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
       status = (this->processDeferredMoves() == asynSuccess) && status;
     }
     this->movesDeferred_ = value;
+  } else if (function == PMAC_CS_MotorScale_) {
+    pAxis->scale_ = value;
+  } else if (function == PMAC_CS_Abort_) {
+    sprintf(command, "&%dA", csNumber_, value);
+    debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
+    status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.
@@ -372,8 +386,13 @@ csStatus pmacCSController::getStatus() {
   return cStatus_;
 }
 
-std::string pmacCSController::getVelocityCmd(double velocity) {
-  return ((pmacController *) pC_)->pHardware_->getCSVelocityCmd(csNumber_, velocity);
+std::string pmacCSController::getVelocityCmd(double velocity, double steps) {
+  return ((pmacController *) pC_)->pHardware_->getCSVelocityCmd(csNumber_, velocity,
+                                                                steps);
+}
+
+std::string pmacCSController::getCSAccTimeCmd(double time) {
+  return ((pmacController *) pC_)->pHardware_->getCSAccTimeCmd(csNumber_, time);
 }
 
 void pmacCSController::callback(pmacCommandStore *sPtr, int type) {
@@ -558,6 +577,23 @@ asynStatus pmacCSController::pmacCSSetAxisDirectMapping(int axis, int mappedAxis
 }
 
 
+double pmacCSController::getAxisResolution(int axis) {
+  double resolution = 0;
+
+  getDoubleParam(axis, PMAC_CS_MotorRes_, &resolution);
+  if(resolution == 0) {
+    resolution = 1;  // guard against asyn issues causing div by zero
+  }
+  return resolution;
+}
+
+double pmacCSController::getAxisOffset(int axis) {
+  double offset = 0;
+
+  getDoubleParam(axis, PMAC_CS_MotorOffset_, &offset);
+  return offset;
+}
+
 /*************************************************************************************/
 /** The following functions have C linkage, and can be called directly or from iocsh */
 
@@ -635,12 +671,12 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
     return asynError;
   }
 
-  pC->lock();
+  // pC->lock();
   for (int axis = 0; axis <= numAxes; axis++) {
     pAxis = new pmacCSAxis(pC, axis);
     pAxis = NULL;
   }
-  pC->unlock();
+  //pC->unlock();
   return asynSuccess;
 }
 

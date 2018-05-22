@@ -19,8 +19,6 @@
 
 #include <iostream>
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "OCUnusedGlobalDeclarationInspection"
 using std::cout;
 using std::endl;
 using std::dec;
@@ -269,6 +267,9 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   i7002_ = 0;
   csGroupSwitchCalled_ = false;
 
+  // Create the message broker
+  pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
+
   // Create the hashtable for storing port to CS number mappings
   pPortToCs_ = new IntegerHashtable();
 
@@ -294,6 +295,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   //Create controller-specific parameters
   createParam(PMAC_C_FirstParamString, asynParamInt32, &PMAC_C_FirstParam_);
+  createParam(PMAC_C_StopAllString, asynParamInt32, &PMAC_C_StopAll_);
+  createParam(PMAC_C_KillAllString, asynParamInt32, &PMAC_C_KillAll_);
   createParam(PMAC_C_GlobalStatusString, asynParamInt32, &PMAC_C_GlobalStatus_);
   createParam(PMAC_C_CommsErrorString, asynParamInt32, &PMAC_C_CommsError_);
   createParam(PMAC_C_FeedRateString, asynParamInt32, &PMAC_C_FeedRate_);
@@ -347,30 +350,12 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_ProfilePositionsXString, asynParamFloat64Array, &PMAC_C_ProfilePositionsX_);
   createParam(PMAC_C_ProfilePositionsYString, asynParamFloat64Array, &PMAC_C_ProfilePositionsY_);
   createParam(PMAC_C_ProfilePositionsZString, asynParamFloat64Array, &PMAC_C_ProfilePositionsZ_);
-  createParam(PMAC_C_ProfileOffsetAString, asynParamFloat64, &PMAC_C_ProfileOffsetA_);
-  createParam(PMAC_C_ProfileOffsetBString, asynParamFloat64, &PMAC_C_ProfileOffsetB_);
-  createParam(PMAC_C_ProfileOffsetCString, asynParamFloat64, &PMAC_C_ProfileOffsetC_);
-  createParam(PMAC_C_ProfileOffsetUString, asynParamFloat64, &PMAC_C_ProfileOffsetU_);
-  createParam(PMAC_C_ProfileOffsetVString, asynParamFloat64, &PMAC_C_ProfileOffsetV_);
-  createParam(PMAC_C_ProfileOffsetWString, asynParamFloat64, &PMAC_C_ProfileOffsetW_);
-  createParam(PMAC_C_ProfileOffsetXString, asynParamFloat64, &PMAC_C_ProfileOffsetX_);
-  createParam(PMAC_C_ProfileOffsetYString, asynParamFloat64, &PMAC_C_ProfileOffsetY_);
-  createParam(PMAC_C_ProfileOffsetZString, asynParamFloat64, &PMAC_C_ProfileOffsetZ_);
   createParam(PMAC_C_ProfileAppendString, asynParamInt32, &PMAC_C_ProfileAppend_);
   createParam(PMAC_C_ProfileAppendStateString, asynParamInt32, &PMAC_C_ProfileAppendState_);
   createParam(PMAC_C_ProfileAppendStatusString, asynParamInt32, &PMAC_C_ProfileAppendStatus_);
   createParam(PMAC_C_ProfileAppendMessageString, asynParamOctet, &PMAC_C_ProfileAppendMessage_);
   createParam(PMAC_C_ProfileNumBuildString, asynParamInt32, &PMAC_C_ProfileNumBuild_);
   createParam(PMAC_C_ProfileBuiltPointsString, asynParamInt32, &PMAC_C_ProfileBuiltPoints_);
-  createParam(PMAC_C_ProfileResAString, asynParamFloat64, &PMAC_C_ProfileResA_);
-  createParam(PMAC_C_ProfileResBString, asynParamFloat64, &PMAC_C_ProfileResB_);
-  createParam(PMAC_C_ProfileResCString, asynParamFloat64, &PMAC_C_ProfileResC_);
-  createParam(PMAC_C_ProfileResUString, asynParamFloat64, &PMAC_C_ProfileResU_);
-  createParam(PMAC_C_ProfileResVString, asynParamFloat64, &PMAC_C_ProfileResV_);
-  createParam(PMAC_C_ProfileResWString, asynParamFloat64, &PMAC_C_ProfileResW_);
-  createParam(PMAC_C_ProfileResXString, asynParamFloat64, &PMAC_C_ProfileResX_);
-  createParam(PMAC_C_ProfileResYString, asynParamFloat64, &PMAC_C_ProfileResY_);
-  createParam(PMAC_C_ProfileResZString, asynParamFloat64, &PMAC_C_ProfileResZ_);
   createParam(PMAC_C_ProfileUserString, asynParamInt32Array, &PMAC_C_ProfileUser_);
   createParam(PMAC_C_ProfileVelModeString, asynParamInt32Array, &PMAC_C_ProfileVelMode_);
   createParam(PMAC_C_TrajBufferLengthString, asynParamInt32, &PMAC_C_TrajBufferLength_);
@@ -410,6 +395,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   createParam(PMAC_C_ReportSlowString, asynParamInt32, &PMAC_C_ReportSlow_);
   createParam(PMAC_C_RealMotorNumberString, asynParamInt32, &PMAC_C_RealMotorNumber_);
   createParam(PMAC_C_MotorScaleString, asynParamInt32, &PMAC_C_MotorScale_);
+  createParam(PMAC_C_MotorResString, asynParamFloat64, &PMAC_C_MotorRes_);
+  createParam(PMAC_C_MotorOffsetString, asynParamFloat64, &PMAC_C_MotorOffset_);
 
   for (index = 0; index < PMAC_MAX_CS; index++) {
     createParam(PMAC_C_ForwardKinematicString[index], asynParamOctet,
@@ -420,9 +407,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   // Create the trajectory store
   pTrajectory_ = new pmacTrajectory();
-
-  // Create the message broker
-  pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
 
   if (pBroker_->connect(lowLevelPortName, lowLevelPortAddress) != asynSuccess) {
     printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName,
@@ -450,6 +434,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   }
 
   bool paramStatus = true;
+  paramStatus = ((setIntegerParam(PMAC_C_StopAll_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_KillAll_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateProblem_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateCS_, 0) == asynSuccess) && paramStatus);
@@ -466,24 +452,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                    paramStatus);
   }
   // Initialise the trajectory interface
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResA_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResB_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResC_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResU_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResV_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResW_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResX_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResY_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileResZ_, 1.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetA_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetB_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetC_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetU_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetV_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetW_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetX_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetY_, 0.0) == asynSuccess) && paramStatus);
-  paramStatus = ((setDoubleParam(PMAC_C_ProfileOffsetZ_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(profileBuildState_, PROFILE_BUILD_DONE) == asynSuccess) &&
                  paramStatus);
   paramStatus = ((setIntegerParam(profileExecuteState_, PROFILE_EXECUTE_DONE) == asynSuccess) &&
@@ -519,13 +487,13 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setIntegerParam(PMAC_C_MediumStore_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_SlowStore_, 0) == asynSuccess) && paramStatus);
 
+  // Set individual axes parmeters
   for(index=0; index<=numAxes; index++) {
     paramStatus = ((setIntegerParam(
             index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
     paramStatus = ((setIntegerParam(
             index, PMAC_C_MotorScale_, 1)  == asynSuccess) &&paramStatus);
   }
-
   callParamCallbacks();
 
   if (!paramStatus) {
@@ -569,9 +537,16 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
   }
 
+  // Medium readout of the motion program status (same for both Geobrick and VME)
+  for (progNo = 0; progNo < 16; progNo++) {
+    sprintf(cmd, "M%d", ((progNo * 100) + 5180));
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
+  }
+
   // Medium readout of the GPIO status bits
   switch (cid_) {
     case PMAC_CID_GEOBRICK_:
+    case PMAC_CID_CLIPPER_:
     case PMAC_CID_POWER_:
       // Outputs
       for (gpioNo = 0; gpioNo < 8; gpioNo++) {
@@ -607,12 +582,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
       debug(DEBUG_ERROR, functionName, "Unable to set GPIO M-vars, unknown Card ID");
   }
 
-  // Medium readout of the motion program status (same for both Geobrick and VME)
-  for (progNo = 0; progNo < 16; progNo++) {
-    sprintf(cmd, "M%d", ((progNo * 100) + 5180));
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
-  }
-
   // Slow readout required of trajectory buffer setup
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFFER_LENGTH);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_A);
@@ -621,6 +590,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
 
   // Register this class for updates
+  pBroker_->registerForLocks(this);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_FAST_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_SLOW_READ);
@@ -641,13 +611,15 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                     epicsThreadGetStackSize(epicsThreadStackMedium),
                     (EPICSTHREADFUNC) trajTaskC,
                     this);
-
 }
-
 
 pmacController::~pmacController(void) {
   //Destructor. Should never get here.
   delete pAxisZero;
+}
+
+void pmacController::registerForLock(asynPortDriver* controller) {
+  pBroker_->registerForLocks(controller);
 }
 
 void pmacController::startPMACPolling() {
@@ -931,8 +903,8 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
     this->slowUpdate(sPtr);
   }
 
+  lock();
   // Loop over parameter list and search for values
-
   // Check for integer params
   std::string key = this->pIntParams_->firstKey();
   if (key != "") {
@@ -953,7 +925,6 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
         setIntegerParam(this->pIntParams_->lookup(key), val);
       }
     }
-    callParamCallbacks();
   }
 
   // Check for hex integer params
@@ -976,7 +947,6 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
         setIntegerParam(this->pHexParams_->lookup(key), val);
       }
     }
-    callParamCallbacks();
   }
 
   // Check for double params
@@ -999,7 +969,6 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
         setDoubleParam(this->pDoubleParams_->lookup(key), val);
       }
     }
-    callParamCallbacks();
   }
 
   // Check for string params
@@ -1022,9 +991,9 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
         setStringParam(this->pDoubleParams_->lookup(key), val);
       }
     }
-    callParamCallbacks();
   }
-
+  unlock();
+  callParamCallbacks();
 }
 
 asynStatus pmacController::checkConnection() {
@@ -1307,6 +1276,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   // Read the GPIO status variables
   switch (cid_) {
     case PMAC_CID_GEOBRICK_:
+    case PMAC_CID_CLIPPER_:
     case PMAC_CID_POWER_:
       // Outputs
       for (gpio = 0; gpio < 8; gpio++) {
@@ -1683,7 +1653,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   }*/
 
 
-  if (cid_ == PMAC_CID_GEOBRICK_) {
+  if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_CLIPPER_) {
     // CPU Calculation
     int m70 = 0;
     int m71 = 0;
@@ -2116,12 +2086,20 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 
   status = (pAxis->setIntegerParam(function, value) == asynSuccess) && status;
 
-  if (function == PMAC_C_FeedRatePoll_) {
+  if (function == PMAC_C_StopAll_) {
+    // Send the abort all command to the PMAC immediately
+    status = (this->immediateWriteRead("\x01", response) == asynSuccess) && status;
+  } else if (function == PMAC_C_KillAll_) {
+    // Send the kill all command to the PMAC immediately
+    status = (this->immediateWriteRead("\x0b", response) == asynSuccess) && status;
+  } else if (function == PMAC_C_FeedRatePoll_) {
     if (value) {
       this->feedRatePoll_ = true;
     } else {
       this->feedRatePoll_ = false;
     }
+  } else if (function == PMAC_C_MotorScale_) {
+    pAxis->scale_ = value;
   } else if (function == PMAC_C_FeedRate_) {
     strcpy(command, "");
     for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++) {
@@ -2149,6 +2127,10 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   } else if (function == PMAC_C_KillAxis_) {
+    // call stop so that this kill can stop CS moves too
+    // this is to get around unexpected behaviour that kill does not stop real axes
+    // which are currently moving in a CS
+    pAxis->stop(0);
     // Send the kill command to the PMAC immediately
     sprintf(command, "#%dk", pAxis->axisNo_);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
@@ -2160,8 +2142,6 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     status = (this->pBroker_->report(pmacMessageBroker::PMAC_SLOW_READ) == asynSuccess) && status;
   } else if (function == PMAC_C_ProfileAppend_) {
     status = (this->appendToProfile() == asynSuccess) && status;
-    // Reset the value to complete any caput callback
-    value = 0;
   } else if (function == PMAC_C_DebugCmd_) {
     // Read the level, axis number and CS number
     int level = 0;
@@ -2391,7 +2371,6 @@ asynStatus pmacController::buildProfile() {
     status = asynError;
   }
 
-  setIntegerParam(profileBuild_, 0);
   return status;
 }
 
@@ -2450,13 +2429,13 @@ asynStatus pmacController::buildProfile(int csNo) {
     } else {
       // Old Geobrick without additional memory.
       // Check memory addresses are less than of equal to (0x10800-18*buffer_size)
-      if (tScanPmacBufferAddressA_ > (0x10800 - (18 * tScanPmacBufferSize_))) {
+      if (tScanPmacBufferAddressA_ > (0x10800 - (10 * tScanPmacBufferSize_))) {
         // Set the status to failure
         this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE,
                              "Buffer A memory address invalid");
         status = asynError;
       }
-      if (tScanPmacBufferAddressB_ > (0x10800 - (18 * tScanPmacBufferSize_))) {
+      if (tScanPmacBufferAddressB_ > (0x10800 - (10 * tScanPmacBufferSize_))) {
         // Set the status to failure
         this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE,
                              "Buffer B memory address invalid");
@@ -2661,6 +2640,7 @@ asynStatus pmacController::appendToProfile() {
                           "Cannot append points, is the scan built?");
     status = asynError;
   }
+
   return status;
 }
 
@@ -2741,7 +2721,7 @@ asynStatus pmacController::executeProfile() {
       csNo = pPortToCs_->lookup(csPortName.c_str());
       // If the axis has an assigned CS no then we will use it
       if (csNo != 0) {
-        // Execute the trajectory scan for the CS
+        // Execute the trajectory scan for the CSthe port name for CS to execute
         status = this->executeProfile(csNo);
       } else {
         debug(DEBUG_ERROR, functionName, "Invalid Coordinate System specified");
@@ -2899,8 +2879,6 @@ void pmacController::trajectoryTask() {
 
   this->lock();
   // Loop forever
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-noreturn"
   while (true) {
     // If we are not scanning then wait for a semaphore that is given when a scan is started
     if (!tScanExecuting_) {
@@ -3071,7 +3049,6 @@ void pmacController::trajectoryTask() {
       }
     }
   }
-#pragma clang diagnostic pop
 }
 
 void pmacController::setBuildStatus(int state, int status, const std::string &message) {
@@ -3972,6 +3949,7 @@ asynStatus pmacController::updateCsAssignmentParameters() {
 asynStatus pmacController::tScanBuildProfileArray(double *positions, int axis, int numPoints) {
   asynStatus status = asynSuccess;
   int index = 0;
+  int csEnum = 0;
   double resolution = 1.0;
   double offset = 0.0;
   static const char *functionName = "tScanBuildProfileArray";
@@ -3983,47 +3961,14 @@ asynStatus pmacController::tScanBuildProfileArray(double *positions, int axis, i
     status = asynError;
   }
 
-  if (status == asynSuccess) {
-    // Read in the resolution and offset
-    switch (axis) {
-      case 0:
-        getDoubleParam(PMAC_C_ProfileResA_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetA_, &offset);
-        break;
-      case 1:
-        getDoubleParam(PMAC_C_ProfileResB_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetB_, &offset);
-        break;
-      case 2:
-        getDoubleParam(PMAC_C_ProfileResC_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetC_, &offset);
-        break;
-      case 3:
-        getDoubleParam(PMAC_C_ProfileResU_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetU_, &offset);
-        break;
-      case 4:
-        getDoubleParam(PMAC_C_ProfileResV_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetV_, &offset);
-        break;
-      case 5:
-        getDoubleParam(PMAC_C_ProfileResW_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetW_, &offset);
-        break;
-      case 6:
-        getDoubleParam(PMAC_C_ProfileResX_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetX_, &offset);
-        break;
-      case 7:
-        getDoubleParam(PMAC_C_ProfileResY_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetY_, &offset);
-        break;
-      case 8:
-        getDoubleParam(PMAC_C_ProfileResZ_, &resolution);
-        getDoubleParam(PMAC_C_ProfileOffsetZ_, &offset);
-        break;
-    }
+  // Determine which CS we currently are using for trajectory scans
+  getIntegerParam(PMAC_C_TrajCSPort_, &csEnum);
 
+  // ask the CS for its axis resolution (axis no.s of CS are 1 based)
+  resolution = pCSControllers_[csEnum]->getAxisResolution(axis+1);
+  offset = pCSControllers_[csEnum]->getAxisOffset(axis+1);
+
+  if (status == asynSuccess) {
     debug(DEBUG_VARIABLE, functionName, "Resolution", resolution);
     debug(DEBUG_VARIABLE, functionName, "Offset", offset);
 
@@ -4468,6 +4413,3 @@ epicsRegisterFunction(pmacSetOpenLoopEncoderAxis);
 epicsRegisterFunction(pmacDebug);
 #endif
 } // extern "C"
-
-
-#pragma clang diagnostic pop

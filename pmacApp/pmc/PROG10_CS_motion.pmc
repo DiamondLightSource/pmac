@@ -33,7 +33,7 @@ CLOSE
 ;The following are set by the motor record:
 ;Isx87 = Acceleration
 ;Isx88 = S curve
-;Isx89 = Feedrate
+;Isx89 = Feedrate : no longer used since always do timed moves now
 
 ; Set some defaults for all CS axes
 i5213,15,100=10   ; segmentation time (needed for lookahead)
@@ -45,12 +45,10 @@ CLEAR
 LINEAR
 ABS
 FRAX(A,B,C,U,V,W,X,Y,Z)
-; Q70 is used to set the move time. If it is -1 then then the default CS move time Isx89 is used
-; instead. The pmac driver sets Isx89 based on the highest numbered CS axis' VELO field.
-; The pmac driver sets Q70 based on the PV $(P):$(CS):CsMoveTime
-If(Q70 > -1)
-    TM(Q70)
-EndIf
+; Q70 is used to set the move time.
+; The pmac driver sets Q70 based on the PV $(P):$(CS):CsMoveTime for deferred moves
+; and based on the motor record velocity (and move distance) for individual cs motor moves
+TM(Q70)
 A(Q71)B(Q72)C(Q73)U(Q74)V(Q75)W(Q76)X(Q77)Y(Q78)Z(Q79)
 DWELL0
 CLOSE

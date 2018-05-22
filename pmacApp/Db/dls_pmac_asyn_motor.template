@@ -1,17 +1,27 @@
 # % macro, PMAC, The P prefix for the motor controller (must match P in pmacController.template)
 
-include "basic_asyn_motor.template"
-include "eloss_kill_autohome_records.template"
+# this template defines a motor with two names:-
+# (1) root is $(P)$(M), the macros fully define the name of the motor
+# (2) 'numbered' names of the form $(PMAC):Mx where x is the motor number
+# names are both assigned to the same PV via aliases in the case basic_asyn_motor
+# or simply duplicated for all other included templates, this approach works because
+# the PVs all point to the same ASYN parameters and improves maintainability of this
+# file
 
-# add standard motor name aliases for all above PVs
+# include motor record from the motor module
+include "basic_asyn_motor.template"
+
+# numbered name aliases for all PVs in basic_asyn_motor.template
 alias($(P)$(M), $(PMAC):M$(ADDR))
 alias($(P)$(M):ADDR, $(PMAC):M$(ADDR):ADDR)
 alias($(P)$(M):PORT, $(PMAC):M$(ADDR):PORT)
+alias($(P)$(M):SCALE, $(PMAC):M$(ADDR):SCALE)
 alias($(P)$(M):USER:SDIS, $(PMAC)M$(ADDR):USER:SDIS)
 alias($(P)$(M):SDIS, $(PMAC):M$(ADDR):SDIS)
 alias($(P)$(M):KILL, $(PMAC):M$(ADDR):KILL)
 alias($(P)$(M):ELOSS, $(PMAC):M$(ADDR):ELOSS)
 alias($(P)$(M):ELOSSRC, $(PMAC):M$(ADDR):ELOSSRC)
+alias($(P)$(M):MR_MOVE_WRITE, $(PMAC):M$(ADDR):MR_MOVE_WRITE)
 alias($(P)$(M):CHECK_SYNC, $(PMAC):M$(ADDR):CHECK_SYNC)
 alias($(P)$(M):FERROR, $(PMAC):M$(ADDR):FERROR)
 alias($(P)$(M):FERRORMAX, $(PMAC):M$(ADDR):FERRORMAX)
@@ -19,5 +29,14 @@ alias($(P)$(M):FEMAXRESET, $(PMAC):M$(ADDR):FEMAXRESET)
 alias($(P)$(M):HOMEVIS, $(PMAC):M$(ADDR):HOMEVIS)
 alias($(P)$(M):HOMEVISSTR, $(PMAC):M$(ADDR):HOMEVISSTR)
 
-substitute "M=M$(ADDR)"
+
+include "motor_in_cs.template"
+include "eloss_kill_autohome_records.template"
+include "pmacDirectMotor.template"
+
+
+# add numbered name aliases for above 3 templates
+substitute "P=$(PMAC):, M=M$(ADDR)"
+include "motor_in_cs.template"
+include "eloss_kill_autohome_records.template"
 include "pmacDirectMotor.template"

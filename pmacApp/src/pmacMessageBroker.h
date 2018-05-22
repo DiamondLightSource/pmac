@@ -9,6 +9,7 @@
 #define PMACAPP_SRC_PMACMESSAGEBROKER_H_
 
 #include "asynDriver.h"
+#include "asynPortDriver.h"
 #include "asynOctet.h"
 #include "asynOctetSyncIO.h"
 #include "epicsTime.h"
@@ -45,6 +46,8 @@ public:
     asynStatus reinstateStatusReads();
 
     asynStatus registerForUpdates(pmacCallbackInterface *cbPtr, int type);
+
+    asynStatus registerForLocks(asynPortDriver *lockPtr);
 
     double readUpdateTime();
 
@@ -94,6 +97,7 @@ private:
     pmacCallbackStore *slowCallbacks_;
     pmacCallbackStore *mediumCallbacks_;
     pmacCallbackStore *fastCallbacks_;
+    asynPortDriver **locks;
 
     // Recording of statistics
     int noOfMessages_;
@@ -109,6 +113,9 @@ private:
 
     // Update time in ms
     double updateTime_;
+
+    // number of registered locks
+    int lock_count;
 
     static const epicsUInt32 PMAC_MAXBUF_;
     static const epicsFloat64 PMAC_TIMEOUT_;

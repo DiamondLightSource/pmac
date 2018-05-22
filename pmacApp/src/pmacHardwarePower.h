@@ -31,7 +31,9 @@ public:
 
     asynStatus parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus);
 
-    std::string getCSVelocityCmd(int csNo, double velocity);
+    std::string getCSVelocityCmd(int csNo, double velocity, double steps);
+
+    std::string getCSAccTimeCmd(int csNo, double time);
 
 private:
     static const std::string GLOBAL_STATUS;
@@ -39,6 +41,7 @@ private:
     static const std::string AXIS_CS_NUMBER;
     static const std::string CS_STATUS;
     static const std::string CS_VEL_CMD;
+    static const std::string CS_ACCELERATION_CMD;
 
     static const int PMAC_STATUS1_TRIGGER_MOVE;
     static const int PMAC_STATUS1_HOMING;

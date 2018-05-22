@@ -1,0 +1,855 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 779
+y 256
+w 423
+h 518
+font "arial-bold-r-12.0"
+ctlFont "arial-bold-r-12.0"
+btnFont "arial-bold-r-12.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 25
+ctlBgColor1 index 3
+ctlBgColor2 index 3
+topShadowColor index 1
+botShadowColor index 11
+showGrid
+snapToGrid
+gridSize 5
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 40
+w 410
+h 45
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 170
+w 410
+h 310
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 165
+w 65
+h 13
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 8
+value {
+  "  Axis status"
+}
+autoSize
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 140
+y 180
+w 60
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Mres"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 170
+y 180
+w 190
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Offset"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 20
+y 180
+w 120
+h 20
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Direct Demand"
+}
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 230
+w 310
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 230
+w 310
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacCsAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacCsAxis.edl"
+}
+symbols {
+  0 "axis=2"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "2"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 260
+w 310
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 260
+w 310
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacCsAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacCsAxis.edl"
+}
+symbols {
+  0 "axis=3"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "3"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 290
+w 310
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 290
+w 310
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacCsAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacCsAxis.edl"
+}
+symbols {
+  0 "axis=4"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "4"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 320
+w 310
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 320
+w 310
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacCsAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacCsAxis.edl"
+}
+symbols {
+  0 "axis=5"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "5"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 350
+w 310
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 350
+w 310
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacCsAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacCsAxis.edl"
+}
+symbols {
+  0 "axis=6"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "6"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 380
+w 310
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 380
+w 310
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacCsAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacCsAxis.edl"
+}
+symbols {
+  0 "axis=7"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "7"
+visMax "100"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 410
+w 310
+h 25
+
+beginGroup
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 410
+w 310
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacCsAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacCsAxis.edl"
+}
+symbols {
+  0 "axis=8"
+}
+noScroll
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):NAXES"
+visMin "8"
+visMax "100"
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 200
+w 310
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacCsAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacCsAxis.edl"
+}
+symbols {
+  0 "axis=1"
+}
+noScroll
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 100
+w 200
+h 55
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Choice Button)
+object activeChoiceButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 120
+w 190
+h 20
+fgColor index 25
+bgColor index 5
+selectColor index 5
+inconsistentColor index 5
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):CS$(CS):DeferMoves"
+indicatorPv "$(pmac):CS$(CS):DeferMoves"
+font "helvetica-bold-r-14.0"
+orientation "horizontal"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 95
+w 95
+h 13
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 8
+value {
+  "  Deferred move  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 215
+y 100
+w 200
+h 55
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 225
+y 95
+w 101
+h 13
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 8
+value {
+  "  Move Time (ms)  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 230
+y 120
+w 83
+h 20
+controlPv "$(pmac):CS$(CS):CsMoveTime"
+displayMode "decimal"
+precision 3
+fgColor index 25
+bgColor index 3
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 330
+y 120
+w 76
+h 20
+controlPv "$(pmac):CS$(CS):CsMoveTime_RBV"
+displayMode "decimal"
+precision 3
+fgColor index 15
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 305
+y 490
+w 110
+h 25
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "EXIT"
+font "arial-medium-r-18.0"
+3d
+endObjectProperties
+
+# (Embedded Window)
+object activePipClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 15
+y 440
+w 310
+h 25
+fgColor index 14
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+displaySource "menu"
+filePv "LOC\\dummy:i=0"
+file "pmacCsAxis"
+center
+sizeOfs 5
+numDsps 1
+displayFileName {
+  0 "pmacCsAxis.edl"
+}
+symbols {
+  0 "axis=9"
+}
+noScroll
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 225
+y 50
+w 180
+h 25
+fgColor index 21
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "BRICK1CS3:Y.STOP"
+pressValue "1"
+onLabel "Abort Motion"
+offLabel "Abort Motion"
+3d
+font "arial-bold-r-14.0"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 5
+w 410
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 5
+w 410
+h 31
+lineColor index 3
+fill
+fillColor index 3
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 5
+y 8
+w 410
+h 25
+lineColor index 11
+fillColor index 0
+numPoints 3
+xPoints {
+  0 5
+  1 415
+  2 415
+}
+yPoints {
+  0 33
+  1 33
+  2 8
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 8
+w 410
+h 25
+font "arial-bold-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 48
+value {
+  "Coordintate System $(CS) on $(pmac)"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 5
+y 8
+w 410
+h 25
+lineColor index 1
+fillColor index 0
+numPoints 3
+xPoints {
+  0 5
+  1 5
+  2 415
+}
+yPoints {
+  0 33
+  1 8
+  2 8
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 90
+y 53
+w 115
+h 20
+controlPv "$(pmac):CS$(CS):Port"
+displayMode "decimal"
+precision 2
+fgColor index 15
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 15
+y 53
+w 105
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Port Name"
+}
+endObjectProperties
+
