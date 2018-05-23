@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 356
-y 287
+x 1211
+y 591
 w 300
 h 20
 font "arial-bold-r-12.0"
@@ -35,8 +35,6 @@ y 0
 w 85
 h 20
 controlPv "$(pmac):CS$(CS):M$(axis):Mres"
-displayMode "decimal"
-precision 6
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -72,12 +70,11 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 220
+x 215
 y 0
-w 70
+w 80
 h 20
 controlPv "$(pmac):CS$(CS):M$(axis):Offset"
-displayMode "decimal"
 fgColor index 16
 fgAlarm
 bgColor index 10

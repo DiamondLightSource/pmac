@@ -17,6 +17,7 @@
 # % macro, ADDR, The asyn address (real or CS axis number)
 # % macro, DESC, Description
 # % macro, PMAC, PV Prefix for the motor controller
+# % macro, P, PV Prefix for direct motors
 # % macro, M, Motor PV suffix ('Mx' for real and 'CSx:My' for CS axes)
 
 ##############################################################
@@ -25,6 +26,7 @@
 record(ao, "$(P)$(M):DirectDemand")
 {
     field(FLNK, "$(P)$(M):DirectCountsCalc.PROC")
+    field(PREC, 4)
 }
 
 record(scalcout, "$(P)$(M):DirectCountsCalc")
@@ -121,6 +123,7 @@ record(scalcout, "$(P)$(M):Mres")
     field(VAL, 1)
     field(PINI, "YES")
     field(OUT,  "$(P)$(M):MresDrv PP")
+    field(PREC, 6)
 }
 
 record(ao,"$(P)$(M):MresDrv") {
@@ -144,6 +147,7 @@ record(scalcout, $(P)$(M):Offset)
     field(CALC, "A")
     field(PINI, "YES")
     field(OUT,  "$(P)$(M):OffsetDrv PP")
+    field(PREC, 4)
 }
 
 
