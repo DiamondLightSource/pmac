@@ -144,11 +144,11 @@ def trajectory_scan_appending(test, test_brick):
         tr.axisX.positions = ascend
         tr.configure_axes()
         tr.AppendPoints()
-        Sleep(1)
+        Sleep(.3)
         tr.axisX.positions = descend
         tr.configure_axes()
         tr.AppendPoints()
-        Sleep(1)
+        Sleep(.3)
 
     start = datetime.now()
     while not tr.execute_done:
