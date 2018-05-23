@@ -125,8 +125,8 @@ def trajectory_scan_appending(test, test_brick):
 
     tr.axisX.positions = ascend
 
-    is_clipper = buff_len < 1000
-    time_period = 3000 if is_clipper else 2000
+    is_clipper = True  # don't have a good test for this (was  is_clipper = buff_len < 1000)
+    time_period = 5000 if is_clipper else 2000
     # each point takes 2 milli sec for brick and 3 for clipper
     times = [time_period] * points
 
@@ -144,11 +144,11 @@ def trajectory_scan_appending(test, test_brick):
         tr.axisX.positions = ascend
         tr.configure_axes()
         tr.AppendPoints()
-        Sleep(.3)
+        Sleep(1)
         tr.axisX.positions = descend
         tr.configure_axes()
         tr.AppendPoints()
-        Sleep(.3)
+        Sleep(1)
 
     start = datetime.now()
     while not tr.execute_done:
