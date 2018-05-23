@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 29
-y 408
+x 103
+y 69
 w 890
-h 535
+h 565
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
 btnFont "arial-bold-r-12.0"
@@ -31,7 +31,7 @@ major 4
 minor 0
 release 0
 x 10
-y 130
+y 160
 w 430
 h 125
 lineColor index 14
@@ -46,8 +46,8 @@ major 4
 minor 1
 release 1
 x 10
-y 125
-w 141
+y 155
+w 153
 h 12
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -66,7 +66,7 @@ major 4
 minor 1
 release 1
 x 125
-y 200
+y 230
 w 40
 h 20
 font "helvetica-medium-r-10.0"
@@ -85,7 +85,7 @@ major 10
 minor 0
 release 0
 x 320
-y 200
+y 230
 w 115
 h 20
 controlPv "$(pmac):ProfileBuildState_RBV"
@@ -104,7 +104,7 @@ major 10
 minor 0
 release 0
 x 15
-y 225
+y 255
 w 420
 h 20
 controlPv "$(pmac):ProfileBuildMessage_RBV"
@@ -123,7 +123,7 @@ major 4
 minor 1
 release 1
 x 285
-y 200
+y 230
 w 35
 h 20
 font "helvetica-medium-r-10.0"
@@ -142,7 +142,7 @@ major 10
 minor 0
 release 0
 x 165
-y 200
+y 230
 w 115
 h 20
 controlPv "$(pmac):ProfileBuildStatus_RBV"
@@ -161,7 +161,7 @@ major 4
 minor 0
 release 0
 x 10
-y 355
+y 385
 w 430
 h 70
 lineColor index 14
@@ -176,8 +176,8 @@ major 4
 minor 1
 release 1
 x 10
-y 350
-w 165
+y 380
+w 175
 h 12
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -196,7 +196,7 @@ major 4
 minor 1
 release 1
 x 125
-y 370
+y 400
 w 45
 h 20
 font "helvetica-medium-r-10.0"
@@ -215,7 +215,7 @@ major 10
 minor 0
 release 0
 x 320
-y 370
+y 400
 w 115
 h 20
 controlPv "$(pmac):ProfileExecuteState_RBV"
@@ -234,7 +234,7 @@ major 10
 minor 0
 release 0
 x 15
-y 395
+y 425
 w 420
 h 20
 controlPv "$(pmac):ProfileExecuteMessage_RBV"
@@ -253,7 +253,7 @@ major 4
 minor 1
 release 1
 x 285
-y 370
+y 400
 w 35
 h 20
 font "helvetica-medium-r-10.0"
@@ -272,7 +272,7 @@ major 10
 minor 0
 release 0
 x 170
-y 370
+y 400
 w 110
 h 20
 controlPv "$(pmac):ProfileExecuteStatus_RBV"
@@ -291,7 +291,7 @@ major 4
 minor 1
 release 0
 x 350
-y 445
+y 475
 w 90
 h 45
 fgColor index 21
@@ -315,7 +315,7 @@ major 4
 minor 1
 release 1
 x 10
-y 445
+y 475
 w 325
 h 45
 indicatorColor index 25
@@ -338,8 +338,8 @@ major 4
 minor 1
 release 1
 x 10
-y 435
-w 169
+y 465
+w 178
 h 12
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -358,7 +358,7 @@ major 4
 minor 1
 release 0
 x 15
-y 200
+y 230
 w 105
 h 20
 fgColor index 25
@@ -382,7 +382,7 @@ major 4
 minor 1
 release 0
 x 15
-y 370
+y 400
 w 105
 h 20
 fgColor index 25
@@ -406,7 +406,7 @@ major 4
 minor 0
 release 0
 x 10
-y 70
+y 100
 w 430
 h 45
 lineColor index 14
@@ -421,8 +421,8 @@ major 4
 minor 1
 release 1
 x 10
-y 65
-w 146
+y 95
+w 150
 h 12
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -441,7 +441,7 @@ major 10
 minor 0
 release 0
 x 205
-y 85
+y 115
 w 100
 h 20
 controlPv "$(pmac):ProfileCsName_RBV"
@@ -461,7 +461,7 @@ major 4
 minor 0
 release 0
 x 455
-y 10
+y 40
 w 430
 h 265
 lineColor index 14
@@ -476,7 +476,7 @@ major 4
 minor 1
 release 1
 x 760
-y 20
+y 50
 w 95
 h 20
 font "helvetica-bold-r-12.0"
@@ -496,7 +496,7 @@ major 4
 minor 1
 release 1
 x 645
-y 20
+y 50
 w 95
 h 20
 font "helvetica-bold-r-12.0"
@@ -516,7 +516,7 @@ major 4
 minor 1
 release 1
 x 530
-y 20
+y 50
 w 95
 h 20
 font "helvetica-bold-r-12.0"
@@ -536,8 +536,8 @@ major 4
 minor 1
 release 1
 x 455
-y 5
-w 170
+y 35
+w 182
 h 12
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -556,7 +556,7 @@ major 10
 minor 0
 release 0
 x 340
-y 140
+y 170
 w 95
 h 20
 controlPv "$(pmac):ProfileNumPoints_RBV"
@@ -576,7 +576,7 @@ major 10
 minor 0
 release 0
 x 240
-y 140
+y 170
 w 90
 h 20
 controlPv "$(pmac):ProfileNumPoints"
@@ -595,7 +595,7 @@ major 4
 minor 1
 release 1
 x 15
-y 140
+y 170
 w 215
 h 20
 font "helvetica-bold-r-12.0"
@@ -614,7 +614,7 @@ major 4
 minor 0
 release 0
 x 530
-y 45
+y 75
 w 95
 h 20
 fgColor index 14
@@ -634,7 +634,7 @@ major 10
 minor 0
 release 0
 x 760
-y 45
+y 75
 w 95
 h 20
 controlPv "$(pmac):A:Positions.NELM"
@@ -654,7 +654,7 @@ major 10
 minor 0
 release 0
 x 645
-y 45
+y 75
 w 95
 h 20
 controlPv "$(pmac):A:NoOfPts"
@@ -674,7 +674,7 @@ major 4
 minor 1
 release 1
 x 470
-y 45
+y 75
 w 55
 h 20
 font "helvetica-bold-r-12.0"
@@ -693,7 +693,7 @@ major 4
 minor 0
 release 0
 x 530
-y 70
+y 100
 w 95
 h 20
 fgColor index 14
@@ -713,7 +713,7 @@ major 10
 minor 0
 release 0
 x 760
-y 70
+y 100
 w 95
 h 20
 controlPv "$(pmac):B:Positions.NELM"
@@ -733,7 +733,7 @@ major 10
 minor 0
 release 0
 x 645
-y 70
+y 100
 w 95
 h 20
 controlPv "$(pmac):B:NoOfPts"
@@ -753,7 +753,7 @@ major 4
 minor 1
 release 1
 x 470
-y 70
+y 100
 w 55
 h 20
 font "helvetica-bold-r-12.0"
@@ -772,7 +772,7 @@ major 4
 minor 0
 release 0
 x 530
-y 95
+y 125
 w 95
 h 20
 fgColor index 14
@@ -792,7 +792,7 @@ major 10
 minor 0
 release 0
 x 760
-y 95
+y 125
 w 95
 h 20
 controlPv "$(pmac):C:Positions.NELM"
@@ -812,7 +812,7 @@ major 10
 minor 0
 release 0
 x 645
-y 95
+y 125
 w 95
 h 20
 controlPv "$(pmac):C:NoOfPts"
@@ -832,7 +832,7 @@ major 4
 minor 1
 release 1
 x 470
-y 95
+y 125
 w 55
 h 20
 font "helvetica-bold-r-12.0"
@@ -851,7 +851,7 @@ major 4
 minor 0
 release 0
 x 530
-y 120
+y 150
 w 95
 h 20
 fgColor index 14
@@ -871,7 +871,7 @@ major 10
 minor 0
 release 0
 x 760
-y 120
+y 150
 w 95
 h 20
 controlPv "$(pmac):U:Positions.NELM"
@@ -891,7 +891,7 @@ major 10
 minor 0
 release 0
 x 645
-y 120
+y 150
 w 95
 h 20
 controlPv "$(pmac):U:NoOfPts"
@@ -911,7 +911,7 @@ major 4
 minor 1
 release 1
 x 470
-y 120
+y 150
 w 55
 h 20
 font "helvetica-bold-r-12.0"
@@ -930,7 +930,7 @@ major 4
 minor 0
 release 0
 x 530
-y 145
+y 175
 w 95
 h 20
 fgColor index 14
@@ -950,7 +950,7 @@ major 10
 minor 0
 release 0
 x 760
-y 145
+y 175
 w 95
 h 20
 controlPv "$(pmac):V:Positions.NELM"
@@ -970,7 +970,7 @@ major 10
 minor 0
 release 0
 x 645
-y 145
+y 175
 w 95
 h 20
 controlPv "$(pmac):V:NoOfPts"
@@ -990,7 +990,7 @@ major 4
 minor 1
 release 1
 x 470
-y 145
+y 175
 w 55
 h 20
 font "helvetica-bold-r-12.0"
@@ -1009,7 +1009,7 @@ major 4
 minor 0
 release 0
 x 530
-y 170
+y 200
 w 95
 h 20
 fgColor index 14
@@ -1029,7 +1029,7 @@ major 10
 minor 0
 release 0
 x 760
-y 170
+y 200
 w 95
 h 20
 controlPv "$(pmac):W:Positions.NELM"
@@ -1049,7 +1049,7 @@ major 10
 minor 0
 release 0
 x 645
-y 170
+y 200
 w 95
 h 20
 controlPv "$(pmac):W:NoOfPts"
@@ -1069,7 +1069,7 @@ major 4
 minor 1
 release 1
 x 470
-y 170
+y 200
 w 55
 h 20
 font "helvetica-bold-r-12.0"
@@ -1088,7 +1088,7 @@ major 4
 minor 0
 release 0
 x 530
-y 195
+y 225
 w 95
 h 20
 fgColor index 14
@@ -1108,7 +1108,7 @@ major 10
 minor 0
 release 0
 x 760
-y 195
+y 225
 w 95
 h 20
 controlPv "$(pmac):X:Positions.NELM"
@@ -1128,7 +1128,7 @@ major 10
 minor 0
 release 0
 x 645
-y 195
+y 225
 w 95
 h 20
 controlPv "$(pmac):X:NoOfPts"
@@ -1148,7 +1148,7 @@ major 4
 minor 1
 release 1
 x 470
-y 195
+y 225
 w 55
 h 20
 font "helvetica-bold-r-12.0"
@@ -1167,7 +1167,7 @@ major 4
 minor 0
 release 0
 x 530
-y 220
+y 250
 w 95
 h 20
 fgColor index 14
@@ -1187,7 +1187,7 @@ major 10
 minor 0
 release 0
 x 760
-y 220
+y 250
 w 95
 h 20
 controlPv "$(pmac):Y:Positions.NELM"
@@ -1207,7 +1207,7 @@ major 10
 minor 0
 release 0
 x 645
-y 220
+y 250
 w 95
 h 20
 controlPv "$(pmac):Y:NoOfPts"
@@ -1227,7 +1227,7 @@ major 4
 minor 1
 release 1
 x 470
-y 220
+y 250
 w 55
 h 20
 font "helvetica-bold-r-12.0"
@@ -1246,7 +1246,7 @@ major 4
 minor 0
 release 0
 x 530
-y 245
+y 275
 w 95
 h 20
 fgColor index 14
@@ -1266,7 +1266,7 @@ major 10
 minor 0
 release 0
 x 760
-y 245
+y 275
 w 95
 h 20
 controlPv "$(pmac):Z:Positions.NELM"
@@ -1286,7 +1286,7 @@ major 10
 minor 0
 release 0
 x 645
-y 245
+y 275
 w 95
 h 20
 controlPv "$(pmac):Z:NoOfPts"
@@ -1306,7 +1306,7 @@ major 4
 minor 1
 release 1
 x 470
-y 245
+y 275
 w 55
 h 20
 font "helvetica-bold-r-12.0"
@@ -1325,7 +1325,7 @@ major 4
 minor 1
 release 0
 x 755
-y 500
+y 530
 w 130
 h 25
 fgColor index 46
@@ -1344,7 +1344,7 @@ major 4
 minor 0
 release 0
 x 85
-y 85
+y 115
 w 110
 h 20
 fgColor index 14
@@ -1364,7 +1364,7 @@ major 4
 minor 0
 release 0
 x 10
-y 10
+y 40
 w 430
 h 45
 lineColor index 14
@@ -1379,8 +1379,8 @@ major 4
 minor 1
 release 1
 x 10
-y 5
-w 104
+y 35
+w 108
 h 12
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -1399,7 +1399,7 @@ major 10
 minor 0
 release 0
 x 120
-y 25
+y 55
 w 80
 h 20
 controlPv "$(pmac):DriverVersion_RBV"
@@ -1420,7 +1420,7 @@ major 4
 minor 1
 release 1
 x 15
-y 25
+y 55
 w 105
 h 20
 font "helvetica-bold-r-12.0"
@@ -1439,7 +1439,7 @@ major 10
 minor 0
 release 0
 x 345
-y 25
+y 55
 w 80
 h 20
 controlPv "$(pmac):ProgramVersion_RBV"
@@ -1460,7 +1460,7 @@ major 4
 minor 1
 release 1
 x 240
-y 25
+y 55
 w 105
 h 20
 font "helvetica-bold-r-12.0"
@@ -1479,7 +1479,7 @@ major 4
 minor 0
 release 0
 x 10
-y 270
+y 300
 w 430
 h 70
 lineColor index 14
@@ -1494,8 +1494,8 @@ major 4
 minor 1
 release 1
 x 10
-y 265
-w 155
+y 295
+w 163
 h 12
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -1514,7 +1514,7 @@ major 4
 minor 1
 release 1
 x 125
-y 285
+y 315
 w 40
 h 20
 font "helvetica-medium-r-10.0"
@@ -1533,7 +1533,7 @@ major 10
 minor 0
 release 0
 x 320
-y 285
+y 315
 w 115
 h 20
 controlPv "$(pmac):ProfileAppendState_RBV"
@@ -1552,7 +1552,7 @@ major 10
 minor 0
 release 0
 x 15
-y 310
+y 340
 w 420
 h 20
 controlPv "$(pmac):ProfileAppendMessage_RBV"
@@ -1571,7 +1571,7 @@ major 4
 minor 1
 release 1
 x 285
-y 285
+y 315
 w 35
 h 20
 font "helvetica-medium-r-10.0"
@@ -1590,7 +1590,7 @@ major 10
 minor 0
 release 0
 x 165
-y 285
+y 315
 w 115
 h 20
 controlPv "$(pmac):ProfileAppendStatus_RBV"
@@ -1609,7 +1609,7 @@ major 4
 minor 1
 release 0
 x 15
-y 285
+y 315
 w 105
 h 20
 fgColor index 25
@@ -1633,7 +1633,7 @@ major 10
 minor 0
 release 0
 x 335
-y 170
+y 200
 w 100
 h 20
 controlPv "$(pmac):ProfilePointsToBuild_RBV"
@@ -1653,7 +1653,7 @@ major 10
 minor 0
 release 0
 x 240
-y 170
+y 200
 w 85
 h 20
 controlPv "$(pmac):ProfilePointsToBuild"
@@ -1672,7 +1672,7 @@ major 4
 minor 1
 release 1
 x 15
-y 170
+y 200
 w 255
 h 20
 font "helvetica-bold-r-12.0"
@@ -1691,7 +1691,7 @@ major 4
 minor 0
 release 0
 x 455
-y 290
+y 320
 w 210
 h 200
 
@@ -1704,7 +1704,7 @@ major 4
 minor 0
 release 0
 x 455
-y 295
+y 325
 w 210
 h 195
 lineColor index 14
@@ -1719,8 +1719,8 @@ major 4
 minor 1
 release 1
 x 455
-y 290
-w 150
+y 320
+w 161
 h 12
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -1739,7 +1739,7 @@ major 10
 minor 0
 release 0
 x 585
-y 310
+y 340
 w 75
 h 20
 controlPv "$(pmac):BufferAAddress_RBV"
@@ -1759,7 +1759,7 @@ major 10
 minor 0
 release 0
 x 585
-y 335
+y 365
 w 75
 h 20
 controlPv "$(pmac):BufferBAddress_RBV"
@@ -1779,7 +1779,7 @@ major 4
 minor 1
 release 1
 x 460
-y 310
+y 340
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -1798,7 +1798,7 @@ major 4
 minor 1
 release 1
 x 460
-y 335
+y 365
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -1817,7 +1817,7 @@ major 10
 minor 0
 release 0
 x 585
-y 360
+y 390
 w 75
 h 20
 controlPv "$(pmac):BufferLength_RBV"
@@ -1837,7 +1837,7 @@ major 4
 minor 1
 release 1
 x 460
-y 360
+y 390
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -1856,7 +1856,7 @@ major 10
 minor 0
 release 0
 x 585
-y 385
+y 415
 w 75
 h 20
 controlPv "$(pmac):CurrentBuffer_RBV"
@@ -1876,7 +1876,7 @@ major 10
 minor 0
 release 0
 x 585
-y 410
+y 440
 w 75
 h 20
 controlPv "$(pmac):CurrentIndex_RBV"
@@ -1896,7 +1896,7 @@ major 4
 minor 1
 release 1
 x 460
-y 385
+y 415
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -1915,7 +1915,7 @@ major 4
 minor 1
 release 1
 x 460
-y 410
+y 440
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -1934,7 +1934,7 @@ major 10
 minor 0
 release 0
 x 585
-y 435
+y 465
 w 75
 h 20
 controlPv "$(pmac):TotalPoints_RBV"
@@ -1954,7 +1954,7 @@ major 4
 minor 1
 release 1
 x 460
-y 435
+y 465
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -1973,7 +1973,7 @@ major 10
 minor 0
 release 0
 x 585
-y 460
+y 490
 w 75
 h 20
 controlPv "$(pmac):TrajectoryStatus_RBV"
@@ -1993,7 +1993,7 @@ major 4
 minor 1
 release 1
 x 460
-y 460
+y 490
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2016,7 +2016,7 @@ major 4
 minor 0
 release 0
 x 675
-y 295
+y 325
 w 210
 h 195
 lineColor index 14
@@ -2031,8 +2031,8 @@ major 4
 minor 1
 release 1
 x 675
-y 290
-w 109
+y 320
+w 116
 h 12
 font "helvetica-medium-r-10.0"
 fgColor index 14
@@ -2051,7 +2051,7 @@ major 10
 minor 0
 release 0
 x 805
-y 310
+y 340
 w 75
 h 20
 controlPv "$(pmac):EpicsBufferAPtr_RBV"
@@ -2071,7 +2071,7 @@ major 4
 minor 1
 release 1
 x 680
-y 310
+y 340
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2090,7 +2090,7 @@ major 4
 minor 1
 release 1
 x 680
-y 335
+y 365
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2109,7 +2109,7 @@ major 4
 minor 1
 release 1
 x 680
-y 360
+y 390
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2128,7 +2128,7 @@ major 10
 minor 0
 release 0
 x 805
-y 385
+y 415
 w 75
 h 20
 controlPv "$(pmac):TscanTime_RBV"
@@ -2149,7 +2149,7 @@ major 10
 minor 0
 release 0
 x 805
-y 410
+y 440
 w 75
 h 20
 controlPv "$(pmac):TscanCs_RBV"
@@ -2169,7 +2169,7 @@ major 4
 minor 1
 release 1
 x 680
-y 385
+y 415
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2188,7 +2188,7 @@ major 4
 minor 1
 release 1
 x 680
-y 410
+y 440
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2207,7 +2207,7 @@ major 10
 minor 0
 release 0
 x 805
-y 435
+y 465
 w 75
 h 20
 controlPv "$(pmac):TscanPercent_RBV"
@@ -2228,7 +2228,7 @@ major 4
 minor 1
 release 1
 x 680
-y 435
+y 465
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2247,7 +2247,7 @@ major 4
 minor 1
 release 1
 x 680
-y 460
+y 490
 w 125
 h 20
 font "helvetica-medium-r-10.0"
@@ -2266,7 +2266,7 @@ major 10
 minor 0
 release 0
 x 805
-y 335
+y 365
 w 75
 h 20
 controlPv "$(pmac):EpicsBufferBPtr_RBV"
@@ -2286,7 +2286,7 @@ major 10
 minor 0
 release 0
 x 805
-y 460
+y 490
 w 75
 h 20
 controlPv "$(pmac):TscanExtStatus_RBV"
@@ -2306,7 +2306,7 @@ major 10
 minor 0
 release 0
 x 805
-y 360
+y 390
 w 75
 h 20
 controlPv "$(pmac):ProfilePointsBuilt_RBV"
@@ -2317,5 +2317,106 @@ bgColor index 10
 fill
 font "helvetica-medium-r-14.0"
 fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 895
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x -10
+y 0
+w 895
+h 31
+lineColor index 3
+fill
+fillColor index 3
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x -10
+y 3
+w 895
+h 25
+lineColor index 11
+fillColor index 0
+numPoints 3
+xPoints {
+  0 -10
+  1 885
+  2 885
+}
+yPoints {
+  0 28
+  1 28
+  2 3
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x -10
+y 3
+w 895
+h 25
+font "arial-bold-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 48
+value {
+  "Trajectory Scans - $(pmac)"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x -10
+y 3
+w 895
+h 25
+lineColor index 1
+fillColor index 0
+numPoints 3
+xPoints {
+  0 -10
+  1 -10
+  2 885
+}
+yPoints {
+  0 28
+  1 3
+  2 3
+}
+endObjectProperties
+
+endGroup
+
 endObjectProperties
 

@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 910
-y 63
+x 1028
+y 37
 w 851
-h 345
+h 377
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
 btnFont "arial-bold-r-12.0"
@@ -31,9 +31,9 @@ major 4
 minor 0
 release 0
 x 0
-y 0
+y 30
 w 850
-h 340
+h 345
 lineColor index 5
 fill
 fillColor index 5
@@ -46,7 +46,7 @@ major 4
 minor 0
 release 0
 x 430
-y 15
+y 50
 w 410
 h 230
 lineColor index 14
@@ -61,7 +61,7 @@ major 4
 minor 0
 release 0
 x 10
-y 15
+y 50
 w 410
 h 320
 lineColor index 14
@@ -76,9 +76,9 @@ major 4
 minor 1
 release 1
 x 10
-y 10
-w 187
-h 16
+y 45
+w 193
+h 18
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 5
@@ -96,7 +96,7 @@ major 10
 minor 0
 release 0
 x 290
-y 30
+y 65
 w 105
 h 20
 controlPv "$(pmac):STAT_MSG_NO_RBV"
@@ -116,7 +116,7 @@ major 10
 minor 0
 release 0
 x 290
-y 55
+y 90
 w 105
 h 20
 controlPv "$(pmac):STAT_MSG_WRITE_RBV"
@@ -136,7 +136,7 @@ major 4
 minor 1
 release 1
 x 15
-y 30
+y 65
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -155,7 +155,7 @@ major 4
 minor 1
 release 1
 x 15
-y 55
+y 90
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -174,7 +174,7 @@ major 10
 minor 0
 release 0
 x 290
-y 80
+y 115
 w 105
 h 20
 controlPv "$(pmac):STAT_MSG_READ_RBV"
@@ -194,7 +194,7 @@ major 4
 minor 1
 release 1
 x 15
-y 80
+y 115
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -213,7 +213,7 @@ major 10
 minor 0
 release 0
 x 290
-y 105
+y 140
 w 105
 h 20
 controlPv "$(pmac):STAT_MSG_TIME_RBV"
@@ -233,7 +233,7 @@ major 10
 minor 0
 release 0
 x 290
-y 130
+y 165
 w 105
 h 20
 controlPv "$(pmac):STAT_MAX_WRITE_RBV"
@@ -253,7 +253,7 @@ major 4
 minor 1
 release 1
 x 15
-y 105
+y 140
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -272,7 +272,7 @@ major 4
 minor 1
 release 1
 x 15
-y 130
+y 165
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -291,7 +291,7 @@ major 10
 minor 0
 release 0
 x 290
-y 155
+y 190
 w 105
 h 20
 controlPv "$(pmac):STAT_MAX_READ_RBV"
@@ -311,7 +311,7 @@ major 4
 minor 1
 release 1
 x 15
-y 155
+y 190
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -330,7 +330,7 @@ major 10
 minor 0
 release 0
 x 290
-y 180
+y 215
 w 105
 h 20
 controlPv "$(pmac):STAT_MAX_TIME_RBV"
@@ -350,7 +350,7 @@ major 4
 minor 1
 release 1
 x 15
-y 180
+y 215
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -369,7 +369,7 @@ major 10
 minor 0
 release 0
 x 290
-y 205
+y 240
 w 105
 h 20
 controlPv "$(pmac):STAT_AVE_WRITE_RBV"
@@ -389,7 +389,7 @@ major 10
 minor 0
 release 0
 x 290
-y 230
+y 265
 w 105
 h 20
 controlPv "$(pmac):STAT_AVE_READ_RBV"
@@ -409,7 +409,7 @@ major 10
 minor 0
 release 0
 x 290
-y 255
+y 290
 w 105
 h 20
 controlPv "$(pmac):STAT_AVE_TIME_RBV"
@@ -429,7 +429,7 @@ major 10
 minor 0
 release 0
 x 290
-y 280
+y 315
 w 105
 h 20
 controlPv "$(pmac):STAT_TOTAL_WRITE_RBV"
@@ -449,7 +449,7 @@ major 10
 minor 0
 release 0
 x 290
-y 305
+y 340
 w 105
 h 20
 controlPv "$(pmac):STAT_TOTAL_READ_RBV"
@@ -469,7 +469,7 @@ major 4
 minor 1
 release 1
 x 15
-y 205
+y 240
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -488,7 +488,7 @@ major 4
 minor 1
 release 1
 x 15
-y 230
+y 265
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -507,7 +507,7 @@ major 4
 minor 1
 release 1
 x 15
-y 255
+y 290
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -526,7 +526,7 @@ major 4
 minor 1
 release 1
 x 15
-y 280
+y 315
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -545,7 +545,7 @@ major 4
 minor 1
 release 1
 x 15
-y 305
+y 340
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -564,7 +564,7 @@ major 10
 minor 0
 release 0
 x 720
-y 30
+y 65
 w 105
 h 20
 controlPv "$(pmac):SLOW_SIZE_RBV"
@@ -584,7 +584,7 @@ major 4
 minor 1
 release 1
 x 445
-y 30
+y 65
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -603,7 +603,7 @@ major 10
 minor 0
 release 0
 x 720
-y 85
+y 120
 w 105
 h 20
 controlPv "$(pmac):MEDIUM_SIZE_RBV"
@@ -623,7 +623,7 @@ major 4
 minor 1
 release 1
 x 445
-y 85
+y 120
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -642,7 +642,7 @@ major 10
 minor 0
 release 0
 x 720
-y 140
+y 175
 w 105
 h 20
 controlPv "$(pmac):FAST_SIZE_RBV"
@@ -662,7 +662,7 @@ major 4
 minor 1
 release 1
 x 445
-y 140
+y 175
 w 250
 h 20
 font "helvetica-medium-r-14.0"
@@ -681,7 +681,7 @@ major 4
 minor 1
 release 0
 x 720
-y 55
+y 90
 w 105
 h 25
 fgColor index 25
@@ -705,7 +705,7 @@ major 4
 minor 1
 release 0
 x 720
-y 110
+y 145
 w 105
 h 25
 fgColor index 25
@@ -729,7 +729,7 @@ major 4
 minor 1
 release 0
 x 720
-y 165
+y 200
 w 105
 h 25
 fgColor index 25
@@ -753,9 +753,9 @@ major 4
 minor 1
 release 1
 x 430
-y 10
-w 132
-h 16
+y 45
+w 139
+h 18
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 5
@@ -773,7 +773,7 @@ major 10
 minor 0
 release 0
 x 545
-y 215
+y 250
 w 55
 h 20
 controlPv "$(pmac):DEBUG_AXISNO"
@@ -792,7 +792,7 @@ major 10
 minor 0
 release 0
 x 630
-y 215
+y 250
 w 55
 h 20
 controlPv "$(pmac):DEBUG_CSNO"
@@ -811,7 +811,7 @@ major 10
 minor 0
 release 0
 x 445
-y 215
+y 250
 w 80
 h 20
 controlPv "$(pmac):DEBUG_LEVEL"
@@ -830,7 +830,7 @@ major 4
 minor 1
 release 0
 x 720
-y 210
+y 245
 w 105
 h 25
 fgColor index 25
@@ -854,10 +854,10 @@ major 4
 minor 1
 release 1
 x 445
-y 195
+y 230
 w 80
 h 20
-font "helvetica-medium-r-14.0"
+font "helvetica-medium-r-12.0"
 fgColor index 14
 bgColor index 10
 useDisplayBg
@@ -873,10 +873,10 @@ major 4
 minor 1
 release 1
 x 545
-y 195
+y 230
 w 55
 h 20
-font "helvetica-medium-r-14.0"
+font "helvetica-medium-r-12.0"
 fgColor index 14
 bgColor index 10
 useDisplayBg
@@ -892,10 +892,10 @@ major 4
 minor 1
 release 1
 x 635
-y 195
+y 230
 w 45
 h 20
-font "helvetica-medium-r-14.0"
+font "helvetica-medium-r-12.0"
 fgColor index 14
 bgColor index 10
 useDisplayBg
@@ -911,7 +911,7 @@ major 4
 minor 1
 release 0
 x 730
-y 310
+y 345
 w 110
 h 25
 fgColor index 46
@@ -921,5 +921,130 @@ botShadowColor index 11
 label "EXIT"
 font "arial-medium-r-18.0"
 3d
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 850
+h 30
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 850
+h 31
+lineColor index 3
+fill
+fillColor index 3
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 3
+w 850
+h 25
+lineColor index 11
+fillColor index 0
+numPoints 3
+xPoints {
+  0 0
+  1 850
+  2 850
+}
+yPoints {
+  0 28
+  1 28
+  2 3
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 0
+y 3
+w 850
+h 25
+font "arial-bold-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 48
+value {
+  "Motion Controller Debugging - $(pmac)"
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 0
+y 3
+w 850
+h 25
+lineColor index 1
+fillColor index 0
+numPoints 3
+xPoints {
+  0 0
+  1 0
+  2 850
+}
+yPoints {
+  0 28
+  1 3
+  2 3
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 430
+y 290
+w 144
+h 75
+font "courier-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "DEBUG_ERROR    0"
+  "DEBUG_VARIABLE 1"
+  "DEBUG_TRACE    2"
+  "DEBUG_FLOW     4"
+  "DEBUG_TIMING   8"
+}
+autoSize
 endObjectProperties
 

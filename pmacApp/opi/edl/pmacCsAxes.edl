@@ -4,7 +4,7 @@ major 4
 minor 0
 release 1
 x 779
-y 256
+y 330
 w 423
 h 518
 font "arial-bold-r-12.0"
@@ -780,7 +780,7 @@ fontAlign "center"
 fgColor index 14
 bgColor index 48
 value {
-  "Coordintate System $(CS) on $(pmac)"
+  "Coordinate System $(CS) - $(pmac)"
 }
 endObjectProperties
 

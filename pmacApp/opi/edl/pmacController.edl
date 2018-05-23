@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1254
-y 93
+x 997
+y 37
 w 584
 h 886
 font "arial-medium-r-16.0"
@@ -2488,7 +2488,7 @@ fontAlign "center"
 fgColor index 14
 bgColor index 48
 value {
-  "$(pmac) Controller"
+  "Motion Controller - $(pmac)"
 }
 endObjectProperties
 

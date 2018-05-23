@@ -301,30 +301,30 @@ def add_basic(cls):
     cls.guiTags = basic_asyn_motor.guiTags
     return cls
 
-class eloss_kill_autohome_records(AutoSubstitution):
+class _eloss_kill_autohome_records(AutoSubstitution):
     WarnMacros = False
     TemplateFile = "eloss_kill_autohome_records.template"
 
 def add_eloss_kill_autohome(cls):
-    """Convenience function to add eloss_kill_autohome_records attributes to a class that
+    """Convenience function to add _eloss_kill_autohome_records attributes to a class that
     includes it via an msi include statement rather than verbatim"""
-    cls.Arguments = eloss_kill_autohome_records.Arguments + [x for x in cls.Arguments if x not in eloss_kill_autohome_records.Arguments]
-    cls.ArgInfo = eloss_kill_autohome_records.ArgInfo + cls.ArgInfo.filtered(without=eloss_kill_autohome_records.ArgInfo.Names())
-    cls.Defaults.update(eloss_kill_autohome_records.Defaults)
-    cls.guiTags = eloss_kill_autohome_records.guiTags
+    cls.Arguments = _eloss_kill_autohome_records.Arguments + [x for x in cls.Arguments if x not in _eloss_kill_autohome_records.Arguments]
+    cls.ArgInfo = _eloss_kill_autohome_records.ArgInfo + cls.ArgInfo.filtered(without=_eloss_kill_autohome_records.ArgInfo.Names())
+    cls.Defaults.update(_eloss_kill_autohome_records.Defaults)
+    cls.guiTags = _eloss_kill_autohome_records.guiTags
     return cls
 
-class motor_in_cs_records(AutoSubstitution):
+class _motor_in_cs_records(AutoSubstitution):
     WarnMacros = False
     TemplateFile = "motor_in_cs.template"
 
 def add_motor_in_cs(cls):
-    """Convenience function to add motor_in_cs_records attributes to a class that
+    """Convenience function to add _motor_in_cs_records attributes to a class that
     includes it via an msi include statement rather than verbatim"""
-    cls.Arguments = motor_in_cs_records.Arguments + [x for x in cls.Arguments if x not in motor_in_cs_records.Arguments]
-    cls.ArgInfo = motor_in_cs_records.ArgInfo + cls.ArgInfo.filtered(without=motor_in_cs_records.ArgInfo.Names())
-    cls.Defaults.update(motor_in_cs_records.Defaults)
-    cls.guiTags = motor_in_cs_records.guiTags
+    cls.Arguments = _motor_in_cs_records.Arguments + [x for x in cls.Arguments if x not in _motor_in_cs_records.Arguments]
+    cls.ArgInfo = _motor_in_cs_records.ArgInfo + cls.ArgInfo.filtered(without=_motor_in_cs_records.ArgInfo.Names())
+    cls.Defaults.update(_motor_in_cs_records.Defaults)
+    cls.guiTags = _motor_in_cs_records.guiTags
     return cls
 
 
@@ -573,11 +573,6 @@ class CS_symetrie_hexapod(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'symetrie_hexapod.template'
 
-class slit4_gui(AutoSubstitution):
-    TemplateFile = 'slit4-gui.template'
-
-
-
 class pmacCreateCsGroup(Device):
     """Create a group of axis mappings to coordinate systems. Instantating a GeoBrickGlobalControl
     will create a PV for switching between these groups"""
@@ -623,3 +618,14 @@ class pmacCsGroupAddAxis(Device):
         AxisDef = Simple('CS Axis definition for this axis i.e. one of I A B C U V W X Y Z (or may include linear equations)', str),
         CoordSysNumber = Simple('Axis number of axis to add to the group', int))
 
+
+# hiding templates which are just used in includes so as to not
+# dirty the auto list of builder objects (is this the best way to do this?)
+class _hide1(AutoSubstitution):
+    TemplateFile = 'pmacDirectMotor.template'
+
+class _hide2(AutoSubstitution):
+    TemplateFile = 'pmac_cs_axis.template'
+
+class _hide3(AutoSubstitution):
+    TemplateFile = 'pmacDirectMotor.template'
