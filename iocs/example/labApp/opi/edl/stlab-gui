@@ -1,6 +1,10 @@
 #!/bin/sh
 TOP="$(cd $(dirname "$0")/../..; pwd)"
 
+# The following two definitions must be changed for each site
+MOTOR="/dls_sw/prod/R3.14.12.3/support/motor/6-9dls14"
+PMAC="/home/hgv27681/R3.14.12.3/support/pmac"
+
 # first load the paths. These have been generated from the configure/RELEASE
 # tree. If we have a -d arg then load the opi/edl paths first
 shopt -s nullglob
@@ -10,16 +14,16 @@ if [ "$1" = "-d" ]; then
         EDMDATAFILES="${EDMDATAFILES}${d}:"
     done
     EDMDATAFILES="${EDMDATAFILES}${TOP}/data:"
-    EDMDATAFILES="${EDMDATAFILES}/dls_sw/prod/R3.14.12.3/support/motor/6-9dls14/motorApp/opi/edl:"
-    EDMDATAFILES="${EDMDATAFILES}/home/hgv27681/R3.14.12.3/support/pmac/pmacApp/opi/edl:"
+    EDMDATAFILES="${EDMDATAFILES}${MOTOR}/motorApp/opi/edl:"
+    EDMDATAFILES="${EDMDATAFILES}${PMAC}/pmacApp/opi/edl:"
 
     OPTS="-x -eolc"
 else
     OPTS="-x -eolc -noedit"
 fi
 EDMDATAFILES="${EDMDATAFILES}${TOP}/data"
-EDMDATAFILES="${EDMDATAFILES}:/dls_sw/prod/R3.14.12.3/support/motor/6-9dls14/data"
-EDMDATAFILES="${EDMDATAFILES}:/home/hgv27681/R3.14.12.3/support/pmac/data"
+EDMDATAFILES="${EDMDATAFILES}:${MOTOR}/data"
+EDMDATAFILES="${EDMDATAFILES}:${PMAC}/data"
 
 export EDMDATAFILES
 
