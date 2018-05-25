@@ -8,7 +8,8 @@ lib
 db
 dbd
 data
-iocs
+iocs/lab
+iocs/lab-ppmac
 .idea
 CMakeLists.txt
 cmake-build-debug/
