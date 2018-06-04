@@ -16,25 +16,25 @@ tar -zxf R3-6-1.tar.gz
 echo "EPICS_BASE=/usr/lib/epics" > calc-R3-6-1/configure/RELEASE
 make -C calc-R3-6-1/
 
-wget -nv http://www.aps.anl.gov/bcda/synApps/tar/busy_R1-6-1.tar.gz
-tar -zxf busy_R1-6-1.tar.gz
-echo "ASYN=`pwd`/asyn-R4-26" > busy-1-6-1/configure/RELEASE 
-echo "EPICS_BASE=/usr/lib/epics" >> busy-1-6-1/configure/RELEASE
-make -C busy-1-6-1/
+wget -nv https://github.com/epics-modules/busy/archive/R1-6-1.tar.gz
+tar -zxf R1-6-1.tar.gz
+echo "ASYN=`pwd`/asyn-R4-26" > busy-R1-6-1/configure/RELEASE
+echo "EPICS_BASE=/usr/lib/epics" >> busy-R1-6-1/configure/RELEASE
+make -C busy-R1-6-1/
 
-wget -nv http://www.aps.anl.gov/bcda/synApps/motor/tar/motorR6-9.tar.gz
-tar -zxf motorR6-9.tar.gz
-echo "TOP = .." > motorR6-9/motorApp/Makefile
-echo "include \$(TOP)/configure/CONFIG" >> motorR6-9/motorApp/Makefile
-echo "DIRS += MotorSrc" >> motorR6-9/motorApp/Makefile
-echo "DIRS += Db" >> motorR6-9/motorApp/Makefile
-echo "include \$(TOP)/configure/RULES_DIRS" >> motorR6-9/motorApp/Makefile
+wget -nv https://github.com/epics-modules/motor/archive/R6-9.tar.gz
+tar -zxf R6-9.tar.gz
+echo "TOP = .." > motor-R6-9/motorApp/Makefile
+echo "include \$(TOP)/configure/CONFIG" >> motor-R6-9/motorApp/Makefile
+echo "DIRS += MotorSrc" >> motor-R6-9/motorApp/Makefile
+echo "DIRS += Db" >> motor-R6-9/motorApp/Makefile
+echo "include \$(TOP)/configure/RULES_DIRS" >> motor-R6-9/motorApp/Makefile
 echo "======= Motor Makefile ========================================="
-cat motorR6-9/motorApp/Makefile
-echo "ASYN=`pwd`/asyn-R4-26" > motorR6-9/configure/RELEASE
-echo "BUSY=`pwd`/busy-1-6-1" >> motorR6-9/configure/RELEASE
-echo "EPICS_BASE=/usr/lib/epics" >> motorR6-9/configure/RELEASE
-make -C motorR6-9/
+cat motor-R6-9/motorApp/Makefile
+echo "ASYN=`pwd`/asyn-R4-26" > motor-R6-9/configure/RELEASE
+echo "BUSY=`pwd`/busy-R1-6-1" >> motor-R6-9/configure/RELEASE
+echo "EPICS_BASE=/usr/lib/epics" >> motor-R6-9/configure/RELEASE
+make -C motor-R6-9/
 
 cd ..
 

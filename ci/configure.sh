@@ -16,8 +16,8 @@ echo "USR_LDFLAGS_Linux=--coverage"          >> configure/CONFIG_SITE.linux-x86_
 
 echo "ASYN=`pwd`/external/asyn-R4-26"        >> configure/RELEASE.local
 echo "CALC=`pwd`/external/calc-R3-6-1"       >> configure/RELEASE.local
-echo "BUSY=`pwd`/external/busy-1-6-1"        >> configure/RELEASE.local
-echo "MOTOR=`pwd`/external/motorR6-9"        >> configure/RELEASE.local
+echo "BUSY=`pwd`/external/busy-R1-6-1"        >> configure/RELEASE.local
+echo "MOTOR=`pwd`/external/motor-R6-9"        >> configure/RELEASE.local
 
 echo "======= configure/RELEASE.local ========================================="
 cat configure/RELEASE.local
