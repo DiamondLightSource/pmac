@@ -27,6 +27,8 @@ public:
 
     virtual ~pmacAxis();
 
+    void initialSetup(int axisNo);
+
     asynStatus move(double position, int relative, double min_velocity, double max_velocity,
                     double acceleration);
 
@@ -68,6 +70,7 @@ private:
 
     double getPosition();
 
+    bool initialised_;
     int assignedCS_;
     double setpointPosition_;
     double encoderPosition_;

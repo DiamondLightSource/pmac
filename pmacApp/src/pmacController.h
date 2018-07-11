@@ -198,30 +198,21 @@ public:
     pmacController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress,
                    int numAxes, double movingPollPeriod,
                    double idlePollPeriod);
-
     virtual ~pmacController();
-
+    asynStatus checkConnection();
+    asynStatus initialSetup();
+    void createAsynParams(void);
+    void initAsynParams(void);
+    void setupBrokerVariables(void);
     void startPMACPolling();
-
     void setDebugLevel(int level, int axis, int csNo);
 
-    asynStatus
-    drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
-
+    asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
     asynStatus processDrvInfo(char *input, char *output);
-
     virtual void callback(pmacCommandStore *sPtr, int type);
-
-    asynStatus checkConnection();
-
-    asynStatus initialiseConnection();
-
     asynStatus slowUpdate(pmacCommandStore *sPtr);
-
     asynStatus mediumUpdate(pmacCommandStore *sPtr);
-
     asynStatus fastUpdate(pmacCommandStore *sPtr);
-
     asynStatus parseIntegerVariable(const std::string &command,
                                     const std::string &response,
                                     const std::string &desc,
@@ -229,64 +220,42 @@ public:
 
     //asynStatus printConnectedStatus(void);
     asynStatus immediateWriteRead(const char *command, char *response);
-
     asynStatus axisWriteRead(const char *command, char *response);
 
     /* These are the methods that we override */
     asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
-
     asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
-
     asynStatus writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements);
-
     asynStatus writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements);
-
     asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t nChars, size_t *nActual);
 
-    asynStatus
-    readEnum(asynUser *pasynUser, char *strings[], int values[], int severities[], size_t nElements,
+    asynStatus readEnum(asynUser *pasynUser, char *strings[], int values[], int severities[], size_t nElements,
              size_t *nIn);
 
     void report(FILE *fp, int level);
-
     pmacAxis *getAxis(asynUser *pasynUser);
-
     pmacAxis *getAxis(int axisNo);
-
     asynStatus poll();
 
     // Trajectory scanning methods
     asynStatus initializeProfile(size_t maxPoints);
-
     asynStatus buildProfile();
-
     asynStatus buildProfile(int csNo);
-
     asynStatus appendToProfile();
-
     asynStatus preparePMAC();
-
     asynStatus executeProfile();
-
     asynStatus executeProfile(int csNo);
-
     asynStatus abortProfile();
 
     void trajectoryTask();
-
     void setBuildStatus(int state, int status, const std::string &message);
-
     void setAppendStatus(int state, int status, const std::string &message);
-
     void setProfileStatus(int state, int status, const std::string &message);
-
     asynStatus sendTrajectoryDemands(int buffer);
-
     asynStatus doubleToPMACFloat(double value, int64_t *representation);
 
     //Disable the check for disabled hardware limits.
     asynStatus pmacDisableLimitsCheck(int axis);
-
     asynStatus pmacDisableLimitsCheck(void);
 
     //Set the axis scale factor.
@@ -312,19 +281,12 @@ public:
 
     // List PLC program
     asynStatus listPLCProgram(int plcNo, char *buffer, size_t size);
-
     asynStatus storeKinematics();
-
     asynStatus listKinematic(int csNo, const std::string &type, char *buffer, size_t size);
-
     asynStatus executeManualGroup();
-
     asynStatus updateCsAssignmentParameters();
-
     asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
-
     asynStatus tScanIncludedAxes(int *axisMask);
-
     void registerForLock(asynPortDriver *controller);
 
 protected:

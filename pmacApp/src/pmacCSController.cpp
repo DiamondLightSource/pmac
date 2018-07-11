@@ -140,6 +140,7 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
                               1, // autoconnect
                               0, 0),  // Default priority and stack size
           pmacDebugger("pmacCSController"),
+          initialised_(false),
           portName_(portName),
           csNumber_(csNo),
           progNumber_(program),
@@ -157,7 +158,7 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
 
   pAxes_ = (pmacCSAxis **) (asynMotorController::pAxes_);
 
-  pC_ = findAsynPortDriver(controllerPortName);
+  pC_ = (pmacController*) findAsynPortDriver(controllerPortName);
   if (!pC_) {
     debug(DEBUG_ERROR, functionName, "ERROR port not found", controllerPortName);
     status = asynError;
@@ -189,14 +190,18 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
               "%s Unable To Set Driver Parameters In Constructor.\n", functionName);
   }
 
-  // Registration with the main controller. Register this coordinate system
-  if (status == asynSuccess) {
-    ((pmacController *) pC_)->registerCS(this, portName, csNumber_);
-  }
+  initialSetup();
 }
 
 pmacCSController::~pmacCSController() {
+}
 
+void pmacCSController::initialSetup(void) {
+  if (pC_->initialised_ && !initialised_) {
+    // Registration with the main controller. Register this coordinate system
+    pC_->registerCS(this, portName, csNumber_);
+    initialised_ = true;
+  }
 }
 
 std::string pmacCSController::getPortName() {
@@ -240,7 +245,7 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   } else if (function == PMAC_CS_MotorScale_) {
     pAxis->scale_ = value;
   } else if (function == PMAC_CS_Abort_) {
-    sprintf(command, "&%dA", csNumber_, value);
+    sprintf(command, "&%dA", csNumber_);
     debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   }

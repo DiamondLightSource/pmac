@@ -44,6 +44,8 @@ public:
 
     virtual ~pmacCSController();
 
+    void initialSetup(void);
+
     std::string getPortName();
 
     asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
@@ -112,13 +114,14 @@ protected:
 #define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_
 
 private:
+    bool initialised_;
     std::string portName_;
     int csNumber_;
     int progNumber_;
     epicsUInt32 movesDeferred_;
     int status_[3];
     csStatus cStatus_;
-    void *pC_;
+    pmacController *pC_;
     // csMoveTime_ defines how long a programmed move takes. The value of this parameter is always
     // put into Q70 before a call to PROG10 on the brick. A value of 0 means that the motion
     // will execute as fast as possible and the slowest motor will determine the time.
