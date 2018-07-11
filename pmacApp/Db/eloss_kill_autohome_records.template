@@ -19,6 +19,14 @@ record(calcout, "$(P)$(M):SDIS") {
 record(busy, "$(HOME=$(P)):HM:HOMING") {
 }
 
+# Monitor homing status
+record(bi, "$(P)$(M):HOMING") {
+  field(DESC, "Monitor homing status of autohome")
+  field(INP, "$(HOME=$(P)):HM:HOMING CP")
+  field(ZNAM, "Done")
+  field(ONAM, "Busy")
+}
+
 # reports position of motor without offset
 record(ai, "$(P)$(M):HMPOS_RBV") {
   field(DTYP, "asynFloat64")
