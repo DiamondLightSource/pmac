@@ -22,7 +22,8 @@ public:
     virtual ~pmacCSMonitor();
 
     // Register a coordinate system with this controller
-    asynStatus registerCS(pmacCSController *csPtr, int csNo);
+    // return false if it is already registered
+    bool registerCS(pmacCSController *csPtr, int csNo);
 
     asynStatus poll(bool *moving);
 

@@ -405,6 +405,7 @@ public:
     pmacCsGroups *pGroupList;
 
 private:
+    void completeRegisterCS(int csNo);
     int connected_;
     int initialised_;
     int cid_;

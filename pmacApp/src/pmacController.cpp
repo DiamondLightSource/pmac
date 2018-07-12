@@ -388,6 +388,13 @@ asynStatus pmacController::initialSetup() {
     if (cid_ != PMAC_CID_POWER_) {
       status = this->storeKinematics();
     }
+    // also complete creation of CSControllers that were constructed
+    // while still waiting for a connection
+    for (int csNum = 0; csNum < PMAC_MAX_CS; csNum++) {
+      if (pCSControllers_[csNum] != NULL) {
+        completeRegisterCS(csNum);
+      }
+    }
   }
 
   if (status != asynSuccess) {
@@ -3495,21 +3502,31 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
 
   debug(DEBUG_VARIABLE, functionName, "Registering CS", csNo);
 
+  // Add the CS to the list
+  pCSControllers_[csNo] = csPtr;
+
   // Record the port name to CS number mapping
   debug(DEBUG_ERROR, functionName, "CS port name", portName);
   pPortToCs_->insert(portName, csNo);
 
-  // Add the CS to the list
-  pCSControllers_[csNo] = csPtr;
-  pAxisZero->registerCS(csPtr, csNo);
-
-  // First add the CS status item to the fast update
-  this->pHardware_->setupCSStatus(csNo);
-
-  // Now register the CS object for callbacks from the broker
-  this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
-
+  completeRegisterCS(csNo);
   return asynSuccess;
+}
+
+void pmacController::completeRegisterCS(int csNo) {
+  if (initialised_) {
+    pmacCSController *csPtr = pCSControllers_[csNo];
+
+    // setup monitoring of movement of all axes in this CS
+    // and check if was already set up
+    if (pAxisZero->registerCS(csPtr, csNo)) {
+      // First add the CS status item to the fast update
+      this->pHardware_->setupCSStatus(csNo);
+
+      // Now register the CS object for callbacks from the broker
+      this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
+    }
+  }
 }
 
 asynStatus pmacController::makeCSDemandsConsistent() {

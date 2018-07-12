@@ -140,7 +140,6 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
                               1, // autoconnect
                               0, 0),  // Default priority and stack size
           pmacDebugger("pmacCSController"),
-          initialised_(false),
           portName_(portName),
           csNumber_(csNo),
           progNumber_(program),
@@ -190,18 +189,10 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
               "%s Unable To Set Driver Parameters In Constructor.\n", functionName);
   }
 
-  initialSetup();
+  pC_->registerCS(this, portName, csNumber_);
 }
 
 pmacCSController::~pmacCSController() {
-}
-
-void pmacCSController::initialSetup(void) {
-  if (pC_->initialised_ && !initialised_) {
-    // Registration with the main controller. Register this coordinate system
-    pC_->registerCS(this, portName, csNumber_);
-    initialised_ = true;
-  }
 }
 
 std::string pmacCSController::getPortName() {

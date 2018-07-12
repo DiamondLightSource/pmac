@@ -24,11 +24,14 @@ pmacCSMonitor::pmacCSMonitor(pmacController *pController) :
 pmacCSMonitor::~pmacCSMonitor() {
 }
 
-asynStatus pmacCSMonitor::registerCS(pmacCSController *csPtr, int csNo) {
-  // Add the CS to the list
-  pCSControllers_[csNo] = csPtr;
-
-  return asynSuccess;
+bool pmacCSMonitor::registerCS(pmacCSController *csPtr, int csNo) {
+  if(pCSControllers_[csNo] == NULL) {
+    // Add the CS to the list
+    pCSControllers_[csNo] = csPtr;
+    return true;
+  } else {
+    return false;
+  }
 }
 
 asynStatus pmacCSMonitor::poll(bool *moving) {
@@ -36,8 +39,12 @@ asynStatus pmacCSMonitor::poll(bool *moving) {
   bool anyMoving = false;
 
   for (i = 0; i < 16; i++) {
-    if (!pCSControllers_[i]) continue;
-    if (pCSControllers_[i]->getMoving()) anyMoving = true;
+    if (!pCSControllers_[i]) {
+      continue;
+    }
+    if (pCSControllers_[i]->getMoving()) {
+      anyMoving = true;
+    }
   }
   *moving = anyMoving;
   return asynSuccess;
