@@ -28,7 +28,6 @@ alias($(P)$(M):FERRORMAX, $(PMAC):M$(ADDR):FERRORMAX)
 alias($(P)$(M):FEMAXRESET, $(PMAC):M$(ADDR):FEMAXRESET)
 alias($(P)$(M):HOMEVIS, $(PMAC):M$(ADDR):HOMEVIS)
 alias($(P)$(M):HOMEVISSTR, $(PMAC):M$(ADDR):HOMEVISSTR)
-alias($(P)$(M):HOMING, $(PMAC):M$(ADDR):HOMING)
 
 
 include "motor_in_cs.template"
