@@ -282,10 +282,10 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pAxisZero = new pmacCSMonitor(this);
   pGroupList = new pmacCsGroups(this);
 
-  createAsynParams();
-
   // Create the trajectory store
   pTrajectory_ = new pmacTrajectory();
+
+  createAsynParams();
 
   if (pBroker_->connect(lowLevelPortName, lowLevelPortAddress) != asynSuccess) {
     printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName,
@@ -296,34 +296,45 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   }
 
   // Initialise the connection
-  status = this->checkConnection();
-  if (status != asynSuccess) {
-    debug(DEBUG_ERROR, functionName, "ERROR: Failed to connect to controller");
-  }
+  this->checkConnection();
 
-  initAsynParams();
+  // Do nothing if we have failed to connect. Requires a restart once
+  // the brick is restored
+  if (connected_) {
+    initialSetup();
+    initAsynParams();
 
-  // Create the epicsEvents for signaling to start and stop scanning
-  this->startEventId_ = epicsEventCreate(epicsEventEmpty);
-  if (!this->startEventId_) {
-    printf("%s:%s epicsEventCreate failure for start event\n", driverName, functionName);
-  }
-  this->stopEventId_ = epicsEventCreate(epicsEventEmpty);
-  if (!this->stopEventId_) {
-    printf("%s:%s epicsEventCreate failure for stop event\n", driverName, functionName);
-  }
+    // Create the epicsEvents for signaling to start and stop scanning
+    this->startEventId_ = epicsEventCreate(epicsEventEmpty);
+    if (!this->startEventId_) {
+      printf("%s:%s epicsEventCreate failure for start event\n", driverName, functionName);
+    }
+    this->stopEventId_ = epicsEventCreate(epicsEventEmpty);
+    if (!this->stopEventId_) {
+      printf("%s:%s epicsEventCreate failure for stop event\n", driverName, functionName);
+    }
 
-  // Create the thread that executes trajectory scans
-  epicsThreadCreate("TrajScanTask",
-                    epicsThreadPriorityMedium,
-                    epicsThreadGetStackSize(epicsThreadStackMedium),
-                    (EPICSTHREADFUNC) trajTaskC,
-                    this);
+    // Create the thread that executes trajectory scans
+    epicsThreadCreate("TrajScanTask",
+                      epicsThreadPriorityMedium,
+                      epicsThreadGetStackSize(epicsThreadStackMedium),
+                      (EPICSTHREADFUNC) trajTaskC,
+                      this);
+  }
+  else {
+    debugf(DEBUG_ERROR, functionName,
+           "FAILED TO CONNECT TO CONTROLLER '%s'. Restore controller and restart IOC.",
+           portName);
+  }
 }
 
 pmacController::~pmacController(void) {
   //Destructor. Should never get here.
   delete pAxisZero;
+}
+
+bool pmacController::initialised() {
+  return initialised_;
 }
 
 asynStatus pmacController::checkConnection() {
@@ -343,10 +354,6 @@ asynStatus pmacController::checkConnection() {
   if (status == asynSuccess) {
     connected_ = connected;
     debug(DEBUG_VARIABLE, functionName, "Connection status", connected_);
-
-    if (!initialised_ && connected_) {
-      status = initialSetup();
-    }
   }
 
   return status;
@@ -381,27 +388,18 @@ asynStatus pmacController::initialSetup() {
       pHardware_->registerController(this);
     }
   }
-  if (status == asynSuccess) {
-    // Initialisation successful
-    initialised_ = 1;
-    // Read the kinematics if we aren't a power pmac
-    if (cid_ != PMAC_CID_POWER_) {
-      status = this->storeKinematics();
-    }
-    // also complete creation of CSControllers that were constructed
-    // while still waiting for a connection
-    for (int csNum = 0; csNum < PMAC_MAX_CS; csNum++) {
-      if (pCSControllers_[csNum] != NULL) {
-        completeRegisterCS(csNum);
-      }
-    }
-  }
 
   if (status != asynSuccess) {
     debug(DEBUG_ERROR, functionName, "Unable to initialise connection to PMAC!");
   }
   else {
+    // Initialisation successful
+    initialised_ = 1;
     setupBrokerVariables();
+    // Read the kinematics if we aren't a power pmac
+    if (cid_ != PMAC_CID_POWER_) {
+      status = this->storeKinematics();
+    }
   }
 
   return status;
@@ -1838,6 +1836,10 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 
   debug(DEBUG_FLOW, functionName);
 
+  if(!initialised_) {
+    return asynSuccess;
+  }
+
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
   pAxis = this->getAxis(pasynUser);
@@ -1936,6 +1938,10 @@ pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size
   static const char *functionName = "writeFloat64Array";
   debug(DEBUG_TRACE, functionName);
 
+  if(!initialised_) {
+    return asynSuccess;
+  }
+
   if (!profileInitialized_) {
     // Initialise the trajectory scan interface pointers
     debug(DEBUG_TRACE, functionName, "Initialising CS trajectory scan interface");
@@ -1983,6 +1989,10 @@ pmacController::writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t n
   static const char *functionName = "writeInt32Array";
   debug(DEBUG_TRACE, functionName);
 
+  if(!initialised_) {
+    return asynSuccess;
+  }
+
   if (!profileInitialized_) {
     // Initialise the trajectory scan interface pointers
     debug(DEBUG_FLOW, functionName, "Initialising trajectory scan interface");
@@ -2022,6 +2032,10 @@ pmacController::writeOctet(asynUser *pasynUser, const char *value, size_t nChars
   char command[PMAC_MAXBUF_] = {0};
   char response[PMAC_MAXBUF_] = {0};
   const char *functionName = "writeOctet";
+
+  if(!initialised_) {
+    return asynSuccess;
+  }
 
   status = getAddress(pasynUser, &addr);
   if (status != asynSuccess) return (status);
@@ -2077,6 +2091,10 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   static const char *functionName = "writeInt32";
 
   debug(DEBUG_TRACE, functionName);
+
+  if(!initialised_) {
+    return asynSuccess;
+  }
 
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
@@ -3509,24 +3527,16 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
   debug(DEBUG_ERROR, functionName, "CS port name", portName);
   pPortToCs_->insert(portName, csNo);
 
-  completeRegisterCS(csNo);
+  // setup monitoring of movement of all axes in this CS
+  pAxisZero->registerCS(csPtr, csNo);
+
+  // Add the CS status item to the fast update
+  this->pHardware_->setupCSStatus(csNo);
+
+  // Now register the CS object for callbacks from the broker
+  this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
+
   return asynSuccess;
-}
-
-void pmacController::completeRegisterCS(int csNo) {
-  if (initialised_) {
-    pmacCSController *csPtr = pCSControllers_[csNo];
-
-    // setup monitoring of movement of all axes in this CS
-    // and check if was already set up
-    if (pAxisZero->registerCS(csPtr, csNo)) {
-      // First add the CS status item to the fast update
-      this->pHardware_->setupCSStatus(csNo);
-
-      // Now register the CS object for callbacks from the broker
-      this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
-    }
-  }
 }
 
 asynStatus pmacController::makeCSDemandsConsistent() {

@@ -70,7 +70,6 @@ private:
 
     double getPosition();
 
-    bool initialised_;
     int assignedCS_;
     double setpointPosition_;
     double encoderPosition_;

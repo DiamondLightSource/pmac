@@ -189,10 +189,16 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
               "%s Unable To Set Driver Parameters In Constructor.\n", functionName);
   }
 
-  pC_->registerCS(this, portName, csNumber_);
+  if(pC_->initialised()) {
+    pC_->registerCS(this, portName, csNumber_);
+  }
 }
 
 pmacCSController::~pmacCSController() {
+}
+
+bool pmacCSController::initialised(void) {
+  return pC_->initialised();
 }
 
 std::string pmacCSController::getPortName() {
@@ -526,22 +532,24 @@ asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale) {
     return asynError;
   }
 
-  this->lock();
-  pA = getAxis(axis);
-  if (pA) {
-    pA->scale_ = scale;
-    setIntegerParam(axis, PMAC_CS_MotorScale_, scale);
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
-              "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
-              functionName, pA->scale_, pA->axisNo_, portName);
+  if(initialised()) {
+    this->lock();
+    pA = getAxis(axis);
+    if (pA) {
+      pA->scale_ = scale;
+      setIntegerParam(axis, PMAC_CS_MotorScale_, scale);
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+                "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
+                functionName, pA->scale_, pA->axisNo_, portName);
 
-  } else {
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-              "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
-              axis);
-    return asynError;
+    } else {
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+                "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
+                axis);
+      return asynError;
+    }
+    this->unlock();
   }
-  this->unlock();
   return asynSuccess;
 }
 
@@ -667,12 +675,11 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
     return asynError;
   }
 
-  // pC->lock();
   for (int axis = 0; axis <= numAxes; axis++) {
     pAxis = new pmacCSAxis(pC, axis);
     pAxis = NULL;
   }
-  //pC->unlock();
+
   return asynSuccess;
 }
 

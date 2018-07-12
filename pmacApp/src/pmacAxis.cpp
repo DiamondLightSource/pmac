@@ -65,7 +65,6 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   //Initialize non-static data members
-  initialised_ = false;
   assignedCS_ = 0;
   setpointPosition_ = 0.0;
   encoderPosition_ = 0.0;
@@ -110,7 +109,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
 void pmacAxis::initialSetup(int axisNo) {
   static const char *functionName = "pmacAxis::initialSetup";
 
-  if(pC_->initialised_ && !initialised_) {
+  if(pC_->initialised_) {
 
     //Do an initial poll to get some values from the PMAC
     if (getAxisInitialStatus() != asynSuccess) {
@@ -140,7 +139,6 @@ void pmacAxis::initialSetup(int axisNo) {
 
       pC_->registerForCallbacks(this, pmacMessageBroker::PMAC_FAST_READ);
     }
-    initialised_ = true;
   }
 }
 
@@ -767,8 +765,6 @@ asynStatus pmacAxis::poll(bool *moving) {
   asynStatus status = asynSuccess;
   static const char *functionName = "poll";
   debug(DEBUG_TIMING, functionName, "Poll called");
-
-  initialSetup(axisNo_);
 
   if (axisNo_ != 0) {
     *moving = moving_;

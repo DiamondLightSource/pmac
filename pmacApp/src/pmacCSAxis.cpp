@@ -30,20 +30,21 @@ pmacCSAxis::pmacCSAxis(pmacCSController *pController, int axisNo)
   printNextError_ = false;
   moving_ = false;
 
-  if (axisNo > 0) {
-    char var[16];
-    // Request position readback
-    sprintf(var, "&%dQ8%d", pC_->getCSNumber(), axisNo_);
-    pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+  if (pC_->initialised()) {
+    if (axisNo > 0) {
+      char var[16];
+      // Request position readback
+      sprintf(var, "&%dQ8%d", pC_->getCSNumber(), axisNo_);
+      pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
 
-    // Register for callbacks
-    pC_->registerForCallbacks(this, pmacMessageBroker::PMAC_FAST_READ);
+      // Register for callbacks
+      pC_->registerForCallbacks(this, pmacMessageBroker::PMAC_FAST_READ);
+    }
+
+    // Wake up the poller task which will make it do a poll,
+    // updating values for this axis to use the new resolution (stepSize_)
+    pC_->wakeupPoller();
   }
-
-  // Wake up the poller task which will make it do a poll,
-  // updating values for this axis to use the new resolution (stepSize_)
-  pC_->wakeupPoller();
-
 }
 
 pmacCSAxis::~pmacCSAxis() {

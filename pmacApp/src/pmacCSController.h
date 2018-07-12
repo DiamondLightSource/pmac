@@ -42,6 +42,7 @@ class pmacCSController
 public:
     pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program);
     virtual ~pmacCSController();
+    bool initialised(void);
     std::string getPortName();
     asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
     asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);

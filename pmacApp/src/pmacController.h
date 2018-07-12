@@ -201,6 +201,7 @@ public:
     virtual ~pmacController();
     asynStatus checkConnection();
     asynStatus initialSetup();
+    bool initialised(void);
     void createAsynParams(void);
     void initAsynParams(void);
     void setupBrokerVariables(void);
@@ -405,7 +406,6 @@ public:
     pmacCsGroups *pGroupList;
 
 private:
-    void completeRegisterCS(int csNo);
     int connected_;
     int initialised_;
     int cid_;
