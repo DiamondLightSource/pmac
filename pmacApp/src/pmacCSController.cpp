@@ -145,7 +145,6 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
           progNumber_(program),
           movesDeferred_(0),
           csMoveTime_(0) {
-  asynStatus status = asynSuccess;
   static const char *functionName = "pmacCSController";
 
   // Init the status
@@ -160,11 +159,10 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   pC_ = (pmacController*) findAsynPortDriver(controllerPortName);
   if (!pC_) {
     debug(DEBUG_ERROR, functionName, "ERROR port not found", controllerPortName);
-    status = asynError;
   }
 
   // tell the broker to lock me when polling the brick
-  ((pmacController *) pC_)->registerForLock(this);
+  pC_->registerForLock(this);
 
   //Create controller-specific parameters
   bool paramStatus = true;
@@ -612,11 +610,10 @@ asynStatus pmacCSCreateController(const char *portName,
                                   const char *controllerPortName,
                                   int csNo,
                                   int program) {
-  pmacCSController *ptrpmacCSController = new pmacCSController(portName,
-                                                               controllerPortName,
-                                                               csNo,
-                                                               program);
-  ptrpmacCSController = NULL;
+  new pmacCSController(portName,
+                       controllerPortName,
+                       csNo,
+                       program);
 
   return asynSuccess;
 }
@@ -630,7 +627,6 @@ asynStatus pmacCreateCSAxis(const char *pmacName, /* specify which controller by
                             int axis)             /* axis number (start from 1). */
 {
   pmacCSController *pC;
-  pmacCSAxis *pAxis;
 
   static const char *functionName = "pmacCreateCSAxis";
 
@@ -647,8 +643,7 @@ asynStatus pmacCreateCSAxis(const char *pmacName, /* specify which controller by
   }
 
   pC->lock();
-  pAxis = new pmacCSAxis(pC, axis);
-  pAxis = NULL;
+  new pmacCSAxis(pC, axis);
   pC->unlock();
   return asynSuccess;
 }
@@ -665,7 +660,6 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
                             int numAxes)          /* Number of axes to create */
 {
   pmacCSController *pC;
-  pmacCSAxis *pAxis;
 
   static const char *functionName = "pmacCreateCSAxis";
 
@@ -676,8 +670,7 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
   }
 
   for (int axis = 0; axis <= numAxes; axis++) {
-    pAxis = new pmacCSAxis(pC, axis);
-    pAxis = NULL;
+    new pmacCSAxis(pC, axis);
   }
 
   return asynSuccess;

@@ -37,7 +37,7 @@ int CharIntHashtable::insert(const char key, int value) {
   if (vPtr != NULL) {
     return *(int *) vPtr;
   }
-  return NULL;
+  return 0;
 }
 
 int CharIntHashtable::remove(const char key) {

@@ -124,7 +124,7 @@ asynStatus pmacCsGroups::addAxisToGroup(int id, int axis, const std::string &axi
 int pmacCsGroups::getAxisCoordSys(int axis) {
   static const char *functionName = "getAxisCoordSys";
   pmacCsGroup *pGrp;
-  pmacCsAxisDef *axd;
+  pmacCsAxisDef *axd = NULL;
 
   debug(DEBUG_TRACE, functionName);
 

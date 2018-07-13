@@ -172,13 +172,12 @@ void pmacCSAxis::callback(pmacCommandStore *sPtr, int type) {
  * @return asynStatus
  */
 asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
-  int done = 0;
   double position = 0;
   int nvals = 0;
   int axisProblemFlag = 0;
   bool printErrors = true;
   char key[16];
-  std::string value = "";
+  std::string value;
   int homeSignal = 0;
   int direction = 0;
   int retStatus = asynSuccess;

@@ -211,7 +211,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                               0, 0),  // Default priority and stack size
           pmacDebugger("pmacController") {
   int index = 0;
-  asynStatus status;
   static const char *functionName = "pmacController::pmacController";
 
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
@@ -2881,7 +2880,6 @@ asynStatus pmacController::abortProfile() {
 }
 
 void pmacController::trajectoryTask() {
-  int status = asynSuccess;
   epicsTimeStamp startTime, endTime;
   double elapsedTime;
   int epicsErrorDetect = 0;
@@ -2892,8 +2890,6 @@ void pmacController::trajectoryTask() {
   //double position = 0.0;
   char response[1024];
   char cmd[1024];
-  char assignment[MAX_STRING_SIZE];
-  std::string axesStrings[PMAC_MAX_CS_AXES] = {"A", "B", "C", "U", "V", "W", "X", "Y", "Z"};
   const char *functionName = "trajectoryTask";
 
   this->lock();
@@ -2911,7 +2907,7 @@ void pmacController::trajectoryTask() {
       // Release the lock while we wait for an event that says scan has started, then lock again
       debug(DEBUG_TRACE, functionName, "Waiting for scan to start");
       this->unlock();
-      status = epicsEventWait(this->startEventId_);
+      epicsEventWait(this->startEventId_);
       this->lock();
       tScanExecuting_ = 1;
 
@@ -2996,7 +2992,7 @@ void pmacController::trajectoryTask() {
         // EPICS buffer number has just been updated, so fill the next
         // half buffer with positions
         this->unlock();
-        status = this->sendTrajectoryDemands(epicsBufferNumber);
+        this->sendTrajectoryDemands(epicsBufferNumber);
         this->lock();
       }
 
@@ -3063,7 +3059,7 @@ void pmacController::trajectoryTask() {
       if (tScanExecuting_) {
         debug(DEBUG_FLOW, functionName, "Trajectory scan waiting");
         this->unlock();
-        status = epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
+        epicsEventWaitWithTimeout(this->stopEventId_, 0.1);
         this->lock();
       }
     }
@@ -3192,7 +3188,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
             status = pTrajectory_->getPosition(index, tScanPointCtr_, &posValue);
             doubleToPMACFloat(posValue, &ival);
             //doubleToPMACFloat(tScanPositions_[index][tScanPointCtr_], &ival);
-            sprintf(cmd[index], "%s,$%lX", cmd[index], ival);
+            sprintf(cmd[index], "%s,$%lX", cmd[index], (long)ival);
           }
         }
       }
@@ -4068,7 +4064,6 @@ asynStatus pmacCreateAxis(const char *pmacName,         /* specify which control
                           int axis)                    /* axis number (start from 1). */
 {
   pmacController *pC;
-  pmacAxis *pAxis;
 
   static const char *functionName = "pmacCreateAxis";
 
@@ -4086,8 +4081,7 @@ asynStatus pmacCreateAxis(const char *pmacName,         /* specify which control
   }
 
   pC->lock();
-  pAxis = new pmacAxis(pC, axis);
-  pAxis = NULL;
+  new pmacAxis(pC, axis);
   pC->unlock();
   return asynSuccess;
 }
@@ -4103,7 +4097,6 @@ asynStatus pmacCreateAxis(const char *pmacName,         /* specify which control
 asynStatus pmacCreateAxes(const char *pmacName,
                           int numAxes) {
   pmacController *pC;
-  pmacAxis *pAxis;
 
   static const char *functionName = "pmacCreateAxis";
 
@@ -4116,8 +4109,7 @@ asynStatus pmacCreateAxes(const char *pmacName,
 
   pC->lock();
   for (int axis = 1; axis <= numAxes; axis++) {
-    pAxis = new pmacAxis(pC, axis);
-    pAxis = NULL;
+    new pmacAxis(pC, axis);
   }
   pC->unlock();
   return asynSuccess;

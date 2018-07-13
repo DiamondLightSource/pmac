@@ -118,7 +118,6 @@ asynStatus pmacMessageBroker::addReadVariable(int type, const char *variable) {
 }
 
 asynStatus pmacMessageBroker::updateVariables(int type) {
-  asynStatus status = asynSuccess;
   static const char *functionName = "updateVariables";
   char response[1024];
   std::string cmd;
@@ -188,9 +187,8 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
       // Perform the necessary callbacks
       slowCallbacks_->callCallbacks(&slowStore_);
     }
-  } else {
-    status = asynError;
   }
+
   stopTimer(DEBUG_TIMING, functionName, "Time taken for updates");
 
   // Unlock the mutex
