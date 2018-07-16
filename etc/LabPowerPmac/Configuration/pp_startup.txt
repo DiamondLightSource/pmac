@@ -1,4 +1,4 @@
-// get stuff working after wipe a reload
+// get stuff working after wipe and reload
 DISABLE PLC 2..17
 DISABLE PLC 18..31
 

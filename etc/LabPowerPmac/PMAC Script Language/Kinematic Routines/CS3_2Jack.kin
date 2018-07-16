@@ -40,24 +40,19 @@
 // - DEPTH = 0  Depth of the surface on the mount
 // ################################################
 
+// Select the coordinate system for these kinematics
 &3
 
-// Forward / Inverse shared varaiables ***************************
+#define J1POSF J1MRES*KinPosMotor3+J1OFF
+#define J2POSF J2MRES*KinPosMotor4+J2OFF
 #define HEIGHT KinPosAxisX
 #define ANGLE KinPosAxisY
 
-// Forward kinematic variables **********************************
-#define J1POSF (J1MRES*KinPosMotor1+J1OFF)
-#define J2POSF (J2MRES*KinPosMotor2+J2OFF)
-
-
-#define SIMPLE
-#ifndef SIMPLE
 OPEN FORWARD
 	local ratio
 
 	// set D0 to show we output axis 6 and 7 (X and Y) only in the forward kinematic
-	D0 = $C1
+	KinAxisUsed = $C0
     // this is the difference in height of the jacks divided by their distance apart
     ratio=(J2POSF-J1POSF)/DIST
     // this is the angle of the surface
@@ -84,26 +79,3 @@ OPEN INVERSE
     KinPosMotor3=(J1Pos-J1OFF)/J1MRES
     KinPosMotor4=(J2Pos-J2OFF)/J2MRES
 CLOSE
-
-#else
-
-// simple version of kinematics for test - both jacks follow height 
-// angle is replaced by offset between jacks
-OPEN FORWARD
-	// set D0 to show we output axis 6 and 7 (X and Y) only in the forward kinematic
-	D0 = $C1
-
-    // this is the offset between jacks
-    ANGLE=J2POSF-J1POSF
-    // the height of the Jack2
-    HEIGHT=J2POSF
-CLOSE
-
-
-OPEN INVERSE
-	KinPosMotor3=((HEIGHT-ANGLE)-J1OFF)/J1MRES
-    KinPosMotor4=(HEIGHT-J2OFF)/J2MRES
-CLOSE
-
-#endif
-
