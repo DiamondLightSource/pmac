@@ -1,0 +1,15 @@
+// Set some defaults for all CS axes
+i5213,15,100=10   // segmentation time (needed for lookahead)
+i5220,15,100=50   // lookahead length (needed to limit max velocity to max set in CS)
+
+OPEN PROG 10
+LINEAR
+ABS
+FRAX(A,B,C,U,V,W,X,Y,Z)
+// Q70 is used to set the move time.
+// The pmac driver sets Q70 based on the PV $(P):$(CS):CsMoveTime for deferred moves
+// and based on the motor record velocity (and move distance) for individual cs motor moves
+TM(Q70)
+A(Q71)B(Q72)C(Q73)U(Q74)V(Q75)W(Q76)X(Q77)Y(Q78)Z(Q79)
+DWELL0
+CLOSE

@@ -1,0 +1,35 @@
+
+
+
+// CS 3 Forward PLC variables **********************************
+#define J1POSP (J1MRES*Motor[3].ActPos+J1OFF)
+#define J2POSP (J2MRES*Motor[4].ActPos+J2OFF)
+#define HEIGHTP Coord[3].Q[87]
+#define ANGLEP Coord[3].Q[88]
+
+
+#define SIMPLE
+#ifndef SIMPLE
+OPEN PLC 18    
+	local ratio
+    // this is the difference in height of the jacks divided by their distance apart
+    ratio=(J2POSP-J1POSP)/DIST
+    // this is the angle of the surface
+    ANGLEP=atand(ratio)
+    // the height of the surface
+    HEIGHTP=J1POSP+ratio*PIVOT+DEPTH/cosd(ANGLEP)
+CLOSE
+
+#else
+
+// simple version of kinematics for test - both jacks follow height 
+// angle is replaced by offset between jacks
+
+OPEN PLC 18    
+    // this is the offset between jacks
+    ANGLEP=J2POSP-J1POSP
+    // the height of the Jack2
+    HEIGHTP=J2POSP
+CLOSE
+
+#endif

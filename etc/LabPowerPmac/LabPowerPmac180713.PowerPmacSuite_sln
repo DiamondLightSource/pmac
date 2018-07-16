@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# PowerPMAC Solution File, Format Version 11.00
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D6E1C338-3587-4566-BEE3-F0DEB1D41E98}") = "LabPowerPmac", "LabPowerPmac.ppproj", "{430F001B-4275-4CB5-8327-D3376757B112}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{430F001B-4275-4CB5-8327-D3376757B112}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{430F001B-4275-4CB5-8327-D3376757B112}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{430F001B-4275-4CB5-8327-D3376757B112}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{430F001B-4275-4CB5-8327-D3376757B112}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
