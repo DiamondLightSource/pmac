@@ -218,7 +218,7 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   char response[PMAC_CS_MAXBUF] = {0};
   static const char *functionName = "writeInt32";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
@@ -269,7 +269,7 @@ asynStatus pmacCSController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
   char command[PMAC_CS_MAXBUF] = {0};
   char response[PMAC_CS_MAXBUF] = {0};
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
@@ -302,7 +302,7 @@ asynStatus pmacCSController::processDeferredMoves(void) {
   int executeDeferred = 0;
   static const char *functionName = "processDeferredMoves";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   //Build up combined move command for all axes involved in the deferred move.
@@ -325,7 +325,6 @@ asynStatus pmacCSController::processDeferredMoves(void) {
 
       sprintf(fullCommand, "&%d%s Q70=%f B%dR", this->getCSNumber(), command, this->csMoveTime_,
               this->getProgramNumber());
-      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", fullCommand);
       status = this->immediateWriteRead(fullCommand, response);
     }
   }
@@ -476,7 +475,7 @@ asynStatus pmacCSController::tScanCheckForErrors() {
   asynStatus status = asynSuccess;
   static const char *functionName = "tScanCheckForErrors";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   if ((status_[2] & CS_STATUS3_LIMIT) != 0) {
     status = asynError;
@@ -497,7 +496,7 @@ asynStatus pmacCSController::tScanCheckProgramRunning(int *running) {
   asynStatus status = asynSuccess;
   static const char *functionName = "tScanCheckProgramRunning";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   if ((status_[0] & CS_STATUS1_RUNNING_PROG) != 0) {
     *running = 1;
@@ -568,7 +567,7 @@ asynStatus pmacCSController::pmacCSSetAxisDirectMapping(int axis, int mappedAxis
   asynStatus status;
   static const char *functionName = "pmacCSSetAxisDirectMapping";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   this->lock();
   status = setIntegerParam(axis, PMAC_CS_RealMotorNumber_, mappedAxis);

@@ -319,8 +319,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                       epicsThreadGetStackSize(epicsThreadStackMedium),
                       (EPICSTHREADFUNC) trajTaskC,
                       this);
-  }
-  else {
+  } else {
     debugf(DEBUG_ERROR, functionName,
            "FAILED TO CONNECT TO CONTROLLER '%s'. Restore controller and restart IOC.",
            portName);
@@ -390,8 +389,7 @@ asynStatus pmacController::initialSetup() {
 
   if (status != asynSuccess) {
     debug(DEBUG_ERROR, functionName, "Unable to initialise connection to PMAC!");
-  }
-  else {
+  } else {
     // Initialisation successful
     initialised_ = 1;
     setupBrokerVariables();
@@ -578,11 +576,11 @@ void pmacController::initAsynParams(void) {
   paramStatus = ((setIntegerParam(PMAC_C_SlowStore_, 0) == asynSuccess) && paramStatus);
 
   // Set individual axes parmeters
-  for(int index=0; index<numAxes_; index++) {
+  for (int index = 0; index < numAxes_; index++) {
     paramStatus = ((setIntegerParam(
             index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
     paramStatus = ((setIntegerParam(
-            index, PMAC_C_MotorScale_, 1)  == asynSuccess) &&paramStatus);
+            index, PMAC_C_MotorScale_, 1) == asynSuccess) && paramStatus);
   }
   callParamCallbacks();
 
@@ -694,7 +692,7 @@ void pmacController::setupBrokerVariables(void) {
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_SLOW_READ);
 }
 
-void pmacController::registerForLock(asynPortDriver* controller) {
+void pmacController::registerForLock(asynPortDriver *controller) {
   pBroker_->registerForLocks(controller);
 }
 
@@ -904,7 +902,7 @@ asynStatus pmacController::processDrvInfo(char *input, char *output) {
   int lstatus = 0;
   static const char *functionName = "processDrvInfo";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Search for any ` characters that represent an expression
   sqPtr = strchr(input, '`');
@@ -1805,7 +1803,7 @@ void pmacController::report(FILE *fp, int level) {
       pAxis = getAxis(axis);
       if (!pAxis) continue;
       fprintf(fp, "  axis %d\n"
-                      "    scale = %d\n",
+                  "    scale = %d\n",
               pAxis->axisNo_,
               pAxis->scale_);
     }
@@ -1835,7 +1833,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 
   debug(DEBUG_FLOW, functionName);
 
-  if(!initialised_) {
+  if (!initialised_) {
     return asynSuccess;
   }
 
@@ -1935,9 +1933,9 @@ pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size
   asynStatus status = asynSuccess;
   int function = pasynUser->reason;
   static const char *functionName = "writeFloat64Array";
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
-  if(!initialised_) {
+  if (!initialised_) {
     return asynSuccess;
   }
 
@@ -1986,9 +1984,9 @@ pmacController::writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t n
   asynStatus status = asynSuccess;
   int function = pasynUser->reason;
   static const char *functionName = "writeInt32Array";
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
-  if(!initialised_) {
+  if (!initialised_) {
     return asynSuccess;
   }
 
@@ -2032,7 +2030,7 @@ pmacController::writeOctet(asynUser *pasynUser, const char *value, size_t nChars
   char response[PMAC_MAXBUF_] = {0};
   const char *functionName = "writeOctet";
 
-  if(!initialised_) {
+  if (!initialised_) {
     return asynSuccess;
   }
 
@@ -2089,9 +2087,9 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   const char *name[128];
   static const char *functionName = "writeInt32";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
-  if(!initialised_) {
+  if (!initialised_) {
     return asynSuccess;
   }
 
@@ -2275,20 +2273,20 @@ asynStatus pmacController::poll() {
   debug(DEBUG_FLOW, functionName);
 
   epicsTimeGetCurrent(&nowTime_);
-  // Always call for a fast update
-  debug(DEBUG_TRACE, functionName, "Fast update has been called", tBuff);
 
   // First check the connection
   this->checkConnection();
 
   if (connected_ != 0 && initialised_ != 0) {
+    // Always call for a fast update
+    epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
+    debug(DEBUG_TIMING, functionName, "Fast update has been called", tBuff);
     pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
     this->updateStatistics();
     setDoubleParam(PMAC_C_FastUpdateTime_, pBroker_->readUpdateTime());
     if (epicsTimeDiffInSeconds(&nowTime_, &lastMediumTime_) >= PMAC_MEDIUM_LOOP_TIME / 1000.0) {
       epicsTimeAddSeconds(&lastMediumTime_, PMAC_MEDIUM_LOOP_TIME / 1000.0);
-      epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
-      debug(DEBUG_TRACE, functionName, "Medium update has been called", tBuff);
+      debug(DEBUG_TIMING, functionName, "Medium update has been called", tBuff);
       // Check if we are connected
       if (connected_ != 0 && initialised_ != 0) {
         pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
@@ -2296,8 +2294,7 @@ asynStatus pmacController::poll() {
     }
     if (epicsTimeDiffInSeconds(&nowTime_, &lastSlowTime_) >= PMAC_SLOW_LOOP_TIME / 1000.0) {
       epicsTimeAddSeconds(&lastSlowTime_, PMAC_SLOW_LOOP_TIME / 1000.0);
-      epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
-      debug(DEBUG_TRACE, functionName, "Slow update has been called", tBuff);
+      debug(DEBUG_TIMING, functionName, "Slow update has been called", tBuff);
       // Check if we are connected
       if (connected_ != 0 && initialised_ != 0) {
         pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
@@ -2311,7 +2308,7 @@ asynStatus pmacController::poll() {
 asynStatus pmacController::initializeProfile(size_t maxPoints) {
   static const char *functionName = "initializeProfile";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   debug(DEBUG_VARIABLE, functionName, "maxPoints", (int) maxPoints);
 
   // Allocate the pointers
@@ -2350,7 +2347,7 @@ asynStatus pmacController::buildProfile() {
   std::string csPortName;
   static const char *functionName = "buildProfile";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Read the port name for CS to execute
   getIntegerParam(PMAC_C_TrajCSPort_, &csPort);
@@ -2400,7 +2397,7 @@ asynStatus pmacController::buildProfile(int csNo) {
   int counter = 0;
   static const char *functionName = "buildProfile";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Set the status to building
   this->setBuildStatus(PROFILE_BUILD_BUSY, PROFILE_STATUS_UNDEFINED, "Building profile");
@@ -2613,7 +2610,7 @@ asynStatus pmacController::appendToProfile() {
   int numPointsToBuild = 0;
   static const char *functionName = "appendToProfile";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Set the status to busy
   this->setAppendStatus(PROFILE_BUILD_BUSY, PROFILE_STATUS_SUCCESS,
@@ -2669,7 +2666,7 @@ asynStatus pmacController::preparePMAC() {
   char cmd[1024];
   const char *functionName = "preparePMAC";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Set the trajectory CS number
   setIntegerParam(PMAC_C_TrajCSNumber_, tScanCSNo_);
@@ -2724,7 +2721,7 @@ asynStatus pmacController::executeProfile() {
   std::string csPortName;
   static const char *functionName = "executeProfile";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Read the port name for CS to execute
   getIntegerParam(PMAC_C_TrajCSPort_, &csPort);
@@ -2771,7 +2768,7 @@ asynStatus pmacController::executeProfile(int csNo) {
   int buildStatus = 0;
   static const char *functionName = "executeProfile";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Set the status to starting
   this->setProfileStatus(PROFILE_EXECUTE_MOVE_START, PROFILE_STATUS_UNDEFINED,
@@ -2841,7 +2838,7 @@ asynStatus pmacController::abortProfile() {
   int progRunning = 1;
   const char *functionName = "abortProfile";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Send an immediate abort signal to the PMAC
   sprintf(cmd, "%s=1", PMAC_TRAJ_ABORT);
@@ -2921,7 +2918,6 @@ void pmacController::trajectoryTask() {
 
       // Make sure axes are enabled
       sprintf(cmd, "&%dE", tScanCSNo_);
-      debug(DEBUG_TRACE, functionName, "Sending command to enable axes", cmd);
       this->immediateWriteRead(cmd, response);
 
       if (response[0] == 0x7) {
@@ -2946,7 +2942,6 @@ void pmacController::trajectoryTask() {
         sprintf(cmd, "%s=%d", PMAC_TRAJ_STATUS, PMAC_TRAJ_STATUS_RUNNING);
         this->immediateWriteRead(cmd, response);
         sprintf(cmd, "&%dB%dR", tScanCSNo_, progNo);
-        debug(DEBUG_TRACE, functionName, "Sending command to start the trajectory move", cmd);
         this->immediateWriteRead(cmd, response);
         // Check if this command returned an error
         if (response[0] == 0x7) {
@@ -3113,7 +3108,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
   char cstr[1024];
   const char *functionName = "sendTrajectoryDemands";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   startTimer(DEBUG_TIMING, functionName);
 
   // Calculate how many axes are included in this trajectory scan
@@ -3188,7 +3183,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
             status = pTrajectory_->getPosition(index, tScanPointCtr_, &posValue);
             doubleToPMACFloat(posValue, &ival);
             //doubleToPMACFloat(tScanPositions_[index][tScanPointCtr_], &ival);
-            sprintf(cmd[index], "%s,$%lX", cmd[index], (long)ival);
+            sprintf(cmd[index], "%s,$%lX", cmd[index], (long) ival);
           }
         }
       }
@@ -3258,7 +3253,7 @@ asynStatus pmacController::doubleToPMACFloat(double value, int64_t *representati
   double maxMantissa = 34359738368.0;  // 0x800000000
   const char *functionName = "doubleToPMACFloat";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   debugf(DEBUG_VARIABLE, functionName, "Value : %20.10lf\n", value);
 
   // Check for special case 0.0
@@ -3545,10 +3540,11 @@ asynStatus pmacController::makeCSDemandsConsistent() {
   char command[PMAC_MAXBUF_];
   char reply[PMAC_MAXBUF_];
   bool csHasRawMovedKinematics;
+  double pos;
   std::string axesString = "ABCUVWXYZ";
   asynStatus status = asynSuccess;
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Loop over all CS
   for (csNum = 0; csNum < PMAC_MAX_CS; csNum++) {
@@ -3580,13 +3576,15 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                   // Set the qvars assigned flag and send the relevant demand position
                   qvars_assigned = qvars_assigned | 1 << csAxisAssignmentNo;
                   debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
-                  if (this->csGroupSwitchCalled_ ) {
-                    sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getPosition());
+                  if (this->csGroupSwitchCalled_) {
+                    pos = aPtr->getPosition();
+                    debugf(DEBUG_TRACE, functionName, "CS%d Q%d set to current pos %f", csNum, qvar, pos);
+                    sprintf(command, "&%dQ%d=%f", csNum, qvar, pos);
+                  } else {
+                    pos = aPtr->getCachedPosition();
+                    debugf(DEBUG_TRACE, functionName, "CS%d Q%d set to cached pos %f", csNum, qvar, pos);
+                    sprintf(command, "&%dQ%d=%f", csNum, qvar, pos);
                   }
-                  else {
-                    sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getCachedPosition());
-                  }
-                  debug(DEBUG_TRACE, functionName, "Sending command", command);
                   if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
                     debug(DEBUG_ERROR, functionName, "Failed to send command", command);
                     status = asynError;
@@ -3595,7 +3593,6 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                 qvar = 1 + csAxisAssignmentNo;
                 debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
                 sprintf(command, "&%dQ%d=%f", csNum, qvar, aPtr->getPosition());
-                debug(DEBUG_TRACE, functionName, "Sending command", command);
                 if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
                   debug(DEBUG_ERROR, functionName, "Failed to send command", command);
                   status = asynError;
@@ -3620,7 +3617,6 @@ asynStatus pmacController::makeCSDemandsConsistent() {
           if (csHasRawMovedKinematics) {
             qvar = 70 + csAxisIndex;
             sprintf(command, "&%dQ%d=Q%d", csNum, qvar, (qvar + 10));
-            debug(DEBUG_TRACE, functionName, "Sending command", command);
             if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
               debug(DEBUG_ERROR, functionName, "Failed to send command", command);
               status = asynError;
@@ -3628,7 +3624,6 @@ asynStatus pmacController::makeCSDemandsConsistent() {
           }
           qvar = csAxisIndex;
           sprintf(command, "&%dQ%d=Q%d", csNum, qvar, (qvar + 70));
-          debug(DEBUG_TRACE, functionName, "Sending command", command);
           if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
             debug(DEBUG_ERROR, functionName, "Failed to send command", command);
             status = asynError;
@@ -3649,7 +3644,7 @@ asynStatus pmacController::readDeviceType() {
   int nvals = 0;
   static const char *functionName = "readDeviceType";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   strcpy(cmd, "cid");
   status = pBroker_->immediateWriteRead(cmd, reply);
@@ -3692,7 +3687,7 @@ asynStatus pmacController::listPLCProgram(int plcNo, char *buffer, size_t size) 
   static const char *functionName = "listPLCProgram";
 
   startTimer(DEBUG_ERROR, functionName);
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   debug(DEBUG_VARIABLE, functionName, "Listing PLC", plcNo);
 
   // Setup the list command
@@ -3731,7 +3726,7 @@ asynStatus pmacController::storeKinematics() {
   static const char *functionName = "storeKinematics";
 
   startTimer(DEBUG_TIMING, functionName);
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   while (csNo < PMAC_MAX_CS && status == asynSuccess) {
     // Read each forward kinematic
     status = listKinematic(csNo + 1, "forward", buffer, sizeof(buffer));
@@ -3764,7 +3759,7 @@ pmacController::listKinematic(int csNo, const std::string &type, char *buffer, s
   static const char *functionName = "listKinematic";
 
   startTimer(DEBUG_TIMING, functionName);
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   debug(DEBUG_VARIABLE, functionName, "Listing kinematics for CS", csNo);
 
   if (type != "forward" && type != "inverse") {
@@ -3815,7 +3810,7 @@ asynStatus pmacController::processDeferredMoves(void) {
   pmacAxis *pAxis = NULL;
   static const char *functionName = "processDeferredMoves";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   //Build up combined move command for all axes involved in the deferred move.
@@ -3863,7 +3858,7 @@ asynStatus pmacController::executeManualGroup() {
   char cmd[PMAC_MAXBUF];
   static const char *functionName = "executeManualGroup";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   strcpy(cmd, "");
   // Loop over each axis, collecting CS based information
@@ -3920,7 +3915,7 @@ asynStatus pmacController::updateCsAssignmentParameters() {
   std::string axesString = "ABCUVWXYZ";
   static const char *functionName = "updateCsAssignmentParameters";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   // Force updates of the fast loop to pickup any new CS numbers
   pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
   // Force two updates of the medium loop to pickup any new axis assignments
@@ -3932,10 +3927,10 @@ asynStatus pmacController::updateCsAssignmentParameters() {
   callParamCallbacks();
 
   // reset all CS axes RealMotor assignments before scanning real axes for current assignments
-  for (csNo=1; csNo<PMAC_MAX_CS; csNo++) {
-    pmacCSController* pCS = pCSControllers_[csNo];
-    if(pCS != NULL) {
-      for(int csAxis = 1; csAxis <= 9; csAxis++) {
+  for (csNo = 1; csNo < PMAC_MAX_CS; csNo++) {
+    pmacCSController *pCS = pCSControllers_[csNo];
+    if (pCS != NULL) {
+      for (int csAxis = 1; csAxis <= 9; csAxis++) {
         pCS->pmacCSSetAxisDirectMapping(csAxis, 0);
       }
     }
@@ -3953,10 +3948,9 @@ asynStatus pmacController::updateCsAssignmentParameters() {
         if (uCsAxisNo != std::string::npos) {
           // there is a direct mapping, tell the CS axis it has this mapping
           int csAxisAssignmentNo = (int) uCsAxisNo + 1;
-          if(pCSControllers_[csNo] != NULL) {
+          if (pCSControllers_[csNo] != NULL) {
             pCSControllers_[csNo]->pmacCSSetAxisDirectMapping(csAxisAssignmentNo, axis);
-          }
-          else {
+          } else {
             printf("Cs Controller Mapping is BAD\n");
           }
         }
@@ -3987,8 +3981,8 @@ asynStatus pmacController::tScanBuildProfileArray(double *positions, int axis, i
   getIntegerParam(PMAC_C_TrajCSPort_, &csEnum);
 
   // ask the CS for its axis resolution (axis no.s of CS are 1 based)
-  resolution = pCSControllers_[csEnum]->getAxisResolution(axis+1);
-  offset = pCSControllers_[csEnum]->getAxisOffset(axis+1);
+  resolution = pCSControllers_[csEnum]->getAxisResolution(axis + 1);
+  offset = pCSControllers_[csEnum]->getAxisOffset(axis + 1);
 
   if (status == asynSuccess) {
     debug(DEBUG_VARIABLE, functionName, "Resolution", resolution);
@@ -4010,7 +4004,7 @@ asynStatus pmacController::tScanIncludedAxes(int *axisMask) {
   int use = 0;
   static const char *functionName = "tScanIncludedAxes";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Loop over each axis and check if it is to be included in the trajectory scan
   //this->lock();

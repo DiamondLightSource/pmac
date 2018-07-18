@@ -12,6 +12,7 @@ const int pmacDebugger::DEBUG_VARIABLE = 1;
 const int pmacDebugger::DEBUG_TRACE = 2;
 const int pmacDebugger::DEBUG_FLOW = 4;
 const int pmacDebugger::DEBUG_TIMING = 8;
+const int pmacDebugger::DEBUG_PMAC = 16;
 
 pmacDebugger::pmacDebugger(const std::string &owner) :
         owner_(owner),

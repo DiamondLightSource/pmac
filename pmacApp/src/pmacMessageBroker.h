@@ -35,7 +35,7 @@ public:
 
     asynStatus getConnectedStatus(int *connected);
 
-    asynStatus immediateWriteRead(const char *command, char *response);
+    asynStatus immediateWriteRead(const char *command, char *response, bool trace=true);
 
     asynStatus addReadVariable(int type, const char *variable);
 

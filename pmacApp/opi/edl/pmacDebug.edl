@@ -4,9 +4,9 @@ major 4
 minor 0
 release 1
 x 1028
-y 37
+y 74
 w 851
-h 377
+h 383
 font "arial-bold-r-12.0"
 ctlFont "arial-bold-r-12.0"
 btnFont "arial-bold-r-12.0"
@@ -33,7 +33,7 @@ release 0
 x 0
 y 30
 w 850
-h 345
+h 355
 lineColor index 5
 fill
 fillColor index 5
@@ -1031,9 +1031,9 @@ major 4
 minor 1
 release 1
 x 430
-y 290
+y 285
 w 144
-h 75
+h 90
 font "courier-bold-r-14.0"
 fgColor index 14
 bgColor index 3
@@ -1044,6 +1044,7 @@ value {
   "DEBUG_TRACE    2"
   "DEBUG_FLOW     4"
   "DEBUG_TIMING   8"
+  "DEBUG_PMAC    16"
 }
 autoSize
 endObjectProperties

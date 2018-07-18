@@ -17,7 +17,7 @@ pmacTrajectory::pmacTrajectory() : pmacDebugger("pmacTrajectory") {
   profileVelMode_ = NULL;
   static const char *functionName = "pmacTrajectory";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 }
 
 pmacTrajectory::~pmacTrajectory() {
