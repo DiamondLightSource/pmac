@@ -14,6 +14,9 @@
  Motor[2].Servo.Kvff = 0
  Motor[2].Servo.Kaff = 0
  Motor[2].Servo.Ki = 0
+ 
+ // position control
+ Motor[2].InPosBand = 10
 
  // process Dac data
  EncTable[2].type = 1

@@ -15,6 +15,9 @@
  Motor[1].Servo.Kaff = 0
  Motor[1].Servo.Ki = 0
 
+ // position control
+ Motor[1].InPosBand = 10
+
  // process Dac data
  EncTable[1].type = 1
  EncTable[1].ScaleFactor = 1/65536
