@@ -1413,32 +1413,32 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
     }
   }
 
-  if (cid_ != PMAC_CID_POWER_) {
-    // For each axis read try to read the assignment
-    for (int axis = 1; axis <= this->numAxes_ - 1; axis++) {
-      if (this->getAxis(axis) != NULL) {
-        axisCs = this->getAxis(axis)->getAxisCSNo();
-      }
-      if (axisCs > 0) {
-        if (pCSControllers_[axisCs]) {
-          setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, axisCs);
-          //setStringParam(axis, PMAC_C_GroupCSPortRBV_, (pCSControllers_[axisCs]->getPortName()).c_str());
-        } else {
-          setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
-          //setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
-        }
-        sprintf(command, "&%d#%d->,", axisCs, axis);
-        if (sPtr->checkForItem(command)) {
-          debugf(DEBUG_VARIABLE, functionName, "Axis %d CS %d assignment: %s", axis, axisCs,
-                 (sPtr->readValue(command)).c_str());
-          setStringParam(axis, PMAC_C_GroupAssignRBV_, (sPtr->readValue(command)).c_str());
-        } else {
-          sPtr->addItem(command);
-        }
+  // For each axis read try to read the assignment
+  for (int axis = 1; axis <= this->numAxes_ - 1; axis++) {
+    axisCs = 0;
+    if (this->getAxis(axis) != NULL) {
+      axisCs = this->getAxis(axis)->getAxisCSNo();
+    }
+    if (axisCs > 0) {
+      if (pCSControllers_[axisCs]) {
+        setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, axisCs);
+        //setStringParam(axis, PMAC_C_GroupCSPortRBV_, (pCSControllers_[axisCs]->getPortName()).c_str());
       } else {
-        setStringParam(axis, PMAC_C_GroupAssignRBV_, "");
         setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
+        //setStringParam(axis, PMAC_C_GroupCSPortRBV_, "");
       }
+      std::string cs_cmd = pHardware_->getCSMappingCmd(axisCs, axis).c_str();
+      if (sPtr->checkForItem(cs_cmd)) {
+        const char* result = pHardware_->parseCSMappingResult(
+                sPtr->readValue(cs_cmd)).c_str();
+        debugf(DEBUG_VARIABLE, functionName, "Axis %d CS %d assignment: %s", axis, axisCs, result);
+        setStringParam(axis, PMAC_C_GroupAssignRBV_, result);
+      } else {
+        sPtr->addItem(cs_cmd);
+      }
+    } else {
+      setStringParam(axis, PMAC_C_GroupAssignRBV_, "");
+      setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0);
     }
   }
 
@@ -3621,12 +3621,12 @@ asynStatus pmacController::makeCSDemandsConsistent() {
               debug(DEBUG_ERROR, functionName, "Failed to send command", command);
               status = asynError;
             }
-          }
-          qvar = csAxisIndex;
-          sprintf(command, "&%dQ%d=Q%d", csNum, qvar, (qvar + 70));
-          if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
-            debug(DEBUG_ERROR, functionName, "Failed to send command", command);
-            status = asynError;
+            qvar = csAxisIndex;
+            sprintf(command, "&%dQ%d=Q%d", csNum, qvar, (qvar + 70));
+            if (pBroker_->immediateWriteRead(command, reply) != asynSuccess) {
+              debug(DEBUG_ERROR, functionName, "Failed to send command", command);
+              status = asynError;
+            }
           }
         }
       }

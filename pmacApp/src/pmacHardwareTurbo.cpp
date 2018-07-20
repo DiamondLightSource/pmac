@@ -13,6 +13,7 @@ const std::string pmacHardwareTurbo::AXIS_STATUS = "#%d?";
 const std::string pmacHardwareTurbo::CS_STATUS = "&%d??";
 const std::string pmacHardwareTurbo::CS_VEL_CMD = "&%dQ70=%f ";
 const std::string pmacHardwareTurbo::CS_ACCELERATION_CMD = "I%d87=%f";
+const std::string pmacHardwareTurbo::CS_AXIS_MAPPING = "&%d#%d->,";
 
 const int pmacHardwareTurbo::PMAC_STATUS1_MAXRAPID_SPEED = (0x1 << 0);
 const int pmacHardwareTurbo::PMAC_STATUS1_ALT_CMNDOUT_MODE = (0x1 << 1);
@@ -297,8 +298,21 @@ std::string pmacHardwareTurbo::getCSAccTimeCmd(int csNo, double time) {
   char cmd[64];
   static const char *functionName = "getCSAccTimeCmd";
 
-  debug(DEBUG_TRACE, functionName, "CS Number", csNo);
-  debug(DEBUG_TRACE, functionName, "time", time);
+  debug(DEBUG_FLOW, functionName, "CS Number", csNo);
+  debug(DEBUG_FLOW, functionName, "time", time);
   sprintf(cmd, CS_ACCELERATION_CMD.c_str(), csNo + 50, time);
   return std::string(cmd);
+}
+
+std::string pmacHardwareTurbo::getCSMappingCmd(int csNo, int axis) {
+  char cmd[10];
+  static const char *functionName = "getCSMappingCmd";
+
+  debugf(DEBUG_FLOW, functionName, "CsNo %d, Axis %d", csNo, axis);
+  sprintf(cmd, CS_AXIS_MAPPING.c_str(), csNo, axis);
+  return std::string(cmd);
+}
+
+std::string pmacHardwareTurbo::parseCSMappingResult(const std::string mappingResult) {
+  return mappingResult;
 }
