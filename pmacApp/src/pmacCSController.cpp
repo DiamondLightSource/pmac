@@ -521,6 +521,7 @@ asynStatus pmacCSController::makeCSDemandsConsistent() {
  * @param scale Scale factor to set
  */
 asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale) {
+  asynStatus result = asynSuccess;
   pmacCSAxis *pA = NULL;
   static const char *functionName = "pmacCSController::pmacSetAxisScale";
 
@@ -529,28 +530,28 @@ asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale) {
   if (scale < 1) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n",
               functionName);
-    return asynError;
-  }
+    result = asynError;
+  } else {
+    if (initialised()) {
+      this->lock();
+      pA = getAxis(axis);
+      if (pA) {
+        pA->scale_ = scale;
+        setIntegerParam(axis, PMAC_CS_MotorScale_, scale);
+        asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+                  "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
+                  functionName, pA->scale_, pA->axisNo_, portName);
 
-  if(initialised()) {
-    this->lock();
-    pA = getAxis(axis);
-    if (pA) {
-      pA->scale_ = scale;
-      setIntegerParam(axis, PMAC_CS_MotorScale_, scale);
-      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
-                "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
-                functionName, pA->scale_, pA->axisNo_, portName);
-
-    } else {
-      asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-                "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
-                axis);
-      return asynError;
+      } else {
+        asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+                  "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
+                  axis);
+        result = asynError;
+      }
+      this->unlock();
     }
-    this->unlock();
   }
-  return asynSuccess;
+  return result;
 }
 
 asynStatus pmacCSController::wakeupPoller() {

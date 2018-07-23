@@ -3377,6 +3377,7 @@ asynStatus pmacController::updateStatistics() {
  * @param axis Axis number to disable the check for.
  */
 asynStatus pmacController::pmacDisableLimitsCheck(int axis) {
+  asynStatus result = asynSuccess;
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacDisableLimitsCheck";
 
@@ -3393,10 +3394,10 @@ asynStatus pmacController::pmacDisableLimitsCheck(int axis) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
               "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
               axis);
-    return asynError;
+    result = asynError;
   }
   this->unlock();
-  return asynSuccess;
+  return result;
 }
 
 /**
@@ -3432,6 +3433,7 @@ asynStatus pmacController::pmacDisableLimitsCheck(void) {
  * @param scale Scale factor to set
  */
 asynStatus pmacController::pmacSetAxisScale(int axis, int scale) {
+  asynStatus result = asynSuccess;
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacSetAxisScale";
 
@@ -3440,26 +3442,26 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale) {
   if (scale < 1) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n",
               functionName);
-    return asynError;
-  }
-
-  this->lock();
-  pA = getAxis(axis);
-  if (pA) {
-    pA->scale_ = scale;
-    setIntegerParam(axis, PMAC_C_MotorScale_, scale);
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
-              "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
-              functionName, pA->scale_, pA->axisNo_, portName);
-
+    result = asynError;
   } else {
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-              "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
-              axis);
-    return asynError;
+    this->lock();
+    pA = getAxis(axis);
+    if (pA) {
+      pA->scale_ = scale;
+      setIntegerParam(axis, PMAC_C_MotorScale_, scale);
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+                "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
+                functionName, pA->scale_, pA->axisNo_, portName);
+
+    } else {
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+                "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
+                axis);
+      result = asynError;
+    }
+    this->unlock();
   }
-  this->unlock();
-  return asynSuccess;
+  return result;
 }
 
 
@@ -3477,6 +3479,7 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale) {
  * @param encoder_axis The axis number that the encoder is fed into.
  */
 asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis) {
+  asynStatus result = asynSuccess;
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacSetOpenLoopEncoderAxis";
 
@@ -3490,21 +3493,21 @@ asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis
       asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
                 "%s: Error: encoder axis %d has not been configured using pmacCreateAxis.\n",
                 functionName, encoder_axis);
-      return asynError;
+      result = asynError;
+    } else {
+      pA->encoder_axis_ = encoder_axis;
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+                "%s. Setting encoder axis %d for axis %d, on controller %s.\n",
+                functionName, pA->encoder_axis_, pA->axisNo_, portName);
     }
-    pA->encoder_axis_ = encoder_axis;
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
-              "%s. Setting encoder axis %d for axis %d, on controller %s.\n",
-              functionName, pA->encoder_axis_, pA->axisNo_, portName);
-
   } else {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
               "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
               axis);
-    return asynError;
+    result = asynError;
   }
   this->unlock();
-  return asynSuccess;
+  return result;
 }
 
 asynStatus pmacController::registerForCallbacks(pmacCallbackInterface *cbPtr, int type) {
@@ -3961,7 +3964,8 @@ asynStatus pmacController::updateCsAssignmentParameters() {
             pCSControllers_[csNo]->pmacCSSetAxisDirectMapping(csAxisAssignmentNo, axis);
           }
           else {
-            printf("Cs Controller Mapping is BAD\n");
+            debugf(DEBUG_ERROR, functionName, "Unsupported axis mapping %s in CS%d",
+                   csAssignment, csNo);
           }
         }
       }
