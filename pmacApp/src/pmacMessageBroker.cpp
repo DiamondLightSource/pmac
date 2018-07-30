@@ -8,7 +8,7 @@
 #include "pmacMessageBroker.h"
 
 const epicsUInt32  pmacMessageBroker::PMAC_MAXBUF_ = 1024;
-const epicsFloat64 pmacMessageBroker::PMAC_TIMEOUT_ = 5.0;
+const epicsFloat64 pmacMessageBroker::PMAC_TIMEOUT_ = 2.0;
 
 pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
         pmacDebugger("pmacMessageBroker"),
@@ -25,7 +25,8 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
         lastMsgBytesRead_(0),
         lastMsgTime_(0),
         updateTime_(0.0),
-        lock_count(0){
+        lock_count(0),
+        connected_(false){
   epicsTimeGetCurrent(&this->writeTime_);
   epicsTimeGetCurrent(&this->startTime_);
   epicsTimeGetCurrent(&this->currentTime_);
@@ -74,24 +75,27 @@ asynStatus pmacMessageBroker::getConnectedStatus(int *connected) {
   static const char *functionName = "getConnectedStatus";
   asynStatus status = asynSuccess;
   *connected = 0;
+  char response[PMAC_MAXBUF_];
   debug(DEBUG_TRACE, functionName);
-
-  if (lowLevelPortUser_) {
-    status = pasynManager->isConnected(lowLevelPortUser_, connected);
-    if (status != asynSuccess) {
-      asynPrint(this->ownerAsynUser_, ASYN_TRACE_ERROR,
-                "pmacController: Error calling pasynManager::isConnected.\n");
-    }
+  // pasynManager->isConnected always reports True (is this because of the
+  // interpose layer?) so send and receive a dummy message to check connection
+  if (!connected_)
+  {
+    status = this->lowLevelWriteRead("", response);
+    connected_ = status ==asynSuccess;
   }
+  *connected = connected_;
   return status;
 }
 
 asynStatus pmacMessageBroker::immediateWriteRead(const char *command, char *response) {
-  asynStatus status = asynSuccess;
+  asynStatus status = asynDisconnected;
   static const char *functionName = "immediateWriteRead";
-  this->startTimer(DEBUG_TIMING, functionName);
-  status = this->lowLevelWriteRead(command, response);
-  this->stopTimer(DEBUG_TIMING, functionName, "PMAC write/read time");
+  if (connected_) {
+    this->startTimer(DEBUG_TIMING, functionName);
+    status = this->lowLevelWriteRead(command, response);
+    this->stopTimer(DEBUG_TIMING, functionName, "PMAC write/read time");
+  }
   return status;
 }
 
@@ -449,8 +453,8 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   }
 
   if (status != asynSuccess) {
-    asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR,
-              "%s: Error from pasynOctetSyncIO->writeRead. command: %s\n", functionName, command);
+    // the next call to CheckConnectionStatus will restore the connected_ state
+    connected_ = false;
   } else {
     // Replace any carriage returns with spaces
     if (powerPMAC_) {

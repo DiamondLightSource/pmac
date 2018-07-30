@@ -41,41 +41,24 @@ class pmacCSController
 
 public:
     pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program);
-
     virtual ~pmacCSController();
-
+    bool initialised(void);
     std::string getPortName();
-
     asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
-
     asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
-
     void setDebugLevel(int level, int axis);
-
     bool getMoving();
-
     int getCSNumber();
-
     double getAxisResolution(int axis);
-
     double getAxisOffset(int axis);
-
     int getProgramNumber();
-
     csStatus getStatus();
-
     std::string getVelocityCmd(double velocity, double steps);
-
     std::string getCSAccTimeCmd(double time);
-
     void callback(pmacCommandStore *sPtr, int type);
-
     asynStatus immediateWriteRead(const char *command, char *response);
-
     asynStatus axisWriteRead(const char *command, char *response);
-
     pmacCSAxis *getAxis(asynUser *pasynUser);
-
     pmacCSAxis *getAxis(int axisNo);
 
     // Registration for callbacks
@@ -83,18 +66,13 @@ public:
 
     // Add PMAC variable/status item to monitor
     asynStatus monitorPMACVariable(int poll_speed, const char *var);
-
     asynStatus tScanCheckForErrors();
-
     asynStatus tScanCheckProgramRunning(int *running);
 
     // Ensure CS demands (Q71..9) are consistent after a motor move or CS change
     asynStatus makeCSDemandsConsistent();
-
     asynStatus pmacSetAxisScale(int axis, int scale);
-
     asynStatus wakeupPoller();
-
     asynStatus pmacCSSetAxisDirectMapping(int axis, int mappedAxis);
 
 protected:
@@ -118,7 +96,7 @@ private:
     epicsUInt32 movesDeferred_;
     int status_[3];
     csStatus cStatus_;
-    void *pC_;
+    pmacController *pC_;
     // csMoveTime_ defines how long a programmed move takes. The value of this parameter is always
     // put into Q70 before a call to PROG10 on the brick. A value of 0 means that the motion
     // will execute as fast as possible and the slowest motor will determine the time.
