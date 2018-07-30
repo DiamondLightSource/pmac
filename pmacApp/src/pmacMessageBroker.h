@@ -117,6 +117,9 @@ private:
     // number of registered locks
     int lock_count;
 
+    // connection status;
+    bool connected_;
+
     static const epicsUInt32 PMAC_MAXBUF_;
     static const epicsFloat64 PMAC_TIMEOUT_;
 };

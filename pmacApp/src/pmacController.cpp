@@ -42,7 +42,7 @@ using std::dec;
 static const char *driverName = "pmacController";
 
 const epicsUInt32 pmacController::PMAC_MAXBUF_ = PMAC_MAXBUF;
-const epicsFloat64 pmacController::PMAC_TIMEOUT_ = 5.0;
+const epicsFloat64 pmacController::PMAC_TIMEOUT_ = 2.0;
 const epicsUInt32 pmacController::PMAC_FEEDRATE_LIM_ = 100;
 const epicsUInt32 pmacController::PMAC_ERROR_PRINT_TIME_ = 600; //seconds
 const epicsUInt32 pmacController::PMAC_FORCED_FAST_POLLS_ = 10;
@@ -345,8 +345,6 @@ asynStatus pmacController::checkConnection() {
 
   if (pBroker_ != NULL) {
     status = pBroker_->getConnectedStatus(&connected);
-    // attempt reconnection
-
   } else {
     status = asynError;
   }
@@ -354,6 +352,8 @@ asynStatus pmacController::checkConnection() {
   if (status == asynSuccess) {
     connected_ = connected;
     debug(DEBUG_VARIABLE, functionName, "Connection status", connected_);
+  } else {
+    connected_ = false;
   }
 
   return status;
@@ -1790,6 +1790,8 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
   } else {
     strcpy(response, "");
     status = asynError;
+    // there is (most likely) a conection issue
+    connected_ = false;
   }
   return status;
 }
@@ -2304,6 +2306,12 @@ asynStatus pmacController::poll() {
         pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
       }
     }
+  } else {
+    // When there is no connection, set the problem flag
+    lock();
+    setIntegerParam(this->PMAC_C_GlobalStatus_, true);
+    callParamCallbacks();
+    unlock();
   }
 
   return asynSuccess;

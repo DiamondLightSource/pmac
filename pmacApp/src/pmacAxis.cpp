@@ -561,7 +561,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
-  if(pC_->initialised_) {
+  if(pC_->initialised_ && pC_->connected_) {
     /* Get the time and decide if we want to print errors.*/
     epicsTimeGetCurrent(&nowTime_);
     nowTimeSecs_ = nowTime_.secPastEpoch;
@@ -715,7 +715,6 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
           sprintf(key, "i%d24", axisNo_);
           value = sPtr->readValue(key);
           sscanf(value.c_str(), "$%x", &limitsDisabledBit);
-//          printf("Axis %d ixx24: %d\n", axisNo_, limitsDisabledBit);
           limitsDisabledBit = ((0x20000 & limitsDisabledBit) >> 17);
           if (limitsDisabledBit) {
             axisProblemFlag = 1;
@@ -755,6 +754,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
       amp_enabled_prev_ = amp_enabled_;
     }
   }
+
   return asynSuccess;
 }
 
@@ -768,6 +768,12 @@ asynStatus pmacAxis::poll(bool *moving) {
 
   if (axisNo_ != 0) {
     *moving = moving_;
+  }
+
+  if(!pC_->initialised_ || !pC_->connected_) {
+      // controller is not connected, set axis problem bit
+      setIntegerParam(pC_->motorStatusProblem_, true);
+      callParamCallbacks();
   }
 
   return status;
