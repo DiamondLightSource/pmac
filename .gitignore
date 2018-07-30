@@ -9,6 +9,7 @@ db
 dbd
 data
 iocs/lab
+iocs/gui
 iocs/lab-ppmac
 .idea
 CMakeLists.txt

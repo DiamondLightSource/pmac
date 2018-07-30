@@ -42,7 +42,7 @@ using std::dec;
 static const char *driverName = "pmacController";
 
 const epicsUInt32 pmacController::PMAC_MAXBUF_ = PMAC_MAXBUF;
-const epicsFloat64 pmacController::PMAC_TIMEOUT_ = 5.0;
+const epicsFloat64 pmacController::PMAC_TIMEOUT_ = 2.0;
 const epicsUInt32 pmacController::PMAC_FEEDRATE_LIM_ = 100;
 const epicsUInt32 pmacController::PMAC_ERROR_PRINT_TIME_ = 600; //seconds
 const epicsUInt32 pmacController::PMAC_FORCED_FAST_POLLS_ = 10;
@@ -179,17 +179,11 @@ extern "C"
 asynStatus
 pmacCreateController(const char *portName, const char *lowLevelPortName, int lowLevelPortAddress,
                      int numAxes, int movingPollPeriod, int idlePollPeriod);
-
 asynStatus pmacCreateAxis(const char *pmacName, int axis);
-
 asynStatus pmacCreateAxes(const char *pmacName, int numAxes);
-
 asynStatus pmacDisableLimitsCheck(const char *controller, int axis, int allAxes);
-
 asynStatus pmacSetAxisScale(const char *controller, int axis, int scale);
-
 asynStatus pmacSetOpenLoopEncoderAxis(const char *controller, int axis, int encoder_axis);
-
 }
 
 static void trajTaskC(void *drvPvt) {
@@ -217,12 +211,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                               0, 0),  // Default priority and stack size
           pmacDebugger("pmacController") {
   int index = 0;
-  int plcNo = 0;
-  int gpioNo = 0;
-  int progNo = 0;
-  int retries = 0;
-  char cmd[32];
-  asynStatus status = asynSuccess;
+  asynStatus status;
   static const char *functionName = "pmacController::pmacController";
 
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
@@ -292,6 +281,132 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   //pAxisZero = new pmacAxis(this, 0);
   pAxisZero = new pmacCSMonitor(this);
   pGroupList = new pmacCsGroups(this);
+
+  // Create the trajectory store
+  pTrajectory_ = new pmacTrajectory();
+
+  createAsynParams();
+
+  if (pBroker_->connect(lowLevelPortName, lowLevelPortAddress) != asynSuccess) {
+    printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName,
+           lowLevelPortName);
+    setIntegerParam(PMAC_C_CommsError_, PMAC_ERROR_);
+  } else {
+    setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
+  }
+
+  // Initialise the connection
+  this->checkConnection();
+
+  // Do nothing if we have failed to connect. Requires a restart once
+  // the brick is restored
+  if (connected_) {
+    initialSetup();
+    initAsynParams();
+
+    // Create the epicsEvents for signaling to start and stop scanning
+    this->startEventId_ = epicsEventCreate(epicsEventEmpty);
+    if (!this->startEventId_) {
+      printf("%s:%s epicsEventCreate failure for start event\n", driverName, functionName);
+    }
+    this->stopEventId_ = epicsEventCreate(epicsEventEmpty);
+    if (!this->stopEventId_) {
+      printf("%s:%s epicsEventCreate failure for stop event\n", driverName, functionName);
+    }
+
+    // Create the thread that executes trajectory scans
+    epicsThreadCreate("TrajScanTask",
+                      epicsThreadPriorityMedium,
+                      epicsThreadGetStackSize(epicsThreadStackMedium),
+                      (EPICSTHREADFUNC) trajTaskC,
+                      this);
+  }
+  else {
+    debugf(DEBUG_ERROR, functionName,
+           "FAILED TO CONNECT TO CONTROLLER '%s'. Restore controller and restart IOC.",
+           portName);
+  }
+}
+
+pmacController::~pmacController(void) {
+  //Destructor. Should never get here.
+  delete pAxisZero;
+}
+
+bool pmacController::initialised() {
+  return initialised_;
+}
+
+asynStatus pmacController::checkConnection() {
+  asynStatus status = asynSuccess;
+  int connected;
+  static const char *functionName = "checkConnection";
+  debug(DEBUG_FLOW, functionName);
+
+  if (pBroker_ != NULL) {
+    status = pBroker_->getConnectedStatus(&connected);
+  } else {
+    status = asynError;
+  }
+
+  if (status == asynSuccess) {
+    connected_ = connected;
+    debug(DEBUG_VARIABLE, functionName, "Connection status", connected_);
+  } else {
+    connected_ = false;
+  }
+
+  return status;
+}
+
+asynStatus pmacController::initialSetup() {
+  asynStatus status;
+  char response[1024];
+  static const char *functionName = "initialiseConnection";
+  debug(DEBUG_FLOW, functionName);
+
+  status = this->readDeviceType();
+
+  if (status == asynSuccess) {
+    // Check for powerPMAC connection
+    if (cid_ == PMAC_CID_POWER_) {
+      pHardware_ = new pmacHardwarePower();
+      // Mark the connection
+      pBroker_->markAsPowerPMAC();
+      // set the echo to 7
+      this->lowLevelWriteRead("echo 7", response);
+    } else if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_PMAC_ ||
+               cid_ == PMAC_CID_CLIPPER_) {
+      pHardware_ = new pmacHardwareTurbo();
+    } else {
+      // This is bad so output an error and return error status
+      debug(DEBUG_ERROR, functionName, "Unknown hardware CID:", cid_);
+      status = asynError;
+    }
+    if (status == asynSuccess) {
+      // Register this controller with the hardware class
+      pHardware_->registerController(this);
+    }
+  }
+
+  if (status != asynSuccess) {
+    debug(DEBUG_ERROR, functionName, "Unable to initialise connection to PMAC!");
+  }
+  else {
+    // Initialisation successful
+    initialised_ = 1;
+    setupBrokerVariables();
+    // Read the kinematics if we aren't a power pmac
+    if (cid_ != PMAC_CID_POWER_) {
+      status = this->storeKinematics();
+    }
+  }
+
+  return status;
+}
+
+void pmacController::createAsynParams(void) {
+  int index = 0;
 
   //Create controller-specific parameters
   createParam(PMAC_C_FirstParamString, asynParamInt32, &PMAC_C_FirstParam_);
@@ -404,34 +519,10 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
     createParam(PMAC_C_InverseKinematicString[index], asynParamOctet,
                 &PMAC_C_InverseKinematic_[index]);
   }
+}
 
-  // Create the trajectory store
-  pTrajectory_ = new pmacTrajectory();
-
-  if (pBroker_->connect(lowLevelPortName, lowLevelPortAddress) != asynSuccess) {
-    printf("%s: Failed to connect to low level asynOctetSyncIO port %s\n", functionName,
-           lowLevelPortName);
-    setIntegerParam(PMAC_C_CommsError_, PMAC_ERROR_);
-  } else {
-    setIntegerParam(PMAC_C_CommsError_, PMAC_OK_);
-  }
-
-  // Initialise the connection
-  status = this->initialiseConnection();
-  if (status != asynSuccess) {
-    debug(DEBUG_ERROR, functionName, "Unable to initialise connection, retrying...");
-    while (status == asynError && retries < 5) {
-      retries++;
-      debug(DEBUG_ERROR, functionName, "Connection retry number", retries);
-      pBroker_->disconnect();
-      pBroker_->connect(lowLevelPortName, lowLevelPortAddress);
-      status = this->initialiseConnection();
-    }
-  }
-  if (status == asynError) {
-    debug(DEBUG_ERROR, functionName, "Failed to connect after several retries, aborting");
-    return;
-  }
+void pmacController::initAsynParams(void) {
+  const char *functionName = "initAsynParams";
 
   bool paramStatus = true;
   paramStatus = ((setIntegerParam(PMAC_C_StopAll_, 0) == asynSuccess) && paramStatus);
@@ -443,7 +534,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setDoubleParam(PMAC_C_FastUpdateTime_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_AxisReadonly_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_CoordSysGroup_, 0) == asynSuccess) && paramStatus);
-  for (int axis = 0; axis <= numAxes; axis++) {
+  for (int axis = 0; axis < numAxes_; axis++) {
     paramStatus = ((setIntegerParam(axis, PMAC_C_GroupCSPort_, 0) == asynSuccess) && paramStatus);
     paramStatus = ((setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, 0) == asynSuccess) &&
                    paramStatus);
@@ -488,7 +579,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   paramStatus = ((setIntegerParam(PMAC_C_SlowStore_, 0) == asynSuccess) && paramStatus);
 
   // Set individual axes parmeters
-  for(index=0; index<=numAxes; index++) {
+  for(int index=0; index<numAxes_; index++) {
     paramStatus = ((setIntegerParam(
             index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
     paramStatus = ((setIntegerParam(
@@ -500,6 +591,14 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
               "%s Unable To Set Driver Parameters In Constructor.\n", functionName);
   }
+}
+
+void pmacController::setupBrokerVariables(void) {
+  int plcNo = 0;
+  int gpioNo = 0;
+  int progNo = 0;
+  char cmd[32];
+  static const char *functionName = "pmacController::setupBrokerVariables";
 
   // Add the items required for global status
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ,
@@ -594,28 +693,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_FAST_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_SLOW_READ);
-
-  // Create the epicsEvents for signaling to start and stop scanning
-  this->startEventId_ = epicsEventCreate(epicsEventEmpty);
-  if (!this->startEventId_) {
-    printf("%s:%s epicsEventCreate failure for start event\n", driverName, functionName);
-  }
-  this->stopEventId_ = epicsEventCreate(epicsEventEmpty);
-  if (!this->stopEventId_) {
-    printf("%s:%s epicsEventCreate failure for stop event\n", driverName, functionName);
-  }
-
-  // Create the thread that executes trajectory scans
-  epicsThreadCreate("TrajScanTask",
-                    epicsThreadPriorityMedium,
-                    epicsThreadGetStackSize(epicsThreadStackMedium),
-                    (EPICSTHREADFUNC) trajTaskC,
-                    this);
-}
-
-pmacController::~pmacController(void) {
-  //Destructor. Should never get here.
-  delete pAxisZero;
 }
 
 void pmacController::registerForLock(asynPortDriver* controller) {
@@ -994,84 +1071,6 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
   }
   unlock();
   callParamCallbacks();
-}
-
-asynStatus pmacController::checkConnection() {
-  asynStatus status = asynSuccess;
-  int connected;
-  static const char *functionName = "checkConnection";
-  debug(DEBUG_FLOW, functionName);
-
-  if (pBroker_ != NULL) {
-    status = pBroker_->getConnectedStatus(&connected);
-  } else {
-    status = asynError;
-  }
-
-  if (status == asynSuccess) {
-    connected_ = connected;
-    debug(DEBUG_VARIABLE, functionName, "Connection status", connected_);
-  }
-
-  return status;
-}
-
-asynStatus pmacController::initialiseConnection() {
-  asynStatus status = asynSuccess;
-  char response[1024];
-  static const char *functionName = "initialiseConnection";
-  debug(DEBUG_FLOW, functionName);
-
-  // Set the initialised state to bad
-  initialised_ = 0;
-
-  // Check the connection status
-  status = this->checkConnection();
-
-  if (status == asynSuccess) {
-    if (connected_ != 0) {
-      // Attempt to read the device type
-      status = this->readDeviceType();
-
-      if (status == asynSuccess) {
-        // Check for powerPMAC connection
-        if (cid_ == PMAC_CID_POWER_) {
-          pHardware_ = new pmacHardwarePower();
-          // Mark the connection
-          pBroker_->markAsPowerPMAC();
-          // set the echo to 7
-          this->lowLevelWriteRead("echo 7", response);
-        } else if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_PMAC_ ||
-                cid_ == PMAC_CID_CLIPPER_) {
-          pHardware_ = new pmacHardwareTurbo();
-        } else {
-          // This is bad so output an error and return error status
-          debug(DEBUG_ERROR, functionName, "Unknown hardware CID:", cid_);
-          status = asynError;
-        }
-        if (status == asynSuccess) {
-          // Register this controller with the hardware class
-          pHardware_->registerController(this);
-        }
-      }
-      if (status == asynSuccess) {
-        // Initialisation successful
-        initialised_ = 1;
-        // Read the kinematics if we aren't a power pmac
-        if (cid_ != PMAC_CID_POWER_) {
-          status = this->storeKinematics();
-        }
-      }
-    } else {
-      status = asynError;
-    }
-  }
-
-  if (status != asynSuccess) {
-    debug(DEBUG_ERROR, functionName, "Unable to initialise connection to PMAC!");
-  }
-
-  return status;
 }
 
 asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
@@ -1791,6 +1790,8 @@ asynStatus pmacController::lowLevelWriteRead(const char *command, char *response
   } else {
     strcpy(response, "");
     status = asynError;
+    // there is (most likely) a conection issue
+    connected_ = false;
   }
   return status;
 }
@@ -1836,6 +1837,10 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
   static const char *functionName = "writeFloat64";
 
   debug(DEBUG_FLOW, functionName);
+
+  if(!initialised_) {
+    return asynSuccess;
+  }
 
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
@@ -1935,6 +1940,10 @@ pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size
   static const char *functionName = "writeFloat64Array";
   debug(DEBUG_TRACE, functionName);
 
+  if(!initialised_) {
+    return asynSuccess;
+  }
+
   if (!profileInitialized_) {
     // Initialise the trajectory scan interface pointers
     debug(DEBUG_TRACE, functionName, "Initialising CS trajectory scan interface");
@@ -1982,6 +1991,10 @@ pmacController::writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t n
   static const char *functionName = "writeInt32Array";
   debug(DEBUG_TRACE, functionName);
 
+  if(!initialised_) {
+    return asynSuccess;
+  }
+
   if (!profileInitialized_) {
     // Initialise the trajectory scan interface pointers
     debug(DEBUG_FLOW, functionName, "Initialising trajectory scan interface");
@@ -2021,6 +2034,10 @@ pmacController::writeOctet(asynUser *pasynUser, const char *value, size_t nChars
   char command[PMAC_MAXBUF_] = {0};
   char response[PMAC_MAXBUF_] = {0};
   const char *functionName = "writeOctet";
+
+  if(!initialised_) {
+    return asynSuccess;
+  }
 
   status = getAddress(pasynUser, &addr);
   if (status != asynSuccess) return (status);
@@ -2076,6 +2093,10 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   static const char *functionName = "writeInt32";
 
   debug(DEBUG_TRACE, functionName);
+
+  if(!initialised_) {
+    return asynSuccess;
+  }
 
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
@@ -2267,24 +2288,30 @@ asynStatus pmacController::poll() {
     pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
     this->updateStatistics();
     setDoubleParam(PMAC_C_FastUpdateTime_, pBroker_->readUpdateTime());
-  }
-  if (epicsTimeDiffInSeconds(&nowTime_, &lastMediumTime_) >= PMAC_MEDIUM_LOOP_TIME / 1000.0) {
-    epicsTimeAddSeconds(&lastMediumTime_, PMAC_MEDIUM_LOOP_TIME / 1000.0);
-    epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
-    debug(DEBUG_TRACE, functionName, "Medium update has been called", tBuff);
-    // Check if we are connected
-    if (connected_ != 0 && initialised_ != 0) {
-      pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+    if (epicsTimeDiffInSeconds(&nowTime_, &lastMediumTime_) >= PMAC_MEDIUM_LOOP_TIME / 1000.0) {
+      epicsTimeAddSeconds(&lastMediumTime_, PMAC_MEDIUM_LOOP_TIME / 1000.0);
+      epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
+      debug(DEBUG_TRACE, functionName, "Medium update has been called", tBuff);
+      // Check if we are connected
+      if (connected_ != 0 && initialised_ != 0) {
+        pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+      }
     }
-  }
-  if (epicsTimeDiffInSeconds(&nowTime_, &lastSlowTime_) >= PMAC_SLOW_LOOP_TIME / 1000.0) {
-    epicsTimeAddSeconds(&lastSlowTime_, PMAC_SLOW_LOOP_TIME / 1000.0);
-    epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
-    debug(DEBUG_TRACE, functionName, "Slow update has been called", tBuff);
-    // Check if we are connected
-    if (connected_ != 0 && initialised_ != 0) {
-      pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+    if (epicsTimeDiffInSeconds(&nowTime_, &lastSlowTime_) >= PMAC_SLOW_LOOP_TIME / 1000.0) {
+      epicsTimeAddSeconds(&lastSlowTime_, PMAC_SLOW_LOOP_TIME / 1000.0);
+      epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
+      debug(DEBUG_TRACE, functionName, "Slow update has been called", tBuff);
+      // Check if we are connected
+      if (connected_ != 0 && initialised_ != 0) {
+        pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+      }
     }
+  } else {
+    // When there is no connection, set the problem flag
+    lock();
+    setIntegerParam(this->PMAC_C_GlobalStatus_, true);
+    callParamCallbacks();
+    unlock();
   }
 
   return asynSuccess;
@@ -3358,6 +3385,7 @@ asynStatus pmacController::updateStatistics() {
  * @param axis Axis number to disable the check for.
  */
 asynStatus pmacController::pmacDisableLimitsCheck(int axis) {
+  asynStatus result = asynSuccess;
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacDisableLimitsCheck";
 
@@ -3374,10 +3402,10 @@ asynStatus pmacController::pmacDisableLimitsCheck(int axis) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
               "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
               axis);
-    return asynError;
+    result = asynError;
   }
   this->unlock();
-  return asynSuccess;
+  return result;
 }
 
 /**
@@ -3413,6 +3441,7 @@ asynStatus pmacController::pmacDisableLimitsCheck(void) {
  * @param scale Scale factor to set
  */
 asynStatus pmacController::pmacSetAxisScale(int axis, int scale) {
+  asynStatus result = asynSuccess;
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacSetAxisScale";
 
@@ -3421,26 +3450,26 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale) {
   if (scale < 1) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR, "%s: Error: scale factor must be >=1.\n",
               functionName);
-    return asynError;
-  }
-
-  this->lock();
-  pA = getAxis(axis);
-  if (pA) {
-    pA->scale_ = scale;
-    setIntegerParam(axis, PMAC_C_MotorScale_, scale);
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
-              "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
-              functionName, pA->scale_, pA->axisNo_, portName);
-
+    result = asynError;
   } else {
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-              "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
-              axis);
-    return asynError;
+    this->lock();
+    pA = getAxis(axis);
+    if (pA) {
+      pA->scale_ = scale;
+      setIntegerParam(axis, PMAC_C_MotorScale_, scale);
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+                "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
+                functionName, pA->scale_, pA->axisNo_, portName);
+
+    } else {
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+                "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
+                axis);
+      result = asynError;
+    }
+    this->unlock();
   }
-  this->unlock();
-  return asynSuccess;
+  return result;
 }
 
 
@@ -3458,6 +3487,7 @@ asynStatus pmacController::pmacSetAxisScale(int axis, int scale) {
  * @param encoder_axis The axis number that the encoder is fed into.
  */
 asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis) {
+  asynStatus result = asynSuccess;
   pmacAxis *pA = NULL;
   static const char *functionName = "pmacController::pmacSetOpenLoopEncoderAxis";
 
@@ -3471,21 +3501,21 @@ asynStatus pmacController::pmacSetOpenLoopEncoderAxis(int axis, int encoder_axis
       asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
                 "%s: Error: encoder axis %d has not been configured using pmacCreateAxis.\n",
                 functionName, encoder_axis);
-      return asynError;
+      result = asynError;
+    } else {
+      pA->encoder_axis_ = encoder_axis;
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+                "%s. Setting encoder axis %d for axis %d, on controller %s.\n",
+                functionName, pA->encoder_axis_, pA->axisNo_, portName);
     }
-    pA->encoder_axis_ = encoder_axis;
-    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
-              "%s. Setting encoder axis %d for axis %d, on controller %s.\n",
-              functionName, pA->encoder_axis_, pA->axisNo_, portName);
-
   } else {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
               "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
               axis);
-    return asynError;
+    result = asynError;
   }
   this->unlock();
-  return asynSuccess;
+  return result;
 }
 
 asynStatus pmacController::registerForCallbacks(pmacCallbackInterface *cbPtr, int type) {
@@ -3501,15 +3531,17 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
 
   debug(DEBUG_VARIABLE, functionName, "Registering CS", csNo);
 
+  // Add the CS to the list
+  pCSControllers_[csNo] = csPtr;
+
   // Record the port name to CS number mapping
   debug(DEBUG_ERROR, functionName, "CS port name", portName);
   pPortToCs_->insert(portName, csNo);
 
-  // Add the CS to the list
-  pCSControllers_[csNo] = csPtr;
+  // setup monitoring of movement of all axes in this CS
   pAxisZero->registerCS(csPtr, csNo);
 
-  // First add the CS status item to the fast update
+  // Add the CS status item to the fast update
   this->pHardware_->setupCSStatus(csNo);
 
   // Now register the CS object for callbacks from the broker
@@ -3936,7 +3968,13 @@ asynStatus pmacController::updateCsAssignmentParameters() {
         if (uCsAxisNo != std::string::npos) {
           // there is a direct mapping, tell the CS axis it has this mapping
           int csAxisAssignmentNo = (int) uCsAxisNo + 1;
-          pCSControllers_[csNo]->pmacCSSetAxisDirectMapping(csAxisAssignmentNo, axis);
+          if(pCSControllers_[csNo] != NULL) {
+            pCSControllers_[csNo]->pmacCSSetAxisDirectMapping(csAxisAssignmentNo, axis);
+          }
+          else {
+            debugf(DEBUG_ERROR, functionName, "Unsupported axis mapping %s in CS%d",
+                   csAssignment, csNo);
+          }
         }
       }
     }

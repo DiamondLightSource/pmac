@@ -87,12 +87,16 @@ BOOST_AUTO_TEST_CASE(test_PMACMessageBroker)
 
   // Try to send a write/read
   strcpy(command, "TEST COMMAND");
-  BOOST_CHECK_EQUAL(pMB->immediateWriteRead(command, response), asynError);
+  BOOST_CHECK_EQUAL(pMB->immediateWriteRead(command, response), asynDisconnected);
 
-  // Connect to the mock driver
+  // Connect to the mock drive
   BOOST_CHECK_EQUAL(pMB->connect(mockport.c_str(), 0), asynSuccess);
 
   // Check the broker is connected
+  // getConnectedStatus now sends a blank message to check connection
+  // the message is 0 long and the OK response is 2 characters,
+  // readStatistics expected results were altered accordingly
+  pMock->setResponse("OK");
   BOOST_CHECK_NO_THROW(pMB->getConnectedStatus(&connected));
   BOOST_CHECK_EQUAL(connected, 1);
 
@@ -167,11 +171,11 @@ BOOST_AUTO_TEST_CASE(test_PMACMessageBroker)
                                         &lastMsgTime), asynSuccess);
 
   // Verify the number of messages sent is 4
-  BOOST_CHECK_EQUAL(noOfMsgs, 4);
+  BOOST_CHECK_EQUAL(noOfMsgs, 5);
   // Verify total bytes written is 41
   BOOST_CHECK_EQUAL(totalBytesWritten, 41);
   // Verify total bytes read is 31
-  BOOST_CHECK_EQUAL(totalBytesRead, 31);
+  BOOST_CHECK_EQUAL(totalBytesRead, 33);
   // Verify total message time is greater than 0
   BOOST_CHECK_GT(totalMsgTime, 0);
   // Verify last message bytes written is 9
