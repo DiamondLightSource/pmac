@@ -6,6 +6,8 @@ from datetime import datetime
 from test.brick.testbrick import TestBrick, DECIMALS
 from cothread import Sleep
 from test.brick.movemonitor import MoveMonitor, MotorCallback
+import pytest
+import os
 
 
 # These tests verify additional functions of the driver
@@ -13,6 +15,7 @@ from test.brick.movemonitor import MoveMonitor, MotorCallback
 
 class TestGeneral(TestCase):
 
+    @pytest.mark.skipif(os.environ['PPMAC'] == 'TRUE', reason="not supported on PPMAC yet")
     def test_auto_home(self):
         """ verify that autohome works as expected
         """

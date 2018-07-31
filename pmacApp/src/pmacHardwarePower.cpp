@@ -14,6 +14,8 @@ const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
 const std::string pmacHardwarePower::CS_STATUS = "&%d?";
 const std::string pmacHardwarePower::CS_VEL_CMD = "&%dQ70=%f ";
 const std::string pmacHardwarePower::CS_ACCELERATION_CMD = "Coord[%d].Ta=%f Coord[%d].Td=%f";
+// the trailing &d stops clashes from occurring since comma is not allowed on ppmac
+const std::string pmacHardwarePower::CS_AXIS_MAPPING = "#%d->&%d";
 
 const int pmacHardwarePower::PMAC_STATUS1_TRIGGER_MOVE = (0x1 << 31);
 const int pmacHardwarePower::PMAC_STATUS1_HOMING = (0x1 << 30);
@@ -245,8 +247,32 @@ std::string pmacHardwarePower::getCSAccTimeCmd(int csNo, double time) {
   char cmd[64];
   static const char *functionName = "getCSAccTimeCmd";
 
-  debug(DEBUG_TRACE, functionName, "CS Number", csNo);
+  debug(DEBUG_FLOW, functionName, "CS Number", csNo);
   debug(DEBUG_TRACE, functionName, "time", time);
   sprintf(cmd, CS_ACCELERATION_CMD.c_str(), csNo, time, csNo, time);
   return std::string(cmd);
+}
+
+
+std::string pmacHardwarePower::getCSMappingCmd(int csNo, int axis) {
+  char cmd[255];
+  static const char *functionName = "getCSMappingCmd";
+
+  debugf(DEBUG_FLOW, functionName, "CsNo %d, Axis %d", csNo, axis);
+  sprintf(cmd, CS_AXIS_MAPPING.c_str(), axis, csNo);
+  return std::string(cmd);
+}
+
+std::string pmacHardwarePower::parseCSMappingResult(const std::string mappingResult) {
+  std::string result;
+  static const char *functionName = "parseCSMappingResult";
+  debugf(DEBUG_FLOW, functionName, "command %s", mappingResult.c_str());
+
+  if (mappingResult.length() > 0) {
+    const char* mapping = mappingResult.substr(mappingResult.length() - 1, 1).c_str();
+    char upper_mapping = (char)toupper(mapping[0]);
+    result = std::string(1, upper_mapping);
+  }
+
+  return result;
 }

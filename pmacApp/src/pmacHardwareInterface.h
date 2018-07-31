@@ -77,6 +77,10 @@ public:
 
     virtual std::string getCSAccTimeCmd(int csNo, double time) = 0;
 
+    virtual std::string getCSMappingCmd(int csNo, int axis) = 0;
+
+    virtual std::string parseCSMappingResult(const std::string mappingResult) = 0;
+
 protected:
     pmacController *pC_;
 };

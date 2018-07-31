@@ -12,6 +12,7 @@ const int pmacDebugger::DEBUG_VARIABLE = 1;
 const int pmacDebugger::DEBUG_TRACE = 2;
 const int pmacDebugger::DEBUG_FLOW = 4;
 const int pmacDebugger::DEBUG_TIMING = 8;
+const int pmacDebugger::DEBUG_PMAC = 16;
 
 pmacDebugger::pmacDebugger(const std::string &owner) :
         owner_(owner),
@@ -115,7 +116,7 @@ void pmacDebugger::stopTimer(int level, const std::string &method, const std::st
       ts1.secPastEpoch = timerSeconds_.lookup(method);
       ts1.nsec = timerNanoSeconds_.lookup(method);
       double dt = epicsTimeDiffInSeconds(&ts2, &ts1);
-      printf("%s::%s : %s => %lf\n", owner_.c_str(), method.c_str(), message.c_str(), dt);
+      printf("%s::%s : %s => %f\n", owner_.c_str(), method.c_str(), message.c_str(), dt);
     }
   }
 }

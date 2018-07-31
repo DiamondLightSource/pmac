@@ -237,7 +237,7 @@ class TestDirect(TestCase):
                 self.assertAlmostEqual(tb.jack1.pos, height1, DECIMALS)
                 self.assertAlmostEqual(tb.jack2.pos, height2, DECIMALS)
 
-    def test_small_steps(self):
+    def test_i16_small_steps(self):
         """ verify real motor deferred direct moves work in quick succession
             using virtual 1-1 mapped axes with CS motor record
 

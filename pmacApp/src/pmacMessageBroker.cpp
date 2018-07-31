@@ -76,7 +76,7 @@ asynStatus pmacMessageBroker::getConnectedStatus(int *connected) {
   asynStatus status = asynSuccess;
   *connected = 0;
   char response[PMAC_MAXBUF_];
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   // pasynManager->isConnected always reports True (is this because of the
   // interpose layer?) so send and receive a dummy message to check connection
   if (!connected_)
@@ -88,9 +88,13 @@ asynStatus pmacMessageBroker::getConnectedStatus(int *connected) {
   return status;
 }
 
-asynStatus pmacMessageBroker::immediateWriteRead(const char *command, char *response) {
+asynStatus pmacMessageBroker::immediateWriteRead(const char *command, char *response, bool trace) {
   asynStatus status = asynDisconnected;
   static const char *functionName = "immediateWriteRead";
+  // don't trace broker polling to avoid too much noise
+  if (trace) {
+    debug(DEBUG_PMAC, "PMAC", "command", command);
+  }
   if (connected_) {
     this->startTimer(DEBUG_TIMING, functionName);
     status = this->lowLevelWriteRead(command, response);
@@ -122,7 +126,6 @@ asynStatus pmacMessageBroker::addReadVariable(int type, const char *variable) {
 }
 
 asynStatus pmacMessageBroker::updateVariables(int type) {
-  asynStatus status = asynSuccess;
   static const char *functionName = "updateVariables";
   char response[1024];
   std::string cmd;
@@ -152,7 +155,7 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
         for (int index = 0; index < noOfCmds; index++) {
           cmd = fastStore_.readCommandString(index);
           if (cmd.length() > 0) {
-            this->immediateWriteRead(cmd.c_str(), response);
+            this->immediateWriteRead(cmd.c_str(), response, false);
             debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
             // Update the store with the response
             fastStore_.updateReply(cmd, response);
@@ -169,7 +172,7 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
       for (int index = 0; index < noOfCmds; index++) {
         cmd = mediumStore_.readCommandString(index);
         if (cmd.length() > 0) {
-          this->immediateWriteRead(cmd.c_str(), response);
+          this->immediateWriteRead(cmd.c_str(), response, false);
           // Update the store with the response
           mediumStore_.updateReply(cmd, response);
         }
@@ -184,7 +187,7 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
       for (int index = 0; index < noOfCmds; index++) {
         cmd = slowStore_.readCommandString(index);
         if (cmd.length() > 0) {
-          this->immediateWriteRead(cmd.c_str(), response);
+          this->immediateWriteRead(cmd.c_str(), response, false);
           // Update the store with the response
           slowStore_.updateReply(cmd, response);
         }
@@ -192,9 +195,8 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
       // Perform the necessary callbacks
       slowCallbacks_->callCallbacks(&slowStore_);
     }
-  } else {
-    status = asynError;
   }
+
   stopTimer(DEBUG_TIMING, functionName, "Time taken for updates");
 
   // Unlock the mutex

@@ -145,7 +145,6 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
           progNumber_(program),
           movesDeferred_(0),
           csMoveTime_(0) {
-  asynStatus status = asynSuccess;
   static const char *functionName = "pmacCSController";
 
   // Init the status
@@ -160,11 +159,10 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   pC_ = (pmacController*) findAsynPortDriver(controllerPortName);
   if (!pC_) {
     debug(DEBUG_ERROR, functionName, "ERROR port not found", controllerPortName);
-    status = asynError;
   }
 
   // tell the broker to lock me when polling the brick
-  ((pmacController *) pC_)->registerForLock(this);
+  pC_->registerForLock(this);
 
   //Create controller-specific parameters
   bool paramStatus = true;
@@ -220,7 +218,7 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   char response[PMAC_CS_MAXBUF] = {0};
   static const char *functionName = "writeInt32";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
@@ -271,7 +269,7 @@ asynStatus pmacCSController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
   char command[PMAC_CS_MAXBUF] = {0};
   char response[PMAC_CS_MAXBUF] = {0};
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   getParamName(function, name);
   debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
@@ -304,7 +302,7 @@ asynStatus pmacCSController::processDeferredMoves(void) {
   int executeDeferred = 0;
   static const char *functionName = "processDeferredMoves";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   //Build up combined move command for all axes involved in the deferred move.
@@ -327,7 +325,6 @@ asynStatus pmacCSController::processDeferredMoves(void) {
 
       sprintf(fullCommand, "&%d%s Q70=%f B%dR", this->getCSNumber(), command, this->csMoveTime_,
               this->getProgramNumber());
-      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", fullCommand);
       status = this->immediateWriteRead(fullCommand, response);
     }
   }
@@ -478,7 +475,7 @@ asynStatus pmacCSController::tScanCheckForErrors() {
   asynStatus status = asynSuccess;
   static const char *functionName = "tScanCheckForErrors";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   if ((status_[2] & CS_STATUS3_LIMIT) != 0) {
     status = asynError;
@@ -499,7 +496,7 @@ asynStatus pmacCSController::tScanCheckProgramRunning(int *running) {
   asynStatus status = asynSuccess;
   static const char *functionName = "tScanCheckProgramRunning";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   if ((status_[0] & CS_STATUS1_RUNNING_PROG) != 0) {
     *running = 1;
@@ -571,7 +568,7 @@ asynStatus pmacCSController::pmacCSSetAxisDirectMapping(int axis, int mappedAxis
   asynStatus status;
   static const char *functionName = "pmacCSSetAxisDirectMapping";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   this->lock();
   status = setIntegerParam(axis, PMAC_CS_RealMotorNumber_, mappedAxis);
@@ -613,11 +610,10 @@ asynStatus pmacCSCreateController(const char *portName,
                                   const char *controllerPortName,
                                   int csNo,
                                   int program) {
-  pmacCSController *ptrpmacCSController = new pmacCSController(portName,
-                                                               controllerPortName,
-                                                               csNo,
-                                                               program);
-  ptrpmacCSController = NULL;
+  new pmacCSController(portName,
+                       controllerPortName,
+                       csNo,
+                       program);
 
   return asynSuccess;
 }
@@ -631,7 +627,6 @@ asynStatus pmacCreateCSAxis(const char *pmacName, /* specify which controller by
                             int axis)             /* axis number (start from 1). */
 {
   pmacCSController *pC;
-  pmacCSAxis *pAxis;
 
   static const char *functionName = "pmacCreateCSAxis";
 
@@ -648,8 +643,7 @@ asynStatus pmacCreateCSAxis(const char *pmacName, /* specify which controller by
   }
 
   pC->lock();
-  pAxis = new pmacCSAxis(pC, axis);
-  pAxis = NULL;
+  new pmacCSAxis(pC, axis);
   pC->unlock();
   return asynSuccess;
 }
@@ -666,7 +660,6 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
                             int numAxes)          /* Number of axes to create */
 {
   pmacCSController *pC;
-  pmacCSAxis *pAxis;
 
   static const char *functionName = "pmacCreateCSAxis";
 
@@ -677,8 +670,7 @@ asynStatus pmacCreateCSAxes(const char *pmacName, /* specify which controller by
   }
 
   for (int axis = 0; axis <= numAxes; axis++) {
-    pAxis = new pmacCSAxis(pC, axis);
-    pAxis = NULL;
+    new pmacCSAxis(pC, axis);
   }
 
   return asynSuccess;

@@ -64,7 +64,7 @@ pmacCsGroups::~pmacCsGroups() {
  */
 void pmacCsGroups::addGroup(int id, const std::string &name, int axisCount) {
   static const char *functionName = "addGroup";
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   // axisCount is not required for this implementation - keeping it
   // in case we need to drop STL
   pmacCsGroup *group = new pmacCsGroup;
@@ -90,7 +90,7 @@ asynStatus pmacCsGroups::addAxisToGroup(int id, int axis, const std::string &axi
                                         int coordSysNumber) {
   static const char *functionName = "addAxisToGroup";
   asynStatus status = asynSuccess;
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   pmacCsAxisDef *def = new pmacCsAxisDef;
   def->axisDefinition = axisDef;
   def->axisNo = axis;
@@ -124,9 +124,9 @@ asynStatus pmacCsGroups::addAxisToGroup(int id, int axis, const std::string &axi
 int pmacCsGroups::getAxisCoordSys(int axis) {
   static const char *functionName = "getAxisCoordSys";
   pmacCsGroup *pGrp;
-  pmacCsAxisDef *axd;
+  pmacCsAxisDef *axd = NULL;
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   pGrp = (pmacCsGroup *) csGroups.lookup(currentGroup);
   if (pGrp != NULL) {
@@ -154,7 +154,7 @@ asynStatus pmacCsGroups::switchToGroup(int id) {
   asynStatus cmdStatus;
   pmacCsGroup *pGrp;
   pmacCsAxisDefList *pAxisDefs;
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   if (csGroups.lookup(id) == NULL) {
     cmdStatus = asynError;
@@ -222,7 +222,7 @@ asynStatus pmacCsGroups::clearCurrentGroup() {
   asynStatus cmdStatus = asynSuccess;
   pmacCsGroup *pGrp;
   pmacCsAxisDefList *pAxisDefs;
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Abort motion on the currently selected group
   pGrp = (pmacCsGroup *) csGroups.lookup(currentGroup);
@@ -254,7 +254,7 @@ asynStatus pmacCsGroups::manualGroup(const std::string &groupDef) {
   char command[PMAC_MAXBUF] = {0};
   char response[PMAC_MAXBUF] = {0};
   asynStatus status = asynSuccess;
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
 
   // Set the current group to -1 to signify manual group
   currentGroup = -1;
@@ -283,10 +283,9 @@ asynStatus pmacCsGroups::redefineLookaheads() {
   int cs = 0;
   static const char *functionName = "refefineLookaheads";
 
-  debug(DEBUG_TRACE, functionName);
+  debug(DEBUG_FLOW, functionName);
   // First any gather buffer must be deleted along with any defined lookaheads
   strcpy(cmd, "DELETE ALL TEMPS");
-  debug(DEBUG_TRACE, functionName, "Sending command", cmd);
   if (pC_->lowLevelWriteRead(cmd, reply) != asynSuccess) {
     debug(DEBUG_ERROR, functionName, "Failed to send command", cmd);
     status = asynError;
@@ -296,7 +295,6 @@ asynStatus pmacCsGroups::redefineLookaheads() {
   if (status == asynSuccess) {
     for (cs = 16; cs > 0; cs--) {
       sprintf(cmd, "&%dDEFINE LOOKAHEAD 50,10", cs);
-      debug(DEBUG_TRACE, functionName, "Sending command", cmd);
       if (pC_->lowLevelWriteRead(cmd, reply) != asynSuccess) {
         debug(DEBUG_ERROR, functionName, "Failed to send command", cmd);
         status = asynError;

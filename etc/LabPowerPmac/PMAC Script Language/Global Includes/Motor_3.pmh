@@ -1,0 +1,25 @@
+#define Mtr3DacOutReg Sys.Idata[3].a
+
+ Motor[3].Ctrl = Sys.PidCtrl // only need simple PID loop
+ Motor[3].ServoCtrl = 1
+ Motor[3].pDac = Mtr3DacOutReg // do not use Sys.pushm + 0 (Sys.Idata[0]) as it is used by default by many things
+ Motor[3].pAmpEnable = 0
+ Motor[3].pAmpFault = 0
+ Motor[3].pLimits = 0
+ Motor[3].CaptureMode = 1 // software capture 
+
+ // needed gains
+ Motor[3].Servo.Kp = 1 
+ Motor[3].Servo.Kvfb = 0 
+ Motor[3].Servo.Kvff = 0
+ Motor[3].Servo.Kaff = 0
+ Motor[3].Servo.Ki = 0
+ 
+ // position control
+ Motor[3].InPosBand = 10
+
+ // process Dac data
+ EncTable[3].type = 1
+ EncTable[3].ScaleFactor = 1/65536
+ EncTable[3].pEnc = Mtr3DacOutReg
+ EncTable[3].index4 = 1 // Integerate once 

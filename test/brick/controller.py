@@ -1,4 +1,4 @@
-from cothread import catools as ca
+from cothread import catools as ca, Sleep
 from trajectory import Trajectory
 
 # use dynamic class since many instances of this class will be created during a test suite
@@ -59,6 +59,13 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
 
         def set_cs_group(self, group):
             ca.caput(self.pv_cs_group, group, wait=True)
+            # TODO we have race conditions on switch of CS:-
+            #  (1) if the direct demand resolutions need to change there is a small delay
+            #  (2) the brick itself may take a short time to do the CS mappings
+            # for now we require a short wait after a switch
+            # (this may not be fixable - (1) showed up on ppmac (2) showed up on VMXI)
+            Sleep(.1)
+
 
         def send_command(self, command):
             ca.caput(self.pv_command, command, wait=True, datatype=ca.DBR_CHAR_STR)

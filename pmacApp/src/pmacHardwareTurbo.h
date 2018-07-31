@@ -35,12 +35,17 @@ public:
 
     std::string getCSAccTimeCmd(int csNo, double time);
 
+    std::string getCSMappingCmd(int csNo, int axis);
+
+    std::string parseCSMappingResult(const std::string mappingResult);
+
 private:
     static const std::string GLOBAL_STATUS;
     static const std::string AXIS_STATUS;
     static const std::string CS_STATUS;
     static const std::string CS_VEL_CMD;
     static const std::string CS_ACCELERATION_CMD;
+    static const std::string CS_AXIS_MAPPING;
 
     static const int PMAC_STATUS1_MAXRAPID_SPEED;
     static const int PMAC_STATUS1_ALT_CMNDOUT_MODE;

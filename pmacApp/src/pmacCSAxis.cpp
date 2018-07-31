@@ -65,6 +65,8 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
   double deviceUnits = 0.0;
   double steps = fabs(position - position_);
 
+  debug(DEBUG_FLOW, functionName);
+
   setIntegerParam(pC_->motorStatusMoving_, true);
 
   // Make any CS demands consistent with this move
@@ -90,7 +92,6 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
     if (pC_->getProgramNumber() != 0) {
       // Abort current move to make sure axes are enabled
       sprintf(commandtemp, "&%dE", pC_->getCSNumber());
-      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", commandtemp);
       status = pC_->axisWriteRead(commandtemp, response);
       /* If the program specified is non-zero, add a command to run the program.
        * If program number is zero, then the move will have to be started by some
@@ -98,7 +99,6 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
        * movement. */
       sprintf(buff, " B%dR", pC_->getProgramNumber());
       strcat(command, buff);
-      debug(DEBUG_TRACE, functionName, "Sending command to PMAC", command);
       status = pC_->axisWriteRead(command, response);
     }
   } else {
@@ -172,13 +172,12 @@ void pmacCSAxis::callback(pmacCommandStore *sPtr, int type) {
  * @return asynStatus
  */
 asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
-  int done = 0;
   double position = 0;
   int nvals = 0;
   int axisProblemFlag = 0;
   bool printErrors = true;
   char key[16];
-  std::string value = "";
+  std::string value;
   int homeSignal = 0;
   int direction = 0;
   int retStatus = asynSuccess;
