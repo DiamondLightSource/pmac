@@ -1458,24 +1458,27 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   min_feedrate_cs = 0;
   // Lookup the value of the feedrate
   for (int csNo = 1; csNo <= PMAC_MAX_CS - 1; csNo++) {
-    sprintf(command, "&%d%s", csNo, "%");
-    std::string feedRate = sPtr->readValue(command);
-    debugf(DEBUG_VARIABLE, functionName, "Feedrate [&%d%s] => %s", csNo, "%", feedRate.c_str());
-    // Check the feedrate value is valid
-    if (feedRate == "") {
-      debug(DEBUG_ERROR, functionName, "Problem reading feed rate command %");
-      status = asynError;
-    } else {
-      nvals = sscanf(feedRate.c_str(), "%d", &feedrate);
-      if (nvals != 1) {
-        debug(DEBUG_ERROR, functionName, "Error reading feedrate [%]");
-        debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-        debug(DEBUG_ERROR, functionName, "    response", feedRate);
+    // only check feedrate on those CS that we are using (have registered config)
+    if (pCSControllers_[csNo] != NULL) {
+      sprintf(command, "&%d%s", csNo, "%");
+      std::string feedRate = sPtr->readValue(command);
+      debugf(DEBUG_VARIABLE, functionName, "Feedrate [&%d%s] => %s", csNo, "%", feedRate.c_str());
+      // Check the feedrate value is valid
+      if (feedRate == "") {
+        debug(DEBUG_ERROR, functionName, "Problem reading feed rate command %");
         status = asynError;
       } else {
-        if (feedrate < min_feedrate) {
-          min_feedrate = feedrate;
-          min_feedrate_cs = csNo;
+        nvals = sscanf(feedRate.c_str(), "%d", &feedrate);
+        if (nvals != 1) {
+          debug(DEBUG_ERROR, functionName, "Error reading feedrate [%]");
+          debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+          debug(DEBUG_ERROR, functionName, "    response", feedRate);
+          status = asynError;
+        } else {
+          if (feedrate < min_feedrate) {
+            min_feedrate = feedrate;
+            min_feedrate_cs = csNo;
+          }
         }
       }
     }

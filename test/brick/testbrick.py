@@ -31,8 +31,7 @@ brick_groups = {'g1': '1,2->A,B',
                 'g3': 'MIXED CS3',
                 'g4': 'MIXED CS2'}
 
-brick_cs = {'cs1': CoordSys('BRICK1:CS1', 1, 'CS1'),
-            'cs2': CoordSys('BRICK1:CS2', 2, 'CS2'),
+brick_cs = {'cs2': CoordSys('BRICK1:CS2', 2, 'CS2'),
             'cs3': CoordSys('BRICK1:CS3', 3, 'CS3')}
 
 MyBrick = make_controller(brick_axes, brick_cs, brick_groups, brick_pv_root)
@@ -68,7 +67,6 @@ class TestBrick(MyBrick):
 
         # make sure deferred moves are not applied
         self.set_deferred_moves(False)
-        self.cs1.set_deferred_moves(False)
         self.cs2.set_deferred_moves(False)
         self.cs3.set_deferred_moves(False)
 
