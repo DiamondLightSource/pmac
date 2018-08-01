@@ -35,6 +35,23 @@ class TestGeneral(TestCase):
         for axis in tb.real_axes.values():
             self.assertAlmostEquals(axis.pos, 0)
 
+    def test_auto_home_readonly(self):
+        """ verify that auto home makes the motor records read only
+            so that soft limits and user intervention cannot
+            interfere with homing
+        """
+        tb = TestBrick()
+
+        ca.caput('PMAC_BRICK_TESTX:HM:HMGRP', 'All')
+        ca.caput('PMAC_BRICK_TESTX:HM:HOME', 1)
+
+        tb.poll_all_now()
+        tb.jack1.go(20)
+        Sleep(0.5)
+
+        ca.caput('PMAC_BRICK_TESTX:HM:ABORT.PROC', 1)
+        self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)
+
     def test_cs_feedrate_protection(self):
         """ verify that feedrate protection works for only those CS we have configured
         """
@@ -72,10 +89,3 @@ class TestGeneral(TestCase):
         tb.poll_all_now()
         problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
         self.assertEquals(problem, 0)
-
-
-
-
-
-
-

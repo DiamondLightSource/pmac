@@ -58,6 +58,8 @@
 	<pmac.pmacDisableLimitsCheck Axis="7" Controller="Brick"/>
 	<pmac.pmacDisableLimitsCheck Axis="8" Controller="Brick"/>
 	<pmac.autohome GRP2="Axis1" GRP3="Axis2" GRP4="Axis3" GRP5="Axes4-8" P="PMAC_BRICK_TEST" PLC="10" PORT="Brick" name="HOME"/>
+	<!--This home is deliberately incorrect - it works agains a non existent PLC and will always try to home indefinitely - used for testing.-->
+	<pmac.autohome GRP2="Axis1" GRP3="Axis2" GRP4="Axis3" GRP5="Axes4-8" P="PMAC_BRICK_TESTX" PLC="11" PORT="Brick" name="HOMEX"/>
 	<pmac.pmacSetCoordStepsPerUnit Axis="1" CS="CS2" Scale="1000"/>
 	<pmac.pmacSetCoordStepsPerUnit Axis="2" CS="CS2" Scale="100"/>
 	<records.ai DTYP="asynInt32" INP="@asyn(Brick,0,1)PMAC_VIF_RY:$002114" SCAN="I/O Intr" record="BRICK1:CS2:Error"/>
