@@ -407,6 +407,7 @@ void pmacController::createAsynParams(void) {
 
   //Create controller-specific parameters
   createParam(PMAC_C_FirstParamString, asynParamInt32, &PMAC_C_FirstParam_);
+  createParam(PMAC_C_PollAllNowString, asynParamInt32, &PMAC_C_PollAllNow_);
   createParam(PMAC_C_StopAllString, asynParamInt32, &PMAC_C_StopAll_);
   createParam(PMAC_C_KillAllString, asynParamInt32, &PMAC_C_KillAll_);
   createParam(PMAC_C_GlobalStatusString, asynParamInt32, &PMAC_C_GlobalStatus_);
@@ -524,6 +525,7 @@ void pmacController::initAsynParams(void) {
   bool paramStatus = true;
   paramStatus = ((setIntegerParam(PMAC_C_StopAll_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_KillAll_, 0) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_PollAllNow_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_GlobalStatus_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateProblem_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_FeedRateCS_, 0) == asynSuccess) && paramStatus);
@@ -588,6 +590,17 @@ void pmacController::initAsynParams(void) {
     asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
               "%s Unable To Set Driver Parameters In Constructor.\n", functionName);
   }
+}
+
+void pmacController::pollAllNow(void) {
+  static const char *functionName = "pollAllNow";
+
+  debug(DEBUG_FLOW, functionName);
+  // Force updates of each loop
+  pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+  pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+  pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+
 }
 
 void pmacController::setupBrokerVariables(void) {
@@ -2103,7 +2116,12 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 
   status = (pAxis->setIntegerParam(function, value) == asynSuccess) && status;
 
-  if (function == PMAC_C_StopAll_) {
+  if (function == PMAC_C_PollAllNow_) {
+    // force all three polls to fire now
+    pollAllNow();
+    // Reset the busy value to complete caput callback
+    value = 0;
+  } else if (function == PMAC_C_StopAll_) {
     // Send the abort all command to the PMAC immediately
     status = (this->immediateWriteRead("\x01", response) == asynSuccess) && status;
   } else if (function == PMAC_C_KillAll_) {
