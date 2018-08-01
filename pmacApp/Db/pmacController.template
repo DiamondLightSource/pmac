@@ -28,6 +28,17 @@
 #
 
 ##############################################################
+# Ensure all PVs are up to date with the current brick state
+##############################################################
+record(busy,"$(P):PollAllNow") {
+    field(DESC,"Poll brick status")
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),0)PMAC_C_POLLALLNOW")
+    field(ZNAM, "Done")
+    field(ONAM, "Polling")
+}
+
+##############################################################
 # Control deferred mode for all real 1axes in this brick
 ##############################################################
 record(bo, "$(P):DeferMoves")

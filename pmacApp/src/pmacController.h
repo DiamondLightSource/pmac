@@ -25,6 +25,7 @@
 #define PMAC_C_FirstParamString           "PMAC_C_FIRSTPARAM"
 #define PMAC_C_LastParamString            "PMAC_C_LASTPARAM"
 
+#define PMAC_C_PollAllNowString           "PMAC_C_POLLALLNOW"
 #define PMAC_C_StopAllString              "PMAC_C_STOPALL"
 #define PMAC_C_KillAllString              "PMAC_C_KILLALL"
 #define PMAC_C_GlobalStatusString         "PMAC_C_GLOBALSTATUS"
@@ -204,6 +205,7 @@ public:
     bool initialised(void);
     void createAsynParams(void);
     void initAsynParams(void);
+    void pollAllNow(void);
     void setupBrokerVariables(void);
     void startPMACPolling();
     void setDebugLevel(int level, int axis, int csNo);
@@ -297,6 +299,7 @@ protected:
 #define FIRST_PMAC_PARAM PMAC_C_FirstParam_
     int PMAC_C_StopAll_;
     int PMAC_C_KillAll_;
+    int PMAC_C_PollAllNow_;
     int PMAC_C_GlobalStatus_;
     int PMAC_C_CommsError_;
     int PMAC_C_FeedRate_;

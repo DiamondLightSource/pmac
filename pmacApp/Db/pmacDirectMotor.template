@@ -23,6 +23,7 @@
 ##############################################################
 # Set immediate demand for this motor
 ##############################################################
+#% archiver 0.5 Monitor
 record(ao, "$(P)$(M):DirectDemand")
 {
     field(FLNK, "$(P)$(M):DirectCountsCalc.PROC")
