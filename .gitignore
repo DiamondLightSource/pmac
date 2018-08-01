@@ -21,4 +21,5 @@ etc/LabPowerPmac/172.23*
 etc/LabPowerPmac/.vs
 etc/LabPowerPmac/Log/
 etc/LabPowerPmac/Temp/
+.cache
 

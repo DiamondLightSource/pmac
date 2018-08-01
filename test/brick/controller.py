@@ -21,6 +21,7 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
         cls.defer = pv_root + 'DeferMoves'
         cls.pv_cs_group = pv_root + 'COORDINATE_SYS_GROUP'
         cls.pv_command = pv_root + 'SendCmd'
+        cls.pv_pollAllNow = pv_root + 'PollAllNow'
 
         for name, value in cls.axes.items() + cls.groups.items() + cls.cs.items():
             setattr(cls, name, value)
@@ -66,9 +67,11 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
             # (this may not be fixable - (1) showed up on ppmac (2) showed up on VMXI)
             Sleep(.1)
 
-
         def send_command(self, command):
             ca.caput(self.pv_command, command, wait=True, datatype=ca.DBR_CHAR_STR)
+
+        def poll_all_now(self):
+            ca.caput(self.pv_pollAllNow, 1, wait=True)
 
         def get_command(self):
             return ca.caget(self.pv_command, datatype=ca.DBR_CHAR_STR)
