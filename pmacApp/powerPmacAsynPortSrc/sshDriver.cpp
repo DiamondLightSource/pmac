@@ -1,13 +1,13 @@
 /********************************************
  *  sshDriver.cpp
- * 
+ *
  *  SSH wrapper class for the libssh2 library
  *  This class provides standard read/write
  *  and flush methods for an ssh connection.
- * 
+ *
  *  Alan Greer
  *  21 Jan 2013
- * 
+ *
  ********************************************/
 
 #include "sshDriver.h"
@@ -23,6 +23,13 @@
  */
 //#define DEBUG 1
 //#define LOGCOM 1
+
+#ifdef WIN32
+  #define Close(s)  closesocket(s)
+#else
+  #define Close(s)  close(s)
+#endif
+
 
 #if defined(DEBUG) || defined(LOGCOM)
 void PrintEscapedNL(const char *buff, size_t bytes)
@@ -181,6 +188,7 @@ SSHDriverStatus SSHDriver::connectSSH()
   sin_.sin_addr.s_addr = hostaddr;
   if (connect(sock_, (struct sockaddr*)(&sin_), sizeof(struct sockaddr_in)) != 0){
     debugPrint("%s : socket failed to connect!\n", functionName);
+    Close(sock_);
     return SSHDriverError;
   }
 
@@ -188,6 +196,7 @@ SSHDriverStatus SSHDriver::connectSSH()
   session_ = libssh2_session_init();
   if(!session_){
     debugPrint("%s : libssh2 failed to create a session instance\n", functionName);
+    Close(sock_);
     return SSHDriverError;
   }
 
@@ -196,6 +205,7 @@ SSHDriverStatus SSHDriver::connectSSH()
   rc = libssh2_session_handshake(session_, sock_);
   if(rc){
     debugPrint("%s : libssh2 failure establishing SSH session: %d\n", functionName, rc);
+    Close(sock_);
     return SSHDriverError;
   }
 
@@ -404,7 +414,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
 /**
  * Read data from the connected channel.  A timeout should be
  * specified in milliseconds.  The read method will continue to
- * read data from the channel until either the specified 
+ * read data from the channel until either the specified
  * terminator is read or the timeout is reached.
  *
  * @param buffer - A string buffer to hold the read data.
@@ -539,15 +549,11 @@ SSHDriverStatus SSHDriver::disconnectSSH()
     libssh2_session_disconnect(session_, "Normal Shutdown");
     libssh2_session_free(session_);
 
-#ifdef WIN32
-    closesocket(sock_);
-#else
-    close(sock_);
-#endif
+    Close(sock_);
     debugPrint("%s : Completed disconnect\n", functionName);
 
     libssh2_exit();
-  
+
   } else {
     debugPrint("%s : Connection was never established\n", functionName);
   }
