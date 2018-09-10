@@ -33,7 +33,8 @@ public:
 
     asynStatus disconnect();
 
-    asynStatus getConnectedStatus(int *connected);
+    asynStatus getConnectedStatus(int *connected, int *newConnection);
+    void  clearNewConnection(void) { newConnection_ = false; }
 
     asynStatus immediateWriteRead(const char *command, char *response, bool trace=true);
 
@@ -119,6 +120,7 @@ private:
 
     // connection status;
     bool connected_;
+    bool newConnection_;
 
     static const epicsUInt32 PMAC_MAXBUF_;
     static const epicsFloat64 PMAC_TIMEOUT_;

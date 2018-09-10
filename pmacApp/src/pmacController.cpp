@@ -1,12 +1,12 @@
 /********************************************
  *  pmacController.cpp
- * 
- *  PMAC Asyn motor based on the 
+ *
+ *  PMAC Asyn motor based on the
  *  asynMotorController class.
- * 
+ *
  *  Matthew Pearson
  *  23 May 2012
- * 
+ *
  ********************************************/
 
 
@@ -300,7 +300,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   // Do nothing if we have failed to connect. Requires a restart once
   // the brick is restored
   if (connected_) {
-    initialSetup();
+    // initialSetup();  // now done in checkConnection()
     initAsynParams();
 
     // Create the epicsEvents for signaling to start and stop scanning
@@ -337,18 +337,19 @@ bool pmacController::initialised() {
 
 asynStatus pmacController::checkConnection() {
   asynStatus status = asynSuccess;
-  int connected;
+  int connected, newConnection;
   static const char *functionName = "checkConnection";
   debug(DEBUG_FLOW, functionName);
 
   if (pBroker_ != NULL) {
-    status = pBroker_->getConnectedStatus(&connected);
+    status = pBroker_->getConnectedStatus(&connected, &newConnection);
   } else {
     status = asynError;
   }
 
   if (status == asynSuccess) {
-    connected_ = connected;
+    connected_ = connected;  //must be before initialSetup() call
+    if (connected && newConnection)  initialSetup();  //config new gpascii session
     debug(DEBUG_VARIABLE, functionName, "Connection status", connected_);
   } else {
     connected_ = false;
@@ -398,6 +399,8 @@ asynStatus pmacController::initialSetup() {
       status = this->storeKinematics();
     }
   }
+
+  if (status == asynSuccess)  pBroker_->clearNewConnection();
 
   return status;
 }

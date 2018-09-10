@@ -26,7 +26,9 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
         lastMsgTime_(0),
         updateTime_(0.0),
         lock_count(0),
-        connected_(false){
+        connected_(false),
+        newConnection(true)
+{
   epicsTimeGetCurrent(&this->writeTime_);
   epicsTimeGetCurrent(&this->startTime_);
   epicsTimeGetCurrent(&this->currentTime_);
@@ -71,20 +73,22 @@ asynStatus pmacMessageBroker::disconnect() {
  * Utilty function to return the connected status of the low level asyn port.
  * @return asynStatus
  */
-asynStatus pmacMessageBroker::getConnectedStatus(int *connected) {
+asynStatus pmacMessageBroker::getConnectedStatus(int *connected, int *newConnection) {
   static const char *functionName = "getConnectedStatus";
   asynStatus status = asynSuccess;
-  *connected = 0;
+  *connected = *newConnection = 0;
   char response[PMAC_MAXBUF_];
   debug(DEBUG_FLOW, functionName);
   // pasynManager->isConnected always reports True (is this because of the
   // interpose layer?) so send and receive a dummy message to check connection
   if (!connected_)
   {
+    newConnection_ = true;
     status = this->lowLevelWriteRead("", response);
     connected_ = status ==asynSuccess;
   }
   *connected = connected_;
+  *newConnection = newConnection_;
   return status;
 }
 
@@ -456,7 +460,7 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
 
   if (status != asynSuccess) {
     // the next call to CheckConnectionStatus will restore the connected_ state
-    connected_ = false;
+    connected_ = false;  newConnection_ = true;
   } else {
     // Replace any carriage returns with spaces
     if (powerPMAC_) {
