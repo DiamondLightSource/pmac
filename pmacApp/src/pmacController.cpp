@@ -216,6 +216,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
 
   //Initialize non static data members
+  pHardware_ = NULL;
   connected_ = 0;
   initialised_ = 0;
   cid_ = 0;
@@ -367,6 +368,10 @@ asynStatus pmacController::initialSetup() {
   status = this->readDeviceType();
 
   if (status == asynSuccess) {
+    if(pHardware_ != NULL) {
+      delete pHardware_;
+    }
+
     // Check for powerPMAC connection
     if (cid_ == PMAC_CID_POWER_) {
       pHardware_ = new pmacHardwarePower();
