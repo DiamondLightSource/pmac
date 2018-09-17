@@ -27,7 +27,7 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
         updateTime_(0.0),
         lock_count(0),
         connected_(false),
-        newConnection(true)
+        newConnection_(true)
 {
   epicsTimeGetCurrent(&this->writeTime_);
   epicsTimeGetCurrent(&this->startTime_);
