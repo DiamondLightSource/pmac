@@ -1,0 +1,41 @@
+/****************************************/
+// Power PMAC SUB PROGRAM Template.
+// The following Sample SUB PROGRAM is a sample template for creating Sub Programs in the Library Folder.
+/****************************************/
+//open subprog MySampleFunction(myinp, &myrtn)
+
+//close
+
+
+/****************************************/
+// Power PMAC SUB PROGRAM Timer Example.
+/****************************************/
+
+//----------------------------------------------
+// Wait delay_time in seconds
+// Syntax: call Timer(1.5)	// wait 1.5 seconds
+//---------------------------------------------
+
+/* 
+OPEN SUBPROG Timer(delay_time) // Open subroutine buffer
+	LOCAL EndTime; // Local variable
+	EndTime = Sys.Time + delay_time; // Store current time + user specified delay
+	WHILE (EndTime > Sys.Time){}; // Wait until real time reaches stored value
+	return
+*/
+
+//---------------------------------------
+// Get Time since Power On in seconds
+// Syntax: call Timer.Time(&RtnTime)
+//---------------------------------------
+
+/*
+	sub: Time(&time) 
+		time = Sys.Time
+	return  
+CLOSE // Close buffer
+*/
+
+
+
+

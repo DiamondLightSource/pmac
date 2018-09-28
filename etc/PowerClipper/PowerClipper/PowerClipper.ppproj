@@ -3,9 +3,9 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{430f001b-4275-4cb5-8327-d3376757b112}</ProjectGuid>
+    <ProjectGuid>DC55630F-4F87-4875-BDCF-C595C895EBF0</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>LabPowerPmac</RootNamespace>
+    <RootNamespace>PowerClipper</RootNamespace>
     <AssemblyName>Power Pmac Project Template</AssemblyName>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
     <IPAddress>172.23.240.160</IPAddress>
@@ -29,17 +29,11 @@
     <DownloadCSoruce>No</DownloadCSoruce>
     <EncryptionOption>Do Not Encrypt Any File</EncryptionOption>
     <ProjppTimeoutPeriod>300000</ProjppTimeoutPeriod>
-    <Name>LabPowerPmac</Name>
+    <Name>PowerClipper</Name>
     <PPCPUType>ppc465-2;3.2.21-powerpmac-smp</PPCPUType>
-    <ProjectFrimwareVers>2.0.2.14</ProjectFrimwareVers>
+    <ProjectFrimwareVers>2.4.0.180</ProjectFrimwareVers>
     <CPUType>PowerPC,APM86xxx</CPUType>
-    <IDESignature>riip6886RIIP</IDESignature>
-    <EtherCatStackType>1</EtherCatStackType>
-    <CpuAffinityServoTask>0</CpuAffinityServoTask>
-    <CpuAffinityRtiTask>0</CpuAffinityRtiTask>
-    <CpuAffinityBackgroundTask>0</CpuAffinityBackgroundTask>
-    <CpuAffinityRtpmacMainTask>0</CpuAffinityRtpmacMainTask>
-    <ProjectExportLevel>0</ProjectExportLevel>
+    <IDESignature>kkoe4701KKOE</IDESignature>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,28 +54,37 @@
     <Content Include="PMAC Script Language\Global Includes\CS3_2Jack.pmh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="PMAC Script Language\Global Includes\Motor_2.pmh">
+    <Content Include="PMAC Script Language\Global Includes\global definitions.pmh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="PMAC Script Language\Global Includes\Motor_3.pmh">
+    <Content Include="PMAC Script Language\Global Includes\Motor 1.pmh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="PMAC Script Language\Global Includes\Motor_4.pmh">
+    <Content Include="PMAC Script Language\Global Includes\Motor 2.pmh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="PMAC Script Language\Global Includes\Motor_5.pmh">
+    <Content Include="PMAC Script Language\Global Includes\Motor 3.pmh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="PMAC Script Language\Global Includes\Motor_6.pmh">
+    <Content Include="PMAC Script Language\Global Includes\Motor 4.pmh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="PMAC Script Language\Global Includes\Motor_7.pmh">
+    <Content Include="PMAC Script Language\Global Includes\Motor 5.pmh">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="PMAC Script Language\Global Includes\Motor_8.pmh">
+    <Content Include="PMAC Script Language\Global Includes\Motor 6.pmh">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="PMAC Script Language\Global Includes\Motor 7.pmh">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="PMAC Script Language\Global Includes\Motor 8.pmh">
       <SubType>Content</SubType>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\PLCS.pmh">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="PMAC Script Language\Global Includes\trajectory_scan_definitions_ppmac.pmh">
       <SubType>Content</SubType>
     </Content>
     <Content Include="PMAC Script Language\Kinematic Routines\CS3_2Jack.kin">
@@ -93,34 +96,26 @@
     <Content Include="PMAC Script Language\Motion Programs\trajectory_scan_code_ppmac.pmc">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="PMAC Script Language\Motion Programs\trajectory_scan_definitions_ppmac.pmc">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="PMAC Script Language\PLC Programs\LabPLCs.plc">
       <SubType>Content</SubType>
     </Content>
-    <None Include="System\Hardware\ACC-24E3[1].hwsetup">
-      <SubType>Content</SubType>
-    </None>
-    <None Include="System\Hardware\ACC-24E3[0].hwsetup">
-      <SubType>Content</SubType>
-    </None>
     <Folder Include="C Language\" />
     <Folder Include="C Language\Background Programs\" />
+    <Folder Include="C Language\Background Programs\capp1" />
+    <Compile Include="C Language\Background Programs\capp1\capp1.c" />
+    <Content Include="C Language\Background Programs\capp1\capp1.h" />
     <Folder Include="C Language\CPLCs\" />
+    <Folder Include="C Language\CPLCs\bgcplc00" />
+    <Content Include="C Language\CPLCs\bgcplc00\bgcplc.c" />
+    <Folder Include="C Language\CPLCs\rticplc" />
+    <Content Include="C Language\CPLCs\rticplc\rticplc.c" />
     <Folder Include="C Language\Include" />
     <Content Include="C Language\Include\pp_proj.h" />
     <Folder Include="C Language\Libraries" />
     <Folder Include="C Language\Realtime Routines" />
+    <Content Include="C Language\Realtime Routines\usrcode.c" />
+    <Content Include="C Language\Realtime Routines\usrcode.h" />
     <Folder Include="Configuration" />
-    <Folder Include="System" />
-    <Folder Include="System\Coordinate Systems" />
-    <Folder Include="System\CPU" />
-    <Folder Include="System\Encoder" />
-    <Folder Include="System\EtherCAT" />
-    <Folder Include="System\Hardware\" />
-    <Folder Include="System\Motors" />
-    <None Include="Configuration\eni.xml" />
     <None Include="Configuration\pp_custom_save.cfg" />
     <None Include="Configuration\pp_custom_save.tpl" />
     <None Include="Configuration\pp_disable.txt" />
@@ -131,20 +126,16 @@
     <Folder Include="Documentation" />
     <Content Include="Documentation\note.txt" />
     <Folder Include="Log" />
-    <None Include="Configuration\systemsetup.cfg" />
     <None Include="Log\pp_error.log" />
     <None Include="Log\pp_error_hist.log" />
     <None Include="Log\pp_proj.log" />
     <Folder Include="PMAC Script Language\" />
     <Folder Include="PMAC Script Language\Global Includes" />
-    <None Include="PMAC Script Language\Global Includes\Motor_1.pmh" />
     <Folder Include="PMAC Script Language\Kinematic Routines" />
     <Folder Include="PMAC Script Language\Libraries" />
+    <None Include="PMAC Script Language\Libraries\subprog1.pmc" />
     <Folder Include="PMAC Script Language\Motion Programs" />
     <Folder Include="PMAC Script Language\PLC Programs" />
-    <None Include="System\CPU\System.cpusetup" />
-    <None Include="System\Encoder\Encoder.encsetup" />
-    <None Include="System\EtherCAT\Master0.ecatmaster" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.Common.targets" />
   <Target Name="Build">

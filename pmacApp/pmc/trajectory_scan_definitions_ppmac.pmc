@@ -1,0 +1,136 @@
+; *****************************************************************************************
+; Variables
+; *****************************************************************************************
+
+
+; *****************************************************************************************
+; Set these values for your PMAC
+; *****************************************************************************************
+#define ProgramNum   1     ; Which motion program to use for scanning
+#define VersionNum   1.1   ; Version of this trajectory scan program
+
+
+; *****************************************************************************************
+; Define memory locations
+; *****************************************************************************************
+global VelModeAdr(10)                              ; for storage of PVT VelMode
+global UserAdr(10)                                 ; for storage of User Subroutines
+global TimeAdr(10)                                 ; for storage of PVT Times
+global AxisAdr(10)                                  ; for storage of axes bit mask
+global BufferAdr(BuffLen*2*10)                      ; PVT position buffers
+
+
+; *****************************************************************************************
+; Address-Based Variables - on ppmac these are indexes into above 'Addr' Arrays
+; *****************************************************************************************
+global Next_Time                                   ; Indexes to Next_* coordinate addresses
+global Next_A                                      ; These are incremented at each step
+global Next_B
+global Next_C
+global Next_U
+global Next_V
+global Next_W
+global Next_X
+global Next_Y
+global Next_Z
+global Next_User
+global NextVelMode
+
+global AxesParser                                  ; Specifiers for what axes are activated
+global A_Axis
+global B_Axis
+global C_Axis
+global U_Axis
+global V_Axis
+global W_Axis
+global X_Axis
+global Y_Axis
+global Z_Axis
+
+; *****************************************************************************************
+; EPICS Required Variables
+; *****************************************************************************************
+#define Status              M4034           ; Status of motion program for EPICS
+                                                    ; 0: Initialised, 1: Active, 2: Idle, 3: Error
+#define Abort               M4035           ; Abort trigger for EPICS
+#define Axes                M4036           ; An int between 1 and 511 specifying which axes to use
+#define BufferLength        M4037           ; Length of a single buffer e.g. AX, AY...
+#define TotalPoints         M4038           ; Total number of points scanned through
+
+#define CurrentIndex        M4039           ; Current index position in buffer
+#define CurrentBuffer       M4040           ; Current buffer specifier - 0: A, 1: B
+
+#define BufferAdr_A         M4041           ; Start index of buffer A
+#define BufferAdr_B         M4042           ; Start index of buffer B
+#define CurrentBufferAdr    M4043           ; A or B buffer address
+ 
+#define BufferFill_A        M4044           ; Fill level of buffer A
+#define BufferFill_B        M4045           ; Fill level of buffer B
+#define CurrentBufferFill   M4046           ; A or B buffer fill level
+#define PrevBufferFill      M4047           ; Fill level of previous buffer
+#define Error               M4048           ; Error code  0: No error, 1: Invalid axes value,
+                                            ; 2: Move time of 0, 3: Following error/ Run-time error
+#define Version             M4049           ; Version number for motion program
+
+
+# for ppmac set the above M variables as self referenced double floats
+Status->*d
+Abort->*d
+Axes->*d
+BufferLength->*d
+TotalPoints->*d
+CurrentIndex->*d
+CurrentBuffer->*d
+BufferAdr_A->*d
+BufferAdr_B->*d
+CurrentBufferAdr->*d
+BufferFill_A->*d
+BufferFill_B->*d
+CurrentBufferFill->*d
+PrevBufferFill->*d
+Error->*d
+Version->*d
+
+; *****************************************************************************************
+; Motion Program Variables
+; *****************************************************************************************
+global Prev_A               ; Previous coordinates for velocity calculations
+global Prev_B
+global Prev_C
+global Prev_U
+global Prev_V
+global Prev_W
+global Prev_X
+global Prev_Y
+global Prev_Z
+
+global Time                 ; Current coordinate values
+#define Current_A   Q71
+#define Current_B   Q72
+#define Current_C   Q73
+#define Current_U   Q74
+#define Current_V
+#define Current_W   Q76
+#define Current_X   Q77
+#define Current_Y   Q78
+#define Current_Z   Q79
+global User
+global VelMode
+
+global A_Vel                ; Current velocity values
+global B_Vel
+global C_Vel
+global U_Vel
+global V_Vel
+global W_Vel
+global X_Vel
+global Y_Vel
+global Z_Vel
+
+global CalculatedBase       ; Calculated temporary variable for Current base address
+global TmpTime              ; Calculated temporary variable for time in velocity calcs
+
+; *****************************************************************************************
+; Set the version number
+; *****************************************************************************************
+Version = VersionNum

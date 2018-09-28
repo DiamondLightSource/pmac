@@ -15,7 +15,7 @@ import os
 
 class TestGeneral(TestCase):
 
-    @pytest.mark.skipif(os.environ['PPMAC'] == 'TRUE', reason="not supported on PPMAC yet")
+    @pytest.mark.skipif(os.environ.get('PPMAC') == 'True', reason="not supported on PPMAC yet")
     def test_auto_home(self):
         """ verify that autohome works as expected
         """
