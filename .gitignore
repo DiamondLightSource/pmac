@@ -22,4 +22,8 @@ etc/LabPowerPmac/.vs
 etc/LabPowerPmac/Log/
 etc/LabPowerPmac/Temp/
 .cache
+*.out
+*.o
+*.log
+etc/PowerClipper/PowerClipper/Log/
 

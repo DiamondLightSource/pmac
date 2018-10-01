@@ -33,7 +33,7 @@
     <PPCPUType>ppc465-2;3.2.21-powerpmac-smp</PPCPUType>
     <ProjectFrimwareVers>2.4.0.180</ProjectFrimwareVers>
     <CPUType>PowerPC,APM86xxx</CPUType>
-    <IDESignature>kkoe4701KKOE</IDESignature>
+    <IDESignature>cpuh1918CPUH</IDESignature>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

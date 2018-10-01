@@ -68,7 +68,7 @@
 68	CSGlobal	Current_X	77	1
 69	CSGlobal	Current_Y	78	1
 70	CSGlobal	Current_Z	79	1
-71	Global	User	56212	1
+71	Global	UserFunc	56212	1
 72	Global	VelMode	56213	1
 73	Global	A_Vel	56214	1
 74	Global	B_Vel	56215	1
