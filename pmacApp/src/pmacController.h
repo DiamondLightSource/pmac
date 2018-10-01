@@ -255,7 +255,6 @@ public:
     void setAppendStatus(int state, int status, const std::string &message);
     void setProfileStatus(int state, int status, const std::string &message);
     asynStatus sendTrajectoryDemands(int buffer);
-    asynStatus doubleToPMACFloat(double value, int64_t *representation);
 
     //Disable the check for disabled hardware limits.
     asynStatus pmacDisableLimitsCheck(int axis);

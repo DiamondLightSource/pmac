@@ -39,7 +39,19 @@ public:
 
     std::string parseCSMappingResult(const std::string mappingResult);
 
+    void startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
+                                      char *time_cmd, int addr);
+
+    void addTrajectoryTimePointCmd(char *vel_cmd, char *user_cmd, char *time_cmd,
+                                   int velocityMode, int userFunc, int time);
+
+    void startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffsize);
+
+    void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffsize);
+
 private:
+    asynStatus doubleToPMACFloat(double value, int64_t *representation);
+
     static const std::string GLOBAL_STATUS;
     static const std::string AXIS_STATUS;
     static const std::string CS_STATUS;

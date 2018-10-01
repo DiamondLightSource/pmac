@@ -236,8 +236,8 @@ std::string pmacHardwarePower::getCSVelocityCmd(int csNo, double velocity, doubl
   // sets Q70 which PROG10 places into a TM command, so units are
   // converted to milliseconds for entire move
   // if velocity is 0 then set Q70 to 0 meaning use underlying real motor speeds
-  if(velocity !=0) {
-    move_time = steps/velocity*1000;
+  if (velocity != 0) {
+    move_time = steps / velocity * 1000;
   }
   sprintf(cmd, CS_VEL_CMD.c_str(), csNo, move_time);
   return std::string(cmd);
@@ -252,7 +252,6 @@ std::string pmacHardwarePower::getCSAccTimeCmd(int csNo, double time) {
   sprintf(cmd, CS_ACCELERATION_CMD.c_str(), csNo, time, csNo, time);
   return std::string(cmd);
 }
-
 
 std::string pmacHardwarePower::getCSMappingCmd(int csNo, int axis) {
   char cmd[255];
@@ -269,10 +268,28 @@ std::string pmacHardwarePower::parseCSMappingResult(const std::string mappingRes
   debugf(DEBUG_FLOW, functionName, "command %s", mappingResult.c_str());
 
   if (mappingResult.length() > 0) {
-    const char* mapping = mappingResult.substr(mappingResult.length() - 1, 1).c_str();
-    char upper_mapping = (char)toupper(mapping[0]);
+    const char *mapping = mappingResult.substr(mappingResult.length() - 1, 1).c_str();
+    char upper_mapping = (char) toupper(mapping[0]);
     result = std::string(1, upper_mapping);
   }
 
   return result;
+}
+
+void pmacHardwarePower::startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
+                                                     char *time_cmd, int addr) {
+
+}
+
+void pmacHardwarePower::addTrajectoryTimePointCmd(char *vel_cmd, char *user_cmd, char *time_cmd,
+                                                  int velocityMode, int userFunc, int time) {
+
+}
+
+void pmacHardwarePower::startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffsize) {
+
+}
+
+void pmacHardwarePower::addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffsize) {
+
 }

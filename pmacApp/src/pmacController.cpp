@@ -2494,7 +2494,7 @@ asynStatus pmacController::buildProfile(int csNo) {
   }
 
   // Check the version numbers are matching
-  if (tScanPmacProgVersion_ != PMAC_TRAJECTORY_VERSION) {
+  if (fabs(tScanPmacProgVersion_ - PMAC_TRAJECTORY_VERSION) > 0.0001) {
     debug(DEBUG_ERROR, functionName, "Motion program and driver versions do not match");
     debug(DEBUG_ERROR, functionName, "Motion program version", tScanPmacProgVersion_);
     debug(DEBUG_ERROR, functionName, "Driver version", PMAC_TRAJECTORY_VERSION);
@@ -3176,13 +3176,13 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
 
     // Count how many buffers to fill
     char cmd[11][1024];
-    // cmd[9] is reserved for the time values
-    sprintf(cmd[9], "WL:$%X", writeAddress);
+    // cmd[9,10,11] are reserved for the time, velocity, user values
+    pHardware_->startTrajectoryTimePointsCmd(cmd[9], cmd[10], cmd[11], writeAddress);
 
     // cmd[0..8] are reserved for axis positions
     for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
       if ((1 << index & tScanAxisMask_) > 0) {
-        sprintf(cmd[index], "WL:$%X", writeAddress + ((index + 1) * (tScanPmacBufferSize_)));
+        pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_);
       }
     }
 
@@ -3203,15 +3203,12 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
         status = pTrajectory_->getTime(tScanPointCtr_, &timeValue);
       }
       if (status == asynSuccess) {
-        sprintf(cmd[9], "%s,$%01X%01X%06X", cmd[9], velModeValue, userValue, timeValue);
-        //sprintf(cmd[9], "%s,$%01X%01X%06X", cmd[9], (int)profileVelMode_[tScanPointCtr_], (int)profileUser_[tScanPointCtr_], (int)profileTimes_[tScanPointCtr_]);
+        pHardware_->addTrajectoryTimePointCmd(cmd[9], cmd[10], cmd[11],
+                velModeValue, userValue, timeValue);
         for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
           if ((1 << index & tScanAxisMask_) > 0) {
-            int64_t ival = 0;
             status = pTrajectory_->getPosition(index, tScanPointCtr_, &posValue);
-            doubleToPMACFloat(posValue, &ival);
-            //doubleToPMACFloat(tScanPositions_[index][tScanPointCtr_], &ival);
-            sprintf(cmd[index], "%s,$%lX", cmd[index], (long) ival);
+            pHardware_->addAxisPointCmd(cmd[index], index, posValue, tScanPmacBufferSize_);
           }
         }
       }
@@ -3265,74 +3262,6 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
   pBroker_->reinstateStatusReads();
 
   stopTimer(DEBUG_TIMING, functionName, "Time taken to send trajectory demand");
-
-  return status;
-}
-
-asynStatus pmacController::doubleToPMACFloat(double value, int64_t *representation) {
-  asynStatus status = asynSuccess;
-  double absVal = value;
-  int negative = 0;
-  int exponent = 0;
-  double expVal = 0.0;
-  int64_t intVal = 0;
-  int64_t tVal = 0;
-  double mantissaVal = 0.0;
-  double maxMantissa = 34359738368.0;  // 0x800000000
-  const char *functionName = "doubleToPMACFloat";
-
-  debug(DEBUG_FLOW, functionName);
-  debugf(DEBUG_VARIABLE, functionName, "Value : %20.10lf\n", value);
-
-  // Check for special case 0.0
-  if (absVal == 0.0) {
-    // Set value accordingly
-    tVal = 0x0;
-  } else {
-    // Check for a negative number, and get the absolute
-    if (absVal < 0.0) {
-      absVal = absVal * -1.0;
-      negative = 1;
-    }
-    expVal = absVal;
-    mantissaVal = absVal;
-
-    // Work out the exponent required to normalise
-    // Normalised should be between 1 and 2
-    while (expVal >= 2.0) {
-      expVal = expVal / 2.0;
-      exponent++;
-    }
-    while (expVal < 1.0) {
-      expVal = expVal * 2.0;
-      exponent--;
-    }
-    // Offset exponent to provide +-2048 range
-    exponent += 0x800;
-
-    // Get the mantissa into correct format, this might not be
-    // the most efficient way to do this
-    while (mantissaVal < maxMantissa) {
-      mantissaVal *= 2.0;
-    }
-    mantissaVal = mantissaVal / 2.0;
-    // Get the integer representation for the altered mantissa
-    intVal = (int64_t) mantissaVal;
-
-    // If negative value then subtract altered mantissa from max
-    if (negative == 1) {
-      intVal = 0xFFFFFFFFFLL - intVal;
-    }
-
-    // Shift the altered mantissa by 12 bits and then set those
-    // 12 bits to the offset exponent
-    tVal = intVal << 12;
-    tVal += exponent;
-  }
-
-  *representation = tVal;
-
-  debugf(DEBUG_VARIABLE, functionName, "Prepared value: %12lX\n", tVal);
 
   return status;
 }
