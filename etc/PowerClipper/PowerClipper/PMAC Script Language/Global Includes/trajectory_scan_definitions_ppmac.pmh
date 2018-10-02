@@ -38,16 +38,27 @@ global Next_Z(DoubleBuffLen)
 global Next_User(DoubleBuffLen)
 global NextVelMode(DoubleBuffLen)
 
-global AxesParser                                  // Specifiers for what axes are activated
-global A_Axis
-global B_Axis
-global C_Axis
-global U_Axis
-global V_Axis
-global W_Axis
-global X_Axis
-global Y_Axis
-global Z_Axis
+#define AxesParser           M4024                      // Specifiers for what axes are activated
+#define A_Axis				M4025
+#define B_Axis				M4026
+#define C_Axis				M4027
+#define U_Axis				M4028
+#define V_Axis				M4029
+#define W_Axis				M4030
+#define X_Axis				M4031
+#define Y_Axis				M4032
+#define Z_Axis				M4034
+AxesParser->*d   
+A_Axis->*d		
+B_Axis->*d		
+C_Axis->*d		
+U_Axis->*d		
+V_Axis->*d		
+W_Axis->*d		
+X_Axis->*d		
+Y_Axis->*d		
+Z_Axis->*d
+	
 
 // *****************************************************************************************
 // EPICS Required Variables

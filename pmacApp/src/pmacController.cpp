@@ -3135,6 +3135,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
   char response[1024];
   char cstr[1024];
   const char *functionName = "sendTrajectoryDemands";
+  bool firstVal = true;
 
   debug(DEBUG_FLOW, functionName);
   startTimer(DEBUG_TIMING, functionName);
@@ -3175,7 +3176,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     writeAddress += epicsBufferPtr;
 
     // Count how many buffers to fill
-    char cmd[11][1024];
+    char cmd[12][1024];
     // cmd[9,10,11] are reserved for the time, velocity, user values
     pHardware_->startTrajectoryTimePointsCmd(cmd[9], cmd[10], cmd[11], writeAddress);
 
@@ -3187,6 +3188,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     }
 
     int bufferCount = 0;
+    firstVal = true;
     while ((bufferCount < nBuffers) && (epicsBufferPtr < tScanPmacBufferSize_) &&
            (tScanPointCtr_ < tScanNumPoints_)) {
       // Create the velmode/user/time memory writes:
@@ -3204,11 +3206,12 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
       }
       if (status == asynSuccess) {
         pHardware_->addTrajectoryTimePointCmd(cmd[9], cmd[10], cmd[11],
-                velModeValue, userValue, timeValue);
+                velModeValue, userValue, timeValue, firstVal);
         for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
           if ((1 << index & tScanAxisMask_) > 0) {
             status = pTrajectory_->getPosition(index, tScanPointCtr_, &posValue);
-            pHardware_->addAxisPointCmd(cmd[index], index, posValue, tScanPmacBufferSize_);
+            pHardware_->addAxisPointCmd(cmd[index], index, posValue, tScanPmacBufferSize_,
+                                        firstVal);
           }
         }
       }
@@ -3218,16 +3221,22 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
       bufferCount++;
       // Increment the epicsBufferPtr
       epicsBufferPtr++;
+      firstVal = false;
     }
 
     if (status == asynSuccess) {
       // First send the times/user buffer
-      sprintf(cstr, "%s", cmd[9]);
-      debug(DEBUG_VARIABLE, functionName, "Command", cstr);
-      status = this->immediateWriteRead(cstr, response);
+      for (int index = 9; index <= 11; index++)
+      {
+        printf("CMD: %s\n", cmd[index]);
+        sprintf(cstr, "%s", cmd[index]);
+        debug(DEBUG_VARIABLE, functionName, "Command", cstr);
+        status = this->immediateWriteRead(cstr, response);
+      }
       // Now send the axis positions
       for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
         if ((1 << index & tScanAxisMask_) > 0) {
+          printf("Axis CMD: %s\n", cmd[index]);
           sprintf(cstr, "%s", cmd[index]);
           debug(DEBUG_VARIABLE, functionName, "Command", cstr);
           status = this->immediateWriteRead(cstr, response);

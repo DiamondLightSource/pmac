@@ -276,20 +276,58 @@ std::string pmacHardwarePower::parseCSMappingResult(const std::string mappingRes
   return result;
 }
 
-void pmacHardwarePower::startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
-                                                     char *time_cmd, int addr) {
+void pmacHardwarePower::startTrajectoryTimePointsCmd(char *velCmd, char *userCmd,
+                                                     char *timeCmd, int addr) {
+  static const char *functionName = "startTrajectoryTimePointsCmd";
+
+  debug(DEBUG_FLOW, functionName, "addr %d", addr);
+
+  sprintf(velCmd, "Next_Vel(%d)=", addr);
+  sprintf(userCmd, "Next_User(%d)=", addr);
+  sprintf(timeCmd, "Next_Time(%d)=", addr);
 
 }
 
-void pmacHardwarePower::addTrajectoryTimePointCmd(char *vel_cmd, char *user_cmd, char *time_cmd,
-                                                  int velocityMode, int userFunc, int time) {
+void pmacHardwarePower::addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
+                                                  int velocityMode, int userFunc, int time,
+                                                  bool firstVal) {
+  static const char *functionName = "addTrajectoryTimePointCmd";
 
+  debugf(DEBUG_FLOW, functionName, "velCmd %s\nuserCmd %s\ntimeCmd %s\nvel %d, user %d, time %d",
+    velCmd, userCmd, timeCmd, velocityMode, userFunc, time);
+
+  if(firstVal) {
+    sprintf(velCmd, "%s%d", velCmd, velocityMode);
+    sprintf(userCmd, "%s%d", userCmd, userFunc);
+    sprintf(timeCmd, "%s%d", timeCmd, time);
+  }
+  else {
+    sprintf(velCmd, "%s,%d", velCmd, velocityMode);
+    sprintf(userCmd, "%s,%d", userCmd, userFunc);
+    sprintf(timeCmd, "%s,%d", timeCmd, time);
+  }
 }
 
-void pmacHardwarePower::startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffsize) {
+void pmacHardwarePower::startAxisPointsCmd(char *axisCmd, int axis, int addr, int ) {
+  const char axes[] = "ABCUVXWYZ";
+  static const char *functionName = "startAxisPointsCmd";
 
+  debugf(DEBUG_FLOW, functionName, "cmd %s, axis %d, addr %d", axisCmd, axis, addr);
+
+  sprintf(axisCmd, "Next_%c(%d)=", axes[axis], addr);
 }
 
-void pmacHardwarePower::addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffsize) {
+void pmacHardwarePower::addAxisPointCmd(char *axisCmd, int , double pos, int ,
+                                        bool firstVal) {
+  static const char *functionName = "addAxisPointCmd";
 
+  debugf(DEBUG_FLOW, functionName, "cmd %s, pos %f, firstval %d", axisCmd,
+          pos, firstVal);
+
+  if(firstVal) {
+    sprintf(axisCmd, "%s%g", axisCmd, pos);
+  }
+  else {
+    sprintf(axisCmd, "%s,%g", axisCmd, pos);
+  }
 }

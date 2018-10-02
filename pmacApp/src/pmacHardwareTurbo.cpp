@@ -319,24 +319,41 @@ std::string pmacHardwareTurbo::parseCSMappingResult(const std::string mappingRes
 
 void pmacHardwareTurbo::startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
                                                      char *time_cmd, int addr) {
+  static const char *functionName = "startTrajectoryTimePointsCmd";
+
+  debug(DEBUG_FLOW, functionName, "addr %d", addr);
+
   sprintf(vel_cmd, "WL:$%X", addr);
   user_cmd[0] = time_cmd[0] = 0;
 }
 
-void pmacHardwareTurbo::addTrajectoryTimePointCmd(char *vel_cmd, char *user_cmd, char *time_cmd,
-                                                  int velocityMode, int userFunc, int time) {
-  sprintf(vel_cmd, "%s,$%01X%01X%06X", vel_cmd, velocityMode, userFunc, time);
-  user_cmd[0] = time_cmd[0] = 0;
+void pmacHardwareTurbo::addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
+                                                  int velocityMode, int userFunc, int time,
+                                                  bool ) {
+  static const char *functionName = "addTrajectoryTimePointCmd";
+
+  debugf(DEBUG_FLOW, functionName, "velCmd %s\nuserCmd %s\ntimeCmd %s\nvel %d, user %d, time %d",
+         velCmd, userCmd, timeCmd, velocityMode, userFunc, time);
+
+  sprintf(velCmd, "%s,$%01X%01X%06X", velCmd, velocityMode, userFunc, time);
+  userCmd[0] = timeCmd[0] = 0;
 }
 
-void pmacHardwareTurbo::startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffsize) {
-  sprintf(axis_cmd, "WL:$%X", addr + ((axis + 1) * buffsize));
+void pmacHardwareTurbo::startAxisPointsCmd(char *axisCmd, int axis, int addr, int buffSize) {
+  static const char *functionName = "startAxisPointsCmd";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, axis %d, addr %d", axisCmd, axis, addr);
+  sprintf(axisCmd, "WL:$%X", addr + ((axis + 1) * buffSize));
 }
 
-void pmacHardwareTurbo::addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffsize) {
+void pmacHardwareTurbo::addAxisPointCmd(char *axisCmd, int , double pos, int ,
+        bool ) {
   int64_t ival = 0;
+  static const char *functionName = "addAxisPointCmd";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, pos %f", axisCmd, pos);
   doubleToPMACFloat(pos, &ival);
-  sprintf(axis_cmd, "%s,$%lX", axis_cmd, (long) ival);
+  sprintf(axisCmd, "%s,$%lX", axisCmd, (long) ival);
 }
 
 asynStatus pmacHardwareTurbo::doubleToPMACFloat(double value, int64_t *representation) {

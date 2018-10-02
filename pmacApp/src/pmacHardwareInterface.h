@@ -84,12 +84,14 @@ public:
     virtual void startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
                                               char *time_cmd, int addr) = 0;
 
-    virtual void addTrajectoryTimePointCmd(char *vel_cmd, char *user_cmd, char *time_cmd,
-                                           int velocityMode, int userFunc, int time) = 0;
+    virtual void addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
+                                           int velocityMode, int userFunc, int time,
+                                           bool firstVal) = 0;
 
-    virtual void startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffsize) = 0;
+    virtual void startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffSize) = 0;
 
-    virtual void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffsize) = 0;
+    virtual void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffSize,
+                                 bool firstVal) = 0;
 
 protected:
     pmacController *pC_;
