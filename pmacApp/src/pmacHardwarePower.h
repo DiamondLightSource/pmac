@@ -78,6 +78,7 @@ private:
     static const int PMAC_STATUS1_IN_POSITION;
     static const int PMAC_STATUS1_BLOCK_REQUEST;
     static const int PMAC_STATUS1_PHASED_MOTOR;
+    static const int CS_STATUS1_RUNNING_PROG;
 
 };
 

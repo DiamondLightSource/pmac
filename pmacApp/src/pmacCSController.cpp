@@ -498,11 +498,7 @@ asynStatus pmacCSController::tScanCheckProgramRunning(int *running) {
 
   debug(DEBUG_FLOW, functionName);
 
-  if ((status_[0] & CS_STATUS1_RUNNING_PROG) != 0) {
-    *running = 1;
-  } else {
-    *running = 0;
-  }
+  *running = cStatus_.running_;
   return status;
 }
 

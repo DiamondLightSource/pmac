@@ -8,7 +8,7 @@
     <RootNamespace>LabPowerPmac</RootNamespace>
     <AssemblyName>Power Pmac Project Template</AssemblyName>
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <IPAddress>172.23.240.160</IPAddress>
+    <IPAddress>172.23.247.1</IPAddress>
     <TelnetPassword>deltatau</TelnetPassword>
     <TelnetPort>22</TelnetPort>
     <TelnetUser>root</TelnetUser>
@@ -30,10 +30,10 @@
     <EncryptionOption>Do Not Encrypt Any File</EncryptionOption>
     <ProjppTimeoutPeriod>300000</ProjppTimeoutPeriod>
     <Name>LabPowerPmac</Name>
-    <PPCPUType>ppc465-2;3.2.21-powerpmac-smp</PPCPUType>
-    <ProjectFrimwareVers>2.0.2.14</ProjectFrimwareVers>
-    <CPUType>PowerPC,APM86xxx</CPUType>
-    <IDESignature>riip6886RIIP</IDESignature>
+    <PPCPUType>ppc405;2.6.30.3</PPCPUType>
+    <ProjectFrimwareVers>2.3.2.5</ProjectFrimwareVers>
+    <CPUType>PowerPC,460EX</CPUType>
+    <IDESignature>qqae6768QQAE</IDESignature>
     <EtherCatStackType>1</EtherCatStackType>
     <CpuAffinityServoTask>0</CpuAffinityServoTask>
     <CpuAffinityRtiTask>0</CpuAffinityRtiTask>
@@ -84,6 +84,9 @@
     <Content Include="PMAC Script Language\Global Includes\PLCS.pmh">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="PMAC Script Language\Global Includes\trajectory_scan_definitions_ppmac.pmh">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="PMAC Script Language\Kinematic Routines\CS3_2Jack.kin">
       <SubType>Content</SubType>
     </Content>
@@ -91,9 +94,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="PMAC Script Language\Motion Programs\trajectory_scan_code_ppmac.pmc">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="PMAC Script Language\Motion Programs\trajectory_scan_definitions_ppmac.pmc">
       <SubType>Content</SubType>
     </Content>
     <Content Include="PMAC Script Language\PLC Programs\LabPLCs.plc">

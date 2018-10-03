@@ -13,5 +13,5 @@ class TestSysTrajectory(TestCase):
         # why does this fail?
         # tb.set_cs_group(tb.g1)
         # Sleep(.1)
-        trajectory_fast_scan(self, tb, 1)
+        trajectory_fast_scan(self, tb, 1, millisecs=100000)
         self.assertAlmostEqual(tb.m1.pos, 1, 1)

@@ -24,6 +24,7 @@ struct csStatus {
     int stat1_;
     int stat2_;
     int stat3_;
+    int running_;
     int done_;
     int highLimit_;
     int lowLimit_;

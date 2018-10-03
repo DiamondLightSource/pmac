@@ -61,7 +61,7 @@ def trajectory_quick_scan(test, test_brick):
     test.assertEquals(test_brick.angle.pos, angles[-1])
 
 
-def trajectory_fast_scan(test, test_brick, n_axes, cs='CS3'):
+def trajectory_fast_scan(test, test_brick, n_axes, cs='CS3', millisecs=5000):
     """
     Do a fast scan involving n_axes motors
     :param n_axes: no. of axes to include in trajectory
@@ -86,7 +86,7 @@ def trajectory_fast_scan(test, test_brick, n_axes, cs='CS3'):
         axis_count += 1
 
     # each point takes 5 milli sec per axis
-    times = [5000 * n_axes] * points
+    times = [millisecs * n_axes] * points
     # all points are interpolated
     modes = [0] * points
 

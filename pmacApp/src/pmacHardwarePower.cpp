@@ -35,6 +35,8 @@ const int pmacHardwarePower::PMAC_STATUS1_AMP_ENABLED = (0x1 << 12);
 const int pmacHardwarePower::PMAC_STATUS1_IN_POSITION = (0x1 << 11);
 const int pmacHardwarePower::PMAC_STATUS1_BLOCK_REQUEST = (0x1 << 9);
 const int pmacHardwarePower::PMAC_STATUS1_PHASED_MOTOR = (0x1 << 8);
+// TODO have not found a status bit for program running
+const int pmacHardwarePower::CS_STATUS1_RUNNING_PROG = (0x1 << 14);
 
 pmacHardwarePower::pmacHardwarePower() : pmacDebugger("pmacHardwareTurbo") {
 }
@@ -215,6 +217,9 @@ pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coo
     coordStatus.followingError_ = ((coordStatus.stat1_ & PMAC_STATUS1_ERR_FOLLOW_ERR) != 0);
     coordStatus.moving_ = ((coordStatus.stat1_ & PMAC_STATUS1_IN_POSITION) == 0);
     coordStatus.problem_ = ((coordStatus.stat1_ & PMAC_STATUS1_AMP_FAULT) != 0);
+    coordStatus.running_ = coordStatus.moving_;
+    // should be as follows but we dont have a program running bit for power pmac?
+    // coordStatus.running_ = (coordStatus.stat1_ & CS_STATUS1_RUNNING_PROG) != 0;
   } else {
     coordStatus.done_ = 0;
     coordStatus.highLimit_ = 0;

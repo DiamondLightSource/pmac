@@ -258,6 +258,7 @@ pmacHardwareTurbo::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coo
     status = asynError;
   }
   if (status == asynSuccess) {
+    coordStatus.running_ = (coordStatus.stat1_ & CS_STATUS1_RUNNING_PROG) != 0;
     coordStatus.done_ = ((coordStatus.stat1_ & CS_STATUS1_RUNNING_PROG) == 0) &&
                         ((coordStatus.stat2_ & CS_STATUS2_IN_POSITION) != 0);
     coordStatus.highLimit_ = ((coordStatus.stat3_ & CS_STATUS3_LIMIT) != 0);
