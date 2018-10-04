@@ -12,8 +12,6 @@ import os
 
 
 class TestMakeCsConsistent(TestCase):
-
-    @pytest.mark.skipif(os.environ.get('PPMAC') == 'True', reason="not supported on PPMAC yet")
     def test_ffe_trajectory_scan(self):
         """
             Do we get fatal following error when doing a traj scan if one of the

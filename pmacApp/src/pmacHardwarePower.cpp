@@ -12,6 +12,7 @@ const std::string pmacHardwarePower::GLOBAL_STATUS = "?";
 const std::string pmacHardwarePower::AXIS_STATUS = "#%d?";
 const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
 const std::string pmacHardwarePower::CS_STATUS = "&%d?";
+const std::string pmacHardwarePower::CS_RUNNING = "Coord[%d].ProgRunning";
 const std::string pmacHardwarePower::CS_VEL_CMD = "&%dQ70=%f ";
 const std::string pmacHardwarePower::CS_ACCELERATION_CMD = "Coord[%d].Ta=%f Coord[%d].Td=%f";
 // the trailing &d stops clashes from occurring since comma is not allowed on ppmac
@@ -35,8 +36,6 @@ const int pmacHardwarePower::PMAC_STATUS1_AMP_ENABLED = (0x1 << 12);
 const int pmacHardwarePower::PMAC_STATUS1_IN_POSITION = (0x1 << 11);
 const int pmacHardwarePower::PMAC_STATUS1_BLOCK_REQUEST = (0x1 << 9);
 const int pmacHardwarePower::PMAC_STATUS1_PHASED_MOTOR = (0x1 << 8);
-// TODO have not found a status bit for program running
-const int pmacHardwarePower::CS_STATUS1_RUNNING_PROG = (0x1 << 14);
 
 pmacHardwarePower::pmacHardwarePower() : pmacDebugger("pmacHardwareTurbo") {
 }
@@ -179,12 +178,14 @@ pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus 
 
 asynStatus pmacHardwarePower::setupCSStatus(int csNo) {
   asynStatus status = asynSuccess;
-  char var[16];
+  char var[30];
   static const char *functionName = "setupAxisStatus";
 
   debug(DEBUG_TRACE, functionName, "CS Number", csNo);
   // Add the CS status item to the fast update
   sprintf(var, CS_STATUS.c_str(), csNo);
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+  sprintf(var, CS_RUNNING.c_str(), csNo);
   pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
 
   return status;
@@ -195,8 +196,12 @@ pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coo
   asynStatus status = asynSuccess;
   int nvals = 0;
   std::string statusString = "";
-  char var[16];
+  char var[30];
   static const char *functionName = "parseCSStatus";
+
+  sprintf(var, CS_RUNNING.c_str(), csNo);
+  statusString = sPtr->readValue(var);
+  sscanf(statusString.c_str(), "%d", &coordStatus.running_);
 
   sprintf(var, CS_STATUS.c_str(), csNo);
   statusString = sPtr->readValue(var);
@@ -217,9 +222,6 @@ pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coo
     coordStatus.followingError_ = ((coordStatus.stat1_ & PMAC_STATUS1_ERR_FOLLOW_ERR) != 0);
     coordStatus.moving_ = ((coordStatus.stat1_ & PMAC_STATUS1_IN_POSITION) == 0);
     coordStatus.problem_ = ((coordStatus.stat1_ & PMAC_STATUS1_AMP_FAULT) != 0);
-    coordStatus.running_ = coordStatus.moving_;
-    // should be as follows but we dont have a program running bit for power pmac?
-    // coordStatus.running_ = (coordStatus.stat1_ & CS_STATUS1_RUNNING_PROG) != 0;
   } else {
     coordStatus.done_ = 0;
     coordStatus.highLimit_ = 0;
@@ -314,7 +316,7 @@ void pmacHardwarePower::addTrajectoryTimePointCmd(char *velCmd, char *userCmd, c
 }
 
 void pmacHardwarePower::startAxisPointsCmd(char *axisCmd, int axis, int addr, int ) {
-  const char axes[] = "ABCUVXWYZ";
+  const char axes[] = "ABCUVWXYZ";
   static const char *functionName = "startAxisPointsCmd";
 
   debugf(DEBUG_FLOW, functionName, "cmd %s, axis %d, addr %d", axisCmd, axis, addr);

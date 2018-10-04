@@ -3228,7 +3228,6 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
       // First send the times/user buffer
       for (int index = 9; index <= 11; index++)
       {
-        printf("CMD: %s\n", cmd[index]);
         sprintf(cstr, "%s", cmd[index]);
         debug(DEBUG_VARIABLE, functionName, "Command", cstr);
         status = this->immediateWriteRead(cstr, response);
@@ -3236,7 +3235,6 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
       // Now send the axis positions
       for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
         if ((1 << index & tScanAxisMask_) > 0) {
-          printf("Axis CMD: %s\n", cmd[index]);
           sprintf(cstr, "%s", cmd[index]);
           debug(DEBUG_VARIABLE, functionName, "Command", cstr);
           status = this->immediateWriteRead(cstr, response);

@@ -56,6 +56,7 @@ private:
     static const std::string AXIS_STATUS;
     static const std::string AXIS_CS_NUMBER;
     static const std::string CS_STATUS;
+    static const std::string CS_RUNNING;
     static const std::string CS_VEL_CMD;
     static const std::string CS_ACCELERATION_CMD;
     static const std::string CS_AXIS_MAPPING;
@@ -78,7 +79,6 @@ private:
     static const int PMAC_STATUS1_IN_POSITION;
     static const int PMAC_STATUS1_BLOCK_REQUEST;
     static const int PMAC_STATUS1_PHASED_MOTOR;
-    static const int CS_STATUS1_RUNNING_PROG;
 
 };
 

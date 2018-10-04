@@ -5,6 +5,7 @@ from cothread import Sleep, catools as ca
 import pytest
 import os
 
+
 class TestSysTrajectory(TestCase):
     def test_simple_trajectory(self):
         """ very quick test of trajectory for debugging

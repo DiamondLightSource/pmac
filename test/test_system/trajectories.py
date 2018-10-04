@@ -94,7 +94,7 @@ def trajectory_fast_scan(test, test_brick, n_axes, cs='CS3', millisecs=5000):
 
     tr.ProfileExecute(timeout=30)
     test.assertTrue(tr.execute_OK)
-    while test_brick.height.moving:
+    while test_brick.m1.moving:
         Sleep(.01)  # allow deceleration todo need to put this in the driver itself
 
 

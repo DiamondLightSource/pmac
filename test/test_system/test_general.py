@@ -57,35 +57,43 @@ class TestGeneral(TestCase):
         """
         tb = TestBrick()
 
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 0)
+        try:
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 0)
 
-        # create a feedrate problem by manually setting a configured feedrate
-        tb.send_command("&2%50")
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 1)
+            # create a feedrate problem by manually setting a configured feedrate
+            tb.send_command("&2%50")
+            tb.poll_all_now()
+            Sleep(2)  # Todo, does requiring this represent an issue?
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 1)
 
-        # use driver feature to reset All feedrates
-        ca.caput("BRICK1:FEEDRATE", 100, wait=True)
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 0)
+            # use driver feature to reset All feedrates
+            ca.caput("BRICK1:FEEDRATE", 100, wait=True)
+            tb.poll_all_now()
+            Sleep(2)
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 0)
 
-        # create a feedrate problem by manually setting another configured feedrate
-        tb.send_command("&3%50")
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 1)
+            # create a feedrate problem by manually setting another configured feedrate
+            tb.send_command("&3%50")
+            tb.poll_all_now()
+            Sleep(2)
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 1)
 
-        # use driver feature to reset All feedrates
-        ca.caput("BRICK1:FEEDRATE", 100, wait=True)
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 0)
+            # use driver feature to reset All feedrates
+            ca.caput("BRICK1:FEEDRATE", 100, wait=True)
+            tb.poll_all_now()
+            Sleep(2)
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 0)
 
-        # check that non-configured CS has no effect
-        tb.send_command("&4%50")
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 0)
+            # check that non-configured CS has no effect
+            tb.send_command("&4%50")
+            tb.poll_all_now()
+            Sleep(2)
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 0)
+        finally:
+            ca.caput("BRICK1:FEEDRATE", 100, wait=True)
