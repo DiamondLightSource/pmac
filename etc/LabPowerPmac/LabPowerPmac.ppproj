@@ -33,7 +33,7 @@
     <PPCPUType>ppc405;2.6.30.3</PPCPUType>
     <ProjectFrimwareVers>2.3.2.5</ProjectFrimwareVers>
     <CPUType>PowerPC,460EX</CPUType>
-    <IDESignature>pwvb6447PWVB</IDESignature>
+    <IDESignature>kzsn4771KZSN</IDESignature>
     <EtherCatStackType>1</EtherCatStackType>
     <CpuAffinityServoTask>0</CpuAffinityServoTask>
     <CpuAffinityRtiTask>0</CpuAffinityRtiTask>

@@ -5,7 +5,7 @@
 // Set Initial Values
 BufferLength = BuffLen                          // BuffLen defined in header file
 BufferAdr_A = 0                                 // BufferAdr defined in header file
-BufferAdr_B = 10*BufferLength
+BufferAdr_B = 2 * BufferLength                  // each individual array holds 2 buffers
 Status = 0
 AbortTrigger = 0
 Error = 0
@@ -129,7 +129,6 @@ Return
 // *************************************************************************************************
 
 N102:
-    CalculatedBase = CurrentBufferAdr + CurrentIndex - 1
     Time = Next_Time(CalculatedBase)
     UserFunc = Next_User(CalculatedBase)
     VelMode = NextVelMode(CalculatedBase)
@@ -179,7 +178,12 @@ N102:
         Prev_Z = Current_Z
         Current_Z = Next_Z(CalculatedBase)
     }
-   
+
+    // All Prev <- Current <- Next shifts done so now
+    // increment the 'next pointer'
+    // Calculated base is the index into all 'Next' Arrays and
+    // Current Index is incremented at each iteration
+    CalculatedBase = CurrentBufferAdr + CurrentIndex
 Return
 
 // Subroutine 3 ************************************************************************************
