@@ -1,0 +1,90 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 922
+y 686
+w 323
+h 38
+font "arial-medium-r-16.0"
+ctlFont "arial-bold-r-16.0"
+btnFont "arial-medium-r-16.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 18
+ctlBgColor1 index 3
+ctlBgColor2 index 5
+topShadowColor index 1
+botShadowColor index 11
+title "Confirm Command"
+showGrid
+snapToGrid
+gridSize 5
+endScreenProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 220
+y 5
+w 98
+h 28
+fgColor index 25
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "No"
+font "arial-medium-r-16.0"
+3d
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 120
+y 5
+w 98
+h 28
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(cmdpv)"
+pressValue "1"
+onLabel "Yes"
+offLabel "Yes"
+closeOnRelease
+3d
+font "arial-medium-r-16.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 5
+y 5
+w 115
+h 25
+font "arial-medium-r-16.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Are you sure?"
+}
+endObjectProperties
+

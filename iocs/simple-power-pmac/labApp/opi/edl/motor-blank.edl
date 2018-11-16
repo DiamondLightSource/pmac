@@ -1,0 +1,25 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 386
+y 389
+w 50
+h 50
+font "helvetica-medium-r-14.0"
+ctlFont "courier-bold-r-14.0"
+btnFont "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 30
+ctlBgColor1 index 3
+ctlBgColor2 index 3
+topShadowColor index 1
+botShadowColor index 11
+title "Motor box"
+showGrid
+endScreenProperties
+

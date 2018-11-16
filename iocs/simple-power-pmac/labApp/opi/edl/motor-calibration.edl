@@ -1,0 +1,238 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 260
+y 398
+w 381
+h 232
+font "arial-medium-r-16.0"
+ctlFont "arial-bold-r-16.0"
+btnFont "arial-medium-r-16.0"
+fgColor index 14
+bgColor index 3
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 18
+ctlBgColor1 index 3
+ctlBgColor2 index 5
+topShadowColor index 1
+botShadowColor index 11
+title "Motor Calibration - $(motor)"
+disableScroll
+endScreenProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 0
+y 0
+w 375
+h 52
+lineColor index 6
+fill
+fillColor index 6
+lineWidth 0
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 0
+y 0
+w 381
+h 54
+font "arial-bold-r-18.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 6
+value {
+  "$(motor)"
+  "Calibration-Related Fields"
+}
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 240
+y 165
+w 130
+h 28
+fgColor index 25
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(motor).SET"
+indicatorPv "$(motor).SET"
+font "arial-medium-r-16.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 63
+w 115
+h 19
+font "arial-medium-r-16.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  ".DIR - Direction"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 102
+w 135
+h 19
+font "arial-medium-r-16.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  ".OFF - User Offset"
+}
+autoSize
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 240
+y 90
+w 130
+h 40
+controlPv "$(motor).OFF"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-16.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 140
+w 215
+h 19
+font "arial-medium-r-16.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  ".FOFF - Offset/Freeze Switch"
+}
+autoSize
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 240
+y 134
+w 130
+h 28
+fgColor index 25
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(motor).FOFF"
+indicatorPv "$(motor).FOFF"
+font "arial-medium-r-16.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 10
+y 170
+w 162
+h 19
+font "arial-medium-r-16.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  ".SET - Set/Use Switch"
+}
+autoSize
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 240
+y 58
+w 130
+h 28
+fgColor index 25
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(motor).DIR"
+indicatorPv "$(motor).DIR"
+font "arial-medium-r-16.0"
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 240
+y 196
+w 130
+h 28
+fgColor index 46
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+label "Exit"
+font "arial-medium-r-16.0"
+3d
+endObjectProperties
+

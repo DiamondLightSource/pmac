@@ -1,0 +1,1252 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 451
+y 473
+w 390
+h 310
+font "helvetica-medium-r-14.0"
+ctlFont "courier-bold-r-14.0"
+btnFont "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 58
+textColor index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 30
+ctlBgColor1 index 5
+ctlBgColor2 index 5
+topShadowColor index 1
+botShadowColor index 11
+title "Tooltip"
+showGrid
+gridSize 5
+disableScroll
+endScreenProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 2
+y 2
+w 387
+h 307
+lineColor index 11
+fillColor index 5
+lineWidth 2
+numPoints 3
+xPoints {
+  0 2
+  1 389
+  2 389
+}
+yPoints {
+  0 309
+  1 309
+  2 2
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 1
+y 1
+w 389
+h 309
+lineColor index 1
+fillColor index 5
+lineWidth 2
+numPoints 3
+xPoints {
+  0 1
+  1 1
+  2 390
+}
+yPoints {
+  0 310
+  1 1
+  2 1
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 100
+y 105
+w 189
+h 104
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 233
+y 183
+w 52
+h 22
+fgColor index 21
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(motor).STOP"
+pressValue "1"
+onLabel "STOP"
+offLabel "STOP"
+3d
+font "arial-bold-r-14.0"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 108
+y 156
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 5
+minValues {
+  0 3
+  2 1
+  3 2
+}
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+controlPvs {
+  0 "$(motor).SEVR"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 262
+y 156
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 6
+minValues {
+  4 1
+}
+maxValues {
+  4 2
+  5 1
+}
+controlPvs {
+  0 "$(motor).DMOV"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 4
+release 0
+x 105
+y 183
+w 52
+h 22
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-14.0"
+buttonLabel "More"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "motor.edl"
+}
+symbols {
+  0 "motor=$(motor)"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 100
+y 100
+w 79
+h 13
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 8
+value {
+  "  $(box-label)  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 138
+y 157
+w 115
+h 20
+controlPv "$(motor).RBV"
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 15
+fgAlarm
+bgColor index 10
+limitsFromDb
+precision 4
+nullColor index 0
+showUnits
+useAlarmBorder
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+# (Menu Mux PV)
+object menuMuxPVClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 2000
+y 2000
+w 20
+h 20
+fgColour index 14
+bgColour index 3
+topShadowColour index 1
+botShadowColour index 11
+font "helvetica-medium-r-14.0"
+numItems 1
+symbolTag {
+  0 "."
+}
+symbol0 {
+  0 "auto-label"
+}
+PV0 {
+  0 "$(motor).DESC"
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 165
+y 185
+w 60
+h 16
+controlPv "$(motor).TWV"
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+editable
+autoHeight
+limitsFromDb
+nullColor index 30
+useHexPrefix
+newPos
+objType "controls"
+noExecuteClipMask
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 105
+y 121
+w 43
+h 29
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(motor).TWR"
+pressValue "1"
+onLabel "-"
+offLabel "-"
+3d
+font "arial-bold-r-24.0"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 153
+y 119
+w 83
+h 33
+controlPv "$(motor)"
+displayMode "decimal"
+precision 4
+fgColor index 25
+bgColor index 3
+colorPv "$(motor):MODE"
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 241
+y 121
+w 43
+h 29
+fgColor index 25
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(motor).TWF"
+pressValue "1"
+onLabel "+"
+offLabel "+"
+3d
+font "arial-bold-r-16.0"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 145
+y 5
+w 100
+h 30
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 0
+bgColor index 9
+value {
+  "Help"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 145
+y 50
+w 97
+h 13
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Motor Description"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 251
+y 6
+w 86
+h 13
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Demand Value"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 295
+y 83
+w 83
+h 26
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Tweak +ve"
+  "(by tweak step)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 25
+y 20
+w 83
+h 26
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Tweak -ve"
+  "(by tweak step)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 190
+y 230
+w 96
+h 39
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Tweak step"
+  "(amount to tweak"
+  "by. Click to set)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 260
+y 270
+w 117
+h 26
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Stop button"
+  "(stops motor moving)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 80
+y 235
+w 104
+h 39
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Motor setup button."
+  "(Brings up motor"
+  "setup screen)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 300
+y 165
+w 80
+h 78
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Moving Status"
+  "       Lamp."
+  "    "
+  "Idle:       "
+  ""
+  "Moving:   "
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 80
+w 66
+h 130
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Error Status"
+  "       Lamp."
+  "    "
+  "Ready:       "
+  ""
+  "Minor:  "
+  ""
+  "Major:"
+  ""
+  "Invalid: "
+}
+autoSize
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 60
+y 115
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 5
+minValues {
+  0 3
+  2 1
+  3 2
+}
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+controlPvs {
+  0 "LOC\\dummy0=i:0"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 60
+y 145
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 5
+minValues {
+  0 3
+  2 1
+  3 2
+}
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+controlPvs {
+  0 "LOC\\dummy1=i:1"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 60
+y 175
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 5
+minValues {
+  0 3
+  2 1
+  3 2
+}
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+controlPvs {
+  0 "LOC\\dummy2=i:2"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 60
+y 205
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 5
+minValues {
+  0 3
+  2 1
+  3 2
+}
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+controlPvs {
+  0 "LOC\\dummy3=i:3"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 65
+y 45
+w 40
+h 90
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 65
+  1 105
+}
+yPoints {
+  0 45
+  1 135
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 75
+y 140
+w 35
+h 30
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 75
+  1 110
+}
+yPoints {
+  0 140
+  1 170
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 210
+y 200
+w 20
+h 30
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 230
+  1 210
+}
+yPoints {
+  0 230
+  1 200
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 265
+y 205
+w 50
+h 65
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 315
+  1 265
+}
+yPoints {
+  0 270
+  1 205
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 245
+y 145
+w 80
+h 15
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 325
+  1 245
+}
+yPoints {
+  0 145
+  1 160
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 279
+y 108
+w 46
+h 32
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 325
+  1 279
+}
+yPoints {
+  0 108
+  1 140
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 315
+y 125
+w 60
+h 26
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Readback"
+  "Value"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 178
+y 18
+w 88
+h 111
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 266
+  1 178
+}
+yPoints {
+  0 18
+  1 129
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 145
+y 60
+w 50
+h 40
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 195
+  1 145
+}
+yPoints {
+  0 60
+  1 100
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 280
+y 165
+w 40
+h 35
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 320
+  1 280
+}
+yPoints {
+  0 200
+  1 165
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 125
+y 205
+w 15
+h 30
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 140
+  1 125
+}
+yPoints {
+  0 235
+  1 205
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 270
+w 57
+h 13
+font "arial-bold-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Error Text"
+}
+autoSize
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 5
+y 285
+w 245
+h 20
+controlPv "$(motor).STAT"
+font "arial-bold-r-12.0"
+fontAlign "center"
+fgColor index 15
+fgAlarm
+bgColor index 10
+limitsFromDb
+precision 4
+nullColor index 0
+showUnits
+useAlarmBorder
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 350
+y 205
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 6
+minValues {
+  4 1
+}
+maxValues {
+  4 2
+  5 1
+}
+controlPvs {
+  0 "LOC\\dummy1=i:1"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 350
+y 235
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 6
+minValues {
+  4 1
+}
+maxValues {
+  4 2
+  5 1
+}
+controlPvs {
+  0 "LOC\\dummy0=i:0"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 241
+y 106
+w 43
+h 13
+fgColor index 25
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(motor).SPMG"
+indicatorPv "$(motor).SPMG"
+font "helvetica-medium-r-8.0"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 221
+y 106
+w 18
+h 11
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 221
+y 106
+w 18
+h 13
+fgColor index 22
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(motor):KILL.PROC"
+pressValue "1"
+onLabel "Kill"
+offLabel "Kill"
+3d
+font "helvetica-medium-r-8.0"
+endObjectProperties
+
+endGroup
+
+visPv "$(motor):KILL"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 226
+y 45
+w 57
+h 61
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 283
+  1 226
+}
+yPoints {
+  0 45
+  1 106
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 295
+y 53
+w 86
+h 26
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Move Mode"
+  "(Should be Go)"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 259
+y 66
+w 36
+h 41
+lineColor index 14
+fillColor index 5
+arrows "to"
+numPoints 2
+xPoints {
+  0 295
+  1 259
+}
+yPoints {
+  0 66
+  1 107
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 276
+y 23
+w 98
+h 26
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Kill (de-energise) "
+  "the motor"
+}
+autoSize
+endObjectProperties
+
