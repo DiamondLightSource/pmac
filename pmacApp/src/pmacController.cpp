@@ -2168,7 +2168,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     // call stop so that this kill can stop CS moves too
     // this is to get around unexpected behaviour that kill does not stop real axes
     // which are currently moving in a CS
-    pAxis->stop(0);
+    // removed this behaviour since it re-enables already killed axes in the same CS
+    // pAxis->stop(0);
     // Send the kill command to the PMAC immediately
     sprintf(command, "#%dk", pAxis->axisNo_);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
