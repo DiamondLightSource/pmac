@@ -8,6 +8,7 @@
  * Modified by: Rok Gajsek
  * Modified by: Rok Vrabic
  * Modified by: Oleg Makarov 
+ * Modified by: Wayne Lewis 
  *
  *      Experimental Physics and Industrial Control System (EPICS)
  *
@@ -19,6 +20,7 @@
  * .04  2006/03/16        gjansa (gasper.jansa@cosylab.com) error logging
  * .05  2006/08/17        rvrabic(rok.vrabic@cosylab.com)       added setpoint initialization and watchdog
  * .06  2012/02/23        oam     updated for epics 3.14.12.2
+ * .07  2019/01/04        Wayne Lewis <wlewis@ospreydcs.com>     Fixed compiler type error in devPmacRamEvent_read 
  */
 
 /*
@@ -1061,7 +1063,7 @@ LOCAL long devPmacRamEvent_read (struct eventRecord *pRec) {
 
   pDpvt = (PMAC_RAM_DPVT *) pRec->dpvt;
 
-  pRec->val = (short) (0x0000ffff & pDpvt->dpramData.ramLong);
+  sprintf(pRec->val, "%ld", (short) (0x0000ffff & pDpvt->dpramData.ramLong));
   pRec->udf = FALSE;
 
   return 0;
