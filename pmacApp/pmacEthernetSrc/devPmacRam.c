@@ -8,6 +8,7 @@
  * Modified by: Rok Gajsek
  * Modified by: Rok Vrabic
  * Modified by: Oleg Makarov 
+ * Modified by: Wayne Lewis 
  *
  *      Experimental Physics and Industrial Control System (EPICS)
  *
@@ -19,6 +20,7 @@
  * .04  2006/03/16        gjansa (gasper.jansa@cosylab.com) error logging
  * .05  2006/08/17        rvrabic(rok.vrabic@cosylab.com)       added setpoint initialization and watchdog
  * .06  2012/02/23        oam     updated for epics 3.14.12.2
+ * .07  2019/01/08        Wayne Lewis <wlewis@ospreydcs.com>     updated for epics 3.15+ (Event Record)
  */
 
 /*
@@ -103,6 +105,13 @@ OWNED RIGHTS.
 #include <longoutRecord.h>
 #include <mbbiRecord.h>
 #include <mbboRecord.h>
+
+#include    <epicsVersion.h>
+#ifndef EPICS_VERSION_INT
+#define VERSION_INT(V,R,M,P) ( ((V)<<24) | ((R)<<16) | ((M)<<8) | (P))
+#define EPICS_VERSION_INT VERSION_INT(EPICS_VERSION, EPICS_REVISION, EPICS_MODIFICATION, EPICS_PATCH_LEVEL)
+#endif
+#define LT_EPICSBASE(V,R,M,P) (EPICS_VERSION_INT < VERSION_INT((V),(R),(M),(P)))
 
 #define STATUS_RECORD
 
@@ -1061,7 +1070,12 @@ LOCAL long devPmacRamEvent_read (struct eventRecord *pRec) {
 
   pDpvt = (PMAC_RAM_DPVT *) pRec->dpvt;
 
+#if LT_EPICSBASE(3,15,0,0)
   pRec->val = (short) (0x0000ffff & pDpvt->dpramData.ramLong);
+#else
+  sprintf(pRec->val, "%d", (short) (0x0000ffff & pDpvt->dpramData.ramLong));
+#endif
+
   pRec->udf = FALSE;
 
   return 0;
