@@ -1,0 +1,4 @@
+<?xml version="1.0" ?>
+<components arch="linux-x86_64">
+	<records.fanout LNK1="$(A1)" LNK2="$(A2)" LNK3="$(A3)" LNK4="$(A4)" LNK5="$(A5)" LNK6="$(A6)" record="$(P):MOVE_TO_SAFE"/>
+</components>
