@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<components arch="linux-x86_64">
+	<records.ai VAL="$(POSITION)" record="$(P):POS$(N)_STORE"/>
+	<records.ao DOL="$(P):POS$(N)_STORE" OMSL="closed_loop" OUT="$(AXIS) PP NMS" record="$(P):POS$(N)_OUT"/>
+</components>

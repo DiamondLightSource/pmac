@@ -1,4 +1,4 @@
-from iocbuilder import Device, AutoSubstitution, records, RecordFactory, SetSimulation, Architecture, ModuleBase
+from iocbuilder import Device, AutoSubstitution, records, RecordFactory, SetSimulation, Architecture, ModuleBase, Xml
 from iocbuilder.arginfo import *
 from iocbuilder.modules.asyn import AsynPort, Asyn
 from iocbuilder.modules.calc import Calc
@@ -668,6 +668,13 @@ class CS_symetrie_hexapod(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'symetrie_hexapod.template'
 
+
+class _moveAxesToSafe(Xml):
+    TemplateFile = "moveAxesToSafe.xml"
+
+class _moveAxesToSafeTrig(Xml):
+    TemplateFile = "moveAxesToSafeTrig.xml"
+
 class pmacCreateCsGroup(Device):
     """Create a group of axis mappings to coordinate systems. Instantating a GeoBrickGlobalControl
     will create a PV for switching between these groups"""
@@ -713,6 +720,49 @@ class pmacCsGroupAddAxis(Device):
         AxisDef = Simple('CS Axis definition for this axis i.e. one of I A B C U V W X Y Z (or may include linear equations)', str),
         CoordSysNumber = Simple('Axis number of axis to add to the group', int))
 
+
+# Create 1 instance to allow up to 6 axes to be moved simultaneously to a defined position
+class moveAxesToSafeMaster(Device,):
+
+    def __init__(self, name, P,NO_OF_AXES):
+        self.__super.__init__()
+        self.name = name
+        self.P = P
+        self.NO_OF_AXES = NO_OF_AXES
+        self.OUTPUTS = [""]*6
+        #self.OUTPUTS = []
+        self.axisCounter = 1
+
+        for output in range(0,self.NO_OF_AXES):
+            self.OUTPUTS[output] = self.P + ":POS" + str(output+1) + "_OUT"
+
+        _moveAxesToSafeTrig(P=self.P,A1=self.OUTPUTS[0],A2=self.OUTPUTS[1],A3=self.OUTPUTS[2],A4=self.OUTPUTS[3],A5=self.OUTPUTS[4],A6=self.OUTPUTS[5])
+        
+    # __init__ arguments
+    ArgInfo = makeArgInfo(__init__,
+        name = Simple("Name",str),
+        P = Simple("Device Prefix", str),
+        NO_OF_AXES = Choice("Number of axes", range(1,7)),
+    )
+    def addAxis(self, AXIS, POSITION):
+        _moveAxesToSafe(P=self.P, N = self.axisCounter, AXIS=AXIS, POSITION=POSITION)
+        self.axisCounter += 1
+
+# Create an instance per axis to allow up to 6 axes to be moved simultaneously to a defined position
+class moveAxesToSafeSlave(Device,):
+    def __init__(self,MASTER,AXIS,POSITION):
+        self.__super.__init__()
+        self.MASTER = MASTER
+        self.AXIS = AXIS
+        self.POSITION = POSITION
+
+        MASTER.addAxis(self.AXIS,self.POSITION)
+    # __init__ arguments
+    ArgInfo = makeArgInfo(__init__,
+        MASTER = Ident("Master", moveAxesToSafeMaster),
+        AXIS = Simple("Axis PV", str),
+        POSITION = Simple("Safe Position", int),
+    )
 
 # hiding templates which are just used in includes so as to not
 # dirty the auto list of builder objects (is this the best way to do this?)
