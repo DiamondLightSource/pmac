@@ -68,6 +68,7 @@ BOOST_FIXTURE_TEST_SUITE(PMACMessageBrokerTest, PMACMessageBrokerFixture)
 BOOST_AUTO_TEST_CASE(test_PMACMessageBroker)
 {
   int connected = 0;
+  int newConnection = 0;
   int noOfMsgs = 0;
   int totalBytesWritten = 0;
   int totalBytesRead = 0;
@@ -82,8 +83,9 @@ BOOST_AUTO_TEST_CASE(test_PMACMessageBroker)
   BOOST_CHECK_EQUAL(pMB->connect("NOPORT", 0), asynError);
 
   // Check the broker is not connected
-  BOOST_CHECK_NO_THROW(pMB->getConnectedStatus(&connected));
+  BOOST_CHECK_NO_THROW(pMB->getConnectedStatus(&connected, &newConnection));
   BOOST_CHECK_EQUAL(connected, 0);
+  BOOST_CHECK_EQUAL(newConnection, 1);
 
   // Try to send a write/read
   strcpy(command, "TEST COMMAND");
@@ -97,8 +99,12 @@ BOOST_AUTO_TEST_CASE(test_PMACMessageBroker)
   // the message is 0 long and the OK response is 2 characters,
   // readStatistics expected results were altered accordingly
   pMock->setResponse("OK");
-  BOOST_CHECK_NO_THROW(pMB->getConnectedStatus(&connected));
+  BOOST_CHECK_NO_THROW(pMB->getConnectedStatus(&connected, &newConnection));
   BOOST_CHECK_EQUAL(connected, 1);
+  BOOST_CHECK_EQUAL(newConnection, 1);
+  pMB->clearNewConnection();
+  pMB->getConnectedStatus(&connected, &newConnection);
+  BOOST_CHECK_EQUAL(newConnection, 0);
 
   // Prime the mock with a response
   pMock->setResponse("TEST RESPONSE");
