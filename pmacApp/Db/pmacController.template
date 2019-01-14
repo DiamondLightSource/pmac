@@ -27,6 +27,15 @@
 # % gui, $(PORT), edm, pmacController.edl, pmac=$(P)
 #
 
+#
+# allow query of this controller's Port Name
+#
+record(stringout, "$(P):Port")
+{
+    field(VAL, "$(PORT)")
+    field(PINI, "YES")
+}
+
 ##############################################################
 # Ensure all PVs are up to date with the current brick state
 ##############################################################

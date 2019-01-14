@@ -9,9 +9,19 @@
 ##############################################################
 
 # % macro, PORT, The asyn port for the pmac cs controller
+# % macro, PARENTPORT, The asyn port for the parent pmac controller
 # % macro, TIMEOUT, Timeout for controller communication
 # % macro, PMAC, PV Prefix for the motor controller
 # % macro, CS, Coordinate System Number for the cs controller
+
+#
+# allow query of this CS controller's Parent's Port Name
+#
+record(stringout, "$(PMAC):CS$(CS):ParentPort")
+{
+    field(VAL, "$(PARENTPORT)")
+    field(PINI, "YES")
+}
 
 #
 # allow query of this CS controller's Port Name
