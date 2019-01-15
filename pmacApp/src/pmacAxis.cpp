@@ -254,6 +254,8 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
   cachedPosition_ = position / scale_;
   // Notify that a move has been initiated
   initiatedMove_ = true;
+
+  // make sure that pmacController->makeCSDemandsConsistent will know this axis has moved
   int csNum = this->getAxisCSNo();
   if (csNum > 0) {
     csRawMoveInitiated_ = true;
@@ -276,6 +278,12 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   sprintf(command, "#%d HOME", axisNo_);
+
+  // make sure that pmacController->makeCSDemandsConsistent will know this axis has moved
+  int csNum = this->getAxisCSNo();
+  if (csNum > 0) {
+    csRawMoveInitiated_ = true;
+  }
 
 #ifdef REMOVE_LIMITS_ON_HOME
   /* If homing onto an end-limit and home velocity is in the right direction, clear limits protection */
