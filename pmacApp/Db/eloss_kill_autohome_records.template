@@ -23,9 +23,28 @@ record(busy, "$(HOME=$(P)):HM:HOMING") {
 record(bi, "$(P)$(M):HOMING") {
   field(DESC, "Monitor homing status of autohome")
   field(INP, "$(HOME=$(P)):HM:HOMING CP")
+  field(FLNK, "$(P)$(M):HOMING_CALC")
   field(ZNAM, "Done")
   field(ONAM, "Busy")
 }
+
+# report to the driver if this motor is being autohomed
+record(calcout, $(P)$(M):HOMING_CALC)
+{
+    field(PINI, 1)
+    field(INPA, "$(P)$(M):HOMING")
+    field(CALC, "A")
+    field(OUT, "$(P)$(M):HOMING_STATUS PP")
+}
+
+# report to the driver if this motor is being autohomed
+record(ao, $(P)$(M):HOMING_STATUS)
+{
+    field(DESC, "driver update on autohome")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT),$(ADDR))HOMING_STATUS")
+}
+
 
 # reports position of motor without offset
 record(ai, "$(P)$(M):HMPOS_RBV") {

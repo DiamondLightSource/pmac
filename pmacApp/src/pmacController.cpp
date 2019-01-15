@@ -514,6 +514,7 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_ReportFastString, asynParamInt32, &PMAC_C_ReportFast_);
   createParam(PMAC_C_ReportMediumString, asynParamInt32, &PMAC_C_ReportMedium_);
   createParam(PMAC_C_ReportSlowString, asynParamInt32, &PMAC_C_ReportSlow_);
+  createParam(PMAC_C_HomingStatusString, asynParamInt32, &PMAC_C_HomingStatus_);
   createParam(PMAC_C_RealMotorNumberString, asynParamInt32, &PMAC_C_RealMotorNumber_);
   createParam(PMAC_C_MotorScaleString, asynParamInt32, &PMAC_C_MotorScale_);
   createParam(PMAC_C_MotorResString, asynParamFloat64, &PMAC_C_MotorRes_);
@@ -2132,6 +2133,15 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     pollAllNow();
     // Reset the busy value to complete caput callback
     value = 0;
+  } else if (function == PMAC_C_HomingStatus_) {
+    if(value ==0) {
+        // An auto home has just completed
+        // make sure that pmacController->makeCSDemandsConsistent will know this axis has moved
+        int csNum = pAxis->getAxisCSNo();
+        if (csNum > 0) {
+            pAxis->csRawMoveInitiated_ = true;
+        }
+    }
   } else if (function == PMAC_C_StopAll_) {
     // Send the abort all command to the PMAC immediately
     status = (this->immediateWriteRead("\x01", response) == asynSuccess) && status;
@@ -2203,6 +2213,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   } else if (function == PMAC_C_GroupCSPort_) {
     status = (this->executeManualGroup() == asynSuccess) && status;
   }
+
+
   //Call base class method. This will handle callCallbacks even if the function was handled here.
   status = (asynMotorController::writeInt32(pasynUser, value) == asynSuccess) && status;
 
