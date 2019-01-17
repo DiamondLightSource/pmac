@@ -204,7 +204,7 @@ asynStatus pmacCsGroups::switchToGroup(int id) {
           cmdStatus = pC_->lowLevelWriteRead(command, response);
 
           // ensure that the Q7x will be set correctly in pmacController::makeCSDemandsConsistent
-          pC_->csGroupSwitchCalled_ = true;
+          pC_->csResetAllDemands = true;
         }
       }
     }
