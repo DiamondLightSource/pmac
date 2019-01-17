@@ -23,11 +23,10 @@ class TestGeneral(TestCase):
 
         for axis in tb.real_axes.values():
             axis.go(1, False)
-
+        Sleep(.5)
         ca.caput('PMAC_BRICK_TEST:HM:HMGRP', 'All')
-        ca.caput('PMAC_BRICK_TEST:HM:HOME', 1)
-
-        Sleep(1)
+        ca.caput('PMAC_BRICK_TEST:HM:HOME', 1, timeout=15, wait=True)
+        Sleep(.5)
 
         # ensure good state if homing failed
         ca.caput('PMAC_BRICK_TEST:HM:ABORT.PROC', 1)
@@ -47,7 +46,7 @@ class TestGeneral(TestCase):
 
         tb.poll_all_now()
         tb.jack1.go(20)
-        Sleep(0.5)
+        Sleep(1)
 
         ca.caput('PMAC_BRICK_TESTX:HM:ABORT.PROC', 1)
         self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)

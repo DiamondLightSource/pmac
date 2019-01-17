@@ -254,7 +254,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   tScanPmacProgVersion_ = 0.0;
   i8_ = 0;
   i7002_ = 0;
-  csGroupSwitchCalled_ = false;
+  csResetAllDemands = false;
 
   // Create the message broker
   pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
@@ -2136,18 +2136,19 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   } else if (function == PMAC_C_HomingStatus_) {
     if(value ==0) {
         // An auto home has just completed
-        // make sure that pmacController->makeCSDemandsConsistent will know this axis has moved
-        int csNum = pAxis->getAxisCSNo();
-        if (csNum > 0) {
-            pAxis->csRawMoveInitiated_ = true;
-        }
+        // make sure that pmacController->makeCSDemandsConsistent will reset the demand for all axes
+        csResetAllDemands = true;
     }
   } else if (function == PMAC_C_StopAll_) {
     // Send the abort all command to the PMAC immediately
     status = (this->immediateWriteRead("\x01", response) == asynSuccess) && status;
+    // Force all CS demands to refresh
+    csResetAllDemands = true;
   } else if (function == PMAC_C_KillAll_) {
     // Send the kill all command to the PMAC immediately
     status = (this->immediateWriteRead("\x0b", response) == asynSuccess) && status;
+    // Force all CS demands to refresh
+    csResetAllDemands = true;
   } else if (function == PMAC_C_FeedRatePoll_) {
     if (value) {
       this->feedRatePoll_ = true;
@@ -3557,14 +3558,14 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                 debug(DEBUG_TRACE, functionName, "Motor assignment for motor", rawAxisIndex);
                 debug(DEBUG_TRACE, functionName, "Motor assignment", axisAssignment);
                 debug(DEBUG_TRACE, functionName, "Axis index", csAxisAssignmentNo);
-                if (aPtr->csRawMoveInitiated_ || this->csGroupSwitchCalled_) {
+                if (aPtr->csRawMoveInitiated_ || this->csResetAllDemands) {
                   aPtr->csRawMoveInitiated_ = false;
                   qvar = 71 + csAxisAssignmentNo;
                   debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
                   // Set the qvars assigned flag and send the relevant demand position
                   qvars_assigned = qvars_assigned | 1 << csAxisAssignmentNo;
                   debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
-                  if (this->csGroupSwitchCalled_) {
+                  if (this->csResetAllDemands) {
                     pos = aPtr->getPosition();
                     debugf(DEBUG_TRACE, functionName, "CS%d Q%d set to current pos %f", csNum, qvar, pos);
                     sprintf(command, "&%dQ%d=%f", csNum, qvar, pos);
@@ -3585,7 +3586,7 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                   debug(DEBUG_ERROR, functionName, "Failed to send command", command);
                   status = asynError;
                 }
-              } else if (aPtr->csRawMoveInitiated_) {
+              } else if (aPtr->csRawMoveInitiated_ || this->csResetAllDemands) {
                 if (strcmp(axisAssignment, "I") == 0) {
                   aPtr->csRawMoveInitiated_ = false;
                   csHasRawMovedKinematics = true;
@@ -3620,7 +3621,7 @@ asynStatus pmacController::makeCSDemandsConsistent() {
       }
     }
   }
-  this->csGroupSwitchCalled_ = false;
+  this->csResetAllDemands = false;
 
   return status;
 }
