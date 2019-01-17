@@ -23,7 +23,7 @@ class TestDirect(TestCase):
 
         for iteration in range(1):
             for height in range(10, 0, -2):
-                angle = height / 20.0
+                angle = height / 2.0
                 # todo mixing direct and standard moves to check for race conditions FAILS
                 tb.all_go_direct([tb.jack1, tb.jack2], [0, 0])
                 self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)

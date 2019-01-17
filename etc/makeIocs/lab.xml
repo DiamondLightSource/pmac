@@ -25,7 +25,7 @@
 	<pmac.dls_pmac_cs_asyn_motor ADDR="1" DESC="CS3 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":A" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="A3"/>
 	<pmac.dls_pmac_cs_asyn_motor ADDR="2" DESC="CS3 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":B" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="B3"/>
 	<pmac.dls_pmac_cs_asyn_motor ADDR="7" DESC="CS3 HEIGHT" DHLM="10000" DLLM="-10000" EGU="mm" M=":X" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="X3"/>
-	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="CS3 ANGLE" DHLM="10000" DLLM="-10000" EGU="deg" M=":Y" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="Y3"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="CS3 DIFFERENCE" DHLM="10000" DLLM="-10000" EGU="deg" M=":Y" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="Y3"/>
 	<pmac.pmacCreateCsGroup AxisCount="6" Controller="Brick" GroupName="1,2-&gt;A,B" GroupNumber="0"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="Brick" GroupName="3,4-&gt;I" GroupNumber="1"/>
 	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED CS3" GroupNumber="2"/>
