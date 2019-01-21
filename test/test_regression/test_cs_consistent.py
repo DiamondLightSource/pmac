@@ -4,6 +4,7 @@ from test.brick.movemonitor import MoveMonitor
 from datetime import datetime
 from test.brick.testbrick import TestBrick, DECIMALS
 from test.test_system.trajectories import trajectory_quick_scan
+from cothread import Sleep, catools as ca
 import pytest
 import os
 
@@ -12,6 +13,131 @@ import os
 
 
 class TestMakeCsConsistent(TestCase):
+    def test_kill_resets_cs_demands(self):
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+
+        tb.cs3.set_deferred_moves(True)
+        tb.cs3.set_move_time(3000)
+        tb.height.go(1000, wait=False)
+        tb.cs3.M1.go_direct(1000, wait=False)
+
+        # verify no motion yet
+        Sleep(.1)
+        self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
+        self.assertAlmostEqual(tb.m1.pos, 0, DECIMALS)
+
+        # start motion and then kill all
+        tb.cs3.set_deferred_moves(False)
+        Sleep(.1)
+        tb.send_command('&3a#1k')
+        # let the motors settle
+        Sleep(.5)
+
+        h = tb.height.pos
+        m1 = tb.m1.pos
+        self.assertGreater(h, 0)
+        self.assertGreater(m1, 0)
+
+        # now move a different motor in the CS, the other two would continue to
+        # their previous destinations if makeCSDemandsConsistent has failed
+        tb.cs3.M2.go_direct(10)
+        self.assertAlmostEqual(h, tb.height.pos, DECIMALS)
+        self.assertAlmostEqual(m1, tb.m1.pos, DECIMALS)
+        self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
+
+    def test_auto_home_resets_cs_demands(self):
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+
+        tb.height.go(10)
+        tb.cs3.M1.go_direct(10)
+        self.assertAlmostEqual(10, tb.height.pos, DECIMALS)
+        self.assertAlmostEqual(10, tb.m1.pos, DECIMALS)
+
+        # auto home everything
+        ca.caput('PMAC_BRICK_TEST:HM:HMGRP', 'All')
+        ca.caput('PMAC_BRICK_TEST:HM:HOME', 1, wait=True, timeout=20)
+
+        self.assertAlmostEqual(0, tb.height.pos, DECIMALS)
+        self.assertAlmostEqual(0, tb.m1.pos, DECIMALS)
+
+        # now move a different motor in the CS, the other two would continue to
+        # their previous destinations if makeCSDemandsConsistent has failed
+        tb.cs3.M2.go_direct(10)
+        self.assertAlmostEqual(0, tb.height.pos, DECIMALS)
+        self.assertAlmostEqual(0, tb.m1.pos, DECIMALS)
+        self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
+
+    def test_abort_cs_resets_cs_demands(self):
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+
+        tb.cs3.set_deferred_moves(True)
+        tb.cs3.set_move_time(3000)
+        tb.height.go(1000, wait=False)
+        tb.cs3.M1.go_direct(1000, wait=False)
+
+        # verify no motion yet
+        Sleep(.1)
+        self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
+        self.assertAlmostEqual(tb.m1.pos, 0, DECIMALS)
+
+        # start motion and then abort CS moves
+        tb.cs3.set_deferred_moves(False)
+        Sleep(.1)
+        tb.cs3.abort()
+        # let the motors settle
+        Sleep(.5)
+
+        h = tb.height.pos
+        m1 = tb.m1.pos
+        self.assertGreater(h, 0)
+        self.assertGreater(m1, 0)
+
+        # now move a different motor in the CS, the other two would continue to
+        # their previous destinations if makeCSDemandsConsistent has failed
+        tb.cs3.M2.go_direct(10)
+        self.assertAlmostEqual(h, tb.height.pos, 1)
+        self.assertAlmostEqual(m1, tb.m1.pos, DECIMALS)
+        self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
+
+    def test_stop_on_limit_resets_cs_demands(self):
+        tb = TestBrick()
+        tb.set_cs_group(tb.g3)
+
+        m = MoveMonitor(tb.height.pv_root)
+        tb.cs3.set_deferred_moves(True)
+        tb.cs3.set_move_time(3000)
+        tb.height.go(10, wait=False)
+        tb.cs3.M1.go_direct(10, wait=False)
+
+        # verify no motion yet
+        Sleep(.1)
+        self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
+        self.assertAlmostEqual(tb.m1.pos, 0, DECIMALS)
+
+        # start motion but stop on lim
+        tb.m3.set_limits(-1, 1)
+        tb.cs3.set_deferred_moves(False)
+        # let axes settle
+        m.wait_for_one_move(2)
+
+        h = tb.height.pos
+        m1 = tb.m1.pos
+        self.assertLess(h, 10)
+        self.assertLess(m1, 10)
+
+        # for some reason a large wait is required before go_direct
+        # in a real scenario this is fine even though I don't understand it
+        Sleep(5)
+        # now move a different motor in the CS, the other two would continue to
+        # their previous destinations if makeCSDemandsConsistent has failed
+        tb.cs3.M2.go_direct(10)
+        self.assertAlmostEqual(h, tb.height.pos, DECIMALS)
+        self.assertAlmostEqual(m1, tb.m1.pos, DECIMALS)
+        self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
+
     def test_ffe_trajectory_scan(self):
         """
             Do we get fatal following error when doing a traj scan if one of the
