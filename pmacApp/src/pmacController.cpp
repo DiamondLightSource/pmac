@@ -3827,7 +3827,7 @@ asynStatus pmacController::processDeferredMoves(void) {
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   //Build up combined move command for all axes involved in the deferred move.
-  for (int axis = 0; axis < numAxes_; axis++) {
+  for (int axis = 1; axis < numAxes_; axis++) {
     pAxis = getAxis(axis);
     if (pAxis != NULL) {
       if (pAxis->deferredMove_) {
