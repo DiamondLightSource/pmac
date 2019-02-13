@@ -407,6 +407,7 @@ protected:
 
 public:
     pmacCsGroups *pGroupList;
+    bool useCsVelocity;
 
 private:
     int connected_;
