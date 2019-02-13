@@ -281,9 +281,11 @@ asynStatus pmacCSController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
 
   if ((function == PMAC_CS_CsMoveTime_) ) {
     csMoveTime_ = value;
-    sprintf(command, "&%dQ70=%f",csNumber_, value);
-    debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
-    status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+    if (this->pC_->useCsVelocity) {
+      sprintf(command, "&%dQ70=%f", csNumber_, value);
+      debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
+      status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+    }
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.

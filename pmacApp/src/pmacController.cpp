@@ -208,11 +208,12 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                               asynEnumMask, // No addition interrupt interfaces
                               ASYN_CANBLOCK | ASYN_MULTIDEVICE,
                               1, // autoconnect
-                              0, 0),  // Default priority and stack size
+                              0, 50000),  // Default priority and stack size
           pmacDebugger("pmacController") {
   int index = 0;
   static const char *functionName = "pmacController::pmacController";
 
+  useCsVelocity = True;
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
 
   //Initialize non static data members
@@ -280,6 +281,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   //pAxisZero = new pmacAxis(this, 0);
   pAxisZero = new pmacCSMonitor(this);
   pGroupList = new pmacCsGroups(this);
+
 
   // Create the trajectory store
   pTrajectory_ = new pmacTrajectory();
@@ -395,7 +397,8 @@ asynStatus pmacController::initialSetup() {
     setupBrokerVariables();
     // Read the kinematics if we aren't a power pmac
     if (cid_ != PMAC_CID_POWER_) {
-      status = this->storeKinematics();
+      // This function blows the stack on VME !!
+      // status = this->storeKinematics();
     }
   }
 
@@ -4308,6 +4311,20 @@ asynStatus pmacDebug(const char *controller, int level, int axis, int csNo) {
   return asynSuccess;
 }
 
+asynStatus pmacNoCsVelocity(const char *controller) {
+  pmacController *pC;
+  static const char *functionName = "pmacNoCsVelocity";
+
+  pC = (pmacController *) findAsynPortDriver(controller);
+  if (!pC) {
+    printf("%s:%s: Error port %s not found\n", driverName, functionName, controller);
+    return asynError;
+  }
+
+  pC->useCsVelocity=False;
+
+  return asynSuccess;
+}
 
 
 /* Code for iocsh registration */
@@ -4431,7 +4448,7 @@ static void configpmacCsGroupAddAxisCallFunc(const iocshArgBuf *args) {
   pmacCsGroupAddAxis(args[0].sval, args[1].ival, args[2].ival, args[3].sval, args[4].ival);
 }
 
-/* pmacCsGroupAddAxis */
+/* pmacDebug */
 static const iocshArg pmacDebugArg0 = {"Controller port name", iocshArgString};
 static const iocshArg pmacDebugArg1 = {"Debug level", iocshArgInt};
 static const iocshArg pmacDebugArg2 = {"Axis number", iocshArgInt};
@@ -4446,6 +4463,14 @@ static void configpmacDebugCallFunc(const iocshArgBuf *args) {
   pmacDebug(args[0].sval, args[1].ival, args[2].ival, args[3].ival);
 }
 
+/* NoCsVelocity */
+static const iocshArg pmacNoVelocityArg0 = {"Controller port name", iocshArgString};
+static const iocshArg *const pmacNoCsVelocityArgs[] = {&pmacNoVelocityArg0};
+static const iocshFuncDef configpmacNoCsVelocity = {"pmacNoCsVelocity", 1, pmacNoCsVelocityArgs};
+
+static void configpmacNoCsVelocityCallFunc(const iocshArgBuf *args) {
+    pmacNoCsVelocity(args[0].sval);
+}
 
 static void pmacControllerRegister(void) {
   iocshRegister(&configpmacCreateController, configpmacCreateControllerCallFunc);
@@ -4457,6 +4482,7 @@ static void pmacControllerRegister(void) {
   iocshRegister(&configpmacCreateCsGroup, configpmacCreateCsGroupCallFunc);
   iocshRegister(&configpmacCsGroupAddAxis, configpmacCsGroupAddAxisCallFunc);
   iocshRegister(&configpmacDebug, configpmacDebugCallFunc);
+  iocshRegister(&configpmacNoCsVelocity, configpmacNoCsVelocityCallFunc);
 }
 epicsExportRegistrar(pmacControllerRegister);
 

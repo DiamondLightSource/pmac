@@ -74,7 +74,9 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
     pC_->makeCSDemandsConsistent();
   }
 
-  strcpy(vel_buff, pC_->getVelocityCmd(max_velocity, steps).c_str());
+  if (this->pC_->useCsVelocity) {
+    strcpy(vel_buff, pC_->getVelocityCmd(max_velocity, steps).c_str());
+  }
   if (acceleration != 0) {
     if (max_velocity != 0) {
       /* Isx87 = accel time in msec */
