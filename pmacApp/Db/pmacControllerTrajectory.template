@@ -5,6 +5,16 @@
 # % macro, NAxes,   Number of axes
 # % macro, PREC, precision of axis defnitions
 
+
+#
+# allow query of parent's Port Name
+#
+record(stringout, "$(PMAC):ParentPort")
+{
+    field(VAL, "$(PORT)")
+    field(PINI, "YES")
+}
+
 ##
 ## Records to read the motion program and driver versions
 ##

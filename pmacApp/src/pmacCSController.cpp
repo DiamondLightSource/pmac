@@ -243,6 +243,7 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     sprintf(command, "&%dA", csNumber_);
     debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+    pC_->csResetAllDemands = true;
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.
@@ -500,11 +501,7 @@ asynStatus pmacCSController::tScanCheckProgramRunning(int *running) {
 
   debug(DEBUG_FLOW, functionName);
 
-  if ((status_[0] & CS_STATUS1_RUNNING_PROG) != 0) {
-    *running = 1;
-  } else {
-    *running = 0;
-  }
+  *running = cStatus_.running_;
   return status;
 }
 

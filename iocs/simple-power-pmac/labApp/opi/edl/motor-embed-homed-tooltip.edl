@@ -1,0 +1,369 @@
+4 0 1
+beginScreenProperties
+major 4
+minor 0
+release 1
+x 613
+y 453
+w 375
+h 220
+font "arial-medium-r-18.0"
+ctlFont "arial-medium-r-18.0"
+btnFont "arial-medium-r-18.0"
+fgColor index 14
+bgColor index 58
+textColor index 14
+ctlFgColor1 index 14
+ctlFgColor2 index 0
+ctlBgColor1 index 0
+ctlBgColor2 index 14
+topShadowColor index 0
+botShadowColor index 14
+showGrid
+snapToGrid
+gridSize 5
+endScreenProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x -1
+y -1
+w 375
+h 220
+lineColor index 14
+fillColor index 11
+lineWidth 2
+numPoints 3
+xPoints {
+  0 -1
+  1 374
+  2 374
+}
+yPoints {
+  0 219
+  1 219
+  2 -1
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 1
+y 1
+w 375
+h 220
+lineColor index 1
+fillColor index 3
+lineWidth 2
+numPoints 3
+xPoints {
+  0 1
+  1 1
+  2 376
+}
+yPoints {
+  0 221
+  1 1
+  2 1
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 280
+y 100
+w 19
+h 19
+controlPv "$(motor).MSTA"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+shift 14
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 185
+y 100
+w 93
+h 20
+controlPv "$(motor).RBV"
+fgColor index 16
+fgAlarm
+bgColor index 12
+fill
+font "arial-bold-r-14.0"
+lineWidth 0
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 135
+y 15
+w 70
+h 25
+font "arial-bold-r-14.0"
+fontAlign "center"
+fgColor index 0
+bgColor index 9
+value {
+  "Help"
+}
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 2
+release 0
+x 75
+y 100
+w 108
+h 20
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-12.0"
+buttonLabel "$(label)"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "motor"
+}
+symbols {
+  0 "motor=$(motor)"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 35
+y 55
+w 139
+h 14
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Launch the motor screen"
+}
+autoSize
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 80
+y 70
+w 30
+h 30
+lineColor index 14
+fillColor index 3
+arrows "to"
+numPoints 2
+xPoints {
+  0 80
+  1 110
+}
+yPoints {
+  0 70
+  1 100
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 225
+y 70
+w 30
+h 30
+lineColor index 14
+fillColor index 3
+arrows "to"
+numPoints 2
+xPoints {
+  0 255
+  1 225
+}
+yPoints {
+  0 70
+  1 100
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 220
+y 55
+w 140
+h 14
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Motor Readback position"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 175
+y 165
+w 19
+h 19
+controlPv "LOC\\dummy0=i:0"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 175
+y 190
+w 19
+h 19
+controlPv "LOC\\dummy1=i:1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+numBits 1
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 250
+y 120
+w 40
+h 45
+lineColor index 14
+fillColor index 3
+arrows "from"
+numPoints 2
+xPoints {
+  0 290
+  1 250
+}
+yPoints {
+  0 120
+  1 165
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 175
+y 130
+w 79
+h 28
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Motor Homing"
+  "Status:"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 200
+y 190
+w 55
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Homed"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 200
+y 165
+w 70
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 5
+useDisplayBg
+value {
+  "Not Homed"
+}
+endObjectProperties
+

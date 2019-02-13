@@ -1,0 +1,48 @@
+// Activate servo algorithms for motors
+Motor[6].ServoCtrl=1
+
+// Write servo output to user shared memory registers
+Motor[6].pDac=Sys.Idata[6].a	// Same as EncTable[6].pEnc
+
+// Encoder conversion table entry to read and integrate this
+EncTable[6].type=1			// 32-bit register read
+EncTable[6].pEnc=Sys.idata[6].a	// Same as Motor[6].pDac
+EncTable[6].pEnc1=Sys.pushm		// Dummy read (not used)
+EncTable[6].index1=0			// No shift right of source data
+EncTable[6].index2=0			// No shift left of source data
+EncTable[6].index3=0			// No accel limiting
+EncTable[6].index4=1			// Single integration
+EncTable[6].PrevDelta=0		// No bias before integration
+EncTable[6].MaxDelta=0		// No velocity limit
+EncTable[6].ScaleFactor=1/65536	// 32 bits -> 16 bits
+
+// Read the encoder conversion table result as feedback
+Motor[6].pEnc=EncTable[6].a		// Position loop feedback source
+Motor[6].pEnc2=EncTable[6].a	// Velocity loop feedback source
+
+// Disable overtravel limit inputs
+// May be needed if there are no physical switches present
+Motor[6].pLimits=0
+
+// Disable amplifier enable output
+// May be needed if channel is also connected to real amplifier
+Motor[6].pAmpEnable=0
+
+// Disable amplifier fault input
+// May be needed if channel is also connected to real amplifier
+Motor[6].pAmpFault=0
+
+// Set derivative gain term in servo loop to zero
+// This is a Type 1 servo (single integration); does not need Kd
+Motor[6].Servo.Kvfb=0
+// Lower proportional gain term from default
+Motor[6].Servo.Kp=1
+// Add integral gain to force to zero error
+Motor[6].Servo.Ki=0.01
+// Set deadband zone to zero
+Motor[6].Servo.BreakPosErr=0
+// Add feedforward to minimize tracking error
+Motor[6].Servo.Kvff=1
+Motor[6].Servo.Kaff=1
+
+Motor[6].InPosBand = 10

@@ -26,6 +26,7 @@ DB += dls_pmac_asyn_motor.template
 DB += motor_in_cs.template
 DB += eloss_kill_autohome_records.template
 DB += pmacVariableWrite.template
+DB += pmacVariableRead.template
 DB += autohome.template
 
 

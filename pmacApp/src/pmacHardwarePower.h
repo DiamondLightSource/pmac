@@ -39,11 +39,24 @@ public:
 
     std::string parseCSMappingResult(const std::string mappingResult);
 
+    void startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
+                                      char *time_cmd, int addr);
+
+    void addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
+                                   int velocityMode, int userFunc, int time,
+                                   bool firstVal);
+
+    void startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffSize);
+
+    void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffSize,
+                                 bool firstVal);
+
 private:
     static const std::string GLOBAL_STATUS;
     static const std::string AXIS_STATUS;
     static const std::string AXIS_CS_NUMBER;
     static const std::string CS_STATUS;
+    static const std::string CS_RUNNING;
     static const std::string CS_VEL_CMD;
     static const std::string CS_ACCELERATION_CMD;
     static const std::string CS_AXIS_MAPPING;

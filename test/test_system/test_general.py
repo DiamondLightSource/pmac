@@ -15,7 +15,7 @@ import os
 
 class TestGeneral(TestCase):
 
-    @pytest.mark.skipif(os.environ['PPMAC'] == 'TRUE', reason="not supported on PPMAC yet")
+    @pytest.mark.skipif(os.environ.get('PPMAC') == 'True', reason="not supported on PPMAC yet")
     def test_auto_home(self):
         """ verify that autohome works as expected
         """
@@ -23,11 +23,10 @@ class TestGeneral(TestCase):
 
         for axis in tb.real_axes.values():
             axis.go(1, False)
-
+        Sleep(.5)
         ca.caput('PMAC_BRICK_TEST:HM:HMGRP', 'All')
-        ca.caput('PMAC_BRICK_TEST:HM:HOME', 1)
-
-        Sleep(1)
+        ca.caput('PMAC_BRICK_TEST:HM:HOME', 1, timeout=15, wait=True)
+        Sleep(.5)
 
         # ensure good state if homing failed
         ca.caput('PMAC_BRICK_TEST:HM:ABORT.PROC', 1)
@@ -47,7 +46,7 @@ class TestGeneral(TestCase):
 
         tb.poll_all_now()
         tb.jack1.go(20)
-        Sleep(0.5)
+        Sleep(1)
 
         ca.caput('PMAC_BRICK_TESTX:HM:ABORT.PROC', 1)
         self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)
@@ -57,35 +56,43 @@ class TestGeneral(TestCase):
         """
         tb = TestBrick()
 
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 0)
+        try:
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 0)
 
-        # create a feedrate problem by manually setting a configured feedrate
-        tb.send_command("&2%50")
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 1)
+            # create a feedrate problem by manually setting a configured feedrate
+            tb.send_command("&2%50")
+            tb.poll_all_now()
+            Sleep(2)  # Todo, does requiring this represent an issue?
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 1)
 
-        # use driver feature to reset All feedrates
-        ca.caput("BRICK1:FEEDRATE", 100, wait=True)
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 0)
+            # use driver feature to reset All feedrates
+            ca.caput("BRICK1:FEEDRATE", 100, wait=True)
+            tb.poll_all_now()
+            Sleep(2)
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 0)
 
-        # create a feedrate problem by manually setting another configured feedrate
-        tb.send_command("&3%50")
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 1)
+            # create a feedrate problem by manually setting another configured feedrate
+            tb.send_command("&3%50")
+            tb.poll_all_now()
+            Sleep(2)
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 1)
 
-        # use driver feature to reset All feedrates
-        ca.caput("BRICK1:FEEDRATE", 100, wait=True)
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 0)
+            # use driver feature to reset All feedrates
+            ca.caput("BRICK1:FEEDRATE", 100, wait=True)
+            tb.poll_all_now()
+            Sleep(2)
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 0)
 
-        # check that non-configured CS has no effect
-        tb.send_command("&4%50")
-        tb.poll_all_now()
-        problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
-        self.assertEquals(problem, 0)
+            # check that non-configured CS has no effect
+            tb.send_command("&4%50")
+            tb.poll_all_now()
+            Sleep(2)
+            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            self.assertEquals(problem, 0)
+        finally:
+            ca.caput("BRICK1:FEEDRATE", 100, wait=True)

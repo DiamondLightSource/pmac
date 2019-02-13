@@ -504,7 +504,8 @@ class CS(AsynPort):
         # init the AsynPort
         self.__super.__init__(name)
         # instatiate the template
-        template = _CsControlT(PORT=name, TIMEOUT=Controller.TIMEOUT, PMAC=Controller.P, CS=CS)
+        template = _CsControlT(PORT=name, TIMEOUT=Controller.TIMEOUT, PMAC=Controller.P,
+                               PARENTPORT=Controller.name, CS=CS)
         # make CS type correct
         self.CS = int(CS)
 

@@ -1,0 +1,15 @@
+meld pmacApp/pmc/trajectory_scan_code_ppmac.pmc 'etc/PowerClipper/PowerClipper/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc' &
+meld pmacApp/pmc/trajectory_scan_code_ppmac.pmc 'etc/LabPowerPmac/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc' &
+
+meld pmacApp/pmc/trajectory_scan_definitions_ppmac.pmh 'etc/PowerClipper/PowerClipper/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh' &
+meld pmacApp/pmc/trajectory_scan_definitions_ppmac.pmh 'etc/LabPowerPmac/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh' &
+
+read -p 'Go ahead and overwrite traj scan code in power pmac projects in etc? (y/n) ' reply
+if [ ${reply} == 'y' ] 
+then
+  echo 'creating links ...'
+  ln -f pmacApp/pmc/trajectory_scan_code_ppmac.pmc 'etc/PowerClipper/PowerClipper/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc' 
+  ln -f pmacApp/pmc/trajectory_scan_code_ppmac.pmc 'etc/LabPowerPmac/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc'
+  ln -f pmacApp/pmc/trajectory_scan_definitions_ppmac.pmh 'etc/PowerClipper/PowerClipper/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh'
+  ln -f pmacApp/pmc/trajectory_scan_definitions_ppmac.pmh 'etc/LabPowerPmac/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh'
+fi

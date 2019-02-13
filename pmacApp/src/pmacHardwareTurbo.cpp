@@ -258,6 +258,7 @@ pmacHardwareTurbo::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coo
     status = asynError;
   }
   if (status == asynSuccess) {
+    coordStatus.running_ = (coordStatus.stat1_ & CS_STATUS1_RUNNING_PROG) != 0;
     coordStatus.done_ = ((coordStatus.stat1_ & CS_STATUS1_RUNNING_PROG) == 0) &&
                         ((coordStatus.stat2_ & CS_STATUS2_IN_POSITION) != 0);
     coordStatus.highLimit_ = ((coordStatus.stat3_ & CS_STATUS3_LIMIT) != 0);
@@ -287,8 +288,8 @@ std::string pmacHardwareTurbo::getCSVelocityCmd(int csNo, double velocity, doubl
   // sets Q70 which PROG10 places into a TM command, so units are
   // converted to milliseconds for entire move
   // if velocity is 0 then set Q70 to 0 meaning use underlying real motor speeds
-  if(velocity !=0) {
-    move_time = steps/velocity*1000;
+  if (velocity != 0) {
+    move_time = steps / velocity * 1000;
   }
   sprintf(cmd, CS_VEL_CMD.c_str(), csNo, move_time);
   return std::string(cmd);
@@ -315,4 +316,111 @@ std::string pmacHardwareTurbo::getCSMappingCmd(int csNo, int axis) {
 
 std::string pmacHardwareTurbo::parseCSMappingResult(const std::string mappingResult) {
   return mappingResult;
+}
+
+void pmacHardwareTurbo::startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
+                                                     char *time_cmd, int addr) {
+  static const char *functionName = "startTrajectoryTimePointsCmd";
+
+  debug(DEBUG_FLOW, functionName, "addr %d", addr);
+
+  sprintf(vel_cmd, "WL:$%X", addr);
+  user_cmd[0] = time_cmd[0] = 0;
+}
+
+void pmacHardwareTurbo::addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
+                                                  int velocityMode, int userFunc, int time,
+                                                  bool ) {
+  static const char *functionName = "addTrajectoryTimePointCmd";
+
+  debugf(DEBUG_FLOW, functionName, "velCmd %s\nuserCmd %s\ntimeCmd %s\nvel %d, user %d, time %d",
+         velCmd, userCmd, timeCmd, velocityMode, userFunc, time);
+
+  sprintf(velCmd, "%s,$%01X%01X%06X", velCmd, velocityMode, userFunc, time);
+  userCmd[0] = timeCmd[0] = 0;
+}
+
+void pmacHardwareTurbo::startAxisPointsCmd(char *axisCmd, int axis, int addr, int buffSize) {
+  static const char *functionName = "startAxisPointsCmd";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, axis %d, addr %d", axisCmd, axis, addr);
+  sprintf(axisCmd, "WL:$%X", addr + ((axis + 1) * buffSize));
+}
+
+void pmacHardwareTurbo::addAxisPointCmd(char *axisCmd, int , double pos, int ,
+        bool ) {
+  int64_t ival = 0;
+  static const char *functionName = "addAxisPointCmd";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, pos %f", axisCmd, pos);
+  doubleToPMACFloat(pos, &ival);
+  sprintf(axisCmd, "%s,$%lX", axisCmd, (long) ival);
+}
+
+asynStatus pmacHardwareTurbo::doubleToPMACFloat(double value, int64_t *representation) {
+  asynStatus status = asynSuccess;
+  double absVal = value;
+  int negative = 0;
+  int exponent = 0;
+  double expVal = 0.0;
+  int64_t intVal = 0;
+  int64_t tVal = 0;
+  double mantissaVal = 0.0;
+  double maxMantissa = 34359738368.0;  // 0x800000000
+  const char *functionName = "doubleToPMACFloat";
+
+  debug(DEBUG_FLOW, functionName);
+  debugf(DEBUG_VARIABLE, functionName, "Value : %20.10lf\n", value);
+
+  // Check for special case 0.0
+  if (absVal == 0.0) {
+    // Set value accordingly
+    tVal = 0x0;
+  } else {
+    // Check for a negative number, and get the absolute
+    if (absVal < 0.0) {
+      absVal = absVal * -1.0;
+      negative = 1;
+    }
+    expVal = absVal;
+    mantissaVal = absVal;
+
+    // Work out the exponent required to normalise
+    // Normalised should be between 1 and 2
+    while (expVal >= 2.0) {
+      expVal = expVal / 2.0;
+      exponent++;
+    }
+    while (expVal < 1.0) {
+      expVal = expVal * 2.0;
+      exponent--;
+    }
+    // Offset exponent to provide +-2048 range
+    exponent += 0x800;
+
+    // Get the mantissa into correct format, this might not be
+    // the most efficient way to do this
+    while (mantissaVal < maxMantissa) {
+      mantissaVal *= 2.0;
+    }
+    mantissaVal = mantissaVal / 2.0;
+    // Get the integer representation for the altered mantissa
+    intVal = (int64_t) mantissaVal;
+
+    // If negative value then subtract altered mantissa from max
+    if (negative == 1) {
+      intVal = 0xFFFFFFFFFLL - intVal;
+    }
+
+    // Shift the altered mantissa by 12 bits and then set those
+    // 12 bits to the offset exponent
+    tVal = intVal << 12;
+    tVal += exponent;
+  }
+
+  *representation = tVal;
+
+  debugf(DEBUG_VARIABLE, functionName, "Prepared value: %12lX\n", tVal);
+
+  return status;
 }

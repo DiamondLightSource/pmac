@@ -1,0 +1,4 @@
+//#*k			//Kill all the motors (This option is commented out.  To use this option remove the comment character ";"
+&*A			//Abort All Programs
+disable plc 0..31	//Disable all Script PLCs
+clear all buffers
