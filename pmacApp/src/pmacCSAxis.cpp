@@ -74,7 +74,7 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
     pC_->makeCSDemandsConsistent();
   }
 
-  if (this->pC_->useCsVelocity) {
+  if (this->pC_->pC_->useCsVelocity) {
     strcpy(vel_buff, pC_->getVelocityCmd(max_velocity, steps).c_str());
   }
   if (acceleration != 0) {
