@@ -3574,6 +3574,7 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
 
   // Now register the CS object for callbacks from the broker
   this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
+  this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_PRE_FAST_READ);
 
   return asynSuccess;
 }

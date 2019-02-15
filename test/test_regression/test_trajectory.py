@@ -59,3 +59,6 @@ class TestTrajectory(TestCase):
         self.assertAlmostEqual(tb.m4.pos, 1, 1)
         self.assertAlmostEqual(tb.m5.pos, 1, 1)
         self.assertAlmostEqual(tb.m6.pos, 1, 1)
+
+        # reset all the mres etc.
+        TestBrick()

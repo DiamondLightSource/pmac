@@ -33,6 +33,7 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
   slowCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_SLOW_READ);
   mediumCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_MEDIUM_READ);
   fastCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_FAST_READ);
+  prefastCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_PRE_FAST_READ);
 
   locks = (asynPortDriver **) malloc(
           MAX_REGISTERED_LOCKS * sizeof(asynPortDriver *));
@@ -115,6 +116,8 @@ asynStatus pmacMessageBroker::addReadVariable(int type, const char *variable) {
     mediumStore_.addItem(variable);
   } else if (type == PMAC_FAST_READ) {
     fastStore_.addItem(variable);
+  } else if (type == PMAC_PRE_FAST_READ) {
+    prefastStore_.addItem(variable);
   } else {
     status = asynError;
   }
@@ -148,6 +151,22 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
       suppressCounter_++;
     }
     if (!suppressStatus_ || suppressCounter_ % 4 == 0) {
+      if (prefastStore_.size() > 0) {
+        // Send the command string and read the response
+        noOfCmds = prefastStore_.countCommandStrings();
+        debug(DEBUG_VARIABLE, functionName, "Prefast Store command string count", noOfCmds);
+        for (int index = 0; index < noOfCmds; index++) {
+          cmd = prefastStore_.readCommandString(index);
+          if (cmd.length() > 0) {
+            this->immediateWriteRead(cmd.c_str(), response, false);
+            debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
+            // Update the store with the response
+            prefastStore_.updateReply(cmd, response);
+          }
+        }
+        // Perform the necessary callbacks
+        prefastCallbacks_->callCallbacks(&prefastStore_);
+      }
       if (fastStore_.size() > 0) {
         // Send the command string and read the response
         noOfCmds = fastStore_.countCommandStrings();
@@ -256,6 +275,8 @@ asynStatus pmacMessageBroker::registerForUpdates(pmacCallbackInterface *cbPtr, i
 
   if (type == PMAC_FAST_READ) {
     fastCallbacks_->registerCallback(cbPtr);
+  } else if (type == PMAC_PRE_FAST_READ) {
+    prefastCallbacks_->registerCallback(cbPtr);
   } else if (type == PMAC_MEDIUM_READ) {
     mediumCallbacks_->registerCallback(cbPtr);
   } else if (type == PMAC_SLOW_READ) {
@@ -303,6 +324,8 @@ asynStatus pmacMessageBroker::readStoreSize(int type, int *size) {
     *size = mediumStore_.size();
   } else if (type == PMAC_SLOW_READ) {
     *size = slowStore_.size();
+  } else if (type == PMAC_PRE_FAST_READ) {
+    *size = prefastStore_.size();
   } else {
     status = asynError;
   }
@@ -322,6 +345,7 @@ asynStatus pmacMessageBroker::report(int type) {
   if (type == PMAC_FAST_READ) {
     printf("Report of PMAC fast store\n");
     printf("=========================\n");
+    prefastStore_.report();
     fastStore_.report();
   } else if (type == PMAC_MEDIUM_READ) {
     printf("Report of PMAC medium store\n");

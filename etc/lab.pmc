@@ -48,14 +48,6 @@ i5250=0 ; disable kinematics for CS 2 which will use mappings only
 #define J2MRES P(4800+4)
 #define J2OFF  P(4900+4)
 
-; The backlash demand in egu's is set by PROG_CS_motion_backlash.pmc (Q401..408)
-; NB Backlash defaults to zero (for use with PROG_CS_motion.pmc)
-#define BDSTJ1 Q(400+3)
-#define BDSTJ2 Q(400+4)
-BDSTJ1=0
-BDSTJ2=0
-
-
 ; Calculate height and DIFFERENCE between jack positions
 #define J1POS (J1MRES*P3+J1OFF)
 #define J2POS (J2MRES*P4+J2OFF)
@@ -79,8 +71,8 @@ CLEAR
     J1POS = HEIGHT - DIFFERENCE/2
     J2POS = HEIGHT + DIFFERENCE/2
     ; then motor counts
-    P3=(J1POS+BDSTJ1-J1OFF)/J1MRES
-    P4=(J2POS+BDSTJ2-J2OFF)/J2MRES
+    P3=(J1POS-J1OFF)/J1MRES
+    P4=(J2POS-J2OFF)/J2MRES
 CLOSE
 
 ; A PLC(sx+15) needs to be made to do position reporting
@@ -90,8 +82,6 @@ CLOSE
 #define J2POS (J2MRES*m462/(I408*32)+J2OFF)
 #define HEIGHT Q87
 #define DIFFERENCE Q88
-; Local variables
-#define RATIO Q328
 OPEN PLC18
 CLEAR
     ADDRESS&3

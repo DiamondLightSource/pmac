@@ -18,6 +18,7 @@ class Axis:
         self.lo_limit = pv_root + '.LLM'
         self.hi_limit = pv_root + '.HLM'
         self.pv_done_moving = pv_root + '.DMOV'
+        self.pv_use_encoder = pv_root + '.UEIP'
         if cs_no > 0:
             cs_name = 'CS{}:'.format(cs_no)
         else:

@@ -184,7 +184,7 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   int direction = 0;
   int retStatus = asynSuccess;
 
-  static const char *functionName = "pmacCSAxis::newGetAxisStatus";
+  static const char *functionName = "pmacCSAxis::GetAxisStatus";
 
   asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
