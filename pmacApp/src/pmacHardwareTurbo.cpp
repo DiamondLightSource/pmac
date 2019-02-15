@@ -227,12 +227,15 @@ pmacHardwareTurbo::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus 
 asynStatus pmacHardwareTurbo::setupCSStatus(int csNo) {
   asynStatus status = asynSuccess;
   char var[16];
-  static const char *functionName = "setupAxisStatus";
+  static const char *functionName = "setupCSStatus";
 
   debug(DEBUG_TRACE, functionName, "CS Number", csNo);
   // Add the CS status item to the fast update
   sprintf(var, CS_STATUS.c_str(), csNo);
-  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+  // status goes into PreFast poller which will be guaranteed to be called before
+  // Fast poller (with the parameter lock held). Thus if motors have just stopped
+  // the readback will happen after the stop status is picked up
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, var);
 
   return status;
 }

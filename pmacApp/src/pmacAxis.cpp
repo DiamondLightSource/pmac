@@ -121,9 +121,6 @@ void pmacAxis::initialSetup(int axisNo) {
     callParamCallbacks();
     if (axisNo > 0) {
       char var[16];
-      // Request status readback
-      sprintf(var, "#%d?", axisNo);
-      pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
       // Request position readback
       sprintf(var, "#%dP", axisNo);
       pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
@@ -136,6 +133,14 @@ void pmacAxis::initialSetup(int axisNo) {
 
       // Setup any specific hardware status items
       pC_->pHardware_->setupAxisStatus(axisNo);
+
+      // important to get status LAST since otherwise there is a race condition
+      // with reading position just before the motors stop - leading to the
+      // position being slightly out when the motor record gets DMOV = 1
+
+      // Request status readback
+      sprintf(var, "#%d?", axisNo);
+      pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
 
       pC_->registerForCallbacks(this, pmacMessageBroker::PMAC_FAST_READ);
     }

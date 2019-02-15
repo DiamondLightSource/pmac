@@ -92,6 +92,11 @@ class TestBrick(MyBrick):
             ca.caput(mres_pvs, mres_val, wait=True, timeout=10)
             ca.caput(["BRICK1:M1.MRES", "BRICK1:M2.MRES"], [1, 1], wait=True)
 
+            # reset all UEIP
+            e_pvs = [axis.pv_use_encoder for axis in r.values()]
+            e_val = [0] * len(mres_pvs)
+            ca.caput(e_pvs, e_val, wait=True, timeout=10)
+
             # reset all real offset
             offset_pvs = [axis.off for axis in r.values()]
             values = [0] * len(offset_pvs)

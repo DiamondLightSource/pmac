@@ -157,8 +157,7 @@ asynStatus pmacCsGroups::switchToGroup(int id) {
   debug(DEBUG_FLOW, functionName);
 
   if (csGroups.lookup(id) == NULL) {
-    cmdStatus = asynError;
-    debug(DEBUG_ERROR, functionName, "Invalid Coordinate System Group Number", id);
+    // do nothing, this will happen at startup if no groups are defined
   } else {
     // First abort motion on the currently selected group
     pGrp = (pmacCsGroup *) csGroups.lookup(currentGroup);

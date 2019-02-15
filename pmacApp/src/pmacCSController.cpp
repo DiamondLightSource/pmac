@@ -403,11 +403,13 @@ void pmacCSController::callback(pmacCommandStore *sPtr, int type) {
 
   debug(DEBUG_TRACE, functionName, "Coordinate system status callback");
 
-  // Parse the status
-  ((pmacController *) pC_)->pHardware_->parseCSStatus(csNumber_, sPtr, cStatus_);
-  status_[0] = cStatus_.stat1_;
-  status_[1] = cStatus_.stat2_;
-  status_[2] = cStatus_.stat3_;
+  if(type == pmacMessageBroker::PMAC_PRE_FAST_READ) {
+    // Parse the status
+    ((pmacController *) pC_)->pHardware_->parseCSStatus(csNumber_, sPtr, cStatus_);
+    status_[0] = cStatus_.stat1_;
+    status_[1] = cStatus_.stat2_;
+    status_[2] = cStatus_.stat3_;
+  }
 }
 
 asynStatus pmacCSController::immediateWriteRead(const char *command, char *response) {
