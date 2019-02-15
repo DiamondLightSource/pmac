@@ -97,14 +97,15 @@ class TestBrick(MyBrick):
             e_val = [0] * len(mres_pvs)
             ca.caput(e_pvs, e_val, wait=True, timeout=10)
 
-            # reset all real offset
-            offset_pvs = [axis.off for axis in r.values()]
+            # reset all offset
+            offset_pvs = [axis.off for axis in a.values()]
             values = [0] * len(offset_pvs)
-            ca.caput(offset_pvs, values, wait=True, timeout=1)
+            ca.caput(offset_pvs, values, wait=False, timeout=4)
 
             # move all real motors to zero
             self.send_command('#1 hmz #2 hmz #3 hmz #4 hmz #5 hmz #6 hmz #7 hmz #8 hmz ')
             demand_pvs = [axis.demand for axis in r.values()]
+            values = [0] * len(demand_pvs)
             ca.caput(demand_pvs, values, wait=True, timeout=30)
 
             # choose a default coordinate system group
@@ -113,7 +114,7 @@ class TestBrick(MyBrick):
             # set wide limits
             lo_pvs = [axis.lo_limit for axis in r.values()]
             hi_pvs = [axis.hi_limit for axis in r.values()]
-            lo_limits = [-10000] * len(offset_pvs)
-            hi_limits = [10000] * len(offset_pvs)
+            lo_limits = [-10000] * len(lo_pvs)
+            hi_limits = [10000] * len(hi_pvs)
             ca.caput(lo_pvs, lo_limits, wait=True, timeout=3)
             ca.caput(hi_pvs, hi_limits, wait=True, timeout=3)
