@@ -8,13 +8,4 @@
 #define J2MRES P(4800+4)
 #define J2OFF  P(4900+4)
 
-// This is the distance between the 2 jacks when they are in the zero position
-#define DIST Coord[3].Q[20]
-DIST = 1000
-// This is the distance from jack 1 to pivot point of the surface
-#define PIVOT Coord[3].Q[21]
-PIVOT = 500
-// This is the depth of the surface on the mount
-#define DEPTH Coord[3].Q[22]
-DEPTH = 0
 

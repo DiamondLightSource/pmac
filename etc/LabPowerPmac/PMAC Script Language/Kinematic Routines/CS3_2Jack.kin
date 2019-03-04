@@ -3,78 +3,32 @@
 // Folder: "PMAC Script Language\Kinematic Routines"
 //====================================================================================
 
-// ###################################################
-// RUNNING TESTS ON CLIPPER
-// ###################################################
-// these settings make clipper pull in tight to position before reporting 'in position'
-// i128,8,100=32      ; in position band
-// i188,8,100=100    ; count of cycles in position before move complete
-
-// ###################################################
-// Motion Program 10 - command coordinate sys moves
-// ###################################################
-// #include "../pmacApp/pmc/PROG10_CS_motion.pmc"
-
-// **************************************************************
-// Coordinate system generated using following command
-// msi -M"COORD=3,PLC=17,J1=3,J2=4,DIST=1000,PIVOT=500,DEPTH=0" /dls_sw/prod/R3.14.12.3/support/pmacCoord/1-51/pmacCoordApp/pmc/CS_2jack.pmc
-// **************************************************************
-
-//################################################
-// \file
-// Define motion for 2 jack system
-//
-// Original Author: Ronaldo Mercado
-//
-// Defined axes:
-// - X (addr 6) = height of surface in EGUs, PIVOT away from J1
-// - Y (addr 7) = angle of the surface in i15 units
-//
-// Macros:
-// - COORD = 3  CS number, e.g. 2
-// - PLC = 17  PLC number, should be CS number+15, e.g. 17
-// - J1 = 3  Axisnum for Jack 1, e.g. 1
-// - J2 = 4  Axisnum for Jack 2, e.g. 2
-// - DIST = 1000  Distance between 2 jacks when they are in the zero position
-// - PIVOT = 500  Distance from jack 1 to pivot point of the surface
-// - DEPTH = 0  Depth of the surface on the mount
-// ################################################
-
-// Select the coordinate system for these kinematics
 &3
 
 #define J1POSF J1MRES*KinPosMotor3+J1OFF
 #define J2POSF J2MRES*KinPosMotor4+J2OFF
 #define HEIGHT KinPosAxisX
-#define ANGLE KinPosAxisY
+#define DIFFF KinPosAxisY
 
 OPEN FORWARD
 	local ratio
 
 	// set D0 to show we output axis 6 and 7 (X and Y) only in the forward kinematic
 	KinAxisUsed = $C0
-    // this is the difference in height of the jacks divided by their distance apart
-    ratio=(J2POSF-J1POSF)/DIST
-    // this is the angle of the surface
-    ANGLE=atand(ratio)
+    // this is the difference in height of the jacks
+    DIFFF=J2POSF-J1POSF
     // the height of the surface
-    HEIGHT=J1POSF+ratio*PIVOT+DEPTH/cosd(ANGLE)
+    HEIGHT=J1POSF+DIFFF / 2
 CLOSE
 
 
 OPEN INVERSE
-	local surface
-	local tantheta
-	local J1Pos
-	local J2Pos
+     local J1Pos
+     local J2Pos
 
-    // this is the bottom edge of the surface
-    surface=HEIGHT-DEPTH/cosd(ANGLE)
-    // store tan theta
-    tantheta=tand(ANGLE)
     // work out the jack positions in EGUs
-    J1Pos = surface-PIVOT*tantheta
-    J2Pos = surface+(DIST-PIVOT)*tantheta
+    J1Pos = HEIGHT + DIFFF / 2
+    J2Pos = HEIGHT - DIFFF / 2
     // then cts
     KinPosMotor3=(J1Pos-J1OFF)/J1MRES
     KinPosMotor4=(J2Pos-J2OFF)/J2MRES
