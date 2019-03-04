@@ -96,15 +96,20 @@ asynStatus pmacMessageBroker::getConnectedStatus(int *connected, int *newConnect
 asynStatus pmacMessageBroker::immediateWriteRead(const char *command, char *response, bool trace) {
   asynStatus status = asynDisconnected;
   static const char *functionName = "immediateWriteRead";
-  // don't trace broker polling to avoid too much noise
+  // don't trace broker polling unless DEBUG_PMAC_POLL set, to avoid too much noise
   if (trace) {
-    debug(DEBUG_PMAC, "PMAC", "command", command);
+    debug(DEBUG_PMAC | DEBUG_PMAC_POLL, "PMAC", "command", command);
+  }
+  else
+  {
+    debug(DEBUG_PMAC_POLL, "PMAC_POLL", "command", command);
   }
   if (connected_) {
     this->startTimer(DEBUG_TIMING, functionName);
     status = this->lowLevelWriteRead(command, response);
     this->stopTimer(DEBUG_TIMING, functionName, "PMAC write/read time");
   }
+  debug(DEBUG_PMAC_POLL, "PMAC_POLL", "response", response);
   return status;
 }
 

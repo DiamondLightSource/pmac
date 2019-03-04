@@ -256,6 +256,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   i8_ = 0;
   i7002_ = 0;
   csResetAllDemands = false;
+  csCount = 0;
 
   // Create the message broker
   pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
@@ -620,6 +621,7 @@ void pmacController::setupBrokerVariables(void) {
   int gpioNo = 0;
   int progNo = 0;
   char cmd[32];
+  char response[64];
   static const char *functionName = "pmacController::setupBrokerVariables";
 
   // Add the items required for global status
@@ -628,7 +630,12 @@ void pmacController::setupBrokerVariables(void) {
   debug(DEBUG_VARIABLE, functionName, "global status", pHardware_->getGlobalStatusCmd().c_str());
 
   // Add the feedrate values
-  for (int csNo = 1; csNo <= PMAC_MAX_CS - 1; csNo++) {
+  // first find out how many Coordinate Systems are enabled
+  sprintf(cmd, "%s", pHardware_->getCSEnabledCountCmd().c_str());
+  this->immediateWriteRead(cmd, response);
+  sscanf(response, "%d", &csCount);
+  debug(DEBUG_VARIABLE, functionName, "Count of CSes enabled %d", csCount);
+  for (int csNo = 1; csNo <= csCount + 1; csNo++) {
     sprintf(cmd, "&%d%s", csNo, "%");
     debug(DEBUG_VARIABLE, functionName, "Adding feedrate check", cmd);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
@@ -2162,7 +2169,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     pAxis->scale_ = value;
   } else if (function == PMAC_C_FeedRate_) {
     strcpy(command, "");
-    for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++) {
+    for (int csNo = 1; csNo <= csCount; csNo++) {
       sprintf(command, "%s &%d%%%d", command, csNo, value);
     }
     debug(DEBUG_VARIABLE, functionName, "Feedrate Command", command);

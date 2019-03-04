@@ -33,7 +33,7 @@
     <PPCPUType>ppc405;2.6.30.3</PPCPUType>
     <ProjectFrimwareVers>2.3.2.5</ProjectFrimwareVers>
     <CPUType>PowerPC,460EX</CPUType>
-    <IDESignature>kzsn4771KZSN</IDESignature>
+    <IDESignature>dqjo2136DQJO</IDESignature>
     <EtherCatStackType>1</EtherCatStackType>
     <CpuAffinityServoTask>0</CpuAffinityServoTask>
     <CpuAffinityRtiTask>0</CpuAffinityRtiTask>
@@ -82,6 +82,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\PLCS.pmh">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="PMAC Script Language\Global Includes\PowerPMAC_M_Variables.pmh">
       <SubType>Content</SubType>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\trajectory_scan_definitions_ppmac.pmh">

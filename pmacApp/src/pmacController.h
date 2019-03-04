@@ -441,6 +441,7 @@ private:
     int i8_;
     int i7002_;
     bool csResetAllDemands;
+    int csCount;
 
     // Trajectory scan variables
     int pvtTimeMode_;
