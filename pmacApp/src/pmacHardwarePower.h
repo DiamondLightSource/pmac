@@ -53,6 +53,9 @@ public:
     void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffSize,
                                  bool firstVal);
 
+    std::string getCSEnableCommand(int csNo);
+
+
 private:
     static const std::string GLOBAL_STATUS;
     static const std::string AXIS_STATUS;

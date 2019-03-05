@@ -409,6 +409,7 @@ protected:
 public:
     pmacCsGroups *pGroupList;
     bool useCsVelocity;
+    pmacHardwareInterface *pHardware_;
 
 private:
     int connected_;
@@ -418,7 +419,6 @@ private:
     int parameterIndex_;
     pmacMessageBroker *pBroker_;
     pmacTrajectory *pTrajectory_;
-    pmacHardwareInterface *pHardware_;
     IntegerHashtable *pPortToCs_;
     IntegerHashtable *pIntParams_;
     IntegerHashtable *pHexParams_;

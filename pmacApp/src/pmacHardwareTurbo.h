@@ -53,6 +53,8 @@ public:
     void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffSize,
                                  bool firstVal);
 
+    std::string getCSEnableCommand(int csNo);
+
 private:
     asynStatus doubleToPMACFloat(double value, int64_t *representation);
 

@@ -365,6 +365,16 @@ void pmacHardwareTurbo::addAxisPointCmd(char *axisCmd, int , double pos, int ,
   sprintf(axisCmd, "%s,$%lX", axisCmd, (long) ival);
 }
 
+std::string pmacHardwareTurbo::getCSEnableCommand(int csNo) {
+  char cmd[10];
+  static const char *functionName = "getCSEnableCommand";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, CS %d", cmd, csNo);
+  sprintf(cmd, "&%de", csNo);
+  return std::string(cmd);
+}
+
+
 asynStatus pmacHardwareTurbo::doubleToPMACFloat(double value, int64_t *representation) {
   asynStatus status = asynSuccess;
   double absVal = value;

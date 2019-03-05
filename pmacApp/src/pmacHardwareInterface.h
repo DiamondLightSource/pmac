@@ -96,6 +96,8 @@ public:
     virtual void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffSize,
                                  bool firstVal) = 0;
 
+    virtual std::string getCSEnableCommand(int csNo) = 0;
+
 protected:
     pmacController *pC_;
 };

@@ -2951,6 +2951,8 @@ void pmacController::trajectoryTask() {
 
   this->lock();
   // Loop forever
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
   while (true) {
     // If we are not scanning then wait for a semaphore that is given when a scan is started
     if (!tScanExecuting_) {
@@ -3119,6 +3121,7 @@ void pmacController::trajectoryTask() {
       }
     }
   }
+#pragma clang diagnostic pop
 }
 
 void pmacController::setBuildStatus(int state, int status, const std::string &message) {
