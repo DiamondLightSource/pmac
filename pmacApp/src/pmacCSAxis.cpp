@@ -61,7 +61,6 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
 
   char vel_buff[128] = "";
   char buff[128];
-  char commandtemp[128];
   double deviceUnits = 0.0;
   double steps = fabs(position - position_);
 
@@ -93,8 +92,9 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
             acc_buff, axisNo_, deviceUnits);
     if (pC_->getProgramNumber() != 0) {
       // Abort current move to make sure axes are enabled
-      sprintf(commandtemp, "&%dE", pC_->getCSNumber());
-      status = pC_->axisWriteRead(commandtemp, response);
+      status = pC_->axisWriteRead(
+              pC_->pC_->pHardware_->getCSEnableCommand(pC_->getCSNumber()).c_str(),
+              response);
       /* If the program specified is non-zero, add a command to run the program.
        * If program number is zero, then the move will have to be started by some
        * external process, which is a mechanism of allowing coordinated starts to

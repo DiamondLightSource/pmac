@@ -348,3 +348,12 @@ void pmacHardwarePower::addAxisPointCmd(char *axisCmd, int , double pos, int ,
     sprintf(axisCmd, "%s,%g", axisCmd, pos);
   }
 }
+
+std::string pmacHardwarePower::getCSEnableCommand(int csNo) {
+  char cmd[10];
+  static const char *functionName = "getCSEnableCommand";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, CS %d", cmd, csNo);
+  sprintf(cmd, "&%denable", csNo);
+  return std::string(cmd);
+}
