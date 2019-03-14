@@ -3,32 +3,37 @@
 // Folder: "PMAC Script Language\Kinematic Routines"
 //====================================================================================
 
+// ###################################################
+// RUNNING TESTS ON CLIPPER
+// ###################################################
+// these settings make clipper pull in tight to position before reporting 'in position'
+// i128,8,100=32      ; in position band
+// i188,8,100=100    ; count of cycles in position before move complete
+
+
+// Select the coordinate system for these kinematics
 &3
 
 #define J1POSF J1MRES*KinPosMotor3+J1OFF
 #define J2POSF J2MRES*KinPosMotor4+J2OFF
 #define HEIGHT KinPosAxisX
-#define DIFFF KinPosAxisY
+#define DIFF KinPosAxisY
 
 OPEN FORWARD
-	local ratio
-
-	// set D0 to show we output axis 6 and 7 (X and Y) only in the forward kinematic
-	KinAxisUsed = $C0
     // this is the difference in height of the jacks
-    DIFFF=J2POSF-J1POSF
+    DIFF=J2POSF-J1POSF
     // the height of the surface
-    HEIGHT=J1POSF+DIFFF / 2
+    HEIGHT=J1POSF + DIFF
 CLOSE
 
 
 OPEN INVERSE
-     local J1Pos
-     local J2Pos
+	local J1Pos
+	local J2Pos
 
     // work out the jack positions in EGUs
-    J1Pos = HEIGHT + DIFFF / 2
-    J2Pos = HEIGHT - DIFFF / 2
+    J1Pos = HEIGHT - DIFF / 2
+    J2Pos = HEIGHT + DIFF / 2
     // then cts
     KinPosMotor3=(J1Pos-J1OFF)/J1MRES
     KinPosMotor4=(J2Pos-J2OFF)/J2MRES

@@ -65,7 +65,7 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
             #  (2) the brick itself may take a short time to do the CS mappings
             # for now we require a short wait after a switch
             # (this may not be fixable - (1) showed up on ppmac (2) showed up on VMXI)
-            Sleep(.1)
+            Sleep(.3)
 
         def send_command(self, command):
             ca.caput(self.pv_command, command, wait=True, datatype=ca.DBR_CHAR_STR)

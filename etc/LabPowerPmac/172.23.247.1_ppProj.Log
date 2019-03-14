@@ -1,0 +1,902 @@
+[PMAC_HARDWARE]
+Gate1AutoDetect=0x0
+Gate2AutoDetect=0x0
+Gate3AutoDetect=0x3
+CardIOAutoDetect=0x0
+CardDPRAutoDetect=0x0
+[PMAC_CONFIG]
+Loading PMAC Defaults ($$$***) Configuration
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+0 Project Symbols were created for gpascii -2 communication
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.052491
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.057976
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.010785
+100 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.223299
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.007233
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.064019
+Project Preprocessing & Load Total Time (sec) = 0.416830
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.059654
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.059852
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.009459
+100 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.242308
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.004978
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.065382
+Project Preprocessing & Load Total Time (sec) = 0.442054
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.066469
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.067022
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.012001
+100 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.277580
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.006018
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.073829
+Project Preprocessing & Load Total Time (sec) = 0.503368
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.063762
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.070787
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.014440
+100 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.276481
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.005416
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.070566
+Project Preprocessing & Load Total Time (sec) = 0.502001
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.063114
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.079002
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.012278
+100 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.266721
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.005956
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.074174
+Project Preprocessing & Load Total Time (sec) = 0.501712
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.059260
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.062260
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.011990
+100 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.242020
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.007487
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.064195
+Project Preprocessing & Load Total Time (sec) = 0.447635
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.049306
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.047058
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.007935
+25 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.201175
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.004071
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.056129
+Project Preprocessing & Load Total Time (sec) = 0.366163
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.050928
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.055784
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.010671
+100 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.214579
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.006530
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.068735
+Project Preprocessing & Load Total Time (sec) = 0.407928
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.070886
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.082766
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.011415
+100 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.307259
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.009903
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.080461
+Project Preprocessing & Load Total Time (sec) = 0.563690
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.070758
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.081077
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.014191
+100 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.308404
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.010220
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.081152
+Project Preprocessing & Load Total Time (sec) = 0.566381
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.075345
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.081641
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.013541
+97 Project Symbols were created for gpascii -2 communication
+/var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc:5:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:11:1: warning: this is the location of the previous definition
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.313165
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.003836
+Project Preprocessing & Load Total Time (sec) = 0.489066
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.063196
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.074551
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.012695
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.286220
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.004117
+Project Preprocessing & Load Total Time (sec) = 0.441480
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.063756
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.074966
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.010287
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.283874
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.006328
+Project Preprocessing & Load Total Time (sec) = 0.440854
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.068984
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.075815
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.012452
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.279221
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.004858
+Project Preprocessing & Load Total Time (sec) = 0.442077
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.071547
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.072774
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.013218
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.279026
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.008762
+Project Preprocessing & Load Total Time (sec) = 0.446162
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.063883
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.074277
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.012627
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.284622
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.008505
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.071271
+Project Preprocessing & Load Total Time (sec) = 0.516132
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.074380
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.071906
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.013018
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.305280
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.006613
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.080009
+Project Preprocessing & Load Total Time (sec) = 0.551704
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.068403
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.082801
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.013894
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.320940
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.006774
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.085823
+Project Preprocessing & Load Total Time (sec) = 0.579245
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.070499
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.081959
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.013555
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.310384
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.005600
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.086359
+Project Preprocessing & Load Total Time (sec) = 0.569027
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.078845
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PowerPMAC_M_Variables.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.085572
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.013979
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.325320
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.009348
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.084546
+Project Preprocessing & Load Total Time (sec) = 0.598073
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.069040
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PowerPMAC_M_Variables.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.071622
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.009555
+25 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.292133
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.004875
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.076749
+Project Preprocessing & Load Total Time (sec) = 0.524616
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.131030
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PowerPMAC_M_Variables.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.145182
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.028671
+25 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.575338
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.005045
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.156187
+Project Preprocessing & Load Total Time (sec) = 1.041907
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.176511
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PowerPMAC_M_Variables.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.190217
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.035450
+25 Project Symbols were created for gpascii -2 communication
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:32:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:20:1: warning: this is the location of the previous definition
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.746951
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.004816
+Project Preprocessing & Load Total Time (sec) = 1.154715
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.133965
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PowerPMAC_M_Variables.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.146354
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.016014
+25 Project Symbols were created for gpascii -2 communication
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:32:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:20:1: warning: this is the location of the previous definition
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.552163
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.003986
+Project Preprocessing & Load Total Time (sec) = 0.855145
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.107021
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PowerPMAC_M_Variables.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.142579
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.010204
+26 Project Symbols were created for gpascii -2 communication
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:32:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:20:1: warning: this is the location of the previous definition
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.475011
+Prog10 offset 244, size 94
+&3Inverse offset 119, size 125
+&3Forward offset 0, size 119
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.005295
+Project Preprocessing & Load Total Time (sec) = 0.741636
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.168252
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PowerPMAC_M_Variables.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.132559
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.039870
+100 Project Symbols were created for gpascii -2 communication
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:32:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:20:1: warning: this is the location of the previous definition
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.498571
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.006011
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.138227
+Project Preprocessing & Load Total Time (sec) = 0.984011
+[PMAC_PROJECT]
+Start of Project Loading using INI File: "/var/ftp/usrflash/Project/Configuration/pp_proj.ini"
+LoadRTUserCode() Delta Time (sec) = 0.184304
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_disable.txt 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/CS3_2Jack.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_1.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_2.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_3.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_4.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_5.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_6.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_7.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/Motor_8.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PLCS.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/PowerPMAC_M_Variables.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Global Includes/trajectory_scan_definitions_ppmac.pmh 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/PROG10_CS_motion.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc 
+Including Project File: /var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc 
+Including Project File: /var/ftp/usrflash/Project/Configuration/pp_startup.txt 
+Status: Pass 1 Create debug file, #defines, *.h & .sym files, Time (sec) = 0.164747
+Status: Pass 2 Verify prog calls, local stack & labels, Time (sec)  = 0.049608
+97 Project Symbols were created for gpascii -2 communication
+Status: Create PPMAC Symbol Table & Run CPP Time (sec) = 0.759992
+Status: Successful load of preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+Status: Download to PPMAC Command Processor, Time (sec) = 0.006546
+Status: Final pp_proj.h & Run Background C Apps, Time (sec) = 0.200174
+Project Preprocessing & Load Total Time (sec) = 1.366363

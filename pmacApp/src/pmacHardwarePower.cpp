@@ -16,7 +16,7 @@ const std::string pmacHardwarePower::CS_INPOS = "Coord[%d].InPos";
 const std::string pmacHardwarePower::CS_RUNNING = "Coord[%d].ProgRunning";
 const std::string pmacHardwarePower::CS_VEL_CMD = "&%dQ70=%f ";
 const std::string pmacHardwarePower::CS_ACCELERATION_CMD = "Coord[%d].Ta=%f Coord[%d].Td=%f";
-// the trailing &d stops clashes from occurring since comma is not allowed on ppmac
+// the trailing ; stops clashes from occurring (instead of comma on turbo)
 const std::string pmacHardwarePower::CS_AXIS_MAPPING = "#%d->;";
 const std::string pmacHardwarePower::CS_ENABLED_COUNT = "Sys.MaxCoords";
 

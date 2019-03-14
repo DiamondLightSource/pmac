@@ -1,0 +1,5 @@
+</var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc>,18
+0,9
+1,11
+2,12
+<end>

@@ -7,5 +7,3 @@
 #define J2MOVE P(4700+4)
 #define J2MRES P(4800+4)
 #define J2OFF  P(4900+4)
-
-

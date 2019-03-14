@@ -20,6 +20,7 @@ deleteme
 *.out
 *.o
 *.log
-etc/PowerClipper/
-etc/LabPowerPmac/
-etc/LabPowerPmac_Backup/
+#etc/PowerClipper/
+#etc/LabPowerPmac/
+#etc/LabPowerPmac_Backup/
+.nfs*

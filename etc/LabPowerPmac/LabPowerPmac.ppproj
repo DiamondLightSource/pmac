@@ -24,7 +24,7 @@
     <LookAheadBuffer>16</LookAheadBuffer>
     <SymbolsBufSize>1</SymbolsBufSize>
     <RealtimeRoutinesBuildFlag>0</RealtimeRoutinesBuildFlag>
-    <TemplateVersion>1.5</TemplateVersion>
+    <TemplateVersion>2</TemplateVersion>
     <ProjppRunAtOption>No</ProjppRunAtOption>
     <DownloadCSoruce>No</DownloadCSoruce>
     <EncryptionOption>Do Not Encrypt Any File</EncryptionOption>
@@ -33,13 +33,14 @@
     <PPCPUType>ppc405;2.6.30.3</PPCPUType>
     <ProjectFrimwareVers>2.3.2.5</ProjectFrimwareVers>
     <CPUType>PowerPC,460EX</CPUType>
-    <IDESignature>dqjo2136DQJO</IDESignature>
+    <IDESignature>wjzm8927WJZM</IDESignature>
     <EtherCatStackType>1</EtherCatStackType>
-    <CpuAffinityServoTask>0</CpuAffinityServoTask>
-    <CpuAffinityRtiTask>0</CpuAffinityRtiTask>
+    <CpuAffinityServoTask>1</CpuAffinityServoTask>
+    <CpuAffinityRtiTask>1</CpuAffinityRtiTask>
     <CpuAffinityBackgroundTask>0</CpuAffinityBackgroundTask>
     <CpuAffinityRtpmacMainTask>0</CpuAffinityRtpmacMainTask>
     <ProjectExportLevel>0</ProjectExportLevel>
+    <DownloadSystemSetupConfig>No</DownloadSystemSetupConfig>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,49 +60,73 @@
   <ItemGroup>
     <Content Include="PMAC Script Language\Global Includes\CS3_2Jack.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>0</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\Motor_2.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>2</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\Motor_3.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>3</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\Motor_4.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>4</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\Motor_5.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>5</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\Motor_6.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>6</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\Motor_7.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>7</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\Motor_8.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>8</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\PLCS.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>9</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\PowerPMAC_M_Variables.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>10</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Global Includes\trajectory_scan_definitions_ppmac.pmh">
       <SubType>Content</SubType>
+      <DisplayOrder>11</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Kinematic Routines\CS3_2Jack.kin">
       <SubType>Content</SubType>
+      <DisplayOrder>0</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Motion Programs\PROG10_CS_motion.pmc">
       <SubType>Content</SubType>
+      <DisplayOrder>0</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\Motion Programs\trajectory_scan_code_ppmac.pmc">
       <SubType>Content</SubType>
+      <DisplayOrder>1</DisplayOrder>
     </Content>
     <Content Include="PMAC Script Language\PLC Programs\LabPLCs.plc">
       <SubType>Content</SubType>
+      <DisplayOrder>0</DisplayOrder>
     </Content>
+    <Folder Include="System" />
+    <Folder Include="System\Coordinate Systems" />
+    <Folder Include="System\CPU" />
+    <Folder Include="System\Encoder" />
+    <Folder Include="System\EtherCAT" />
+    <Folder Include="System\Motors" />
+    <None Include="Configuration\systemsetup.cfg" />
+    <None Include="System\CPU\System.cpusetup" />
+    <None Include="System\Encoder\Encoder.encsetup" />
     <None Include="System\Hardware\ACC-24E3[1].hwsetup">
       <SubType>Content</SubType>
     </None>
@@ -140,7 +165,9 @@
     <None Include="Log\pp_proj.log" />
     <Folder Include="PMAC Script Language\" />
     <Folder Include="PMAC Script Language\Global Includes" />
-    <None Include="PMAC Script Language\Global Includes\Motor_1.pmh" />
+    <None Include="PMAC Script Language\Global Includes\Motor_1.pmh">
+      <DisplayOrder>1</DisplayOrder>
+    </None>
     <Folder Include="PMAC Script Language\Kinematic Routines" />
     <Folder Include="PMAC Script Language\Libraries" />
     <Folder Include="PMAC Script Language\Motion Programs" />
