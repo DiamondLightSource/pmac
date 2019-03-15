@@ -626,8 +626,11 @@ void pmacController::setupBrokerVariables(void) {
   sprintf(cmd, "%s", pHardware_->getCSEnabledCountCmd().c_str());
   this->immediateWriteRead(cmd, response);
   sscanf(response, "%d", &csCount);
+  //Power pmac coordinate systems are from 0 - 15 so subtract 1
+  if(cid_ == PMAC_CID_POWER_)
+    csCount -- ;
   debug(DEBUG_VARIABLE, functionName, "Count of CSes enabled %d", csCount);
-  for (int csNo = 1; csNo <= csCount + 1; csNo++) {
+  for (int csNo = 1; csNo <= csCount; csNo++) {
     sprintf(cmd, "&%d%s", csNo, "%");
     debug(DEBUG_VARIABLE, functionName, "Adding feedrate check", cmd);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
