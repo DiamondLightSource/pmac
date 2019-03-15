@@ -292,7 +292,7 @@ asynStatus pmacCsGroups::redefineLookaheads() {
 
   // Next we must re-define the lookaheads
   if (status == asynSuccess) {
-    for (cs = pC_->csCount+1; cs > 0; cs--) {
+    for (cs = pC_->csCount; cs > 0; cs--) {
       sprintf(cmd, "&%dDEFINE LOOKAHEAD 50,10", cs);
       if (pC_->lowLevelWriteRead(cmd, reply) != asynSuccess) {
         debug(DEBUG_ERROR, functionName, "Failed to send command", cmd);

@@ -634,9 +634,14 @@ void pmacController::setupBrokerVariables(void) {
   sprintf(cmd, "%s", pHardware_->getCSEnabledCountCmd().c_str());
   this->immediateWriteRead(cmd, response);
   sscanf(response, "%d", &csCount);
-  //Power pmac coordinate systems are from 0 - 15 so subtract 1
-  if(cid_ == PMAC_CID_POWER_)
-    csCount -- ;
+
+  if(cid_ == PMAC_CID_POWER_) {
+      //Power pmac coordinate systems are from 0 - 15 so subtract 1
+      csCount--;
+  } else {
+      // Turbo pmac I68 is one less than the count
+      csCount++;
+  }
   debug(DEBUG_VARIABLE, functionName, "Count of CSes enabled %d", csCount);
   for (int csNo = 1; csNo <= csCount; csNo++) {
     sprintf(cmd, "&%d%s", csNo, "%");
@@ -1479,7 +1484,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   min_feedrate = 100;
   min_feedrate_cs = 0;
   // Lookup the value of the feedrate
-  for (int csNo = 1; csNo <= PMAC_MAX_CS - 1; csNo++) {
+  for (int csNo = 1; csNo <= csCount; csNo++) {
     // only check feedrate on those CS that we are using (have registered config)
     if (pCSControllers_[csNo] != NULL) {
       sprintf(command, "&%d%s", csNo, "%");
