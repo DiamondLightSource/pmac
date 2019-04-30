@@ -2,13 +2,13 @@
 
 # These following three base definitions are overwritten by definitions in 
 # the RELEASE.<arch>.Common files. Included here for information only.
-# SUPPORT         = /dls_sw/prod/R3.14.12.7/support
-# WORK            = /dls_sw/work/R3.14.12.7/support
-# EPICS_BASE      = /dls_sw/epics/R3.14.12.7/base
+# SUPPORT         = /dls_sw/prod/R3.14.12.3/support
+# WORK            = /dls_sw/work/R3.14.12.3/support
+# EPICS_BASE      = /dls_sw/epics/R3.14.12.3/base
 
-ASYN=       $(SUPPORT)/asyn/4-34
-CALC=       $(SUPPORT)/calc/3-7
-MOTOR=      $(SUPPORT)/motor/6-10-1dls1-1
-BUSY=       $(SUPPORT)/busy/1-7dls1
+ASYN=       $(SUPPORT)/asyn/4-31
+CALC=       $(SUPPORT)/calc/3-1
+MOTOR=      $(SUPPORT)/motor/6-9dls14
+BUSY=       $(SUPPORT)/busy/1-6-1dls1
 
 
