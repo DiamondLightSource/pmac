@@ -1561,25 +1561,6 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   std::string trajBufPtr = "";
   static const char *functionName = "getGlobalStatus";
 
-  // Read the current trajectory status from the PMAC
-  trajBufPtr = sPtr->readValue(PMAC_TRAJ_STATUS);
-  if (trajBufPtr == "") {
-    debug(DEBUG_ERROR, functionName, "Problem reading trajectory status", PMAC_TRAJ_STATUS);
-    status = asynError;
-  } else {
-    nvals = sscanf(trajBufPtr.c_str(), "%d", &tScanPmacStatus_);
-    if (nvals != 1) {
-      debug(DEBUG_ERROR, functionName, "Error reading trajectory status", PMAC_TRAJ_STATUS);
-      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-      debug(DEBUG_ERROR, functionName, "    response", trajBufPtr);
-      status = asynError;
-    } else {
-      // Save the value into the parameter
-      setIntegerParam(PMAC_C_TrajStatus_, tScanPmacStatus_);
-      debugf(DEBUG_VARIABLE, functionName, "Fast read trajectory status [%s] => %d",
-             PMAC_TRAJ_STATUS, tScanPmacStatus_);
-    }
-  }
 
   // Read the current trajectory buffer index read from the PMAC (within current buffer)
   trajBufPtr = sPtr->readValue(PMAC_TRAJ_CURRENT_INDEX);
@@ -1651,6 +1632,26 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       debugf(DEBUG_VARIABLE, functionName, "Fast read trajectory current buffer [%s] => %d",
              PMAC_TRAJ_CURRENT_BUFFER, tScanPmacBufferNumber_);
     }
+  }
+
+  // Read the current trajectory status from the PMAC
+  trajBufPtr = sPtr->readValue(PMAC_TRAJ_STATUS);
+  if (trajBufPtr == "") {
+      debug(DEBUG_ERROR, functionName, "Problem reading trajectory status", PMAC_TRAJ_STATUS);
+      status = asynError;
+  } else {
+      nvals = sscanf(trajBufPtr.c_str(), "%d", &tScanPmacStatus_);
+      if (nvals != 1) {
+          debug(DEBUG_ERROR, functionName, "Error reading trajectory status", PMAC_TRAJ_STATUS);
+          debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+          debug(DEBUG_ERROR, functionName, "    response", trajBufPtr);
+          status = asynError;
+      } else {
+          // Save the value into the parameter
+          setIntegerParam(PMAC_C_TrajStatus_, tScanPmacStatus_);
+          debugf(DEBUG_VARIABLE, functionName, "Fast read trajectory status [%s] => %d",
+                 PMAC_TRAJ_STATUS, tScanPmacStatus_);
+      }
   }
 
   // Lookup the value of global status
