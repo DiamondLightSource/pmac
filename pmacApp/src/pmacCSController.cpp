@@ -403,7 +403,7 @@ void pmacCSController::callback(pmacCommandStore *sPtr, int type) {
 
   debug(DEBUG_TRACE, functionName, "Coordinate system status callback");
 
-  if(type == pmacMessageBroker::PMAC_PRE_FAST_READ) {
+  if(type == pmacMessageBroker::PMAC_FAST_READ) {
     // Parse the status
     ((pmacController *) pC_)->pHardware_->parseCSStatus(csNumber_, sPtr, cStatus_);
     status_[0] = cStatus_.stat1_;
@@ -766,6 +766,3 @@ epicsRegisterFunction(pmacCreateCSAxes);
 epicsRegisterFunction(pmacCSSetAxisScale);
 #endif
 } // extern "C"
-
-
-
