@@ -610,6 +610,7 @@ void pmacController::pollAllNow(void) {
 
   debug(DEBUG_FLOW, functionName);
   // Force updates of each loop
+  pBroker_->updateVariables(pmacMessageBroker::PMAC_PRE_FAST_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
@@ -662,7 +663,7 @@ void pmacController::setupBrokerVariables(void) {
 
   // Add the PMAC P variables required for trajectory scanning
   // Fast readout required of these values
-  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_STATUS);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, PMAC_TRAJ_STATUS);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_INDEX);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_BUFFER);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_TOTAL_POINTS);
@@ -727,6 +728,7 @@ void pmacController::setupBrokerVariables(void) {
 
   // Register this class for updates
   pBroker_->registerForLocks(this);
+  pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_PRE_FAST_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_FAST_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_SLOW_READ);
@@ -999,6 +1001,11 @@ asynStatus pmacController::processDrvInfo(char *input, char *output) {
 void pmacController::callback(pmacCommandStore *sPtr, int type) {
   static const char *functionName = "callback";
   debug(DEBUG_FLOW, functionName);
+
+  if (type == pmacMessageBroker::PMAC_PRE_FAST_READ) {
+    // Execute the pre-fast update loop
+    this->prefastUpdate(sPtr);
+  }
 
   if (type == pmacMessageBroker::PMAC_FAST_READ) {
     // Execute the fast update loop
@@ -1550,6 +1557,16 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   return status;
 }
 
+asynStatus pmacController::prefastUpdate(pmacCommandStore *sPtr) {
+  asynStatus status = asynSuccess;
+  int nvals;
+  std::string trajBufPtr = "";
+  static const char *functionName = "prefastUpdate";
+
+
+  return status;
+}
+
 asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   asynStatus status = asynSuccess;
   int gStatus = 0;
@@ -1559,8 +1576,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   bool hardwareProblem;
   int nvals;
   std::string trajBufPtr = "";
-  static const char *functionName = "getGlobalStatus";
-
+  static const char *functionName = "fastUpdate";
 
   // Read the current trajectory buffer index read from the PMAC (within current buffer)
   trajBufPtr = sPtr->readValue(PMAC_TRAJ_CURRENT_INDEX);
@@ -2956,6 +2972,7 @@ void pmacController::trajectoryTask() {
   //double position = 0.0;
   char response[1024];
   char cmd[1024];
+  char msg[1024];
   const char *functionName = "trajectoryTask";
 
   this->lock();
@@ -3083,8 +3100,9 @@ void pmacController::trajectoryTask() {
                                    "Trajectory scan complete");
           } else {
             // Set the status to failure
-            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE,
-                                   "Trajectory scan failed, unable to fill buffers in time");
+            sprintf(msg,"Scan failed, unable to fill buffers in time (%d/%d)",
+                    tScanPmacTotalPts_, totalProfilePoints);
+            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, msg);
           }
         } else {
           // Set the status to failure

@@ -216,6 +216,7 @@ public:
     virtual void callback(pmacCommandStore *sPtr, int type);
     asynStatus slowUpdate(pmacCommandStore *sPtr);
     asynStatus mediumUpdate(pmacCommandStore *sPtr);
+    asynStatus prefastUpdate(pmacCommandStore *sPtr);
     asynStatus fastUpdate(pmacCommandStore *sPtr);
     asynStatus parseIntegerVariable(const std::string &command,
                                     const std::string &response,
