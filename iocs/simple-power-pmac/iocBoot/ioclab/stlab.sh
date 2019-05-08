@@ -13,4 +13,5 @@ if [ -n "$1" ]; then
         exit 1
     }
 fi
-exec ./lab stlab.boot
+export INSTALL=/usr/local/epics/apps/pmac/iocs/simple-power-pmac
+exec ../../bin/linux-x86_64/lab stlab.src

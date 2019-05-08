@@ -1,11 +1,11 @@
 # TODO edit this file to reflect your site dependencies locations
 
-SUPPORT = /dls_sw/prod/R3.14.12.7/support
+SUPPORT = /usr/local/epics/synApps/support
 # Module definitions
-ASYN = $(SUPPORT)/asyn/4-33
-BUSY = $(SUPPORT)/busy/1-7
-CALC = $(SUPPORT)/calc/3-7
-MOTOR = /home/hgv27681/R3.14.12.7/support/motor
-PMAC = /home/hgv27681/R3.14.12.7/support/pmac
+ASYN = $(SUPPORT)/asyn-R4-33
+BUSY = $(SUPPORT)/busy-R1-7
+CALC = $(SUPPORT)/calc-R3-7-1
+MOTOR = $(SUPPORT)/motor-R6-10-1
+PMAC = /usr/local/epics/apps/pmac
 # EPICS Base appears last
-EPICS_BASE = /dls_sw/epics/R3.14.12.7/base
+EPICS_BASE = /usr/local/epics/base
