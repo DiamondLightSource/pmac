@@ -65,7 +65,7 @@
       <InCtrl>$287</InCtrl>
       <IndexDemuxEna>0</IndexDemuxEna>
       <IndexGateState>0</IndexGateState>
-      <OutCtrl>$f000001</OutCtrl>
+      <OutFlagD>0</OutFlagD>
       <OutputMode>0</OutputMode>
       <OutputPol>0</OutputPol>
       <PackInData>0</PackInData>
@@ -98,7 +98,7 @@
       <InCtrl>$401047</InCtrl>
       <IndexDemuxEna>0</IndexDemuxEna>
       <IndexGateState>0</IndexGateState>
-      <OutCtrl>$f800002</OutCtrl>
+      <OutFlagD>0</OutFlagD>
       <OutputMode>0</OutputMode>
       <OutputPol>0</OutputPol>
       <PackInData>2</PackInData>
@@ -131,7 +131,7 @@
       <InCtrl>$402047</InCtrl>
       <IndexDemuxEna>0</IndexDemuxEna>
       <IndexGateState>0</IndexGateState>
-      <OutCtrl>$f800004</OutCtrl>
+      <OutFlagD>0</OutFlagD>
       <OutputMode>0</OutputMode>
       <OutputPol>0</OutputPol>
       <PackInData>2</PackInData>
@@ -164,7 +164,7 @@
       <InCtrl>$403047</InCtrl>
       <IndexDemuxEna>0</IndexDemuxEna>
       <IndexGateState>0</IndexGateState>
-      <OutCtrl>$f800008</OutCtrl>
+      <OutFlagD>0</OutFlagD>
       <OutputMode>0</OutputMode>
       <OutputPol>0</OutputPol>
       <PackInData>2</PackInData>

@@ -1,9 +1,9 @@
 <?xml version="1.0" ?>
 <components arch="linux-x86_64">
 	<!--Giles Test Power Clipper-->
-	<!--<pmac.pmacAsynSSHPort IP="172.23.240.160" name="BRICK1port"/>-->
+	<pmac.pmacAsynSSHPort IP="172.23.240.160" name="BRICK1port"/>
 	<!--Lab Power Brick-->
-	<pmac.pmacAsynSSHPort IP="172.23.247.1" name="BRICK1port"/>
+	<!--<pmac.pmacAsynSSHPort IP="172.23.247.1" name="BRICK1port"/>-->
 	<!--<EPICS_BASE.dbpf pv="BRICK1:FEEDRATE" value="100"/>-->
 	<!--<EPICS_BASE.dbpf pv="BRICK1:FEEDRATE_LIMIT" value="0"/>-->
 	<pmac.PowerPMAC P="BRICK1" Port="BRICK1port" name="Brick"/>

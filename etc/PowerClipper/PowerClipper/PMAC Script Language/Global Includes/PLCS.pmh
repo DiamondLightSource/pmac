@@ -5,13 +5,13 @@ DISABLE PLC 18..31
 
 
 // enable all motors
-#1j/  
-#2j/
-#3j/
-#4j/
-#5j/
-#6j/
-#7j/
-#8j/
+// #1j/  
+//#2j/
+//#3j/
+//#4j/
+//#5j/
+//#6j/
+//#7j/
+//#8j/
 
 enable plc 18
