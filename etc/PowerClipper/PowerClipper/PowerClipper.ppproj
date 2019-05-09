@@ -30,7 +30,7 @@
     <EncryptionOption>Do Not Encrypt Any File</EncryptionOption>
     <ProjppTimeoutPeriod>300000</ProjppTimeoutPeriod>
     <Name>PowerClipper</Name>
-    <PPCPUType>ppc465-2;3.2.21-powerpmac-smp</PPCPUType>
+    <PPCPUType>ppc405</PPCPUType>
     <ProjectFrimwareVers>2.4.0.180</ProjectFrimwareVers>
     <CPUType>PowerPC,APM86xxx</CPUType>
     <IDESignature>jujl4384JUJL</IDESignature>
@@ -170,9 +170,6 @@
     <Folder Include="PMAC Script Language\Global Includes" />
     <Folder Include="PMAC Script Language\Kinematic Routines" />
     <Folder Include="PMAC Script Language\Libraries" />
-    <None Include="PMAC Script Language\Libraries\subprog1.pmc">
-      <DisplayOrder>0</DisplayOrder>
-    </None>
     <Folder Include="PMAC Script Language\Motion Programs" />
     <Folder Include="PMAC Script Language\PLC Programs" />
     <None Include="System\CPU\System.cpusetup" />

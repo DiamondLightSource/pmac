@@ -28,8 +28,9 @@ class TestMakeCsConsistent(TestCase):
 
         # start motion and then kill all
         tb.cs3.set_deferred_moves(False)
-        Sleep(.1)
-        tb.send_command('&3a#1k')
+        Sleep(.5)
+        tb.send_command('&3a')
+        tb.send_command('#1k')
         # let the motors settle
         Sleep(.5)
 

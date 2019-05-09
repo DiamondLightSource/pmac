@@ -1,0 +1,65 @@
+
+// M variables for GPIO Inputs
+M0->acc65e[0].datareg[0].0     // Input 1
+M1->acc65e[0].datareg[0].1     // Input 2
+M2->acc65e[0].datareg[0].2     // Input 3
+M3->acc65e[0].datareg[0].3     // Input 4
+M4->acc65e[0].datareg[0].4     // Input 5
+M5->acc65e[0].datareg[0].5     // Input 6
+M6->acc65e[0].datareg[0].6     // Input 7
+M7->acc65e[0].datareg[0].7     // Input 8
+M8->acc65e[0].datareg[1].0     // Input 9
+M9->acc65e[0].datareg[1].1     // Input 10
+M10->acc65e[0].datareg[1].2    // Input 11
+M11->acc65e[0].datareg[1].3    // Input 12
+M12->acc65e[0].datareg[1].4    // Input 13
+M13->acc65e[0].datareg[1].5    // Input 14
+M14->acc65e[0].datareg[1].6    // Input 15
+M15->acc65e[0].datareg[1].7    // Input 16
+
+// M variables for GPIO Outputs
+M32->acc65e[0].datareg[3].0    // Output 1
+M33->acc65e[0].datareg[3].1    // Output 2
+M34->acc65e[0].datareg[3].2    // Output 3
+M35->acc65e[0].datareg[3].3    // Output 4
+M36->acc65e[0].datareg[3].4    // Output 5
+M37->acc65e[0].datareg[3].5    // Output 6
+M38->acc65e[0].datareg[3].6    // Output 7
+M39->acc65e[0].datareg[3].7    // Output 8
+
+
+// M variables to determine whether PLCs are running
+// from "PowerPMAC Software Reference Manual"
+M5000->PLC[0].Running       // PLC 0
+M5001->PLC[1].Running       // PLC 1
+M5002->PLC[2].Running       // PLC 2
+M5003->PLC[3].Running       // PLC 3
+M5004->PLC[4].Running       // PLC 4
+M5005->PLC[5].Running       // PLC 5
+M5006->PLC[6].Running       // PLC 6
+M5007->PLC[7].Running       // PLC 7
+M5008->PLC[8].Running       // PLC 8
+M5009->PLC[9].Running       // PLC 9
+M5010->PLC[10].Running      // PLC 10
+M5011->PLC[11].Running      // PLC 11
+M5012->PLC[12].Running      // PLC 12
+M5013->PLC[13].Running      // PLC 13
+M5014->PLC[14].Running      // PLC 14
+M5015->PLC[15].Running      // PLC 15
+M5016->PLC[16].Running      // PLC 16
+M5017->PLC[17].Running      // PLC 17
+M5018->PLC[18].Running      // PLC 18
+M5019->PLC[19].Running      // PLC 19
+M5020->PLC[20].Running      // PLC 20
+M5021->PLC[21].Running      // PLC 21
+M5022->PLC[22].Running      // PLC 22
+M5023->PLC[23].Running      // PLC 23
+M5024->PLC[24].Running      // PLC 24
+M5025->PLC[25].Running      // PLC 25
+M5026->PLC[26].Running      // PLC 26
+M5027->PLC[27].Running      // PLC 27
+M5028->PLC[28].Running      // PLC 28
+M5029->PLC[29].Running      // PLC 29
+M5030->PLC[30].Running      // PLC 30
+M5031->PLC[31].Running      // PLC 31
+
