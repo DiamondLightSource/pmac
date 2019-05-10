@@ -32,7 +32,7 @@ class TestMakeCsConsistent(TestCase):
         tb.send_command('&3a')
         tb.send_command('#1k')
         # let the motors settle
-        Sleep(.5)
+        Sleep(1)
 
         h = tb.height.pos
         m1 = tb.m1.pos
