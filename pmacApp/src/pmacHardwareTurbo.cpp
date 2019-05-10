@@ -14,6 +14,7 @@ const std::string pmacHardwareTurbo::CS_STATUS = "&%d??";
 const std::string pmacHardwareTurbo::CS_VEL_CMD = "&%dQ70=%f ";
 const std::string pmacHardwareTurbo::CS_ACCELERATION_CMD = "I%d87=%f";
 const std::string pmacHardwareTurbo::CS_AXIS_MAPPING = "&%d#%d->,";
+const std::string pmacHardwareTurbo::CS_ENABLED_COUNT = "I68";
 
 const int pmacHardwareTurbo::PMAC_STATUS1_MAXRAPID_SPEED = (0x1 << 0);
 const int pmacHardwareTurbo::PMAC_STATUS1_ALT_CMNDOUT_MODE = (0x1 << 1);
@@ -317,6 +318,10 @@ std::string pmacHardwareTurbo::getCSMappingCmd(int csNo, int axis) {
   return std::string(cmd);
 }
 
+std::string pmacHardwareTurbo::getCSEnabledCountCmd(){
+  return std::string(CS_ENABLED_COUNT);
+}
+
 std::string pmacHardwareTurbo::parseCSMappingResult(const std::string mappingResult) {
   return mappingResult;
 }
@@ -359,6 +364,16 @@ void pmacHardwareTurbo::addAxisPointCmd(char *axisCmd, int , double pos, int ,
   doubleToPMACFloat(pos, &ival);
   sprintf(axisCmd, "%s,$%lX", axisCmd, (long) ival);
 }
+
+std::string pmacHardwareTurbo::getCSEnableCommand(int csNo) {
+  char cmd[10];
+  static const char *functionName = "getCSEnableCommand";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, CS %d", cmd, csNo);
+  sprintf(cmd, "&%de", csNo);
+  return std::string(cmd);
+}
+
 
 asynStatus pmacHardwareTurbo::doubleToPMACFloat(double value, int64_t *representation) {
   asynStatus status = asynSuccess;

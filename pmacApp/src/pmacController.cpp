@@ -256,6 +256,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   i8_ = 0;
   i7002_ = 0;
   csResetAllDemands = false;
+  csCount = 0;
 
   // Create the message broker
   pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
@@ -609,6 +610,7 @@ void pmacController::pollAllNow(void) {
 
   debug(DEBUG_FLOW, functionName);
   // Force updates of each loop
+  pBroker_->updateVariables(pmacMessageBroker::PMAC_PRE_FAST_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
@@ -620,6 +622,7 @@ void pmacController::setupBrokerVariables(void) {
   int gpioNo = 0;
   int progNo = 0;
   char cmd[32];
+  char response[64];
   static const char *functionName = "pmacController::setupBrokerVariables";
 
   // Add the items required for global status
@@ -628,7 +631,20 @@ void pmacController::setupBrokerVariables(void) {
   debug(DEBUG_VARIABLE, functionName, "global status", pHardware_->getGlobalStatusCmd().c_str());
 
   // Add the feedrate values
-  for (int csNo = 1; csNo <= PMAC_MAX_CS - 1; csNo++) {
+  // first find out how many Coordinate Systems are enabled
+  sprintf(cmd, "%s", pHardware_->getCSEnabledCountCmd().c_str());
+  this->immediateWriteRead(cmd, response);
+  sscanf(response, "%d", &csCount);
+
+  if(cid_ == PMAC_CID_POWER_) {
+      //Power pmac coordinate systems are from 0 - 15 so subtract 1
+      csCount--;
+  } else {
+      // Turbo pmac I68 is one less than the count
+      csCount++;
+  }
+  debug(DEBUG_VARIABLE, functionName, "Count of CSes enabled %d", csCount);
+  for (int csNo = 1; csNo <= csCount; csNo++) {
     sprintf(cmd, "&%d%s", csNo, "%");
     debug(DEBUG_VARIABLE, functionName, "Adding feedrate check", cmd);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
@@ -647,7 +663,7 @@ void pmacController::setupBrokerVariables(void) {
 
   // Add the PMAC P variables required for trajectory scanning
   // Fast readout required of these values
-  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_STATUS);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, PMAC_TRAJ_STATUS);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_INDEX);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_BUFFER);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_TOTAL_POINTS);
@@ -712,6 +728,7 @@ void pmacController::setupBrokerVariables(void) {
 
   // Register this class for updates
   pBroker_->registerForLocks(this);
+  pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_PRE_FAST_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_FAST_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_SLOW_READ);
@@ -984,6 +1001,11 @@ asynStatus pmacController::processDrvInfo(char *input, char *output) {
 void pmacController::callback(pmacCommandStore *sPtr, int type) {
   static const char *functionName = "callback";
   debug(DEBUG_FLOW, functionName);
+
+  if (type == pmacMessageBroker::PMAC_PRE_FAST_READ) {
+    // Execute the pre-fast update loop
+    this->prefastUpdate(sPtr);
+  }
 
   if (type == pmacMessageBroker::PMAC_FAST_READ) {
     // Execute the fast update loop
@@ -1469,7 +1491,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   min_feedrate = 100;
   min_feedrate_cs = 0;
   // Lookup the value of the feedrate
-  for (int csNo = 1; csNo <= PMAC_MAX_CS - 1; csNo++) {
+  for (int csNo = 1; csNo <= csCount; csNo++) {
     // only check feedrate on those CS that we are using (have registered config)
     if (pCSControllers_[csNo] != NULL) {
       sprintf(command, "&%d%s", csNo, "%");
@@ -1535,16 +1557,11 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   return status;
 }
 
-asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
+asynStatus pmacController::prefastUpdate(pmacCommandStore *sPtr) {
   asynStatus status = asynSuccess;
-  int gStatus = 0;
-  int gStat1 = 0;
-  int gStat2 = 0;
-  int gStat3 = 0;
-  bool hardwareProblem;
   int nvals;
   std::string trajBufPtr = "";
-  static const char *functionName = "getGlobalStatus";
+  static const char *functionName = "prefastUpdate";
 
   // Read the current trajectory status from the PMAC
   trajBufPtr = sPtr->readValue(PMAC_TRAJ_STATUS);
@@ -1565,6 +1582,20 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
              PMAC_TRAJ_STATUS, tScanPmacStatus_);
     }
   }
+
+  return status;
+}
+
+asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
+  asynStatus status = asynSuccess;
+  int gStatus = 0;
+  int gStat1 = 0;
+  int gStat2 = 0;
+  int gStat3 = 0;
+  bool hardwareProblem;
+  int nvals;
+  std::string trajBufPtr = "";
+  static const char *functionName = "fastUpdate";
 
   // Read the current trajectory buffer index read from the PMAC (within current buffer)
   trajBufPtr = sPtr->readValue(PMAC_TRAJ_CURRENT_INDEX);
@@ -2162,7 +2193,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     pAxis->scale_ = value;
   } else if (function == PMAC_C_FeedRate_) {
     strcpy(command, "");
-    for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++) {
+    for (int csNo = 1; csNo <= csCount; csNo++) {
       sprintf(command, "%s &%d%%%d", command, csNo, value);
     }
     debug(DEBUG_VARIABLE, functionName, "Feedrate Command", command);
@@ -2940,10 +2971,13 @@ void pmacController::trajectoryTask() {
   //double position = 0.0;
   char response[1024];
   char cmd[1024];
+  char msg[1024];
   const char *functionName = "trajectoryTask";
 
   this->lock();
   // Loop forever
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
   while (true) {
     // If we are not scanning then wait for a semaphore that is given when a scan is started
     if (!tScanExecuting_) {
@@ -2970,8 +3004,7 @@ void pmacController::trajectoryTask() {
       epicsTimeGetCurrent(&startTime);
 
       // Make sure axes are enabled
-      sprintf(cmd, "&%dE", tScanCSNo_);
-      this->immediateWriteRead(cmd, response);
+      this->immediateWriteRead(pHardware_->getCSEnableCommand(tScanCSNo_).c_str(), response);
 
       if (response[0] == 0x7) {
         // Remove the line feed
@@ -3065,8 +3098,9 @@ void pmacController::trajectoryTask() {
                                    "Trajectory scan complete");
           } else {
             // Set the status to failure
-            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE,
-                                   "Trajectory scan failed, unable to fill buffers in time");
+            sprintf(msg,"Scan failed, unable to fill buffers in time (%d/%d)",
+                    tScanPmacTotalPts_, totalProfilePoints);
+            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, msg);
           }
         } else {
           // Set the status to failure
@@ -3112,6 +3146,7 @@ void pmacController::trajectoryTask() {
       }
     }
   }
+#pragma clang diagnostic pop
 }
 
 void pmacController::setBuildStatus(int state, int status, const std::string &message) {

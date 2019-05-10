@@ -23,7 +23,7 @@ enum csglobalQ {_csglobalQ_=-1};
 enum csglobalQarray {_csglobalQarray_=-1};
 
 enum ptrM {_ptrM_=-1
-,Status=4034
+,TrajStatus=4034
 ,AbortTrigger=4035
 ,Axes=4036
 ,BufferLength=4037
@@ -263,7 +263,7 @@ enum csglobalQ {_csglobalQ_=-1
 ,Current_Z=79};
 enum csglobalQarray {_csglobalQarray_=-1};
 enum ptrM {_ptrM_=-1
-,Status=4034
+,TrajStatus=4034
 ,AbortTrigger=4035
 ,Axes=4036
 ,BufferLength=4037
@@ -412,7 +412,7 @@ enum ptrMarray {_ptrMarray_=-1};
 #define X_Axis 56199
 #define Y_Axis 56200
 #define Z_Axis 56201
-#define Status 4034
+#define TrajStatus 4034
 #define AbortTrigger 4035
 #define Axes 4036
 #define BufferLength 4037

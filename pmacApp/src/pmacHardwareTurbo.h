@@ -37,6 +37,8 @@ public:
 
     std::string getCSMappingCmd(int csNo, int axis);
 
+    std::string getCSEnabledCountCmd();
+
     std::string parseCSMappingResult(const std::string mappingResult);
 
     void startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
@@ -51,6 +53,8 @@ public:
     void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffSize,
                                  bool firstVal);
 
+    std::string getCSEnableCommand(int csNo);
+
 private:
     asynStatus doubleToPMACFloat(double value, int64_t *representation);
 
@@ -60,6 +64,7 @@ private:
     static const std::string CS_VEL_CMD;
     static const std::string CS_ACCELERATION_CMD;
     static const std::string CS_AXIS_MAPPING;
+    static const std::string CS_ENABLED_COUNT;
 
     static const int PMAC_STATUS1_MAXRAPID_SPEED;
     static const int PMAC_STATUS1_ALT_CMNDOUT_MODE;

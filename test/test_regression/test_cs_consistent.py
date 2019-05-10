@@ -5,7 +5,6 @@ from datetime import datetime
 from test.brick.testbrick import TestBrick, DECIMALS
 from test.test_system.trajectories import trajectory_quick_scan
 from cothread import Sleep, catools as ca
-import pytest
 import os
 
 # these are test_regression tests for the set of issues that pmacController::makeCSDemandsConsistent
@@ -29,10 +28,11 @@ class TestMakeCsConsistent(TestCase):
 
         # start motion and then kill all
         tb.cs3.set_deferred_moves(False)
-        Sleep(.1)
-        tb.send_command('&3a#1k')
-        # let the motors settle
         Sleep(.5)
+        tb.send_command('&3a')
+        tb.send_command('#1k')
+        # let the motors settle
+        Sleep(1)
 
         h = tb.height.pos
         m1 = tb.m1.pos
@@ -250,6 +250,7 @@ class TestMakeCsConsistent(TestCase):
 
             # make a CS move and make sure it happens quickly enough
             then = datetime.now()
+            # Sleep(.5)   - this is required for reliable pass on PowerBrick BUT WHY?
             tb.height.go(1)
             self.assertAlmostEqual(tb.height.pos, 1, DECIMALS)
             elapsed = datetime.now() - then
