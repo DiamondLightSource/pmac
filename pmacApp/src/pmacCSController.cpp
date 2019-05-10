@@ -297,7 +297,6 @@ asynStatus pmacCSController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
 
 asynStatus pmacCSController::processDeferredMoves(void) {
   asynStatus status = asynSuccess;
-  char abort[PMAC_MAXBUF] = {0};
   char command[PMAC_MAXBUF] = {0};
   char fullCommand[PMAC_MAXBUF] = {0};
   char response[PMAC_MAXBUF] = {0};
@@ -323,12 +322,15 @@ asynStatus pmacCSController::processDeferredMoves(void) {
     this->makeCSDemandsConsistent();
     if (this->getProgramNumber() != 0) {
       // Abort current move to make sure axes are enabled
-      sprintf(abort, "&%dE", this->getCSNumber());
-      status = this->immediateWriteRead(abort, response);
+      status = this->immediateWriteRead(
+              ((pmacController *) pC_)->pHardware_->getCSEnableCommand(csNumber_).c_str(),
+              response);
 
       sprintf(fullCommand, "&%d%s Q70=%f B%dR", this->getCSNumber(), command, this->csMoveTime_,
               this->getProgramNumber());
-      status = this->immediateWriteRead(fullCommand, response);
+      if(status == asynSuccess) {
+        status = this->immediateWriteRead(fullCommand, response);
+      }
     }
   }
 

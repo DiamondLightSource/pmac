@@ -3004,8 +3004,7 @@ void pmacController::trajectoryTask() {
       epicsTimeGetCurrent(&startTime);
 
       // Make sure axes are enabled
-      sprintf(cmd, "&%dE", tScanCSNo_);
-      this->immediateWriteRead(cmd, response);
+      this->immediateWriteRead(pHardware_->getCSEnableCommand(tScanCSNo_).c_str(), response);
 
       if (response[0] == 0x7) {
         // Remove the line feed

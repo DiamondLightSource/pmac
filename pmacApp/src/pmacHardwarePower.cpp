@@ -13,6 +13,7 @@ const std::string pmacHardwarePower::AXIS_STATUS = "#%d?";
 const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
 const std::string pmacHardwarePower::CS_STATUS = "&%d?";
 const std::string pmacHardwarePower::CS_INPOS = "Coord[%d].InPos";
+const std::string pmacHardwarePower::CS_AMPENABLE = "Coord[%d].AmpEna";
 const std::string pmacHardwarePower::CS_RUNNING = "Coord[%d].ProgRunning";
 const std::string pmacHardwarePower::CS_VEL_CMD = "&%dQ70=%f ";
 const std::string pmacHardwarePower::CS_ACCELERATION_CMD = "Coord[%d].Ta=%f Coord[%d].Td=%f";
@@ -191,6 +192,8 @@ asynStatus pmacHardwarePower::setupCSStatus(int csNo) {
   pC_->monitorPMACVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, var);
   sprintf(var, CS_INPOS.c_str(), csNo);
   pC_->monitorPMACVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, var);
+  sprintf(var, CS_AMPENABLE.c_str(), csNo);
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, var);
 
   return status;
 }
@@ -199,6 +202,7 @@ asynStatus
 pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus) {
   asynStatus status = asynSuccess;
   int nvals = 0;
+  int cs_amp_enabled = 0;
   std::string statusString = "";
   char var[30];
   static const char *functionName = "parseCSStatus";
@@ -209,6 +213,11 @@ pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coo
   sprintf(var, CS_INPOS.c_str(), csNo);
   statusString = sPtr->readValue(var);
   sscanf(statusString.c_str(), "%d", &coordStatus.done_);
+  sprintf(var, CS_AMPENABLE.c_str(), csNo);
+  statusString = sPtr->readValue(var);
+  sscanf(statusString.c_str(), "%d", &cs_amp_enabled);
+  // we want to show Done Moving true when any of the CS motor's amps are disabled
+  coordStatus.done_= coordStatus.done_|| !cs_amp_enabled;
   coordStatus.moving_ = !coordStatus.done_;
 
   sprintf(var, CS_STATUS.c_str(), csNo);
