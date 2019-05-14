@@ -5,6 +5,7 @@ from datetime import datetime
 from test.brick.testbrick import TestBrick, DECIMALS
 from test.test_system.trajectories import trajectory_quick_scan
 from cothread import Sleep, catools as ca
+import pytest
 import os
 
 # these are test_regression tests for the set of issues that pmacController::makeCSDemandsConsistent
@@ -42,10 +43,12 @@ class TestMakeCsConsistent(TestCase):
         # now move a different motor in the CS, the other two would continue to
         # their previous destinations if makeCSDemandsConsistent has failed
         tb.cs3.M2.go_direct(10)
+
         self.assertAlmostEqual(h, tb.height.pos, DECIMALS)
         self.assertAlmostEqual(m1, tb.m1.pos, DECIMALS)
         self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
 
+    @pytest.mark.skipif(os.environ.get('PPMAC') == 'True', reason="not supported on PPMAC yet")
     def test_auto_home_resets_cs_demands(self):
         tb = TestBrick()
         tb.set_cs_group(tb.g3)
@@ -55,19 +58,23 @@ class TestMakeCsConsistent(TestCase):
         self.assertAlmostEqual(10, tb.height.pos, DECIMALS)
         self.assertAlmostEqual(10, tb.m1.pos, DECIMALS)
 
-        # auto home everything
-        ca.caput('PMAC_BRICK_TEST:HM:HMGRP', 'All')
-        ca.caput('PMAC_BRICK_TEST:HM:HOME', 1, wait=True, timeout=20)
+        try:
+            # auto home everything
+            ca.caput('PMAC_BRICK_TEST:HM:HMGRP', 'All')
+            ca.caput('PMAC_BRICK_TEST:HM:HOME', 1, wait=True, timeout=20)
 
-        self.assertAlmostEqual(0, tb.height.pos, DECIMALS)
-        self.assertAlmostEqual(0, tb.m1.pos, DECIMALS)
+            self.assertAlmostEqual(0, tb.height.pos, DECIMALS)
+            self.assertAlmostEqual(0, tb.m1.pos, DECIMALS)
 
-        # now move a different motor in the CS, the other two would continue to
-        # their previous destinations if makeCSDemandsConsistent has failed
-        tb.cs3.M2.go_direct(10)
-        self.assertAlmostEqual(0, tb.height.pos, DECIMALS)
-        self.assertAlmostEqual(0, tb.m1.pos, DECIMALS)
-        self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
+            # now move a different motor in the CS, the other two would continue to
+            # their previous destinations if makeCSDemandsConsistent has failed
+            tb.cs3.M2.go_direct(10)
+            self.assertAlmostEqual(0, tb.height.pos, DECIMALS)
+            self.assertAlmostEqual(0, tb.m1.pos, DECIMALS)
+            self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
+        finally:
+            # ensure good state if homing failed
+            ca.caput('PMAC_BRICK_TEST:HM:ABORT.PROC', 1)
 
     def test_abort_cs_resets_cs_demands(self):
         tb = TestBrick()

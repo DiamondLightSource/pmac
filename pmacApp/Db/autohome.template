@@ -210,6 +210,9 @@ record(calcout, "$(P):HM:CHECK") {
   field(OUT, "$(P):HM:HOMING CA")
   field(OOPT, "When Zero")
   field(DOPT, "Use CALC")
+  # ensure we can never get into a locked state
+  # since this disables all motor records
+  field(SCAN, "5 second")
 }
 
 record(bo, "$(P):HM:HOMED") {

@@ -10,3 +10,12 @@ OPEN PLC 18
     // the height of the surface
     HEIGHTP=J1POSP + DIFF_P / 2
 CLOSE
+
+OPEN PLC 10
+	if(P1000 != 0 || P1001 !=0) {
+		cmd "#1 hmz #2 hmz #3 hmz #4 hmz #5 hmz #6 hmz #7 hmz #8 hmz"
+		dwell 1000
+		P1000 = 0
+		P1001 = 0
+	}
+CLOSE

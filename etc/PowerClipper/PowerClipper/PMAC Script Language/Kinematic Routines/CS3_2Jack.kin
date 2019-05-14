@@ -20,6 +20,7 @@
 #define DIFF KinPosAxisY
 
 OPEN FORWARD
+	KinAxisUsed = $C0 // X and Y axes are addressed in these kinematics
     // this is the difference in height of the jacks
     DIFF=J2POSF-J1POSF
     // the height of the surface

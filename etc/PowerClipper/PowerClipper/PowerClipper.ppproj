@@ -30,10 +30,10 @@
     <EncryptionOption>Do Not Encrypt Any File</EncryptionOption>
     <ProjppTimeoutPeriod>300000</ProjppTimeoutPeriod>
     <Name>PowerClipper</Name>
-    <PPCPUType>ppc405</PPCPUType>
+    <PPCPUType>ppc465-2;3.2.21-powerpmac-smp</PPCPUType>
     <ProjectFrimwareVers>2.4.0.180</ProjectFrimwareVers>
     <CPUType>PowerPC,APM86xxx</CPUType>
-    <IDESignature>jujl4384JUJL</IDESignature>
+    <IDESignature>wckc8703WCKC</IDESignature>
     <DownloadSystemSetupConfig>No</DownloadSystemSetupConfig>
     <EtherCatStackType>1</EtherCatStackType>
     <CpuAffinityServoTask>1</CpuAffinityServoTask>
