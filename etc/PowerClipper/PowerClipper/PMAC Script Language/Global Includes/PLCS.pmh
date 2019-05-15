@@ -3,6 +3,3 @@
 DISABLE PLC 2..17
 DISABLE PLC 18..31
 
-
-
-enable plc 18

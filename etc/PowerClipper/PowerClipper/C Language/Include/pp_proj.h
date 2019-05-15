@@ -23,6 +23,16 @@ enum csglobalQ {_csglobalQ_=-1};
 enum csglobalQarray {_csglobalQarray_=-1};
 
 enum ptrM {_ptrM_=-1
+,AxesParser=4024
+,A_Axis=4025
+,B_Axis=4026
+,C_Axis=4027
+,U_Axis=4028
+,V_Axis=4029
+,W_Axis=4030
+,X_Axis=4031
+,Y_Axis=4032
+,Z_Axis=4034
 ,TrajStatus=4034
 ,AbortTrigger=4035
 ,Axes=4036
@@ -52,26 +62,16 @@ enum ptrMarray {_ptrMarray_=-1};
 #define	Next_Z(i)	pshm->P[(44192+i)%MAX_P]
 #define	Next_User(i)	pshm->P[(48192+i)%MAX_P]
 #define	NextVelMode(i)	pshm->P[(52192+i)%MAX_P]
-#define	AxesParser	pshm->P[56192]
-#define	A_Axis	pshm->P[56193]
-#define	B_Axis	pshm->P[56194]
-#define	C_Axis	pshm->P[56195]
-#define	U_Axis	pshm->P[56196]
-#define	V_Axis	pshm->P[56197]
-#define	W_Axis	pshm->P[56198]
-#define	X_Axis	pshm->P[56199]
-#define	Y_Axis	pshm->P[56200]
-#define	Z_Axis	pshm->P[56201]
-#define	Prev_A	pshm->P[56202]
-#define	Prev_B	pshm->P[56203]
-#define	Prev_C	pshm->P[56204]
-#define	Prev_U	pshm->P[56205]
-#define	Prev_V	pshm->P[56206]
-#define	Prev_W	pshm->P[56207]
-#define	Prev_X	pshm->P[56208]
-#define	Prev_Y	pshm->P[56209]
-#define	Prev_Z	pshm->P[56210]
-#define	Time	pshm->P[56211]
+#define	Prev_A	pshm->P[56192]
+#define	Prev_B	pshm->P[56193]
+#define	Prev_C	pshm->P[56194]
+#define	Prev_U	pshm->P[56195]
+#define	Prev_V	pshm->P[56196]
+#define	Prev_W	pshm->P[56197]
+#define	Prev_X	pshm->P[56198]
+#define	Prev_Y	pshm->P[56199]
+#define	Prev_Z	pshm->P[56200]
+#define	Time	pshm->P[56201]
 #define	Current_A(i)	pshm->Coord[i%MAX_COORDS].Q[71]
 #define	Current_B(i)	pshm->Coord[i%MAX_COORDS].Q[72]
 #define	Current_C(i)	pshm->Coord[i%MAX_COORDS].Q[73]
@@ -81,19 +81,21 @@ enum ptrMarray {_ptrMarray_=-1};
 #define	Current_X(i)	pshm->Coord[i%MAX_COORDS].Q[77]
 #define	Current_Y(i)	pshm->Coord[i%MAX_COORDS].Q[78]
 #define	Current_Z(i)	pshm->Coord[i%MAX_COORDS].Q[79]
-#define	UserFunc	pshm->P[56212]
-#define	VelMode	pshm->P[56213]
-#define	A_Vel	pshm->P[56214]
-#define	B_Vel	pshm->P[56215]
-#define	C_Vel	pshm->P[56216]
-#define	U_Vel	pshm->P[56217]
-#define	V_Vel	pshm->P[56218]
-#define	W_Vel	pshm->P[56219]
-#define	X_Vel	pshm->P[56220]
-#define	Y_Vel	pshm->P[56221]
-#define	Z_Vel	pshm->P[56222]
-#define	CalculatedBase	pshm->P[56223]
-#define	TmpTime	pshm->P[56224]
+#define	UserFunc	pshm->P[56202]
+#define	VelMode	pshm->P[56203]
+#define	A_Vel	pshm->P[56204]
+#define	B_Vel	pshm->P[56205]
+#define	C_Vel	pshm->P[56206]
+#define	U_Vel	pshm->P[56207]
+#define	V_Vel	pshm->P[56208]
+#define	W_Vel	pshm->P[56209]
+#define	X_Vel	pshm->P[56210]
+#define	Y_Vel	pshm->P[56211]
+#define	Z_Vel	pshm->P[56212]
+#define	CalculatedBase	pshm->P[56213]
+#define	TmpTime	pshm->P[56214]
+#define	Center(i)	pshm->Coord[i%MAX_COORDS].Q[81]
+#define	Gap(i)	pshm->Coord[i%MAX_COORDS].Q[82]
 #ifndef _PP_PROJ_HDR_
   void SetEnumGlobalVar(enum globalP var, double data)
   {
@@ -205,39 +207,29 @@ enum ptrMarray {_ptrMarray_=-1};
 #else
 #ifdef _EnumMode_
 enum globalP {_globalP_=-1
-,AxesParser=56192
-,A_Axis=56193
-,B_Axis=56194
-,C_Axis=56195
-,U_Axis=56196
-,V_Axis=56197
-,W_Axis=56198
-,X_Axis=56199
-,Y_Axis=56200
-,Z_Axis=56201
-,Prev_A=56202
-,Prev_B=56203
-,Prev_C=56204
-,Prev_U=56205
-,Prev_V=56206
-,Prev_W=56207
-,Prev_X=56208
-,Prev_Y=56209
-,Prev_Z=56210
-,Time=56211
-,UserFunc=56212
-,VelMode=56213
-,A_Vel=56214
-,B_Vel=56215
-,C_Vel=56216
-,U_Vel=56217
-,V_Vel=56218
-,W_Vel=56219
-,X_Vel=56220
-,Y_Vel=56221
-,Z_Vel=56222
-,CalculatedBase=56223
-,TmpTime=56224};
+,Prev_A=56192
+,Prev_B=56193
+,Prev_C=56194
+,Prev_U=56195
+,Prev_V=56196
+,Prev_W=56197
+,Prev_X=56198
+,Prev_Y=56199
+,Prev_Z=56200
+,Time=56201
+,UserFunc=56202
+,VelMode=56203
+,A_Vel=56204
+,B_Vel=56205
+,C_Vel=56206
+,U_Vel=56207
+,V_Vel=56208
+,W_Vel=56209
+,X_Vel=56210
+,Y_Vel=56211
+,Z_Vel=56212
+,CalculatedBase=56213
+,TmpTime=56214};
 enum globalParray {_globalParray_=-1
 ,Next_Time=8192
 ,Next_A=12192
@@ -260,9 +252,21 @@ enum csglobalQ {_csglobalQ_=-1
 ,Current_W=76
 ,Current_X=77
 ,Current_Y=78
-,Current_Z=79};
+,Current_Z=79
+,Center=81
+,Gap=82};
 enum csglobalQarray {_csglobalQarray_=-1};
 enum ptrM {_ptrM_=-1
+,AxesParser=4024
+,A_Axis=4025
+,B_Axis=4026
+,C_Axis=4027
+,U_Axis=4028
+,V_Axis=4029
+,W_Axis=4030
+,X_Axis=4031
+,Y_Axis=4032
+,Z_Axis=4034
 ,TrajStatus=4034
 ,AbortTrigger=4035
 ,Axes=4036
@@ -402,16 +406,16 @@ enum ptrMarray {_ptrMarray_=-1};
 #define Next_Z 44192
 #define Next_User 48192
 #define NextVelMode 52192
-#define AxesParser 56192
-#define A_Axis 56193
-#define B_Axis 56194
-#define C_Axis 56195
-#define U_Axis 56196
-#define V_Axis 56197
-#define W_Axis 56198
-#define X_Axis 56199
-#define Y_Axis 56200
-#define Z_Axis 56201
+#define AxesParser 4024
+#define A_Axis 4025
+#define B_Axis 4026
+#define C_Axis 4027
+#define U_Axis 4028
+#define V_Axis 4029
+#define W_Axis 4030
+#define X_Axis 4031
+#define Y_Axis 4032
+#define Z_Axis 4034
 #define TrajStatus 4034
 #define AbortTrigger 4035
 #define Axes 4036
@@ -428,16 +432,16 @@ enum ptrMarray {_ptrMarray_=-1};
 #define PrevBufferFill 4047
 #define Error 4048
 #define Version 4049
-#define Prev_A 56202
-#define Prev_B 56203
-#define Prev_C 56204
-#define Prev_U 56205
-#define Prev_V 56206
-#define Prev_W 56207
-#define Prev_X 56208
-#define Prev_Y 56209
-#define Prev_Z 56210
-#define Time 56211
+#define Prev_A 56192
+#define Prev_B 56193
+#define Prev_C 56194
+#define Prev_U 56195
+#define Prev_V 56196
+#define Prev_W 56197
+#define Prev_X 56198
+#define Prev_Y 56199
+#define Prev_Z 56200
+#define Time 56201
 #define Current_A 71
 #define Current_B 72
 #define Current_C 73
@@ -447,19 +451,21 @@ enum ptrMarray {_ptrMarray_=-1};
 #define Current_X 77
 #define Current_Y 78
 #define Current_Z 79
-#define UserFunc 56212
-#define VelMode 56213
-#define A_Vel 56214
-#define B_Vel 56215
-#define C_Vel 56216
-#define U_Vel 56217
-#define V_Vel 56218
-#define W_Vel 56219
-#define X_Vel 56220
-#define Y_Vel 56221
-#define Z_Vel 56222
-#define CalculatedBase 56223
-#define TmpTime 56224
+#define UserFunc 56202
+#define VelMode 56203
+#define A_Vel 56204
+#define B_Vel 56205
+#define C_Vel 56206
+#define U_Vel 56207
+#define V_Vel 56208
+#define W_Vel 56209
+#define X_Vel 56210
+#define Y_Vel 56211
+#define Z_Vel 56212
+#define CalculatedBase 56213
+#define TmpTime 56214
+#define Center 81
+#define Gap 82
 #endif
 #endif
 #endif //_PP_PROJ_H_

@@ -110,6 +110,10 @@
       <SubType>Content</SubType>
       <DisplayOrder>0</DisplayOrder>
     </Content>
+    <Content Include="PMAC Script Language\Kinematic Routines\slits.kin">
+      <SubType>Content</SubType>
+      <DisplayOrder>1</DisplayOrder>
+    </Content>
     <Content Include="PMAC Script Language\Motion Programs\PROG10_CS_motion.pmc">
       <SubType>Content</SubType>
       <DisplayOrder>0</DisplayOrder>

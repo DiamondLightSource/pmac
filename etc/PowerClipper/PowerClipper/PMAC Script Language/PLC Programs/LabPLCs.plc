@@ -11,6 +11,21 @@ OPEN PLC 18
     HEIGHTP=J1POSP + DIFF_P / 2
 CLOSE
 
+open plc 19
+   Ldata.Coord = 1;
+
+   // Compute current Gap value
+   local mtr1Pos = Motor[1].Pos - Motor[1].HomePos;
+   local mtr2Pos = Motor[2].Pos - Motor[2].HomePos;
+
+   // CS values that the EPICS powerPMAC driver reads the cur axesvalues from
+   #define Center Q81   // Axis A
+   #define Gap    Q82   // Axis B
+
+   Gap = mtr2Pos - mtr1Pos;
+   Center = mtr1Pos + Gap * 0.5;
+close
+
 OPEN PLC 10
 	if(P1000 != 0 || P1001 !=0) {
 		cmd "#1 hmz #2 hmz #3 hmz #4 hmz #5 hmz #6 hmz #7 hmz #8 hmz"

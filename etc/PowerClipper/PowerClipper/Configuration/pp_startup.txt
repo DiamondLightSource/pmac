@@ -1,1 +1,6 @@
+
+DISABLE PLC 2..17
+DISABLE PLC 18..31
+
 enable PLC18
+enable PLC19

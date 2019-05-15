@@ -15,7 +15,7 @@
 	<pmac.dls_pmac_asyn_motor ADDR="6" DESC="Motor 6" DHLM="10000" DLLM="-10000" EGU="mm" M=":MOTOR6" MRES="0.001" P="PMAC_BRICK_TEST" PORT="Brick" PREC="3" SPORT="BRICK1port" TWV="10" VELO="20" name="M6"/>
 	<pmac.dls_pmac_asyn_motor ADDR="7" DESC="Motor 7" DHLM="10000" DLLM="-10000" EGU="mm" M=":MOTOR7" MRES="0.001" P="PMAC_BRICK_TEST" PORT="Brick" PREC="3" SPORT="BRICK1port" TWV="10" VELO="20" name="M7"/>
 	<pmac.dls_pmac_asyn_motor ADDR="8" DESC="Motor 8" DHLM="10000" DLLM="-10000" EGU="mm" M=":MOTOR8" MRES="0.001" P="PMAC_BRICK_TEST" PORT="Brick" PREC="3" SPORT="BRICK1port" TWV="10" VELO="20" name="M8"/>
-	<!--<pmac.CS CS="1" Controller="Brick" IdlePoll="1000" name="CS1"/>-->
+	<pmac.CS CS="1" Controller="Brick" IdlePoll="1000" name="CS1"/>
 	<pmac.CS CS="2" Controller="Brick" IdlePoll="1000" name="CS2"/>
 	<pmac.CS CS="3" Controller="Brick" IdlePoll="1000" name="CS3"/>
 	<pmac.dls_pmac_cs_asyn_motor ADDR="1" DESC="CS2 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":A" MRES="0.0001" P="BRICK1CS2" PORT="CS2" PREC="3" TWV="1" VELO="20" name="X2"/>
@@ -24,10 +24,13 @@
 	<pmac.dls_pmac_cs_asyn_motor ADDR="2" DESC="CS3 2-&gt;B" DHLM="10000" DLLM="-10000" EGU="mm" M=":B" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="B3"/>
 	<pmac.dls_pmac_cs_asyn_motor ADDR="7" DESC="CS3 HEIGHT" DHLM="10000" DLLM="-10000" EGU="mm" M=":X" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="X3"/>
 	<pmac.dls_pmac_cs_asyn_motor ADDR="8" DESC="CS3 ANGLE" DHLM="10000" DLLM="-10000" EGU="deg" M=":Y" MRES="0.0001" P="BRICK1CS3" PORT="CS3" PREC="3" TWV="1" VELO="20" name="Y3"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="2" DESC="GAP CS1" DHLM="10000" DLLM="-10000" EGU="mm" M=":GAP" MRES="0.0001" P="BRICK1CS1" PORT="CS1" PREC="3" TWV="1" VELO="20" name="GAP"/>
+	<pmac.dls_pmac_cs_asyn_motor ADDR="1" DESC="CENTRE CS1" DHLM="10000" DLLM="-10000" EGU="mm" M=":CENTRE" MRES="0.0001" P="BRICK1CS1" PORT="CS1" PREC="3" TWV="1" VELO="20" name="CENTRE"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="Brick" GroupName="1,2-&gt;A,B" GroupNumber="0"/>
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="Brick" GroupName="3,4-&gt;I" GroupNumber="1"/>
 	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED CS3" GroupNumber="2"/>
 	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED CS2" GroupNumber="3"/>
+	<pmac.pmacCreateCsGroup AxisCount="4" Controller="Brick" GroupName="Slits" GroupNumber="4"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="1" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="C" AxisNumber="3" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
@@ -46,6 +49,10 @@
 	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="3" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="4" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="A-0.5B " AxisNumber="1" Controller="Brick" CoordSysNumber="1" GroupNumber="4"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="A+0.5B " AxisNumber="2" Controller="Brick" CoordSysNumber="1" GroupNumber="4"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="3" Controller="Brick" CoordSysNumber="3" GroupNumber="4"/>
+	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="4" Controller="Brick" CoordSysNumber="3" GroupNumber="4"/>
 	<pmac.GeoBrickTrajectoryControlT NPOINTS="10000" PORT="Brick" name="TRAJ"/>
 	<pmac.pmacDisableLimitsCheck Axis="1" Controller="Brick"/>
 	<pmac.pmacDisableLimitsCheck Axis="2" Controller="Brick"/>
@@ -60,33 +67,33 @@
 	<pmac.autohome GRP2="Axis1" GRP3="Axis2" GRP4="Axis3" GRP5="Axes4-8" P="PMAC_BRICK_TESTX" PLC="11" PORT="Brick" name="HOMEX"/>
 	<pmac.pmacSetCoordStepsPerUnit Axis="1" CS="CS2" Scale="1000"/>
 	<pmac.pmacSetCoordStepsPerUnit Axis="2" CS="CS2" Scale="100"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q1" SCAN="I/O Intr" record="BRICK1:CS3:Q1"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q2" SCAN="I/O Intr" record="BRICK1:CS3:Q2"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q3" SCAN="I/O Intr" record="BRICK1:CS3:Q3"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q4" SCAN="I/O Intr" record="BRICK1:CS3:Q4"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q5" SCAN="I/O Intr" record="BRICK1:CS3:Q5"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q6" SCAN="I/O Intr" record="BRICK1:CS3:Q6"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q7" SCAN="I/O Intr" record="BRICK1:CS3:Q7"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q8" SCAN="I/O Intr" record="BRICK1:CS3:Q8"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q9" SCAN="I/O Intr" record="BRICK1:CS3:Q9"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q70" SCAN="I/O Intr" record="BRICK1:CS3:Q70"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q71" SCAN="I/O Intr" record="BRICK1:CS3:Q71"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q72" SCAN="I/O Intr" record="BRICK1:CS3:Q72"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q73" SCAN="I/O Intr" record="BRICK1:CS3:Q73"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q74" SCAN="I/O Intr" record="BRICK1:CS3:Q74"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q75" SCAN="I/O Intr" record="BRICK1:CS3:Q75"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q76" SCAN="I/O Intr" record="BRICK1:CS3:Q76"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q77" SCAN="I/O Intr" record="BRICK1:CS3:Q77"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q78" SCAN="I/O Intr" record="BRICK1:CS3:Q78"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q79" SCAN="I/O Intr" record="BRICK1:CS3:Q79"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q80" SCAN="I/O Intr" record="BRICK1:CS3:Q80"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q81" SCAN="I/O Intr" record="BRICK1:CS3:Q81"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q82" SCAN="I/O Intr" record="BRICK1:CS3:Q82"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q83" SCAN="I/O Intr" record="BRICK1:CS3:Q83"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q84" SCAN="I/O Intr" record="BRICK1:CS3:Q84"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q85" SCAN="I/O Intr" record="BRICK1:CS3:Q85"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q86" SCAN="I/O Intr" record="BRICK1:CS3:Q86"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q87" SCAN="I/O Intr" record="BRICK1:CS3:Q87"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q88" SCAN="I/O Intr" record="BRICK1:CS3:Q88"/>
-	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;3Q89" SCAN="I/O Intr" record="BRICK1:CS3:Q89"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q1" SCAN="I/O Intr" record="BRICK1:CS3:Q1"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q2" SCAN="I/O Intr" record="BRICK1:CS3:Q2"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q3" SCAN="I/O Intr" record="BRICK1:CS3:Q3"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q4" SCAN="I/O Intr" record="BRICK1:CS3:Q4"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q5" SCAN="I/O Intr" record="BRICK1:CS3:Q5"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q6" SCAN="I/O Intr" record="BRICK1:CS3:Q6"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q7" SCAN="I/O Intr" record="BRICK1:CS3:Q7"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q8" SCAN="I/O Intr" record="BRICK1:CS3:Q8"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q9" SCAN="I/O Intr" record="BRICK1:CS3:Q9"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q70" SCAN="I/O Intr" record="BRICK1:CS3:Q70"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q71" SCAN="I/O Intr" record="BRICK1:CS3:Q71"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q72" SCAN="I/O Intr" record="BRICK1:CS3:Q72"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q73" SCAN="I/O Intr" record="BRICK1:CS3:Q73"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q74" SCAN="I/O Intr" record="BRICK1:CS3:Q74"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q75" SCAN="I/O Intr" record="BRICK1:CS3:Q75"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q76" SCAN="I/O Intr" record="BRICK1:CS3:Q76"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q77" SCAN="I/O Intr" record="BRICK1:CS3:Q77"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q78" SCAN="I/O Intr" record="BRICK1:CS3:Q78"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q79" SCAN="I/O Intr" record="BRICK1:CS3:Q79"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q80" SCAN="I/O Intr" record="BRICK1:CS3:Q80"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q81" SCAN="I/O Intr" record="BRICK1:CS3:Q81"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q82" SCAN="I/O Intr" record="BRICK1:CS3:Q82"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q83" SCAN="I/O Intr" record="BRICK1:CS3:Q83"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q84" SCAN="I/O Intr" record="BRICK1:CS3:Q84"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q85" SCAN="I/O Intr" record="BRICK1:CS3:Q85"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q86" SCAN="I/O Intr" record="BRICK1:CS3:Q86"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q87" SCAN="I/O Intr" record="BRICK1:CS3:Q87"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q88" SCAN="I/O Intr" record="BRICK1:CS3:Q88"/>
+	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDF_&amp;1Q89" SCAN="I/O Intr" record="BRICK1:CS3:Q89"/>
 </components>

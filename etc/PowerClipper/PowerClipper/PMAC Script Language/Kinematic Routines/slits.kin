@@ -1,0 +1,18 @@
+
+
+&1
+
+OPEN FORWARD
+	KinAxisUsed = KinEnaAxisX + KinEnaAxisY;
+
+    // B is the slit gap (motor 1 is on the + side of the centre)
+    KinPosAxisB=(KinPosMotor2-KinPosMotor1)
+    // A represents the slit centre
+    KinPosAxisA=KinPosMotor1+KinPosAxisB/2
+CLOSE
+
+
+OPEN INVERSE
+    KinPosMotor1=KinPosAxisA-KinPosAxisB/2
+    KinPosMotor2=KinPosAxisA+KinPosAxisB/2
+CLOSE
