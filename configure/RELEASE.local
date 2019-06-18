@@ -8,7 +8,7 @@
 
 ASYN=       $(SUPPORT)/asyn/4-34
 CALC=       $(SUPPORT)/calc/3-7
-MOTOR=      $(SUPPORT)/motor/6-10-1dls1-1
+MOTOR=      $(SUPPORT)/motor/7-0dls1
 BUSY=       $(SUPPORT)/busy/1-7dls1
 
 
