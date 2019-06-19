@@ -1,0 +1,133 @@
+{
+  "attributes": {
+    "layout": {
+      "stage1": {
+        "x": -770.7808000047339, 
+        "y": 71.93331805570256, 
+        "visible": true
+      }, 
+      "stage2": {
+        "x": -775.8357262103536, 
+        "y": 186.1373324227236, 
+        "visible": true
+      }, 
+      "stage3": {
+        "x": -763.314858096831, 
+        "y": -33.4085774270261, 
+        "visible": true
+      }, 
+      "stage4": {
+        "x": -773.331552587649, 
+        "y": 304.2324910203854, 
+        "visible": true
+      }, 
+      "x": {
+        "x": -783.5656155594452, 
+        "y": 444.44453323423284, 
+        "visible": true
+      }, 
+      "y": {
+        "x": -780.8440734557626, 
+        "y": 525.8835761622902, 
+        "visible": true
+      }, 
+      "x3": {
+        "x": -54.63372287145285, 
+        "y": -448.8192619011474, 
+        "visible": true
+      }, 
+      "y3": {
+        "x": -222.41335559265553, 
+        "y": -390.00290130014616, 
+        "visible": true
+      }, 
+      "height": {
+        "x": -375.16794657763097, 
+        "y": -326.17819345373584, 
+        "visible": true
+      }, 
+      "diff": {
+        "x": -515.4016694490839, 
+        "y": -266.38687458896163, 
+        "visible": true
+      }, 
+      "CS1": {
+        "x": -1913.8757929883197, 
+        "y": -505.5685283553383, 
+        "visible": true
+      }, 
+      "CS2": {
+        "x": -1573.2566608606858, 
+        "y": 388.0263264736069, 
+        "visible": true
+      }, 
+      "CS3": {
+        "x": -1555.9046267301196, 
+        "y": -308.35215446318705, 
+        "visible": true
+      }, 
+      "STATUS": {
+        "x": -1865.473385573604, 
+        "y": 313.9989109361246, 
+        "visible": true
+      }, 
+      "TRAJ": {
+        "x": -764.4601001669471, 
+        "y": -143.74440228664054, 
+        "visible": true
+      }
+    }, 
+    "exports": {}, 
+    "outputTriggers": true
+  }, 
+  "children": {
+    "stage1": {
+      "cs": "CS2,A", 
+      "velocitySettle": 0.0
+    }, 
+    "stage2": {
+      "cs": "CS2,B", 
+      "velocitySettle": 0.0
+    }, 
+    "stage3": {
+      "cs": "CS2,C", 
+      "velocitySettle": 0.0
+    }, 
+    "stage4": {
+      "cs": "CS2,U", 
+      "velocitySettle": 0.0
+    }, 
+    "x": {
+      "velocitySettle": 0.0
+    }, 
+    "y": {
+      "velocitySettle": 0.0
+    }, 
+    "x3": {
+      "velocitySettle": 0.0
+    }, 
+    "y3": {
+      "velocitySettle": 0.0
+    }, 
+    "height": {
+      "velocitySettle": 0.0
+    }, 
+    "diff": {
+      "velocitySettle": 0.0
+    }, 
+    "CS1": {
+      "deferMoves": "Defer Off", 
+      "csMoveTime": 0.0
+    }, 
+    "CS2": {
+      "deferMoves": "Defer Off", 
+      "csMoveTime": 0.0
+    }, 
+    "CS3": {
+      "deferMoves": "Defer Off", 
+      "csMoveTime": 3000.0
+    }, 
+    "STATUS": {}, 
+    "TRAJ": {}
+  }
+}

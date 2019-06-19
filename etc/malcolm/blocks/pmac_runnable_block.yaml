@@ -1,0 +1,80 @@
+- builtin.parameters.string:
+    name: mri_prefix
+    description: MRI for created block
+
+- builtin.parameters.string:
+    name: config_dir
+    description: Where to store saved configs
+
+- scanning.controllers.RunnableController:
+    mri: $(mri_prefix)
+    config_dir: $(config_dir)
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M1
+    prefix: PMAC_BRICK_TEST:MOTOR1
+    scannable: stage1
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M2
+    prefix: PMAC_BRICK_TEST:MOTOR2
+    scannable: stage2
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M3
+    prefix: PMAC_BRICK_TEST:MOTOR3
+    scannable: stage3
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M4
+    prefix: PMAC_BRICK_TEST:MOTOR4
+    scannable: stage4
+
+- pmac.includes.compoundmotor_collection:
+    mri: PMAC-ML-STAGE-01:A2
+    prefix: BRICK1CS2:A
+    scannable: x
+
+- pmac.includes.compoundmotor_collection:
+    mri: PMAC-ML-STAGE-01:B2
+    prefix: BRICK1CS2:B
+    scannable: y
+
+- pmac.includes.compoundmotor_collection:
+    mri: PMAC-ML-STAGE-01:A3
+    prefix: BRICK1CS3:A
+    scannable: x3
+
+- pmac.includes.compoundmotor_collection:
+    mri: PMAC-ML-STAGE-01:B3
+    prefix: BRICK1CS3:B
+    scannable: y3
+
+- pmac.includes.compoundmotor_collection:
+    mri: PMAC-ML-STAGE-01:HEIGHT
+    prefix: BRICK1CS3:X
+    scannable: height
+
+- pmac.includes.compoundmotor_collection:
+    mri: PMAC-ML-STAGE-01:DIFF
+    prefix: BRICK1CS3:Y
+    scannable: diff
+
+- pmac.includes.cs_collection:
+    mri_prefix: $(mri_prefix)
+    prefix: BRICK1
+    cs: 1
+
+- pmac.includes.cs_collection:
+    mri_prefix: $(mri_prefix)
+    prefix: BRICK1
+    cs: 2
+
+- pmac.includes.cs_collection:
+    mri_prefix: $(mri_prefix)
+    prefix: BRICK1
+    cs: 3
+
+- pmac.includes.trajectory_collection:
+    mri_prefix: $(mri_prefix)
+    prefix: BRICK1

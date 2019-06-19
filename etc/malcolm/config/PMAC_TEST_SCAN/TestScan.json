@@ -1,0 +1,21 @@
+{
+  "attributes": {
+    "layout": {
+      "BRICK": {
+        "x": 0.0, 
+        "y": 0.0, 
+        "visible": true
+      }
+    }, 
+    "exports": {}, 
+    "simultaneousAxes": [
+      "x", 
+      "y"
+    ]
+  }, 
+  "children": {
+    "BRICK": {
+      "design": ""
+    }
+  }
+}

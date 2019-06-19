@@ -1,0 +1,29 @@
+- builtin.parameters.string:
+    name: mri
+    description: MRI for created block
+
+- builtin.parameters.string:
+    name: brick
+    description: MRI for brick PMACManager object
+
+- builtin.parameters.string:
+    name: config_dir
+    description: Where to store saved configs
+
+- builtin.parameters.string:
+    name: initial_design
+    default: 
+    description: Design to load at init
+
+- scanning.controllers.RunnableController:
+    mri: $(mri)
+    config_dir: $(config_dir)
+    initial_design: $(initial_design)
+
+- pmac.parts.PmacChildPart:
+    name: BRICK
+    mri: $(brick)
+    initial_visibility: True
+
+- scanning.parts.SimultaneousAxesPart:
+
