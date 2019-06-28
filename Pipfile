@@ -8,6 +8,7 @@ pytest = "*"
 
 [packages]
 dls-pmaclib = {editable = true,path = "/home/hgv27681/python3/dls_pmaclib"}
+cothread = "*"
 
 [requires]
 python_version = "3.7"

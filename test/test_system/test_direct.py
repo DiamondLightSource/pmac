@@ -3,7 +3,7 @@ from unittest import TestCase
 import cothread.catools as ca
 from datetime import datetime
 
-from test.brick.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TBrick, DECIMALS
 from cothread import Sleep
 from test.brick.movemonitor import MoveMonitor, MotorCallback
 
@@ -17,7 +17,7 @@ class TestDirect(TestCase):
         """ verify coordinated deferred direct moves work in quick succession
             i16 diffractometer style
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
         waiter = MotorCallback()
 
@@ -73,7 +73,7 @@ class TestDirect(TestCase):
     def test_real_moves_cs(self):
         """ check that virtual axes update as expected on real axis moves
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         # tb.jack1.go_direct(5)
@@ -87,7 +87,7 @@ class TestDirect(TestCase):
     def test_cs_moves_real(self):
         """ check that real axes update as expected on virtual axis moves
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.height.go_direct(5)
@@ -98,7 +98,7 @@ class TestDirect(TestCase):
     def test_cs_demand_updates(self):
         """ checks that the internal Q7x demand is updated on a real axis move
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.jack1.go_direct(2)
@@ -114,7 +114,7 @@ class TestDirect(TestCase):
         """ verify the speed of direct real axes
         """
 
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g1)
 
         # direct demand axes will go at the speed of the most recent standard motor record
@@ -141,7 +141,7 @@ class TestDirect(TestCase):
     def test_velocity_cs(self):
         """ verify the speed of direct virtual axes
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.height.set_speed(2)
@@ -179,7 +179,7 @@ class TestDirect(TestCase):
         self.assertTrue(elapsed.seconds < 1.5)
 
     def test_direct_deferred_cs_move_timing(self):
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
         waiter = MotorCallback()
 
@@ -198,7 +198,7 @@ class TestDirect(TestCase):
         """ verify real motor deferred direct moves work in quick succession
             using virtual 1-1 mapped axes which also have a CS motor record
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g1)
         waiter = MotorCallback()
 
@@ -244,7 +244,7 @@ class TestDirect(TestCase):
 
             (copied from i16 tests)
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g1)
         waiter = MotorCallback()
 
@@ -269,18 +269,18 @@ class TestDirect(TestCase):
             Sleep(.1)
 
             # verify no motion yet
-            self.assertAlmostEquals(tb.kphi.pos, kphi, DECIMALS)
-            self.assertAlmostEquals(tb.kappa.pos, kappa, DECIMALS)
-            self.assertAlmostEquals(tb.ktheta.pos, ktheta, DECIMALS)
+            self.assertAlmostEqual(tb.kphi.pos, kphi, DECIMALS)
+            self.assertAlmostEqual(tb.kappa.pos, kappa, DECIMALS)
+            self.assertAlmostEqual(tb.ktheta.pos, ktheta, DECIMALS)
 
             # make the move
             tb.cs2.set_deferred_moves(False)
             waiter.wait_for_done()
 
             # verify motion
-            self.assertAlmostEquals(tb.kphi.pos, next_kphi, DECIMALS)
-            self.assertAlmostEquals(tb.kappa.pos, next_kappa, DECIMALS)
-            self.assertAlmostEquals(tb.ktheta.pos, next_ktheta, DECIMALS)
+            self.assertAlmostEqual(tb.kphi.pos, next_kphi, DECIMALS)
+            self.assertAlmostEqual(tb.kappa.pos, next_kappa, DECIMALS)
+            self.assertAlmostEqual(tb.ktheta.pos, next_ktheta, DECIMALS)
 
             kphi = next_kphi
             kappa = next_kappa

@@ -2,7 +2,7 @@ from unittest import TestCase
 from test.brick.trajectory import Trajectory
 from test.brick.movemonitor import MoveMonitor
 from datetime import datetime
-from test.brick.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TBrick, DECIMALS
 from test.test_system.trajectories import trajectory_quick_scan
 from cothread import Sleep, catools as ca
 import pytest
@@ -14,7 +14,7 @@ import os
 
 class TestMakeCsConsistent(TestCase):
     def test_kill_resets_cs_demands(self):
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.cs3.set_deferred_moves(True)
@@ -50,7 +50,7 @@ class TestMakeCsConsistent(TestCase):
 
     @pytest.mark.skipif(os.environ.get('PPMAC') == 'True', reason="not supported on PPMAC yet")
     def test_auto_home_resets_cs_demands(self):
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.height.go(10)
@@ -77,7 +77,7 @@ class TestMakeCsConsistent(TestCase):
             ca.caput('PMAC_BRICK_TEST:HM:ABORT.PROC', 1)
 
     def test_abort_cs_resets_cs_demands(self):
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.cs3.set_deferred_moves(True)
@@ -111,7 +111,7 @@ class TestMakeCsConsistent(TestCase):
         self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
 
     def test_stop_on_limit_resets_cs_demands(self):
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         m = MoveMonitor(tb.height.pv_root)
@@ -152,7 +152,7 @@ class TestMakeCsConsistent(TestCase):
             motors has a radically incorrect Q7x ?
         :return: None
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
         tb.cs3.set_move_time(0)
 
@@ -173,7 +173,7 @@ class TestMakeCsConsistent(TestCase):
 
         :return: None
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
         tb.cs3.set_move_time(0)
 
@@ -205,7 +205,7 @@ class TestMakeCsConsistent(TestCase):
 
         :return: None
         """
-        tb = TestBrick()
+        tb = TBrick()
         # set the appropriate coordinate system group
         tb.set_cs_group(tb.g3)
         # the first CS move after a coord sys group switch clears the cached real motor positions
@@ -245,7 +245,7 @@ class TestMakeCsConsistent(TestCase):
 
         :return: None
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
         tb.cs3.set_move_time(0)
 
@@ -264,7 +264,7 @@ class TestMakeCsConsistent(TestCase):
             self.assertLess(elapsed.seconds, 4)
 
     def test_switch_cs_group(self):
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
         tb.all_go([tb.A3, tb.B3], [3, 3])
 
@@ -289,7 +289,7 @@ class TestMakeCsConsistent(TestCase):
         """ look for a bug where having the angle set in CS 3 means that both jacks cannot return to
             zero when another test is initialized. This was a bug in the test framework, not pmac
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.all_go([tb.jack1, tb.jack2], [5, 5])
@@ -300,6 +300,6 @@ class TestMakeCsConsistent(TestCase):
 
         tb.jack1.go(6)
 
-        tb2 = TestBrick()
+        tb2 = TBrick()
         self.assertAlmostEqual(tb2.m3.pos, 0, DECIMALS)
         self.assertAlmostEqual(tb2.m4.pos, 0, DECIMALS)

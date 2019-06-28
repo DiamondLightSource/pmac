@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "59b0f7aeabaebffbe826f121584d768612ade146570972a2e032b7c170f4985d"
+            "sha256": "1f307bfcb2f6985163ecb46c1dc681e87fdc04014fac34535860f11567c65c33"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,9 +16,23 @@
         ]
     },
     "default": {
+        "cothread": {
+            "hashes": [
+                "sha256:69d225477e0037af05625ee16a5273fcdcee81689a6a7a189d477f40e0c40646",
+                "sha256:ad10b25bb584c8f7e6223af60199516b55263145803250af9a03ce8244cfaf23"
+            ],
+            "index": "pypi",
+            "version": "==2.16+dls1"
+        },
         "dls-pmaclib": {
             "editable": true,
             "path": "/home/hgv27681/python3/dls_pmaclib"
+        },
+        "numpy": {
+            "hashes": [
+                "sha256:4a22dc3f5221a644dfe4a63bf990052cc674ef12a157b1056969079985c92816"
+            ],
+            "version": "==1.15.4"
         },
         "pyserial": {
             "hashes": [

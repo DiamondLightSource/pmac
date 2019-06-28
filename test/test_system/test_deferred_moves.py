@@ -1,6 +1,6 @@
 from unittest import TestCase
 from test.brick.movemonitor import MoveMonitor
-from test.brick.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TBrick, DECIMALS
 from cothread import Sleep
 from datetime import datetime
 
@@ -11,7 +11,7 @@ class TestDeferred(TestCase):
         """
         check timed deferred moves and also individual cs moves
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.cs3.set_deferred_moves(True)
@@ -52,7 +52,7 @@ class TestDeferred(TestCase):
         check that real axes update as expected on virtual axis moves
         """
         for _ in range(4):  # retry for possible occasional race condition
-            tb = TestBrick()
+            tb = TBrick()
             tb.set_cs_group(tb.g2)
 
             tb.set_deferred_moves(True)

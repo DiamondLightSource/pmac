@@ -1,5 +1,5 @@
 from cothread import catools as ca, Sleep
-from trajectory import Trajectory
+from .trajectory import Trajectory
 
 # use dynamic class since many instances of this class will be created during a test suite
 # and this way add_attributes is only called once
@@ -23,7 +23,7 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
         cls.pv_command = pv_root + 'SendCmd'
         cls.pv_pollAllNow = pv_root + 'PollAllNow'
 
-        for name, value in cls.axes.items() + cls.groups.items() + cls.cs.items():
+        for name, value in {**cls.axes, **cls.groups, **cls.cs}.items():
             setattr(cls, name, value)
 
         return cls

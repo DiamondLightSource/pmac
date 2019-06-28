@@ -3,7 +3,7 @@ from unittest import TestCase
 import cothread.catools as ca
 from datetime import datetime
 
-from test.brick.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TBrick, DECIMALS
 from cothread import Sleep
 from test.brick.movemonitor import MoveMonitor, MotorCallback
 import pytest
@@ -17,7 +17,7 @@ class TestGeneral(TestCase):
     def test_auto_home(self):
         """ verify that autohome works as expected
         """
-        tb = TestBrick()
+        tb = TBrick()
 
         for axis in tb.real_axes.values():
             axis.go(1, False)
@@ -30,14 +30,14 @@ class TestGeneral(TestCase):
         ca.caput('PMAC_BRICK_TEST:HM:ABORT.PROC', 1)
 
         for axis in tb.real_axes.values():
-            self.assertAlmostEquals(axis.pos, 0)
+            self.assertAlmostEqual(axis.pos, 0)
 
     def test_auto_home_readonly(self):
         """ verify that auto home makes the motor records read only
             so that soft limits and user intervention cannot
             interfere with homing
         """
-        tb = TestBrick()
+        tb = TBrick()
 
         ca.caput('PMAC_BRICK_TESTX:HM:HMGRP', 'All')
         ca.caput('PMAC_BRICK_TESTX:HM:HOME', 1)
@@ -52,7 +52,7 @@ class TestGeneral(TestCase):
     def test_cs_feedrate_protection(self):
         """ verify that feedrate protection works for only those CS we have configured
         """
-        tb = TestBrick()
+        tb = TBrick()
 
         try:
             problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")

@@ -1,8 +1,8 @@
 from cothread import catools as ca
-from axis import Axis
-from coordsys import CoordSys
-from controller import make_controller
-from trajectory import Trajectory
+from .axis import Axis
+from .coordsys import CoordSys
+from .controller import make_controller
+from .trajectory import Trajectory
 
 # number of decimals to use in verifying positions
 # cant be very high on a clipper since it seems to
@@ -37,7 +37,7 @@ brick_cs = {'cs2': CoordSys('BRICK1:CS2', 2, 'CS2'),
 MyBrick = make_controller(brick_axes, brick_cs, brick_groups, brick_pv_root)
 
 
-class TestBrick(MyBrick):
+class TBrick(MyBrick):
     # noinspection PyAttributeOutsideInit
     def startup(self, init=True):
         a = self.axes

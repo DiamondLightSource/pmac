@@ -1,5 +1,5 @@
 from unittest import TestCase
-from test.brick.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TBrick, DECIMALS
 from datetime import datetime
 
 # These tests verify real and virtual motors interact correctly
@@ -9,7 +9,7 @@ class TestCsAndReal(TestCase):
     def test_real_moves_cs(self):
         """ check that virtual axes update as expected on real axis moves
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.all_go([tb.jack1, tb.jack2], [5, 5])
@@ -21,7 +21,7 @@ class TestCsAndReal(TestCase):
     def test_cs_moves_real(self):
         """ check that real axes update as expected on virtual axis moves
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.height.go(5)
@@ -32,7 +32,7 @@ class TestCsAndReal(TestCase):
     def test_cs_demand_updates(self):
         """ checks that the internal Q7x demand is updated on a real axis move
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.jack1.go(2)
@@ -51,7 +51,7 @@ class TestCsAndReal(TestCase):
         for each real motor in the move
         """
 
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g2)
 
         tb.height.set_speed(10)
