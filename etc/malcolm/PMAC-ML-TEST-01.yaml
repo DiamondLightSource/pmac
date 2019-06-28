@@ -1,4 +1,5 @@
-#!/dls_sw/prod/common/python/RHEL7-x86_64/pymalcolm/4-0b1/malcolm/imalcolm.py
+#!/home/hgv27681/odin/pymalcolm/malcolm/imalcolm.py
+# #!/dls_sw/prod/common/python/RHEL7-x86_64/pymalcolm/4-0b2/malcolm/imalcolm.py
 
 - builtin.defines.module_path:
     name: pmactest

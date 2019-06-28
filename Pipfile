@@ -1,0 +1,13 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+
+[packages]
+dls-pmaclib = {editable = true,path = "/home/hgv27681/python3/dls_pmaclib"}
+
+[requires]
+python_version = "3.7"
