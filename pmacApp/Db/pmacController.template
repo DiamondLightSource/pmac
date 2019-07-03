@@ -1062,3 +1062,15 @@ record(longout, "$(P):DEBUG_EXECUTE"){
   field(DTYP, "asynInt32")
   field(OUT, "@asyn($(PORT),0)PMAC_C_DEBUG_CMD")
 }
+
+record(mbbo, "$(P):DISABLE_POLL")
+{
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),0)PMAC_C_DEBUG_POLL_OFF")
+   field(VAL, "0")
+   field(ZRST, "Enabled")
+   field(ZRVL, "0")
+   field(ONST, "Disabled")
+   field(ONVL, "1")
+}

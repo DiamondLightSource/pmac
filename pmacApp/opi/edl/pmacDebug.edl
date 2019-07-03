@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1028
-y 74
+x 851
+y 284
 w 851
 h 383
 font "arial-bold-r-12.0"
@@ -77,8 +77,8 @@ minor 1
 release 1
 x 10
 y 45
-w 193
-h 18
+w 187
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 5
@@ -754,8 +754,8 @@ minor 1
 release 1
 x 430
 y 45
-w 139
-h 18
+w 132
+h 16
 font "helvetica-medium-r-14.0"
 fgColor index 14
 bgColor index 5
@@ -910,7 +910,7 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 730
+x 720
 y 345
 w 110
 h 25
@@ -1047,5 +1047,43 @@ value {
   "DEBUG_PMAC    16"
 }
 autoSize
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 720
+y 300
+w 110
+h 25
+fgColor index 25
+bgColor index 3
+inconsistentColor index 0
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):DISABLE_POLL"
+font "helvetica-bold-r-14.0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 670
+y 305
+w 60
+h 20
+font "helvetica-medium-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Polling:"
+}
 endObjectProperties
 
