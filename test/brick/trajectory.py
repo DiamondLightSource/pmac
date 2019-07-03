@@ -1,7 +1,7 @@
 #!/bin/env python
 from cothread import catools as ca
 
-ALL_AXES = set('ABCUVWXYZ')
+ALL_AXES = 'ABCUVWXYZ'
 
 
 class AxisSetup:

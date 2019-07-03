@@ -11,9 +11,11 @@ class TestTrajectories(TestCase):
 
         g = PmacGather(pmac1)
         axes = [3, 2]
-        g.gatherConfig(axes, 400, 10)
+        g.gatherConfig(axes, 100, 50)
         g.gatherTrigger()
         data = g.collectData()
         g.parseData(data)
         for c in g.channels:
             print(c.scaledData)
+
+        pmac1.disconnect()

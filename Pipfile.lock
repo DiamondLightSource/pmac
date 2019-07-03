@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1f307bfcb2f6985163ecb46c1dc681e87fdc04014fac34535860f11567c65c33"
+            "sha256": "751df2d72693c89b63950a021830250490d865703d9ce0398b3ba70ab7b46164"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,10 @@
         ]
     },
     "default": {
+        "annotypes": {
+            "editable": true,
+            "path": "/home/hgv27681/odin/annotypes"
+        },
         "cothread": {
             "hashes": [
                 "sha256:69d225477e0037af05625ee16a5273fcdcee81689a6a7a189d477f40e0c40646",
