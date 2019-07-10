@@ -10,8 +10,10 @@ pytest = "*"
 dls-pmaclib = {editable = true,path = "/home/hgv27681/python3/dls_pmaclib"}
 cothread = "*"
 annotypes = {editable = true,path = "/home/hgv27681/odin/annotypes"}
-ruamel = "*"
+malcolm = {editable = true,path = "/home/hgv27681/odin/pymalcolm"}
+scanpointgenerator = "*"
 ruamel-yaml = "*"
+tornado = "*"
 
 [requires]
 python_version = "3.7"

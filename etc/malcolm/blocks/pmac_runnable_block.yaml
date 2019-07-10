@@ -30,25 +30,25 @@
     pv_prefix: PMAC_BRICK_TEST:MOTOR4
     scannable: stage4
 
-- pmac.includes.compoundmotor_collection:
-    mri: PMAC-ML-STAGE-01:A2
-    pv_prefix: BRICK1CS2:A
-    scannable: x
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M5
+    pv_prefix: PMAC_BRICK_TEST:MOTOR5
+    scannable: stage5
 
-- pmac.includes.compoundmotor_collection:
-    mri: PMAC-ML-STAGE-01:B2
-    pv_prefix: BRICK1CS2:B
-    scannable: y
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M6
+    pv_prefix: PMAC_BRICK_TEST:MOTOR6
+    scannable: stage6
 
-- pmac.includes.compoundmotor_collection:
-    mri: PMAC-ML-STAGE-01:A3
-    pv_prefix: BRICK1CS3:A
-    scannable: x3
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M7
+    pv_prefix: PMAC_BRICK_TEST:MOTOR7
+    scannable: stage7
 
-- pmac.includes.compoundmotor_collection:
-    mri: PMAC-ML-STAGE-01:B3
-    pv_prefix: BRICK1CS3:B
-    scannable: y3
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M8
+    pv_prefix: PMAC_BRICK_TEST:MOTOR8
+    scannable: stage8
 
 - pmac.includes.compoundmotor_collection:
     mri: PMAC-ML-STAGE-01:HEIGHT
@@ -59,11 +59,6 @@
     mri: PMAC-ML-STAGE-01:DIFF
     pv_prefix: BRICK1CS3:Y
     scannable: diff
-
-- pmac.includes.cs_collection:
-    mri_prefix: $(mri_prefix)
-    pv_prefix: BRICK1
-    cs: 1
 
 - pmac.includes.cs_collection:
     mri_prefix: $(mri_prefix)
