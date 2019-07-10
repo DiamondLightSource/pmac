@@ -1,9 +1,8 @@
-from unittest import TestCase, skip
+from unittest import TestCase
 from test.brick.testbrick import TBrick
-from test.test_system.trajectories import trajectory_fast_scan, trajectory_scan_appending, trajectory_quick_scan
-from cothread import Sleep, catools as ca
-import pytest
-import os
+from test.test_pmac.test_system.trajectories import trajectory_fast_scan, trajectory_scan_appending
+from cothread import catools as ca
+
 
 # Tests for historical issues with trajectory scanning
 

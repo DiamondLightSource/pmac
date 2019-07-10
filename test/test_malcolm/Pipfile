@@ -15,7 +15,6 @@ scanpointgenerator = "*"
 ruamel-yaml = "*"
 tornado = "==4.5.3"
 matplotlib = "*"
-tornado-web = "*"
 
 [requires]
 python_version = "3.7"

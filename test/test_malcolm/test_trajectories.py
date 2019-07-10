@@ -9,8 +9,8 @@ from malcolm.core import Process, Block
 from malcolm.yamlutil import make_include_creator
 from scanpointgenerator import SpiralGenerator, CompoundGenerator, \
     LineGenerator
-from test.brick.testbrick import TBrick
-from test_malcolm.plot_trajectories import plot_velocities
+from ..brick.testbrick import TBrick
+from .plot_trajectories import plot_velocities
 
 SAMPLE_RATE = 20  # how many between each point to gather
 BRICK_CLOCK = 5000  # servo loop speed in Hz
@@ -47,7 +47,7 @@ class TestTrajectories(TestCase):
     def make_malcolm(self):
         # create a malcolm scan from a YAML definition
         yaml_file = Path(
-            __file__).parent / '../etc/malcolm/PMAC-ML-TEST-01.yaml'
+            __file__).parent / '../../etc/malcolm/PMAC-ML-TEST-01.yaml'
         self.proc = Process("Process")
         controllers, parts = make_include_creator(str(yaml_file))()
         for controller in controllers:
@@ -114,6 +114,7 @@ class TestTrajectories(TestCase):
             np.insert(np.array(self.traj_block.timeArray.value), 0, 0), \
             np.insert(np.array(self.traj_block.velocityMode.value), 0, 0), \
             np.insert(np.array(self.traj_block.userPrograms.value), 0, 0)
+        print('trajectory arrays:-\n', p)
         plot_velocities(p, title=title, step_time=step_time,
                         overlay=self.gather_points)
 
@@ -127,8 +128,8 @@ class TestTrajectories(TestCase):
 
         self.test_brick.m7.set_speed(10 / step_time)
         self.test_brick.m8.set_speed(10 / step_time)
-        self.test_brick.m7.set_acceleration(.01 / step_time)
-        self.test_brick.m8.set_acceleration(.01 / step_time)
+        self.test_brick.m7.set_acceleration(.01)
+        self.test_brick.m8.set_acceleration(.01)
 
         self.do_a_scan(gen)
         self.plot_scan('Live Spiral', step_time)

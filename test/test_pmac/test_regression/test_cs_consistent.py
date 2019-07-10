@@ -1,9 +1,8 @@
 from unittest import TestCase
-from test.brick.trajectory import Trajectory
 from test.brick.movemonitor import MoveMonitor
 from datetime import datetime
 from test.brick.testbrick import TBrick, DECIMALS
-from test.test_system.trajectories import trajectory_quick_scan
+from test.test_pmac.test_system.trajectories import trajectory_quick_scan
 from cothread import Sleep, catools as ca
 import pytest
 import os

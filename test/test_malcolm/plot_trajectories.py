@@ -34,6 +34,12 @@ def velocity_prev_current(previous_pos, previous_velocity, current_pos,
     return result
 
 
+def old_velocity_prev_current(previous_pos, previous_velocity, current_pos,
+                          current_time):
+    result = (current_pos - previous_pos) / current_time
+    return result
+
+
 def plot_velocities(np_arrays, title='Plot', step_time=0.15,
                     overlay=None):
     """ plots a 2d graph of a 2 axis trajectory, also does the velocity
@@ -58,9 +64,9 @@ def plot_velocities(np_arrays, title='Plot', step_time=0.15,
             vys[i] = velocity_prev_next(ys[i - 1], ys[i], ys[i + 1], ts[i],
                                         ts[i + 1])
         elif modes[i] == VelMode.PrevCurrent:
-            vxs[i] = velocity_prev_current(xs[i - 1], vxs[i - 1], xs[i],
+            vxs[i] = old_velocity_prev_current(xs[i - 1], vxs[i - 1], xs[i],
                                            ts[i])
-            vys[i] = velocity_prev_current(ys[i - 1], vys[i - 1], ys[i],
+            vys[i] = old_velocity_prev_current(ys[i - 1], vys[i - 1], ys[i],
                                            ts[i])
         elif modes[i] == VelMode.CurrentNext:
             vxs[i] = velocity_current_next(xs[i], xs[i + 1], ts[i])
