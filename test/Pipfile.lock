@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8ff7b3f5729f2368a0380764a9a50f79bf5894b652bd31aabafb12ad482af7de"
+            "sha256": "3703dc3acdd12c3b8a6155cdd6d4d8ab85f151d48cf22411559fbb435637fc4c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -22,12 +22,11 @@
         },
         "cothread": {
             "hashes": [
-                "sha256:46c91f6b9902f77ec1e08210e3d0fc2ae365d4d1e537d29867203c2e5e3a1f10",
                 "sha256:69d225477e0037af05625ee16a5273fcdcee81689a6a7a189d477f40e0c40646",
                 "sha256:ad10b25bb584c8f7e6223af60199516b55263145803250af9a03ce8244cfaf23"
             ],
             "index": "pypi",
-            "version": "==2.16"
+            "version": "==2.16+dls1"
         },
         "cycler": {
             "hashes": [
@@ -144,10 +143,10 @@
         },
         "tornado": {
             "hashes": [
-                "sha256:33b1f888d241a1ca27c12c040d38ed4cdc94e7c63ef56439bd1d2a1a70691c46"
+                "sha256:6c58a746701e61a07f0feab449b7e4f28efe8dd8a347880e10ceef15d87a4c67"
             ],
             "index": "pypi",
-            "version": "==6.0.3"
+            "version": "==4.5.3"
         }
     },
     "develop": {

@@ -14,7 +14,7 @@ from .plot_trajectories import plot_velocities
 
 SAMPLE_RATE = 20  # how many between each point to gather
 BRICK_CLOCK = 5000  # servo loop speed in Hz
-FUDGE = .1  # no. secs to add to gather time as a safe buffer
+FUDGE = .2  # no. secs to add to gather time as a safe buffer
 AXES = [7, 8]  # always use axes x, y which are mapped to 7, 8
 
 
@@ -126,10 +126,10 @@ class TestTrajectories(TestCase):
         gen = CompoundGenerator([s], [], [], step_time)
         gen.prepare()
 
-        self.test_brick.m7.set_speed(10 / step_time)
-        self.test_brick.m8.set_speed(10 / step_time)
-        self.test_brick.m7.set_acceleration(.01)
-        self.test_brick.m8.set_acceleration(.01)
+        self.test_brick.m7.set_speed(100)
+        self.test_brick.m8.set_speed(100)
+        self.test_brick.m7.set_acceleration(.2)
+        self.test_brick.m8.set_acceleration(.2)
 
         self.do_a_scan(gen)
         self.plot_scan('Live Spiral', step_time)
@@ -142,9 +142,9 @@ class TestTrajectories(TestCase):
         gen = CompoundGenerator([ys, xs], [], [], step_time)
         gen.prepare()
 
-        self.test_brick.m7.set_speed(10 / step_time)
-        self.test_brick.m8.set_speed(5 / step_time)
-        self.test_brick.m7.set_acceleration(.1)
+        self.test_brick.m7.set_speed(100)
+        self.test_brick.m8.set_speed(100)
+        self.test_brick.m7.set_acceleration(.3)
         self.test_brick.m8.set_acceleration(.3)
 
         self.do_a_scan(gen)

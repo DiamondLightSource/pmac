@@ -3,6 +3,8 @@ from enum import IntEnum
 import matplotlib.pyplot as plt
 import numpy as np
 
+use_old_velocities = False
+
 
 class VelMode(IntEnum):
     PrevNext = 0
@@ -28,14 +30,16 @@ def velocity_current_next(current_pos, next_pos, current_time):
 def velocity_prev_current(previous_pos, previous_velocity, current_pos,
                           current_time):
     result, dt2 = 0, 0
-    if current_time != 0:
+    if use_old_velocities:
+        result = old_velocity_prev_current(
+            previous_pos, current_pos, current_time)
+    elif current_time != 0:
         dt2 = 2.0 * (current_pos - previous_pos) / current_time
         result = dt2 - previous_velocity
     return result
 
 
-def old_velocity_prev_current(previous_pos, previous_velocity, current_pos,
-                          current_time):
+def old_velocity_prev_current(previous_pos, current_pos, current_time):
     result = (current_pos - previous_pos) / current_time
     return result
 
@@ -63,22 +67,30 @@ def plot_velocities(np_arrays, title='Plot', step_time=0.15,
                                         ts[i + 1])
             vys[i] = velocity_prev_next(ys[i - 1], ys[i], ys[i + 1], ts[i],
                                         ts[i + 1])
-        elif modes[i] == VelMode.PrevCurrent:
-            vxs[i] = old_velocity_prev_current(xs[i - 1], vxs[i - 1], xs[i],
+        elif modes[i] == VelMode.PrevCurrent or \
+                (not use_old_velocities and modes[i] == VelMode.CurrentNext):
+            vxs[i] = velocity_prev_current(xs[i - 1], vxs[i - 1], xs[i],
                                            ts[i])
-            vys[i] = old_velocity_prev_current(ys[i - 1], vys[i - 1], ys[i],
+            vys[i] = velocity_prev_current(ys[i - 1], vys[i - 1], ys[i],
                                            ts[i])
         elif modes[i] == VelMode.CurrentNext:
-            vxs[i] = velocity_current_next(xs[i], xs[i + 1], ts[i])
-            vys[i] = velocity_current_next(ys[i], ys[i + 1], ts[i])
+            vxs[i] = velocity_current_next(xs[i], xs[i + 1], ts[i+1])
+            vys[i] = velocity_current_next(ys[i], ys[i + 1], ts[i+1])
 
         # plot a line to represent the velocity vector
         s = 'velocity vector {}: prev=({},{}) next=({},{}) ' \
             'vel=({},{}), time={}'
         print(s.format(i, xs[i - 1], ys[i - 1], xs[i], ys[i],
                        vxs[i] * ms, vys[i] * ms, ts[i]))
-        plt.plot([xs[i], xs[i] + vxs[i] * ts[i]],
-                 [ys[i], ys[i] + vys[i] * ts[i]],
+        # the time to the next point is a good representation of the velocity
+        # vector but for the last point this can be a bit ugly so we use the
+        # time to previous point
+        if i == len(xs) - 2:
+            ms = ts[i]
+        else:
+            ms = ts[i + 1]
+        plt.plot([xs[i], xs[i] + vxs[i] * ms],
+                 [ys[i], ys[i] + vys[i] * ms],
                  color=velocity_colors[i % len(velocity_colors)])
 
     # plot the start and end positions
@@ -95,7 +107,7 @@ def plot_velocities(np_arrays, title='Plot', step_time=0.15,
                      color="k", markersize=6)
 
     if overlay:
-        plt.plot(overlay[0], overlay[1], linestyle='',
+        plt.plot(overlay[0], overlay[1], linestyle='-', linewidth=.1,
                  marker='*', markersize=2, color='#8888ff')
 
     plt.show()
