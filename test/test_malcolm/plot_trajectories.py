@@ -82,13 +82,8 @@ def plot_velocities(np_arrays, title='Plot', step_time=0.15,
             'vel=({},{}), time={}'
         print(s.format(i, xs[i - 1], ys[i - 1], xs[i], ys[i],
                        vxs[i] * ms, vys[i] * ms, ts[i]))
-        # the time to the next point is a good representation of the velocity
-        # vector but for the last point this can be a bit ugly so we use the
-        # time to previous point
-        if i == len(xs) - 2:
-            ms = ts[i]
-        else:
-            ms = ts[i + 1]
+
+        ms = ts[i + 1]
         plt.plot([xs[i], xs[i] + vxs[i] * ms],
                  [ys[i], ys[i] + vys[i] * ms],
                  color=velocity_colors[i % len(velocity_colors)])

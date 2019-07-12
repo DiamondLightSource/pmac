@@ -1,4 +1,3 @@
-from pathlib import Path
 from unittest import TestCase
 
 import cothread.catools as ca
@@ -7,15 +6,21 @@ from dls_pmaclib.dls_pmacremote import PmacEthernetInterface
 from dls_pmaclib.pmacgather import PmacGather
 from malcolm.core import Process, Block
 from malcolm.yamlutil import make_include_creator
+from pathlib import Path
 from scanpointgenerator import SpiralGenerator, CompoundGenerator, \
     LineGenerator
-from ..brick.testbrick import TBrick
-from .plot_trajectories import plot_velocities
 
-SAMPLE_RATE = 20  # how many between each point to gather
+from .plot_trajectories import plot_velocities
+from ..brick.testbrick import TBrick
+
+SAMPLE_RATE = 10  # how many between each point to gather
 BRICK_CLOCK = 5000  # servo loop speed in Hz
 FUDGE = .2  # no. secs to add to gather time as a safe buffer
 AXES = [7, 8]  # always use axes x, y which are mapped to 7, 8
+
+# for debugging set to True to just plot the trajectory without
+# trying to download it to the pmac
+SKIP_RUN = True
 
 
 class TestTrajectories(TestCase):
@@ -41,8 +46,15 @@ class TestTrajectories(TestCase):
 
     def tearDown(self) -> None:
         self.proc.stop()
-        self.pmac.disconnect()
+        if not SKIP_RUN:
+            self.pmac.disconnect()
         pass
+
+    def setup_brick(self, xs, ys, xa, ya):
+        self.test_brick.m7.set_speed(xs)
+        self.test_brick.m8.set_speed(ys)
+        self.test_brick.m7.set_acceleration(xa)
+        self.test_brick.m8.set_acceleration(ya)
 
     def make_malcolm(self):
         # create a malcolm scan from a YAML definition
@@ -79,7 +91,8 @@ class TestTrajectories(TestCase):
         self.scan_block.configure(gen)
         self.start_x = self.test_brick.m7.pos
         self.start_y = self.test_brick.m8.pos
-        self.total_time = np.sum(self.test_brick.trajectory.getProfileTimeArray())
+        self.total_time = np.sum(
+            self.test_brick.trajectory.getProfileTimeArray())
         # time array is in microseconds
         self.total_time /= 1000000
 
@@ -89,22 +102,24 @@ class TestTrajectories(TestCase):
         samples = (self.total_time + FUDGE) * samples_per_sec
         self.pmac_gather.gatherConfig(AXES, samples, ticks_per_sample)
 
-        # start gathering and scanning
-        self.pmac_gather.gatherTrigger(wait=False)
-        self.scan_block.run()
-        # make sure the gather period has expired
-        self.pmac_gather.gatherWait()
+        if not SKIP_RUN:
+            # start gathering and scanning
+            self.pmac_gather.gatherTrigger(wait=False)
+            self.scan_block.run()
+            # make sure the gather period has expired
+            self.pmac_gather.gatherWait()
 
-        # extract the pmac gather info, disabling IOC polling while doing so
-        self.test_brick.disable_polling()
-        data = self.pmac_gather.collectData()
-        self.test_brick.disable_polling(False)
+            # extract the pmac gather info, disabling IOC polling while
+            # doing so
+            self.test_brick.disable_polling()
+            data = self.pmac_gather.collectData()
+            self.test_brick.disable_polling(False)
 
-        self.gather_points = []
-        self.pmac_gather.parseData(data)
-        for i, c in enumerate(self.pmac_gather.channels):
-            egu_points = np.multiply(c.scaledData, self.m_res[i])
-            self.gather_points.append(egu_points)
+            self.gather_points = []
+            self.pmac_gather.parseData(data)
+            for i, c in enumerate(self.pmac_gather.channels):
+                egu_points = np.multiply(c.scaledData, self.m_res[i])
+                self.gather_points.append(egu_points)
 
     def plot_scan(self, title, step_time):
         p = np.insert(np.array(self.traj_block.positionsX.value), 0,
@@ -115,6 +130,7 @@ class TestTrajectories(TestCase):
             np.insert(np.array(self.traj_block.velocityMode.value), 0, 0), \
             np.insert(np.array(self.traj_block.userPrograms.value), 0, 0)
         print('trajectory arrays:-\n', p)
+
         plot_velocities(p, title=title, step_time=step_time,
                         overlay=self.gather_points)
 
@@ -126,15 +142,12 @@ class TestTrajectories(TestCase):
         gen = CompoundGenerator([s], [], [], step_time)
         gen.prepare()
 
-        self.test_brick.m7.set_speed(100)
-        self.test_brick.m8.set_speed(100)
-        self.test_brick.m7.set_acceleration(.2)
-        self.test_brick.m8.set_acceleration(.2)
+        self.setup_brick(xs=100, ys=100, xa=.2, ya=.2)
 
         self.do_a_scan(gen)
         self.plot_scan('Live Spiral', step_time)
 
-    def test_snake(self):
+    def test_raster(self):
         step_time = .1
         xs = LineGenerator(self.axes[0], "mm", 0, 10, 3)
         ys = LineGenerator(self.axes[1], "mm", 0, 8, 3)
@@ -142,10 +155,20 @@ class TestTrajectories(TestCase):
         gen = CompoundGenerator([ys, xs], [], [], step_time)
         gen.prepare()
 
-        self.test_brick.m7.set_speed(100)
-        self.test_brick.m8.set_speed(100)
-        self.test_brick.m7.set_acceleration(.3)
-        self.test_brick.m8.set_acceleration(.3)
+        self.setup_brick(xs=100, ys=100, xa=.5, ya=.5)
+
+        self.do_a_scan(gen)
+        self.plot_scan('Live Raster', step_time)
+
+    def test_snake(self):
+        step_time = .2
+        xs = LineGenerator(self.axes[0], "mm", 0, 10, 3, alternate=True)
+        ys = LineGenerator(self.axes[1], "mm", 0, 2, 3)
+
+        gen = CompoundGenerator([ys, xs], [], [], step_time)
+        gen.prepare()
+
+        self.setup_brick(xs=100, ys=100, xa=.5, ya=5)
 
         self.do_a_scan(gen)
         self.plot_scan('Live Snake', step_time)
