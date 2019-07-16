@@ -73,6 +73,15 @@ class TBrick(MyBrick):
         self.trajectory = Trajectory(self.pv_root)
 
         if init:
+            # reset all real mres
+            mres_pvs = [axis.mres for axis in r.values()]
+            mres_val = [0.001] * len(mres_pvs)
+            ca.caput(mres_pvs, mres_val, wait=True, timeout=10)
+            ca.caput(["BRICK1:M1.MRES", "BRICK1:M2.MRES"], [1, 1], wait=True)
+            # higher resolution on 7 and 8 for clipper trajectories
+            ca.caput(self.m7.mres, 0.00001)
+            ca.caput(self.m8.mres, 0.00001)
+
             # make all motors fast to speed up tests
             # (and encourage race conditions)
             acc_pvs = [axis.acc for axis in a.values()]
@@ -85,16 +94,6 @@ class TBrick(MyBrick):
 
             # also make motors speed, acceleration in motion programs fast
             self.send_command('i117,8,100=10 i116,8,100=200')
-
-            # reset all real mres
-            mres_pvs = [axis.mres for axis in r.values()]
-            mres_val = [0.001] * len(mres_pvs)
-            ca.caput(mres_pvs, mres_val, wait=True, timeout=10)
-            ca.caput(["BRICK1:M1.MRES", "BRICK1:M2.MRES"], [1, 1], wait=True)
-            # higher resolution on 7 and 8 for clipper trajectories
-            # ca.caput(self.m7.mres, 0.00001)
-            # ca.caput(self.m8.mres, 0.00001)
-
             # reset all UEIP
             e_pvs = [axis.pv_use_encoder for axis in r.values()]
             e_val = [0] * len(mres_pvs)
