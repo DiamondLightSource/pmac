@@ -1,13 +1,13 @@
+from pathlib import Path
 from unittest import TestCase
 
 import cothread.catools as ca
-from cothread import Sleep
 import numpy as np
+from cothread import Sleep
 from dls_pmaclib.dls_pmacremote import PmacEthernetInterface
 from dls_pmaclib.pmacgather import PmacGather
 from malcolm.core import Process, Block
 from malcolm.yamlutil import make_include_creator
-from pathlib import Path
 from scanpointgenerator import SpiralGenerator, CompoundGenerator, \
     LineGenerator
 
@@ -130,6 +130,9 @@ class TestTrajectories(TestCase):
 
         plot_velocities(p, title=title, step_time=self.step_time,
                         overlay=self.gather_points)
+        # return the position arrays including start point to the caller
+        xp, yp, _, _, _ = p
+        return xp, yp
 
     def test_spiral(self):
         step_time = .1
@@ -145,12 +148,12 @@ class TestTrajectories(TestCase):
         self.plot_scan('Live Spiral')
 
     def test_raster(self):
-        self.lines(False)
+        self.lines(False, 'Live Raster')
 
     def test_snake(self):
-        self.lines(True)
+        self.lines(True, 'Live Snake')
 
-    def lines(self, snake=False):
+    def lines(self, snake=False, name='lines'):
         step_time = .2
         xs = LineGenerator(self.axes[0], "mm", 0, 10, 3, alternate=snake)
         ys = LineGenerator(self.axes[1], "mm", 0, 8, 3)
@@ -161,17 +164,20 @@ class TestTrajectories(TestCase):
         self.setup_brick_malcolm(xv=100, yv=100, xa=.5, ya=.5)
 
         self.do_a_scan(gen)
-        self.plot_scan('Live Snake')
+        xp, yp = self.plot_scan(name)
+        self.check_bounds(xp, '{} array x'.format(name))
+        self.check_bounds(yp, '{} array y'.format(name))
 
     def test_high_acceleration(self):
         # this system test performs the same trajectory as the malcolm unit
         # test pmacchildpart_test.test_turnaround_overshoot
-        self.Interpolation_checker(17, 1, .1, .2)
+        self.Interpolation_checker(17, 1, .1, .2,
+                                   name='test_turnaround_overshoot')
 
     def Interpolation_checker(self, xv=200., yv=400., xa=1., ya=80.,
-                              skip=True, snake=False):
+                              skip=True, snake=False, name=''):
         xs = LineGenerator("stage7", "mm", 0, 5, 4, alternate=snake)
-        ys = LineGenerator("stage8", "mm", 0, 1, 2)
+        ys = LineGenerator("stage8", "mm", 0, 2, 3)
 
         gen = CompoundGenerator([ys, xs], [], [], 0.15)
         gen.prepare()
@@ -180,21 +186,36 @@ class TestTrajectories(TestCase):
 
         # todo try this with a fast brick and remove skip_run
         self.do_a_scan(gen, skip_run=skip)
-        self.plot_scan('X Overshoot test xv={} yv={} xa={} ya={}'.format(
-            xv, yv, xa, ya))
+        xp, yp = self.plot_scan(
+            'X Overshoot test xv={} yv={} xa={} ya={}'.format(
+                xv, yv, xa, ya))
+        self.check_bounds(xp, '{} array x'.format(name))
+        self.check_bounds(yp, '{} array y'.format(name))
+
+    def check_bounds(self, a, name):
+        # small amounts of overshoot are acceptable
+        npa = np.array(a)
+        less_start = np.argmax((npa[0] - npa) > 0.001)
+        greater_end = np.argmax((npa - npa[-1]) > 0.001)
+        self.assertEqual(
+            less_start, 0, "Position {} < start for {}\n{}".format(
+                less_start, name, a))
+        self.assertEqual(
+            greater_end, 0, "Position {} > end for {}\n{}".format(
+                greater_end, name, a))
 
     def test_profile_point_interpolation(self):
         # test combinations of velocity profile points
+
         # x=6 and y=3 combined = 7
-        # todo add some checks to see if these have overrun
-        #  just need to see if x,y exceed expected bounds
-        self.Interpolation_checker()
+        self.Interpolation_checker(name='x6 y3 interpolation')
         self.scan_block.reset()
         # x=6 and y=4 combined = 8
-        self.Interpolation_checker(ya=1)
+        self.Interpolation_checker(ya=1, name='x6 y4 interpolation')
         self.scan_block.reset()
         # x=4 and y=3 combined = 5
-        self.Interpolation_checker(snake=True)
+        self.Interpolation_checker(snake=True, name='x4 y3 interpolation')
         self.scan_block.reset()
         # x=3 and y=4 combined = 5
-        self.Interpolation_checker(ya=.01, snake=True)
+        self.Interpolation_checker(
+            ya=.01, snake=True, name='x3 y4 interpolation')
