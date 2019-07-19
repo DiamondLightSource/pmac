@@ -27,3 +27,9 @@
 
 - scanning.parts.SimultaneousAxesPart:
 
+- pmactest.blocks.dummy_trigger_block:
+    mri: $(mri):TRIG
+
+- pmactest.parts.DummyTriggerPart:
+    name: TRIG
+    mri: $(mri):TRIG

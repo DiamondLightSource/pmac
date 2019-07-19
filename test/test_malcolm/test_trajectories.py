@@ -62,10 +62,12 @@ class TestTrajectories(TestCase):
             self.proc.add_controller(controller)
         self.scan_block = self.proc.block_view('PMAC_TEST_SCAN')
         self.traj_block = self.proc.block_view('PMAC-ML-BRICK-01:TRAJ')
+        self.trigger_block = self.proc.block_view('PMAC_TEST_SCAN:TRIG')
 
         # prepare the scan
         self.proc.start()
         self.scan_block.simultaneousAxes.put_value(self.axes)
+        self.trigger_block.rowTrigger.put_value(1)
 
     def brick_connect(self):
         # create test brick object to communicate with pmac IOC

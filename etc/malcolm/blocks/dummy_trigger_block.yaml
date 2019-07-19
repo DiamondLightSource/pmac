@@ -1,0 +1,16 @@
+- builtin.parameters.string:
+    name: mri
+    description: Malcolm resource id of the Block
+
+- builtin.controllers.BasicController:
+    mri: $(mri)
+
+- builtin.parts.ChoicePart:
+    name: rowTrigger
+    description: What should trigger each row of joined points?
+    choices:
+      - None
+      - Row Gate
+      - Every Point
+    value: Row Gate
+    writeable: True
