@@ -129,8 +129,11 @@ class TestTrajectories(TestCase):
             self.gather_points = []
             self.pmac_gather.parseData(data)
             for i, c in enumerate(self.pmac_gather.channels):
-                egu_points = np.multiply(c.scaledData, self.m_res[i])
-                self.gather_points.append(egu_points)
+                if i < len(self.m_res):
+                    egu_points = np.multiply(c.scaledData, self.m_res[i])
+                    self.gather_points.append(egu_points)
+                else:
+                    print("WARNING - gather data has extra channels??")
 
     def plot_scan(self, title, failed=False):
         p = np.insert(np.array(self.traj_block.positionsX.value), 0,
@@ -143,7 +146,7 @@ class TestTrajectories(TestCase):
         print('trajectory arrays:-\n', p)
 
         title += '\n MinInterval={}us at {}'.format(
-            self.min_interval, self.min_index
+            self.min_interval, self.min_index[:5]
         )
         if failed:
             title = 'FAILED ' + title
@@ -162,7 +165,7 @@ class TestTrajectories(TestCase):
         return self.plot_scan(title)
 
     def test_spiral(self, trigger=TRIGGER_EVERY):
-        step_time = .5
+        step_time = .1
         # create a set of scan points in a spiral
         s = SpiralGenerator(self.axes, "mm", [0.0, 0.0],
                             5.0, scale=5)
@@ -229,7 +232,7 @@ class TestTrajectories(TestCase):
     def test_high_acceleration(self):
         # this system test performs the same trajectory as the malcolm unit
         # test pmacchildpart_test.test_turnaround_overshoot
-        self.Interpolation_checker(17, 1, .1, .2,
+        self.Interpolation_checker(xv=17, yv=1, xa=.1, ya=.2,
                                    name='test_high_acceleration')
 
     def test_profile_point_interpolation(self):
