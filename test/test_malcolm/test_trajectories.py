@@ -6,18 +6,23 @@ import numpy as np
 from cothread import Sleep
 from dls_pmaclib.dls_pmacremote import PmacEthernetInterface
 from dls_pmaclib.pmacgather import PmacGather
-from malcolm.core import Process, Block
-from malcolm.yamlutil import make_include_creator
 from scanpointgenerator import SpiralGenerator, CompoundGenerator, \
     LineGenerator
 
+from malcolm.core import Process, Block
+from malcolm.yamlutil import make_include_creator
 from .plot_trajectories import plot_velocities
 from ..brick.testbrick import TBrick
 
-SAMPLE_RATE = 30  # how many between each point to gather
+SAMPLE_RATE = 10  # how many between each point to gather
 BRICK_CLOCK = 5000  # servo loop speed in Hz
 FUDGE = .2  # no. secs to add to gather time as a safe buffer
 AXES = [7, 8]  # always use axes x, y which are mapped to 7, 8
+
+# triggering modes
+TRIGGER_NONE = 0
+TRIGGER_ROW = 1
+TRIGGER_EVERY = 2
 
 
 class TestTrajectories(TestCase):
@@ -35,6 +40,10 @@ class TestTrajectories(TestCase):
         self.m_res = []
         self.axes = []
         self.total_time = 0
+        self.skip_run = False  # set true to not send trajectory to pmac
+
+        self.min_interval = None
+        self.min_index = None
 
         for axis in AXES:
             self.axes.append("stage{}".format(axis))
@@ -67,7 +76,7 @@ class TestTrajectories(TestCase):
         # prepare the scan
         self.proc.start()
         self.scan_block.simultaneousAxes.put_value(self.axes)
-        self.trigger_block.rowTrigger.put_value(1)
+        self.trigger_block.rowTrigger.put_value(TRIGGER_EVERY)
 
     def brick_connect(self):
         # create test brick object to communicate with pmac IOC
@@ -84,14 +93,17 @@ class TestTrajectories(TestCase):
         self.m_res.append(float(ca.caget(self.test_brick.m7.mres)))
         self.m_res.append(float(ca.caget(self.test_brick.m8.mres)))
 
-    def do_a_scan(self, gen: CompoundGenerator, skip_run=False):
+    def do_a_scan(self, gen: CompoundGenerator):
         # configure the Malcolm scan
         self.scan_block.configure(gen)
         self.start_x = self.test_brick.m7.pos
         self.start_y = self.test_brick.m8.pos
         self.step_time = gen.duration
-        self.total_time = np.sum(
-            self.test_brick.trajectory.getProfileTimeArray())
+        times = self.test_brick.trajectory.getProfileTimeArray()
+        self.total_time = np.sum(times)
+        self.min_interval = np.min(times)
+        self.min_index = np.where(self.min_interval == times)[0]
+
         # time array is in microseconds
         self.total_time /= 1000000
 
@@ -101,7 +113,7 @@ class TestTrajectories(TestCase):
         samples = (self.total_time + FUDGE) * samples_per_sec
         self.pmac_gather.gatherConfig(AXES, samples, ticks_per_sample)
 
-        if not skip_run:
+        if not self.skip_run:
             # start gathering and scanning
             self.pmac_gather.gatherTrigger(wait=False)
             self.scan_block.run()
@@ -120,7 +132,7 @@ class TestTrajectories(TestCase):
                 egu_points = np.multiply(c.scaledData, self.m_res[i])
                 self.gather_points.append(egu_points)
 
-    def plot_scan(self, title):
+    def plot_scan(self, title, failed=False):
         p = np.insert(np.array(self.traj_block.positionsX.value), 0,
                       self.start_x), \
             np.insert(np.array(self.traj_block.positionsY.value), 0,
@@ -130,14 +142,27 @@ class TestTrajectories(TestCase):
             np.insert(np.array(self.traj_block.userPrograms.value), 0, 0)
         print('trajectory arrays:-\n', p)
 
+        title += '\n MinInterval={}us at {}'.format(
+            self.min_interval, self.min_index
+        )
+        if failed:
+            title = 'FAILED ' + title
         plot_velocities(p, title=title, step_time=self.step_time,
                         overlay=self.gather_points)
         # return the position arrays including start point to the caller
         xp, yp, _, _, _ = p
         return xp, yp
 
-    def test_spiral(self):
-        step_time = .1
+    def scan_and_plot(self, gen, title):
+        try:
+            self.do_a_scan(gen)
+        except AssertionError:
+            self.plot_scan(title, failed=True)
+            raise
+        return self.plot_scan(title)
+
+    def test_spiral(self, trigger=TRIGGER_EVERY):
+        step_time = .5
         # create a set of scan points in a spiral
         s = SpiralGenerator(self.axes, "mm", [0.0, 0.0],
                             5.0, scale=5)
@@ -145,9 +170,9 @@ class TestTrajectories(TestCase):
         gen.prepare()
 
         self.setup_brick_malcolm(xv=100, yv=100, xa=.2, ya=.2)
+        self.trigger_block.rowTrigger.put_value(trigger)
 
-        self.do_a_scan(gen)
-        self.plot_scan('Live Spiral')
+        self.scan_and_plot(gen, 'Live Spiral')
 
     def test_raster(self):
         self.lines(False, 'Live Raster')
@@ -165,34 +190,29 @@ class TestTrajectories(TestCase):
 
         self.setup_brick_malcolm(xv=100, yv=100, xa=.5, ya=.5)
 
-        self.do_a_scan(gen)
-        xp, yp = self.plot_scan(name)
+        xp, yp = self.scan_and_plot(gen, name)
         self.check_bounds(xp, '{} array x'.format(name))
         self.check_bounds(yp, '{} array y'.format(name))
 
-    def test_high_acceleration(self):
-        # this system test performs the same trajectory as the malcolm unit
-        # test pmacchildpart_test.test_turnaround_overshoot
-        self.Interpolation_checker(17, 1, .1, .2,
-                                   name='test_turnaround_overshoot')
+    TITLE_PATTERN = '{} xv={} yv={} xa={} ya={}'
 
     def Interpolation_checker(self, xv=200., yv=400., xa=1., ya=80.,
-                              skip=True, snake=False, name=''):
-        xs = LineGenerator("stage7", "mm", 0, 5, 4, alternate=snake)
+                              skip=False, snake=False, name='',
+                              trigger=TRIGGER_EVERY):
+        xs = LineGenerator("stage7", "mm", 0, 4, 5, alternate=snake)
         ys = LineGenerator("stage8", "mm", 0, 2, 3)
 
         gen = CompoundGenerator([ys, xs], [], [], 0.15)
         gen.prepare()
 
         self.setup_brick_malcolm(xv=xv, yv=yv, xa=xa, ya=ya)
+        self.trigger_block.rowTrigger.put_value(trigger)
 
-        # todo try this with a fast brick and remove skip_run
-        self.do_a_scan(gen, skip_run=skip)
-        xp, yp = self.plot_scan(
-            'X Overshoot test xv={} yv={} xa={} ya={}'.format(
-                xv, yv, xa, ya))
+        title = self.TITLE_PATTERN.format(name, xv, yv, xa, ya)
+        xp, yp = self.scan_and_plot(gen, title)
         self.check_bounds(xp, '{} array x'.format(name))
         self.check_bounds(yp, '{} array y'.format(name))
+        return xp, yp
 
     def check_bounds(self, a, name):
         # small amounts of overshoot are acceptable
@@ -205,6 +225,12 @@ class TestTrajectories(TestCase):
         self.assertEqual(
             greater_end, 0, "Position {} > end for {}\n{}".format(
                 greater_end, name, a))
+
+    def test_high_acceleration(self):
+        # this system test performs the same trajectory as the malcolm unit
+        # test pmacchildpart_test.test_turnaround_overshoot
+        self.Interpolation_checker(17, 1, .1, .2,
+                                   name='test_high_acceleration')
 
     def test_profile_point_interpolation(self):
         # test combinations of velocity profile points
@@ -221,3 +247,24 @@ class TestTrajectories(TestCase):
         # x=3 and y=4 combined = 5
         self.Interpolation_checker(
             ya=.01, snake=True, name='x3 y4 interpolation')
+
+    def test_sparse_trajectory(self):
+        # todo validate that these 1st two create same trajectory
+        # x=6 and y=3 combined = 7. Trigggering at start of row only
+        self.Interpolation_checker(xv=200, yv=200, xa=.1, skip=False,
+                                   name='Row trigger', trigger=TRIGGER_ROW)
+
+        # x=6 and y=3 combined = 7. Triggering all points
+        self.Interpolation_checker(xv=200, yv=200, xa=.1, skip=True,
+                                   name='Every trigger')
+        # self.test_spiral(trigger=TRIGGER_ROW)
+
+    def test_dummy(self):
+        try:
+            self.Interpolation_checker(
+                xv=200, yv=200, xa=1, skip=False, name='Every trigger',
+                trigger=TRIGGER_ROW
+            )
+        finally:
+            print('min interval {} at position {}'.format(
+                self.min_interval, self.min_index))

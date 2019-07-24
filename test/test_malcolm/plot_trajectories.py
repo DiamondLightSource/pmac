@@ -12,6 +12,12 @@ class VelMode(IntEnum):
     CurrentNext = 2
     Zero = 3
 
+# user programs
+NO_PROGRAM = 0  # Do nothing
+LIVE_PROGRAM = 1  # GPIO123 = 1, 0, 0
+DEAD_PROGRAM = 2  # GPIO123 = 0, 1, 0
+MID_PROGRAM = 4  # GPIO123 = 0, 0, 1
+ZERO_PROGRAM = 8  # GPIO123 = 0, 0, 0
 
 def velocity_prev_next(previous_pos, current_pos, next_pos,
                        current_time, next_time):
@@ -89,20 +95,30 @@ def plot_velocities(np_arrays, title='Plot', step_time=0.15,
                  color=velocity_colors[i % len(velocity_colors)])
 
     # plot the start and end positions
-    plt.plot([xs[0]], [ys[0]], 'go', markersize=6)
-    plt.plot([xs[-1]], [ys[-1]], 'ro', markersize=6)
+    plt.plot([xs[0]], [ys[0]], 'go', markersize=8)
+    plt.plot([xs[-1]], [ys[-1]], 'ro', markersize=8)
 
     for i in range(len(user)):
-        if user[i] == 4:
-            # plot over the data points with a plus
+        if user[i] == MID_PROGRAM:
+            # plot the data points with a black plus
             plt.plot(xs[i], ys[i], marker="+", color="k", markersize=8)
             # plot the bounds points with a dot
-        else:
+        elif user[i] == LIVE_PROGRAM:
+            # plot over start of data with green dot
+            plt.plot(xs[i], ys[i], marker=".", color="g", markersize=6)
+        elif user[i] == DEAD_PROGRAM:
+            # plot over end of data with red star
+            plt.plot(xs[i], ys[i], marker="*", color="r", markersize=6)
+        elif user[i] == ZERO_PROGRAM:
+            # plot over GPIO 0 with yellow dot
+            plt.plot(xs[i], ys[i], marker=".", color="y", markersize=6)
+        elif user[i] == NO_PROGRAM:
+            # plot turnaround points with a black dot
             plt.plot(xs[i], ys[i], linestyle="", marker=".",
                      color="k", markersize=6)
 
     if overlay:
-        plt.plot(overlay[0], overlay[1], linestyle='-', linewidth=.1,
+        plt.plot(overlay[0], overlay[1], linestyle='-', linewidth=.01,
                  marker='*', markersize=2, color='#8888ff')
 
     plt.show()
