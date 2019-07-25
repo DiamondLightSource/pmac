@@ -12,12 +12,14 @@ class VelMode(IntEnum):
     CurrentNext = 2
     Zero = 3
 
+
 # user programs
 NO_PROGRAM = 0  # Do nothing
 LIVE_PROGRAM = 1  # GPIO123 = 1, 0, 0
 DEAD_PROGRAM = 2  # GPIO123 = 0, 1, 0
 MID_PROGRAM = 4  # GPIO123 = 0, 0, 1
 ZERO_PROGRAM = 8  # GPIO123 = 0, 0, 0
+
 
 def velocity_prev_next(previous_pos, current_pos, next_pos,
                        current_time, next_time):
@@ -51,12 +53,17 @@ def old_velocity_prev_current(previous_pos, current_pos, current_time):
 
 
 def plot_velocities(np_arrays, title='Plot', step_time=0.15,
-                    overlay=None):
+                    overlay=None, x_scale=None, y_scale=None):
     """ plots a 2d graph of a 2 axis trajectory, also does the velocity
     calculations and plots the velocity vector at each point.
     """
     xs, ys, ts, modes, user = np_arrays
     fig1 = plt.figure(figsize=(8, 6), dpi=300)
+    axes = plt.gca()
+    if x_scale:
+        axes.set_xlim(x_scale)
+    if y_scale:
+        axes.set_ylim(y_scale)
     plt.title(title)
 
     # a multiply in ms for the velocity vector
@@ -65,7 +72,7 @@ def plot_velocities(np_arrays, title='Plot', step_time=0.15,
     # plot some velocity vectors
     vxs = np.zeros(len(xs) + 1)
     vys = np.zeros(len(xs) + 1)
-    velocity_colors = ['#ff000030', '#df005030', '#af00A030', '#8f00f030']
+    velocity_colors = ['#ff000030', '#aa605530', '#5500AA30', '#0060ff30']
 
     for i in range(1, len(xs) - 1):
         if modes[i] == VelMode.PrevNext:
@@ -73,8 +80,7 @@ def plot_velocities(np_arrays, title='Plot', step_time=0.15,
                                         ts[i + 1])
             vys[i] = velocity_prev_next(ys[i - 1], ys[i], ys[i + 1], ts[i],
                                         ts[i + 1])
-        elif modes[i] == VelMode.PrevCurrent or \
-                (not use_old_velocities and modes[i] == VelMode.CurrentNext):
+        elif modes[i] == VelMode.PrevCurrent:
             vxs[i] = velocity_prev_current(xs[i - 1], vxs[i - 1], xs[i],
                                            ts[i])
             vys[i] = velocity_prev_current(ys[i - 1], vys[i - 1], ys[i],
