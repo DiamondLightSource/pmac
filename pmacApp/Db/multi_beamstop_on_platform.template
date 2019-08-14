@@ -130,7 +130,7 @@ record(ao, "$(P):TRACK:DELTA") {
 
 record(calcout, "$(P):TRACK:CALC") {
   field(DESC, "Is BS tracking ok")
-  field(CALC, "A?ABS(B-C)>D:0"
+  field(CALC, "A?ABS(B-C)>D:0")
   field(INPA, "$(P):TRACK:USE CP")
   field(INPB, "$(P):BS2:PITCH.RBV CP")
   field(INPC, "BL22I-MO-HEX-01:PITCH.RBV CP")    
