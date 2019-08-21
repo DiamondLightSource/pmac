@@ -1,0 +1,20 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+
+[packages]
+dls-pmaclib = {editable = true,path = "/home/hgv27681/python3/dls_pmaclib"}
+cothread = "*"
+annotypes = {editable = true,path = "/home/hgv27681/odin/annotypes"}
+malcolm = {editable = true,path = "/home/hgv27681/odin/pymalcolm"}
+scanpointgenerator = "*"
+ruamel-yaml = "*"
+tornado = "==4.5.3"
+matplotlib = "*"
+
+[requires]
+python_version = "3.7"

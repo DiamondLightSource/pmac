@@ -2,7 +2,7 @@ from unittest import TestCase
 from test.brick.trajectory import Trajectory
 from test.brick.movemonitor import MoveMonitor
 from datetime import datetime
-from test.brick.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TBrick, DECIMALS
 from cothread import Sleep
 import cothread.catools as ca
 
@@ -17,7 +17,7 @@ class TestCsSwitching(TestCase):
             Vmxi issue: switching coordinate system drive mappings and then trying to move cs motors
             immediately occasionally gets CS runtime error 'no axes in CS'
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
 
         tb.m3.set_cs_port('CS3')
@@ -42,7 +42,7 @@ class TestCsSwitching(TestCase):
         """ This issue showed up after adding parameter library locking on broker polling.
             switching cs group caused motion due to record processing in
             pmacDirectMotor.template"""
-        tb = TestBrick()
+        tb = TBrick()
 
         for i in range(2):
             print('trying CS switch {}'.format(i))

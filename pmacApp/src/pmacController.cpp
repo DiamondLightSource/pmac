@@ -439,6 +439,7 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_DebugAxisString, asynParamInt32, &PMAC_C_DebugAxis_);
   createParam(PMAC_C_DebugCSString, asynParamInt32, &PMAC_C_DebugCS_);
   createParam(PMAC_C_DebugCmdString, asynParamInt32, &PMAC_C_DebugCmd_);
+  createParam(PMAC_C_DisablePollingString, asynParamInt32, &PMAC_C_DisablePolling_);
   createParam(PMAC_C_FastUpdateTimeString, asynParamFloat64, &PMAC_C_FastUpdateTime_);
   createParam(PMAC_C_LastParamString, asynParamInt32, &PMAC_C_LastParam_);
   createParam(PMAC_C_CpuUsageString, asynParamFloat64, &PMAC_C_CpuUsage_);
@@ -2168,10 +2169,10 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     // Reset the busy value to complete caput callback
     value = 0;
   } else if (function == PMAC_C_HomingStatus_) {
-    if(value ==0) {
-        // An auto home has just completed
-        // make sure that pmacController->makeCSDemandsConsistent will reset the demand for all axes
-        csResetAllDemands = true;
+    if (value == 0) {
+      // An auto home has just completed
+      // make sure that pmacController->makeCSDemandsConsistent will reset the demand for all axes
+      csResetAllDemands = true;
     }
   } else if (function == PMAC_C_StopAll_) {
     // Send the abort all command to the PMAC immediately
@@ -2243,6 +2244,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     getIntegerParam(PMAC_C_DebugAxis_, &axisNo);
     getIntegerParam(PMAC_C_DebugCS_, &csNo);
     this->setDebugLevel(level, axisNo, csNo);
+  } else if (function == PMAC_C_DisablePolling_) {
+    this->pBroker_->disable_poll = value;
   } else if (function == PMAC_C_GroupExecute_) {
     status = (this->executeManualGroup() == asynSuccess) && status;
   } else if (function == PMAC_C_GroupCSPort_) {

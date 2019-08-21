@@ -7,7 +7,7 @@
 ; Set these values for your PMAC
 ; *****************************************************************************************
 #define ProgramNum   1     ; Which motion program to use for scanning
-#define VersionNum   1.1   ; Version of this trajectory scan program
+#define VersionNum   2     ; Must be an integer (because it is now stored in an unmapped M variable)
 
 
 ; *****************************************************************************************
@@ -149,7 +149,17 @@ Z_Axis->Y:$AxisAdr,8
 #define User                M4060
 #define VelMode             M4061
 
-#define A_Vel               M4062          ; Previous coordinate values
+#define Readback_A           Q81
+#define Readback_B           Q82
+#define Readback_C           Q83
+#define Readback_U           Q84
+#define Readback_V           Q85
+#define Readback_W           Q86
+#define Readback_X           Q87
+#define Readback_Y           Q88
+#define Readback_Z           Q89
+
+#define A_Vel               M4062          ; Current velocity values
 #define B_Vel               M4063
 #define C_Vel               M4064
 #define U_Vel               M4065
@@ -159,9 +169,20 @@ Z_Axis->Y:$AxisAdr,8
 #define Y_Vel               M4069
 #define Z_Vel               M4070
 
-#define CalculatedBase      M4071           ; Calculated temporary variable for Current base address
-#define TmpTime             M4072           ; Calculated temporary variable for time in velocity calcs
+#define A_Prev_Vel          M4071          ; Previous velocity values
+#define B_Prev_Vel          M4072
+#define C_Prev_Vel          M4073
+#define U_Prev_Vel          M4074
+#define V_Prev_Vel          M4075
+#define W_Prev_Vel          M4076
+#define X_Prev_Vel          M4077
+#define Y_Prev_Vel          M4078
+#define Z_Prev_Vel          M4079
 
+#define CalculatedBase      M4081           ; Calculated temporary variable for Current base address
+#define TmpTime             M4082           ; Calculated temporary variable for time in velocity calcs
+#define TmpVelX             M4083           ; Calculated temporary variable for velocity in velocity calcs
+#define TmpVelY             M4084
 
 ; *****************************************************************************************
 ; Progran variable assignments
@@ -181,7 +202,7 @@ BufferFill_B->Y:$VarAdr0B,0,24
 CurrentBufferFill->Y:$VarAdr0C,0,24
 PrevBufferFill->Y:$VarAdr0D,0,24
 Error->Y:$VarAdr0E,0,24
-Version->L:$VarAdr0F
+Version->* ; this is deliberately unmapped so that the value assigned survives a brick swap
 Prev_A->L:$VarAdr10
 Prev_B->L:$VarAdr11
 Prev_C->L:$VarAdr12
@@ -203,8 +224,19 @@ W_Vel->L:$VarAdr21
 X_Vel->L:$VarAdr22
 Y_Vel->L:$VarAdr23
 Z_Vel->L:$VarAdr24
-CalculatedBase->L:$VarAdr25
-TmpTime->L:$VarAdr26
+A_Prev_Vel->L:$VarAdr25
+B_Prev_Vel->L:$VarAdr26
+C_Prev_Vel->L:$VarAdr27
+U_Prev_Vel->L:$VarAdr28
+V_Prev_Vel->L:$VarAdr29
+W_Prev_Vel->L:$VarAdr2A
+X_Prev_Vel->L:$VarAdr2B
+Y_Prev_Vel->L:$VarAdr2C
+Z_Prev_Vel->L:$VarAdr2E
+CalculatedBase->L:$VarAdr2F
+TmpTime->L:$VarAdr30
+TmpVelX->L:$VarAdr31
+TmpVelY->L:$VarAdr32
 
 
 ; *****************************************************************************************

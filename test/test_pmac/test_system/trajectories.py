@@ -140,7 +140,7 @@ def trajectory_scan_appending(test, test_brick):
     tr.ProfileExecute(wait=False)
     Sleep(0)
 
-    for iteration in range(total_points/points/2 - 1):
+    for iteration in range(int(total_points/points/2 - 1)):
         tr.axisX.positions = ascend
         tr.configure_axes()
         tr.AppendPoints()

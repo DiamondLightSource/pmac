@@ -1,0 +1,24 @@
+#!/dls_sw/prod/common/python/RHEL7-x86_64/pymalcolm/4-0b2/malcolm/imalcolm.py
+##!/home/hgv27681/odin/pymalcolm/malcolm/imalcolm.py
+
+- builtin.defines.module_path:
+    name: pmactest
+    path: $(yamldir)
+
+- builtin.defines.string:
+    name: config_dir
+    value: $(pmactest)/config
+
+- pmactest.blocks.pmac_runnable_block:
+    mri_prefix: PMAC-ML-BRICK-01
+    config_dir: $(config_dir)
+
+- pmactest.blocks.pmac_test_scan:
+    mri: PMAC_TEST_SCAN
+    brick: PMAC-ML-BRICK-01
+    config_dir: $(config_dir)
+    initial_design:
+
+- web.blocks.web_server_block:
+    mri: $(yamlname):WEB
+

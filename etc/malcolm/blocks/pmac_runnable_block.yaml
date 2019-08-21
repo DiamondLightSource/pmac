@@ -1,0 +1,75 @@
+- builtin.parameters.string:
+    name: mri_prefix
+    description: MRI for created block
+
+- builtin.parameters.string:
+    name: config_dir
+    description: Where to store saved configs
+
+- scanning.controllers.RunnableController:
+    mri: $(mri_prefix)
+    config_dir: $(config_dir)
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M1
+    pv_prefix: PMAC_BRICK_TEST:MOTOR1
+    scannable: stage1
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M2
+    pv_prefix: PMAC_BRICK_TEST:MOTOR2
+    scannable: stage2
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M3
+    pv_prefix: PMAC_BRICK_TEST:MOTOR3
+    scannable: stage3
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M4
+    pv_prefix: PMAC_BRICK_TEST:MOTOR4
+    scannable: stage4
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M5
+    pv_prefix: PMAC_BRICK_TEST:MOTOR5
+    scannable: stage5
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M6
+    pv_prefix: PMAC_BRICK_TEST:MOTOR6
+    scannable: stage6
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M7
+    pv_prefix: PMAC_BRICK_TEST:MOTOR7
+    scannable: stage7
+
+- pmac.includes.rawmotor_collection:
+    mri: PMAC-ML-STAGE-01:M8
+    pv_prefix: PMAC_BRICK_TEST:MOTOR8
+    scannable: stage8
+
+- pmac.includes.compoundmotor_collection:
+    mri: PMAC-ML-STAGE-01:HEIGHT
+    pv_prefix: BRICK1CS3:X
+    scannable: height
+
+- pmac.includes.compoundmotor_collection:
+    mri: PMAC-ML-STAGE-01:DIFF
+    pv_prefix: BRICK1CS3:Y
+    scannable: diff
+
+- pmac.includes.cs_collection:
+    mri_prefix: $(mri_prefix)
+    pv_prefix: BRICK1
+    cs: 2
+
+- pmac.includes.cs_collection:
+    mri_prefix: $(mri_prefix)
+    pv_prefix: BRICK1
+    cs: 3
+
+- pmac.includes.trajectory_collection:
+    mri_prefix: $(mri_prefix)
+    pv_prefix: BRICK1

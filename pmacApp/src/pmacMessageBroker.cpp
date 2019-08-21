@@ -27,7 +27,8 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
         updateTime_(0.0),
         lock_count(0),
         connected_(false),
-        newConnection_(true)
+        newConnection_(true),
+        disable_poll(false)
 {
   epicsTimeGetCurrent(&this->writeTime_);
   epicsTimeGetCurrent(&this->startTime_);
@@ -155,76 +156,77 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
 
   startTimer(DEBUG_TIMING, functionName);
 
-  if (type == PMAC_FAST_READ) {
-    if (suppressStatus_) {
-      suppressCounter_++;
-    }
-    if (!suppressStatus_ || suppressCounter_ % 4 == 0) {
-      if (prefastStore_.size() > 0) {
+  if (!disable_poll) {
+    if (type == PMAC_FAST_READ) {
+      if (suppressStatus_) {
+        suppressCounter_++;
+      }
+      if (!suppressStatus_ || suppressCounter_ % 4 == 0) {
+        if (prefastStore_.size() > 0) {
+          // Send the command string and read the response
+          noOfCmds = prefastStore_.countCommandStrings();
+          debug(DEBUG_VARIABLE, functionName, "Prefast Store command string count", noOfCmds);
+          for (int index = 0; index < noOfCmds; index++) {
+            cmd = prefastStore_.readCommandString(index);
+            if (cmd.length() > 0) {
+              this->immediateWriteRead(cmd.c_str(), response, false);
+              debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
+              // Update the store with the response
+              prefastStore_.updateReply(cmd, response);
+            }
+          }
+          // Perform the necessary callbacks
+          prefastCallbacks_->callCallbacks(&prefastStore_);
+        }
+        if (fastStore_.size() > 0) {
+          // Send the command string and read the response
+          noOfCmds = fastStore_.countCommandStrings();
+          debug(DEBUG_VARIABLE, functionName, "Fast Store command string count", noOfCmds);
+          for (int index = 0; index < noOfCmds; index++) {
+            cmd = fastStore_.readCommandString(index);
+            if (cmd.length() > 0) {
+              this->immediateWriteRead(cmd.c_str(), response, false);
+              debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
+              // Update the store with the response
+              fastStore_.updateReply(cmd, response);
+            }
+          }
+          // Perform the necessary callbacks
+          fastCallbacks_->callCallbacks(&fastStore_);
+        }
+      }
+    } else if (type == PMAC_MEDIUM_READ && !suppressStatus_) {
+      if (mediumStore_.size() > 0) {
         // Send the command string and read the response
-        noOfCmds = prefastStore_.countCommandStrings();
-        debug(DEBUG_VARIABLE, functionName, "Prefast Store command string count", noOfCmds);
+        noOfCmds = mediumStore_.countCommandStrings();
         for (int index = 0; index < noOfCmds; index++) {
-          cmd = prefastStore_.readCommandString(index);
+          cmd = mediumStore_.readCommandString(index);
           if (cmd.length() > 0) {
             this->immediateWriteRead(cmd.c_str(), response, false);
-            debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
             // Update the store with the response
-            prefastStore_.updateReply(cmd, response);
+            mediumStore_.updateReply(cmd, response);
           }
         }
         // Perform the necessary callbacks
-        prefastCallbacks_->callCallbacks(&prefastStore_);
+        mediumCallbacks_->callCallbacks(&mediumStore_);
       }
-      if (fastStore_.size() > 0) {
+    } else if (type == PMAC_SLOW_READ && !suppressStatus_) {
+      if (slowStore_.size() > 0) {
         // Send the command string and read the response
-        noOfCmds = fastStore_.countCommandStrings();
-        debug(DEBUG_VARIABLE, functionName, "Fast Store command string count", noOfCmds);
+        noOfCmds = slowStore_.countCommandStrings();
         for (int index = 0; index < noOfCmds; index++) {
-          cmd = fastStore_.readCommandString(index);
+          cmd = slowStore_.readCommandString(index);
           if (cmd.length() > 0) {
             this->immediateWriteRead(cmd.c_str(), response, false);
-            debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
             // Update the store with the response
-            fastStore_.updateReply(cmd, response);
+            slowStore_.updateReply(cmd, response);
           }
         }
         // Perform the necessary callbacks
-        fastCallbacks_->callCallbacks(&fastStore_);
+        slowCallbacks_->callCallbacks(&slowStore_);
       }
-    }
-  } else if (type == PMAC_MEDIUM_READ && !suppressStatus_) {
-    if (mediumStore_.size() > 0) {
-      // Send the command string and read the response
-      noOfCmds = mediumStore_.countCommandStrings();
-      for (int index = 0; index < noOfCmds; index++) {
-        cmd = mediumStore_.readCommandString(index);
-        if (cmd.length() > 0) {
-          this->immediateWriteRead(cmd.c_str(), response, false);
-          // Update the store with the response
-          mediumStore_.updateReply(cmd, response);
-        }
-      }
-      // Perform the necessary callbacks
-      mediumCallbacks_->callCallbacks(&mediumStore_);
-    }
-  } else if (type == PMAC_SLOW_READ && !suppressStatus_) {
-    if (slowStore_.size() > 0) {
-      // Send the command string and read the response
-      noOfCmds = slowStore_.countCommandStrings();
-      for (int index = 0; index < noOfCmds; index++) {
-        cmd = slowStore_.readCommandString(index);
-        if (cmd.length() > 0) {
-          this->immediateWriteRead(cmd.c_str(), response, false);
-          // Update the store with the response
-          slowStore_.updateReply(cmd, response);
-        }
-      }
-      // Perform the necessary callbacks
-      slowCallbacks_->callCallbacks(&slowStore_);
     }
   }
-
   stopTimer(DEBUG_TIMING, functionName, "Time taken for updates");
 
   // Unlock the mutex

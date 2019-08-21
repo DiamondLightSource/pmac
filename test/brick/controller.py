@@ -1,5 +1,5 @@
 from cothread import catools as ca, Sleep
-from trajectory import Trajectory
+from .trajectory import Trajectory
 
 # use dynamic class since many instances of this class will be created during a test suite
 # and this way add_attributes is only called once
@@ -22,8 +22,9 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
         cls.pv_cs_group = pv_root + 'COORDINATE_SYS_GROUP'
         cls.pv_command = pv_root + 'SendCmd'
         cls.pv_pollAllNow = pv_root + 'PollAllNow'
+        cls.pv_disablePoll = pv_root + 'DISABLE_POLL'
 
-        for name, value in cls.axes.items() + cls.groups.items() + cls.cs.items():
+        for name, value in {**cls.axes, **cls.groups, **cls.cs}.items():
             setattr(cls, name, value)
 
         return cls
@@ -78,5 +79,8 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
 
         def set_deferred_moves(self, defer):
             ca.caput(self.defer, defer, wait=True)
+
+        def disable_polling(self, disable: bool = True):
+            ca.caput(self.pv_disablePoll, disable, wait=True)
 
     return Controller

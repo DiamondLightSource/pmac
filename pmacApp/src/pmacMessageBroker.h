@@ -75,6 +75,8 @@ public:
 
     void markAsPowerPMAC();
 
+    bool disable_poll;
+
 private:
     asynStatus
     lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos,

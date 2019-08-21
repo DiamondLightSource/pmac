@@ -1,7 +1,7 @@
 #!/bin/env python
 from cothread import catools as ca
 
-ALL_AXES = set('ABCUVWXYZ')
+ALL_AXES = 'ABCUVWXYZ'
 
 
 class AxisSetup:
@@ -47,6 +47,9 @@ class Trajectory:
 
     def setProfileTimeArray(self, value):
         ca.caput(self.pv_root + 'ProfileTimeArray', value, wait=True)
+
+    def getProfileTimeArray(self):
+        return ca.caget(self.pv_root + 'ProfileTimeArray')
 
     def setVelocityMode(self, value):
         ca.caput(self.pv_root + 'VelocityMode', value, wait=True)

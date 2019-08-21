@@ -1,6 +1,6 @@
 from unittest import TestCase
 from test.brick.movemonitor import MoveMonitor
-from test.brick.testbrick import TestBrick, DECIMALS
+from test.brick.testbrick import TBrick, DECIMALS
 
 
 class TestSwitchGroup(TestCase):
@@ -10,7 +10,7 @@ class TestSwitchGroup(TestCase):
             when commanding a direct demand to a CS motor. This is a regression test for a problem that
             occurred because Q7x variables were not correctly set after a switch
         """
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g3)
         tb.all_go_direct([tb.m1, tb.m2], [3, 3])
 

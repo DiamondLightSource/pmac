@@ -48,6 +48,7 @@
 #define PMAC_C_DebugAxisString            "PMAC_C_DEBUG_AXIS"
 #define PMAC_C_DebugCSString              "PMAC_C_DEBUG_CS"
 #define PMAC_C_DebugCmdString             "PMAC_C_DEBUG_CMD"
+#define PMAC_C_DisablePollingString       "PMAC_C_DEBUG_POLL_OFF"
 
 #define PMAC_C_FastUpdateTimeString       "PMAC_C_FAST_UPDATE_TIME"
 
@@ -140,7 +141,7 @@
 #define PMAC_C_TrajProgVersionString      "PMAC_C_TRAJ_PROG_V"  // Motion program version number
 #define PMAC_C_TrajCodeVersionString      "PMAC_C_TRAJ_CODE_V"  // Version of this control code
 
-#define PMAC_TRAJECTORY_VERSION 1.1
+#define PMAC_TRAJECTORY_VERSION 2
 
 #define PMAC_CPU_GEO_240MHZ               "DSP56321"            // Approved geobrick for trajectory scans
 #define PMAC_CPU_CLIPPER                  "DSP56303"            // Allowed for trajectory scans
@@ -318,6 +319,7 @@ protected:
     int PMAC_C_DebugAxis_;
     int PMAC_C_DebugCS_;
     int PMAC_C_DebugCmd_;
+    int PMAC_C_DisablePolling_;
     int PMAC_C_FastUpdateTime_;
     int PMAC_C_CpuUsage_;
     int PMAC_C_AxisCS_;

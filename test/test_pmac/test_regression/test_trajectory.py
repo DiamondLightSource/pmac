@@ -1,9 +1,8 @@
-from unittest import TestCase, skip
-from test.brick.testbrick import TestBrick
-from test.test_system.trajectories import trajectory_fast_scan, trajectory_scan_appending, trajectory_quick_scan
-from cothread import Sleep, catools as ca
-import pytest
-import os
+from unittest import TestCase
+from test.brick.testbrick import TBrick
+from test.test_pmac.test_system.trajectories import trajectory_fast_scan, trajectory_scan_appending
+from cothread import catools as ca
+
 
 # Tests for historical issues with trajectory scanning
 
@@ -15,7 +14,7 @@ class TestTrajectory(TestCase):
             scan causes the CS to immediately go into 'No motors in CS'
             error (err code 10)
             """
-        tb = TestBrick()
+        tb = TBrick()
         for iteration in range(20):
             trajectory_fast_scan(self, tb, 1)
             # todo this is required because the CS may be still decelerating after it
@@ -34,11 +33,11 @@ class TestTrajectory(TestCase):
         (due to busy record handling)
         """
 
-        tb2 = TestBrick()
+        tb2 = TBrick()
         trajectory_scan_appending(self, tb2)
 
     def test_mres_offsets_trajectory(self):
-        tb = TestBrick()
+        tb = TBrick()
         tb.set_cs_group(tb.g1)
         ca.caput(tb.m1.mres, .009)
         ca.caput(tb.m2.mres, .008)
@@ -61,4 +60,4 @@ class TestTrajectory(TestCase):
         self.assertAlmostEqual(tb.m6.pos, 1, 1)
 
         # reset all the mres etc.
-        TestBrick()
+        TBrick()
