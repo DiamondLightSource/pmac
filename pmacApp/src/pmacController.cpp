@@ -404,8 +404,7 @@ asynStatus pmacController::initialSetup() {
     setupBrokerVariables();
     // Read the kinematics if we aren't a power pmac
     if (cid_ != PMAC_CID_POWER_) {
-      // This function blows the stack on VME !!
-      // status = this->storeKinematics();
+      status = this->storeKinematics();
     }
   }
 
@@ -3753,18 +3752,19 @@ asynStatus pmacController::listPLCProgram(int plcNo, char *buffer, size_t size) 
 asynStatus pmacController::storeKinematics() {
   asynStatus status = asynSuccess;
   int csNo = 0;
-  char buffer[20000];
+  int buffer_size = 20000;
+  char* buffer = (char*)malloc(buffer_size);
   static const char *functionName = "storeKinematics";
 
   startTimer(DEBUG_TIMING, functionName);
   debug(DEBUG_FLOW, functionName);
   while (csNo < PMAC_MAX_CS && status == asynSuccess) {
     // Read each forward kinematic
-    status = listKinematic(csNo + 1, "forward", buffer, sizeof(buffer));
+    status = listKinematic(csNo + 1, "forward", buffer, buffer_size);
     // Store into the appropriate parameter
     setStringParam(PMAC_C_ForwardKinematic_[csNo], buffer);
     // Read each inverse kinematic
-    status = listKinematic(csNo + 1, "inverse", buffer, sizeof(buffer));
+    status = listKinematic(csNo + 1, "inverse", buffer, buffer_size);
     // Store into the appropriate parameter
     setStringParam(PMAC_C_InverseKinematic_[csNo], buffer);
     // Next coordinate system
@@ -3775,6 +3775,8 @@ asynStatus pmacController::storeKinematics() {
     debug(DEBUG_ERROR, functionName, "Failed to read all Kinematics");
   }
   stopTimer(DEBUG_TIMING, functionName, "Time taken to store kinematics");
+
+  free(buffer);
   return status;
 }
 
