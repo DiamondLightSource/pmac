@@ -94,6 +94,10 @@
 #define PMAC_C_MotorScaleString           "PMAC_MOTOR_SCALE"
 #define PMAC_C_MotorResString             "PMAC_MRES"
 #define PMAC_C_MotorOffsetString          "PMAC_OFFSET"
+#define PMAC_C_IVariablesString           "PMAC_I_VARIABLES"
+#define PMAC_C_MVariablesString           "PMAC_M_VARIABLES"
+#define PMAC_C_PVariablesString           "PMAC_P_VARIABLES"
+
 
 #define PMAC_C_ProfileUseAxisAString      "PROFILE_USE_AXIS_A"
 #define PMAC_C_ProfileUseAxisBString      "PROFILE_USE_AXIS_B"
@@ -286,8 +290,6 @@ public:
 
     // List PLC program
     asynStatus listPLCProgram(int plcNo, char *buffer, size_t size);
-    asynStatus storeKinematics();
-    asynStatus listKinematic(int csNo, const std::string &type, char *buffer, size_t size);
     asynStatus executeManualGroup();
     asynStatus updateCsAssignmentParameters();
     asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
@@ -403,8 +405,9 @@ protected:
     int PMAC_C_MotorScale_;
     int PMAC_C_MotorRes_;
     int PMAC_C_MotorOffset_;
-    int PMAC_C_ForwardKinematic_[PMAC_MAX_CS];
-    int PMAC_C_InverseKinematic_[PMAC_MAX_CS];
+    int PMAC_I_Variables_;
+    int PMAC_M_Variables_;
+    int PMAC_P_Variables_;
     int PMAC_C_LastParam_;
 #define LAST_PMAC_PARAM PMAC_C_LastParam_
     int parameters[PMAC_MAX_PARAMETERS];
@@ -565,9 +568,6 @@ private:
     static const epicsUInt32 PMAC_HARDWARE_PROB;
     static const epicsUInt32 PMAX_AXIS_GENERAL_PROB1;
     static const epicsUInt32 PMAX_AXIS_GENERAL_PROB2;
-
-    static const char *PMAC_C_ForwardKinematicString[];
-    static const char *PMAC_C_InverseKinematicString[];
 
     friend class pmacAxis;
 

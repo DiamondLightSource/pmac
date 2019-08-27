@@ -173,6 +173,9 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   createParam(PMAC_CS_MotorResString, asynParamFloat64, &PMAC_CS_MotorRes_);
   createParam(PMAC_CS_MotorOffsetString, asynParamFloat64, &PMAC_CS_MotorOffset_);
   createParam(PMAC_CS_CsAbortString, asynParamInt32, &PMAC_CS_Abort_);
+  createParam(PMAC_CS_ForwardKinematicString, asynParamOctet, &PMAC_CS_ForwardKinematic_);
+  createParam(PMAC_CS_InverseKinematicString, asynParamOctet, &PMAC_CS_InverseKinematic_);
+  createParam(PMAC_CS_QVariablesString, asynParamOctet, &PMAC_CS_QVariables_);
   createParam(PMAC_CS_LastParamString, asynParamInt32, &PMAC_CS_LastParam_);
   paramStatus = ((setDoubleParam(PMAC_CS_CsMoveTime_, csMoveTime_) == asynSuccess) && paramStatus);
   for(int index=0; index<=PMAC_CS_AXES_COUNT; index++) {
@@ -189,6 +192,7 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
 
   if(pC_->initialised()) {
     pC_->registerCS(this, portName, csNumber_);
+    storeKinematics();
   }
 }
 
@@ -400,7 +404,9 @@ std::string pmacCSController::getCSAccTimeCmd(double time) {
 }
 
 void pmacCSController::callback(pmacCommandStore *sPtr, int type) {
-  std::string value = "";
+  std::string value;
+  char remove[PMAC_CS_MAXBUF];
+  char key[PMAC_CS_MAXBUF];
   static const char *functionName = "callback";
 
   debug(DEBUG_TRACE, functionName, "Coordinate system status callback");
@@ -411,6 +417,14 @@ void pmacCSController::callback(pmacCommandStore *sPtr, int type) {
     status_[0] = cStatus_.stat1_;
     status_[1] = cStatus_.stat2_;
     status_[2] = cStatus_.stat3_;
+  }
+  else if (type == pmacMessageBroker::PMAC_SLOW_READ) {
+    // ask the command store to extract all Q variables from the SLOW_READ hash table
+    sprintf(remove, "&%d", csNumber_);
+    sprintf(key, "&%dQ", csNumber_);
+    value = sPtr->getVariablesList(key, remove);
+    setStringParam(PMAC_CS_QVariables_, value.c_str());
+    callParamCallbacks();
   }
 }
 
@@ -597,6 +611,88 @@ double pmacCSController::getAxisOffset(int axis) {
 
   getDoubleParam(axis, PMAC_CS_MotorOffset_, &offset);
   return offset;
+}
+
+asynStatus pmacCSController::storeKinematics() {
+  asynStatus status = asynSuccess;
+  int buffer_size = 20000;
+  char* buffer = (char*)malloc(buffer_size);
+  static const char *functionName = "storeKinematics";
+
+  startTimer(DEBUG_TIMING, functionName);
+  debug(DEBUG_FLOW, functionName);
+  // Read forward kinematic
+  status = listKinematic(csNumber_ , "forward", buffer, buffer_size);
+  // Store into the appropriate parameter
+  setStringParam(PMAC_CS_ForwardKinematic_, buffer);
+  // Read inverse kinematic
+  status = listKinematic(csNumber_, "inverse", buffer, buffer_size);
+  // Store into the appropriate parameter
+  setStringParam(PMAC_CS_InverseKinematic_, buffer);
+
+  callParamCallbacks();
+  if (status != asynSuccess) {
+    debug(DEBUG_ERROR, functionName, "Failed to read all Kinematics");
+  }
+  stopTimer(DEBUG_TIMING, functionName, "Time taken to store kinematics");
+
+  free(buffer);
+  return status;
+}
+
+asynStatus
+pmacCSController::listKinematic(int csNo, const std::string &type, char *buffer, size_t size) {
+  int word = 0;
+  char reply[PMAC_MAXBUF];
+  char cmd[PMAC_MAXBUF];
+  char line[PMAC_MAXBUF];
+  int cword = 0;
+  int running = 1;
+  asynStatus status = asynSuccess;
+  static const char *functionName = "listKinematic";
+
+  startTimer(DEBUG_TIMING, functionName);
+  debug(DEBUG_FLOW, functionName);
+  debug(DEBUG_VARIABLE, functionName, "Listing kinematics for CS", csNo);
+
+  if (type != "forward" && type != "inverse") {
+    status = asynError;
+    debug(DEBUG_ERROR, functionName, "Unknown kinematic type", type);
+  }
+
+  if (status == asynSuccess) {
+    // Setup the list command
+    // List by 1 word at a time, throw away duplicates
+    // This is very inefficient, but currently necessary due
+    // to the PMAC driver
+    strcpy(buffer, "");
+    while (running == 1 && word < 10000) {
+      sprintf(cmd, "&%d list %s,%d,1", csNo, type.c_str(), word);
+      this->immediateWriteRead(cmd, reply);
+      if (reply[0] == 0x7) {
+        running = 0;
+      } else {
+        sscanf(reply, "%d:%s", &cword, line);
+        if (cword == word) {
+          if (strlen(buffer) + strlen(line) + 1 > size) {
+            // We cannot add the next line as the buffer would be full
+            // Report the error
+            running = 0;
+            status = asynError;
+            debug(DEBUG_ERROR, functionName, "Buffer not large enough for kinematic", (int) size);
+          } else {
+            strcat(buffer, line);
+            strcat(buffer, " ");
+          }
+        }
+      }
+      word++;
+    }
+    debug(DEBUG_VARIABLE, functionName, "Kinematic", buffer);
+  }
+  stopTimer(DEBUG_TIMING, functionName, "Time taken to list kinematic");
+
+  return status;
 }
 
 /*************************************************************************************/

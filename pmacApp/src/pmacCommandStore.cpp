@@ -159,7 +159,34 @@ void pmacCommandStore::buildCommandString() {
   }
   // Finally +1 to command strings
   qtyCmdStrings++;
-  //printf("%s\n", commandString);
 }
 
+std::string pmacCommandStore::getVariablesList(
+        const std::string & substring, const std::string & remove) {
+  std::string result;
+  std::string value;
+  size_t index;
+  std::string key = this->store.firstKey();
+  char tmp[20];
+
+  do {
+    if (key.find(substring) != std::string::npos) {
+      value = this->store.lookup(key);
+      // don't report on zero value variables
+      if (value != "0") {
+        epicsSnprintf(tmp, sizeof(tmp), "%s=%s ", key.c_str(), value.c_str());
+        result.append(tmp);
+      }
+    }
+    key = this->store.nextKey();
+  } while (this->store.hasNextKey());
+
+  // remove repetitive strings that the caller asked us to remove
+  if (!remove.empty()) {
+    while (index = result.find(remove), index != std::string::npos) {
+      result.replace(index, remove.length(), "");
+    }
+  }
+  return result;
+}
 

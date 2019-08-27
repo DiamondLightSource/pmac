@@ -77,6 +77,39 @@ record(ai, "$(PMAC):CS$(CS):CsMoveTime_RBV")
     field(SCAN, "I/O Intr")
 }
 
+##############################################################
+# Record of the Kinematics on the PMAC
+##############################################################
+
+record(waveform, "$(PMAC):CS$(CS):FWD_KINEMATIC_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PMAC_CS_FWD_KIN")
+  field(FTVL, "CHAR")
+  field(NELM, "20000")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(PMAC):CS$(CS):INV_KINEMATIC_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PMAC_CS_INV_KIN")
+  field(FTVL, "CHAR")
+  field(NELM, "20000")
+  field(SCAN, "I/O Intr")
+}
+
+##############################################################
+# Listing of combined Q Variables (slow poll)
+##############################################################
+record(waveform, "$(PMAC):CS$(CS):Q_VARIABLES_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PMAC_CS_Q_VARIABLES")
+  field(FTVL, "CHAR")
+  field(NELM, "20000")
+  field(SCAN, "I/O Intr")
+}
 
 ##############################################################
 # Immediate demands for each CS motor
@@ -99,4 +132,3 @@ substitute "P=$(PMAC):, M=CS$(CS):M8, ADDR=8, DESC=CS Motor Y"
 include "pmacDirectMotor.template"
 substitute "P=$(PMAC):, M=CS$(CS):M9, ADDR=9, DESC=CS Motor Z"
 include "pmacDirectMotor.template"
-

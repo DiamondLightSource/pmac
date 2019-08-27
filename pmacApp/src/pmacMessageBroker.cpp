@@ -525,3 +525,4 @@ int pmacMessageBroker::replace(char *str, char ch1, char ch2) {
   }
   return changes;
 }
+

@@ -133,44 +133,6 @@ const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB1 = 0;
 const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRED_STOP |
                                                              PMAC_STATUS2_AMP_FAULT);
 
-const char *pmacController::PMAC_C_ForwardKinematicString[] = {
-        "PMAC_C_FWD_KIN_1",
-        "PMAC_C_FWD_KIN_2",
-        "PMAC_C_FWD_KIN_3",
-        "PMAC_C_FWD_KIN_4",
-        "PMAC_C_FWD_KIN_5",
-        "PMAC_C_FWD_KIN_6",
-        "PMAC_C_FWD_KIN_7",
-        "PMAC_C_FWD_KIN_8",
-        "PMAC_C_FWD_KIN_9",
-        "PMAC_C_FWD_KIN_10",
-        "PMAC_C_FWD_KIN_11",
-        "PMAC_C_FWD_KIN_12",
-        "PMAC_C_FWD_KIN_13",
-        "PMAC_C_FWD_KIN_14",
-        "PMAC_C_FWD_KIN_15",
-        "PMAC_C_FWD_KIN_16"
-};
-
-const char *pmacController::PMAC_C_InverseKinematicString[] = {
-        "PMAC_C_INV_KIN_1",
-        "PMAC_C_INV_KIN_2",
-        "PMAC_C_INV_KIN_3",
-        "PMAC_C_INV_KIN_4",
-        "PMAC_C_INV_KIN_5",
-        "PMAC_C_INV_KIN_6",
-        "PMAC_C_INV_KIN_7",
-        "PMAC_C_INV_KIN_8",
-        "PMAC_C_INV_KIN_9",
-        "PMAC_C_INV_KIN_10",
-        "PMAC_C_INV_KIN_11",
-        "PMAC_C_INV_KIN_12",
-        "PMAC_C_INV_KIN_13",
-        "PMAC_C_INV_KIN_14",
-        "PMAC_C_INV_KIN_15",
-        "PMAC_C_INV_KIN_16"
-};
-
 //C function prototypes, for the functions that can be called on IOC shell.
 //Some of these functions are provided to ease transition to the model 3 driver. Some of these
 //functions could be handled by the parameter library.
@@ -402,10 +364,6 @@ asynStatus pmacController::initialSetup() {
     // Initialisation successful
     initialised_ = 1;
     setupBrokerVariables();
-    // Read the kinematics if we aren't a power pmac
-    if (cid_ != PMAC_CID_POWER_) {
-      status = this->storeKinematics();
-    }
   }
 
   if (status == asynSuccess)  pBroker_->clearNewConnection();
@@ -523,13 +481,9 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_MotorScaleString, asynParamInt32, &PMAC_C_MotorScale_);
   createParam(PMAC_C_MotorResString, asynParamFloat64, &PMAC_C_MotorRes_);
   createParam(PMAC_C_MotorOffsetString, asynParamFloat64, &PMAC_C_MotorOffset_);
-
-  for (index = 0; index < PMAC_MAX_CS; index++) {
-    createParam(PMAC_C_ForwardKinematicString[index], asynParamOctet,
-                &PMAC_C_ForwardKinematic_[index]);
-    createParam(PMAC_C_InverseKinematicString[index], asynParamOctet,
-                &PMAC_C_InverseKinematic_[index]);
-  }
+  createParam(PMAC_C_IVariablesString, asynParamOctet, &PMAC_I_Variables_);
+  createParam(PMAC_C_MVariablesString, asynParamOctet, &PMAC_M_Variables_);
+  createParam(PMAC_C_PVariablesString, asynParamOctet, &PMAC_P_Variables_);
 }
 
 void pmacController::initAsynParams(void) {
@@ -1119,11 +1073,20 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
 
 asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
   asynStatus status = asynSuccess;
-  int nvals = 0;
-  std::string trajPtr = "";
+  int nvals;
+  std::string trajPtr;
   int storeSize = 0;
   static const char *functionName = "slowUpdate";
+  std::string value;
   debug(DEBUG_FLOW, functionName);
+
+  // read in the combined variables values.
+  value = sPtr->getVariablesList("I");
+  setStringParam(PMAC_I_Variables_, value.c_str());
+  value = sPtr->getVariablesList("P");
+  setStringParam(PMAC_P_Variables_, value.c_str());
+  value = sPtr->getVariablesList("M");
+  setStringParam(PMAC_M_Variables_, value.c_str());
 
   // Read the length of avaialable trajectory buffers
   trajPtr = sPtr->readValue(PMAC_TRAJ_BUFFER_LENGTH);
@@ -3556,6 +3519,7 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
   // Now register the CS object for callbacks from the broker
   this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
   this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_PRE_FAST_READ);
+  this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_SLOW_READ);
 
   return asynSuccess;
 }
@@ -3748,93 +3712,6 @@ asynStatus pmacController::listPLCProgram(int plcNo, char *buffer, size_t size) 
 
   return status;
 }
-
-asynStatus pmacController::storeKinematics() {
-  asynStatus status = asynSuccess;
-  int csNo = 0;
-  int buffer_size = 20000;
-  char* buffer = (char*)malloc(buffer_size);
-  static const char *functionName = "storeKinematics";
-
-  startTimer(DEBUG_TIMING, functionName);
-  debug(DEBUG_FLOW, functionName);
-  while (csNo < PMAC_MAX_CS && status == asynSuccess) {
-    // Read each forward kinematic
-    status = listKinematic(csNo + 1, "forward", buffer, buffer_size);
-    // Store into the appropriate parameter
-    setStringParam(PMAC_C_ForwardKinematic_[csNo], buffer);
-    // Read each inverse kinematic
-    status = listKinematic(csNo + 1, "inverse", buffer, buffer_size);
-    // Store into the appropriate parameter
-    setStringParam(PMAC_C_InverseKinematic_[csNo], buffer);
-    // Next coordinate system
-    csNo++;
-  }
-  callParamCallbacks();
-  if (status != asynSuccess) {
-    debug(DEBUG_ERROR, functionName, "Failed to read all Kinematics");
-  }
-  stopTimer(DEBUG_TIMING, functionName, "Time taken to store kinematics");
-
-  free(buffer);
-  return status;
-}
-
-asynStatus
-pmacController::listKinematic(int csNo, const std::string &type, char *buffer, size_t size) {
-  int word = 0;
-  char reply[PMAC_MAXBUF];
-  char cmd[PMAC_MAXBUF];
-  char line[PMAC_MAXBUF];
-  int cword = 0;
-  int running = 1;
-  asynStatus status = asynSuccess;
-  static const char *functionName = "listKinematic";
-
-  startTimer(DEBUG_TIMING, functionName);
-  debug(DEBUG_FLOW, functionName);
-  debug(DEBUG_VARIABLE, functionName, "Listing kinematics for CS", csNo);
-
-  if (type != "forward" && type != "inverse") {
-    status = asynError;
-    debug(DEBUG_ERROR, functionName, "Unknown kinematic type", type);
-  }
-
-  if (status == asynSuccess) {
-    // Setup the list command
-    // List by 1 word at a time, throw away duplicates
-    // This is very inefficient, but currently necessary due
-    // to the PMAC driver
-    strcpy(buffer, "");
-    while (running == 1 && word < 10000) {
-      sprintf(cmd, "&%d list %s,%d,1", csNo, type.c_str(), word);
-      pBroker_->immediateWriteRead(cmd, reply);
-      if (reply[0] == 0x7) {
-        running = 0;
-      } else {
-        sscanf(reply, "%d:%s", &cword, line);
-        if (cword == word) {
-          if (strlen(buffer) + strlen(line) + 1 > size) {
-            // We cannot add the next line as the buffer would be full
-            // Report the error
-            running = 0;
-            status = asynError;
-            debug(DEBUG_ERROR, functionName, "Buffer not large enough for kinematic", (int) size);
-          } else {
-            strcat(buffer, line);
-            strcat(buffer, " ");
-          }
-        }
-      }
-      word++;
-    }
-    debug(DEBUG_VARIABLE, functionName, "Kinematic", buffer);
-  }
-  stopTimer(DEBUG_TIMING, functionName, "Time taken to list kinematic");
-
-  return status;
-}
-
 
 asynStatus pmacController::processDeferredMoves(void) {
   asynStatus status = asynSuccess;

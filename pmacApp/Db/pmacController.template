@@ -37,6 +37,36 @@ record(stringout, "$(P):Port")
 }
 
 ##############################################################
+# Listing of combined Slow Poll Variables
+##############################################################
+record(waveform, "$(P):I_VARIABLES_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PMAC_I_VARIABLES")
+  field(FTVL, "CHAR")
+  field(NELM, "20000")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(P):P_VARIABLES_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PMAC_P_VARIABLES")
+  field(FTVL, "CHAR")
+  field(NELM, "20000")
+  field(SCAN, "I/O Intr")
+}
+
+record(waveform, "$(P):M_VARIABLES_RBV")
+{
+  field(DTYP, "asynOctetRead")
+  field(INP,  "@asyn($(PORT),0)PMAC_M_VARIABLES")
+  field(FTVL, "CHAR")
+  field(NELM, "20000")
+  field(SCAN, "I/O Intr")
+}
+
+##############################################################
 # Ensure all PVs are up to date with the current brick state
 ##############################################################
 record(busy,"$(P):PollAllNow") {
@@ -177,298 +207,6 @@ record(bi, "$(P):AxesReadonly_RBV")
     field(ZNAM, "Read/Write")
     field(ONAM, "Readonly")
 }
-
-##############################################################
-# Record of the Kinematics on the PMAC
-##############################################################
-record(waveform, "$(P):FWD_KINEMATIC_1_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_1")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_2_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_2")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_3_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_3")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_4_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_4")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_5_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_5")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_6_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_6")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_7_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_7")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_8_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_8")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_9_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_9")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_10_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_10")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_11_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_11")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_12_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_12")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_13_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_13")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_14_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_14")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_15_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_15")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):FWD_KINEMATIC_16_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_FWD_KIN_16")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_1_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_1")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_2_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_2")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_3_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_3")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_4_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_4")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_5_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_5")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_6_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_6")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_7_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_7")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_8_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_8")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_9_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_9")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_10_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_10")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_11_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_11")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_12_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_12")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_13_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_13")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_14_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_14")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_15_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_15")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
-record(waveform, "$(P):INV_KINEMATIC_16_RBV")
-{
-  field(DTYP, "asynOctetRead")
-  field(INP,  "@asyn($(PORT),0)PMAC_C_INV_KIN_16")
-  field(FTVL, "CHAR")
-  field(NELM, "20000")
-  field(SCAN, "I/O Intr")
-}
-
 
 #####################################################
 # Below are the records originally from

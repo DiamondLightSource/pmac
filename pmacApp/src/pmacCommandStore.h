@@ -10,6 +10,7 @@
 
 #include "epicsTypes.h"
 #include "epicsMutex.h"
+#include "epicsStdio.h"
 #include "StringHashtable.h"
 #include "pmacDebugger.h"
 
@@ -36,6 +37,10 @@ public:
     int updateReply(const std::string &cmd, const std::string &reply);
 
     void report();
+
+    std::string getVariablesList(
+            const std::string & substring,
+            const std::string & remove=std::string());
 
 private:
     void buildCommandString();

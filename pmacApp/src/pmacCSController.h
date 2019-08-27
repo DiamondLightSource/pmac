@@ -32,6 +32,9 @@
 #define PMAC_CS_MotorScaleString           "PMAC_MOTOR_SCALE"
 #define PMAC_CS_MotorResString             "PMAC_MRES"
 #define PMAC_CS_MotorOffsetString          "PMAC_OFFSET"
+#define PMAC_CS_ForwardKinematicString      "PMAC_CS_FWD_KIN"
+#define PMAC_CS_InverseKinematicString      "PMAC_CS_INV_KIN"
+#define PMAC_CS_QVariablesString            "PMAC_CS_Q_VARIABLES"
 
 #define PMAC_CS_MAXBUF 1024
 #define PMAC_CS_AXES_COUNT 9
@@ -75,6 +78,10 @@ public:
     asynStatus wakeupPoller();
     asynStatus pmacCSSetAxisDirectMapping(int axis, int mappedAxis);
 
+    // Read in the kinematics
+    asynStatus storeKinematics();
+    asynStatus listKinematic(int csNo, const std::string &type, char *buffer, size_t size);
+
 protected:
     pmacCSAxis **pAxes_; // Array of pointers to axis objects
 
@@ -87,6 +94,9 @@ protected:
     int PMAC_CS_MotorOffset_;
     int PMAC_CS_Abort_;
     int PMAC_CS_LastParam_;
+    int PMAC_CS_ForwardKinematic_;
+    int PMAC_CS_InverseKinematic_;
+    int PMAC_CS_QVariables_;
 #define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_
 
 private:
@@ -159,6 +169,7 @@ private:
     static const epicsUInt32 CS_STATUS2_LOOKAHEAD;           // (0x1<<23)
 
     static const epicsUInt32 CS_STATUS3_LIMIT;               // (0x1<<1)
+
 
     friend class pmacCSAxis;
 
