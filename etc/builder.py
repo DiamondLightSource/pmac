@@ -59,7 +59,6 @@ def pmacAsynIPPort_sim(name, IP, simulation=None, pmacAsynIPPort=pmacAsynIPPort)
         return pmacAsynIPPort(name, simulation)
 SetSimulation(pmacAsynIPPort, pmacAsynIPPort_sim)
 
-
 class pmacAsynSSHPort(DeltaTauSSHCommsPort):
     """This will create an AsynPort connecting to a PowerPMAC over SSH"""
     LibFileList = ['powerPmacAsynPort']
@@ -382,8 +381,25 @@ class pmacDisableLimitsCheck(Device):
         print 'pmacDisableLimitsCheck("%(ControllerPort)s", %(Axis)d, 0)' % self.__dict__
 
     ArgInfo = makeArgInfo(__init__,
-        Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
-        Axis       = Simple('Axis number to disable limit check, defaults to all', int))
+                          Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
+                          Axis       = Simple('Axis number to disable limit check, defaults to all', int))
+
+
+class pmacMonitorVariables(Device):
+    Dependencies = (Pmac,)
+
+    def __init__(self, Controller, Variables):
+        self.__super.__init__()
+        self.Controller = Controller
+        self.Variables = Variables
+        self.ControllerPort = self.Controller.DeviceName()
+
+    def Initialise(self):
+        print 'pmacMonitorVariables("%(ControllerPort)s", "%(Variables)s")' % self.__dict__
+
+    ArgInfo = makeArgInfo(__init__,
+                          Controller=Ident('Underlying PMAC or GeoBrick object', DeltaTau),
+                          Variables=Simple('Space separated list of pmac variables to monitor', str))
 
 
 def add_basic(cls):

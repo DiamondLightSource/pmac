@@ -417,6 +417,8 @@ public:
     bool useCsVelocity;
     pmacHardwareInterface *pHardware_;
 
+    void addBrokerVariables(const std::string &monitorVariables);
+
 private:
     int connected_;
     int initialised_;
@@ -476,7 +478,6 @@ private:
     epicsEventId stopEventId_;
 
     asynStatus lowLevelWriteRead(const char *command, char *response);
-//  asynStatus lowLevelPortConnect(const char *port, int addr, asynUser **ppasynUser, char *inputEos, char *outputEos);
 
     asynStatus updateStatistics();
 

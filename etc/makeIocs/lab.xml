@@ -94,4 +94,6 @@
 	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDS_&amp;3Q87" SCAN="I/O Intr" record="BRICK1:CS3:Q87"/>
 	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDS_&amp;3Q88" SCAN="I/O Intr" record="BRICK1:CS3:Q88"/>
 	<records.ai DTYP="asynFloat64" INP="@asyn(Brick,0,1)PMAC_VDS_&amp;3Q89" SCAN="I/O Intr" record="BRICK1:CS3:Q89"/>
+	<pmac.pmacMonitorVariables Controller="Brick" Variables="&amp;3Q99 &amp;3Q98 &amp;3Q100" name="v1"/>
+	<pmac.pmacMonitorVariables Controller="Brick" Variables="P100 P201 P202 P303" name="v2"/>
 </components>

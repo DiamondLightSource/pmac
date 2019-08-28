@@ -372,8 +372,6 @@ asynStatus pmacController::initialSetup() {
 }
 
 void pmacController::createAsynParams(void) {
-  int index = 0;
-
   //Create controller-specific parameters
   createParam(PMAC_C_FirstParamString, asynParamInt32, &PMAC_C_FirstParam_);
   createParam(PMAC_C_PollAllNowString, asynParamInt32, &PMAC_C_PollAllNow_);
@@ -569,6 +567,25 @@ void pmacController::pollAllNow(void) {
   pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
 
+}
+
+void pmacController::addBrokerVariables(const std::string &monitorVariables) {
+  std::string var;
+  char sep = ' ';
+  unsigned long pos = 0;
+  unsigned long next = 0;
+
+  // add in slow poll monitoring of any variables added in the startup script
+  // using pmacMonitorVariables
+  while (next < monitorVariables.length()) {
+    next = monitorVariables.find(sep, pos);
+    if (next == std::string::npos) {
+      next = monitorVariables.length();
+    }
+    var = monitorVariables.substr(pos, next - pos);
+    pos = next + 1;
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, var.c_str());
+  }
 }
 
 void pmacController::setupBrokerVariables(void) {
@@ -4188,6 +4205,21 @@ asynStatus pmacNoCsVelocity(const char *controller) {
   return asynSuccess;
 }
 
+asynStatus pmacMonitorVariables(const char *controller, const char *variablesString) {
+  std::string variables = std::string(variablesString);
+  pmacController *pC;
+  static const char *functionName = "pmacMonitorVariables";
+
+  pC = (pmacController *) findAsynPortDriver(controller);
+  if (!pC) {
+    printf("%s:%s: Error port %s not found\n", driverName, functionName, controller);
+    return asynError;
+  }
+
+  pC->addBrokerVariables(variables);
+
+  return asynSuccess;
+}
 
 /* Code for iocsh registration */
 
@@ -4334,6 +4366,17 @@ static void configpmacNoCsVelocityCallFunc(const iocshArgBuf *args) {
     pmacNoCsVelocity(args[0].sval);
 }
 
+
+/* pmacMonitorVariables */
+static const iocshArg pmacMonitorVariables0 = {"Controller port name", iocshArgString};
+static const iocshArg pmacMonitorVariables1 = {"Variables", iocshArgString};
+static const iocshArg *const pmacMonitorVariablesArgs[] = {&pmacMonitorVariables0, &pmacMonitorVariables1};
+static const iocshFuncDef configMonitorVariables = {"pmacMonitorVariables", 2, pmacMonitorVariablesArgs};
+
+static void configpmacMonitorVariablesCallFunc(const iocshArgBuf *args) {
+  pmacMonitorVariables(args[0].sval, args[1].sval);
+}
+
 static void pmacControllerRegister(void) {
   iocshRegister(&configpmacCreateController, configpmacCreateControllerCallFunc);
   iocshRegister(&configpmacAxis, configpmacAxisCallFunc);
@@ -4345,6 +4388,7 @@ static void pmacControllerRegister(void) {
   iocshRegister(&configpmacCsGroupAddAxis, configpmacCsGroupAddAxisCallFunc);
   iocshRegister(&configpmacDebug, configpmacDebugCallFunc);
   iocshRegister(&configpmacNoCsVelocity, configpmacNoCsVelocityCallFunc);
+  iocshRegister(&configMonitorVariables, configpmacMonitorVariablesCallFunc);
 }
 epicsExportRegistrar(pmacControllerRegister);
 
