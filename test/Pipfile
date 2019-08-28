@@ -14,7 +14,7 @@ malcolm = {editable = true,path = "/home/hgv27681/odin/pymalcolm"}
 scanpointgenerator = "*"
 ruamel-yaml = "*"
 tornado = "==4.5.3"
-matplotlib = "*"
+matplotlib = "==2.2.3"
 
 [requires]
 python_version = "3.7"

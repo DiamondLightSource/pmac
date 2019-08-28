@@ -12,8 +12,8 @@ from scanpointgenerator import SpiralGenerator, CompoundGenerator, \
 
 from malcolm.core import Process, Block
 from malcolm.yamlutil import make_include_creator
-from .plot_trajectories import plot_velocities
-from ..brick.testbrick import TBrick
+from test.test_malcolm.plot_trajectories import plot_velocities
+from test.brick.testbrick import TBrick
 
 SAMPLE_RATE = 50  # gather samples / second
 BRICK_CLOCK = 5000  # servo loop speed in Hz
