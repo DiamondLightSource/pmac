@@ -139,16 +139,17 @@ void pmacCommandStore::report() {
 }
 
 void pmacCommandStore::buildCommandString() {
+  char curStr[1024];  //NSCL/FRIB
   int index = 0;
   qtyCmdStrings = 0;
   // Fill up command string buffers, MAX_VALS in each
   std::string key = this->store.firstKey();
-  strcpy(commandString[qtyCmdStrings], "");
-  sprintf(commandString[qtyCmdStrings], "%s %s", commandString[qtyCmdStrings], key.c_str());
+  sprintf(commandString[qtyCmdStrings], " %s", key.c_str());
   index++;
   while (this->store.hasNextKey()) {
     key = this->store.nextKey();
-    sprintf(commandString[qtyCmdStrings], "%s %s", commandString[qtyCmdStrings], key.c_str());
+    strcpy(curStr, commandString[qtyCmdStrings]);
+    sprintf(commandString[qtyCmdStrings], "%s %s", curStr, key.c_str());
     index++;
     if (index == PMAC_MAX_REQUESTS) {
       // Move onto next buffer
