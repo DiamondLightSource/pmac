@@ -82,7 +82,7 @@ private:
     static const int PMAC_STATUS1_I2T_AMP_FAULT;
     static const int PMAC_STATUS1_HOME_COMPLETE;
     static const int PMAC_STATUS1_DESIRED_VELOCITY_ZERO;
-    static const int PMAC_STATUS1_OPEN_LOOP;
+    static const int PMAC_STATUS1_CLOSED_LOOP;
     static const int PMAC_STATUS1_AMP_ENABLED;
     static const int PMAC_STATUS1_IN_POSITION;
     static const int PMAC_STATUS1_BLOCK_REQUEST;
