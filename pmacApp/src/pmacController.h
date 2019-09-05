@@ -87,6 +87,7 @@
 #define PMAC_C_ReportFastString           "PMAC_C_REPORT_FAST"
 #define PMAC_C_ReportMediumString         "PMAC_C_REPORT_MEDIUM"
 #define PMAC_C_ReportSlowString           "PMAC_C_REPORT_SLOW"
+#define PMAC_C_HomingStatusString         "HOMING_STATUS"
 // the following 4 parameters are axis parameters for both pmacController and pmacCSController
 #define PMAC_C_RealMotorNumberString      "PMAC_REAL_MOTOR_NUMBER"
 #define PMAC_C_MotorScaleString           "PMAC_MOTOR_SCALE"
@@ -215,6 +216,7 @@ public:
     virtual void callback(pmacCommandStore *sPtr, int type);
     asynStatus slowUpdate(pmacCommandStore *sPtr);
     asynStatus mediumUpdate(pmacCommandStore *sPtr);
+    asynStatus prefastUpdate(pmacCommandStore *sPtr);
     asynStatus fastUpdate(pmacCommandStore *sPtr);
     asynStatus parseIntegerVariable(const std::string &command,
                                     const std::string &response,
@@ -255,7 +257,6 @@ public:
     void setAppendStatus(int state, int status, const std::string &message);
     void setProfileStatus(int state, int status, const std::string &message);
     asynStatus sendTrajectoryDemands(int buffer);
-    asynStatus doubleToPMACFloat(double value, int64_t *representation);
 
     //Disable the check for disabled hardware limits.
     asynStatus pmacDisableLimitsCheck(int axis);
@@ -395,6 +396,7 @@ protected:
     int PMAC_C_ReportFast_;
     int PMAC_C_ReportMedium_;
     int PMAC_C_ReportSlow_;
+    int PMAC_C_HomingStatus_;
     int PMAC_C_RealMotorNumber_;
     int PMAC_C_MotorScale_;
     int PMAC_C_MotorRes_;
@@ -407,6 +409,8 @@ protected:
 
 public:
     pmacCsGroups *pGroupList;
+    bool useCsVelocity;
+    pmacHardwareInterface *pHardware_;
 
 private:
     int connected_;
@@ -416,7 +420,6 @@ private:
     int parameterIndex_;
     pmacMessageBroker *pBroker_;
     pmacTrajectory *pTrajectory_;
-    pmacHardwareInterface *pHardware_;
     IntegerHashtable *pPortToCs_;
     IntegerHashtable *pIntParams_;
     IntegerHashtable *pHexParams_;
@@ -438,7 +441,8 @@ private:
     double idlePollPeriod_;
     int i8_;
     int i7002_;
-    bool csGroupSwitchCalled_;
+    bool csResetAllDemands;
+    int csCount;
 
     // Trajectory scan variables
     int pvtTimeMode_;

@@ -23,6 +23,7 @@ public:
     static const int DEBUG_FLOW;
     static const int DEBUG_TIMING;
     static const int DEBUG_PMAC;
+    static const int DEBUG_PMAC_POLL;
 
     pmacDebugger(const std::string &owner);
 

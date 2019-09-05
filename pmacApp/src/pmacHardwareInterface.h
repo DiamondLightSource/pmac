@@ -24,6 +24,7 @@ struct csStatus {
     int stat1_;
     int stat2_;
     int stat3_;
+    int running_;
     int done_;
     int highLimit_;
     int lowLimit_;
@@ -79,7 +80,23 @@ public:
 
     virtual std::string getCSMappingCmd(int csNo, int axis) = 0;
 
+    virtual std::string getCSEnabledCountCmd() = 0;
+
     virtual std::string parseCSMappingResult(const std::string mappingResult) = 0;
+
+    virtual void startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
+                                              char *time_cmd, int addr) = 0;
+
+    virtual void addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
+                                           int velocityMode, int userFunc, int time,
+                                           bool firstVal) = 0;
+
+    virtual void startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffSize) = 0;
+
+    virtual void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffSize,
+                                 bool firstVal) = 0;
+
+    virtual std::string getCSEnableCommand(int csNo) = 0;
 
 protected:
     pmacController *pC_;

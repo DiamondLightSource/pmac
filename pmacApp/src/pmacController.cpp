@@ -1,12 +1,12 @@
 /********************************************
  *  pmacController.cpp
- * 
- *  PMAC Asyn motor based on the 
+ *
+ *  PMAC Asyn motor based on the
  *  asynMotorController class.
- * 
+ *
  *  Matthew Pearson
  *  23 May 2012
- * 
+ *
  ********************************************/
 
 
@@ -208,14 +208,16 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                               asynEnumMask, // No addition interrupt interfaces
                               ASYN_CANBLOCK | ASYN_MULTIDEVICE,
                               1, // autoconnect
-                              0, 0),  // Default priority and stack size
+                              0, 50000),  // Default priority and stack size
           pmacDebugger("pmacController") {
   int index = 0;
   static const char *functionName = "pmacController::pmacController";
 
+  useCsVelocity = true;
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s Constructor.\n", functionName);
 
   //Initialize non static data members
+  pHardware_ = NULL;
   connected_ = 0;
   initialised_ = 0;
   cid_ = 0;
@@ -253,7 +255,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   tScanPmacProgVersion_ = 0.0;
   i8_ = 0;
   i7002_ = 0;
-  csGroupSwitchCalled_ = false;
+  csResetAllDemands = false;
+  csCount = 0;
 
   // Create the message broker
   pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
@@ -281,6 +284,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pAxisZero = new pmacCSMonitor(this);
   pGroupList = new pmacCsGroups(this);
 
+
   // Create the trajectory store
   pTrajectory_ = new pmacTrajectory();
 
@@ -300,7 +304,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   // Do nothing if we have failed to connect. Requires a restart once
   // the brick is restored
   if (connected_) {
-    initialSetup();
+    // initialSetup();  // now done in checkConnection()
     initAsynParams();
 
     // Create the epicsEvents for signaling to start and stop scanning
@@ -337,18 +341,19 @@ bool pmacController::initialised() {
 
 asynStatus pmacController::checkConnection() {
   asynStatus status = asynSuccess;
-  int connected;
+  int connected, newConnection;
   static const char *functionName = "checkConnection";
   debug(DEBUG_FLOW, functionName);
 
   if (pBroker_ != NULL) {
-    status = pBroker_->getConnectedStatus(&connected);
+    status = pBroker_->getConnectedStatus(&connected, &newConnection);
   } else {
     status = asynError;
   }
 
   if (status == asynSuccess) {
-    connected_ = connected;
+    connected_ = connected;  //must be before initialSetup() call
+    if (connected && newConnection)  initialSetup();  //config new gpascii session
     debug(DEBUG_VARIABLE, functionName, "Connection status", connected_);
   } else {
     connected_ = false;
@@ -366,6 +371,10 @@ asynStatus pmacController::initialSetup() {
   status = this->readDeviceType();
 
   if (status == asynSuccess) {
+    if(pHardware_ != NULL) {
+      delete pHardware_;
+    }
+
     // Check for powerPMAC connection
     if (cid_ == PMAC_CID_POWER_) {
       pHardware_ = new pmacHardwarePower();
@@ -395,9 +404,12 @@ asynStatus pmacController::initialSetup() {
     setupBrokerVariables();
     // Read the kinematics if we aren't a power pmac
     if (cid_ != PMAC_CID_POWER_) {
-      status = this->storeKinematics();
+      // This function blows the stack on VME !!
+      // status = this->storeKinematics();
     }
   }
+
+  if (status == asynSuccess)  pBroker_->clearNewConnection();
 
   return status;
 }
@@ -506,6 +518,7 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_ReportFastString, asynParamInt32, &PMAC_C_ReportFast_);
   createParam(PMAC_C_ReportMediumString, asynParamInt32, &PMAC_C_ReportMedium_);
   createParam(PMAC_C_ReportSlowString, asynParamInt32, &PMAC_C_ReportSlow_);
+  createParam(PMAC_C_HomingStatusString, asynParamInt32, &PMAC_C_HomingStatus_);
   createParam(PMAC_C_RealMotorNumberString, asynParamInt32, &PMAC_C_RealMotorNumber_);
   createParam(PMAC_C_MotorScaleString, asynParamInt32, &PMAC_C_MotorScale_);
   createParam(PMAC_C_MotorResString, asynParamFloat64, &PMAC_C_MotorRes_);
@@ -597,6 +610,7 @@ void pmacController::pollAllNow(void) {
 
   debug(DEBUG_FLOW, functionName);
   // Force updates of each loop
+  pBroker_->updateVariables(pmacMessageBroker::PMAC_PRE_FAST_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
@@ -608,6 +622,7 @@ void pmacController::setupBrokerVariables(void) {
   int gpioNo = 0;
   int progNo = 0;
   char cmd[32];
+  char response[64];
   static const char *functionName = "pmacController::setupBrokerVariables";
 
   // Add the items required for global status
@@ -616,7 +631,20 @@ void pmacController::setupBrokerVariables(void) {
   debug(DEBUG_VARIABLE, functionName, "global status", pHardware_->getGlobalStatusCmd().c_str());
 
   // Add the feedrate values
-  for (int csNo = 1; csNo <= PMAC_MAX_CS - 1; csNo++) {
+  // first find out how many Coordinate Systems are enabled
+  sprintf(cmd, "%s", pHardware_->getCSEnabledCountCmd().c_str());
+  this->immediateWriteRead(cmd, response);
+  sscanf(response, "%d", &csCount);
+
+  if(cid_ == PMAC_CID_POWER_) {
+      //Power pmac coordinate systems are from 0 - 15 so subtract 1
+      csCount--;
+  } else {
+      // Turbo pmac I68 is one less than the count
+      csCount++;
+  }
+  debug(DEBUG_VARIABLE, functionName, "Count of CSes enabled %d", csCount);
+  for (int csNo = 1; csNo <= csCount; csNo++) {
     sprintf(cmd, "&%d%s", csNo, "%");
     debug(DEBUG_VARIABLE, functionName, "Adding feedrate check", cmd);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, cmd);
@@ -635,7 +663,7 @@ void pmacController::setupBrokerVariables(void) {
 
   // Add the PMAC P variables required for trajectory scanning
   // Fast readout required of these values
-  pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_STATUS);
+  pBroker_->addReadVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, PMAC_TRAJ_STATUS);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_INDEX);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_BUFFER);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_TOTAL_POINTS);
@@ -700,6 +728,7 @@ void pmacController::setupBrokerVariables(void) {
 
   // Register this class for updates
   pBroker_->registerForLocks(this);
+  pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_PRE_FAST_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_FAST_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_MEDIUM_READ);
   pBroker_->registerForUpdates(this, pmacMessageBroker::PMAC_SLOW_READ);
@@ -972,6 +1001,11 @@ asynStatus pmacController::processDrvInfo(char *input, char *output) {
 void pmacController::callback(pmacCommandStore *sPtr, int type) {
   static const char *functionName = "callback";
   debug(DEBUG_FLOW, functionName);
+
+  if (type == pmacMessageBroker::PMAC_PRE_FAST_READ) {
+    // Execute the pre-fast update loop
+    this->prefastUpdate(sPtr);
+  }
 
   if (type == pmacMessageBroker::PMAC_FAST_READ) {
     // Execute the fast update loop
@@ -1263,14 +1297,14 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
     sprintf(command, "M%d", (plc + 5000));
     plcString = sPtr->readValue(command);
     if (plcString == "") {
-      debug(DEBUG_ERROR, functionName, "Problem reading PLC program status", command);
+      debug(DEBUG_VARIABLE, functionName, "Problem reading PLC program status", command);
       status = asynError;
     } else {
       nvals = sscanf(plcString.c_str(), "%d", &plcBit);
       if (nvals != 1) {
-        debug(DEBUG_ERROR, functionName, "Error reading PLC program status", command);
-        debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-        debug(DEBUG_ERROR, functionName, "    response", plcString);
+        debug(DEBUG_VARIABLE, functionName, "Error reading PLC program status", command);
+        debug(DEBUG_VARIABLE, functionName, "    nvals", nvals);
+        debug(DEBUG_VARIABLE, functionName, "    response", plcString);
         status = asynError;
       } else {
         if (plc < 16) {
@@ -1292,14 +1326,14 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
         sprintf(command, "M%d", (gpio + 32));
         gpioString = sPtr->readValue(command);
         if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          debug(DEBUG_VARIABLE, functionName, "Problem reading GPIO status", command);
           status = asynError;
         } else {
           nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
           if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            debug(DEBUG_VARIABLE, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_VARIABLE, functionName, "    nvals", nvals);
+            debug(DEBUG_VARIABLE, functionName, "    response", gpioString);
             status = asynError;
           } else {
             gpioOutputs += gpioBit << gpio;
@@ -1311,14 +1345,14 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
         sprintf(command, "M%d", gpio);
         gpioString = sPtr->readValue(command);
         if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          debug(DEBUG_VARIABLE, functionName, "Problem reading GPIO status", command);
           status = asynError;
         } else {
           nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
           if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            debug(DEBUG_VARIABLE, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_VARIABLE, functionName, "    nvals", nvals);
+            debug(DEBUG_VARIABLE, functionName, "    response", gpioString);
             status = asynError;
           } else {
             gpioInputs += gpioBit << gpio;
@@ -1333,14 +1367,14 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
         sprintf(command, "M%d", (gpio + 7716));
         gpioString = sPtr->readValue(command);
         if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          debug(DEBUG_VARIABLE, functionName, "Problem reading GPIO status", command);
           status = asynError;
         } else {
           nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
           if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            debug(DEBUG_VARIABLE, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_VARIABLE, functionName, "    nvals", nvals);
+            debug(DEBUG_VARIABLE, functionName, "    response", gpioString);
             status = asynError;
           } else {
             gpioOutputs += gpioBit << (gpio + 8);
@@ -1349,14 +1383,14 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
         sprintf(command, "M%d", (gpio + 7740));
         gpioString = sPtr->readValue(command);
         if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          debug(DEBUG_VARIABLE, functionName, "Problem reading GPIO status", command);
           status = asynError;
         } else {
           nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
           if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            debug(DEBUG_VARIABLE, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_VARIABLE, functionName, "    nvals", nvals);
+            debug(DEBUG_VARIABLE, functionName, "    response", gpioString);
             status = asynError;
           } else {
             gpioOutputs += gpioBit << gpio;
@@ -1368,14 +1402,14 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
         sprintf(command, "M%d", (gpio + 7616));
         gpioString = sPtr->readValue(command);
         if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          debug(DEBUG_VARIABLE, functionName, "Problem reading GPIO status", command);
           status = asynError;
         } else {
           nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
           if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            debug(DEBUG_VARIABLE, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_VARIABLE, functionName, "    nvals", nvals);
+            debug(DEBUG_VARIABLE, functionName, "    response", gpioString);
             status = asynError;
           } else {
             gpioInputs += gpioBit << (gpio + 8);
@@ -1384,14 +1418,14 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
         sprintf(command, "M%d", (gpio + 7640));
         gpioString = sPtr->readValue(command);
         if (gpioString == "") {
-          debug(DEBUG_ERROR, functionName, "Problem reading GPIO status", command);
+          debug(DEBUG_VARIABLE, functionName, "Problem reading GPIO status", command);
           status = asynError;
         } else {
           nvals = sscanf(gpioString.c_str(), "%d", &gpioBit);
           if (nvals != 1) {
-            debug(DEBUG_ERROR, functionName, "Error reading GPIO status", command);
-            debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-            debug(DEBUG_ERROR, functionName, "    response", gpioString);
+            debug(DEBUG_VARIABLE, functionName, "Error reading GPIO status", command);
+            debug(DEBUG_VARIABLE, functionName, "    nvals", nvals);
+            debug(DEBUG_VARIABLE, functionName, "    response", gpioString);
             status = asynError;
           } else {
             gpioInputs += gpioBit << gpio;
@@ -1411,14 +1445,14 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
     sprintf(command, "M%d", ((prog * 100) + 5180));
     progString = sPtr->readValue(command);
     if (progString == "") {
-      debug(DEBUG_ERROR, functionName, "Problem reading motion program status", command);
+      debug(DEBUG_VARIABLE, functionName, "Problem reading motion program status", command);
       status = asynError;
     } else {
       nvals = sscanf(progString.c_str(), "%d", &progBit);
       if (nvals != 1) {
-        debug(DEBUG_ERROR, functionName, "Error reading motion program status", command);
-        debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-        debug(DEBUG_ERROR, functionName, "    response", progString);
+        debug(DEBUG_VARIABLE, functionName, "Error reading motion program status", command);
+        debug(DEBUG_VARIABLE, functionName, "    nvals", nvals);
+        debug(DEBUG_VARIABLE, functionName, "    response", progString);
         status = asynError;
       } else {
         progBits += progBit << prog;
@@ -1457,7 +1491,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   min_feedrate = 100;
   min_feedrate_cs = 0;
   // Lookup the value of the feedrate
-  for (int csNo = 1; csNo <= PMAC_MAX_CS - 1; csNo++) {
+  for (int csNo = 1; csNo <= csCount; csNo++) {
     // only check feedrate on those CS that we are using (have registered config)
     if (pCSControllers_[csNo] != NULL) {
       sprintf(command, "&%d%s", csNo, "%");
@@ -1523,16 +1557,11 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   return status;
 }
 
-asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
+asynStatus pmacController::prefastUpdate(pmacCommandStore *sPtr) {
   asynStatus status = asynSuccess;
-  int gStatus = 0;
-  int gStat1 = 0;
-  int gStat2 = 0;
-  int gStat3 = 0;
-  bool hardwareProblem;
   int nvals;
   std::string trajBufPtr = "";
-  static const char *functionName = "getGlobalStatus";
+  static const char *functionName = "prefastUpdate";
 
   // Read the current trajectory status from the PMAC
   trajBufPtr = sPtr->readValue(PMAC_TRAJ_STATUS);
@@ -1553,6 +1582,20 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
              PMAC_TRAJ_STATUS, tScanPmacStatus_);
     }
   }
+
+  return status;
+}
+
+asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
+  asynStatus status = asynSuccess;
+  int gStatus = 0;
+  int gStat1 = 0;
+  int gStat2 = 0;
+  int gStat3 = 0;
+  bool hardwareProblem;
+  int nvals;
+  std::string trajBufPtr = "";
+  static const char *functionName = "fastUpdate";
 
   // Read the current trajectory buffer index read from the PMAC (within current buffer)
   trajBufPtr = sPtr->readValue(PMAC_TRAJ_CURRENT_INDEX);
@@ -2124,12 +2167,22 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     pollAllNow();
     // Reset the busy value to complete caput callback
     value = 0;
+  } else if (function == PMAC_C_HomingStatus_) {
+    if(value ==0) {
+        // An auto home has just completed
+        // make sure that pmacController->makeCSDemandsConsistent will reset the demand for all axes
+        csResetAllDemands = true;
+    }
   } else if (function == PMAC_C_StopAll_) {
     // Send the abort all command to the PMAC immediately
     status = (this->immediateWriteRead("\x01", response) == asynSuccess) && status;
+    // Force all CS demands to refresh
+    csResetAllDemands = true;
   } else if (function == PMAC_C_KillAll_) {
     // Send the kill all command to the PMAC immediately
     status = (this->immediateWriteRead("\x0b", response) == asynSuccess) && status;
+    // Force all CS demands to refresh
+    csResetAllDemands = true;
   } else if (function == PMAC_C_FeedRatePoll_) {
     if (value) {
       this->feedRatePoll_ = true;
@@ -2140,7 +2193,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     pAxis->scale_ = value;
   } else if (function == PMAC_C_FeedRate_) {
     strcpy(command, "");
-    for (int csNo = 1; csNo <= PMAC_MAX_CS; csNo++) {
+    for (int csNo = 1; csNo <= csCount; csNo++) {
       sprintf(command, "%s &%d%%%d", command, csNo, value);
     }
     debug(DEBUG_VARIABLE, functionName, "Feedrate Command", command);
@@ -2168,7 +2221,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     // call stop so that this kill can stop CS moves too
     // this is to get around unexpected behaviour that kill does not stop real axes
     // which are currently moving in a CS
-    pAxis->stop(0);
+    // removed this behaviour since it re-enables already killed axes in the same CS
+    // pAxis->stop(0);
     // Send the kill command to the PMAC immediately
     sprintf(command, "#%dk", pAxis->axisNo_);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
@@ -2194,6 +2248,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   } else if (function == PMAC_C_GroupCSPort_) {
     status = (this->executeManualGroup() == asynSuccess) && status;
   }
+
+
   //Call base class method. This will handle callCallbacks even if the function was handled here.
   status = (asynMotorController::writeInt32(pasynUser, value) == asynSuccess) && status;
 
@@ -2494,7 +2550,7 @@ asynStatus pmacController::buildProfile(int csNo) {
   }
 
   // Check the version numbers are matching
-  if (tScanPmacProgVersion_ != PMAC_TRAJECTORY_VERSION) {
+  if (fabs(tScanPmacProgVersion_ - PMAC_TRAJECTORY_VERSION) > 0.0001) {
     debug(DEBUG_ERROR, functionName, "Motion program and driver versions do not match");
     debug(DEBUG_ERROR, functionName, "Motion program version", tScanPmacProgVersion_);
     debug(DEBUG_ERROR, functionName, "Driver version", PMAC_TRAJECTORY_VERSION);
@@ -2915,10 +2971,13 @@ void pmacController::trajectoryTask() {
   //double position = 0.0;
   char response[1024];
   char cmd[1024];
+  char msg[1024];
   const char *functionName = "trajectoryTask";
 
   this->lock();
   // Loop forever
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-noreturn"
   while (true) {
     // If we are not scanning then wait for a semaphore that is given when a scan is started
     if (!tScanExecuting_) {
@@ -2945,8 +3004,7 @@ void pmacController::trajectoryTask() {
       epicsTimeGetCurrent(&startTime);
 
       // Make sure axes are enabled
-      sprintf(cmd, "&%dE", tScanCSNo_);
-      this->immediateWriteRead(cmd, response);
+      this->immediateWriteRead(pHardware_->getCSEnableCommand(tScanCSNo_).c_str(), response);
 
       if (response[0] == 0x7) {
         // Remove the line feed
@@ -3040,8 +3098,9 @@ void pmacController::trajectoryTask() {
                                    "Trajectory scan complete");
           } else {
             // Set the status to failure
-            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE,
-                                   "Trajectory scan failed, unable to fill buffers in time");
+            sprintf(msg,"Scan failed, unable to fill buffers in time (%d/%d)",
+                    tScanPmacTotalPts_, totalProfilePoints);
+            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, msg);
           }
         } else {
           // Set the status to failure
@@ -3087,6 +3146,7 @@ void pmacController::trajectoryTask() {
       }
     }
   }
+#pragma clang diagnostic pop
 }
 
 void pmacController::setBuildStatus(int state, int status, const std::string &message) {
@@ -3135,6 +3195,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
   char response[1024];
   char cstr[1024];
   const char *functionName = "sendTrajectoryDemands";
+  bool firstVal = true;
 
   debug(DEBUG_FLOW, functionName);
   startTimer(DEBUG_TIMING, functionName);
@@ -3175,18 +3236,19 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     writeAddress += epicsBufferPtr;
 
     // Count how many buffers to fill
-    char cmd[11][1024];
-    // cmd[9] is reserved for the time values
-    sprintf(cmd[9], "WL:$%X", writeAddress);
+    char cmd[12][1024];
+    // cmd[9,10,11] are reserved for the time, velocity, user values
+    pHardware_->startTrajectoryTimePointsCmd(cmd[9], cmd[10], cmd[11], writeAddress);
 
     // cmd[0..8] are reserved for axis positions
     for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
       if ((1 << index & tScanAxisMask_) > 0) {
-        sprintf(cmd[index], "WL:$%X", writeAddress + ((index + 1) * (tScanPmacBufferSize_)));
+        pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_);
       }
     }
 
     int bufferCount = 0;
+    firstVal = true;
     while ((bufferCount < nBuffers) && (epicsBufferPtr < tScanPmacBufferSize_) &&
            (tScanPointCtr_ < tScanNumPoints_)) {
       // Create the velmode/user/time memory writes:
@@ -3203,15 +3265,13 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
         status = pTrajectory_->getTime(tScanPointCtr_, &timeValue);
       }
       if (status == asynSuccess) {
-        sprintf(cmd[9], "%s,$%01X%01X%06X", cmd[9], velModeValue, userValue, timeValue);
-        //sprintf(cmd[9], "%s,$%01X%01X%06X", cmd[9], (int)profileVelMode_[tScanPointCtr_], (int)profileUser_[tScanPointCtr_], (int)profileTimes_[tScanPointCtr_]);
+        pHardware_->addTrajectoryTimePointCmd(cmd[9], cmd[10], cmd[11],
+                velModeValue, userValue, timeValue, firstVal);
         for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
           if ((1 << index & tScanAxisMask_) > 0) {
-            int64_t ival = 0;
             status = pTrajectory_->getPosition(index, tScanPointCtr_, &posValue);
-            doubleToPMACFloat(posValue, &ival);
-            //doubleToPMACFloat(tScanPositions_[index][tScanPointCtr_], &ival);
-            sprintf(cmd[index], "%s,$%lX", cmd[index], (long) ival);
+            pHardware_->addAxisPointCmd(cmd[index], index, posValue, tScanPmacBufferSize_,
+                                        firstVal);
           }
         }
       }
@@ -3221,13 +3281,17 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
       bufferCount++;
       // Increment the epicsBufferPtr
       epicsBufferPtr++;
+      firstVal = false;
     }
 
     if (status == asynSuccess) {
       // First send the times/user buffer
-      sprintf(cstr, "%s", cmd[9]);
-      debug(DEBUG_VARIABLE, functionName, "Command", cstr);
-      status = this->immediateWriteRead(cstr, response);
+      for (int index = 9; index <= 11; index++)
+      {
+        sprintf(cstr, "%s", cmd[index]);
+        debug(DEBUG_VARIABLE, functionName, "Command", cstr);
+        status = this->immediateWriteRead(cstr, response);
+      }
       // Now send the axis positions
       for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
         if ((1 << index & tScanAxisMask_) > 0) {
@@ -3265,74 +3329,6 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
   pBroker_->reinstateStatusReads();
 
   stopTimer(DEBUG_TIMING, functionName, "Time taken to send trajectory demand");
-
-  return status;
-}
-
-asynStatus pmacController::doubleToPMACFloat(double value, int64_t *representation) {
-  asynStatus status = asynSuccess;
-  double absVal = value;
-  int negative = 0;
-  int exponent = 0;
-  double expVal = 0.0;
-  int64_t intVal = 0;
-  int64_t tVal = 0;
-  double mantissaVal = 0.0;
-  double maxMantissa = 34359738368.0;  // 0x800000000
-  const char *functionName = "doubleToPMACFloat";
-
-  debug(DEBUG_FLOW, functionName);
-  debugf(DEBUG_VARIABLE, functionName, "Value : %20.10lf\n", value);
-
-  // Check for special case 0.0
-  if (absVal == 0.0) {
-    // Set value accordingly
-    tVal = 0x0;
-  } else {
-    // Check for a negative number, and get the absolute
-    if (absVal < 0.0) {
-      absVal = absVal * -1.0;
-      negative = 1;
-    }
-    expVal = absVal;
-    mantissaVal = absVal;
-
-    // Work out the exponent required to normalise
-    // Normalised should be between 1 and 2
-    while (expVal >= 2.0) {
-      expVal = expVal / 2.0;
-      exponent++;
-    }
-    while (expVal < 1.0) {
-      expVal = expVal * 2.0;
-      exponent--;
-    }
-    // Offset exponent to provide +-2048 range
-    exponent += 0x800;
-
-    // Get the mantissa into correct format, this might not be
-    // the most efficient way to do this
-    while (mantissaVal < maxMantissa) {
-      mantissaVal *= 2.0;
-    }
-    mantissaVal = mantissaVal / 2.0;
-    // Get the integer representation for the altered mantissa
-    intVal = (int64_t) mantissaVal;
-
-    // If negative value then subtract altered mantissa from max
-    if (negative == 1) {
-      intVal = 0xFFFFFFFFFLL - intVal;
-    }
-
-    // Shift the altered mantissa by 12 bits and then set those
-    // 12 bits to the offset exponent
-    tVal = intVal << 12;
-    tVal += exponent;
-  }
-
-  *representation = tVal;
-
-  debugf(DEBUG_VARIABLE, functionName, "Prepared value: %12lX\n", tVal);
 
   return status;
 }
@@ -3557,6 +3553,7 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
 
   // Now register the CS object for callbacks from the broker
   this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
+  this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_PRE_FAST_READ);
 
   return asynSuccess;
 }
@@ -3600,14 +3597,14 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                 debug(DEBUG_TRACE, functionName, "Motor assignment for motor", rawAxisIndex);
                 debug(DEBUG_TRACE, functionName, "Motor assignment", axisAssignment);
                 debug(DEBUG_TRACE, functionName, "Axis index", csAxisAssignmentNo);
-                if (aPtr->csRawMoveInitiated_ || this->csGroupSwitchCalled_) {
+                if (aPtr->csRawMoveInitiated_ || this->csResetAllDemands) {
                   aPtr->csRawMoveInitiated_ = false;
                   qvar = 71 + csAxisAssignmentNo;
                   debug(DEBUG_TRACE, functionName, "Q Variable for demand", qvar);
                   // Set the qvars assigned flag and send the relevant demand position
                   qvars_assigned = qvars_assigned | 1 << csAxisAssignmentNo;
                   debug(DEBUG_TRACE, functionName, "Q Vars assigned flag", qvars_assigned);
-                  if (this->csGroupSwitchCalled_) {
+                  if (this->csResetAllDemands) {
                     pos = aPtr->getPosition();
                     debugf(DEBUG_TRACE, functionName, "CS%d Q%d set to current pos %f", csNum, qvar, pos);
                     sprintf(command, "&%dQ%d=%f", csNum, qvar, pos);
@@ -3628,7 +3625,7 @@ asynStatus pmacController::makeCSDemandsConsistent() {
                   debug(DEBUG_ERROR, functionName, "Failed to send command", command);
                   status = asynError;
                 }
-              } else if (aPtr->csRawMoveInitiated_) {
+              } else if (aPtr->csRawMoveInitiated_ || this->csResetAllDemands) {
                 if (strcmp(axisAssignment, "I") == 0) {
                   aPtr->csRawMoveInitiated_ = false;
                   csHasRawMovedKinematics = true;
@@ -3663,7 +3660,7 @@ asynStatus pmacController::makeCSDemandsConsistent() {
       }
     }
   }
-  this->csGroupSwitchCalled_ = false;
+  this->csResetAllDemands = false;
 
   return status;
 }
@@ -3845,7 +3842,7 @@ asynStatus pmacController::processDeferredMoves(void) {
   asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "%s\n", functionName);
 
   //Build up combined move command for all axes involved in the deferred move.
-  for (int axis = 0; axis < numAxes_; axis++) {
+  for (int axis = 1; axis < numAxes_; axis++) {
     pAxis = getAxis(axis);
     if (pAxis != NULL) {
       if (pAxis->deferredMove_) {
@@ -4294,6 +4291,20 @@ asynStatus pmacDebug(const char *controller, int level, int axis, int csNo) {
   return asynSuccess;
 }
 
+asynStatus pmacNoCsVelocity(const char *controller) {
+  pmacController *pC;
+  static const char *functionName = "pmacNoCsVelocity";
+
+  pC = (pmacController *) findAsynPortDriver(controller);
+  if (!pC) {
+    printf("%s:%s: Error port %s not found\n", driverName, functionName, controller);
+    return asynError;
+  }
+
+  pC->useCsVelocity=false;
+
+  return asynSuccess;
+}
 
 
 /* Code for iocsh registration */
@@ -4417,7 +4428,7 @@ static void configpmacCsGroupAddAxisCallFunc(const iocshArgBuf *args) {
   pmacCsGroupAddAxis(args[0].sval, args[1].ival, args[2].ival, args[3].sval, args[4].ival);
 }
 
-/* pmacCsGroupAddAxis */
+/* pmacDebug */
 static const iocshArg pmacDebugArg0 = {"Controller port name", iocshArgString};
 static const iocshArg pmacDebugArg1 = {"Debug level", iocshArgInt};
 static const iocshArg pmacDebugArg2 = {"Axis number", iocshArgInt};
@@ -4432,6 +4443,14 @@ static void configpmacDebugCallFunc(const iocshArgBuf *args) {
   pmacDebug(args[0].sval, args[1].ival, args[2].ival, args[3].ival);
 }
 
+/* NoCsVelocity */
+static const iocshArg pmacNoVelocityArg0 = {"Controller port name", iocshArgString};
+static const iocshArg *const pmacNoCsVelocityArgs[] = {&pmacNoVelocityArg0};
+static const iocshFuncDef configpmacNoCsVelocity = {"pmacNoCsVelocity", 1, pmacNoCsVelocityArgs};
+
+static void configpmacNoCsVelocityCallFunc(const iocshArgBuf *args) {
+    pmacNoCsVelocity(args[0].sval);
+}
 
 static void pmacControllerRegister(void) {
   iocshRegister(&configpmacCreateController, configpmacCreateControllerCallFunc);
@@ -4443,6 +4462,7 @@ static void pmacControllerRegister(void) {
   iocshRegister(&configpmacCreateCsGroup, configpmacCreateCsGroupCallFunc);
   iocshRegister(&configpmacCsGroupAddAxis, configpmacCsGroupAddAxisCallFunc);
   iocshRegister(&configpmacDebug, configpmacDebugCallFunc);
+  iocshRegister(&configpmacNoCsVelocity, configpmacNoCsVelocityCallFunc);
 }
 epicsExportRegistrar(pmacControllerRegister);
 

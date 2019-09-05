@@ -15,7 +15,10 @@ class Axis:
         self.vmax = pv_root + '.VMAX'
         self.off = pv_root + '.OFF'
         self.mres = pv_root + '.MRES'
+        self.lo_limit = pv_root + '.LLM'
+        self.hi_limit = pv_root + '.HLM'
         self.pv_done_moving = pv_root + '.DMOV'
+        self.pv_use_encoder = pv_root + '.UEIP'
         if cs_no > 0:
             cs_name = 'CS{}:'.format(cs_no)
         else:
@@ -56,6 +59,10 @@ class Axis:
 
     def set_cs_port(self, port):
         ca.caput(self.cs_port, port, wait=True)
+
+    def set_limits(self, lo, hi):
+        ca.caput(self.lo_limit, lo, wait=True)
+        ca.caput(self.hi_limit, hi, wait=True)
 
     @property
     def alarm(self):

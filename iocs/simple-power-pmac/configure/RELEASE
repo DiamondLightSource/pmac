@@ -1,0 +1,11 @@
+# TODO edit this file to reflect your site dependencies locations
+
+SUPPORT = /dls_sw/prod/R3.14.12.7/support
+# Module definitions
+ASYN = $(SUPPORT)/asyn/4-33
+BUSY = $(SUPPORT)/busy/1-7
+CALC = $(SUPPORT)/calc/3-7
+MOTOR = /home/hgv27681/R3.14.12.7/support/motor
+PMAC = /home/hgv27681/R3.14.12.7/support/pmac
+# EPICS Base appears last
+EPICS_BASE = /dls_sw/epics/R3.14.12.7/base

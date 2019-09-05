@@ -1,0 +1,52 @@
+[PMAC_HARDWARE]
+[PMAC_CONFIG]
+Loading PMAC Defaults ($$$***) Configuration
+[PMAC_PROJECT]
+[PMAC_CONFIG]
+[PMAC_CONFIG]
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+/var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc:5:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:11:1: warning: this is the location of the previous definition
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:21:1: error #31: invalid function in equation:  C6=J1POFS+diff / 2
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+[PMAC_PROJECT]
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:21:1: error #31: invalid function in equation:  C6=J1POFS+diff / 2
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+[PMAC_PROJECT]
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:21:1: error #31: invalid function in equation:  C6=J1POFS+C7 / 2
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+[PMAC_PROJECT]
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:27:1: error #31: invalid data:  J1Pos = C6 + C7 / 2
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+[PMAC_PROJECT]
+/var/ftp/usrflash/Project/PMAC Script Language/PLC Programs/LabPLCs.plc:11:1: error #31: invalid parameter number in equation:  Coord[3].Q[87]=(P(4800+3)*Motor[3].ActPos+P(4900+3))+diff / 2
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+[PMAC_PROJECT]
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:32:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:20:1: warning: this is the location of the previous definition
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:25:1: error #31: invalid function in equation:  C7=J2POSP-J1POSP
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+[PMAC_PROJECT]
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:32:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:20:1: warning: this is the location of the previous definition
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:38:1: error #31: invalid data:  surface=C6-Coord[3].Q[22]/cosd(ANGLE)
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+[PMAC_PROJECT]
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:32:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:20:1: warning: this is the location of the previous definition
+/var/ftp/usrflash/Project/PMAC Script Language/Motion Programs/trajectory_scan_code_ppmac.pmc:6:7: error #20: ILLEGAL CMD: BufferLength = BuffLen
+Error: downloading preprocessed File: "/var/ftp/usrflash/Temp/pp_proj.pma"
+[PMAC_PROJECT]
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:32:1: warning: "DIFF" redefined
+/var/ftp/usrflash/Project/PMAC Script Language/Kinematic Routines/CS3_2Jack.kin:20:1: warning: this is the location of the previous definition
+[PMAC_PROJECT]

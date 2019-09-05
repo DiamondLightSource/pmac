@@ -243,6 +243,7 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     sprintf(command, "&%dA", csNumber_);
     debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+    pC_->csResetAllDemands = true;
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.
@@ -280,9 +281,11 @@ asynStatus pmacCSController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
 
   if ((function == PMAC_CS_CsMoveTime_) ) {
     csMoveTime_ = value;
-    sprintf(command, "&%dQ70=%f",csNumber_, value);
-    debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
-    status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+    if (this->pC_->useCsVelocity) {
+      sprintf(command, "&%dQ70=%f", csNumber_, value);
+      debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
+      status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
+    }
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.
@@ -294,7 +297,6 @@ asynStatus pmacCSController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
 
 asynStatus pmacCSController::processDeferredMoves(void) {
   asynStatus status = asynSuccess;
-  char abort[PMAC_MAXBUF] = {0};
   char command[PMAC_MAXBUF] = {0};
   char fullCommand[PMAC_MAXBUF] = {0};
   char response[PMAC_MAXBUF] = {0};
@@ -320,12 +322,15 @@ asynStatus pmacCSController::processDeferredMoves(void) {
     this->makeCSDemandsConsistent();
     if (this->getProgramNumber() != 0) {
       // Abort current move to make sure axes are enabled
-      sprintf(abort, "&%dE", this->getCSNumber());
-      status = this->immediateWriteRead(abort, response);
+      status = this->immediateWriteRead(
+              ((pmacController *) pC_)->pHardware_->getCSEnableCommand(csNumber_).c_str(),
+              response);
 
       sprintf(fullCommand, "&%d%s Q70=%f B%dR", this->getCSNumber(), command, this->csMoveTime_,
               this->getProgramNumber());
-      status = this->immediateWriteRead(fullCommand, response);
+      if(status == asynSuccess) {
+        status = this->immediateWriteRead(fullCommand, response);
+      }
     }
   }
 
@@ -400,11 +405,13 @@ void pmacCSController::callback(pmacCommandStore *sPtr, int type) {
 
   debug(DEBUG_TRACE, functionName, "Coordinate system status callback");
 
-  // Parse the status
-  ((pmacController *) pC_)->pHardware_->parseCSStatus(csNumber_, sPtr, cStatus_);
-  status_[0] = cStatus_.stat1_;
-  status_[1] = cStatus_.stat2_;
-  status_[2] = cStatus_.stat3_;
+  if(type == pmacMessageBroker::PMAC_PRE_FAST_READ) {
+    // Parse the status
+    ((pmacController *) pC_)->pHardware_->parseCSStatus(csNumber_, sPtr, cStatus_);
+    status_[0] = cStatus_.stat1_;
+    status_[1] = cStatus_.stat2_;
+    status_[2] = cStatus_.stat3_;
+  }
 }
 
 asynStatus pmacCSController::immediateWriteRead(const char *command, char *response) {
@@ -498,11 +505,7 @@ asynStatus pmacCSController::tScanCheckProgramRunning(int *running) {
 
   debug(DEBUG_FLOW, functionName);
 
-  if ((status_[0] & CS_STATUS1_RUNNING_PROG) != 0) {
-    *running = 1;
-  } else {
-    *running = 0;
-  }
+  *running = cStatus_.running_;
   return status;
 }
 

@@ -1,15 +1,15 @@
 ; ###################################################
-; RUNNING TESTS ON CLIPPER
+;     SETUP for RUNNING TESTS ON CLIPPER
 ; ###################################################
 ; these settings make clipper pull in tight to position before reporting 'in position'
 i128,8,100=32      ; in position band
 i188,8,100=100    ; count of cycles in position before move complete
 
-; ###################################################
-; Motion Program 10 - command coordinate sys moves
-; ###################################################
-#include "../pmacApp/pmc/PROG10_CS_motion.pmc"
-i5250=0 ; disable for CS 2 which will use mappings only
+#include "../pmacApp/pmc/PROG10_CS_motion.pmc"          ; motion program for making CS moves
+#include "lab-home.pmc"                                 ; auto homing PLC
+; NOTE also requires standard MVariables etc from "/dls_sw/work/motion/Common/PMAC_CLIPPER_Startup.pmc"
+
+i5250=0 ; disable kinematics for CS 2 which will use mappings only
 
 ; **************************************************************
 ; Coordinate system generated using following command
@@ -18,22 +18,19 @@ i5250=0 ; disable for CS 2 which will use mappings only
 
 ;################################################
 ;; \file
-;; Define motion for 2 jack system
+;; Super Simple motion for 2 jack system
 ;;
-;; Original Author: Ronaldo Mercado
+;; Original Author: giles knap
 ;;
 ;; Defined axes:
-;; - X (addr 6) = height of surface in EGUs, PIVOT away from J1
-;; - Y (addr 7) = angle of the surface in i15 units
+;; - X (addr 6) = height of surface in EGU
+;; - Y (addr 7) = Difference between jack1 and jack2
 ;;
 ;; Macros:
 ;; - COORD = 3  CS number, e.g. 2
 ;; - PLC = 17  PLC number, should be CS number+15, e.g. 17
 ;; - J1 = 3  Axisnum for Jack 1, e.g. 1
 ;; - J2 = 4  Axisnum for Jack 2, e.g. 2
-;; - DIST = 1000  Distance between 2 jacks when they are in the zero position
-;; - PIVOT = 500  Distance from jack 1 to pivot point of the surface
-;; - DEPTH = 0  Depth of the surface on the mount
 ;################################################
 
 ; Change to CS3
@@ -51,57 +48,31 @@ i5250=0 ; disable for CS 2 which will use mappings only
 #define J2MRES P(4800+4)
 #define J2OFF  P(4900+4)
 
-; The backlash demand in egu's is set by PROG_CS_motion_backlash.pmc (Q401..408)
-; NB Backlash defaults to zero (for use with PROG_CS_motion.pmc)
-#define BDSTJ1 Q(400+3)
-#define BDSTJ2 Q(400+4)
-BDSTJ1=0
-BDSTJ2=0
-
-;; This is the distance between the 2 jacks when they are in the zero position
-#define DIST Q20
-DIST = 1000
-;; This is the distance from jack 1 to pivot point of the surface
-#define PIVOT Q21
-PIVOT = 500
-;; This is the depth of the surface on the mount
-#define DEPTH Q22
-DEPTH = 0
-
-; Calculate height and angle from jack positions
+; Calculate height and DIFFERENCE between jack positions
 #define J1POS (J1MRES*P3+J1OFF)
 #define J2POS (J2MRES*P4+J2OFF)
 #define HEIGHT Q7
-#define ANGLE Q8
-; Local variables
-#define RATIO Q128
+#define DIFFERENCE Q8
+
 OPEN FORWARD
 CLEAR
-    ; this is the difference in height of the jacks divided by their distance apart
-    RATIO=(J2POS-J1POS)/DIST
-    ; this is the angle of the surface
-    ANGLE=atan(RATIO)
-    ; the height of the surface
-    HEIGHT=J1POS+RATIO*PIVOT+DEPTH/cos(ANGLE)
+    ; this is the DIFFERENCE between Jacks
+    DIFFERENCE=(J2POS-J1POS)
+    ; the height of centre of the surface
+    HEIGHT=J1POS+DIFFERENCE/2
 CLOSE
 
-; Calculate jack positions from height and angle
-#define SURFACE Q228
-#define TANTHETA Q229
+; Calculate jack positions from height and DIFFERENCE
 #define J1POS Q230
 #define J2POS Q231
 OPEN INVERSE
 CLEAR
-    ; this is the bottom edge of the surface
-    SURFACE=HEIGHT-DEPTH/cos(ANGLE)
-    ; store tan theta
-    TANTHETA=tan(ANGLE)
     ; work out the jack positions in EGUs
-    J1POS = SURFACE-PIVOT*TANTHETA
-    J2POS = SURFACE+(DIST-PIVOT)*TANTHETA
-    ; then cts
-    P3=(J1POS+BDSTJ1-J1OFF)/J1MRES
-    P4=(J2POS+BDSTJ2-J2OFF)/J2MRES
+    J1POS = HEIGHT - DIFFERENCE/2
+    J2POS = HEIGHT + DIFFERENCE/2
+    ; then motor counts
+    P3=(J1POS-J1OFF)/J1MRES
+    P4=(J2POS-J2OFF)/J2MRES
 CLOSE
 
 ; A PLC(sx+15) needs to be made to do position reporting
@@ -110,18 +81,14 @@ CLOSE
 #define J1POS (J1MRES*m362/(I308*32)+J1OFF)
 #define J2POS (J2MRES*m462/(I408*32)+J2OFF)
 #define HEIGHT Q87
-#define ANGLE Q88
-; Local variables
-#define RATIO Q328
+#define DIFFERENCE Q88
 OPEN PLC18
 CLEAR
     ADDRESS&3
-    ; this is the difference in height of the jacks divided by their distance apart
-    RATIO=(J2POS-J1POS)/DIST
-    ; this is the angle of the surface
-    ANGLE=atan(RATIO)
-    ; the height of the surface
-    HEIGHT=J1POS+RATIO*PIVOT+DEPTH/cos(ANGLE)
+    ; this is the DIFFERENCE between Jacks
+    DIFFERENCE=(J2POS-J1POS)
+    ; the height of centre of the surface
+    HEIGHT=J1POS+DIFFERENCE/2
 CLOSE
 ENABLE PLC18
 

@@ -157,8 +157,7 @@ asynStatus pmacCsGroups::switchToGroup(int id) {
   debug(DEBUG_FLOW, functionName);
 
   if (csGroups.lookup(id) == NULL) {
-    cmdStatus = asynError;
-    debug(DEBUG_ERROR, functionName, "Invalid Coordinate System Group Number", id);
+    // do nothing, this will happen at startup if no groups are defined
   } else {
     // First abort motion on the currently selected group
     pGrp = (pmacCsGroup *) csGroups.lookup(currentGroup);
@@ -204,7 +203,7 @@ asynStatus pmacCsGroups::switchToGroup(int id) {
           cmdStatus = pC_->lowLevelWriteRead(command, response);
 
           // ensure that the Q7x will be set correctly in pmacController::makeCSDemandsConsistent
-          pC_->csGroupSwitchCalled_ = true;
+          pC_->csResetAllDemands = true;
         }
       }
     }
@@ -293,7 +292,7 @@ asynStatus pmacCsGroups::redefineLookaheads() {
 
   // Next we must re-define the lookaheads
   if (status == asynSuccess) {
-    for (cs = 16; cs > 0; cs--) {
+    for (cs = pC_->csCount; cs > 0; cs--) {
       sprintf(cmd, "&%dDEFINE LOOKAHEAD 50,10", cs);
       if (pC_->lowLevelWriteRead(cmd, reply) != asynSuccess) {
         debug(DEBUG_ERROR, functionName, "Failed to send command", cmd);

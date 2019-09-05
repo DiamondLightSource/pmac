@@ -1,0 +1,4199 @@
+4 0 1
+beginScreenProperties
+h 400
+major 4
+minor 0
+release 1
+w 620
+x 0
+y 0
+bgColor index 3
+botShadowColor index 11
+btnFont "arial-bold-r-14.0"
+ctlBgColor1 index 3
+ctlBgColor2 index 14
+ctlFgColor1 index 25
+ctlFgColor2 index 0
+ctlFont "arial-bold-r-14.0"
+fgColor index 14
+font "arial-medium-r-14.0"
+showGrid
+snapToGrid
+textColor index 14
+title "Device - labTop"
+topShadowColor index 1
+endScreenProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 30
+major 4
+minor 0
+release 0
+w 620
+x 0
+y 0
+
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 25
+major 4
+minor 0
+release 0
+w 618
+x 0
+y 2
+fillColor index 0
+lineColor index 1
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 25
+major 4
+minor 0
+release 0
+w 618
+x 1
+y 3
+fillColor index 0
+lineColor index 11
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 24
+major 4
+minor 2
+release 0
+w 618
+x 1
+y 3
+bgColor index 3
+botShadowColor index 0
+button3Popup
+buttonLabel "tooltip"
+displayFileName {
+  0 "generic-tooltip"
+}
+fgColor index 14
+font "arial-bold-r-14.0"
+invisible
+numDsps 1
+numPvs 4
+setPosition {
+  0 "button"
+}
+topShadowColor index 0
+xPosOffset 5
+yPosOffset 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 25
+major 4
+minor 1
+release 0
+w 660
+x 1
+y 3
+bgColor index 48
+fgColor index 14
+font "arial-bold-r-16.0"
+fontAlign "center"
+value {
+  "lab Top"
+}
+endObjectProperties
+
+endGroup
+
+
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 109
+major 4
+minor 4
+release 0
+w 189
+x 10
+y 40
+bgColor index 0
+botShadowColor index 0
+button3Popup
+buttonLabel "HELP"
+displayFileName {
+  0 "motor-embed-small-tooltip"
+}
+fgColor index 0
+font "helvetica-medium-r-14.0"
+invisible
+numDsps 1
+numPvs 4
+setPosition {
+  0 "button"
+}
+symbols {
+  0 "box-label=Motor 1->A,motor=PMAC_BRICK_TEST:MOTOR1"
+}
+topShadowColor index 0
+xPosOffset -100
+yPosOffset -100
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 104
+major 4
+minor 0
+release 0
+w 189
+x 10
+y 45
+fill
+fillColor index 5
+lineColor index 14
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 22
+major 4
+minor 1
+release 0
+w 52
+x 143
+y 123
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR1.STOP"
+fgColor index 21
+font "arial-bold-r-14.0"
+offColor index 3
+offLabel "STOP"
+onColor index 4
+onLabel "STOP"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 18
+y 96
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR1.SEVR"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+minValues {
+  0 3
+  2 1
+  3 2
+}
+numPvs 1
+numStates 5
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 172
+y 96
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR1.DMOV"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  4 2
+  5 1
+}
+minValues {
+  4 1
+}
+numPvs 1
+numStates 6
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 22
+major 4
+minor 4
+release 0
+w 52
+x 15
+y 123
+bgColor index 3
+botShadowColor index 11
+buttonLabel "More"
+displayFileName {
+  0 "motor.edl"
+}
+fgColor index 43
+font "arial-bold-r-14.0"
+numDsps 1
+numPvs 4
+symbols {
+  0 "motor=PMAC_BRICK_TEST:MOTOR1"
+}
+topShadowColor index 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 1
+w 79
+x 10
+y 40
+autoSize
+bgColor index 8
+border
+fgColor index 14
+font "arial-medium-r-12.0"
+value {
+  "  Motor 1->A  "
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+h 16
+major 4
+minor 6
+release 0
+w 60
+x 75
+y 125
+autoHeight
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR1.TWV"
+editable
+fgColor index 14
+font "arial-bold-r-14.0"
+fontAlign "center"
+limitsFromDb
+newPos
+noExecuteClipMask
+nullColor index 30
+objType "controls"
+useHexPrefix
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 15
+y 61
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR1.TWR"
+fgColor index 25
+font "arial-bold-r-24.0"
+offColor index 3
+offLabel "-"
+onColor index 4
+onLabel "-"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+h 33
+major 10
+minor 0
+release 0
+w 83
+x 63
+y 59
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR1"
+displayMode "decimal"
+fgColor index 25
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+precision 4
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 151
+y 61
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR1.TWF"
+fgColor index 25
+font "arial-bold-r-16.0"
+offColor index 3
+offLabel "+"
+onColor index 4
+onLabel "+"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 0
+release 0
+w 43
+x 151
+y 46
+bgColor index 3
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR1.SPMG"
+fgColor index 25
+font "helvetica-medium-r-8.0"
+inconsistentColor index 14
+indicatorPv "PMAC_BRICK_TEST:MOTOR1.SPMG"
+topShadowColor index 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+h 20
+major 10
+minor 0
+release 0
+w 115
+x 48
+y 97
+bgColor index 10
+controlPv "PMAC_BRICK_TEST:MOTOR1.RBV"
+fgAlarm
+fgColor index 15
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 11
+major 4
+minor 0
+release 0
+w 18
+x 131
+y 46
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 0
+w 18
+x 131
+y 46
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR1:KILL.PROC"
+fgColor index 22
+font "helvetica-medium-r-8.0"
+offColor index 3
+offLabel "Kill"
+onColor index 4
+onLabel "Kill"
+pressValue "1"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "1"
+visMin "0"
+visPv "PMAC_BRICK_TEST:MOTOR1:KILL"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 168
+y 96
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 168
+y 96
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "ALoss"
+}
+endObjectProperties
+
+endGroup
+
+visMax "3"
+visMin "2"
+visPv "CALC\\\{A&2\}(PMAC_BRICK_TEST:MOTOR1:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 168
+y 96
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 168
+y 96
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "SFail"
+}
+endObjectProperties
+
+endGroup
+
+visMax "5"
+visMin "4"
+visPv "CALC\\\{A&4\}(PMAC_BRICK_TEST:MOTOR1:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 168
+y 96
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 0
+w 28
+x 168
+y 96
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR1:ELOSSRC.A"
+fgColor index 14
+font "helvetica-medium-r-8.0"
+offColor index 20
+offLabel "Eloss"
+onColor index 21
+onLabel "ELoss"
+pressValue "0"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "2"
+visMin "1"
+visPv "CALC\\\{A&1\}(PMAC_BRICK_TEST:MOTOR1:ELOSS)"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 109
+major 4
+minor 4
+release 0
+w 189
+x 10
+y 160
+bgColor index 0
+botShadowColor index 0
+button3Popup
+buttonLabel "HELP"
+displayFileName {
+  0 "motor-embed-small-tooltip"
+}
+fgColor index 0
+font "helvetica-medium-r-14.0"
+invisible
+numDsps 1
+numPvs 4
+setPosition {
+  0 "button"
+}
+symbols {
+  0 "box-label=Motor 2->B,motor=PMAC_BRICK_TEST:MOTOR2"
+}
+topShadowColor index 0
+xPosOffset -100
+yPosOffset -100
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 104
+major 4
+minor 0
+release 0
+w 189
+x 10
+y 165
+fill
+fillColor index 5
+lineColor index 14
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 22
+major 4
+minor 1
+release 0
+w 52
+x 143
+y 243
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR2.STOP"
+fgColor index 21
+font "arial-bold-r-14.0"
+offColor index 3
+offLabel "STOP"
+onColor index 4
+onLabel "STOP"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 18
+y 216
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR2.SEVR"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+minValues {
+  0 3
+  2 1
+  3 2
+}
+numPvs 1
+numStates 5
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 172
+y 216
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR2.DMOV"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  4 2
+  5 1
+}
+minValues {
+  4 1
+}
+numPvs 1
+numStates 6
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 22
+major 4
+minor 4
+release 0
+w 52
+x 15
+y 243
+bgColor index 3
+botShadowColor index 11
+buttonLabel "More"
+displayFileName {
+  0 "motor.edl"
+}
+fgColor index 43
+font "arial-bold-r-14.0"
+numDsps 1
+numPvs 4
+symbols {
+  0 "motor=PMAC_BRICK_TEST:MOTOR2"
+}
+topShadowColor index 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 1
+w 79
+x 10
+y 160
+autoSize
+bgColor index 8
+border
+fgColor index 14
+font "arial-medium-r-12.0"
+value {
+  "  Motor 2->B  "
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+h 16
+major 4
+minor 6
+release 0
+w 60
+x 75
+y 245
+autoHeight
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR2.TWV"
+editable
+fgColor index 14
+font "arial-bold-r-14.0"
+fontAlign "center"
+limitsFromDb
+newPos
+noExecuteClipMask
+nullColor index 30
+objType "controls"
+useHexPrefix
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 15
+y 181
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR2.TWR"
+fgColor index 25
+font "arial-bold-r-24.0"
+offColor index 3
+offLabel "-"
+onColor index 4
+onLabel "-"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+h 33
+major 10
+minor 0
+release 0
+w 83
+x 63
+y 179
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR2"
+displayMode "decimal"
+fgColor index 25
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+precision 4
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 151
+y 181
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR2.TWF"
+fgColor index 25
+font "arial-bold-r-16.0"
+offColor index 3
+offLabel "+"
+onColor index 4
+onLabel "+"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 0
+release 0
+w 43
+x 151
+y 166
+bgColor index 3
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR2.SPMG"
+fgColor index 25
+font "helvetica-medium-r-8.0"
+inconsistentColor index 14
+indicatorPv "PMAC_BRICK_TEST:MOTOR2.SPMG"
+topShadowColor index 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+h 20
+major 10
+minor 0
+release 0
+w 115
+x 48
+y 217
+bgColor index 10
+controlPv "PMAC_BRICK_TEST:MOTOR2.RBV"
+fgAlarm
+fgColor index 15
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 11
+major 4
+minor 0
+release 0
+w 18
+x 131
+y 166
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 0
+w 18
+x 131
+y 166
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR2:KILL.PROC"
+fgColor index 22
+font "helvetica-medium-r-8.0"
+offColor index 3
+offLabel "Kill"
+onColor index 4
+onLabel "Kill"
+pressValue "1"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "1"
+visMin "0"
+visPv "PMAC_BRICK_TEST:MOTOR2:KILL"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 168
+y 216
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 168
+y 216
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "ALoss"
+}
+endObjectProperties
+
+endGroup
+
+visMax "3"
+visMin "2"
+visPv "CALC\\\{A&2\}(PMAC_BRICK_TEST:MOTOR2:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 168
+y 216
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 168
+y 216
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "SFail"
+}
+endObjectProperties
+
+endGroup
+
+visMax "5"
+visMin "4"
+visPv "CALC\\\{A&4\}(PMAC_BRICK_TEST:MOTOR2:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 168
+y 216
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 0
+w 28
+x 168
+y 216
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR2:ELOSSRC.A"
+fgColor index 14
+font "helvetica-medium-r-8.0"
+offColor index 20
+offLabel "Eloss"
+onColor index 21
+onLabel "ELoss"
+pressValue "0"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "2"
+visMin "1"
+visPv "CALC\\\{A&1\}(PMAC_BRICK_TEST:MOTOR2:ELOSS)"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 109
+major 4
+minor 4
+release 0
+w 189
+x 10
+y 280
+bgColor index 0
+botShadowColor index 0
+button3Popup
+buttonLabel "HELP"
+displayFileName {
+  0 "motor-embed-small-tooltip"
+}
+fgColor index 0
+font "helvetica-medium-r-14.0"
+invisible
+numDsps 1
+numPvs 4
+setPosition {
+  0 "button"
+}
+symbols {
+  0 "box-label=Motor 3->I JACK 1,motor=PMAC_BRICK_TEST:MOTOR3"
+}
+topShadowColor index 0
+xPosOffset -100
+yPosOffset -100
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 104
+major 4
+minor 0
+release 0
+w 189
+x 10
+y 285
+fill
+fillColor index 5
+lineColor index 14
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 22
+major 4
+minor 1
+release 0
+w 52
+x 143
+y 363
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR3.STOP"
+fgColor index 21
+font "arial-bold-r-14.0"
+offColor index 3
+offLabel "STOP"
+onColor index 4
+onLabel "STOP"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 18
+y 336
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR3.SEVR"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+minValues {
+  0 3
+  2 1
+  3 2
+}
+numPvs 1
+numStates 5
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 172
+y 336
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR3.DMOV"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  4 2
+  5 1
+}
+minValues {
+  4 1
+}
+numPvs 1
+numStates 6
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 22
+major 4
+minor 4
+release 0
+w 52
+x 15
+y 363
+bgColor index 3
+botShadowColor index 11
+buttonLabel "More"
+displayFileName {
+  0 "motor.edl"
+}
+fgColor index 43
+font "arial-bold-r-14.0"
+numDsps 1
+numPvs 4
+symbols {
+  0 "motor=PMAC_BRICK_TEST:MOTOR3"
+}
+topShadowColor index 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 1
+w 79
+x 10
+y 280
+autoSize
+bgColor index 8
+border
+fgColor index 14
+font "arial-medium-r-12.0"
+value {
+  "  Motor 3->I JACK 1  "
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+h 16
+major 4
+minor 6
+release 0
+w 60
+x 75
+y 365
+autoHeight
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR3.TWV"
+editable
+fgColor index 14
+font "arial-bold-r-14.0"
+fontAlign "center"
+limitsFromDb
+newPos
+noExecuteClipMask
+nullColor index 30
+objType "controls"
+useHexPrefix
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 15
+y 301
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR3.TWR"
+fgColor index 25
+font "arial-bold-r-24.0"
+offColor index 3
+offLabel "-"
+onColor index 4
+onLabel "-"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+h 33
+major 10
+minor 0
+release 0
+w 83
+x 63
+y 299
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR3"
+displayMode "decimal"
+fgColor index 25
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+precision 4
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 151
+y 301
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR3.TWF"
+fgColor index 25
+font "arial-bold-r-16.0"
+offColor index 3
+offLabel "+"
+onColor index 4
+onLabel "+"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 0
+release 0
+w 43
+x 151
+y 286
+bgColor index 3
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR3.SPMG"
+fgColor index 25
+font "helvetica-medium-r-8.0"
+inconsistentColor index 14
+indicatorPv "PMAC_BRICK_TEST:MOTOR3.SPMG"
+topShadowColor index 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+h 20
+major 10
+minor 0
+release 0
+w 115
+x 48
+y 337
+bgColor index 10
+controlPv "PMAC_BRICK_TEST:MOTOR3.RBV"
+fgAlarm
+fgColor index 15
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 11
+major 4
+minor 0
+release 0
+w 18
+x 131
+y 286
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 0
+w 18
+x 131
+y 286
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR3:KILL.PROC"
+fgColor index 22
+font "helvetica-medium-r-8.0"
+offColor index 3
+offLabel "Kill"
+onColor index 4
+onLabel "Kill"
+pressValue "1"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "1"
+visMin "0"
+visPv "PMAC_BRICK_TEST:MOTOR3:KILL"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 168
+y 336
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 168
+y 336
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "ALoss"
+}
+endObjectProperties
+
+endGroup
+
+visMax "3"
+visMin "2"
+visPv "CALC\\\{A&2\}(PMAC_BRICK_TEST:MOTOR3:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 168
+y 336
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 168
+y 336
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "SFail"
+}
+endObjectProperties
+
+endGroup
+
+visMax "5"
+visMin "4"
+visPv "CALC\\\{A&4\}(PMAC_BRICK_TEST:MOTOR3:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 168
+y 336
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 0
+w 28
+x 168
+y 336
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR3:ELOSSRC.A"
+fgColor index 14
+font "helvetica-medium-r-8.0"
+offColor index 20
+offLabel "Eloss"
+onColor index 21
+onLabel "ELoss"
+pressValue "0"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "2"
+visMin "1"
+visPv "CALC\\\{A&1\}(PMAC_BRICK_TEST:MOTOR3:ELOSS)"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 109
+major 4
+minor 4
+release 0
+w 189
+x 215
+y 40
+bgColor index 0
+botShadowColor index 0
+button3Popup
+buttonLabel "HELP"
+displayFileName {
+  0 "motor-embed-small-tooltip"
+}
+fgColor index 0
+font "helvetica-medium-r-14.0"
+invisible
+numDsps 1
+numPvs 4
+setPosition {
+  0 "button"
+}
+symbols {
+  0 "box-label=Motor 4->I- JACK 2,motor=PMAC_BRICK_TEST:MOTOR4"
+}
+topShadowColor index 0
+xPosOffset -100
+yPosOffset -100
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 104
+major 4
+minor 0
+release 0
+w 189
+x 215
+y 45
+fill
+fillColor index 5
+lineColor index 14
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 22
+major 4
+minor 1
+release 0
+w 52
+x 348
+y 123
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR4.STOP"
+fgColor index 21
+font "arial-bold-r-14.0"
+offColor index 3
+offLabel "STOP"
+onColor index 4
+onLabel "STOP"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 223
+y 96
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR4.SEVR"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+minValues {
+  0 3
+  2 1
+  3 2
+}
+numPvs 1
+numStates 5
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 377
+y 96
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR4.DMOV"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  4 2
+  5 1
+}
+minValues {
+  4 1
+}
+numPvs 1
+numStates 6
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 22
+major 4
+minor 4
+release 0
+w 52
+x 220
+y 123
+bgColor index 3
+botShadowColor index 11
+buttonLabel "More"
+displayFileName {
+  0 "motor.edl"
+}
+fgColor index 43
+font "arial-bold-r-14.0"
+numDsps 1
+numPvs 4
+symbols {
+  0 "motor=PMAC_BRICK_TEST:MOTOR4"
+}
+topShadowColor index 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 1
+w 79
+x 215
+y 40
+autoSize
+bgColor index 8
+border
+fgColor index 14
+font "arial-medium-r-12.0"
+value {
+  "  Motor 4->I- JACK 2  "
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+h 16
+major 4
+minor 6
+release 0
+w 60
+x 280
+y 125
+autoHeight
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR4.TWV"
+editable
+fgColor index 14
+font "arial-bold-r-14.0"
+fontAlign "center"
+limitsFromDb
+newPos
+noExecuteClipMask
+nullColor index 30
+objType "controls"
+useHexPrefix
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 220
+y 61
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR4.TWR"
+fgColor index 25
+font "arial-bold-r-24.0"
+offColor index 3
+offLabel "-"
+onColor index 4
+onLabel "-"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+h 33
+major 10
+minor 0
+release 0
+w 83
+x 268
+y 59
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR4"
+displayMode "decimal"
+fgColor index 25
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+precision 4
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 356
+y 61
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR4.TWF"
+fgColor index 25
+font "arial-bold-r-16.0"
+offColor index 3
+offLabel "+"
+onColor index 4
+onLabel "+"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 0
+release 0
+w 43
+x 356
+y 46
+bgColor index 3
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR4.SPMG"
+fgColor index 25
+font "helvetica-medium-r-8.0"
+inconsistentColor index 14
+indicatorPv "PMAC_BRICK_TEST:MOTOR4.SPMG"
+topShadowColor index 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+h 20
+major 10
+minor 0
+release 0
+w 115
+x 253
+y 97
+bgColor index 10
+controlPv "PMAC_BRICK_TEST:MOTOR4.RBV"
+fgAlarm
+fgColor index 15
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 11
+major 4
+minor 0
+release 0
+w 18
+x 336
+y 46
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 0
+w 18
+x 336
+y 46
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR4:KILL.PROC"
+fgColor index 22
+font "helvetica-medium-r-8.0"
+offColor index 3
+offLabel "Kill"
+onColor index 4
+onLabel "Kill"
+pressValue "1"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "1"
+visMin "0"
+visPv "PMAC_BRICK_TEST:MOTOR4:KILL"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 373
+y 96
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 373
+y 96
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "ALoss"
+}
+endObjectProperties
+
+endGroup
+
+visMax "3"
+visMin "2"
+visPv "CALC\\\{A&2\}(PMAC_BRICK_TEST:MOTOR4:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 373
+y 96
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 373
+y 96
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "SFail"
+}
+endObjectProperties
+
+endGroup
+
+visMax "5"
+visMin "4"
+visPv "CALC\\\{A&4\}(PMAC_BRICK_TEST:MOTOR4:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 373
+y 96
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 0
+w 28
+x 373
+y 96
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR4:ELOSSRC.A"
+fgColor index 14
+font "helvetica-medium-r-8.0"
+offColor index 20
+offLabel "Eloss"
+onColor index 21
+onLabel "ELoss"
+pressValue "0"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "2"
+visMin "1"
+visPv "CALC\\\{A&1\}(PMAC_BRICK_TEST:MOTOR4:ELOSS)"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 109
+major 4
+minor 4
+release 0
+w 189
+x 215
+y 160
+bgColor index 0
+botShadowColor index 0
+button3Popup
+buttonLabel "HELP"
+displayFileName {
+  0 "motor-embed-small-tooltip"
+}
+fgColor index 0
+font "helvetica-medium-r-14.0"
+invisible
+numDsps 1
+numPvs 4
+setPosition {
+  0 "button"
+}
+symbols {
+  0 "box-label=Motor 5,motor=PMAC_BRICK_TEST:MOTOR5"
+}
+topShadowColor index 0
+xPosOffset -100
+yPosOffset -100
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 104
+major 4
+minor 0
+release 0
+w 189
+x 215
+y 165
+fill
+fillColor index 5
+lineColor index 14
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 22
+major 4
+minor 1
+release 0
+w 52
+x 348
+y 243
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR5.STOP"
+fgColor index 21
+font "arial-bold-r-14.0"
+offColor index 3
+offLabel "STOP"
+onColor index 4
+onLabel "STOP"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 223
+y 216
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR5.SEVR"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+minValues {
+  0 3
+  2 1
+  3 2
+}
+numPvs 1
+numStates 5
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 377
+y 216
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR5.DMOV"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  4 2
+  5 1
+}
+minValues {
+  4 1
+}
+numPvs 1
+numStates 6
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 22
+major 4
+minor 4
+release 0
+w 52
+x 220
+y 243
+bgColor index 3
+botShadowColor index 11
+buttonLabel "More"
+displayFileName {
+  0 "motor.edl"
+}
+fgColor index 43
+font "arial-bold-r-14.0"
+numDsps 1
+numPvs 4
+symbols {
+  0 "motor=PMAC_BRICK_TEST:MOTOR5"
+}
+topShadowColor index 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 1
+w 79
+x 215
+y 160
+autoSize
+bgColor index 8
+border
+fgColor index 14
+font "arial-medium-r-12.0"
+value {
+  "  Motor 5  "
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+h 16
+major 4
+minor 6
+release 0
+w 60
+x 280
+y 245
+autoHeight
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR5.TWV"
+editable
+fgColor index 14
+font "arial-bold-r-14.0"
+fontAlign "center"
+limitsFromDb
+newPos
+noExecuteClipMask
+nullColor index 30
+objType "controls"
+useHexPrefix
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 220
+y 181
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR5.TWR"
+fgColor index 25
+font "arial-bold-r-24.0"
+offColor index 3
+offLabel "-"
+onColor index 4
+onLabel "-"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+h 33
+major 10
+minor 0
+release 0
+w 83
+x 268
+y 179
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR5"
+displayMode "decimal"
+fgColor index 25
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+precision 4
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 356
+y 181
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR5.TWF"
+fgColor index 25
+font "arial-bold-r-16.0"
+offColor index 3
+offLabel "+"
+onColor index 4
+onLabel "+"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 0
+release 0
+w 43
+x 356
+y 166
+bgColor index 3
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR5.SPMG"
+fgColor index 25
+font "helvetica-medium-r-8.0"
+inconsistentColor index 14
+indicatorPv "PMAC_BRICK_TEST:MOTOR5.SPMG"
+topShadowColor index 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+h 20
+major 10
+minor 0
+release 0
+w 115
+x 253
+y 217
+bgColor index 10
+controlPv "PMAC_BRICK_TEST:MOTOR5.RBV"
+fgAlarm
+fgColor index 15
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 11
+major 4
+minor 0
+release 0
+w 18
+x 336
+y 166
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 0
+w 18
+x 336
+y 166
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR5:KILL.PROC"
+fgColor index 22
+font "helvetica-medium-r-8.0"
+offColor index 3
+offLabel "Kill"
+onColor index 4
+onLabel "Kill"
+pressValue "1"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "1"
+visMin "0"
+visPv "PMAC_BRICK_TEST:MOTOR5:KILL"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 373
+y 216
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 373
+y 216
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "ALoss"
+}
+endObjectProperties
+
+endGroup
+
+visMax "3"
+visMin "2"
+visPv "CALC\\\{A&2\}(PMAC_BRICK_TEST:MOTOR5:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 373
+y 216
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 373
+y 216
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "SFail"
+}
+endObjectProperties
+
+endGroup
+
+visMax "5"
+visMin "4"
+visPv "CALC\\\{A&4\}(PMAC_BRICK_TEST:MOTOR5:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 373
+y 216
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 0
+w 28
+x 373
+y 216
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR5:ELOSSRC.A"
+fgColor index 14
+font "helvetica-medium-r-8.0"
+offColor index 20
+offLabel "Eloss"
+onColor index 21
+onLabel "ELoss"
+pressValue "0"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "2"
+visMin "1"
+visPv "CALC\\\{A&1\}(PMAC_BRICK_TEST:MOTOR5:ELOSS)"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 109
+major 4
+minor 4
+release 0
+w 189
+x 215
+y 280
+bgColor index 0
+botShadowColor index 0
+button3Popup
+buttonLabel "HELP"
+displayFileName {
+  0 "motor-embed-small-tooltip"
+}
+fgColor index 0
+font "helvetica-medium-r-14.0"
+invisible
+numDsps 1
+numPvs 4
+setPosition {
+  0 "button"
+}
+symbols {
+  0 "box-label=Motor 6,motor=PMAC_BRICK_TEST:MOTOR6"
+}
+topShadowColor index 0
+xPosOffset -100
+yPosOffset -100
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 104
+major 4
+minor 0
+release 0
+w 189
+x 215
+y 285
+fill
+fillColor index 5
+lineColor index 14
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 22
+major 4
+minor 1
+release 0
+w 52
+x 348
+y 363
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR6.STOP"
+fgColor index 21
+font "arial-bold-r-14.0"
+offColor index 3
+offLabel "STOP"
+onColor index 4
+onLabel "STOP"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 223
+y 336
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR6.SEVR"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+minValues {
+  0 3
+  2 1
+  3 2
+}
+numPvs 1
+numStates 5
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 377
+y 336
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR6.DMOV"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  4 2
+  5 1
+}
+minValues {
+  4 1
+}
+numPvs 1
+numStates 6
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 22
+major 4
+minor 4
+release 0
+w 52
+x 220
+y 363
+bgColor index 3
+botShadowColor index 11
+buttonLabel "More"
+displayFileName {
+  0 "motor.edl"
+}
+fgColor index 43
+font "arial-bold-r-14.0"
+numDsps 1
+numPvs 4
+symbols {
+  0 "motor=PMAC_BRICK_TEST:MOTOR6"
+}
+topShadowColor index 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 1
+w 79
+x 215
+y 280
+autoSize
+bgColor index 8
+border
+fgColor index 14
+font "arial-medium-r-12.0"
+value {
+  "  Motor 6  "
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+h 16
+major 4
+minor 6
+release 0
+w 60
+x 280
+y 365
+autoHeight
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR6.TWV"
+editable
+fgColor index 14
+font "arial-bold-r-14.0"
+fontAlign "center"
+limitsFromDb
+newPos
+noExecuteClipMask
+nullColor index 30
+objType "controls"
+useHexPrefix
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 220
+y 301
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR6.TWR"
+fgColor index 25
+font "arial-bold-r-24.0"
+offColor index 3
+offLabel "-"
+onColor index 4
+onLabel "-"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+h 33
+major 10
+minor 0
+release 0
+w 83
+x 268
+y 299
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR6"
+displayMode "decimal"
+fgColor index 25
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+precision 4
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 356
+y 301
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR6.TWF"
+fgColor index 25
+font "arial-bold-r-16.0"
+offColor index 3
+offLabel "+"
+onColor index 4
+onLabel "+"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 0
+release 0
+w 43
+x 356
+y 286
+bgColor index 3
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR6.SPMG"
+fgColor index 25
+font "helvetica-medium-r-8.0"
+inconsistentColor index 14
+indicatorPv "PMAC_BRICK_TEST:MOTOR6.SPMG"
+topShadowColor index 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+h 20
+major 10
+minor 0
+release 0
+w 115
+x 253
+y 337
+bgColor index 10
+controlPv "PMAC_BRICK_TEST:MOTOR6.RBV"
+fgAlarm
+fgColor index 15
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 11
+major 4
+minor 0
+release 0
+w 18
+x 336
+y 286
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 0
+w 18
+x 336
+y 286
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR6:KILL.PROC"
+fgColor index 22
+font "helvetica-medium-r-8.0"
+offColor index 3
+offLabel "Kill"
+onColor index 4
+onLabel "Kill"
+pressValue "1"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "1"
+visMin "0"
+visPv "PMAC_BRICK_TEST:MOTOR6:KILL"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 373
+y 336
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 373
+y 336
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "ALoss"
+}
+endObjectProperties
+
+endGroup
+
+visMax "3"
+visMin "2"
+visPv "CALC\\\{A&2\}(PMAC_BRICK_TEST:MOTOR6:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 373
+y 336
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 373
+y 336
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "SFail"
+}
+endObjectProperties
+
+endGroup
+
+visMax "5"
+visMin "4"
+visPv "CALC\\\{A&4\}(PMAC_BRICK_TEST:MOTOR6:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 373
+y 336
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 0
+w 28
+x 373
+y 336
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR6:ELOSSRC.A"
+fgColor index 14
+font "helvetica-medium-r-8.0"
+offColor index 20
+offLabel "Eloss"
+onColor index 21
+onLabel "ELoss"
+pressValue "0"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "2"
+visMin "1"
+visPv "CALC\\\{A&1\}(PMAC_BRICK_TEST:MOTOR6:ELOSS)"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 109
+major 4
+minor 4
+release 0
+w 189
+x 420
+y 40
+bgColor index 0
+botShadowColor index 0
+button3Popup
+buttonLabel "HELP"
+displayFileName {
+  0 "motor-embed-small-tooltip"
+}
+fgColor index 0
+font "helvetica-medium-r-14.0"
+invisible
+numDsps 1
+numPvs 4
+setPosition {
+  0 "button"
+}
+symbols {
+  0 "box-label=Motor 7,motor=PMAC_BRICK_TEST:MOTOR7"
+}
+topShadowColor index 0
+xPosOffset -100
+yPosOffset -100
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 104
+major 4
+minor 0
+release 0
+w 189
+x 420
+y 45
+fill
+fillColor index 5
+lineColor index 14
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 22
+major 4
+minor 1
+release 0
+w 52
+x 553
+y 123
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR7.STOP"
+fgColor index 21
+font "arial-bold-r-14.0"
+offColor index 3
+offLabel "STOP"
+onColor index 4
+onLabel "STOP"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 428
+y 96
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR7.SEVR"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+minValues {
+  0 3
+  2 1
+  3 2
+}
+numPvs 1
+numStates 5
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 582
+y 96
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR7.DMOV"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  4 2
+  5 1
+}
+minValues {
+  4 1
+}
+numPvs 1
+numStates 6
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 22
+major 4
+minor 4
+release 0
+w 52
+x 425
+y 123
+bgColor index 3
+botShadowColor index 11
+buttonLabel "More"
+displayFileName {
+  0 "motor.edl"
+}
+fgColor index 43
+font "arial-bold-r-14.0"
+numDsps 1
+numPvs 4
+symbols {
+  0 "motor=PMAC_BRICK_TEST:MOTOR7"
+}
+topShadowColor index 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 1
+w 79
+x 420
+y 40
+autoSize
+bgColor index 8
+border
+fgColor index 14
+font "arial-medium-r-12.0"
+value {
+  "  Motor 7  "
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+h 16
+major 4
+minor 6
+release 0
+w 60
+x 485
+y 125
+autoHeight
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR7.TWV"
+editable
+fgColor index 14
+font "arial-bold-r-14.0"
+fontAlign "center"
+limitsFromDb
+newPos
+noExecuteClipMask
+nullColor index 30
+objType "controls"
+useHexPrefix
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 425
+y 61
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR7.TWR"
+fgColor index 25
+font "arial-bold-r-24.0"
+offColor index 3
+offLabel "-"
+onColor index 4
+onLabel "-"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+h 33
+major 10
+minor 0
+release 0
+w 83
+x 473
+y 59
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR7"
+displayMode "decimal"
+fgColor index 25
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+precision 4
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 561
+y 61
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR7.TWF"
+fgColor index 25
+font "arial-bold-r-16.0"
+offColor index 3
+offLabel "+"
+onColor index 4
+onLabel "+"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 0
+release 0
+w 43
+x 561
+y 46
+bgColor index 3
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR7.SPMG"
+fgColor index 25
+font "helvetica-medium-r-8.0"
+inconsistentColor index 14
+indicatorPv "PMAC_BRICK_TEST:MOTOR7.SPMG"
+topShadowColor index 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+h 20
+major 10
+minor 0
+release 0
+w 115
+x 458
+y 97
+bgColor index 10
+controlPv "PMAC_BRICK_TEST:MOTOR7.RBV"
+fgAlarm
+fgColor index 15
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 11
+major 4
+minor 0
+release 0
+w 18
+x 541
+y 46
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 0
+w 18
+x 541
+y 46
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR7:KILL.PROC"
+fgColor index 22
+font "helvetica-medium-r-8.0"
+offColor index 3
+offLabel "Kill"
+onColor index 4
+onLabel "Kill"
+pressValue "1"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "1"
+visMin "0"
+visPv "PMAC_BRICK_TEST:MOTOR7:KILL"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 578
+y 96
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 578
+y 96
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "ALoss"
+}
+endObjectProperties
+
+endGroup
+
+visMax "3"
+visMin "2"
+visPv "CALC\\\{A&2\}(PMAC_BRICK_TEST:MOTOR7:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 578
+y 96
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 578
+y 96
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "SFail"
+}
+endObjectProperties
+
+endGroup
+
+visMax "5"
+visMin "4"
+visPv "CALC\\\{A&4\}(PMAC_BRICK_TEST:MOTOR7:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 578
+y 96
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 0
+w 28
+x 578
+y 96
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR7:ELOSSRC.A"
+fgColor index 14
+font "helvetica-medium-r-8.0"
+offColor index 20
+offLabel "Eloss"
+onColor index 21
+onLabel "ELoss"
+pressValue "0"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "2"
+visMin "1"
+visPv "CALC\\\{A&1\}(PMAC_BRICK_TEST:MOTOR7:ELOSS)"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 109
+major 4
+minor 4
+release 0
+w 189
+x 420
+y 160
+bgColor index 0
+botShadowColor index 0
+button3Popup
+buttonLabel "HELP"
+displayFileName {
+  0 "motor-embed-small-tooltip"
+}
+fgColor index 0
+font "helvetica-medium-r-14.0"
+invisible
+numDsps 1
+numPvs 4
+setPosition {
+  0 "button"
+}
+symbols {
+  0 "box-label=Motor 8,motor=PMAC_BRICK_TEST:MOTOR8"
+}
+topShadowColor index 0
+xPosOffset -100
+yPosOffset -100
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+h 104
+major 4
+minor 0
+release 0
+w 189
+x 420
+y 165
+fill
+fillColor index 5
+lineColor index 14
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 22
+major 4
+minor 1
+release 0
+w 52
+x 553
+y 243
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR8.STOP"
+fgColor index 21
+font "arial-bold-r-14.0"
+offColor index 3
+offLabel "STOP"
+onColor index 4
+onLabel "STOP"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 428
+y 216
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR8.SEVR"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  0 4
+  2 2
+  3 3
+  4 1
+}
+minValues {
+  0 3
+  2 1
+  3 2
+}
+numPvs 1
+numStates 5
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 20
+x 582
+y 216
+bgColor index 3
+controlPvs {
+  0 "PMAC_BRICK_TEST:MOTOR8.DMOV"
+}
+fgColor index 14
+file "symbols-traffic-light-symbol.edl"
+maxValues {
+  4 2
+  5 1
+}
+minValues {
+  4 1
+}
+numPvs 1
+numStates 6
+useOriginalColors
+useOriginalSize
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 22
+major 4
+minor 4
+release 0
+w 52
+x 425
+y 243
+bgColor index 3
+botShadowColor index 11
+buttonLabel "More"
+displayFileName {
+  0 "motor.edl"
+}
+fgColor index 43
+font "arial-bold-r-14.0"
+numDsps 1
+numPvs 4
+symbols {
+  0 "motor=PMAC_BRICK_TEST:MOTOR8"
+}
+topShadowColor index 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 1
+w 79
+x 420
+y 160
+autoSize
+bgColor index 8
+border
+fgColor index 14
+font "arial-medium-r-12.0"
+value {
+  "  Motor 8  "
+}
+endObjectProperties
+
+# (Text Control)
+object activeXTextDspClass
+beginObjectProperties
+h 16
+major 4
+minor 6
+release 0
+w 60
+x 485
+y 245
+autoHeight
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR8.TWV"
+editable
+fgColor index 14
+font "arial-bold-r-14.0"
+fontAlign "center"
+limitsFromDb
+newPos
+noExecuteClipMask
+nullColor index 30
+objType "controls"
+useHexPrefix
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 425
+y 181
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR8.TWR"
+fgColor index 25
+font "arial-bold-r-24.0"
+offColor index 3
+offLabel "-"
+onColor index 4
+onLabel "-"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+h 33
+major 10
+minor 0
+release 0
+w 83
+x 473
+y 179
+bgColor index 3
+controlPv "PMAC_BRICK_TEST:MOTOR8"
+displayMode "decimal"
+fgColor index 25
+font "arial-bold-r-14.0"
+fontAlign "center"
+lineWidth -2
+precision 4
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 29
+major 4
+minor 1
+release 0
+w 43
+x 561
+y 181
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR8.TWF"
+fgColor index 25
+font "arial-bold-r-16.0"
+offColor index 3
+offLabel "+"
+onColor index 4
+onLabel "+"
+pressValue "1"
+topShadowColor index 1
+visMax "1"
+visMin "0"
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 0
+release 0
+w 43
+x 561
+y 166
+bgColor index 3
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR8.SPMG"
+fgColor index 25
+font "helvetica-medium-r-8.0"
+inconsistentColor index 14
+indicatorPv "PMAC_BRICK_TEST:MOTOR8.SPMG"
+topShadowColor index 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+h 20
+major 10
+minor 0
+release 0
+w 115
+x 458
+y 217
+bgColor index 10
+controlPv "PMAC_BRICK_TEST:MOTOR8.RBV"
+fgAlarm
+fgColor index 15
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 11
+major 4
+minor 0
+release 0
+w 18
+x 541
+y 166
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 13
+major 4
+minor 1
+release 0
+w 18
+x 541
+y 166
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR8:KILL.PROC"
+fgColor index 22
+font "helvetica-medium-r-8.0"
+offColor index 3
+offLabel "Kill"
+onColor index 4
+onLabel "Kill"
+pressValue "1"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "1"
+visMin "0"
+visPv "PMAC_BRICK_TEST:MOTOR8:KILL"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 578
+y 216
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 578
+y 216
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "ALoss"
+}
+endObjectProperties
+
+endGroup
+
+visMax "3"
+visMin "2"
+visPv "CALC\\\{A&2\}(PMAC_BRICK_TEST:MOTOR8:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 578
+y 216
+
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 1
+w 28
+x 578
+y 216
+bgColor index 21
+fgColor index 14
+font "helvetica-medium-r-10.0"
+fontAlign "center"
+value {
+  "SFail"
+}
+endObjectProperties
+
+endGroup
+
+visMax "5"
+visMin "4"
+visPv "CALC\\\{A&4\}(PMAC_BRICK_TEST:MOTOR8:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 21
+major 4
+minor 0
+release 0
+w 28
+x 578
+y 216
+
+
+beginGroup
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+h 21
+major 4
+minor 1
+release 0
+w 28
+x 578
+y 216
+3d
+botShadowColor index 11
+controlPv "PMAC_BRICK_TEST:MOTOR8:ELOSSRC.A"
+fgColor index 14
+font "helvetica-medium-r-8.0"
+offColor index 20
+offLabel "Eloss"
+onColor index 21
+onLabel "ELoss"
+pressValue "0"
+topShadowColor index 1
+endObjectProperties
+
+endGroup
+
+visMax "2"
+visMin "1"
+visPv "CALC\\\{A&1\}(PMAC_BRICK_TEST:MOTOR8:ELOSS)"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 20
+major 4
+minor 0
+release 0
+w 90
+x 420
+y 280
+
+
+beginGroup
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+h 20
+major 4
+minor 2
+release 0
+w 90
+x 420
+y 280
+bgColor index 3
+botShadowColor index 11
+buttonLabel ""
+displayFileName {
+  0 "pmacController.edl"
+}
+fgColor index 43
+font "arial-bold-r-14.0"
+numDsps 1
+numPvs 4
+symbols {
+  0 "pmac=BRICK1"
+}
+topShadowColor index 1
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 16
+major 4
+minor 1
+release 0
+w 86
+x 422
+y 282
+alarmPv "LOC\\dummy0=i:0"
+bgAlarm
+bgColor index 3
+fgColor index 43
+font "arial-bold-r-14.0"
+fontAlign "center"
+value {
+  "Brick"
+}
+visInvert
+visMax "2"
+visMin "1"
+visPv "LOC\\dummy0=i:0"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 16
+major 4
+minor 1
+release 0
+w 86
+x 422
+y 282
+alarmPv "LOC\\dummy0=i:0"
+bgAlarm
+bgColor index 16
+fgColor index 43
+font "arial-bold-r-14.0"
+fontAlign "center"
+value {
+  "Brick"
+}
+visMax "2"
+visMin "1"
+visPv "LOC\\dummy0=i:0"
+endObjectProperties
+
+endGroup
+
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+h 30
+major 4
+minor 0
+release 0
+w 50
+x 0
+y 0
+
+
+beginGroup
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+h 29
+major 4
+minor 0
+release 0
+w 48
+x 0
+y 0
+fillColor index 0
+lineColor index 1
+lineWidth 2
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+h 29
+major 4
+minor 0
+release 0
+w 48
+x 2
+y 2
+fillColor index 0
+lineColor index 11
+lineWidth 2
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+h 27
+major 4
+minor 0
+release 0
+w 47
+x 2
+y 2
+fill
+fillColor index 48
+lineColor index 49
+lineWidth 3
+endObjectProperties
+
+# (Circle)
+object activeCircleClass
+beginObjectProperties
+h 3
+major 4
+minor 0
+release 0
+w 4
+x 12
+y 6
+fill
+fillColor index 0
+lineColor index 1
+lineWidth 2
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+h 30
+major 4
+minor 1
+release 0
+w 50
+x 0
+y 0
+bgColor index 3
+fgColor index 14
+font "arial-bold-r-14.0"
+fontAlign "center"
+useDisplayBg
+value {
+  "labTop"
+}
+endObjectProperties
+
+endGroup
+
+
+endObjectProperties
+
+# (Exit Button)
+object activeExitButtonClass
+beginObjectProperties
+h 20
+major 4
+minor 1
+release 0
+w 90
+x 520
+y 370
+3d
+bgColor index 3
+botShadowColor index 11
+fgColor index 46
+font "arial-medium-r-16.0"
+label "EXIT"
+topShadowColor index 1
+endObjectProperties

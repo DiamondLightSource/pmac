@@ -1,0 +1,252 @@
+3 1 0
+299
+193
+420
+300
+arial-medium-r-16.0
+0
+arial-bold-r-16.0
+0
+index
+14
+index
+3
+index
+14
+index
+25
+index
+18
+index
+3
+index
+1
+index
+11
+index
+5
+Motor Record - Servo Fields - $(motor)
+0
+0
+10
+0
+<<<empty>>>
+<<<empty>>>
+0
+0
+arial-medium-r-16.0
+0
+<<<E~O~D>>>
+activeRectangleClass
+2 1 0
+0
+0
+420
+52
+index
+6
+0
+1
+index
+6
+0
+<<<empty>>>
+<<<empty>>>
+0
+<<<empty>>>
+<<<empty>>>
+0
+0
+0
+<<<E~O~D>>>
+activeXTextClass
+2 1 0
+0
+0
+420
+54
+index
+14
+0
+1
+index
+0
+0
+<<<empty>>>
+<<<empty>>>
+0
+<<<empty>>>
+<<<empty>>>
+$(motor)\nServo Fields
+arial-bold-r-18.0
+1
+0
+<<<empty>>>
+<<<E~O~D>>>
+activeXTextClass
+2 1 0
+10
+64
+173
+19
+index
+14
+0
+1
+index
+0
+0
+<<<empty>>>
+<<<empty>>>
+0
+<<<empty>>>
+<<<empty>>>
+.CNEN - Enable Control
+arial-medium-r-16.0
+0
+1
+<<<empty>>>
+<<<E~O~D>>>
+activeMenuButtonClass
+2 4 0
+200
+60
+120
+25
+index
+25
+0
+index
+3
+0
+index
+1
+index
+11
+$(motor).CNEN
+arial-medium-r-16.0
+$(motor).CNEN
+14
+<<<empty>>>
+0
+<<<empty>>>
+<<<empty>>>
+<<<empty>>>
+<<<E~O~D>>>
+activeMotifSliderClass
+1 1 0
+10
+160
+400
+56
+index
+14
+index
+3
+index
+25
+index
+1
+index
+11
+0.1
+$(motor).ICOF
+.ICOF - Integral Gain
+0
+arial-medium-r-16.0
+0
+0
+2 0
+0 0
+1 0
+0
+1
+1
+1
+0
+<<<E~O~D>>>
+activeMotifSliderClass
+1 1 0
+10
+230
+400
+56
+index
+14
+index
+3
+index
+25
+index
+1
+index
+11
+0.1
+$(motor).DCOF
+.DCOF - Differential Gain
+0
+arial-medium-r-16.0
+0
+0
+2 0
+0 0
+1 0
+0
+1
+1
+1
+0
+<<<E~O~D>>>
+activeMotifSliderClass
+1 1 0
+10
+90
+400
+56
+index
+14
+index
+3
+index
+25
+index
+1
+index
+11
+0.1
+$(motor).PCOF
+.PCOF - Proportional Gain
+0
+arial-medium-r-16.0
+0
+0
+2 0
+0 0
+1 0
+0
+1
+1
+1
+0
+<<<E~O~D>>>
+activeExitButtonClass
+2 1 0
+330
+58
+80
+28
+index
+46
+index
+3
+index
+1
+index
+11
+1
+0
+arial-medium-r-16.0
+Exit
+0
+0
+<<<E~O~D>>>

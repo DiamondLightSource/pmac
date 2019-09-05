@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 779
-y 330
+x 4277
+y 592
 w 423
 h 518
 font "arial-bold-r-12.0"
@@ -702,11 +702,12 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BRICK1CS3:Y.STOP"
+controlPv "$(pmac):CS$(CS):Abort"
 pressValue "1"
 onLabel "Abort Motion"
 offLabel "Abort Motion"
 3d
+useEnumNumeric
 font "arial-bold-r-14.0"
 visMin "0"
 visMax "1"

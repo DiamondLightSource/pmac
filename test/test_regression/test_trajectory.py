@@ -8,7 +8,7 @@ import os
 # Tests for historical issues with trajectory scanning
 
 
-@pytest.mark.skipif(os.environ['PPMAC'] == 'TRUE', reason="not supported on PPMAC yet")
+# @pytest.mark.skipif(os.environ.get('PPMAC') == 'True', reason="not supported on PPMAC yet")
 class TestTrajectory(TestCase):
     def test_cs_switched_trajectory(self):
         """ test problem seen on VMXI where switching CS right after a traj
@@ -59,3 +59,6 @@ class TestTrajectory(TestCase):
         self.assertAlmostEqual(tb.m4.pos, 1, 1)
         self.assertAlmostEqual(tb.m5.pos, 1, 1)
         self.assertAlmostEqual(tb.m6.pos, 1, 1)
+
+        # reset all the mres etc.
+        TestBrick()

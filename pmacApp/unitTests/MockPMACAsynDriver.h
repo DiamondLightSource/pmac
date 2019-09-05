@@ -47,6 +47,7 @@ public:
                                 size_t *nActual);
 
   void setResponse(const std::string& response);
+  void setOnceOnly();
   void clearStore();
   bool checkForWrite(const std::string& item);
   bool checkForWrite(const std::string& item, int index);
@@ -56,6 +57,7 @@ private:
   double delay_;
   std::vector<std::string> writes_;
   std::string response_;
+  bool only_once_;
 
 };
 

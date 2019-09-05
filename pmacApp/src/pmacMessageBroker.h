@@ -21,9 +21,18 @@
 
 class pmacMessageBroker : public pmacDebugger {
 public:
+    // These variables identify the 4 command stores provided by the broker
+    // the Fast store is polled at the rate defined by the idle and moving
+    // poll rates used in defining the pmacController (parameters in the startup
+    // script.
+    // The medium store is polled at 2 secs and the slow at 5 secs
+    // The pre fast is polled at the same rate as fast but is always read out
+    // of the brick first. This allows the control of order of reading of some
+    // brick variables.
     static const epicsInt32 PMAC_SLOW_READ = 0;
     static const epicsInt32 PMAC_MEDIUM_READ = 1;
     static const epicsInt32 PMAC_FAST_READ = 2;
+    static const epicsInt32 PMAC_PRE_FAST_READ = 3;
 
     pmacMessageBroker(asynUser *pasynUser);
 
@@ -33,7 +42,8 @@ public:
 
     asynStatus disconnect();
 
-    asynStatus getConnectedStatus(int *connected);
+    asynStatus getConnectedStatus(int *connected, int *newConnection);
+    void  clearNewConnection(void) { newConnection_ = false; }
 
     asynStatus immediateWriteRead(const char *command, char *response, bool trace=true);
 
@@ -92,11 +102,13 @@ private:
     pmacCommandStore slowStore_;
     pmacCommandStore mediumStore_;
     pmacCommandStore fastStore_;
+    pmacCommandStore prefastStore_;
 
     // Callback storage
     pmacCallbackStore *slowCallbacks_;
     pmacCallbackStore *mediumCallbacks_;
     pmacCallbackStore *fastCallbacks_;
+    pmacCallbackStore *prefastCallbacks_;
     asynPortDriver **locks;
 
     // Recording of statistics
@@ -119,6 +131,7 @@ private:
 
     // connection status;
     bool connected_;
+    bool newConnection_;
 
     static const epicsUInt32 PMAC_MAXBUF_;
     static const epicsFloat64 PMAC_TIMEOUT_;

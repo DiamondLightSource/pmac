@@ -1,0 +1,141 @@
+// *****************************************************************************************
+// Variables
+// *****************************************************************************************
+#define BuffLen       1000    // Length of buffers
+#define DoubleBuffLen 4000
+
+
+// *****************************************************************************************
+// Set these values for your PMAC
+// *****************************************************************************************
+#define ProgramNum   1     // Which motion program to use for scanning
+#define VersionNum   1.1   // Version of this trajectory scan program
+
+// *****************************************************************************************
+// Address-Based Variables - on ppmac these are indexes into above 'Addr' Arrays
+// *****************************************************************************************
+global Next_Time(DoubleBuffLen)                     // Indexes to Next_* coordinate addresses
+global Next_A(DoubleBuffLen)                        // These are incremented at each step
+global Next_B(DoubleBuffLen)
+global Next_C(DoubleBuffLen)
+global Next_U(DoubleBuffLen)
+global Next_V(DoubleBuffLen)
+global Next_W(DoubleBuffLen)
+global Next_X(DoubleBuffLen)
+global Next_Y(DoubleBuffLen)
+global Next_Z(DoubleBuffLen)
+global Next_User(DoubleBuffLen)
+global NextVelMode(DoubleBuffLen)
+
+#define AxesParser          M4024                      // Specifiers for what axes are activated
+#define A_Axis				M4025
+#define B_Axis				M4026
+#define C_Axis				M4027
+#define U_Axis				M4028
+#define V_Axis				M4029
+#define W_Axis				M4030
+#define X_Axis				M4031
+#define Y_Axis				M4032
+#define Z_Axis				M4034
+
+// User address 0 is the only memory location we allocate explicitly
+// this seems to be required in order to map to bits in the word
+AxesParser->u.user:0  
+A_Axis->u.user:0.0.1		
+B_Axis->u.user:0.1.1	
+C_Axis->u.user:0.2.1
+U_Axis->u.user:0.3.1
+V_Axis->u.user:0.4.1
+W_Axis->u.user:0.5.1
+X_Axis->u.user:0.6.1
+Y_Axis->u.user:0.7.1
+Z_Axis->u.user:0.8.1
+	
+
+// *****************************************************************************************
+// EPICS Required Variables
+// *****************************************************************************************
+#define TrajStatus              M4034           // TrajStatus of motion program for EPICS
+                                                    // 0: Initialised, 1: Active, 2: Idle, 3: Error
+#define AbortTrigger        M4035           // Abort trigger for EPICS
+#define Axes                M4036           // An int between 1 and 511 specifying which axes to use
+#define BufferLength        M4037           // Length of a single buffer e.g. AX, AY...
+#define TotalPoints         M4038           // Total number of points scanned through
+
+#define CurrentIndex        M4039           // Current index position in buffer
+#define CurrentBuffer       M4040           // Current buffer specifier - 0: A, 1: B
+
+#define BufferAdr_A         M4041           // Start index of buffer A
+#define BufferAdr_B         M4042           // Start index of buffer B
+#define CurrentBufferAdr    M4043           // A or B buffer address
+ 
+#define BufferFill_A        M4044           // Fill level of buffer A
+#define BufferFill_B        M4045           // Fill level of buffer B
+#define CurrentBufferFill   M4046           // A or B buffer fill level
+#define PrevBufferFill      M4047           // Fill level of previous buffer
+#define Error               M4048           // Error code  0: No error, 1: Invalid axes value,
+                                            // 2: Move time of 0, 3: Following error/ Run-time error
+#define Version             M4049           // Version number for motion program
+
+
+// for ppmac set the above M variables as self referenced double floats
+TrajStatus->*d
+AbortTrigger->*d
+Axes->*d
+BufferLength->*d
+TotalPoints->*d
+CurrentIndex->*d
+CurrentBuffer->*d
+BufferAdr_A->*d
+BufferAdr_B->*d
+CurrentBufferAdr->*d
+BufferFill_A->*d
+BufferFill_B->*d
+CurrentBufferFill->*d
+PrevBufferFill->*d
+Error->*d
+Version->*d
+
+// *****************************************************************************************
+// Motion Program Variables
+// *****************************************************************************************
+global Prev_A               // Previous coordinates for velocity calculations
+global Prev_B
+global Prev_C
+global Prev_U
+global Prev_V
+global Prev_W
+global Prev_X
+global Prev_Y
+global Prev_Z
+
+global Time                 // Current coordinate values
+#define Current_A   Q71
+#define Current_B   Q72
+#define Current_C   Q73
+#define Current_U   Q74
+#define Current_V	Q75
+#define Current_W   Q76
+#define Current_X   Q77
+#define Current_Y   Q78
+#define Current_Z   Q79
+global UserFunc
+global VelMode
+
+global A_Vel                // Current velocity values
+global B_Vel
+global C_Vel
+global U_Vel
+global V_Vel
+global W_Vel
+global X_Vel
+global Y_Vel
+global Z_Vel
+
+global CalculatedBase       // Calculated temporary variable for Current base address
+global TmpTime              // Calculated temporary variable for time in velocity calcs
+
+// *****************************************************************************************
+// Set the version number
+// *****************************************************************************************
+Version = VersionNum

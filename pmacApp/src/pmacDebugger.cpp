@@ -13,6 +13,7 @@ const int pmacDebugger::DEBUG_TRACE = 2;
 const int pmacDebugger::DEBUG_FLOW = 4;
 const int pmacDebugger::DEBUG_TIMING = 8;
 const int pmacDebugger::DEBUG_PMAC = 16;
+const int pmacDebugger::DEBUG_PMAC_POLL = 32;
 
 pmacDebugger::pmacDebugger(const std::string &owner) :
         owner_(owner),
@@ -68,12 +69,19 @@ void pmacDebugger::debugf(int level, const std::string &method, const char *pfor
 void pmacDebugger::debug(int level, const std::string &method, const std::string &message,
                          const std::string &value) {
   char tBuff[32];
+  size_t pos;
   epicsTimeStamp ts;
+  std::string val = value;
+
   if (level == 0 || (level & level_) > 0) {
     epicsTimeGetCurrent(&ts);
+    // allow printing of response from geobrick containing several \r
+    while((pos = val.find('\r')) != std::string::npos) {
+      val.replace(pos, (size_t) 1, " ");
+    }
     epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &ts);
     printf("%s %s::%s %s => %s\n", tBuff, owner_.c_str(), method.c_str(), message.c_str(),
-           value.c_str());
+           val.c_str());
   }
 }
 

@@ -107,6 +107,41 @@ class _GeoBrickControllerT(AutoSubstitution):
     namely global feed rate and axis coordinate system assignment"""
     TemplateFile = "pmacController.template"
 
+class pmacVmeConfig(DeltaTauCommsPort):
+    """This will create an AsynPort connecting to a PMAC or GeoBrick over VME"""
+    LibFileList = ['pmacIoc']
+    DbdFileList = ['pmacInclude']
+    _Cards = []
+
+    def __init__(self, Prefix = "PMAC_S", simulation=None, priority=0):
+        # Now add self to list of cards
+        self.Card = len(self._Cards)
+        self._Cards.append(self)
+        self.Prefix = Prefix
+        self.priority = priority
+        self.vector = self.AllocateIntVector(3)
+        assert self.vector == 192 + self.Card * 3, "PMAC should be instantiated first to avoid interrupt clashes, vector = %d"% self.vector
+        # init the AsynPort superclass
+        self.__super.__init__(Prefix + str(self.Card))
+
+    def Initialise(self):
+        if self.Card == 0:
+            print 'pmacVmeDebug=1'
+            print 'drvPmacDebug=1'
+            print '# Configure %d PMAC cards' % len(self._Cards)
+        print 'pmacVmeConfig(%d, 0x%dfa000, 0x%d00000, 0xC%d, %d)' % (self.Card, self.Card+7, self.Card+7, 3*self.Card+1, self.Card+3)
+        if self.Card == len(self._Cards) - 1:
+            print '# Startup driver for DPRAM ASCII buffer'
+            print 'pmacDrv()'
+            print 'pmacVmeDebug=0'
+            print 'drvPmacDebug=0'
+            print 'pmacAsynConfig(0, "%s", %d)' % (self.Prefix, self.priority)
+
+    ArgInfo = makeArgInfo(__init__,
+        Prefix = Simple('Prefix for asyn port name, Default of PMAC_S will give PMAC_S0, PMAC_S1, etc.', str),
+        priority = Simple('Priority to give the asyn serial ports', int),
+        simulation    = Simple('IP port to connect to if in simulation mode', str))
+
 class GeoBrick(DeltaTau):
     """This will create an asyn motor port for a GeoBrick that we can attach
     motor records to using the model 3 driver"""
@@ -270,6 +305,65 @@ GeoBrickTrajectoryControlT.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor
 GeoBrickTrajectoryControlT.ArgInfo = GeoBrickTrajectoryControlT.ArgInfo.filtered(
     without=GeoBrickTrajectoryControlT.geobrickArgs)
 
+class PMAC(DeltaTau):
+    """This will create an asyn motor port for a PMAC that we can attach
+    motor records to using the model 3 driver"""
+    LibFileList = ['pmacAsynMotorPort']
+    DbdFileList = ['pmacAsynMotorPort']
+    Dependencies = (Pmac,)
+    _Cards = []
+
+    def __init__(self, Port, name = None, NAxes = 32, IdlePoll = 1000, MovingPoll = 100, **kwargs):
+        # init a list of groupnames for each pmacCreateCsGroup to add to
+        self.CsGroupNamesList = {}
+        # First create an asyn IP port to connect to
+        self.PortName = Port.DeviceName()
+        # Now add self to list of cards
+        self.Card = len(self._Cards)
+        self._Cards.append(self)
+        if name is None:
+            name = "PPMAC%d" % (self.Card + 1)
+        self.name = name
+        # Store other attributes
+        self.__dict__.update(kwargs)
+        self.NAxes = NAxes
+        self.IdlePoll = IdlePoll
+        self.MovingPoll = MovingPoll
+
+        # init the AsynPort superclass
+        self.__super.__init__(name)
+
+        # instatiate the template
+        self.template = _GeoBrickControllerT(PORT=name, **kwargs)
+        self.TIMEOUT = self.template.args['TIMEOUT']
+        # and device specific status PVs
+        #self.statusT = _powerPmacStatusT(PORT=name, P=self.P)
+
+        # instantiate an axis status template for each axis
+        assert self.NAxes in range(1,33), "Number of axes (%d) must be in range 1..32" % self.NAxes
+        self.axes = []
+        # for each axis
+        for i in range(1, self.NAxes + 1):
+            args = {'PMAC':self.P, 'AXIS':i, 'PORT':name}
+            # make a _pmacStatusAxis instance
+            self.axes.append(
+                _pmacStatusAxis(
+                    **filter_dict(args, _pmacStatusAxis.ArgInfo.Names())))
+
+    def Initialise(self):
+        print '# Configure Model 3 Controller Driver (ControlerPort, LowLevelDriverPort, Address, Axes, MovingPoll, IdlePoll)'
+        print 'pmacCreateController("%(name)s", "%(PortName)s", 0, %(NAxes)d, %(MovingPoll)d, %(IdlePoll)d)' % self.__dict__
+        print '# Configure Model 3 Axes Driver (Controler Port, Axis Count)'
+        print 'pmacCreateAxes("%(name)s", %(NAxes)d)' % self.__dict__
+
+    # __init__ arguments
+    ArgInfo = makeArgInfo(__init__,
+        name = Simple('Name to use for the asyn port', str),
+        Port       = Ident('pmacAsynSSHPort to connect to', pmacAsynSSHPort),
+        NAxes      = Simple('Number of axes', int),
+        IdlePoll   = Simple('Idle Poll Period in ms', int),
+        MovingPoll = Simple('Moving Poll Period in ms', int))+ \
+              _GeoBrickControllerT.ArgInfo.filtered(without = GeoBrick.removeThese + ['PORT'])
 
 class pmacDisableLimitsCheck(Device):
     Dependencies = (Pmac,)
@@ -410,7 +504,8 @@ class CS(AsynPort):
         # init the AsynPort
         self.__super.__init__(name)
         # instatiate the template
-        template = _CsControlT(PORT=name, TIMEOUT=Controller.TIMEOUT, PMAC=Controller.P, CS=CS)
+        template = _CsControlT(PORT=name, TIMEOUT=Controller.TIMEOUT, PMAC=Controller.P,
+                               PARENTPORT=Controller.name, CS=CS)
         # make CS type correct
         self.CS = int(CS)
 

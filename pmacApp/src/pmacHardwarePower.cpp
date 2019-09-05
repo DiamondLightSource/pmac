@@ -12,10 +12,14 @@ const std::string pmacHardwarePower::GLOBAL_STATUS = "?";
 const std::string pmacHardwarePower::AXIS_STATUS = "#%d?";
 const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
 const std::string pmacHardwarePower::CS_STATUS = "&%d?";
+const std::string pmacHardwarePower::CS_INPOS = "Coord[%d].InPos";
+const std::string pmacHardwarePower::CS_AMPENABLE = "Coord[%d].AmpEna";
+const std::string pmacHardwarePower::CS_RUNNING = "Coord[%d].ProgRunning";
 const std::string pmacHardwarePower::CS_VEL_CMD = "&%dQ70=%f ";
 const std::string pmacHardwarePower::CS_ACCELERATION_CMD = "Coord[%d].Ta=%f Coord[%d].Td=%f";
-// the trailing &d stops clashes from occurring since comma is not allowed on ppmac
-const std::string pmacHardwarePower::CS_AXIS_MAPPING = "#%d->&%d";
+// the trailing ; stops clashes from occurring (instead of comma on turbo)
+const std::string pmacHardwarePower::CS_AXIS_MAPPING = "#%d->;";
+const std::string pmacHardwarePower::CS_ENABLED_COUNT = "Sys.MaxCoords";
 
 const int pmacHardwarePower::PMAC_STATUS1_TRIGGER_MOVE = (0x1 << 31);
 const int pmacHardwarePower::PMAC_STATUS1_HOMING = (0x1 << 30);
@@ -177,13 +181,19 @@ pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus 
 
 asynStatus pmacHardwarePower::setupCSStatus(int csNo) {
   asynStatus status = asynSuccess;
-  char var[16];
+  char var[30];
   static const char *functionName = "setupAxisStatus";
 
   debug(DEBUG_TRACE, functionName, "CS Number", csNo);
   // Add the CS status item to the fast update
   sprintf(var, CS_STATUS.c_str(), csNo);
-  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, var);
+  sprintf(var, CS_RUNNING.c_str(), csNo);
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, var);
+  sprintf(var, CS_INPOS.c_str(), csNo);
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, var);
+  sprintf(var, CS_AMPENABLE.c_str(), csNo);
+  pC_->monitorPMACVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, var);
 
   return status;
 }
@@ -192,9 +202,23 @@ asynStatus
 pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus) {
   asynStatus status = asynSuccess;
   int nvals = 0;
+  int cs_amp_enabled = 0;
   std::string statusString = "";
-  char var[16];
+  char var[30];
   static const char *functionName = "parseCSStatus";
+
+  sprintf(var, CS_RUNNING.c_str(), csNo);
+  statusString = sPtr->readValue(var);
+  sscanf(statusString.c_str(), "%d", &coordStatus.running_);
+  sprintf(var, CS_INPOS.c_str(), csNo);
+  statusString = sPtr->readValue(var);
+  sscanf(statusString.c_str(), "%d", &coordStatus.done_);
+  sprintf(var, CS_AMPENABLE.c_str(), csNo);
+  statusString = sPtr->readValue(var);
+  sscanf(statusString.c_str(), "%d", &cs_amp_enabled);
+  // we want to show Done Moving true when any of the CS motor's amps are disabled
+  coordStatus.done_= coordStatus.done_|| !cs_amp_enabled;
+  coordStatus.moving_ = !coordStatus.done_;
 
   sprintf(var, CS_STATUS.c_str(), csNo);
   statusString = sPtr->readValue(var);
@@ -209,11 +233,9 @@ pmacHardwarePower::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coo
   }
   coordStatus.stat3_ = 0;
   if (status == asynSuccess) {
-    coordStatus.done_ = ((coordStatus.stat1_ & PMAC_STATUS1_IN_POSITION) != 0);
     coordStatus.highLimit_ = ((coordStatus.stat1_ & PMAC_STATUS1_POS_LIMIT_SET) != 0);
     coordStatus.lowLimit_ = ((coordStatus.stat1_ & PMAC_STATUS1_NEG_LIMIT_SET) != 0);
     coordStatus.followingError_ = ((coordStatus.stat1_ & PMAC_STATUS1_ERR_FOLLOW_ERR) != 0);
-    coordStatus.moving_ = ((coordStatus.stat1_ & PMAC_STATUS1_IN_POSITION) == 0);
     coordStatus.problem_ = ((coordStatus.stat1_ & PMAC_STATUS1_AMP_FAULT) != 0);
   } else {
     coordStatus.done_ = 0;
@@ -236,8 +258,8 @@ std::string pmacHardwarePower::getCSVelocityCmd(int csNo, double velocity, doubl
   // sets Q70 which PROG10 places into a TM command, so units are
   // converted to milliseconds for entire move
   // if velocity is 0 then set Q70 to 0 meaning use underlying real motor speeds
-  if(velocity !=0) {
-    move_time = steps/velocity*1000;
+  if (velocity != 0) {
+    move_time = steps / velocity * 1000;
   }
   sprintf(cmd, CS_VEL_CMD.c_str(), csNo, move_time);
   return std::string(cmd);
@@ -253,14 +275,17 @@ std::string pmacHardwarePower::getCSAccTimeCmd(int csNo, double time) {
   return std::string(cmd);
 }
 
-
 std::string pmacHardwarePower::getCSMappingCmd(int csNo, int axis) {
   char cmd[255];
   static const char *functionName = "getCSMappingCmd";
 
   debugf(DEBUG_FLOW, functionName, "CsNo %d, Axis %d", csNo, axis);
-  sprintf(cmd, CS_AXIS_MAPPING.c_str(), axis, csNo);
+  sprintf(cmd, CS_AXIS_MAPPING.c_str(), axis);
   return std::string(cmd);
+}
+
+std::string pmacHardwarePower::getCSEnabledCountCmd(){
+  return std::string(CS_ENABLED_COUNT);
 }
 
 std::string pmacHardwarePower::parseCSMappingResult(const std::string mappingResult) {
@@ -269,10 +294,75 @@ std::string pmacHardwarePower::parseCSMappingResult(const std::string mappingRes
   debugf(DEBUG_FLOW, functionName, "command %s", mappingResult.c_str());
 
   if (mappingResult.length() > 0) {
-    const char* mapping = mappingResult.substr(mappingResult.length() - 1, 1).c_str();
-    char upper_mapping = (char)toupper(mapping[0]);
+    const char *mapping = mappingResult.substr(mappingResult.length() - 1, 1).c_str();
+    char upper_mapping = (char) toupper(mapping[0]);
     result = std::string(1, upper_mapping);
   }
 
   return result;
+}
+
+void pmacHardwarePower::startTrajectoryTimePointsCmd(char *velCmd, char *userCmd,
+                                                     char *timeCmd, int addr) {
+  static const char *functionName = "startTrajectoryTimePointsCmd";
+
+  debug(DEBUG_FLOW, functionName, "addr %d", addr);
+
+  sprintf(velCmd, "Next_Vel(%d)=", addr);
+  sprintf(userCmd, "Next_User(%d)=", addr);
+  sprintf(timeCmd, "Next_Time(%d)=", addr);
+
+}
+
+void pmacHardwarePower::addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
+                                                  int velocityMode, int userFunc, int time,
+                                                  bool firstVal) {
+  static const char *functionName = "addTrajectoryTimePointCmd";
+
+  debugf(DEBUG_FLOW, functionName, "velCmd %s\nuserCmd %s\ntimeCmd %s\nvel %d, user %d, time %d",
+    velCmd, userCmd, timeCmd, velocityMode, userFunc, time);
+
+  if(firstVal) {
+    sprintf(velCmd, "%s%d", velCmd, velocityMode);
+    sprintf(userCmd, "%s%d", userCmd, userFunc);
+    sprintf(timeCmd, "%s%d", timeCmd, time);
+  }
+  else {
+    sprintf(velCmd, "%s,%d", velCmd, velocityMode);
+    sprintf(userCmd, "%s,%d", userCmd, userFunc);
+    sprintf(timeCmd, "%s,%d", timeCmd, time);
+  }
+}
+
+void pmacHardwarePower::startAxisPointsCmd(char *axisCmd, int axis, int addr, int ) {
+  const char axes[] = "ABCUVWXYZ";
+  static const char *functionName = "startAxisPointsCmd";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, axis %d, addr %d", axisCmd, axis, addr);
+
+  sprintf(axisCmd, "Next_%c(%d)=", axes[axis], addr);
+}
+
+void pmacHardwarePower::addAxisPointCmd(char *axisCmd, int , double pos, int ,
+                                        bool firstVal) {
+  static const char *functionName = "addAxisPointCmd";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, pos %f, firstval %d", axisCmd,
+          pos, firstVal);
+
+  if(firstVal) {
+    sprintf(axisCmd, "%s%g", axisCmd, pos);
+  }
+  else {
+    sprintf(axisCmd, "%s,%g", axisCmd, pos);
+  }
+}
+
+std::string pmacHardwarePower::getCSEnableCommand(int csNo) {
+  char cmd[10];
+  static const char *functionName = "getCSEnableCommand";
+
+  debugf(DEBUG_FLOW, functionName, "cmd %s, CS %d", cmd, csNo);
+  sprintf(cmd, "&%denable", csNo);
+  return std::string(cmd);
 }

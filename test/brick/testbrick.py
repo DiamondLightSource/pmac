@@ -92,16 +92,29 @@ class TestBrick(MyBrick):
             ca.caput(mres_pvs, mres_val, wait=True, timeout=10)
             ca.caput(["BRICK1:M1.MRES", "BRICK1:M2.MRES"], [1, 1], wait=True)
 
-            # reset all real offset
-            offset_pvs = [axis.off for axis in r.values()]
+            # reset all UEIP
+            e_pvs = [axis.pv_use_encoder for axis in r.values()]
+            e_val = [0] * len(mres_pvs)
+            ca.caput(e_pvs, e_val, wait=True, timeout=10)
+
+            # reset all offset
+            offset_pvs = [axis.off for axis in a.values()]
             values = [0] * len(offset_pvs)
-            ca.caput(offset_pvs, values, wait=True, timeout=1)
+            ca.caput(offset_pvs, values, wait=False, timeout=4)
 
             # move all real motors to zero
+            self.send_command('#1 hmz #2 hmz #3 hmz #4 hmz #5 hmz #6 hmz #7 hmz #8 hmz ')
             demand_pvs = [axis.demand for axis in r.values()]
+            values = [0] * len(demand_pvs)
             ca.caput(demand_pvs, values, wait=True, timeout=30)
 
             # choose a default coordinate system group
             self.set_cs_group(self.g3)
 
-
+            # set wide limits
+            lo_pvs = [axis.lo_limit for axis in r.values()]
+            hi_pvs = [axis.hi_limit for axis in r.values()]
+            lo_limits = [-10000] * len(lo_pvs)
+            hi_limits = [10000] * len(hi_pvs)
+            ca.caput(lo_pvs, lo_limits, wait=True, timeout=3)
+            ca.caput(hi_pvs, hi_limits, wait=True, timeout=3)

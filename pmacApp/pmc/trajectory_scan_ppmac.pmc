@@ -1,0 +1,7 @@
+; *****************************************************************************************
+; Set these values for your PMAC
+; *****************************************************************************************
+#define BuffLen      2000  ; Length of buffers
+
+#include "./trajectory_scan_definitions_ppmac.pmc"
+#include "./trajectory_scan_code_ppmac.pmc"

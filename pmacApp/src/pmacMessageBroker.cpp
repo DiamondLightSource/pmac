@@ -26,13 +26,16 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
         lastMsgTime_(0),
         updateTime_(0.0),
         lock_count(0),
-        connected_(false){
+        connected_(false),
+        newConnection_(true)
+{
   epicsTimeGetCurrent(&this->writeTime_);
   epicsTimeGetCurrent(&this->startTime_);
   epicsTimeGetCurrent(&this->currentTime_);
   slowCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_SLOW_READ);
   mediumCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_MEDIUM_READ);
   fastCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_FAST_READ);
+  prefastCallbacks_ = new pmacCallbackStore(pmacMessageBroker::PMAC_PRE_FAST_READ);
 
   locks = (asynPortDriver **) malloc(
           MAX_REGISTERED_LOCKS * sizeof(asynPortDriver *));
@@ -71,35 +74,42 @@ asynStatus pmacMessageBroker::disconnect() {
  * Utilty function to return the connected status of the low level asyn port.
  * @return asynStatus
  */
-asynStatus pmacMessageBroker::getConnectedStatus(int *connected) {
+asynStatus pmacMessageBroker::getConnectedStatus(int *connected, int *newConnection) {
   static const char *functionName = "getConnectedStatus";
   asynStatus status = asynSuccess;
-  *connected = 0;
+  *connected = *newConnection = 0;
   char response[PMAC_MAXBUF_];
   debug(DEBUG_FLOW, functionName);
   // pasynManager->isConnected always reports True (is this because of the
   // interpose layer?) so send and receive a dummy message to check connection
   if (!connected_)
   {
+    newConnection_ = true;
     status = this->lowLevelWriteRead("", response);
     connected_ = status ==asynSuccess;
   }
   *connected = connected_;
+  *newConnection = newConnection_;
   return status;
 }
 
 asynStatus pmacMessageBroker::immediateWriteRead(const char *command, char *response, bool trace) {
   asynStatus status = asynDisconnected;
   static const char *functionName = "immediateWriteRead";
-  // don't trace broker polling to avoid too much noise
+  // don't trace broker polling unless DEBUG_PMAC_POLL set, to avoid too much noise
   if (trace) {
-    debug(DEBUG_PMAC, "PMAC", "command", command);
+    debug(DEBUG_PMAC | DEBUG_PMAC_POLL, "PMAC", "command", command);
+  }
+  else
+  {
+    debug(DEBUG_PMAC_POLL, "PMAC_POLL", "command", command);
   }
   if (connected_) {
     this->startTimer(DEBUG_TIMING, functionName);
     status = this->lowLevelWriteRead(command, response);
     this->stopTimer(DEBUG_TIMING, functionName, "PMAC write/read time");
   }
+  debug(DEBUG_PMAC_POLL, "PMAC_POLL", "response", response);
   return status;
 }
 
@@ -115,6 +125,8 @@ asynStatus pmacMessageBroker::addReadVariable(int type, const char *variable) {
     mediumStore_.addItem(variable);
   } else if (type == PMAC_FAST_READ) {
     fastStore_.addItem(variable);
+  } else if (type == PMAC_PRE_FAST_READ) {
+    prefastStore_.addItem(variable);
   } else {
     status = asynError;
   }
@@ -148,6 +160,22 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
       suppressCounter_++;
     }
     if (!suppressStatus_ || suppressCounter_ % 4 == 0) {
+      if (prefastStore_.size() > 0) {
+        // Send the command string and read the response
+        noOfCmds = prefastStore_.countCommandStrings();
+        debug(DEBUG_VARIABLE, functionName, "Prefast Store command string count", noOfCmds);
+        for (int index = 0; index < noOfCmds; index++) {
+          cmd = prefastStore_.readCommandString(index);
+          if (cmd.length() > 0) {
+            this->immediateWriteRead(cmd.c_str(), response, false);
+            debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
+            // Update the store with the response
+            prefastStore_.updateReply(cmd, response);
+          }
+        }
+        // Perform the necessary callbacks
+        prefastCallbacks_->callCallbacks(&prefastStore_);
+      }
       if (fastStore_.size() > 0) {
         // Send the command string and read the response
         noOfCmds = fastStore_.countCommandStrings();
@@ -256,6 +284,8 @@ asynStatus pmacMessageBroker::registerForUpdates(pmacCallbackInterface *cbPtr, i
 
   if (type == PMAC_FAST_READ) {
     fastCallbacks_->registerCallback(cbPtr);
+  } else if (type == PMAC_PRE_FAST_READ) {
+    prefastCallbacks_->registerCallback(cbPtr);
   } else if (type == PMAC_MEDIUM_READ) {
     mediumCallbacks_->registerCallback(cbPtr);
   } else if (type == PMAC_SLOW_READ) {
@@ -303,6 +333,8 @@ asynStatus pmacMessageBroker::readStoreSize(int type, int *size) {
     *size = mediumStore_.size();
   } else if (type == PMAC_SLOW_READ) {
     *size = slowStore_.size();
+  } else if (type == PMAC_PRE_FAST_READ) {
+    *size = prefastStore_.size();
   } else {
     status = asynError;
   }
@@ -322,6 +354,7 @@ asynStatus pmacMessageBroker::report(int type) {
   if (type == PMAC_FAST_READ) {
     printf("Report of PMAC fast store\n");
     printf("=========================\n");
+    prefastStore_.report();
     fastStore_.report();
   } else if (type == PMAC_MEDIUM_READ) {
     printf("Report of PMAC medium store\n");
@@ -456,7 +489,7 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
 
   if (status != asynSuccess) {
     // the next call to CheckConnectionStatus will restore the connected_ state
-    connected_ = false;
+    connected_ = false;  newConnection_ = true;
   } else {
     // Replace any carriage returns with spaces
     if (powerPMAC_) {

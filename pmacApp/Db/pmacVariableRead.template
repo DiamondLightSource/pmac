@@ -1,0 +1,26 @@
+# % macro, __doc__, Simple template that reads a variable on a 
+# PMAC or geoBrick via dynamic parameters.
+# % macro, P, Pv Prefix
+# % macro, Q, Pv Suffix
+# % macro, DTYP, asyn DTYP (e.g., asynFloat64, asynInt32)
+# % macro, PORT, Motor controller serial port
+# % macro, TYPE, PMAC variable type (D=double, I=integer, H=hex, S=string)
+# % macro, SPEED, Speed to read at (F=motor scan rates, M=medium (2 s), S=slow (5 s))
+# % macro, VAR, Variable on PMAC to write to, e.g. P700
+# % macro, EGU, Engineering units
+# % macro, VARIABLE_PREC, Variable Record precision
+
+##########################################
+# Records for reading from PMAC variables
+########################################## 
+
+record(ai, "$(P)$(Q):RBV") {
+  field(SCAN, "I/O Intr")
+  field(PINI, "NO")
+  field(DTYP, "$(DTYP=asynFloat64)")
+  # Example expanded command is PMAC_VDM_P700 
+  # (read a double (D) at medium speed (M) from P700)
+  field(INP, "@asyn($(PORT),0)PMAC_V$(TYPE=D)$(SPEED=M)_$(VAR)")
+  field(PREC, "$(VARIABLE_PREC)")
+  field(EGU, "$(EGU)")
+}
