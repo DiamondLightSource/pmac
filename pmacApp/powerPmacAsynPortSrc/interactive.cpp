@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
   ptr->write(buff, strlen(buff), &bytes, 1000);
   ptr->read(buff, 512, &bytes, '\n', 2000);
   printf("We got the following:\n");
-  printf(buff);
+  printf("%s", buff);
   printf("\n");
   sleep(1);
 

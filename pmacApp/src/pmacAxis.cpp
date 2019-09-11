@@ -1,12 +1,12 @@
 /********************************************
  *  pmacAxis.cpp
- * 
- *  PMAC Asyn motor based on the 
+ *
+ *  PMAC Asyn motor based on the
  *  asynMotorAxis class.
- * 
+ *
  *  Matthew Pearson
  *  23 May 2012
- * 
+ *
  ********************************************/
 
 #include <stdlib.h>
@@ -321,6 +321,10 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
     asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
               "Controller %s Addr %d. %s: This is a Turbo PMAC 2 Ultralite.\n", pC_->portName,
               axisNo_, functionName);
+  } else if (controller_type == pC_->PMAC_CID_POWER_) {
+    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
+              "Controller %s Addr %d. %s: This is a Power Brick.\n", pC_->portName,
+              axisNo_, functionName);
   } else {
     asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
               "Controller %s Addr %d. %s: ERROR Unknown controller type = %d.\n", pC_->portName,
@@ -328,7 +332,9 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
     return asynError;
   }
 
-  if (controller_type == pC_->PMAC_CID_GEOBRICK_ || controller_type == pC_->PMAC_CID_CLIPPER_) {
+  if (controller_type == pC_->PMAC_CID_GEOBRICK_
+   || controller_type == pC_->PMAC_CID_CLIPPER_
+   || controller_type == pC_->PMAC_CID_POWER_)  {
     /* Read home flags and home direction from Geobrick LV */
     if (axisNo_ < 5) {
       sprintf(buffer, "I70%d2 I70%d3 i%d24 i%d23 i%d26", axisNo_, axisNo_, axisNo_, axisNo_,
@@ -453,7 +459,7 @@ asynStatus pmacAxis::stop(double acceleration) {
   char command[PMAC_MAXBUF] = {0};
   char response[PMAC_MAXBUF] = {0};
 
-  /*Only send a J/ if the amplifier output is enabled. When we send a stop, 
+  /*Only send a J/ if the amplifier output is enabled. When we send a stop,
     we don't want to power on axes that have been powered off for a reason. */
   if ((amp_enabled_ == 1) || (fatal_following_ == 1)) {
       sprintf(command, "#%d J/ M%d40=1", axisNo_, axisNo_);

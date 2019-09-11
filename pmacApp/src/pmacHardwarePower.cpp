@@ -34,7 +34,7 @@ const int pmacHardwarePower::PMAC_STATUS1_SOFT_PLUS_LIMIT = (0x1 << 22);
 const int pmacHardwarePower::PMAC_STATUS1_I2T_AMP_FAULT = (0x1 << 21);
 const int pmacHardwarePower::PMAC_STATUS1_HOME_COMPLETE = (0x1 << 15);
 const int pmacHardwarePower::PMAC_STATUS1_DESIRED_VELOCITY_ZERO = (0x1 << 14);
-const int pmacHardwarePower::PMAC_STATUS1_OPEN_LOOP = (0x1 << 13);
+const int pmacHardwarePower::PMAC_STATUS1_CLOSED_LOOP = (0x1 << 13);
 const int pmacHardwarePower::PMAC_STATUS1_AMP_ENABLED = (0x1 << 12);
 const int pmacHardwarePower::PMAC_STATUS1_IN_POSITION = (0x1 << 11);
 const int pmacHardwarePower::PMAC_STATUS1_BLOCK_REQUEST = (0x1 << 9);
@@ -161,6 +161,7 @@ pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus 
     axStatus.lowLimit_ = (((axStatus.status24Bit1_ & PMAC_STATUS1_NEG_LIMIT_SET) |
                            (axStatus.status24Bit1_ & PMAC_STATUS1_SOFT_MINUS_LIMIT)) != 0);
     axStatus.followingError_ = ((axStatus.status24Bit1_ & PMAC_STATUS1_ERR_FOLLOW_ERR) != 0);
+    axStatus.power_ = (axStatus.status24Bit1_ & PMAC_STATUS1_CLOSED_LOOP);
 
     // Set amplifier enabled bit.
     axStatus.ampEnabled_ = ((axStatus.status24Bit1_ & PMAC_STATUS1_AMP_ENABLED) != 0);
