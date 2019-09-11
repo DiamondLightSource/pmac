@@ -333,7 +333,7 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
   }
 
   if (controller_type == pC_->PMAC_CID_GEOBRICK_
-   || controller_type == pC_->PMAC_CID_CLIPPER_)
+   || controller_type == pC_->PMAC_CID_CLIPPER_
    || controller_type == pC_->PMAC_CID_POWER_)  {
     /* Read home flags and home direction from Geobrick LV */
     if (axisNo_ < 5) {
