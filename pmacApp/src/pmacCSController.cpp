@@ -705,10 +705,10 @@ extern "C" {
  * See pmacCSController::pmacCSController.
  *
  */
-asynStatus pmacCSCreateController(const char *portName,
-                                  const char *controllerPortName,
-                                  int csNo,
-                                  int program) {
+asynStatus pmacCreateCS(const char *portName,
+                        const char *controllerPortName,
+                        int csNo,
+                        int program) {
   new pmacCSController(portName,
                        controllerPortName,
                        csNo,
@@ -809,7 +809,7 @@ static const iocshArg *const pmacCreateCSControllerArgs[] = {&pmacCreateCSContro
 static const iocshFuncDef configpmacCreateController = {"pmacCreateCS", 4,
                                                         pmacCreateCSControllerArgs};
 static void configpmacCreateCSControllerCallFunc(const iocshArgBuf *args) {
-  pmacCSCreateController(args[0].sval, args[1].sval, args[2].ival, args[3].ival);
+  pmacCreateCS(args[0].sval, args[1].sval, args[2].ival, args[3].ival);
 }
 
 /* pmacCreateCSAxis */
@@ -858,7 +858,7 @@ epicsExportRegistrar(pmacCSControllerRegister);
 
 #ifdef vxWorks
 //VxWorks register functions
-epicsRegisterFunction(pmacCSCreateController);
+epicsRegisterFunction(pmacCreateCS);
 epicsRegisterFunction(pmacCreateCSAxis);
 epicsRegisterFunction(pmacCreateCSAxes);
 epicsRegisterFunction(pmacCSSetAxisScale);

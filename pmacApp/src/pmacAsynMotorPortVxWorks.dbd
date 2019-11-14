@@ -5,7 +5,7 @@ function(pmacSetAxisScale)
 function(pmacSetOpenLoopEncoderAxis)
 function(pmacDebug)
 
-function(pmacCSCreateController)
+function(pmacCreateCS)
 function(pmacCreateCSAxis);
 function(pmacCreateCSAxes);
 
