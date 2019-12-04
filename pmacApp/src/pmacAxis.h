@@ -27,6 +27,10 @@ public:
 
     virtual ~pmacAxis();
 
+    void badConnection();
+
+    void goodConnection();
+
     void initialSetup(int axisNo);
 
     asynStatus move(double position, int relative, double min_velocity, double max_velocity,
@@ -101,6 +105,9 @@ private:
     epicsFloat64 lastTimeSecs_;
     bool printNextError_;
     bool moving_; // only valid within poll time - used as a hint for validating deferred coordinated moves
+
+    bool connected_; // Current connection status of the hardware
+    bool initialised_; // We need to keep a record of this in case the software starts up without a connection
 
     friend class pmacController;
 
