@@ -262,34 +262,30 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
 
   // Initialise the connection
   this->checkConnection();
+  if (!connected_){
+    debugf(DEBUG_ERROR, "pmacController", "FAILED TO CONNECT TO CONTROLLER '%s'", portName);
+  }
 
   // Do nothing if we have failed to connect. Requires a restart once
   // the brick is restored
-  if (connected_) {
-    // initialSetup();  // now done in checkConnection()
-    initAsynParams();
+  initAsynParams();
 
-    // Create the epicsEvents for signaling to start and stop scanning
-    this->startEventId_ = epicsEventCreate(epicsEventEmpty);
-    if (!this->startEventId_) {
-      printf("%s:%s epicsEventCreate failure for start event\n", driverName, functionName);
-    }
-    this->stopEventId_ = epicsEventCreate(epicsEventEmpty);
-    if (!this->stopEventId_) {
-      printf("%s:%s epicsEventCreate failure for stop event\n", driverName, functionName);
-    }
-
-    // Create the thread that executes trajectory scans
-    epicsThreadCreate("TrajScanTask",
-                      epicsThreadPriorityMedium,
-                      epicsThreadGetStackSize(epicsThreadStackMedium),
-                      (EPICSTHREADFUNC) trajTaskC,
-                      this);
-  } else {
-    debugf(DEBUG_ERROR, functionName,
-           "FAILED TO CONNECT TO CONTROLLER '%s'. Restore controller and restart IOC.",
-           portName);
+  // Create the epicsEvents for signaling to start and stop scanning
+  this->startEventId_ = epicsEventCreate(epicsEventEmpty);
+  if (!this->startEventId_) {
+    printf("%s:%s epicsEventCreate failure for start event\n", driverName, functionName);
   }
+  this->stopEventId_ = epicsEventCreate(epicsEventEmpty);
+  if (!this->stopEventId_) {
+    printf("%s:%s epicsEventCreate failure for stop event\n", driverName, functionName);
+  }
+
+  // Create the thread that executes trajectory scans
+  epicsThreadCreate("TrajScanTask",
+                    epicsThreadPriorityMedium,
+                    epicsThreadGetStackSize(epicsThreadStackMedium),
+                    (EPICSTHREADFUNC) trajTaskC,
+                    this);
 }
 
 pmacController::~pmacController(void) {
@@ -319,6 +315,19 @@ asynStatus pmacController::checkConnection() {
     debug(DEBUG_VARIABLE, functionName, "Connection status", connected_);
   } else {
     connected_ = false;
+    // Inform all motor axis objects that the connection is dropped
+    for (int axis = 1; axis <= numAxes_; axis++) {
+      if (this->getAxis(axis) != NULL) {
+        this->getAxis(axis)->badConnection();
+      }
+    }
+    // Inform all CS controller objects that the connection is dropped
+    for (int index = 0; index < PMAC_MAX_CS; index++) {
+      pmacCSController *csPtr = pCSControllers_[index];
+      if (csPtr != NULL){
+        csPtr->badConnection();
+      }
+    }
   }
 
   return status;
@@ -329,7 +338,6 @@ asynStatus pmacController::initialSetup() {
   char response[1024];
   static const char *functionName = "initialiseConnection";
   debug(DEBUG_FLOW, functionName);
-
   status = this->readDeviceType();
 
   if (status == asynSuccess) {
@@ -367,6 +375,18 @@ asynStatus pmacController::initialSetup() {
   }
 
   if (status == asynSuccess)  pBroker_->clearNewConnection();
+
+  // Inform all motor axis objects that the connection is good
+  for (int axis = 1; axis <= numAxes_; axis++) {
+    if (this->getAxis(axis) != NULL) {
+      this->getAxis(axis)->goodConnection();
+    }
+  }
+
+  // Now loop over and initialise all CS registered objects
+  for (int index = 0; index < PMAC_MAX_CS; index++) {
+    this->initCSHardware(index);
+  }
 
   return status;
 }
@@ -2331,7 +2351,6 @@ asynStatus pmacController::poll() {
   char tBuff[32];
   static const char *functionName = "poll";
   debug(DEBUG_FLOW, functionName);
-
   epicsTimeGetCurrent(&nowTime_);
 
   // First check the connection
@@ -3527,17 +3546,37 @@ asynStatus pmacController::registerCS(pmacCSController *csPtr, const char *portN
   debug(DEBUG_ERROR, functionName, "CS port name", portName);
   pPortToCs_->insert(portName, csNo);
 
-  // setup monitoring of movement of all axes in this CS
-  pAxisZero->registerCS(csPtr, csNo);
+  if (initialised_){
+    this->initCSHardware(csNo);
+  }
 
-  // Add the CS status item to the fast update
-  this->pHardware_->setupCSStatus(csNo);
+  return asynSuccess;
+}
 
-  // Now register the CS object for callbacks from the broker
-  this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
-  this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_PRE_FAST_READ);
-  this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_SLOW_READ);
+asynStatus pmacController::initCSHardware(int csNo)
+{
+  pmacCSController *csPtr = NULL;
+  static const char *functionName = "initCSHardware";
 
+  debug(DEBUG_VARIABLE, functionName, "Initialising CS with broker", csNo);
+  // Check if we have a valid csPtr for this CS
+  csPtr = pCSControllers_[csNo];
+
+  if (csPtr != NULL){
+    // setup monitoring of movement of all axes in this CS
+    pAxisZero->registerCS(csPtr, csNo);
+
+    // Add the CS status item to the fast update
+    this->pHardware_->setupCSStatus(csNo);
+
+    // Now register the CS object for callbacks from the broker
+    this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_FAST_READ);
+    this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_PRE_FAST_READ);
+    this->pBroker_->registerForUpdates(csPtr, pmacMessageBroker::PMAC_SLOW_READ);
+
+    // Notify the CS object that we have a valid connection
+    csPtr->initComplete();
+  }
   return asynSuccess;
 }
 

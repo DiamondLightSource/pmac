@@ -190,13 +190,33 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
               "%s Unable To Set Driver Parameters In Constructor.\n", functionName);
   }
 
-  if(pC_->initialised()) {
-    pC_->registerCS(this, portName, csNumber_);
-    storeKinematics();
-  }
+  pC_->registerCS(this, portName, csNumber_);
 }
 
 pmacCSController::~pmacCSController() {
+}
+
+void pmacCSController::initComplete() {
+  storeKinematics();
+  pmacCSAxis *pAxis = NULL;
+  // Notify all registered axes of the good connection
+  for (int axis = 0; axis < numAxes_; axis++) {
+    pAxis = getAxis(axis);
+    if (pAxis != NULL) {
+      pAxis->goodConnection();
+    }
+  }
+}
+
+void pmacCSController::badConnection() {
+  pmacCSAxis *pAxis = NULL;
+  // Notify all registered axes of the bad connection
+  for (int axis = 0; axis < numAxes_; axis++) {
+    pAxis = getAxis(axis);
+    if (pAxis != NULL) {
+      pAxis->badConnection();
+    }
+  }
 }
 
 bool pmacCSController::initialised(void) {
@@ -408,7 +428,6 @@ void pmacCSController::callback(pmacCommandStore *sPtr, int type) {
   char remove[PMAC_CS_MAXBUF];
   char key[PMAC_CS_MAXBUF];
   static const char *functionName = "callback";
-
   debug(DEBUG_TRACE, functionName, "Coordinate system status callback");
 
   if(type == pmacMessageBroker::PMAC_PRE_FAST_READ) {
@@ -546,24 +565,22 @@ asynStatus pmacCSController::pmacSetAxisScale(int axis, int scale) {
               functionName);
     result = asynError;
   } else {
-    if (initialised()) {
-      this->lock();
-      pA = getAxis(axis);
-      if (pA) {
-        pA->scale_ = scale;
-        setIntegerParam(axis, PMAC_CS_MotorScale_, scale);
-        asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
-                  "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
-                  functionName, pA->scale_, pA->axisNo_, portName);
+    this->lock();
+    pA = getAxis(axis);
+    if (pA) {
+      pA->scale_ = scale;
+      setIntegerParam(axis, PMAC_CS_MotorScale_, scale);
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
+                "%s. Setting scale factor of %d on axis %d, on controller %s.\n",
+                functionName, pA->scale_, pA->axisNo_, portName);
 
-      } else {
-        asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-                  "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
-                  axis);
-        result = asynError;
-      }
-      this->unlock();
+    } else {
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+                "%s: Error: axis %d has not been configured using pmacCreateAxis.\n", functionName,
+                axis);
+      result = asynError;
     }
+    this->unlock();
   }
   return result;
 }
