@@ -2192,6 +2192,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   } else if (function == PMAC_C_CoordSysGroup_) {
     status = (pGroupList->switchToGroup(value) == asynSuccess) && status;
     updateCsAssignmentParameters();
+    copyCsReadbackToDemand(false);
   } else if (pWriteParams_->hasKey(*name)) {
     // This is an integer write of a parameter, so send the immediate write/read
     sprintf(command, "%s=%d", pWriteParams_->lookup(*name).c_str(), value);
@@ -3823,6 +3824,7 @@ asynStatus pmacController::executeManualGroup() {
   status = pGroupList->manualGroup(cmd);
 
   updateCsAssignmentParameters();
+  copyCsReadbackToDemand(true);
 
   return status;
 }
@@ -3885,7 +3887,49 @@ asynStatus pmacController::updateCsAssignmentParameters() {
       }
     }
   }
+  callParamCallbacks();
+  return status;
+}
 
+/**
+ * Ensure the demand parameters are consistent after a CS group change or a
+ * manual update has taken place.
+ *
+ * - After a CS group change all values should be copied from the readback parameters
+ *   into the demand parameters.
+ * - After a manual CS change all non zero and non empty values should be copied from
+ *   the readback parameters into the demand parameters.
+ *
+ * This method is called with the boolean manual flag
+ *
+ * @param manual A flag to indicate if this is called after a manual CS change.
+ * @return status asynSuccess if the function succeeds
+ */
+asynStatus pmacController::copyCsReadbackToDemand(bool manual)
+{
+  asynStatus status = asynSuccess;
+  int csNo = 0;
+  char csAssignment[MAX_STRING_SIZE];
+  static const char *functionName = "copyCsReadbackToDemand";
+
+  debug(DEBUG_FLOW, functionName);
+
+  for (int axis = 1; axis <= this->numAxes_; axis++) {
+    if (this->getAxis(axis) != NULL) {
+      getIntegerParam(axis, PMAC_C_GroupCSPortRBV_, &csNo);
+      if (!manual){
+        setIntegerParam(axis, PMAC_C_GroupCSPort_, csNo);
+      } else if (csNo != 0){
+        setIntegerParam(axis, PMAC_C_GroupCSPort_, csNo);
+      }
+      getStringParam(axis, PMAC_C_GroupAssignRBV_, MAX_STRING_SIZE, csAssignment);
+      if (!manual){
+        setStringParam(axis, PMAC_C_GroupAssign_, csAssignment);
+      } else if (strcmp("", csAssignment) != 0){
+        setStringParam(axis, PMAC_C_GroupAssign_, csAssignment);
+      }
+    }
+  }
   callParamCallbacks();
   return status;
 }
