@@ -22,6 +22,9 @@ public:
 
     virtual ~pmacCSAxis();
 
+    void badConnection();
+    void goodConnection();
+
     asynStatus move(double position, int relative, double min_velocity, double max_velocity,
                     double acceleration);
 
@@ -53,6 +56,8 @@ private:
     epicsFloat64 lastTimeSecs_;
     bool printNextError_;
     bool moving_; // only valid within poll time - used as a hint for validating deferred coordinated moves
+    bool connected_;
+    bool initialized_;
 
     friend class pmacCSController;
 

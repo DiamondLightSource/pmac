@@ -45,6 +45,8 @@ class pmacCSController
 public:
     pmacCSController(const char *portName, const char *controllerPortName, int csNo, int program);
     virtual ~pmacCSController();
+    void initComplete();
+    void badConnection();
     bool initialised(void);
     std::string getPortName();
     asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);

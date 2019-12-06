@@ -29,8 +29,12 @@ pmacCSAxis::pmacCSAxis(pmacCSController *pController, int axisNo)
   lastTimeSecs_ = 0.0;
   printNextError_ = false;
   moving_ = false;
+  connected_ = false;
+  initialized_ = false;
 
   if (pC_->initialised()) {
+//    this->goodConnection();
+
     if (axisNo > 0) {
       char var[16];
       // Request position readback
@@ -44,11 +48,48 @@ pmacCSAxis::pmacCSAxis(pmacCSController *pController, int axisNo)
     // Wake up the poller task which will make it do a poll,
     // updating values for this axis to use the new resolution (stepSize_)
     pC_->wakeupPoller();
+
+    // Finally, set the connection to good
+    connected_ = true;
+    initialized_ = true;
   }
 }
 
 pmacCSAxis::~pmacCSAxis() {
   // TODO Auto-generated destructor stub
+}
+
+void pmacCSAxis::badConnection() {
+  connected_ = false;
+  setIntegerParam(pC_->motorStatusProblem_, true);
+  setIntegerParam(pC_->motorStatusCommsError_, true);
+  statusChanged_ = 1;
+  callParamCallbacks();
+}
+
+void pmacCSAxis::goodConnection() {
+  if (!initialized_){
+    initialized_ = true;
+    if (axisNo_ > 0) {
+      char var[16];
+      // Request position readback
+      sprintf(var, "&%dQ8%d", pC_->getCSNumber(), axisNo_);
+      pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
+
+      // Register for callbacks
+      pC_->registerForCallbacks(this, pmacMessageBroker::PMAC_FAST_READ);
+    }
+
+    // Wake up the poller task which will make it do a poll,
+    // updating values for this axis to use the new resolution (stepSize_)
+    pC_->wakeupPoller();
+  }
+
+  connected_ = true;
+  setIntegerParam(pC_->motorStatusProblem_, false);
+  setIntegerParam(pC_->motorStatusCommsError_, false);
+  statusChanged_ = 1;
+  callParamCallbacks();
 }
 
 asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_velocity, double max_velocity,
@@ -66,48 +107,53 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
 
   debug(DEBUG_FLOW, functionName);
 
-  setIntegerParam(pC_->motorStatusMoving_, true);
+  if (connected_){
+    setIntegerParam(pC_->motorStatusMoving_, true);
 
-  // Make any CS demands consistent with this move
-  if (pC_->movesDeferred_ == 0) {
-    pC_->makeCSDemandsConsistent();
-  }
-
-  if (this->pC_->pC_->useCsVelocity) {
-    strcpy(vel_buff, pC_->getVelocityCmd(max_velocity, steps).c_str());
-  }
-  if (acceleration != 0) {
-    if (max_velocity != 0) {
-      /* Isx87 = accel time in msec */
-      sprintf(acc_buff, "%s",
-              pC_->getCSAccTimeCmd(fabs(max_velocity / acceleration) * 1000.0).c_str());
+    // Make any CS demands consistent with this move
+    if (pC_->movesDeferred_ == 0) {
+      pC_->makeCSDemandsConsistent();
     }
-  }
 
-  deviceUnits = position / (double) scale_;
+    if (this->pC_->pC_->useCsVelocity) {
+      strcpy(vel_buff, pC_->getVelocityCmd(max_velocity, steps).c_str());
+    }
+    if (acceleration != 0) {
+      if (max_velocity != 0) {
+        /* Isx87 = accel time in msec */
+        sprintf(acc_buff, "%s",
+                pC_->getCSAccTimeCmd(fabs(max_velocity / acceleration) * 1000.0).c_str());
+      }
+    }
+
+    deviceUnits = position / (double) scale_;
 
 
-  if (pC_->movesDeferred_ == 0) {
-    sprintf(command, "&%d%s%sQ7%d=%.12f", pC_->getCSNumber(), vel_buff,
-            acc_buff, axisNo_, deviceUnits);
-    if (pC_->getProgramNumber() != 0) {
-      // Abort current move to make sure axes are enabled
-      status = pC_->axisWriteRead(
-              pC_->pC_->pHardware_->getCSEnableCommand(pC_->getCSNumber()).c_str(),
-              response);
-      /* If the program specified is non-zero, add a command to run the program.
-       * If program number is zero, then the move will have to be started by some
-       * external process, which is a mechanism of allowing coordinated starts to
-       * movement. */
-      sprintf(buff, " B%dR", pC_->getProgramNumber());
-      strcat(command, buff);
-      status = pC_->axisWriteRead(command, response);
+    if (pC_->movesDeferred_ == 0) {
+      sprintf(command, "&%d%s%sQ7%d=%.12f", pC_->getCSNumber(), vel_buff,
+              acc_buff, axisNo_, deviceUnits);
+      if (pC_->getProgramNumber() != 0) {
+        // Abort current move to make sure axes are enabled
+        status = pC_->axisWriteRead(
+                pC_->pC_->pHardware_->getCSEnableCommand(pC_->getCSNumber()).c_str(),
+                response);
+        /* If the program specified is non-zero, add a command to run the program.
+        * If program number is zero, then the move will have to be started by some
+        * external process, which is a mechanism of allowing coordinated starts to
+        * movement. */
+        sprintf(buff, " B%dR", pC_->getProgramNumber());
+        strcat(command, buff);
+        status = pC_->axisWriteRead(command, response);
+      }
+    } else {
+      // do not pass the velocity buffer, deferred velocity is controlled separately
+      sprintf(command, "%sQ7%d=%.12f", acc_buff, axisNo_, deviceUnits);
+      deferredMove_ = pC_->movesDeferred_;
+      sprintf(deferredCommand_, "%s", command);
     }
   } else {
-    // do not pass the velocity buffer, deferred velocity is controlled separately
-    sprintf(command, "%sQ7%d=%.12f", acc_buff, axisNo_, deviceUnits);
-    deferredMove_ = pC_->movesDeferred_;
-    sprintf(deferredCommand_, "%s", command);
+    debug(DEBUG_ERROR, functionName, "Cannot move CS axis, connection lost");
+    status = asynError;
   }
   return status;
 }
@@ -136,7 +182,13 @@ asynStatus pmacCSAxis::stop(double acceleration) {
   deferredMove_ = 0;
 
   debug(DEBUG_TRACE, functionName, "CS Stop command", command);
-  status = pC_->axisWriteRead(command, response);
+
+  if (connected_){
+    status = pC_->axisWriteRead(command, response);
+  } else {
+    debug(DEBUG_ERROR, functionName, "Cannot stop CS axis, connection lost");
+    status = asynError;
+  }
   return status;
 }
 

@@ -88,6 +88,9 @@ asynStatus pmacMessageBroker::getConnectedStatus(int *connected, int *newConnect
     newConnection_ = true;
     status = this->lowLevelWriteRead("", response);
     connected_ = status ==asynSuccess;
+    if (connected_){
+      debug(DEBUG_ERROR, "getConnectedStatus", "Connection to hardware restored");
+    }
   }
   *connected = connected_;
   *newConnection = newConnection_;
@@ -491,6 +494,9 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
 
   if (status != asynSuccess) {
     // the next call to CheckConnectionStatus will restore the connected_ state
+    if (connected_){
+      debug(DEBUG_ERROR, "lowLevelWriteRead", "Connection to hardware lost");
+    }
     connected_ = false;  newConnection_ = true;
   } else {
     // Replace any carriage returns with spaces
