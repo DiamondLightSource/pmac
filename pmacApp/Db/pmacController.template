@@ -122,7 +122,7 @@ record(waveform, "$(P):SendCmd")
 
 
 # a dummy real motor 0 with mres of 1, used by the CS axis mres DB logic in pmacDirectMotor.template
-record(motor,"$(P)M0")
+record(motor,"$(P):M0")
 {
 	field(DTYP,"Soft Channel")
 	field(MRES,"1")
