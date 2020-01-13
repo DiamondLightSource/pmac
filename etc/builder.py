@@ -466,7 +466,7 @@ class dls_pmac_cs_asyn_motor(AutoSubstitution, MotorRecord):
         kwargs['CS'] = kwargs['PORT'].CS
         self.__super.__init__(**kwargs)
 
-dls_pmac_cs_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
+dls_pmac_cs_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Coordinate System object that this motor belongs to", DeltaTau)
 # we want to copy the controller port name (see above) so do not want it as an argument
 dls_pmac_cs_asyn_motor.ArgInfo = dls_pmac_cs_asyn_motor.ArgInfo.filtered(
     without=['PMAC', 'CS'])
