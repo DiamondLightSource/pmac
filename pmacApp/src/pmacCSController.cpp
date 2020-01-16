@@ -64,6 +64,7 @@ pmacSetCoordMovingPollPeriod(0, 100)
 #include <drvSup.h>
 #include <registryFunction.h>
 #include <epicsExport.h>
+#include <sstream>
 #include "pmacCSController.h"
 #include "pmacController.h"
 
@@ -120,6 +121,20 @@ const epicsUInt32 pmacCSController::CS_STATUS2_RUNTIME_ERR = (0x1 << 22);
 const epicsUInt32 pmacCSController::CS_STATUS2_LOOKAHEAD = (0x1 << 23);
 
 const epicsUInt32 pmacCSController::CS_STATUS3_LIMIT = (0x1 << 1);
+
+const std::string pmacCSController::CS_RUNTIME_ERRORS[] = {
+  "No run-time error",
+  "Insufficient calculation time",
+  "Program counter out of range (too low)",
+  "Program counter out of range (too high)",
+  "Unlinked conditional statement",
+  "Subroutine stack overflow",
+  "Jump to non-existant label",
+  "Cutter compensation interference error",
+  "Forward kinematic execution error",
+  "Inverse kinematic execution error",
+  "No axes remaining in CS"
+};
 
 /**
  * Create a driver instance to communicate with a given coordinate system
@@ -514,7 +529,6 @@ asynStatus pmacCSController::monitorPMACVariable(int poll_speed, const char *var
 asynStatus pmacCSController::tScanCheckForErrors() {
   asynStatus status = asynSuccess;
   static const char *functionName = "tScanCheckForErrors";
-
   debug(DEBUG_FLOW, functionName);
 
   if ((status_[2] & CS_STATUS3_LIMIT) != 0) {
@@ -530,6 +544,55 @@ asynStatus pmacCSController::tScanCheckForErrors() {
     status = asynError;
   }
   return status;
+}
+
+/** Returns a string containing an appropriate trajectory scan error
+  * message if the scan has failed or else an empty string.
+  * Returns empty string if there is no error found.
+  */
+std::string pmacCSController::tScanGetErrorMessage()
+{
+  static const char *functionName = "tScanGetErrorMessage";
+  std::stringstream ss;
+  char reply[PMAC_MAXBUF];
+  int reason;
+  debug(DEBUG_FLOW, functionName);
+
+  if ((status_[2] & CS_STATUS3_LIMIT) != 0) {
+    std::stringstream err;
+    err << "Trajectory scan failed - CS " << this->csNumber_ << " reports limit active";
+    ss << "CS " << this->csNumber_ << " reports limit active";
+    debug(DEBUG_ERROR, functionName, err.str());
+  }
+  if ((status_[1] & CS_STATUS2_FOLLOW_ERR) != 0) {
+    std::stringstream err;
+    err << "Trajectory scan failed - CS " << this->csNumber_ << " reports following error";
+    ss << "CS " << this->csNumber_ << " reports following error";
+    debug(DEBUG_ERROR, functionName, err.str());
+  }
+  if ((status_[1] & CS_STATUS2_AMP_FAULT) != 0) {
+    std::stringstream err;
+    err << "Trajectory scan failed - CS " << this->csNumber_ << " reports amplifier fault";
+    ss << "CS " << this->csNumber_ << " reports amplifier fault";
+    debug(DEBUG_ERROR, functionName, err.str());
+  }
+  if ((status_[1] & CS_STATUS2_RUNTIME_ERR) != 0) {
+    std::stringstream err;
+    err << "Trajectory scan failed - CS " << this->csNumber_ << " Runtime Error (";
+    // Read the runtime error value out of the motion controller
+    ss << "RY:$002" << (this->csNumber_ - 1) << "14";
+    // Construct a full error message for logging to console
+    // and a status message that can be displayed to the user
+    err << ss.str();
+    this->immediateWriteRead(ss.str().c_str(), reply);
+    sscanf(reply, "%d", &reason);
+    err << " = " << reason << ") : ";
+    err << CS_RUNTIME_ERRORS[reason];
+    debug(DEBUG_ERROR, functionName, err.str());
+    ss.str(std::string());
+    ss << "CS " << this->csNumber_ << " Runtime Error: " << CS_RUNTIME_ERRORS[reason];
+  }
+  return ss.str();
 }
 
 asynStatus pmacCSController::tScanCheckProgramRunning(int *running) {
