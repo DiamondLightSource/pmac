@@ -3138,6 +3138,18 @@ void pmacController::trajectoryTask() {
                     em << "Trajectory scan failed: Motor " << axis << " low limit activated";
                     debug(DEBUG_ERROR, functionName, em.str());
                   }
+                  if (mStatus.ampEnabled_ == 0){
+                    ss << "M" << axis << " AmpEna(OFF) ";
+                    std::stringstream em;
+                    em << "Trajectory scan failed: Motor " << axis << " amplifier disabled (could have been killed)";
+                    debug(DEBUG_ERROR, functionName, em.str());
+                  }
+                  if (mStatus.followingError_ == 1){
+                    ss << "M" << axis << " FFE(ON) ";
+                    std::stringstream em;
+                    em << "Trajectory scan failed: Motor " << axis << " Fatal Following Error";
+                    debug(DEBUG_ERROR, functionName, em.str());
+                  }
                 }
               }
             }
