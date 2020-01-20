@@ -3662,7 +3662,7 @@ asynStatus pmacController::makeCSDemandsConsistent() {
       }
       // Now loop over each CS axis and set any demands that haven't already been set
       // This loop covers all kinematic axes (and those that are not assigned)
-      for (int csAxisIndex = 1; csAxisIndex <= numAxes_; csAxisIndex++) {
+      for (int csAxisIndex = 1; csAxisIndex <= PMAC_CS_AXES_COUNT; csAxisIndex++) {
         if ((qvars_assigned & (1 << (csAxisIndex - 1))) == 0) {
           // This axis has not already had its demand set.
           if (csHasRawMovedKinematics) {
