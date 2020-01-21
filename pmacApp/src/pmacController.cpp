@@ -16,7 +16,7 @@
 #include <string.h>
 #include <math.h>
 #include <errno.h>
-
+#include <sstream>
 #include <iostream>
 
 using std::cout;
@@ -3118,11 +3118,49 @@ void pmacController::trajectoryTask() {
       if (tScanPmacStatus_ == PMAC_TRAJ_STATUS_RUNNING) {
         if (pCSControllers_[tScanCSNo_]->tScanCheckProgramRunning(&progRunning) == asynSuccess) {
           if (progRunning == 0) {
+            std::stringstream ss;
+            ss << "Scan failed: ";
+            for (int axis = 1; axis <= numAxes_; axis++) {
+              // Check for any motors in limits
+              if (this->getAxis(axis) != NULL) {
+                int csNo = this->getAxis(axis)->getAxisCSNo();
+                if (csNo == tScanCSNo_){
+                  axisStatus mStatus = this->getAxis(axis)->getMotorStatus();
+                  if (mStatus.highLimit_ == 1){
+                    ss << "M" << axis << " Lim(HIGH) ";
+                    std::stringstream em;
+                    em << "Trajectory scan failed: Motor " << axis << " high limit activated";
+                    debug(DEBUG_ERROR, functionName, em.str());
+                  }
+                  if (mStatus.lowLimit_ == 1){
+                    ss << "M" << axis << " Lim(LOW) ";
+                    std::stringstream em;
+                    em << "Trajectory scan failed: Motor " << axis << " low limit activated";
+                    debug(DEBUG_ERROR, functionName, em.str());
+                  }
+                  if (mStatus.ampEnabled_ == 0){
+                    ss << "M" << axis << " AmpEna(OFF) ";
+                    std::stringstream em;
+                    em << "Trajectory scan failed: Motor " << axis << " amplifier disabled (could have been killed)";
+                    debug(DEBUG_ERROR, functionName, em.str());
+                  }
+                  if (mStatus.followingError_ == 1){
+                    ss << "M" << axis << " FFE(ON) ";
+                    std::stringstream em;
+                    em << "Trajectory scan failed: Motor " << axis << " Fatal Following Error";
+                    debug(DEBUG_ERROR, functionName, em.str());
+                  }
+                }
+              }
+            }
+            if (ss.str() == "Scan failed: "){
+              // We have been unable to determine why the scan has failed, log this
+              ss << "No motor problems - checking CS";
+            }
             // Program not running but it should be
             tScanExecuting_ = 0;
             // Set the status to failure
-            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE,
-                                   "Scan failed, motion program not running - check motor status");
+            this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE, ss.str().c_str());
           }
         }
       }
@@ -3135,7 +3173,8 @@ void pmacController::trajectoryTask() {
         setIntegerParam(PMAC_C_TrajEStatus_, 1);
         // Set the status to failure
         this->setProfileStatus(PROFILE_EXECUTE_DONE, PROFILE_STATUS_FAILURE,
-                               "Trajectory scan failed, coordinate system error");
+                               pCSControllers_[tScanCSNo_]->tScanGetErrorMessage());
+
         callParamCallbacks();
       }
 

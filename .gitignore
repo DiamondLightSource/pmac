@@ -1,6 +1,7 @@
 *~
 .cproject
 .project
+.vscode
 O.*
 bin
 include

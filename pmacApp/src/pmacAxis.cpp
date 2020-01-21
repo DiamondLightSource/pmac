@@ -21,7 +21,6 @@
 #include <iocsh.h>
 
 #include "pmacController.h"
-#include "pmacHardwareInterface.h"
 #include <iostream>
 #include <sstream>
 
@@ -644,7 +643,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
         // Parse the axis status
         axisStatus axStatus;
         retStatus = pC_->pHardware_->parseAxisStatus(axisNo_, sPtr, axStatus);
-
+        status_ = axStatus;
 
         setIntegerParam(pC_->PMAC_C_AxisBits01_, axStatus.status16Bit1_);
         setIntegerParam(pC_->PMAC_C_AxisBits02_, axStatus.status16Bit2_);
@@ -835,6 +834,14 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
     }
 
   return asynSuccess;
+}
+
+/**
+ * Return the current motor status
+ */
+axisStatus pmacAxis::getMotorStatus()
+{
+  return status_;
 }
 
 /**

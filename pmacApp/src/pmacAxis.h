@@ -14,6 +14,7 @@
 
 #include "asynMotorController.h"
 #include "asynMotorAxis.h"
+#include "pmacHardwareInterface.h"
 #include "pmacCallbackInterface.h"
 #include "pmacCommandStore.h"
 #include "pmacDebugger.h"
@@ -32,6 +33,8 @@ public:
     void goodConnection();
 
     void initialSetup(int axisNo);
+
+    axisStatus getMotorStatus();
 
     asynStatus move(double position, int relative, double min_velocity, double max_velocity,
                     double acceleration);
@@ -105,6 +108,7 @@ private:
     epicsFloat64 lastTimeSecs_;
     bool printNextError_;
     bool moving_; // only valid within poll time - used as a hint for validating deferred coordinated moves
+    axisStatus status_;
 
     bool connected_; // Current connection status of the hardware
     bool initialised_; // We need to keep a record of this in case the software starts up without a connection

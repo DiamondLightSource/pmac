@@ -61,22 +61,27 @@ def trajectory_quick_scan(test, test_brick):
     test.assertEquals(test_brick.angle.pos, angles[-1])
 
 
-def trajectory_fast_scan(test, test_brick, n_axes, cs='CS3', millisecs=5000):
+def trajectory_fast_scan(
+        test, test_brick, n_axes, cs='CS3', millisecs=5000, distance=1
+        ):
     """
     Do a fast scan involving n_axes motors
     :param n_axes: no. of axes to include in trajectory
     :param test_brick: the test brick instance to run against
-    :param (TestCase) test: the calling test object, used to make assertions
+    :param cs: the coordinate system name
+    :param millisecs: time interval per step
     """
     tr = test_brick.trajectory
     assert isinstance(tr, Trajectory)
+    steps = 10
+    stepsize = distance / steps
 
     # build simple trajectory
     heights = []
     points = 0
-    for height in range(11):
+    for height in range(steps+1):
         points += 1
-        heights.append(height/10.0)
+        heights.append(height*stepsize)
 
     # set up the axis parameters
     axis_count = 0
@@ -85,17 +90,20 @@ def trajectory_fast_scan(test, test_brick, n_axes, cs='CS3', millisecs=5000):
         tr.axes[axis_count].positions = heights
         axis_count += 1
 
-    # each point takes 5 milli sec per axis
-    times = [millisecs * n_axes] * points
+    # each point takes 5 milli sec per step
+    times = [millisecs] * points
     # all points are interpolated
     modes = [0] * points
 
     tr.setup_scan(times, modes, points, points, cs)
 
     tr.ProfileExecute(timeout=30)
-    test.assertTrue(tr.execute_OK)
+
     while test_brick.m1.moving:
         Sleep(.01)  # allow deceleration todo need to put this in the driver itself
+
+    if not tr.execute_OK:
+        raise RuntimeError
 
 
 def trajectory_scan_appending(test, test_brick):

@@ -23,6 +23,7 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
         cls.pv_command = pv_root + 'SendCmd'
         cls.pv_pollAllNow = pv_root + 'PollAllNow'
         cls.pv_disablePoll = pv_root + 'DISABLE_POLL'
+        cls.pv_trajectory_error = pv_root + 'ProfileExecuteMessage_RBV'
 
         for name, value in {**cls.axes, **cls.groups, **cls.cs}.items():
             setattr(cls, name, value)
@@ -82,5 +83,8 @@ def make_controller(c_axes, c_groups, c_cs, pv_root):
 
         def disable_polling(self, disable: bool = True):
             ca.caput(self.pv_disablePoll, disable, wait=True)
+
+        def get_trajectory_error(self):
+            return ca.caget(self.pv_trajectory_error, datatype=ca.DBR_CHAR_STR)
 
     return Controller

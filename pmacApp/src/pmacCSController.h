@@ -72,6 +72,7 @@ public:
     // Add PMAC variable/status item to monitor
     asynStatus monitorPMACVariable(int poll_speed, const char *var);
     asynStatus tScanCheckForErrors();
+    std::string tScanGetErrorMessage();
     asynStatus tScanCheckProgramRunning(int *running);
 
     // Ensure CS demands (Q71..9) are consistent after a motor move or CS change
@@ -172,7 +173,7 @@ private:
 
     static const epicsUInt32 CS_STATUS3_LIMIT;               // (0x1<<1)
 
-
+    static const std::string CS_RUNTIME_ERRORS[];
     friend class pmacCSAxis;
 
     friend class pmacCsGroups;
