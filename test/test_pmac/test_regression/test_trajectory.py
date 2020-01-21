@@ -51,7 +51,7 @@ class TestTrajectory(TestCase):
         ca.caput(tb.m4.off, 40)
         ca.caput(tb.m5.off, 50)
         ca.caput(tb.m6.off, 60)
-        trajectory_fast_scan(self, tb, 6, 'CS2')
+        trajectory_fast_scan(self, tb, 6, 'CS2', microsecs=50000)
         self.assertAlmostEqual(tb.m1.pos, 1, 1)
         self.assertAlmostEqual(tb.m2.pos, 1, 1)
         self.assertAlmostEqual(tb.m3.pos, 1, 1)

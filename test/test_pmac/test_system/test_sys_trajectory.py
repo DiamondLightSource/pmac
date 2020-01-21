@@ -10,7 +10,7 @@ class TestSysTrajectory(TestCase):
         # why does this fail?
         # tb.set_cs_group(tb.g1)
         # Sleep(.1)
-        trajectory_fast_scan(self, tb, 1, millisecs=100000)
+        trajectory_fast_scan(self, tb, 1, microsecs=100000)
         self.assertAlmostEqual(tb.m1.pos, 1, 1)
 
     def test_trajectory_error(self):
@@ -20,13 +20,13 @@ class TestSysTrajectory(TestCase):
         """
         tb = TBrick()
         with self.assertRaises(RuntimeError):
-            trajectory_fast_scan(self, tb, 1, millisecs=10)
+            trajectory_fast_scan(self, tb, 1, microsecs=10)
 
         error_string = tb.get_trajectory_error()
         self.assertTrue("calculation time" in error_string)
 
         with self.assertRaises(RuntimeError):
-            trajectory_fast_scan(self, tb, 1, millisecs=10000, distance=10000)
+            trajectory_fast_scan(self, tb, 1, microsecs=10000, distance=10000)
 
         error_string = tb.get_trajectory_error()
         self.assertTrue("M1 Lim" in error_string)
@@ -34,7 +34,7 @@ class TestSysTrajectory(TestCase):
         tb.m1.set_limits(-100000, 100000)
 
         with self.assertRaises(RuntimeError):
-            trajectory_fast_scan(self, tb, 1, millisecs=10000, distance=10000)
+            trajectory_fast_scan(self, tb, 1, microsecs=10000, distance=10000)
 
         error_string = tb.get_trajectory_error()
         self.assertTrue("following error" in error_string)

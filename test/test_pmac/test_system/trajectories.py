@@ -62,14 +62,14 @@ def trajectory_quick_scan(test, test_brick):
 
 
 def trajectory_fast_scan(
-        test, test_brick, n_axes, cs='CS3', millisecs=5000, distance=1
+        test, test_brick, n_axes, cs='CS3', microsecs=5000, distance=1
         ):
     """
     Do a fast scan involving n_axes motors
     :param n_axes: no. of axes to include in trajectory
     :param test_brick: the test brick instance to run against
     :param cs: the coordinate system name
-    :param millisecs: time interval per step
+    :param microsecs: time interval per step
     """
     tr = test_brick.trajectory
     assert isinstance(tr, Trajectory)
@@ -91,7 +91,7 @@ def trajectory_fast_scan(
         axis_count += 1
 
     # each point takes 5 milli sec per step
-    times = [millisecs] * points
+    times = [microsecs] * points
     # all points are interpolated
     modes = [0] * points
 
