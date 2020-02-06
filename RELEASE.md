@@ -15,6 +15,40 @@ site location of dependencies.
 
 Release Notes
 =============
+
+R2-4-17 (Feb 6, 2020)
+=====================
+### Changes
+* Stop manual axes CS defs clearing previously defined groups
+* Improved connection logic for PMAC controllers
+    * Driver can now start in disconnected state
+    * Driver can connect when hardware is available
+    * Driver can disconnect and reconnect
+* Fixed missing colon in motor record name
+* Fixed CS bug, was looping over raw axis total instead of CS total
+* Improved trajectory scan error reporting
+* Updated motor builder object PORT field description
+
+R2-1 (May 23, 2018)
+===================
+### Changes
+* restore continuous integration (new synapps dependencies)
+* Fix seg fault on startup with no brick connected
+* clean up compiler warnings
+* Add Power Pmac IDE project as example configuration
+* Get all system tests working against PPmac
+    * except trajectory scan tests - not yet supported
+* Fix coordinate system control features for ppmac
+* Added $(PMAC):PollAllNow PV -
+    * put value 1 with callback
+    * synchronizes the current brick status
+* fix issues with feedrate check (now compatible with PPMAC)
+
+R2-0-1 (May 23, 2018)
+=====================
+### Changes
+* fix example IOC to build outside of Diamond
+
 R2-0 (May 23, 2018)
 ======================
 ### Changes
@@ -45,23 +79,4 @@ is not available
 changes for each site
 * I have added a non-builder example IOC (with edm GUI)
 
-R2-0-1 (May 23, 2018)
-=====================
-### Changes
-* fix example IOC to build outside of Diamond
-
-R2-1 (May 23, 2018)
-===================
-### Changes
-* restore continuous integration (new synapps dependencies)
-* Fix seg fault on startup with no brick connected
-* clean up compiler warnings
-* Add Power Pmac IDE project as example configuration
-* Get all system tests working against PPmac
-    * except trajectory scan tests - not yet supported
-* Fix coordinate system control features for ppmac
-* Added $(PMAC):PollAllNow PV -
-    * put value 1 with callback
-    * synchronizes the current brick status
-* fix issues with feedrate check (now compatible with PPMAC)
 
