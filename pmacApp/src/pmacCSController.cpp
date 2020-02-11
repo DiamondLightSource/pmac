@@ -749,7 +749,11 @@ pmacCSController::listKinematic(int csNo, const std::string &type, char *buffer,
     while (running == 1 && word < 10000) {
       sprintf(cmd, "&%d list %s,%d,1", csNo, type.c_str(), word);
       this->immediateWriteRead(cmd, reply);
-      if (reply[0] == 0x7) {
+      if (
+          reply[0] == 0x7 || reply[0] == 0 ||
+          strncmp(reply, " ", 5) == 0 ||
+          strstr(reply, "NOT IN BUFFER") != NULL)
+      {
         running = 0;
       } else {
         sscanf(reply, "%d:%s", &cword, line);

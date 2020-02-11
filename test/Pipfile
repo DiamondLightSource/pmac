@@ -7,14 +7,15 @@ verify_ssl = true
 pytest = "*"
 
 [packages]
-dls-pmaclib = {editable = true,path = "/home/hgv27681/python3/dls_pmaclib"}
+dls-pmaclib = {editable = true,path = "/scratch/work/dls_pmaclib"}
 cothread = "*"
-annotypes = {editable = true,path = "/home/hgv27681/odin/annotypes"}
-malcolm = {editable = true,path = "/home/hgv27681/odin/pymalcolm"}
+annotypes = "*"
+malcolm = {editable = true,path = "/scratch/work//pymalcolm"}
 scanpointgenerator = "*"
 ruamel-yaml = "*"
-tornado = "==4.5.3"
+tornado = "*"
 matplotlib = "==2.2.3"
+serial = "*"
 
 [requires]
 python_version = "3.7"

@@ -30,7 +30,6 @@
 	<pmac.pmacCreateCsGroup AxisCount="2" Controller="Brick" GroupName="3,4-&gt;I" GroupNumber="1"/>
 	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED CS3" GroupNumber="2"/>
 	<pmac.pmacCreateCsGroup AxisCount="8" Controller="Brick" GroupName="MIXED CS2" GroupNumber="3"/>
-	<pmac.pmacCreateCsGroup AxisCount="4" Controller="Brick" GroupName="Slits" GroupNumber="4"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="A" AxisNumber="1" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="C" AxisNumber="3" Controller="Brick" CoordSysNumber="2" GroupNumber="0"/>
@@ -49,10 +48,6 @@
 	<pmac.pmacCsGroupAddAxis AxisDef="B" AxisNumber="2" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="3" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
 	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="4" Controller="Brick" CoordSysNumber="2" GroupNumber="3"/>
-	<pmac.pmacCsGroupAddAxis AxisDef="A-0.5B " AxisNumber="1" Controller="Brick" CoordSysNumber="1" GroupNumber="4"/>
-	<pmac.pmacCsGroupAddAxis AxisDef="A+0.5B " AxisNumber="2" Controller="Brick" CoordSysNumber="1" GroupNumber="4"/>
-	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="3" Controller="Brick" CoordSysNumber="3" GroupNumber="4"/>
-	<pmac.pmacCsGroupAddAxis AxisDef="I" AxisNumber="4" Controller="Brick" CoordSysNumber="3" GroupNumber="4"/>
 	<pmac.GeoBrickTrajectoryControlT NPOINTS="10000" PORT="Brick" name="TRAJ"/>
 	<pmac.pmacDisableLimitsCheck Axis="1" Controller="Brick"/>
 	<pmac.pmacDisableLimitsCheck Axis="2" Controller="Brick"/>
