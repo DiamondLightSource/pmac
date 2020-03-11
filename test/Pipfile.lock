@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2a35cedae28764c0ab9919a059a9ecf1422291ba53785cac9e80e1661fac95a6"
+            "sha256": "40cf1f0603b54b679a0d5e5387494004d735479f26ba95c6e6bc808b5b5483cb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -39,8 +39,12 @@
             "version": "==0.10.0"
         },
         "dls-pmaclib": {
-            "editable": true,
-            "path": "/scratch/work/dls_pmaclib"
+            "hashes": [
+                "sha256:1a9e82930a4ab5fb8013155bf9d29a7d5e879b81a84d08f3bc9d7cdbed08c802",
+                "sha256:5bc6d19e849be7e062a9735e572b89934dcac2877133e4a4aa459dbbbf544bcc"
+            ],
+            "index": "pypi",
+            "version": "==2.1.0"
         },
         "enum34": {
             "hashes": [
@@ -82,7 +86,7 @@
         },
         "malcolm": {
             "editable": true,
-            "path": "/scratch/work//pymalcolm"
+            "path": "/scratch/work/pymalcolm"
         },
         "matplotlib": {
             "hashes": [
@@ -127,6 +131,12 @@
             ],
             "version": "==2.4.0"
         },
+        "pyserial": {
+            "hashes": [
+                "sha256:e0770fadba80c31013896c7e6ef703f72e7834965954a78e71a3049488d4d7d8"
+            ],
+            "version": "==3.4"
+        },
         "python-dateutil": {
             "hashes": [
                 "sha256:7e6584c74aeed623791615e26efd690f29817a27c73085b78e4bad02493df2fb"
@@ -160,10 +170,10 @@
         },
         "scanpointgenerator": {
             "hashes": [
-                "sha256:4e82342817d078f3297a5cf2e0f4ca1c25b88f86876c368afcf3b03346c801a1"
+                "sha256:28672715d82ebf67f62d3d6632dddd5cb6132e62c71d7884fcfbe6a88aa6ebe5"
             ],
             "index": "pypi",
-            "version": "==2.3"
+            "version": "==3.1"
         },
         "serial": {
             "hashes": [

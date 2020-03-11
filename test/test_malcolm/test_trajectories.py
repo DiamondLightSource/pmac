@@ -4,6 +4,7 @@ from unittest import TestCase
 
 import cothread.catools as ca
 import numpy as np
+import json
 from cothread import Sleep
 from dls_pmaclib.dls_pmacremote import PmacEthernetInterface
 from dls_pmaclib.pmacgather import PmacGather
@@ -12,7 +13,7 @@ from scanpointgenerator import SpiralGenerator, CompoundGenerator, \
 
 from malcolm.core import Process, Block
 from malcolm.yamlutil import make_include_creator
-from test.test_malcolm.plot_trajectories import plot_velocities
+from test.test_malcolm.plot_trajectories import plot_velocities, plot_pos_time
 from test.brick.testbrick import TBrick
 
 SAMPLE_RATE = 50  # gather samples / second
@@ -57,12 +58,20 @@ class TestTrajectories(TestCase):
         self.proc.stop()
         self.pmac.disconnect()
 
-    def setup_brick_malcolm(self, xv, yv, xa, ya):
+    def setup_brick_malcolm(self, xv, yv, xa, ya, mres=None):
         self.pmac_gather = PmacGather(self.pmac)
+
+        if mres:
+            ca.caput(self.test_brick.m7.mres, mres)
+            ca.caput(self.test_brick.m8.mres, mres)
         self.test_brick.m7.set_speed(xv)
         self.test_brick.m8.set_speed(yv)
         self.test_brick.m7.set_acceleration(xa)
         self.test_brick.m8.set_acceleration(ya)
+
+        self.m_res.append(float(ca.caget(self.test_brick.m7.mres)))
+        self.m_res.append(float(ca.caget(self.test_brick.m8.mres)))
+
         # yield cothread so Malcolm can see the changes
         Sleep(.001)
 
@@ -75,6 +84,7 @@ class TestTrajectories(TestCase):
             self.proc.add_controller(controller)
         self.scan_block = self.proc.block_view('PMAC_TEST_SCAN')
         self.traj_block = self.proc.block_view('PMAC-ML-BRICK-01:TRAJ')
+        self.pmac_block = self.proc.block_view('PMAC-ML-BRICK-01')
         self.trigger_block = self.proc.block_view('PMAC_TEST_SCAN:TRIG')
 
         # prepare the scan
@@ -92,9 +102,6 @@ class TestTrajectories(TestCase):
         self.pmac = PmacEthernetInterface(verbose=True)
         self.pmac.setConnectionParams('172.23.240.97', 1025)
         self.pmac.connect()
-
-        self.m_res.append(float(ca.caget(self.test_brick.m7.mres)))
-        self.m_res.append(float(ca.caget(self.test_brick.m8.mres)))
 
     def do_a_scan(self, gen: CompoundGenerator):
         # configure the Malcolm scan
@@ -177,12 +184,15 @@ class TestTrajectories(TestCase):
         return self.plot_scan(title, elapsed=elapsed,
                               duration=gen.duration)
 
-    def do_spiral(self, trigger=TRIGGER_EVERY, name='Spiral'):
-        step_time = .5
+    def do_spiral(
+        self, trigger=TRIGGER_EVERY, name='Spiral',
+        interval=.5,
+        continuous=True
+    ):
         # create a set of scan points in a spiral
         s = SpiralGenerator(self.axes, "mm", [0.0, 0.0],
                             5.0, scale=5)
-        gen = CompoundGenerator([s], [], [], step_time)
+        gen = CompoundGenerator([s], [], [], interval, continuous=continuous)
         gen.prepare()
 
         self.setup_brick_malcolm(xv=100, yv=100, xa=.2, ya=.2)
@@ -194,23 +204,34 @@ class TestTrajectories(TestCase):
 
     TITLE_PATTERN = '{} xv={} yv={} xa={} ya={}'
 
-    def Interpolation_checker(self, xv=200., yv=400., xa=1., ya=80.,
-                              snake=False, name='',
-                              trigger=TRIGGER_EVERY,
-                              interval=0.15):
-        xs = LineGenerator("stage7", "mm", 0, 4, 5, alternate=snake)
-        ys = LineGenerator("stage8", "mm", 0, 2, 3)
+    def Interpolation_checker(
+        self, xv=200., yv=400., xa=1., ya=80.,
+        snake=False, name='',
+        trigger=TRIGGER_EVERY,
+        interval=0.15,
+        continuous=True,
+        generator=None,
+        mres=None
+    ):
+        if not generator:
+            xs = LineGenerator("stage7", "mm", 0, 4, 5, alternate=snake)
+            ys = LineGenerator("stage8", "mm", 0, 2, 3)
 
-        gen = CompoundGenerator([ys, xs], [], [], interval)
-        gen.prepare()
+            gen = CompoundGenerator(
+                [ys, xs], [], [], interval, continuous=continuous
+            )
+            gen.prepare()
+        else:
+            gen = generator
 
-        self.setup_brick_malcolm(xv=xv, yv=yv, xa=xa, ya=ya)
+        self.setup_brick_malcolm(xv=xv, yv=yv, xa=xa, ya=ya, mres=mres)
         self.trigger_block.rowTrigger.put_value(trigger)
 
         title = self.TITLE_PATTERN.format(name, xv, yv, xa, ya)
         xp, yp = self.scan_and_plot(gen, title)
-        self.check_bounds(xp, '{} array x'.format(name))
-        self.check_bounds(yp, '{} array y'.format(name))
+        if test_bounds:
+            self.check_bounds(xp, '{} array x'.format(name))
+            self.check_bounds(yp, '{} array y'.format(name))
         return xp, yp
 
     def check_bounds(self, a, name):
@@ -269,11 +290,106 @@ class TestTrajectories(TestCase):
         self.do_spiral(trigger=TRIGGER_ROW, name='Sparse Spiral')
         self.do_spiral(trigger=TRIGGER_EVERY, name='Every Point Spiral')
 
-    # def test_dummy(self)
-    #     # self.test_spiral(trigger=TRIGGER_ROW)
-    #     # self.test_spiral(trigger=TRIGGER_EVERY)
-    #     # # x=6 and y=4 combined = 8
-    #     self.Interpolation_checker(
-    #         ya=1, name='Sparse x6 y4', trigger=TRIGGER_ROW)
-    #     self.Interpolation_checker(
-    #         ya=1, name='Every Point x6 y4', trigger=TRIGGER_EVERY)
+    def ____test_dummy(self):
+        linear = True
+        if linear:
+            self.Interpolation_checker(
+                name='Every Point x6 y3',
+                trigger=TRIGGER_EVERY,
+                continuous=False,
+                xv=2000, xa=.01,
+                yv=2000, ya=.01,
+                interval=0.001
+            )
+        else:
+            self.do_spiral(
+                trigger=TRIGGER_EVERY,
+                continuous=False,
+                interval=0.001
+            )
+
+    def test_sharks_tooth(self):
+        """
+        attemmpt to reproduce an issue seen by Bryan where snake scan looks
+        like sharks' fins rather than a saw tooth
+        """
+        gen_dict = json.loads(self.bryans_generator)
+        gen = CompoundGenerator.from_dict(gen_dict)
+
+        self.setup_brick_malcolm(xv=17, yv=17, xa=.01, ya=.01, mres=2e-5)
+        self.trigger_block.rowTrigger.put_value(TRIGGER_ROW)
+
+        self.do_a_scan(gen)
+        total_time = gen.size * gen.duration
+
+        x_demands = np.insert(np.array(
+            self.traj_block.positionsX.value), 0,
+            self.start_x)
+        plot_pos_time([self.gather_points[0], x_demands], total_time)
+
+    bryans_generator = """
+        {
+            "typeid": "scanpointgenerator:generator/CompoundGenerator:1.0",
+            "generators": [
+                {
+                    "typeid": "scanpointgenerator:generator/LineGenerator:1.0",
+                    "axes": [
+                        "stage8"
+                    ],
+                    "units": [
+                        "mm"
+                    ],
+                    "start": [
+                        0.05
+                    ],
+                    "stop": [
+                        0.2
+                    ],
+                    "size": 4,
+                    "alternate": true
+                },
+                {
+                    "typeid": "scanpointgenerator:generator/LineGenerator:1.0",
+                    "axes": [
+                        "stage7"
+                    ],
+                    "units": [
+                        "mm"
+                    ],
+                    "start": [
+                        0.02
+                    ],
+                    "stop": [
+                        0.98
+                    ],
+                    "size": 25,
+                    "alternate": true
+                }
+            ],
+            "excluders": [
+                {
+                    "typeid": "scanpointgenerator:excluder/ROIExcluder:1.0",
+                    "rois": [
+                        {
+                            "typeid": "scanpointgenerator:roi/RectangularROI:1.0",
+                            "start": [
+                                0,
+                                0
+                            ],
+                            "width": 1,
+                            "height": 1,
+                            "angle": 0
+                        }
+                    ],
+                    "axes": [
+                        "stage8",
+                        "stage7"
+                    ]
+                }
+            ],
+            "mutators": [],
+            "duration": 0.1,
+            "continuous": true,
+            "delay_after": 0
+        }
+        """

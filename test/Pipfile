@@ -7,10 +7,10 @@ verify_ssl = true
 pytest = "*"
 
 [packages]
-dls-pmaclib = {editable = true,path = "/scratch/work/dls_pmaclib"}
+dls-pmaclib = "*"
 cothread = "*"
 annotypes = "*"
-malcolm = {editable = true,path = "/scratch/work//pymalcolm"}
+malcolm = {editable = true,path = "/scratch/work/pymalcolm"}
 scanpointgenerator = "*"
 ruamel-yaml = "*"
 tornado = "*"

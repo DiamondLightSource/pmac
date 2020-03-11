@@ -52,13 +52,27 @@ def old_velocity_prev_current(previous_pos, current_pos, current_time):
     return result
 
 
+def plot_pos_time(points, total_time):
+    colours = ['k', 'r', 'g']
+    fig1 = plt.figure(figsize=(8, 6), dpi=200)
+    for i, y in enumerate(points):
+        count = len(y)
+        # create an x axis so that all points arrays are all same width
+        x = np.arange(0,  total_time, total_time/count)
+        plt.plot(
+            x, y, marker=".", color=colours[i % len(colours)], markersize=8
+        )
+
+    plt.show()
+
+
 def plot_velocities(np_arrays, title='Plot', step_time=0.15,
                     overlay=None, x_scale=None, y_scale=None):
     """ plots a 2d graph of a 2 axis trajectory, also does the velocity
     calculations and plots the velocity vector at each point.
     """
     xs, ys, ts, modes, user = np_arrays
-    fig1 = plt.figure(figsize=(8, 6), dpi=300)
+    fig1 = plt.figure(figsize=(8, 6), dpi=200)
     axes = plt.gca()
     if x_scale:
         axes.set_xlim(x_scale)

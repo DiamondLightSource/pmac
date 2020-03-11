@@ -12,7 +12,7 @@
 
 - builtin.parameters.string:
     name: initial_design
-    default: 
+    default:
     description: Design to load at init
 
 - scanning.controllers.RunnableController:
@@ -33,3 +33,7 @@
 - pmactest.parts.DummyTriggerPart:
     name: TRIG
     mri: $(mri):TRIG
+
+- scanning.parts.MinTurnaroundPart:
+    gap: 0.050
+    interval: 0.006
