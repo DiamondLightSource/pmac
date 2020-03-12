@@ -22,15 +22,15 @@ class TestMakeCsConsistent(TestCase):
         tb.cs3.M1.go_direct(1000, wait=False)
 
         # verify no motion yet
-        Sleep(.1)
+        Sleep(0.1)
         self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
         self.assertAlmostEqual(tb.m1.pos, 0, DECIMALS)
 
         # start motion and then kill all
         tb.cs3.set_deferred_moves(False)
-        Sleep(.5)
-        tb.send_command('&3a')
-        tb.send_command('#1k')
+        Sleep(0.5)
+        tb.send_command("&3a")
+        tb.send_command("#1k")
         # let the motors settle
         Sleep(1)
 
@@ -47,7 +47,9 @@ class TestMakeCsConsistent(TestCase):
         self.assertAlmostEqual(m1, tb.m1.pos, DECIMALS)
         self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
 
-    @pytest.mark.skipif(os.environ.get('PPMAC') == 'True', reason="not supported on PPMAC yet")
+    @pytest.mark.skipif(
+        os.environ.get("PPMAC") == "True", reason="not supported on PPMAC yet"
+    )
     def test_auto_home_resets_cs_demands(self):
         tb = TBrick()
         tb.set_cs_group(tb.g3)
@@ -59,8 +61,8 @@ class TestMakeCsConsistent(TestCase):
 
         try:
             # auto home everything
-            ca.caput('PMAC_BRICK_TEST:HM:HMGRP', 'All')
-            ca.caput('PMAC_BRICK_TEST:HM:HOME', 1, wait=True, timeout=20)
+            ca.caput("PMAC_BRICK_TEST:HM:HMGRP", "All")
+            ca.caput("PMAC_BRICK_TEST:HM:HOME", 1, wait=True, timeout=20)
 
             self.assertAlmostEqual(0, tb.height.pos, DECIMALS)
             self.assertAlmostEqual(0, tb.m1.pos, DECIMALS)
@@ -73,7 +75,7 @@ class TestMakeCsConsistent(TestCase):
             self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
         finally:
             # ensure good state if homing failed
-            ca.caput('PMAC_BRICK_TEST:HM:ABORT.PROC', 1)
+            ca.caput("PMAC_BRICK_TEST:HM:ABORT.PROC", 1)
 
     def test_abort_cs_resets_cs_demands(self):
         tb = TBrick()
@@ -85,17 +87,17 @@ class TestMakeCsConsistent(TestCase):
         tb.cs3.M1.go_direct(1000, wait=False)
 
         # verify no motion yet
-        Sleep(.1)
+        Sleep(0.1)
         self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
         self.assertAlmostEqual(tb.m1.pos, 0, DECIMALS)
 
         # start motion and then abort CS moves
         tb.cs3.set_deferred_moves(False)
         # allow the axes to get started
-        Sleep(.1)
+        Sleep(0.1)
         tb.cs3.abort()
         # let the motors settle
-        Sleep(.5)
+        Sleep(0.5)
 
         h = tb.height.pos
         m1 = tb.m1.pos
@@ -105,7 +107,7 @@ class TestMakeCsConsistent(TestCase):
         # now move a different motor in the CS, the other two would continue to
         # their previous destinations if makeCSDemandsConsistent has failed
         tb.cs3.M2.go_direct(10)
-        self.assertLess(tb.height.pos, h+1)  # some settling after abort is OK
+        self.assertLess(tb.height.pos, h + 1)  # some settling after abort is OK
         self.assertAlmostEqual(m1, tb.m1.pos, DECIMALS)
         self.assertAlmostEqual(10, tb.m2.pos, DECIMALS)
 
@@ -120,7 +122,7 @@ class TestMakeCsConsistent(TestCase):
         tb.cs3.M1.go_direct(10, wait=False)
 
         # verify no motion yet
-        Sleep(.1)
+        Sleep(0.1)
         self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
         self.assertAlmostEqual(tb.m1.pos, 0, DECIMALS)
 
@@ -156,10 +158,10 @@ class TestMakeCsConsistent(TestCase):
         tb.cs3.set_move_time(0)
 
         # make axis 1 demand cache Q71 radically wrong
-        command = '&3 Q71=90000'
+        command = "&3 Q71=90000"
         tb.send_command(command)
         # this check is probably not required but leaving it in to verify reliability
-        self. assertEquals(tb.get_command(), command)
+        self.assertEquals(tb.get_command(), command)
 
         # if this succeeds without error then we are all good
         trajectory_quick_scan(self, tb)
@@ -181,7 +183,7 @@ class TestMakeCsConsistent(TestCase):
 
         # pretend that axis 3 moved by itself and monitor change in height.
         monitor = MoveMonitor(tb.height.pv_root)
-        tb.send_command('#3J:1000')
+        tb.send_command("#3J:1000")
         monitor.wait_for_one_move(10)
         # this should make Height 1.5mm
         self.assertAlmostEqual(tb.height.pos, 1.5, DECIMALS)
@@ -225,7 +227,7 @@ class TestMakeCsConsistent(TestCase):
 
             # pretend that axis 1 moved by itself.
             monitor = MoveMonitor(tb.m1.pv_root)
-            tb.send_command('#1J:{}'.format(move))
+            tb.send_command("#1J:{}".format(move))
             monitor.wait_for_one_move(1, throw=False)
             # this should put axis 1 at {move}mm
             self.assertEquals(tb.m1.pos, move)
@@ -252,7 +254,7 @@ class TestMakeCsConsistent(TestCase):
             # move affected axes to 0
             tb.all_go([tb.m1, tb.m2, tb.m3, tb.m4], [0, 0, 0, 0])
             # make axis 5 demand radically wrong (not in a CS)
-            tb.send_command('&3 Q75=900000')
+            tb.send_command("&3 Q75=900000")
 
             # make a CS move and make sure it happens quickly enough
             then = datetime.now()

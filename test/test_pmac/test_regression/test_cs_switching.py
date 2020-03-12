@@ -11,7 +11,6 @@ import cothread.catools as ca
 
 
 class TestCsSwitching(TestCase):
-
     def test_individual_switch(self):
         """
             Vmxi issue: switching coordinate system drive mappings and then trying to move cs motors
@@ -20,19 +19,19 @@ class TestCsSwitching(TestCase):
         tb = TBrick()
         tb.set_cs_group(tb.g3)
 
-        tb.m3.set_cs_port('CS3')
-        tb.m4.set_cs_port('CS3')
+        tb.m3.set_cs_port("CS3")
+        tb.m4.set_cs_port("CS3")
 
         for i in range(4):
-            print('trying CS switch {}'.format(i))
-            tb.m3.set_cs_assignment('')
-            tb.m4.set_cs_assignment('')
+            print("trying CS switch {}".format(i))
+            tb.m3.set_cs_assignment("")
+            tb.m4.set_cs_assignment("")
             tb.all_go([tb.m3, tb.m4], [3, 3])
             self.assertAlmostEqual(tb.m3.pos, 3, DECIMALS)
             self.assertAlmostEqual(tb.m4.pos, 3, DECIMALS)
 
-            tb.m3.set_cs_assignment('I')
-            tb.m4.set_cs_assignment('I')
+            tb.m3.set_cs_assignment("I")
+            tb.m4.set_cs_assignment("I")
             tb.height.go_direct(1)
 
             self.assertEquals(tb.height.alarm, 0)
@@ -45,7 +44,7 @@ class TestCsSwitching(TestCase):
         tb = TBrick()
 
         for i in range(2):
-            print('trying CS switch {}'.format(i))
+            print("trying CS switch {}".format(i))
             tb.set_cs_group(tb.g3)
             tb.height.go(2)
             self.assertAlmostEqual(tb.jack1.pos, 2, DECIMALS)

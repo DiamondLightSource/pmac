@@ -2,6 +2,7 @@ from unittest import TestCase
 from test.brick.testbrick import TBrick
 from test.test_pmac.test_system.trajectories import trajectory_fast_scan
 
+
 class TestSysTrajectory(TestCase):
     def test_simple_trajectory(self):
         """ very quick test of trajectory for debugging

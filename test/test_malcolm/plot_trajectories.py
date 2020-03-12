@@ -21,8 +21,7 @@ MID_PROGRAM = 4  # GPIO123 = 0, 0, 1
 ZERO_PROGRAM = 8  # GPIO123 = 0, 0, 0
 
 
-def velocity_prev_next(previous_pos, current_pos, next_pos,
-                       current_time, next_time):
+def velocity_prev_next(previous_pos, current_pos, next_pos, current_time, next_time):
     # proportional P->N velocity calculation (actually the same as before!)
     # speed1 = (current_pos - previous_pos) / current_time
     # speed2 = (next_pos - current_pos) / next_time
@@ -35,12 +34,10 @@ def velocity_current_next(current_pos, next_pos, current_time):
     return (next_pos - current_pos) / current_time
 
 
-def velocity_prev_current(previous_pos, previous_velocity, current_pos,
-                          current_time):
+def velocity_prev_current(previous_pos, previous_velocity, current_pos, current_time):
     result, dt2 = 0, 0
     if use_old_velocities:
-        result = old_velocity_prev_current(
-            previous_pos, current_pos, current_time)
+        result = old_velocity_prev_current(previous_pos, current_pos, current_time)
     elif current_time != 0:
         dt2 = 2.0 * (current_pos - previous_pos) / current_time
         result = dt2 - previous_velocity
@@ -61,30 +58,19 @@ def plot_pos_time(gather_x, gather_y, x, y, times):
         total_time += t / 1000000  # convert us to s
         point_times.append(total_time)
 
-    plt.plot(
-        point_times, y, marker="+", color='g', markersize=4
-    )
-    plt.plot(
-        point_times, x, marker="+", color='r', markersize=4
-    )
+    plt.plot(point_times, y, marker="+", color="g", markersize=4)
+    plt.plot(point_times, x, marker="+", color="r", markersize=4)
     # create an xgathaxis so that all points arrays are all same width
-    gather_times = np.arange(0,  total_time, total_time/len(gather_x))
-    plt.plot(
-        gather_times, gather_x,
-        color='lightsalmon',
-        linewidth=1
-    )
-    plt.plot(
-        gather_times, gather_y,
-        color='lightgreen',
-        linewidth=1
-    )
+    gather_times = np.arange(0, total_time, total_time / len(gather_x))
+    plt.plot(gather_times, gather_x, color="lightsalmon", linewidth=1)
+    plt.plot(gather_times, gather_y, color="lightgreen", linewidth=1)
 
     plt.show()
 
 
-def plot_velocities(np_arrays, title='Plot', step_time=0.15,
-                    overlay=None, x_scale=None, y_scale=None):
+def plot_velocities(
+    np_arrays, title="Plot", step_time=0.15, overlay=None, x_scale=None, y_scale=None
+):
     """ plots a 2d graph of a 2 axis trajectory, also does the velocity
     calculations and plots the velocity vector at each point.
     """
@@ -103,37 +89,37 @@ def plot_velocities(np_arrays, title='Plot', step_time=0.15,
     # plot some velocity vectors
     vxs = np.zeros(len(xs) + 1)
     vys = np.zeros(len(xs) + 1)
-    velocity_colors = ['#ff000030', '#aa605530', '#5500AA30', '#0060ff30']
+    velocity_colors = ["#ff000030", "#aa605530", "#5500AA30", "#0060ff30"]
 
     for i in range(1, len(xs) - 1):
         if modes[i] == VelMode.PrevNext:
-            vxs[i] = velocity_prev_next(xs[i - 1], xs[i], xs[i + 1], ts[i],
-                                        ts[i + 1])
-            vys[i] = velocity_prev_next(ys[i - 1], ys[i], ys[i + 1], ts[i],
-                                        ts[i + 1])
+            vxs[i] = velocity_prev_next(xs[i - 1], xs[i], xs[i + 1], ts[i], ts[i + 1])
+            vys[i] = velocity_prev_next(ys[i - 1], ys[i], ys[i + 1], ts[i], ts[i + 1])
         elif modes[i] == VelMode.PrevCurrent:
-            vxs[i] = velocity_prev_current(xs[i - 1], vxs[i - 1], xs[i],
-                                           ts[i])
-            vys[i] = velocity_prev_current(ys[i - 1], vys[i - 1], ys[i],
-                                           ts[i])
+            vxs[i] = velocity_prev_current(xs[i - 1], vxs[i - 1], xs[i], ts[i])
+            vys[i] = velocity_prev_current(ys[i - 1], vys[i - 1], ys[i], ts[i])
         elif modes[i] == VelMode.CurrentNext:
-            vxs[i] = velocity_current_next(xs[i], xs[i + 1], ts[i+1])
-            vys[i] = velocity_current_next(ys[i], ys[i + 1], ts[i+1])
+            vxs[i] = velocity_current_next(xs[i], xs[i + 1], ts[i + 1])
+            vys[i] = velocity_current_next(ys[i], ys[i + 1], ts[i + 1])
 
         # plot a line to represent the velocity vector
-        s = 'velocity vector {}: prev=({},{}) next=({},{}) ' \
-            'vel=({},{}), time={}'
-        print(s.format(i, xs[i - 1], ys[i - 1], xs[i], ys[i],
-                       vxs[i] * ms, vys[i] * ms, ts[i]))
+        s = "velocity vector {}: prev=({},{}) next=({},{}) " "vel=({},{}), time={}"
+        print(
+            s.format(
+                i, xs[i - 1], ys[i - 1], xs[i], ys[i], vxs[i] * ms, vys[i] * ms, ts[i]
+            )
+        )
 
         ms = ts[i + 1]
-        plt.plot([xs[i], xs[i] + vxs[i] * ms],
-                 [ys[i], ys[i] + vys[i] * ms],
-                 color=velocity_colors[i % len(velocity_colors)])
+        plt.plot(
+            [xs[i], xs[i] + vxs[i] * ms],
+            [ys[i], ys[i] + vys[i] * ms],
+            color=velocity_colors[i % len(velocity_colors)],
+        )
 
     # plot the start and end positions
-    plt.plot([xs[0]], [ys[0]], 'go', markersize=8)
-    plt.plot([xs[-1]], [ys[-1]], 'ro', markersize=8)
+    plt.plot([xs[0]], [ys[0]], "go", markersize=8)
+    plt.plot([xs[-1]], [ys[-1]], "ro", markersize=8)
 
     for i in range(len(user)):
         if user[i] == MID_PROGRAM:
@@ -151,11 +137,17 @@ def plot_velocities(np_arrays, title='Plot', step_time=0.15,
             plt.plot(xs[i], ys[i], marker=".", color="y", markersize=6)
         elif user[i] == NO_PROGRAM:
             # plot turnaround points with a black dot
-            plt.plot(xs[i], ys[i], linestyle="", marker=".",
-                     color="k", markersize=6)
+            plt.plot(xs[i], ys[i], linestyle="", marker=".", color="k", markersize=6)
 
     if overlay:
-        plt.plot(overlay[0], overlay[1], linestyle='-', linewidth=.01,
-                 marker='*', markersize=2, color='#8888ff')
+        plt.plot(
+            overlay[0],
+            overlay[1],
+            linestyle="-",
+            linewidth=0.01,
+            marker="*",
+            markersize=2,
+            color="#8888ff",
+        )
 
     plt.show()
