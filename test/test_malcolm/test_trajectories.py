@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from pathlib import Path
 from unittest import TestCase
+import logging
 
 import cothread.catools as ca
 import numpy as np
@@ -308,24 +309,45 @@ class TestTrajectories(TestCase):
                 interval=0.001
             )
 
-    def test_sharks_tooth(self):
+    def test_sharks_fin(self):
         """
         attemmpt to reproduce an issue seen by Bryan where snake scan looks
         like sharks' fins rather than a saw tooth
         """
         gen_dict = json.loads(self.bryans_generator)
         gen = CompoundGenerator.from_dict(gen_dict)
+        gen.prepare()
 
-        self.setup_brick_malcolm(xv=17, yv=17, xa=.01, ya=.01, mres=2e-5)
-        self.trigger_block.rowTrigger.put_value(TRIGGER_ROW)
+        xv, yv, xa, ya, mres, trig = 17, 17, .01, .01, 2e-5, TRIGGER_ROW
+        self.setup_brick_malcolm(xv=xv, yv=yv, xa=xa, ya=ya, mres=mres)
+        self.trigger_block.rowTrigger.put_value(trig)
 
         self.do_a_scan(gen)
-        total_time = gen.size * gen.duration
 
         x_demands = np.insert(np.array(
-            self.traj_block.positionsX.value), 0,
-            self.start_x)
-        plot_pos_time([self.gather_points[0], x_demands], total_time)
+            self.traj_block.positionsX.value), 0, self.start_x)
+        y_demands = np.insert(np.array(
+            self.traj_block.positionsY.value), 0, self.start_y)
+        times = np.insert(np.array(
+            self.traj_block.timeArray.value), 0, 0)
+        velocity_modes = np.insert(
+            np.array(self.traj_block.velocityMode.value), 0, 0)
+
+        logging.info(
+            f"parameters: xv={xv}, yv={yv}, xa={xa}, ya={ya}, mres={mres}")
+        logging.info("times, " + np.array2string(times, separator=","))
+        logging.info("x_demands, " + np.array2string(x_demands,
+                                                     precision=5, separator=","))
+        logging.info("y_demands, " + np.array2string(y_demands,
+                                                     precision=5, separator=","))
+        logging.info("velocity_modes, " +
+                     np.array2string(velocity_modes, separator=","))
+
+        plot_pos_time(
+            self.gather_points[0],
+            self.gather_points[1],
+            x_demands, y_demands, times
+        )
 
     bryans_generator = """
         {

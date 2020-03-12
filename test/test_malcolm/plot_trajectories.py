@@ -52,16 +52,33 @@ def old_velocity_prev_current(previous_pos, current_pos, current_time):
     return result
 
 
-def plot_pos_time(points, total_time):
-    colours = ['k', 'r', 'g']
+def plot_pos_time(gather_x, gather_y, x, y, times):
     fig1 = plt.figure(figsize=(8, 6), dpi=200)
-    for i, y in enumerate(points):
-        count = len(y)
-        # create an x axis so that all points arrays are all same width
-        x = np.arange(0,  total_time, total_time/count)
-        plt.plot(
-            x, y, marker=".", color=colours[i % len(colours)], markersize=8
-        )
+
+    total_time = 0
+    point_times = []
+    for t in times:
+        total_time += t / 1000000  # convert us to s
+        point_times.append(total_time)
+
+    plt.plot(
+        point_times, y, marker="+", color='g', markersize=4
+    )
+    plt.plot(
+        point_times, x, marker="+", color='r', markersize=4
+    )
+    # create an xgathaxis so that all points arrays are all same width
+    gather_times = np.arange(0,  total_time, total_time/len(gather_x))
+    plt.plot(
+        gather_times, gather_x,
+        color='lightsalmon',
+        linewidth=1
+    )
+    plt.plot(
+        gather_times, gather_y,
+        color='lightgreen',
+        linewidth=1
+    )
 
     plt.show()
 

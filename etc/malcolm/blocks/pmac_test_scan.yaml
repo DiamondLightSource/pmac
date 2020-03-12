@@ -35,5 +35,5 @@
     mri: $(mri):TRIG
 
 - scanning.parts.MinTurnaroundPart:
-    gap: 0.050
-    interval: 0.006
+    gap: 0.010
+    interval: 0.005
