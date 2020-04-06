@@ -325,7 +325,7 @@ class TestTrajectories(TestCase):
         self.setup_brick_malcolm(xv=xv, yv=yv, xa=xa, ya=ya, mres=mres)
         self.trigger_block.rowTrigger.put_value(trig)
 
-        self.do_a_scan(gen)
+        elapsed = self.do_a_scan(gen)
 
         x_demands = np.insert(
             np.array(self.traj_block.positionsX.value), 0, self.start_x
@@ -336,7 +336,8 @@ class TestTrajectories(TestCase):
         times = np.insert(np.array(self.traj_block.timeArray.value), 0, 0)
         velocity_modes = np.insert(np.array(self.traj_block.velocityMode.value), 0, 0)
 
-        logging.info(f"parameters: xv={xv}, yv={yv}, xa={xa}, ya={ya}, mres={mres}")
+        title = f"parameters: xv={xv}, yv={yv}, xa={xa}, ya={ya}, mres={mres}"
+        logging.info(title)
         logging.info("times, " + np.array2string(times, separator=","))
         logging.info(
             "x_demands, " + np.array2string(x_demands, precision=5, separator=",")
@@ -348,8 +349,14 @@ class TestTrajectories(TestCase):
             "velocity_modes, " + np.array2string(velocity_modes, separator=",")
         )
 
+        self.plot_scan(title, failed=True, elapsed=elapsed)
         plot_pos_time(
-            self.gather_points[0], self.gather_points[1], x_demands, y_demands, times
+            title,
+            self.gather_points[0],
+            self.gather_points[1],
+            x_demands,
+            y_demands,
+            times,
         )
 
     bryans_generator = """

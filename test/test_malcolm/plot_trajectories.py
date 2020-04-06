@@ -49,8 +49,10 @@ def old_velocity_prev_current(previous_pos, current_pos, current_time):
     return result
 
 
-def plot_pos_time(gather_x, gather_y, x, y, times):
+def plot_pos_time(title, gather_x, gather_y, x, y, times):
     fig1 = plt.figure(figsize=(8, 6), dpi=200)
+
+    plt.title(title)
 
     total_time = 0
     point_times = []
