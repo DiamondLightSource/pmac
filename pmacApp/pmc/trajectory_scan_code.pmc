@@ -234,9 +234,7 @@ N104
         GoSub106                        ; Prev -> Next
     EndIf
     If(VelMode = 2)
-        ; GoSub107                        ; Current -> Next
-        ; TODO TODO - hack - this should be fixed Malcolm
-        GoSub105
+        GoSub107                        ; Current -> Next
     EndIf
     If(VelMode = 3)
         GoSub108			; Zero
