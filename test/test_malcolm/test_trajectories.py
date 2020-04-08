@@ -99,7 +99,7 @@ class TestTrajectories(TestCase):
         self.test_brick.set_cs_group(self.test_brick.g1)
         # setup the pmac for gathering via the dls-pmaclib module
         self.pmac = PmacEthernetInterface(verbose=True)
-        self.pmac.setConnectionParams("172.23.240.97", 1025)
+        self.pmac.setConnectionParams("172.23.240.59", 1025)
         self.pmac.connect()
 
     def do_a_scan(self, gen: CompoundGenerator):
