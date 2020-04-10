@@ -228,20 +228,20 @@ N104
 
     ; Select velocity calculation based on VelMode value
     If(VelMode = 1)
-        GoSub105                        ; Prev -> Current
+        GoSub105                        ; Real Prev -> Current
     EndIf
     If(VelMode = 0)
-        GoSub106                        ; Prev -> Next
+        GoSub106                        ; Average Prev -> Next
     EndIf
     If(VelMode = 2)
-        GoSub107                        ; Current -> Next
+        GoSub107                        ; Average Prev -> Current
     EndIf
     If(VelMode = 3)
-        GoSub108			; Zero
+        GoSub108			            ; Zero
     EndIf
 Return
 
-N105 ; Prev -> Current
+N105 ; Real Prev -> Current
     InverseTmpTime = 1000000/Time
     A_Vel = A_Axis*((2.0*(Current_A - Prev_A) * InverseTmpTime) - A_Prev_Vel)
     B_Vel = B_Axis*((2.0*(Current_B - Prev_B) * InverseTmpTime) - B_Prev_Vel)
@@ -254,7 +254,7 @@ N105 ; Prev -> Current
     Z_Vel = Z_Axis*((2.0*(Current_Z - Prev_Z) * InverseTmpTime) - Z_Prev_Vel)
 Return
 
-N106 ; Prev -> Next
+N106 ; Average Prev -> Next
     InverseTmpTime = 1000000/(Time + Next_Time)
     A_Vel = A_Axis*InverseTmpTime*(Next_A - Prev_A)
     B_Vel = B_Axis*InverseTmpTime*(Next_B - Prev_B)
@@ -267,17 +267,17 @@ N106 ; Prev -> Next
     Z_Vel = Z_Axis*InverseTmpTime*(Next_Z - Prev_Z)
 Return
 
-N107 ; Current -> Next
-    InverseTmpTime = 1000000/Next_Time
-    A_Vel = A_Axis*InverseTmpTime*(Next_A - Current_A)
-    B_Vel = B_Axis*InverseTmpTime*(Next_B - Current_B)
-    C_Vel = C_Axis*InverseTmpTime*(Next_C - Current_C)
-    U_Vel = U_Axis*InverseTmpTime*(Next_U - Current_U)
-    V_Vel = V_Axis*InverseTmpTime*(Next_V - Current_V)
-    W_Vel = W_Axis*InverseTmpTime*(Next_W - Current_W)
-    X_Vel = X_Axis*InverseTmpTime*(Next_X - Current_X)
-    Y_Vel = Y_Axis*InverseTmpTime*(Next_Y - Current_Y)
-    Z_Vel = Z_Axis*InverseTmpTime*(Next_Z - Current_Z)
+N107 ; Average Prev -> Current
+    InverseTmpTime = 1000000/Time
+    A_Vel = A_Axis*InverseTmpTime*(Current_A - Prev_A)
+    B_Vel = B_Axis*InverseTmpTime*(Current_B - Prev_B)
+    C_Vel = C_Axis*InverseTmpTime*(Current_C - Prev_C)
+    U_Vel = U_Axis*InverseTmpTime*(Current_U - Prev_U)
+    V_Vel = V_Axis*InverseTmpTime*(Current_V - Prev_V)
+    W_Vel = W_Axis*InverseTmpTime*(Current_W - Prev_W)
+    X_Vel = X_Axis*InverseTmpTime*(Current_X - Prev_X)
+    Y_Vel = Y_Axis*InverseTmpTime*(Current_Y - Prev_Y)
+    Z_Vel = Z_Axis*InverseTmpTime*(Current_Z - Prev_Z)
 Return
 
 N108 ; Zero

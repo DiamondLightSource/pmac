@@ -241,9 +241,13 @@ class TestTrajectories(TestCase):
 
     def check_bounds(self, a, name):
         # small amounts of overshoot are acceptable
+        # UPDATE - I increased the tolerance on this because the
+        # quatizing will reduce acceleration in a turnaround and therefore
+        # it is possible for a motor to swing outside of the original run-up
+        # distance which uses max acceleration
         npa = np.array(a)
-        less_start = np.argmax((npa[0] - npa) > 0.001)
-        greater_end = np.argmax((npa - npa[-1]) > 0.001)
+        less_start = np.argmax((npa[0] - npa) > 0.05)
+        greater_end = np.argmax((npa - npa[-1]) > 0.05)
         self.assertEqual(
             less_start, 0, "Position {} < start for {}\n{}".format(less_start, name, a)
         )
@@ -265,27 +269,32 @@ class TestTrajectories(TestCase):
             name="Slow Every Point", trigger=TRIGGER_EVERY, interval=2
         )
 
-    def test_profile_point_interpolation(self):
-        # these tests choose parameters that create all the combinations of
-        # numbers of velocity profile points and (will) verify that they
-        # create the same trajectory for ROW triggering and every point
-        # triggering
-        # todo validate that these create same trajectories (how?)
-        #  note I have done so visually
-
+    # these tests choose parameters that create all the combinations of
+    # numbers of velocity profile points in a turnaround and verify that they
+    # create the same trajectory for ROW triggering and every point
+    # triggering
+    # todo validate that these create same trajectories (how?)
+    #  note I have done so visually using the plots
+    def test_trigger_x6_y3(self):
         # x=6 and y=3 combined = 7
         self.Interpolation_checker(name="Sparse x6 y3", trigger=TRIGGER_ROW)
         self.Interpolation_checker(name="Every Point x6 y3", trigger=TRIGGER_EVERY)
+
+    def test_trigger_x6_y4(self):
         # x=6 and y=4 combined = 8
         self.Interpolation_checker(ya=1, name="Sparse x6 y4", trigger=TRIGGER_ROW)
         self.Interpolation_checker(
             ya=1, name="Every Point x6 y4", trigger=TRIGGER_EVERY
         )
+
+    def test_trigger_x4_y3(self):
         # x=4 and y=3 combined = 5
         self.Interpolation_checker(snake=True, name="Sparse x4 y3", trigger=TRIGGER_ROW)
         self.Interpolation_checker(
             snake=True, name="Every Point x4 y3", trigger=TRIGGER_EVERY
         )
+
+    def test_trigger_x3_y4(self):
         # x=3 and y=4 combined = 5
         self.Interpolation_checker(
             ya=0.01, snake=True, name="Sparse x3 y4", trigger=TRIGGER_ROW
@@ -293,25 +302,12 @@ class TestTrajectories(TestCase):
         self.Interpolation_checker(
             ya=0.01, snake=True, name="Every Point x3 y4", trigger=TRIGGER_EVERY
         )
+
+    def test_trigger_spiral(self):
         self.do_spiral(trigger=TRIGGER_ROW, name="Sparse Spiral")
         self.do_spiral(trigger=TRIGGER_EVERY, name="Every Point Spiral")
 
-    def ____test_dummy(self):
-        linear = True
-        if linear:
-            self.Interpolation_checker(
-                name="Every Point x6 y3",
-                trigger=TRIGGER_EVERY,
-                continuous=False,
-                xv=2000,
-                xa=0.01,
-                yv=2000,
-                ya=0.01,
-                interval=0.001,
-            )
-        else:
-            self.do_spiral(trigger=TRIGGER_EVERY, continuous=False, interval=0.001)
-
+    # Sharks Fin
     def test_sharks_fin(self):
         """
         attemmpt to reproduce an issue seen by Bryan where snake scan looks
@@ -349,7 +345,7 @@ class TestTrajectories(TestCase):
             "velocity_modes, " + np.array2string(velocity_modes, separator=",")
         )
 
-        self.plot_scan(title, failed=True, elapsed=elapsed)
+        self.plot_scan(title, failed=False, elapsed=elapsed)
         plot_pos_time(
             title,
             self.gather_points[0],

@@ -7,9 +7,9 @@ use_old_velocities = False
 
 
 class VelMode(IntEnum):
-    PrevNext = 0
-    PrevCurrent = 1
-    CurrentNext = 2
+    AvgPrevNext = 0
+    RealPrevCurrent = 1
+    AvgPrevCurrent = 2
     Zero = 3
 
 
@@ -29,9 +29,9 @@ def velocity_prev_next(previous_pos, current_pos, next_pos, current_time, next_t
     return (next_pos - previous_pos) / (current_time + next_time)
 
 
-def velocity_current_next(current_pos, next_pos, current_time):
+def avg_velocity_prev_current(prev_pos, current_pos, current_time):
     # redundant - now always use prev_current
-    return (next_pos - current_pos) / current_time
+    return (current_pos - prev_pos) / current_time
 
 
 def velocity_prev_current(previous_pos, previous_velocity, current_pos, current_time):
@@ -94,15 +94,15 @@ def plot_velocities(
     velocity_colors = ["#ff000030", "#aa605530", "#5500AA30", "#0060ff30"]
 
     for i in range(1, len(xs) - 1):
-        if modes[i] == VelMode.PrevNext:
+        if modes[i] == VelMode.AvgPrevNext:
             vxs[i] = velocity_prev_next(xs[i - 1], xs[i], xs[i + 1], ts[i], ts[i + 1])
             vys[i] = velocity_prev_next(ys[i - 1], ys[i], ys[i + 1], ts[i], ts[i + 1])
-        elif modes[i] == VelMode.PrevCurrent:
+        elif modes[i] == VelMode.RealPrevCurrent:
             vxs[i] = velocity_prev_current(xs[i - 1], vxs[i - 1], xs[i], ts[i])
             vys[i] = velocity_prev_current(ys[i - 1], vys[i - 1], ys[i], ts[i])
-        elif modes[i] == VelMode.CurrentNext:
-            vxs[i] = velocity_current_next(xs[i], xs[i + 1], ts[i + 1])
-            vys[i] = velocity_current_next(ys[i], ys[i + 1], ts[i + 1])
+        elif modes[i] == VelMode.AvgPrevCurrent:
+            vxs[i] = avg_velocity_prev_current(xs[i - 1], xs[i], ts[i])
+            vys[i] = avg_velocity_prev_current(ys[i - 1], ys[i], ts[i])
 
         # plot a line to represent the velocity vector
         s = "velocity vector {}: prev=({},{}) next=({},{}) " "vel=({},{}), time={}"
