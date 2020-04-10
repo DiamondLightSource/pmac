@@ -113,7 +113,7 @@ Z_Axis->Y:$AxisAdr,8
 #define BufferAdr_A         M4041           ; Start index of buffer A
 #define BufferAdr_B         M4042           ; Start index of buffer B
 #define CurrentBufferAdr    M4043           ; A or B buffer address
- 
+
 #define BufferFill_A        M4044           ; Fill level of buffer A
 #define BufferFill_B        M4045           ; Fill level of buffer B
 #define CurrentBufferFill   M4046           ; A or B buffer fill level
@@ -127,14 +127,14 @@ Z_Axis->Y:$AxisAdr,8
 ; Motion Program Variables
 ; *****************************************************************************************
 #define Prev_A              M4050           ; Previous coordinates for velocity calculations
-#define Prev_B              M4051  
-#define Prev_C              M4052  
-#define Prev_U              M4053  
-#define Prev_V              M4054  
-#define Prev_W              M4055  
-#define Prev_X              M4056  
-#define Prev_Y              M4057  
-#define Prev_Z              M4058  
+#define Prev_B              M4051
+#define Prev_C              M4052
+#define Prev_U              M4053
+#define Prev_V              M4054
+#define Prev_W              M4055
+#define Prev_X              M4056
+#define Prev_Y              M4057
+#define Prev_Z              M4058
 
 #define Time                M4059           ; Current coordinate values
 #define Current_A           Q71
@@ -180,7 +180,7 @@ Z_Axis->Y:$AxisAdr,8
 #define Z_Prev_Vel          M4079
 
 #define CalculatedBase      M4081           ; Calculated temporary variable for Current base address
-#define TmpTime             M4082           ; Calculated temporary variable for time in velocity calcs
+#define InverseTmpTime      M4082           ; Calculated temporary variable for time in velocity calcs
 #define TmpVelX             M4083           ; Calculated temporary variable for velocity in velocity calcs
 #define TmpVelY             M4084
 
@@ -234,7 +234,7 @@ X_Prev_Vel->L:$VarAdr2B
 Y_Prev_Vel->L:$VarAdr2C
 Z_Prev_Vel->L:$VarAdr2E
 CalculatedBase->L:$VarAdr2F
-TmpTime->L:$VarAdr30
+InverseTmpTime->L:$VarAdr30
 TmpVelX->L:$VarAdr31
 TmpVelY->L:$VarAdr32
 

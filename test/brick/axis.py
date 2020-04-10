@@ -1,6 +1,7 @@
 from cothread import catools as ca
 from cothread import Sleep
 
+
 class Axis:
     def __init__(self, brick_pv_root, pv_root, axis_no, cs_no):
         self.brick_pv_root = brick_pv_root
@@ -8,28 +9,29 @@ class Axis:
         self.axis_no = axis_no
         self.cs_no = cs_no
         self.demand = pv_root
-        self.rbv = pv_root + '.RBV'
-        self.acc = pv_root + '.ACCL'
-        self.stop_pv = pv_root + '.STOP'
-        self.velo = pv_root + '.VELO'
-        self.vmax = pv_root + '.VMAX'
-        self.off = pv_root + '.OFF'
-        self.mres = pv_root + '.MRES'
-        self.lo_limit = pv_root + '.LLM'
-        self.hi_limit = pv_root + '.HLM'
-        self.pv_done_moving = pv_root + '.DMOV'
-        self.pv_use_encoder = pv_root + '.UEIP'
+        self.rbv = pv_root + ".RBV"
+        self.acc = pv_root + ".ACCL"
+        self.stop_pv = pv_root + ".STOP"
+        self.velo = pv_root + ".VELO"
+        self.vmax = pv_root + ".VMAX"
+        self.off = pv_root + ".OFF"
+        self.mres = pv_root + ".MRES"
+        self.lo_limit = pv_root + ".LLM"
+        self.hi_limit = pv_root + ".HLM"
+        self.pv_done_moving = pv_root + ".DMOV"
+        self.pv_use_encoder = pv_root + ".UEIP"
         if cs_no > 0:
-            cs_name = 'CS{}:'.format(cs_no)
+            cs_name = "CS{}:".format(cs_no)
         else:
-            cs_name = ''
-        self.cs_assignment = brick_pv_root + 'M{}:CsAxis'.format(axis_no)
-        self.cs_port = brick_pv_root + 'M{}:CsPort'.format(axis_no)
-        self.direct_demand = brick_pv_root + '{}M{}:DirectDemand'.format(cs_name,
-                                                                           axis_no)
+            cs_name = ""
+        self.cs_assignment = brick_pv_root + "M{}:CsAxis".format(axis_no)
+        self.cs_port = brick_pv_root + "M{}:CsPort".format(axis_no)
+        self.direct_demand = brick_pv_root + "{}M{}:DirectDemand".format(
+            cs_name, axis_no
+        )
 
         # the following helps to avoid waiting for a timeout if the IOC is down
-        ca.caget(self.rbv, timeout=.1)
+        ca.caget(self.rbv, timeout=0.1)
 
     @property
     def pos(self):
@@ -37,12 +39,11 @@ class Axis:
 
     def go(self, position, wait=True):
         ca.caput(self.demand, position, wait=wait, timeout=60)
-        Sleep(.05)  # test clipper reports in position a little early sometimes
+        Sleep(0.05)  # test clipper reports in position a little early sometimes
 
     def go_direct(self, position, wait=True, callback=None):
-        ca.caput(self.direct_demand, position, wait=wait, timeout=60,
-                 callback=callback)
-        Sleep(.05)  # test clipper reports in position a little early sometimes
+        ca.caput(self.direct_demand, position, wait=wait, timeout=60, callback=callback)
+        Sleep(0.05)  # test clipper reports in position a little early sometimes
 
     def stop(self):
         ca.caput(self.stop_pv, 1, wait=True)

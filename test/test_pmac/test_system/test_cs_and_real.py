@@ -72,7 +72,7 @@ class TestCsAndReal(TestCase):
 
         tb.height.set_speed(100)
         # set max motion program speed of jack 1 (axis 3) to 2mm/s
-        tb.send_command('i316=2')
+        tb.send_command("i316=2")
         start = datetime.now()
         tb.height.go(10)
         elapsed = datetime.now() - start
@@ -81,7 +81,7 @@ class TestCsAndReal(TestCase):
         self.assertTrue(5 <= elapsed.seconds < 6.5)
 
         # set max motion program speed of jack 1 (axis 3) to 500mm/s
-        tb.send_command('i316=500')
+        tb.send_command("i316=500")
         start = datetime.now()
         tb.height.go(0)
         elapsed = datetime.now() - start

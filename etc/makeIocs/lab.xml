@@ -1,13 +1,11 @@
 <?xml version="1.0" ?>
 <components arch="linux-x86_64">
-	<!--Controls Lab Test Brick-->
-	<!--<pmac.pmacAsynIPPort IP="172.23.253.11:1025" name="BRICK1port"/>-->
 	<!--Local simulator-->
 	<!--<pmac.pmacAsynIPPort IP="localhost:1025" name="BRICK1port"/>-->
-	<!--Lee's test clipper-->
-	<pmac.pmacAsynIPPort IP="172.23.240.97" name="BRICK1port"/>
-	<!--Clipper 3-->
-	<!--<pmac.pmacAsynIPPort IP="172.23.240.86" name="BRICK1port"/>-->
+	<!--Giles's test clipper-->
+	<!--<pmac.pmacAsynIPPort IP="172.23.240.97" name="BRICK1port"/>-->
+	<!--Giles Test geoBrick-->
+	<pmac.pmacAsynIPPort IP="172.23.240.59" name="BRICK1port"/>
 	<autosave.Autosave debug="0" iocName="lab" ip="None" name="as" path="/tmp/autosave" server="None" skip_1="False"/>
 	<pmac.GeoBrick IdlePoll="200" MovingPoll="100" NAXES="8" P="BRICK1" Port="BRICK1port" name="Brick"/>
 	<pmac.dls_pmac_asyn_motor ADDR="1" DESC="Motor 1-&gt;A" DHLM="10000" DLLM="-10000" EGU="mm" M=":MOTOR1" MRES="1" P="PMAC_BRICK_TEST" PORT="Brick" PREC="3" SPORT="BRICK1port" TWV="50" VELO="20" name="M1"/>

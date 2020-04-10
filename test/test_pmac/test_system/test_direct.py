@@ -12,7 +12,6 @@ from test.brick.movemonitor import MoveMonitor, MotorCallback
 
 
 class TestDirect(TestCase):
-
     def test_direct_deferred_moves_cs(self):
         """ verify coordinated deferred direct moves work in quick succession
             i16 diffractometer style
@@ -34,7 +33,7 @@ class TestDirect(TestCase):
                 waiter.reset_done()
                 tb.height.go_direct(height, callback=waiter.moves_done, wait=False)
                 tb.angle.go_direct(angle, wait=False)
-                Sleep(.2)
+                Sleep(0.2)
 
                 # verify no motion yet
                 self.assertAlmostEqual(tb.height.pos, 0, DECIMALS)
@@ -44,7 +43,11 @@ class TestDirect(TestCase):
                 tb.cs3.set_deferred_moves(False)
                 waiter.wait_for_done()
                 elapsed = datetime.now() - start
-                print("Iteration {}. Direct Deferred Coordinated to height {} took {}".format(iteration, height, elapsed))
+                print(
+                    "Iteration {}. Direct Deferred Coordinated to height {} took {}".format(
+                        iteration, height, elapsed
+                    )
+                )
 
                 # verify motion
                 self.assertAlmostEqual(tb.height.pos, height, DECIMALS)
@@ -53,19 +56,19 @@ class TestDirect(TestCase):
 
     def test_quick(self):
         # prove that timings work OK when not using the TesBrick class
-        ca.caput('BRICK1:M5.VMAX', 10, wait=True, timeout=60)
-        ca.caput('BRICK1:M5.VELO', 10, wait=True, timeout=60)
-        ca.caput('BRICK1:M5', 0.1, wait=True, timeout=60)
+        ca.caput("BRICK1:M5.VMAX", 10, wait=True, timeout=60)
+        ca.caput("BRICK1:M5.VELO", 10, wait=True, timeout=60)
+        ca.caput("BRICK1:M5", 0.1, wait=True, timeout=60)
 
-        ca.caput('BRICK1:M5:DirectDemand', 10, wait=True, timeout=60)
+        ca.caput("BRICK1:M5:DirectDemand", 10, wait=True, timeout=60)
         start = datetime.now()
-        ca.caput('BRICK1:M5:DirectDemand', 0, wait=True, timeout=60)
+        ca.caput("BRICK1:M5:DirectDemand", 0, wait=True, timeout=60)
         elapsed = datetime.now() - start
         print(elapsed)
         self.assertLess(elapsed.seconds, 1.5)
 
         start = datetime.now()
-        ca.caput('BRICK1:M5:DirectDemand', 1, wait=True, timeout=60)
+        ca.caput("BRICK1:M5:DirectDemand", 1, wait=True, timeout=60)
         elapsed = datetime.now() - start
         print(elapsed)
         self.assertLess(elapsed.seconds, 1.5)
@@ -158,7 +161,7 @@ class TestDirect(TestCase):
         tb.height.go(0)
         # set max motion program speed of jack 1 (axis 3) to 2mm/s
         # cts/msec is the same as mm/s if mres = .001
-        tb.send_command('i316=2')
+        tb.send_command("i316=2")
         start = datetime.now()
         tb.height.go(10)
         elapsed = datetime.now() - start
@@ -168,7 +171,7 @@ class TestDirect(TestCase):
         self.assertTrue(5 <= elapsed.seconds < 7)
 
         # set max motion program speed of jack 1 (axis 3) to 500mm/s
-        tb.send_command('i316=500')
+        tb.send_command("i316=500")
         tb.height.go(0)
         start = datetime.now()
         tb.height.go(10)
@@ -221,7 +224,7 @@ class TestDirect(TestCase):
                 tb.jack1.go_direct(height1, callback=waiter.moves_done, wait=False)
                 tb.jack1.go_direct(height1, wait=False)
                 tb.jack2.go_direct(height2, wait=False)
-                Sleep(.2)
+                Sleep(0.2)
 
                 # verify no motion yet
                 self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)
@@ -229,10 +232,14 @@ class TestDirect(TestCase):
 
                 start = datetime.now()
                 tb.set_deferred_moves(False)
-                Sleep(.1)
+                Sleep(0.1)
                 waiter.wait_for_done()
                 elapsed = datetime.now() - start
-                print("Iteration {}. Direct Deferred real motors to height {} took {}".format(iteration, height1, elapsed))
+                print(
+                    "Iteration {}. Direct Deferred real motors to height {} took {}".format(
+                        iteration, height1, elapsed
+                    )
+                )
 
                 # verify motion
                 self.assertAlmostEqual(tb.jack1.pos, height1, DECIMALS)
@@ -257,16 +264,19 @@ class TestDirect(TestCase):
             tb.cs2.set_deferred_moves(True)
 
             next_kphi = kphi + 1
-            next_kappa = kappa + .01
-            next_ktheta = ktheta + .01
+            next_kappa = kappa + 0.01
+            next_ktheta = ktheta + 0.01
 
-            print('deferred move to kphi {}, kappa {}, ktheta {}'.format(
-                next_kphi, next_kappa, next_ktheta))
+            print(
+                "deferred move to kphi {}, kappa {}, ktheta {}".format(
+                    next_kphi, next_kappa, next_ktheta
+                )
+            )
 
             tb.cs2.kphi.go_direct(next_kphi, callback=waiter.moves_done, wait=False)
             tb.cs2.kappa.go_direct(next_kappa, wait=False)
             tb.cs2.ktheta.go_direct(next_ktheta, wait=False)
-            Sleep(.1)
+            Sleep(0.1)
 
             # verify no motion yet
             self.assertAlmostEqual(tb.kphi.pos, kphi, DECIMALS)

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2a35cedae28764c0ab9919a059a9ecf1422291ba53785cac9e80e1661fac95a6"
+            "sha256": "8af318e37779c4c7ad4299033735d695c613324a5bf8a6effbb3cfee10b6d6e2"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -40,7 +40,7 @@
         },
         "dls-pmaclib": {
             "editable": true,
-            "path": "/scratch/work/dls_pmaclib"
+            "path": "./../../dls_pmaclib"
         },
         "enum34": {
             "hashes": [
@@ -82,7 +82,7 @@
         },
         "malcolm": {
             "editable": true,
-            "path": "/scratch/work//pymalcolm"
+            "path": "/scratch/work/pymalcolm"
         },
         "matplotlib": {
             "hashes": [
@@ -160,10 +160,10 @@
         },
         "scanpointgenerator": {
             "hashes": [
-                "sha256:4e82342817d078f3297a5cf2e0f4ca1c25b88f86876c368afcf3b03346c801a1"
+                "sha256:28672715d82ebf67f62d3d6632dddd5cb6132e62c71d7884fcfbe6a88aa6ebe5"
             ],
             "index": "pypi",
-            "version": "==2.3"
+            "version": "==3.1"
         },
         "serial": {
             "hashes": [

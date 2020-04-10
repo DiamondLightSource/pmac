@@ -1,6 +1,9 @@
 from unittest import TestCase
 from test.brick.testbrick import TBrick
-from test.test_pmac.test_system.trajectories import trajectory_fast_scan, trajectory_scan_appending
+from test.test_pmac.test_system.trajectories import (
+    trajectory_fast_scan,
+    trajectory_scan_appending,
+)
 from cothread import catools as ca
 
 
@@ -39,19 +42,19 @@ class TestTrajectory(TestCase):
     def test_mres_offsets_trajectory(self):
         tb = TBrick()
         tb.set_cs_group(tb.g1)
-        ca.caput(tb.m1.mres, .009)
-        ca.caput(tb.m2.mres, .008)
-        ca.caput(tb.m3.mres, .007)
-        ca.caput(tb.m4.mres, .006)
-        ca.caput(tb.m5.mres, .005)
-        ca.caput(tb.m6.mres, .004)
+        ca.caput(tb.m1.mres, 0.009)
+        ca.caput(tb.m2.mres, 0.008)
+        ca.caput(tb.m3.mres, 0.007)
+        ca.caput(tb.m4.mres, 0.006)
+        ca.caput(tb.m5.mres, 0.005)
+        ca.caput(tb.m6.mres, 0.004)
         ca.caput(tb.m1.off, 10)
         ca.caput(tb.m2.off, 20)
         ca.caput(tb.m3.off, 20)
         ca.caput(tb.m4.off, 40)
         ca.caput(tb.m5.off, 50)
         ca.caput(tb.m6.off, 60)
-        trajectory_fast_scan(self, tb, 6, 'CS2', microsecs=50000)
+        trajectory_fast_scan(self, tb, 6, "CS2", microsecs=50000)
         self.assertAlmostEqual(tb.m1.pos, 1, 1)
         self.assertAlmostEqual(tb.m2.pos, 1, 1)
         self.assertAlmostEqual(tb.m3.pos, 1, 1)
