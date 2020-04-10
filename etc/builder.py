@@ -746,13 +746,14 @@ class moveAxesToSafeMaster(Device,):
         self.P = P
         self.NO_OF_AXES = NO_OF_AXES
         self.OUTPUTS = [""]*6
+        self.INPOS = [""]*6
         #self.OUTPUTS = []
         self.axisCounter = 1
 
         for output in range(0,self.NO_OF_AXES):
             self.OUTPUTS[output] = self.P + ":POS" + str(output+1) + "_OUT"
+            self.INPOS[output] = self.P + ":POS" + str(output+1) + "_SAFE CP"
 
-        _moveAxesToSafeTrig(P=self.P,A1=self.OUTPUTS[0],A2=self.OUTPUTS[1],A3=self.OUTPUTS[2],A4=self.OUTPUTS[3],A5=self.OUTPUTS[4],A6=self.OUTPUTS[5])
         
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
@@ -760,24 +761,39 @@ class moveAxesToSafeMaster(Device,):
         P = Simple("Device Prefix", str),
         NO_OF_AXES = Choice("Number of axes", range(1,7)),
     )
-    def addAxis(self, AXIS, POSITION):
-        _moveAxesToSafe(P=self.P, N = self.axisCounter, AXIS=AXIS, POSITION=POSITION)
+
+    def addAxis(self, AXIS, POSITION,THRESHOLD):
+        _moveAxesToSafe(P=self.P, N = self.axisCounter, AXIS=AXIS, POSITION=POSITION,THRESHOLD=THRESHOLD)
         self.axisCounter += 1
+        
+        # If this is the last axis to add create the custom calc and instatiate main template
+        if self.axisCounter == self.NO_OF_AXES + 1:
+            inposCalc = ""
+            calcInputs = ["A","B","C","D","E","F"]
+            for a in range (self.NO_OF_AXES):
+                if a == 0:
+                    inposCalc += calcInputs[a]
+                else:
+                    inposCalc += "&amp;&amp;"+calcInputs[a]
+            _moveAxesToSafeTrig(P=self.P,A1=self.OUTPUTS[0],A2=self.OUTPUTS[1],A3=self.OUTPUTS[2],A4=self.OUTPUTS[3],A5=self.OUTPUTS[4],A6=self.OUTPUTS[5],INPOS1=self.INPOS[0],INPOS2=self.INPOS[1],INPOS3=self.INPOS[2],INPOS4=self.INPOS[3],INPOS5=self.INPOS[4],INPOS6=self.INPOS[5],INPOS_CALC=inposCalc)
 
 # Create an instance per axis to allow up to 6 axes to be moved simultaneously to a defined position
 class moveAxesToSafeSlave(Device,):
-    def __init__(self,MASTER,AXIS,POSITION):
+    def __init__(self,MASTER,AXIS,POSITION,THRESHOLD):
         self.__super.__init__()
         self.MASTER = MASTER
         self.AXIS = AXIS
         self.POSITION = POSITION
+        self.THRESHOLD = THRESHOLD
 
-        MASTER.addAxis(self.AXIS,self.POSITION)
+
+        MASTER.addAxis(self.AXIS,self.POSITION,self.THRESHOLD)
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
         MASTER = Ident("Master", moveAxesToSafeMaster),
         AXIS = Simple("Axis PV", str),
         POSITION = Simple("Safe Position", int),
+        THRESHOLD = Simple("In safe position threshold in EGUs", float),
     )
 
 # hiding templates which are just used in includes so as to not

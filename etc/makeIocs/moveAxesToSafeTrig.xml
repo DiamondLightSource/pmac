@@ -1,4 +1,5 @@
 <?xml version="1.0" ?>
 <components arch="linux-x86_64">
 	<records.fanout LNK1="$(A1)" LNK2="$(A2)" LNK3="$(A3)" LNK4="$(A4)" LNK5="$(A5)" LNK6="$(A6)" record="$(P):MOVE_TO_SAFE"/>
+	<records.calc record="$(P):MOVE_TO_SAFE:ALL_SAFE" INPA = "$(INPOS1)" INPB = "$(INPOS2)" INPC = "$(INPOS3)" INPD = "$(INPOS4)" INPE = "$(INPOS5)" INPF = "$(INPOS6)" CALC="$(INPOS_CALC)"/>
 </components>

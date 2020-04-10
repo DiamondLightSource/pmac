@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
 <components arch="linux-x86_64">
 	<records.ai VAL="$(POSITION)" record="$(P):POS$(N)_STORE"/>
+	<records.ai VAL="$(THRESHOLD)" record="$(P):POS$(N)_THRESHOLD"/>
 	<records.ao DOL="$(P):POS$(N)_STORE" OMSL="closed_loop" OUT="$(AXIS) PP NMS" record="$(P):POS$(N)_OUT"/>
+	<records.calc INPB="$(P):POS$(N)_STORE CP" INPC="$(P):POS$(N)_THRESHOLD CP" CALC="(A&gt;(B-C))&amp;&amp;(A&lt;(B+C))" INPA="$(AXIS).RBV CP" record="$(P):POS$(N)_SAFE"/>
 </components>
