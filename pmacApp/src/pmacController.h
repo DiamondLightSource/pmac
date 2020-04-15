@@ -296,8 +296,6 @@ public:
     asynStatus executeManualGroup();
     asynStatus updateCsAssignmentParameters();
     asynStatus copyCsReadbackToDemand(bool manual);
-    asynStatus copyCsReadbackToDemand(bool manual);
-    asynStatus copyCsReadbackToDemand(bool manual);
     asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
     asynStatus tScanIncludedAxes(int *axisMask);
     void registerForLock(asynPortDriver *controller);
