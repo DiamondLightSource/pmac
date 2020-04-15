@@ -16,6 +16,15 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-4-18 (Apr 15, 2020)
+=====================
+### Changes
+* Updates to support VME pmac devices
+* Avoid long at startup pause waiting to list kinematics on Power Pmac
+* Fix incorrect NAXES column in xeb
+* New PROG1.pmc with "Average Previous to Current" velocity mode 2
+  * This supports changes in Malcolm (post version 4-2b5) to avoid accumulation of errors in long sparse trajectories
+
 R2-4-17 (Feb 6, 2020)
 =====================
 ### Changes

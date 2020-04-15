@@ -2552,6 +2552,7 @@ asynStatus pmacController::buildProfile(int csNo) {
   }
 
   // Check the version numbers are matching
+  // Assuming a newer Trajectory PMC version against older pmac driver is OK
   if (fabs(tScanPmacProgVersion_ - PMAC_TRAJECTORY_VERSION) > 0.0001) {
     debug(DEBUG_ERROR, functionName, "Motion program and driver versions do not match");
     debug(DEBUG_ERROR, functionName, "Motion program version", tScanPmacProgVersion_);

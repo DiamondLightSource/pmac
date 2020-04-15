@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8af318e37779c4c7ad4299033735d695c613324a5bf8a6effbb3cfee10b6d6e2"
+            "sha256": "40cf1f0603b54b679a0d5e5387494004d735479f26ba95c6e6bc808b5b5483cb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -39,8 +39,12 @@
             "version": "==0.10.0"
         },
         "dls-pmaclib": {
-            "editable": true,
-            "path": "./../../dls_pmaclib"
+            "hashes": [
+                "sha256:1a9e82930a4ab5fb8013155bf9d29a7d5e879b81a84d08f3bc9d7cdbed08c802",
+                "sha256:5bc6d19e849be7e062a9735e572b89934dcac2877133e4a4aa459dbbbf544bcc"
+            ],
+            "index": "pypi",
+            "version": "==2.1.0"
         },
         "enum34": {
             "hashes": [
@@ -126,6 +130,12 @@
                 "sha256:9b6323ef4ab914af344ba97510e966d64ba91055d6b9afa6b30799340e89cc03"
             ],
             "version": "==2.4.0"
+        },
+        "pyserial": {
+            "hashes": [
+                "sha256:e0770fadba80c31013896c7e6ef703f72e7834965954a78e71a3049488d4d7d8"
+            ],
+            "version": "==3.4"
         },
         "python-dateutil": {
             "hashes": [

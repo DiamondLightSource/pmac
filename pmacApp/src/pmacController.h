@@ -1,12 +1,12 @@
 /********************************************
- *  pmacController.h 
- * 
- *  PMAC Asyn motor based on the 
+ *  pmacController.h
+ *
+ *  PMAC Asyn motor based on the
  *  asynMotorController class.
- * 
+ *
  *  Matthew Pearson
  *  23 May 2012
- * 
+ *
  ********************************************/
 
 #ifndef pmacController_H
@@ -145,7 +145,7 @@
 #define PMAC_C_TrajProgVersionString      "PMAC_C_TRAJ_PROG_V"  // Motion program version number
 #define PMAC_C_TrajCodeVersionString      "PMAC_C_TRAJ_CODE_V"  // Version of this control code
 
-#define PMAC_TRAJECTORY_VERSION 2
+#define PMAC_TRAJECTORY_VERSION 3
 
 #define PMAC_CPU_GEO_240MHZ               "DSP56321"            // Approved geobrick for trajectory scans
 #define PMAC_CPU_CLIPPER                  "DSP56303"            // Allowed for trajectory scans
@@ -295,6 +295,8 @@ public:
     asynStatus listPLCProgram(int plcNo, char *buffer, size_t size);
     asynStatus executeManualGroup();
     asynStatus updateCsAssignmentParameters();
+    asynStatus copyCsReadbackToDemand(bool manual);
+    asynStatus copyCsReadbackToDemand(bool manual);
     asynStatus copyCsReadbackToDemand(bool manual);
     asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
     asynStatus tScanIncludedAxes(int *axisMask);
