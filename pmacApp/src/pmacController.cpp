@@ -499,6 +499,9 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_MotorScaleString, asynParamInt32, &PMAC_C_MotorScale_);
   createParam(PMAC_C_MotorResString, asynParamFloat64, &PMAC_C_MotorRes_);
   createParam(PMAC_C_MotorOffsetString, asynParamFloat64, &PMAC_C_MotorOffset_);
+  createParam(PMAC_C_DirectMoveString, asynParamFloat64, &PMAC_C_DirectMove_);
+  createParam(PMAC_C_DirectResString, asynParamFloat64, &PMAC_C_DirectRes_);
+  createParam(PMAC_C_DirectOffsetString, asynParamFloat64, &PMAC_C_DirectOffset_);
   createParam(PMAC_C_IVariablesString, asynParamOctet, &PMAC_I_Variables_);
   createParam(PMAC_C_MVariablesString, asynParamOctet, &PMAC_M_Variables_);
   createParam(PMAC_C_PVariablesString, asynParamOctet, &PMAC_P_Variables_);
@@ -564,10 +567,10 @@ void pmacController::initAsynParams(void) {
 
   // Set individual axes parmeters
   for (int index = 0; index < numAxes_; index++) {
-    paramStatus = ((setIntegerParam(
-            index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
-    paramStatus = ((setIntegerParam(
-            index, PMAC_C_MotorScale_, 1) == asynSuccess) && paramStatus);
+    paramStatus = ((setIntegerParam(index, PMAC_C_RealMotorNumber_, index) == asynSuccess) && paramStatus);
+    paramStatus = ((setIntegerParam(index, PMAC_C_MotorScale_, 1) == asynSuccess) && paramStatus);
+    //paramStatus = ((setDoubleParam(index, PMAC_C_MotorRes_, 1.0) == asynSuccess) && paramStatus);
+    //paramStatus = ((setDoubleParam(index, PMAC_C_MotorOffset_, 0.0) == asynSuccess) && paramStatus);
   }
   callParamCallbacks();
 
@@ -1953,6 +1956,25 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
       //The lowLevelWriteRead will be done at the end of this function.
     }
 
+  } else if (function == PMAC_C_MotorRes_){
+    pAxis->setResolution(value);
+    // Direct resolution parameter will always match the raw motor
+    setDoubleParam(pAxis->axisNo_, PMAC_C_DirectRes_, value);
+  } else if (function == PMAC_C_MotorOffset_){
+    pAxis->setOffset(value);
+    // Direct offset parameter will always match the raw motor
+    setDoubleParam(pAxis->axisNo_, PMAC_C_DirectOffset_, value);
+  } else if (function == PMAC_C_DirectMove_){
+    double baseVelocity = 0.0;
+    double velocity = 0.0;
+    double acceleration = 0.0;
+    getDoubleParam(pAxis->axisNo_, motorVelBase_, &baseVelocity);
+    getDoubleParam(pAxis->axisNo_, motorVelocity_, &velocity);
+    getDoubleParam(pAxis->axisNo_, motorAccel_, &acceleration);
+    pAxis->directMove(value, baseVelocity, velocity, acceleration);
+    pAxis->setIntegerParam(motorStatusDone_, 0);
+    pAxis->callParamCallbacks();
+    wakeupPoller();
   } else if (function == motorLowLimit_) {
     sprintf(command, "I%d14=%f", pAxis->axisNo_, value / pAxis->scale_);
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,

@@ -191,6 +191,9 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   createParam(PMAC_CS_ForwardKinematicString, asynParamOctet, &PMAC_CS_ForwardKinematic_);
   createParam(PMAC_CS_InverseKinematicString, asynParamOctet, &PMAC_CS_InverseKinematic_);
   createParam(PMAC_CS_QVariablesString, asynParamOctet, &PMAC_CS_QVariables_);
+  createParam(PMAC_CS_DirectMoveString, asynParamFloat64, &PMAC_CS_DirectMove_);
+  createParam(PMAC_CS_DirectResString, asynParamFloat64, &PMAC_CS_DirectRes_);
+  createParam(PMAC_CS_DirectOffsetString, asynParamFloat64, &PMAC_CS_DirectOffset_);
   createParam(PMAC_CS_LastParamString, asynParamInt32, &PMAC_CS_LastParam_);
   paramStatus = ((setDoubleParam(PMAC_CS_CsMoveTime_, csMoveTime_) == asynSuccess) && paramStatus);
   for(int index=0; index<=PMAC_CS_AXES_COUNT; index++) {
@@ -325,6 +328,21 @@ asynStatus pmacCSController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
       debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
       status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
     }
+  } else if (function == PMAC_CS_MotorRes_){
+    pAxis->setKinematicResolution(value);
+  } else if (function == PMAC_CS_MotorOffset_){
+    pAxis->setKinematicOffset(value);
+  } else if (function == PMAC_CS_DirectMove_){
+    double baseVelocity = 0.0;
+    double velocity = 0.0;
+    double acceleration = 0.0;
+    getDoubleParam(pAxis->axisNo_, motorVelBase_, &baseVelocity);
+    getDoubleParam(pAxis->axisNo_, motorVelocity_, &velocity);
+    getDoubleParam(pAxis->axisNo_, motorAccel_, &acceleration);
+    pAxis->directMove(value, baseVelocity, velocity, acceleration);
+    pAxis->setIntegerParam(motorStatusDone_, 0);
+    pAxis->callParamCallbacks();
+    wakeupPoller();
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.
@@ -494,6 +512,11 @@ asynStatus pmacCSController::axisWriteRead(const char *command, char *response) 
   }
 
   return status;
+}
+
+pmacAxis *pmacCSController::getRawAxis(int axisNo)
+{
+  return pC_->getAxis(axisNo);
 }
 
 /** Returns a pointer to an pmacAxis object.
@@ -675,6 +698,15 @@ asynStatus pmacCSController::pmacCSSetAxisDirectMapping(int axis, int mappedAxis
   return status;
 }
 
+int pmacCSController::pmacCSGetAxisDirectMapping(int axis) {
+  int rawAxis = 0;
+  static const char *functionName = "pmacCSGetAxisDirectMapping";
+
+  debug(DEBUG_FLOW, functionName);
+  getIntegerParam(axis, PMAC_CS_RealMotorNumber_, &rawAxis);
+
+  return rawAxis;
+}
 
 double pmacCSController::getAxisResolution(int axis) {
   double resolution = 0;

@@ -25,6 +25,12 @@ public:
     void badConnection();
     void goodConnection();
 
+    void setKinematicResolution(double new_resolution);
+
+    void setKinematicOffset(double new_offset);
+
+    asynStatus directMove(double position, double min_velocity, double max_velocity, double acceleration);
+
     asynStatus move(double position, int relative, double min_velocity, double max_velocity,
                     double acceleration);
 
@@ -48,6 +54,8 @@ private:
     int deferredMove_;
     char deferredCommand_[128];
     int scale_;
+    double kinematic_resolution_;
+    double kinematic_offset_;
     double position_;
     double previous_position_;
     int previous_direction_;

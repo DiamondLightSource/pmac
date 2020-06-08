@@ -24,7 +24,7 @@ record(calcout, "$(P)$(M):MRES_CALC") {
 
 record(ao, "$(P)$(M):MRES_SET") {
   field(DTYP, "asynFloat64")
-  field(OUT, "@asyn($(PORT),0)PMAC_WD_P`4800+$(ADDR)`")
+  field(OUT, "@asyn($(PORT),$(ADDR),0)PMAC_MRES")
   field(FLNK, "$(P)$(M):MR_MOVE_WRITE")
 }
 
@@ -37,7 +37,7 @@ record(calcout, "$(P)$(M):OFF_SET_CALC") {
 
 record(ao, "$(P)$(M):OFF_SET") {
   field(DTYP, "asynFloat64")
-  field(OUT, "@asyn($(PORT),0)PMAC_WD_P`4900+$(ADDR)`")
+  field(OUT, "@asyn($(PORT),$(ADDR),0)PMAC_OFFSET")
   field(FLNK, "$(P)$(M):MR_MOVE_WRITE")
 }
 
