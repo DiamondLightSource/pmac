@@ -26,8 +26,10 @@ public:
     void goodConnection();
 
     void setKinematicResolution(double new_resolution);
+    double getResolution();
 
     void setKinematicOffset(double new_offset);
+    double getOffset();
 
     asynStatus directMove(double position, double min_velocity, double max_velocity, double acceleration);
 

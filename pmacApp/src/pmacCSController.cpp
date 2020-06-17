@@ -711,7 +711,9 @@ int pmacCSController::pmacCSGetAxisDirectMapping(int axis) {
 double pmacCSController::getAxisResolution(int axis) {
   double resolution = 0;
 
-  getDoubleParam(axis, PMAC_CS_MotorRes_, &resolution);
+  //getDoubleParam(axis, PMAC_CS_MotorRes_, &resolution);
+
+  resolution = this->getAxis(axis)->getResolution();
   if(resolution == 0) {
     resolution = 1;  // guard against asyn issues causing div by zero
   }
@@ -719,9 +721,9 @@ double pmacCSController::getAxisResolution(int axis) {
 }
 
 double pmacCSController::getAxisOffset(int axis) {
-  double offset = 0;
+  //getDoubleParam(axis, PMAC_CS_MotorOffset_, &offset);
 
-  getDoubleParam(axis, PMAC_CS_MotorOffset_, &offset);
+  double offset = this->getAxis(axis)->getOffset();
   return offset;
 }
 
