@@ -24,9 +24,9 @@ class Axis:
             cs_name = "CS{}:".format(cs_no)
         else:
             cs_name = ""
-        self.cs_assignment = brick_pv_root + "M{}:CsAxis".format(axis_no)
-        self.cs_port = brick_pv_root + "M{}:CsPort".format(axis_no)
-        self.direct_demand = brick_pv_root + "{}M{}:DirectDemand".format(
+        self.cs_assignment = brick_pv_root + ":M{}:CsAxis".format(axis_no)
+        self.cs_port = brick_pv_root + ":M{}:CsPort".format(axis_no)
+        self.direct_demand = brick_pv_root + ":{}M{}:DirectDemand".format(
             cs_name, axis_no
         )
 

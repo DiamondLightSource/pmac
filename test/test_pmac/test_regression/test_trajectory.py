@@ -1,10 +1,11 @@
 from unittest import TestCase
-from test.brick.testbrick import TBrick
+from test.brick.testbrick import TBrick, test_pv_root
 from test.test_pmac.test_system.trajectories import (
     trajectory_fast_scan,
     trajectory_scan_appending,
 )
 from cothread import catools as ca
+from cothread import Sleep
 
 
 # Tests for historical issues with trajectory scanning
@@ -42,19 +43,38 @@ class TestTrajectory(TestCase):
     def test_mres_offsets_trajectory(self):
         tb = TBrick()
         tb.set_cs_group(tb.g1)
-        ca.caput(tb.m1.mres, 0.009)
-        ca.caput(tb.m2.mres, 0.008)
-        ca.caput(tb.m3.mres, 0.007)
-        ca.caput(tb.m4.mres, 0.006)
-        ca.caput(tb.m5.mres, 0.005)
-        ca.caput(tb.m6.mres, 0.004)
-        ca.caput(tb.m1.off, 10)
-        ca.caput(tb.m2.off, 20)
-        ca.caput(tb.m3.off, 20)
-        ca.caput(tb.m4.off, 40)
-        ca.caput(tb.m5.off, 50)
-        ca.caput(tb.m6.off, 60)
-        trajectory_fast_scan(self, tb, 6, "CS2", microsecs=50000)
+        ca.caput(tb.m1.mres, .009, wait=True)
+        ca.caput(tb.m2.mres, .008, wait=True)
+        ca.caput(tb.m3.mres, .007, wait=True)
+        ca.caput(tb.m4.mres, .006, wait=True)
+        ca.caput(tb.m5.mres, .005, wait=True)
+        ca.caput(tb.m6.mres, .004, wait=True)
+        ca.caput(tb.m1.off, 10, wait=True)
+        ca.caput(tb.m2.off, 20, wait=True)
+        ca.caput(tb.m3.off, 20, wait=True)
+        ca.caput(tb.m4.off, 40, wait=True)
+        ca.caput(tb.m5.off, 50, wait=True)
+        ca.caput(tb.m6.off, 60, wait=True)
+        Sleep(1.0)
+
+        ca.caput('{}:MOTOR1:OFF_SET.PROC'.format(test_pv_root), 1, wait=True)
+        ca.caput('{}:MOTOR2:OFF_SET.PROC'.format(test_pv_root), 1, wait=True)
+        ca.caput('{}:MOTOR3:OFF_SET.PROC'.format(test_pv_root), 1, wait=True)
+        ca.caput('{}:MOTOR4:OFF_SET.PROC'.format(test_pv_root), 1, wait=True)
+        ca.caput('{}:MOTOR5:OFF_SET.PROC'.format(test_pv_root), 1, wait=True)
+        ca.caput('{}:MOTOR6:OFF_SET.PROC'.format(test_pv_root), 1, wait=True)
+
+        tb.m1.go(0.0)
+        tb.m2.go(0.0)
+        tb.m3.go(0.0)
+        tb.m4.go(0.0)
+        tb.m5.go(0.0)
+        tb.m6.go(0.0)
+        tb.m7.go(0.0)
+        tb.m8.go(0.0)
+#        return
+        Sleep(1.0)
+        trajectory_fast_scan(self, tb, 6, 'CS2', microsecs=50000)
         self.assertAlmostEqual(tb.m1.pos, 1, 1)
         self.assertAlmostEqual(tb.m2.pos, 1, 1)
         self.assertAlmostEqual(tb.m3.pos, 1, 1)

@@ -3,13 +3,12 @@ from unittest import TestCase
 import cothread.catools as ca
 from datetime import datetime
 
-from test.brick.testbrick import TBrick, DECIMALS
+from test.brick.testbrick import TBrick, DECIMALS, brick_pv_root
 from cothread import Sleep
 from test.brick.movemonitor import MoveMonitor, MotorCallback
 
 
 # These tests verify real and virtual motors interact correctly
-
 
 class TestDirect(TestCase):
     def test_direct_deferred_moves_cs(self):
@@ -56,19 +55,19 @@ class TestDirect(TestCase):
 
     def test_quick(self):
         # prove that timings work OK when not using the TesBrick class
-        ca.caput("BRICK1:M5.VMAX", 10, wait=True, timeout=60)
-        ca.caput("BRICK1:M5.VELO", 10, wait=True, timeout=60)
-        ca.caput("BRICK1:M5", 0.1, wait=True, timeout=60)
+        ca.caput('{}:M5.VMAX'.format(brick_pv_root), 10, wait=True, timeout=60)
+        ca.caput('{}:M5.VELO'.format(brick_pv_root), 10, wait=True, timeout=60)
+        ca.caput('{}:M5'.format(brick_pv_root), 0.1, wait=True, timeout=60)
 
-        ca.caput("BRICK1:M5:DirectDemand", 10, wait=True, timeout=60)
+        ca.caput('{}:M5:DirectDemand'.format(brick_pv_root), 10, wait=True, timeout=60)
         start = datetime.now()
-        ca.caput("BRICK1:M5:DirectDemand", 0, wait=True, timeout=60)
+        ca.caput('{}:M5:DirectDemand'.format(brick_pv_root), 0, wait=True, timeout=60)
         elapsed = datetime.now() - start
         print(elapsed)
         self.assertLess(elapsed.seconds, 1.5)
 
         start = datetime.now()
-        ca.caput("BRICK1:M5:DirectDemand", 1, wait=True, timeout=60)
+        ca.caput('{}:M5:DirectDemand'.format(brick_pv_root), 1, wait=True, timeout=60)
         elapsed = datetime.now() - start
         print(elapsed)
         self.assertLess(elapsed.seconds, 1.5)
