@@ -1,4 +1,5 @@
 from cothread import catools as ca
+from cothread import Sleep
 from .axis import Axis
 from .coordsys import CoordSys
 from .controller import make_controller
@@ -9,33 +10,33 @@ from .trajectory import Trajectory
 # set 'in position' a little early
 DECIMALS = 2
 
-brick_pv_root = bpr = "BRICK1:"
+brick_pv_root = bpr = 'BRICK1'
+test_pv_root = "PMAC_BRICK_TEST"
 
-brick_axes = {
-    "m1": Axis(bpr, "PMAC_BRICK_TEST:MOTOR1", 1, 0),
-    "m2": Axis(bpr, "PMAC_BRICK_TEST:MOTOR2", 2, 0),
-    "m3": Axis(bpr, "PMAC_BRICK_TEST:MOTOR3", 3, 0),
-    "m4": Axis(bpr, "PMAC_BRICK_TEST:MOTOR4", 4, 0),
-    "m5": Axis(bpr, "PMAC_BRICK_TEST:MOTOR5", 5, 0),
-    "m6": Axis(bpr, "PMAC_BRICK_TEST:MOTOR6", 6, 0),
-    "m7": Axis(bpr, "PMAC_BRICK_TEST:MOTOR7", 7, 0),
-    "m8": Axis(bpr, "PMAC_BRICK_TEST:MOTOR8", 8, 0),
-    "A2": Axis(bpr, "BRICK1CS2:A", 1, 2),
-    "B2": Axis(bpr, "BRICK1CS2:B", 2, 2),
-    "A3": Axis(bpr, "BRICK1CS3:A", 1, 3),
-    "B3": Axis(bpr, "BRICK1CS3:B", 2, 3),
-    "X3": Axis(bpr, "BRICK1CS3:X", 7, 3),
-    "Y3": Axis(bpr, "BRICK1CS3:Y", 8, 3),
-}
+brick_axes = {'m1': Axis(bpr, '{}:MOTOR1'.format(test_pv_root), 1, 0),
+              'm2': Axis(bpr, '{}:MOTOR2'.format(test_pv_root), 2, 0),
+              'm3': Axis(bpr, '{}:MOTOR3'.format(test_pv_root), 3, 0),
+              'm4': Axis(bpr, '{}:MOTOR4'.format(test_pv_root), 4, 0),
+              'm5': Axis(bpr, '{}:MOTOR5'.format(test_pv_root), 5, 0),
+              'm6': Axis(bpr, '{}:MOTOR6'.format(test_pv_root), 6, 0),
+              'm7': Axis(bpr, '{}:MOTOR7'.format(test_pv_root), 7, 0),
+              'm8': Axis(bpr, '{}:MOTOR8'.format(test_pv_root), 8, 0),
+              'A2': Axis(bpr, '{}CS2:A'.format(brick_pv_root), 1, 2),
+              'B2': Axis(bpr, '{}CS2:B'.format(brick_pv_root), 2, 2),
+              'A3': Axis(bpr, '{}CS3:A'.format(brick_pv_root), 1, 3),
+              'B3': Axis(bpr, '{}CS3:B'.format(brick_pv_root), 2, 3),
+              'X3': Axis(bpr, '{}CS3:X'.format(brick_pv_root), 7, 3),
+              'Y3': Axis(bpr, '{}CS3:Y'.format(brick_pv_root), 8, 3)}
 
-brick_groups = {"g1": "1,2->A,B", "g2": "3,4->I", "g3": "MIXED CS3", "g4": "MIXED CS2"}
+brick_groups = {'g1': '1,2->A,B',
+                'g2': '3,4->I',
+                'g3': 'MIXED CS3',
+                'g4': 'MIXED CS2'}
 
-brick_cs = {
-    "cs2": CoordSys("BRICK1:CS2", 2, "CS2"),
-    "cs3": CoordSys("BRICK1:CS3", 3, "CS3"),
-}
+brick_cs = {'cs2': CoordSys('{}:CS2'.format(brick_pv_root), 2, 'CS2'),
+            'cs3': CoordSys('{}:CS3'.format(brick_pv_root), 3, 'CS3')}
 
-MyBrick = make_controller(brick_axes, brick_cs, brick_groups, brick_pv_root)
+MyBrick = make_controller(brick_axes, brick_cs, brick_groups, '{}:'.format(brick_pv_root))
 
 
 class TBrick(MyBrick):
@@ -79,7 +80,10 @@ class TBrick(MyBrick):
             mres_pvs = [axis.mres for axis in r.values()]
             mres_val = [0.001] * len(mres_pvs)
             ca.caput(mres_pvs, mres_val, wait=True, timeout=10)
-            ca.caput(["BRICK1:M1.MRES", "BRICK1:M2.MRES"], [1, 1], wait=True)
+            Sleep(2.0)
+            ca.caput(["{}:M1.MRES PP".format(brick_pv_root), "{}:M2.MRES PP".format(brick_pv_root)], [1, 1], wait=True)
+            Sleep(2.0)
+            ca.caput(["{}:M1.PROC PP".format(brick_pv_root), "{}:M2.PROC PP".format(brick_pv_root)], [1, 1], wait=True)
             # higher resolution on 7 and 8 for clipper trajectories
             ca.caput(self.m7.mres, 0.001)
             ca.caput(self.m8.mres, 0.001)
@@ -104,7 +108,7 @@ class TBrick(MyBrick):
             # reset all offset
             offset_pvs = [axis.off for axis in a.values()]
             values = [0] * len(offset_pvs)
-            ca.caput(offset_pvs, values, wait=False, timeout=4)
+            ca.caput(offset_pvs, values, wait=True, timeout=4)
 
             # move all real motors to zero
             self.send_command(

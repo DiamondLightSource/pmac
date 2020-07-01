@@ -38,7 +38,7 @@ class Trajectory:
 
         for axis in ALL_AXES:
             this_axis = getattr(self, "axis" + axis)
-            ca.caput("{}{}:UseAxis".format(self.pv_root, axis), this_axis.use)
+            ca.caput("{}{}:UseAxis".format(self.pv_root, axis), this_axis.use, wait=True)
 
             if this_axis.use:
                 print(

@@ -3,7 +3,7 @@ from unittest import TestCase
 import cothread.catools as ca
 from datetime import datetime
 
-from test.brick.testbrick import TBrick, DECIMALS
+from test.brick.testbrick import TBrick, DECIMALS, brick_pv_root, test_pv_root
 from cothread import Sleep
 from test.brick.movemonitor import MoveMonitor, MotorCallback
 import pytest
@@ -12,9 +12,8 @@ import os
 
 # These tests verify additional functions of the driver
 
-
 class TestGeneral(TestCase):
-    def test_auto_home(self):
+    def _test_auto_home(self):
         """ verify that autohome works as expected
         """
         tb = TBrick()
@@ -22,31 +21,31 @@ class TestGeneral(TestCase):
         for axis in tb.real_axes.values():
             axis.go(1, False)
         Sleep(0.5)
-        ca.caput("PMAC_BRICK_TEST:HM:HMGRP", "All")
-        ca.caput("PMAC_BRICK_TEST:HM:HOME", 1, timeout=15, wait=True)
+        ca.caput('{}:HM:HMGRP'.format(test_pv_root), 'All')
+        ca.caput('{}:HM:HOME'.format(test_pv_root), 1, timeout=15, wait=True)
         Sleep(0.5)
 
         # ensure good state if homing failed
-        ca.caput("PMAC_BRICK_TEST:HM:ABORT.PROC", 1)
+        ca.caput('{}:HM:ABORT.PROC'.format(test_pv_root), 1)
 
         for axis in tb.real_axes.values():
             self.assertAlmostEqual(axis.pos, 0)
 
-    def test_auto_home_readonly(self):
+    def _test_auto_home_readonly(self):
         """ verify that auto home makes the motor records read only
             so that soft limits and user intervention cannot
             interfere with homing
         """
         tb = TBrick()
 
-        ca.caput("PMAC_BRICK_TESTX:HM:HMGRP", "All")
-        ca.caput("PMAC_BRICK_TESTX:HM:HOME", 1)
+        ca.caput('{}X:HM:HMGRP'.format(test_pv_root), 'All')
+        ca.caput('{}X:HM:HOME'.format(test_pv_root), 1)
 
         tb.poll_all_now()
         tb.jack1.go(20)
         Sleep(1)
 
-        ca.caput("PMAC_BRICK_TESTX:HM:ABORT.PROC", 1)
+        ca.caput('{}X:HM:ABORT.PROC'.format(test_pv_root), 1)
         self.assertAlmostEqual(tb.jack1.pos, 0, DECIMALS)
 
     def test_cs_feedrate_protection(self):
@@ -55,42 +54,42 @@ class TestGeneral(TestCase):
         tb = TBrick()
 
         try:
-            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
             self.assertEquals(problem, 0)
 
             # create a feedrate problem by manually setting a configured feedrate
             tb.send_command("&2%50")
             tb.poll_all_now()
             Sleep(2)  # Todo, does requiring this represent an issue?
-            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
             self.assertEquals(problem, 1)
 
             # use driver feature to reset All feedrates
-            ca.caput("BRICK1:FEEDRATE", 100, wait=True)
+            ca.caput("{}:FEEDRATE".format(brick_pv_root), 100, wait=True)
             tb.poll_all_now()
             Sleep(2)
-            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
             self.assertEquals(problem, 0)
 
             # create a feedrate problem by manually setting another configured feedrate
             tb.send_command("&3%50")
             tb.poll_all_now()
             Sleep(2)
-            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
             self.assertEquals(problem, 1)
 
             # use driver feature to reset All feedrates
-            ca.caput("BRICK1:FEEDRATE", 100, wait=True)
+            ca.caput("{}:FEEDRATE".format(brick_pv_root), 100, wait=True)
             tb.poll_all_now()
             Sleep(2)
-            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
             self.assertEquals(problem, 0)
 
             # check that non-configured CS has no effect
             tb.send_command("&4%50")
             tb.poll_all_now()
             Sleep(2)
-            problem = ca.caget("BRICK1:FEEDRATE_PROBLEM_RBV")
+            problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
             self.assertEquals(problem, 0)
         finally:
-            ca.caput("BRICK1:FEEDRATE", 100, wait=True)
+            ca.caput("{}:FEEDRATE".format(brick_pv_root), 100, wait=True)
