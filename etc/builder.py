@@ -59,6 +59,7 @@ def pmacAsynIPPort_sim(name, IP, simulation=None, pmacAsynIPPort=pmacAsynIPPort)
         return pmacAsynIPPort(name, simulation)
 SetSimulation(pmacAsynIPPort, pmacAsynIPPort_sim)
 
+
 class pmacAsynSSHPort(DeltaTauSSHCommsPort):
     """This will create an AsynPort connecting to a PowerPMAC over SSH"""
     LibFileList = ['powerPmacAsynPort']
@@ -91,20 +92,29 @@ class pmacAsynSSHPort(DeltaTauSSHCommsPort):
         NOEOS = Simple('No EOS used if set to 1', int),
         simulation   = Simple('IP port to connect to if in simulation mode', str))
 
+
 class _pmacStatusT(AutoSubstitution):
     """Creates some PVs for monitoring status of the pmac controller,
     not compatible with power Pmac"""
     TemplateFile = "pmacStatus.template"
+
 
 class _powerPmacStatusT(AutoSubstitution):
     """Creates some PVs for monitoring status of the power pmac controller,
     not compatible with pmac"""
     TemplateFile = "powerPmacStatus.template"
 
+
 class _GeoBrickControllerT(AutoSubstitution):
     """Creates some PVs for global control of the pmac controller,
     namely global feed rate and axis coordinate system assignment"""
     TemplateFile = "pmacController.template"
+
+
+class _GeoBrickCSST(AutoSubstitution):
+    """Creates GUI tags for CSS screens"""
+    TemplateFile = "pmacCSS.template"
+
 
 class pmacVmeConfig(DeltaTauCommsPort):
     """This will create an AsynPort connecting to a PMAC or GeoBrick over VME"""
@@ -141,6 +151,7 @@ class pmacVmeConfig(DeltaTauCommsPort):
         priority = Simple('Priority to give the asyn serial ports', int),
         simulation    = Simple('IP port to connect to if in simulation mode', str))
 
+
 class GeoBrick(DeltaTau):
     """This will create an asyn motor port for a GeoBrick that we can attach
     motor records to using the model 3 driver"""
@@ -157,7 +168,7 @@ class GeoBrick(DeltaTau):
     # parameters in Finalise below so they can be substituted into the template )
     removeThese = [ 'CSG%d' % i for i in range(8) ]
 
-    def __init__(self, Port, name = None, IdlePoll = 500, MovingPoll = 100, **kwargs):
+    def __init__(self, Port, name=None, IdlePoll=500, MovingPoll=100, ControlIP=None, ControlPort=None, ControlMode=None, Description=None, **kwargs):
         # init a list of groupnames for each pmacCreateCsGroup to add to
         self.CsGroupNamesList = {}
         # First create an asyn IP port to connect to
@@ -178,11 +189,24 @@ class GeoBrick(DeltaTau):
         # init the AsynPort superclass
         self.__super.__init__(name)
 
-        # instatiate the template
+        # instantiate the template
         self.template = _GeoBrickControllerT(PORT=name, **kwargs)
         self.TIMEOUT = self.template.args['TIMEOUT']
         # and device specific status PVs
         self.statusT = _pmacStatusT(PORT=name, P=self.P)
+        # and the CSS template
+        if ControlIP is not None:
+            # Ensure correct port if tcpip
+            if ControlMode == "tcpip":
+                ControlPort = 1025
+            self.cssT = _GeoBrickCSST(
+                NAME=name,
+                P=self.P,
+                ControlIP=ControlIP,
+                ControlPort=ControlPort,
+                ControlMode=ControlMode,
+                Description=Description
+            )
 
         # instantiate an axis status template for each axis
         assert self.NAxes in range(1,33), "Number of axes (%d) must be in range 1..32" % self.NAxes
@@ -197,10 +221,14 @@ class GeoBrick(DeltaTau):
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
-        name = Simple('Name to use for the asyn port', str),
-        Port       = Ident('pmacAsynIPPort/pmacVmeConfig to connect to', pmacAsynIPPort),
-        IdlePoll   = Simple('Idle Poll Period in ms', int),
-        MovingPoll = Simple('Moving Poll Period in ms', int)) + \
+        name        = Simple('Name to use for the asyn port', str),
+        Port        = Ident('pmacAsynIPPort/pmacVmeConfig to connect to', pmacAsynIPPort),
+        IdlePoll    = Simple('Idle Poll Period in ms', int),
+        MovingPoll  = Simple('Moving Poll Period in ms', int),
+        ControlIP   = Simple('IP/Hostname for dls-pmac-control (CSS)', str),
+        ControlPort = Simple('Port for dls-pmac-control (CSS)', str),
+        ControlMode = Choice('Terminal server or Ethernet for dls-pmac-control (CSS)', ['ts', 'tcpip']),
+        Description = Simple('Description for pmac status screen (CSS)', str)) + \
               _GeoBrickControllerT.ArgInfo.filtered(without = removeThese + ['PORT'])
 
     def Initialise(self):
@@ -264,7 +292,7 @@ class PowerPMAC(DeltaTau):
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
-        name = Simple('Name to use for the asyn port', str),
+        name       = Simple('Name to use for the asyn port', str),
         Port       = Ident('pmacAsynSSHPort to connect to', pmacAsynSSHPort),
         NAxes      = Simple('Number of axes', int),
         IdlePoll   = Simple('Idle Poll Period in ms', int),
@@ -303,6 +331,7 @@ class GeoBrickTrajectoryControlT(AutoSubstitution):
 GeoBrickTrajectoryControlT.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 GeoBrickTrajectoryControlT.ArgInfo = GeoBrickTrajectoryControlT.ArgInfo.filtered(
     without=GeoBrickTrajectoryControlT.geobrickArgs)
+
 
 class PMAC(DeltaTau):
     """This will create an asyn motor port for a PMAC that we can attach
@@ -357,12 +386,13 @@ class PMAC(DeltaTau):
 
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
-        name = Simple('Name to use for the asyn port', str),
+        name       = Simple('Name to use for the asyn port', str),
         Port       = Ident('pmacAsynSSHPort to connect to', pmacAsynSSHPort),
         NAxes      = Simple('Number of axes', int),
         IdlePoll   = Simple('Idle Poll Period in ms', int),
         MovingPoll = Simple('Moving Poll Period in ms', int))+ \
               _GeoBrickControllerT.ArgInfo.filtered(without = GeoBrick.removeThese + ['PORT'])
+
 
 class pmacDisableLimitsCheck(Device):
     Dependencies = (Pmac,)
@@ -411,9 +441,11 @@ def add_basic(cls):
     cls.guiTags = basic_asyn_motor.guiTags
     return cls
 
+
 class _eloss_kill_autohome_records(AutoSubstitution):
     WarnMacros = False
     TemplateFile = "eloss_kill_autohome_records.template"
+
 
 def add_eloss_kill_autohome(cls):
     """Convenience function to add _eloss_kill_autohome_records attributes to a class that
@@ -424,9 +456,11 @@ def add_eloss_kill_autohome(cls):
     cls.guiTags = _eloss_kill_autohome_records.guiTags
     return cls
 
+
 class _motor_in_cs_records(AutoSubstitution):
     WarnMacros = False
     TemplateFile = "motor_in_cs.template"
+
 
 def add_motor_in_cs(cls):
     """Convenience function to add _motor_in_cs_records attributes to a class that
@@ -450,10 +484,12 @@ class dls_pmac_asyn_motor(AutoSubstitution, MotorRecord):
         kwargs['PMAC'] = kwargs['PORT'].P
         self.__super.__init__(**kwargs)
 
+
 dls_pmac_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller", DeltaTau)
 dls_pmac_asyn_motor.ArgInfo.descriptions["SPORT"] = Ident("Delta tau motor controller comms port", DeltaTauCommsPort)
 # we want to copy the controller port name (see above) so do not want it as an argument
 dls_pmac_asyn_motor.ArgInfo = dls_pmac_asyn_motor.ArgInfo.filtered(without=['PMAC'])
+
 
 @add_basic
 class dls_pmac_cs_asyn_motor(AutoSubstitution, MotorRecord):
@@ -466,16 +502,20 @@ class dls_pmac_cs_asyn_motor(AutoSubstitution, MotorRecord):
         kwargs['CS'] = kwargs['PORT'].CS
         self.__super.__init__(**kwargs)
 
+
 dls_pmac_cs_asyn_motor.ArgInfo.descriptions["PORT"] = Ident("Coordinate System object that this motor belongs to", DeltaTau)
 # we want to copy the controller port name (see above) so do not want it as an argument
 dls_pmac_cs_asyn_motor.ArgInfo = dls_pmac_cs_asyn_motor.ArgInfo.filtered(
     without=['PMAC', 'CS'])
 
+
 class _automhomeT(AutoSubstitution):
     Dependencies = (Calc,)
     TemplateFile = 'autohome.template'
 
+
 _automhomeT.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller port", DeltaTau)
+
 
 class autohome(_automhomeT):
     def __init__(self, **args):
@@ -485,12 +525,15 @@ class autohome(_automhomeT):
 
     ArgInfo = _automhomeT.ArgInfo.filtered(without=['CTRL'])
 
+
 class _pmacStatusAxis(AutoSubstitution):
     TemplateFile = 'pmacStatusAxis.template'
+
 
 class _CsControlT(AutoSubstitution):
     TemplateFile = "pmacCsController.template"
     Dependencies = (Pmac,)
+
 
 class CS(AsynPort):
     """Creates some PVs for global control of the pmac controller,
@@ -545,6 +588,7 @@ class CS(AsynPort):
         print '# Configure Model 3 CS Axes Driver (CSPortName, CSAxisCount)'
         print 'pmacCreateCSAxes("%(name)s", %(NAxes)d)' % self.__dict__
 
+
 class pmacSetCoordStepsPerUnit(Device):
     """Apply an integer scale factor to an axis on the PMAC"""
     def __init__(self, CS, Axis, Scale):
@@ -569,11 +613,13 @@ def setPortArgInfo(cls):
     cls.ArgInfo.descriptions["PORT"] = Ident("Delta tau motor controller comms port", DeltaTau)
     return cls
 
+
 @setPortArgInfo
 class pmacVariableWrite(AutoSubstitution):
     WarnMacros = False
     Dependencies = (Pmac,)
     TemplateFile = 'pmacVariableWrite.template'
+
 
 def add_pmac_variable_write(cls):
     """Convenience function to add pmacVariableWrite PORT attribute to a class that
@@ -589,17 +635,20 @@ class CS_accel_dcm(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'accel_dcm.template'
 
+
 @setPortArgInfo
 @add_pmac_variable_write
 class CS_IDT_sagittal_dcm(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'IDT_sagittal_dcm.template'
 
+
 @setPortArgInfo
 @add_pmac_variable_write
 class CS_IDT_sagittal_bender(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'IDT_sagittal_bender.template'
+
 
 @setPortArgInfo
 @add_pmac_variable_write
@@ -608,11 +657,13 @@ class CS_qcm(AutoSubstitution):
     Dependencies = (Calc,)
     TemplateFile = 'qcm.template'
 
+
 @setPortArgInfo
 @add_pmac_variable_write
 class CS_aperture_slits(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'aperture_slits.template'
+
 
 @setPortArgInfo
 @add_pmac_variable_write
@@ -620,8 +671,10 @@ class CS_B22_Optics_Box(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'B22_optics_box.template'
 
+
 class CS_blade_slits(AutoSubstitution):
     TemplateFile = 'blade_slits.template'
+
 
 @setPortArgInfo
 @add_pmac_variable_write
@@ -629,11 +682,13 @@ class CS_bender(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'bender.template'
 
+
 @setPortArgInfo
 @add_pmac_variable_write
 class CS_flexure_slits(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'flexure_slits.template'
+
 
 @setPortArgInfo
 @add_pmac_variable_write
@@ -641,11 +696,13 @@ class CS_gap_and_centre_slits(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'gap_and_centre_slits.template'
 
+
 @setPortArgInfo
 @add_pmac_variable_write
 class CS_multi_beamstop_on_platform(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'multi_beamstop_on_platform.template'
+
 
 @setPortArgInfo
 @add_pmac_variable_write
@@ -653,11 +710,13 @@ class CS_1jack_compensated(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = '1jack_compensated.template'
 
+
 @setPortArgInfo
 @add_pmac_variable_write
 class CS_2jack(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = '2jack.template'
+
 
 @setPortArgInfo
 @add_pmac_variable_write
@@ -665,11 +724,13 @@ class CS_3jack(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = '3jack.template'
 
+
 @setPortArgInfo
 @add_pmac_variable_write
 class CS_3jack_mirror(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = '3jack_mirror.template'
+
 
 @setPortArgInfo
 @add_pmac_variable_write
@@ -688,8 +749,10 @@ class CS_symetrie_hexapod(AutoSubstitution):
 class _moveAxesToSafe(Xml):
     TemplateFile = "moveAxesToSafe.xml"
 
+
 class _moveAxesToSafeTrig(Xml):
     TemplateFile = "moveAxesToSafeTrig.xml"
+
 
 class pmacCreateCsGroup(Device):
     """Create a group of axis mappings to coordinate systems. Instantating a GeoBrickGlobalControl
@@ -714,6 +777,7 @@ class pmacCreateCsGroup(Device):
         GroupNumber = Simple('Unique Group number to describe this group', int),
         GroupName = Simple('Description of the group', str),
         AxisCount = Simple('Number of CS axes in this group', int))
+
 
 class pmacCsGroupAddAxis(Device):
     Dependencies = (Pmac,)
@@ -777,6 +841,7 @@ class moveAxesToSafeMaster(Device,):
                     inposCalc += "&amp;&amp;"+calcInputs[a]
             _moveAxesToSafeTrig(P=self.P,A1=self.OUTPUTS[0],A2=self.OUTPUTS[1],A3=self.OUTPUTS[2],A4=self.OUTPUTS[3],A5=self.OUTPUTS[4],A6=self.OUTPUTS[5],INPOS1=self.INPOS[0],INPOS2=self.INPOS[1],INPOS3=self.INPOS[2],INPOS4=self.INPOS[3],INPOS5=self.INPOS[4],INPOS6=self.INPOS[5],INPOS_CALC=inposCalc)
 
+
 # Create an instance per axis to allow up to 6 axes to be moved simultaneously to a defined position
 class moveAxesToSafeSlave(Device,):
     def __init__(self,MASTER,AXIS,POSITION,THRESHOLD):
@@ -796,13 +861,16 @@ class moveAxesToSafeSlave(Device,):
         THRESHOLD = Simple("In safe position threshold in EGUs", float),
     )
 
+
 # hiding templates which are just used in includes so as to not
 # dirty the auto list of builder objects (is this the best way to do this?)
 class _hide1(AutoSubstitution):
     TemplateFile = 'pmacDirectMotor.template'
 
+
 class _hide2(AutoSubstitution):
     TemplateFile = 'pmac_cs_axis.template'
+
 
 class _hide3(AutoSubstitution):
     TemplateFile = 'pmacDirectMotor.template'
