@@ -186,12 +186,13 @@ $(pv_value)</tooltip>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="OPEN_DISPLAY">
-        <path>pmac_status_detail.opi</path>
+        <path>pmac_controller.opi</path>
         <macros>
           <include_parent_macros>true</include_parent_macros>
+          <pmac>$(P)</pmac>
         </macros>
-        <mode>3</mode>
-        <description></description>
+        <mode>1</mode>
+        <description>Open pmac status screen</description>
       </action>
     </actions>
     <alarm_pulsing>false</alarm_pulsing>

@@ -21,4 +21,6 @@
 
 # % gui, $(NAME), boyembed, pmacApp_opi/pmac_status_list_embed.opi, P=$(P), DESC=$(Description), CTLIP=$(ControlIP), CTLPORT=$(ControlPort), CTLMODE=$(ControlMode)
 
+# % gui, $(NAME), boyembed, pmacApp_opi/pmac_controller.opi, pmac=$(P)
+
 #=================================
