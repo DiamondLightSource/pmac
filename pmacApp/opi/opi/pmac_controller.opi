@@ -6436,62 +6436,7 @@ $(pv_value)</tooltip>
   <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
     <actions hook="false" hook_all="false">
       <action type="OPEN_DISPLAY">
-        <path>pmac_axes.opi</path>
-        <macros>
-          <include_parent_macros>true</include_parent_macros>
-        </macros>
-        <mode>1</mode>
-        <description></description>
-      </action>
-    </actions>
-    <alarm_pulsing>false</alarm_pulsing>
-    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
-    <background_color>
-      <color name="Button: BG" red="205" green="205" blue="205" />
-    </background_color>
-    <border_alarm_sensitive>false</border_alarm_sensitive>
-    <border_color>
-      <color name="Black" red="0" green="0" blue="0" />
-    </border_color>
-    <border_style>0</border_style>
-    <border_width>0</border_width>
-    <enabled>true</enabled>
-    <font>
-      <opifont.name fontName="Liberation Sans" height="15" style="1" pixels="true">Default Bold</opifont.name>
-    </font>
-    <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
-    <foreground_color>
-      <color name="Related Display: FG" red="128" green="64" blue="0" />
-    </foreground_color>
-    <height>25</height>
-    <image></image>
-    <name>AdditionalScreens:CoordSys</name>
-    <push_action_index>0</push_action_index>
-    <pv_name></pv_name>
-    <pv_value />
-    <rules />
-    <scale_options>
-      <width_scalable>true</width_scalable>
-      <height_scalable>true</height_scalable>
-      <keep_wh_ratio>false</keep_wh_ratio>
-    </scale_options>
-    <scripts />
-    <style>0</style>
-    <text>Coord sys</text>
-    <toggle_button>false</toggle_button>
-    <tooltip>$(pv_name)
-$(pv_value)</tooltip>
-    <visible>true</visible>
-    <widget_type>Action Button</widget_type>
-    <width>111</width>
-    <wuid>-7ffee625:17458368a08:-5c22</wuid>
-    <x>12</x>
-    <y>607</y>
-  </widget>
-  <widget typeId="org.csstudio.opibuilder.widgets.ActionButton" version="2.0.0">
-    <actions hook="false" hook_all="false">
-      <action type="OPEN_DISPLAY">
-        <path>pmac_axes.opi</path>
+        <path>pmac_debug.opi</path>
         <macros>
           <include_parent_macros>true</include_parent_macros>
         </macros>
@@ -6541,6 +6486,124 @@ $(pv_value)</tooltip>
     <width>111</width>
     <wuid>-7ffee625:17458368a08:-5c16</wuid>
     <x>140</x>
+    <y>607</y>
+  </widget>
+  <widget typeId="org.csstudio.opibuilder.widgets.MenuButton" version="1.0.0">
+    <actions hook="false" hook_all="false">
+      <action type="OPEN_DISPLAY">
+        <path>pmac_cs_axes.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <CS>1</CS>
+        </macros>
+        <mode>3</mode>
+        <description>CS1</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>pmac_cs_axes.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <CS>2</CS>
+        </macros>
+        <mode>3</mode>
+        <description>CS2</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>pmac_cs_axes.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <CS>3</CS>
+        </macros>
+        <mode>3</mode>
+        <description>CS3</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>pmac_cs_axes.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <CS>4</CS>
+        </macros>
+        <mode>3</mode>
+        <description>CS4</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>pmac_cs_axes.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <CS>5</CS>
+        </macros>
+        <mode>3</mode>
+        <description>CS5</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>pmac_cs_axes.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <CS>6</CS>
+        </macros>
+        <mode>3</mode>
+        <description>CS6</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>pmac_cs_axes.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <CS>7</CS>
+        </macros>
+        <mode>3</mode>
+        <description>CS7</description>
+      </action>
+      <action type="OPEN_DISPLAY">
+        <path>pmac_cs_axes.opi</path>
+        <macros>
+          <include_parent_macros>true</include_parent_macros>
+          <CS>8</CS>
+        </macros>
+        <mode>3</mode>
+        <description>CS8</description>
+      </action>
+    </actions>
+    <actions_from_pv>false</actions_from_pv>
+    <alarm_pulsing>false</alarm_pulsing>
+    <backcolor_alarm_sensitive>false</backcolor_alarm_sensitive>
+    <background_color>
+      <color name="Button: BG" red="205" green="205" blue="205" />
+    </background_color>
+    <border_alarm_sensitive>false</border_alarm_sensitive>
+    <border_color>
+      <color name="Black" red="0" green="0" blue="0" />
+    </border_color>
+    <border_style>6</border_style>
+    <border_width>0</border_width>
+    <enabled>true</enabled>
+    <font>
+      <opifont.name fontName="Liberation Sans" height="15" style="1" pixels="true">Default Bold</opifont.name>
+    </font>
+    <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
+    <foreground_color>
+      <color name="Related Display: FG" red="128" green="64" blue="0" />
+    </foreground_color>
+    <height>25</height>
+    <label>Coord sys</label>
+    <name>AdditionalScreens:CoordSys</name>
+    <pv_name></pv_name>
+    <pv_value />
+    <rules />
+    <scale_options>
+      <width_scalable>true</width_scalable>
+      <height_scalable>true</height_scalable>
+      <keep_wh_ratio>false</keep_wh_ratio>
+    </scale_options>
+    <scripts />
+    <show_down_arrow>true</show_down_arrow>
+    <tooltip>$(pv_name)
+$(pv_value)</tooltip>
+    <transparent>false</transparent>
+    <visible>true</visible>
+    <widget_type>Menu Button</widget_type>
+    <width>111</width>
+    <wuid>-7ffee625:17458368a08:-45a3</wuid>
+    <x>12</x>
     <y>607</y>
   </widget>
 </display>
