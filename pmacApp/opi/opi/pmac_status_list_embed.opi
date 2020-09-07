@@ -85,7 +85,7 @@ $(pv_value)</tooltip>
     <transparent>false</transparent>
     <visible>true</visible>
     <widget_type>Rectangle</widget_type>
-    <width>501</width>
+    <width>500</width>
     <wuid>31e285f:15143100cd9:-7c3f</wuid>
     <x>0</x>
     <y>5</y>
@@ -124,7 +124,7 @@ $(pv_value)</tooltip>
     <vertical_alignment>1</vertical_alignment>
     <visible>true</visible>
     <widget_type>Label</widget_type>
-    <width>236</width>
+    <width>235</width>
     <wrap_words>false</wrap_words>
     <wuid>-34f2baef:1513f318ae2:-7264</wuid>
     <x>265</x>
