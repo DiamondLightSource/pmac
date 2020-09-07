@@ -75,13 +75,13 @@
   <widget typeId="org.csstudio.opibuilder.widgets.groupingContainer" version="1.0.0">
     <actions hook="false" hook_all="false" />
     <background_color>
-      <color name="Canvas" red="200" green="200" blue="200" />
+      <color name="Grey 65%" red="166" green="166" blue="166" />
     </background_color>
     <border_color>
       <color red="0" green="128" blue="255" />
     </border_color>
     <border_style>0</border_style>
-    <border_width>1</border_width>
+    <border_width>0</border_width>
     <enabled>true</enabled>
     <fc>false</fc>
     <font>
@@ -91,7 +91,7 @@
       <color red="192" green="192" blue="192" />
     </foreground_color>
     <height>20</height>
-    <lock_children>false</lock_children>
+    <lock_children>true</lock_children>
     <macros>
       <include_parent_macros>true</include_parent_macros>
     </macros>
@@ -113,7 +113,7 @@
     <show_scrollbar>false</show_scrollbar>
     <tooltip></tooltip>
     <transparent>true</transparent>
-    <visible>true</visible>
+    <visible>false</visible>
     <widget_type>Grouping Container</widget_type>
     <width>1106</width>
     <wuid>-7ffee625:17458368a08:367</wuid>
@@ -240,7 +240,7 @@ $(pv_value)</tooltip>
       <font>
         <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Fine Print</opifont.name>
       </font>
-      <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
+      <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
         <color name="Controller: FG" red="0" green="0" blue="196" />
       </foreground_color>
@@ -338,7 +338,7 @@ $(pv_value)</tooltip>
       <font>
         <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Fine Print</opifont.name>
       </font>
-      <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
+      <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
         <color name="Controller: FG" red="0" green="0" blue="196" />
       </foreground_color>
@@ -447,7 +447,7 @@ $(pv_value)</tooltip>
       <font>
         <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Fine Print</opifont.name>
       </font>
-      <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
+      <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
         <color name="Controller: FG" red="0" green="0" blue="196" />
       </foreground_color>
@@ -562,7 +562,7 @@ $(pv_value)</tooltip>
       <font>
         <opifont.name fontName="Liberation Sans" height="12" style="0" pixels="true">Fine Print</opifont.name>
       </font>
-      <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
+      <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
       <foreground_color>
         <color name="Major" red="255" green="0" blue="0" />
       </foreground_color>
@@ -711,7 +711,7 @@ $(pv_value)</tooltip>
           <path>../motorApp_opi/motor_detail.opi</path>
           <macros>
             <include_parent_macros>false</include_parent_macros>
-            <DESC>$(P):AXIS$(axis):DESC</DESC>
+            <DESC>$(P):AXIS$(axis)</DESC>
             <P>$(P)</P>
             <M>:M$(axis)</M>
             <name>$(P):$(axis)</name>

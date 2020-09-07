@@ -850,7 +850,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -866,7 +866,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>126</width>
+      <width>121</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bc8</wuid>
       <x>13</x>
@@ -890,7 +890,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -906,7 +906,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>143</width>
+      <width>137</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bc7</wuid>
       <x>13</x>
@@ -930,7 +930,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -970,7 +970,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -986,7 +986,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>67</width>
+      <width>66</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bc5</wuid>
       <x>13</x>
@@ -1010,7 +1010,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1026,7 +1026,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>117</width>
+      <width>112</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bc4</wuid>
       <x>13</x>
@@ -1050,7 +1050,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1066,7 +1066,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>143</width>
+      <width>137</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bc3</wuid>
       <x>13</x>
@@ -1090,7 +1090,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1106,7 +1106,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>142</width>
+      <width>136</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bc2</wuid>
       <x>13</x>
@@ -1130,7 +1130,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1146,7 +1146,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>76</width>
+      <width>75</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bc1</wuid>
       <x>13</x>
@@ -1170,7 +1170,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1186,7 +1186,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>72</width>
+      <width>71</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bc0</wuid>
       <x>13</x>
@@ -1210,7 +1210,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1226,7 +1226,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>136</width>
+      <width>130</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bbf</wuid>
       <x>13</x>
@@ -1250,7 +1250,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1266,7 +1266,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>126</width>
+      <width>121</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bbe</wuid>
       <x>13</x>
@@ -1290,7 +1290,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1306,7 +1306,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>140</width>
+      <width>134</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bbd</wuid>
       <x>13</x>
@@ -1330,7 +1330,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1370,7 +1370,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1386,7 +1386,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>74</width>
+      <width>73</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bbb</wuid>
       <x>13</x>
@@ -1488,7 +1488,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1504,7 +1504,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>136</width>
+      <width>130</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bb9</wuid>
       <x>13</x>
@@ -1528,7 +1528,7 @@ $(pv_value)</tooltip>
       <foreground_color>
         <color name="Text: FG" red="0" green="0" blue="0" />
       </foreground_color>
-      <height>12</height>
+      <height>13</height>
       <horizontal_alignment>0</horizontal_alignment>
       <name>EDM Label</name>
       <rules />
@@ -1544,7 +1544,7 @@ $(pv_value)</tooltip>
       <vertical_alignment>1</vertical_alignment>
       <visible>true</visible>
       <widget_type>Label</widget_type>
-      <width>126</width>
+      <width>121</width>
       <wrap_words>false</wrap_words>
       <wuid>-7ffee625:17458368a08:-6bb8</wuid>
       <x>13</x>
@@ -5858,7 +5858,7 @@ $(pv_value)</tooltip>
     <font>
       <opifont.name fontName="Liberation Sans" height="15" style="1" pixels="true">Default Bold</opifont.name>
     </font>
-    <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color name="Major" red="255" green="0" blue="0" />
     </foreground_color>
@@ -5912,7 +5912,7 @@ $(pv_value)</tooltip>
     <font>
       <opifont.name fontName="Liberation Sans" height="15" style="1" pixels="true">Default Bold</opifont.name>
     </font>
-    <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color name="Major" red="255" green="0" blue="0" />
     </foreground_color>
@@ -6056,7 +6056,7 @@ $(pv_value)</tooltip>
     <font>
       <opifont.name fontName="Liberation Sans" height="15" style="0" pixels="true">Default</opifont.name>
     </font>
-    <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color name="Controller: FG" red="0" green="0" blue="196" />
     </foreground_color>
@@ -6198,7 +6198,7 @@ $(pv_value)</tooltip>
     <font>
       <opifont.name fontName="Liberation Sans" height="15" style="0" pixels="true">Default</opifont.name>
     </font>
-    <forecolor_alarm_sensitive>true</forecolor_alarm_sensitive>
+    <forecolor_alarm_sensitive>false</forecolor_alarm_sensitive>
     <foreground_color>
       <color name="Controller: FG" red="0" green="0" blue="196" />
     </foreground_color>
