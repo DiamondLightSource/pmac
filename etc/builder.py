@@ -195,18 +195,16 @@ class GeoBrick(DeltaTau):
         # and device specific status PVs
         self.statusT = _pmacStatusT(PORT=name, P=self.P)
         # and the CSS template
-        if ControlIP is not None:
-            # Ensure correct port if tcpip
-            if ControlMode == "tcpip":
-                ControlPort = 1025
-            self.cssT = _GeoBrickCSST(
-                NAME=name,
-                P=self.P,
-                ControlIP=ControlIP,
-                ControlPort=ControlPort,
-                ControlMode=ControlMode,
-                Description=Description
-            )
+        if ControlMode == "tcpip":
+            ControlPort = 1025
+        self.cssT = _GeoBrickCSST(
+            NAME=name,
+            P=self.P,
+            ControlIP=ControlIP,
+            ControlPort=ControlPort,
+            ControlMode=ControlMode,
+            Description=Description
+        )
 
         # instantiate an axis status template for each axis
         assert self.NAxes in range(1,33), "Number of axes (%d) must be in range 1..32" % self.NAxes

@@ -16,11 +16,10 @@ site location of dependencies.
 Release Notes
 =============
 
-R2-4-20 (September XX, 2020)
+R2-4-20 (September 08, 2020)
 =====================
 ### Changes
-* Add CSS screens for dls-pmac-control.py and status
-    * Template is only added if you define ControlIP macro
+* Add CSS screens for dls-pmac-control.py and pmac status
     * Copy style of EDM screens
     * Trajectory, CS, Axes and Debugging screens included
 
