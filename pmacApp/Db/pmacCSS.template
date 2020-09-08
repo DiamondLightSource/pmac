@@ -1,0 +1,26 @@
+#==============================================================================
+# pmacControllerCSS
+#
+# Tags for CSS screens related to the PMAC Controller.
+#
+#==============================================================================
+
+#=================================
+# Macros
+#=================================
+# % macro, NAME, Object name
+# % macro, P, PV prefix
+# % macro, Description, Geobrick description
+# % macro, ControlIP, dls-pmac-control.py IP or HostName
+# % macro, ControlPort, dls-pmac-control.py Port
+# % macro, ControlMode, dls-pmac-control.py Mode (tcp/ip or terminal server)
+
+#=================================
+# CSS screens
+#=================================
+
+# % gui, $(NAME), boyembed, pmacApp_opi/pmac_status_list_embed.opi, P=$(P), DESC=$(Description), CTLIP=$(ControlIP), CTLPORT=$(ControlPort), CTLMODE=$(ControlMode)
+
+# % gui, $(NAME), boyembed, pmacApp_opi/pmac_controller.opi, pmac=$(P)
+
+#=================================

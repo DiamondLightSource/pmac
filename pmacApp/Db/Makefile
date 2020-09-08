@@ -52,6 +52,10 @@ DB += symetrie_hexapod.template
 DB += translated_motor.template
 DB += zform.template
 
+
+# The following templates are used for CSS screens
+DB += pmacCSS.template
+
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
 # <anyname>_template = <templatename>
