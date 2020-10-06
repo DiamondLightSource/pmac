@@ -860,6 +860,49 @@ class moveAxesToSafeSlave(Device,):
     )
 
 
+# Template for reading back encoder-only axes
+class _EncoderReadbackTemplate(AutoSubstitution):
+    TemplateFile = 'encoder_readback.template'
+
+class EncoderReadback(Device):
+    scan_choice_list = [
+        "Passive",
+        ".1 second",
+        ".2 second",
+        ".5 second",
+        "1 second",
+        "2 second",
+        "5 second",
+        "10 second"
+    ]
+    def __init__(self, name, P, Q, PORT, AXIS, DESC, EGU, ERES, PREC, SCAN="0.1 second"):
+        _EncoderReadbackTemplate(
+            name=name,
+            P=P,
+            Q=Q,
+            PORT=PORT,
+            AXIS=AXIS,
+            DESC=DESC,
+            EGU=EGU,
+            ERES=ERES,
+            PREC=PREC,
+            SCAN=SCAN
+        )
+
+    ArgInfo = makeArgInfo(__init__,
+        name = Simple("Object name", str),
+        P    = Simple("PV prefix", str),
+        Q    = Simple("PV suffix", str),
+        PORT = Ident("Controller port", DeltaTau),
+        AXIS = Simple("Axis number", int),
+        DESC = Simple("Description", str),
+        EGU  = Simple("Engineering units", str),
+        ERES = Simple("Encoder resolution", float),
+        PREC = Simple("Readback precision", int),
+        SCAN = Choice("Scan rate", scan_choice_list)
+    )
+
+
 # hiding templates which are just used in includes so as to not
 # dirty the auto list of builder objects (is this the best way to do this?)
 class _hide1(AutoSubstitution):

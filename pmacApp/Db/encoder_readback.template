@@ -1,0 +1,52 @@
+##############################################################
+#
+# Template to read position of encoder on a Geobrick axis.
+#
+##############################################################
+
+# Macros
+# % macro, name, Object name and gui association name
+# % macro, P,    PV prefix
+# % macro, Q,    PV suffix
+# % macro, PORT, PMAC controller Port
+# % macro, AXIS, Axis number
+# % macro, DESC, Description
+# % macro, EGU,  Engineering units
+# % macro, ERES, Encoder resolution
+# % macro, PREC, Readback precision
+# % macro, SCAN, Readback scan rate
+
+# CSS GUI
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_encoder_readback_embed_box.opi, P=$(P),Q=$(Q),DESC=$(DESC), name=$(name=)
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_encoder_readback_embed.opi, P=$(P),Q=$(Q),DESC=$(DESC), name=$(name=)
+
+# EDM GUI
+# % gui, $(name=), edmembed, pmac_encoder_readback_embed.edl, P=$(P),Q=$(Q),DESC=$(DESC)
+
+# Position scale factor
+record(longin, "$(P)$(Q):IX08") {
+  field(SCAN, "Passive")
+  field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VIM_I$(AXIS)08")
+}
+
+# Position in counts
+record(longin, "$(P)$(Q):MX62") {
+  field(SCAN, "Passive")
+  field(PINI, "NO")
+  field(DTYP, "asynInt32")
+  field(INP, "@asyn($(PORT),0)PMAC_VIM_M$(AXIS)62")
+  field(EGU, "Counts")
+}
+
+# Position in EGUs
+record(calc, "$(P)$(Q):RBV") {
+  field(SCAN, "$(SCAN)")
+  field(CALC, "(A*$(ERES))/(B*32)")
+  field(INPA, "$(P)$(Q):MX62 PP")
+  field(INPB, "$(P)$(Q):IX08 PP")
+  field(EGU, "$(EGU)")
+  field(PREC, "$(PREC)")
+  field(DESC, "$(DESC)")
+}

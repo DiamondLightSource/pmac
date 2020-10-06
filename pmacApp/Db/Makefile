@@ -28,6 +28,7 @@ DB += eloss_kill_autohome_records.template
 DB += pmacVariableWrite.template
 DB += pmacVariableRead.template
 DB += autohome.template
+DB += encoder_readback.template
 
 
 # The following templates are used for Coordinate Systems
