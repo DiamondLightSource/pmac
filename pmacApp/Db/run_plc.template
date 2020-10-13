@@ -1,0 +1,36 @@
+##############################################################
+#
+# Run and monitor a PLC on a PMAC controller
+# 
+##############################################################
+
+# Macros
+# % macro, name, Object name and gui association name
+# % macro, P,    PV Prefix
+# % macro, PLC,  PLC number
+# % macro, PORT, PMAC controller Port
+# % macro, DESC, Description
+
+# CSS GUI
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_plc_embed.opi, P=$(P),PLC=$(PLC),DESC=$(DESC), name=$(name=)
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_plc_embed_box.opi, P=$(P),PLC=$(PLC),DESC=$(DESC), name=$(name=)
+
+# EDM GUI
+# % gui, $(name=), edmembed, pmac_plc.edl, P=$(P), PLC=$(PLC), DESC=$(DESC)
+
+# Enable PLC
+record(stringout, "$(P):PLC$(PLC):ENABLE") {
+  field(DESC, "$(DESC)")
+  field(VAL,  "enable plc $(PLC)")
+  field(DTYP, "asynOctetWrite")
+  field(OUT,  "@asyn($(PORT),0)PMAC_C_WRITE_CMD")
+}
+
+# Monitor PLC
+record(bi, "$(P):PLC$(PLC):STATUS") {
+  field(SCAN, ".5 second")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),0)PMAC_VIM_M50$(PLC)")
+  field(ONAM, "Not running")
+  field(ZNAM, "Running")
+}
