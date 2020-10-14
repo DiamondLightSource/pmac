@@ -16,6 +16,16 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-4-22 (October 14 , 2020)
+=====================
+### Changes
+* Add template for enabling a PLC on a pmac controller
+
+R2-4-21 (October 06 , 2020)
+=====================
+### Changes
+* Add template for reading just the encoder position of an axis
+
 R2-4-20 (September 08, 2020)
 =====================
 ### Changes
