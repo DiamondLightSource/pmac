@@ -903,6 +903,28 @@ class EncoderReadback(Device):
     )
 
 
+# Template for running a PLC on a pmac
+class _RunPlcTemplate(AutoSubstitution):
+    TemplateFile = 'run_plc.template'
+
+class RunPlc(Device):
+    def __init__(self, name, BRICK, PLC, DESC):
+        _RunPlcTemplate(
+            name=name,
+            P=BRICK.P,
+            PLC=PLC,
+            PORT=BRICK.name,
+            DESC=DESC
+        )
+
+    ArgInfo = makeArgInfo(__init__,
+        name = Simple("Object name", str),
+        BRICK = Ident("Geobrick/PMAC", GeoBrick),
+        PLC  = Simple("PLC number", int),
+        DESC = Simple("Description", str)
+    )
+
+
 # hiding templates which are just used in includes so as to not
 # dirty the auto list of builder objects (is this the best way to do this?)
 class _hide1(AutoSubstitution):

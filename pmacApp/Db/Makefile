@@ -29,6 +29,7 @@ DB += pmacVariableWrite.template
 DB += pmacVariableRead.template
 DB += autohome.template
 DB += encoder_readback.template
+DB += run_plc.template
 
 
 # The following templates are used for Coordinate Systems
