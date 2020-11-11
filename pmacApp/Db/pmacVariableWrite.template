@@ -2,7 +2,9 @@
 # PMAC or geoBrick via dynamic parameters.
 # % macro, P, Pv Prefix
 # % macro, Q, Pv Suffix
+# % macro, DTYP, asyn DTYP (e.g., asynFloat64, asynInt32)
 # % macro, PORT, Motor controller serial port
+# % macro, TYPE, PMAC variable type (D=double, I=integer, H=hex, S=string)
 # % macro, VAR, Variable on PMAC to write to, e.g. P700
 # % macro, EGU, Engineering units
 # % macro, VARIABLE_PREC, Variable Record precision
@@ -14,8 +16,8 @@
 record(ai, "$(P)$(Q):RBV") {
   field(SCAN, "I/O Intr")
   field(PINI, "NO")
-  field(DTYP, "asynFloat64")
-  field(INP, "@asyn($(PORT),0)PMAC_VDM_$(VAR)")
+  field(DTYP, "$(DTYP=asynFloat64)")
+  field(INP, "@asyn($(PORT),0)PMAC_V$(TYPE=D)M_$(VAR)")
   field(PREC, "$(VARIABLE_PREC)")
   field(EGU, "$(EGU)")
 }
@@ -37,7 +39,7 @@ record(ao, "$(P)$(Q)") {
 
 record(ao, "$(P)$(Q):SET") {
   field(DESC, "Write value to pmac")
-  field(DTYP, "asynFloat64")
+  field(DTYP, "$(DTYP=asynFloat64)")
   field(SDIS, "$(P)$(Q):SYNC.PACT")
-  field(OUT, "@asyn($(PORT),0)PMAC_VDM_$(VAR)")
+  field(OUT, "@asyn($(PORT),0)PMAC_W$(TYPE=D)_$(VAR)")
 }
