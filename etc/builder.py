@@ -404,7 +404,7 @@ class pmacDisableLimitsCheck(Device):
         if self.Axis is None:
             self.Axis = 0
 
-        # model 3 version of pmacDisableLimitsCheck uses port instead of card 
+        # model 3 version of pmacDisableLimitsCheck uses port instead of card
         self.ControllerPort = self.Controller.DeviceName()
         print 'pmacDisableLimitsCheck("%(ControllerPort)s", %(Axis)d, 0)' % self.__dict__
 
@@ -739,9 +739,29 @@ class CS_zform(AutoSubstitution):
 
 @setPortArgInfo
 @add_pmac_variable_write
-class CS_symetrie_hexapod(AutoSubstitution):
+class SymetrieHexapodTemplate(AutoSubstitution):
     Dependencies = (Pmac,)
     TemplateFile = 'symetrie_hexapod.template'
+
+
+class CS_symetrie_hexapod(Device):
+    Dependencies = (Pmac,)
+
+    def __init__(self, P, PORT, COORD, PREC=3):
+        self.__super.__init__()
+        self.__dict__.update(locals())
+        SymetrieHexapodTemplate(P=P, PORT=PORT, COORD=COORD, PREC=PREC)
+
+    def Initialise(self):
+        print('pmacNoCsVelocity("%(PORT)s")' % self.__dict__)
+
+    ArgInfo = makeArgInfo(
+        __init__,
+        P=Simple("Device prefix", str),
+        PORT=Ident("GeoBrick object", GeoBrick),
+        COORD=Simple("Coordinate system number", int),
+        PREC=Simple("Precision of records", int)
+    )
 
 
 class _moveAxesToSafe(Xml):
@@ -816,7 +836,7 @@ class moveAxesToSafeMaster(Device,):
             self.OUTPUTS[output] = self.P + ":POS" + str(output+1) + "_OUT"
             self.INPOS[output] = self.P + ":POS" + str(output+1) + "_SAFE CP"
 
-        
+
     # __init__ arguments
     ArgInfo = makeArgInfo(__init__,
         name = Simple("Name",str),
@@ -827,7 +847,7 @@ class moveAxesToSafeMaster(Device,):
     def addAxis(self, AXIS, POSITION,THRESHOLD):
         _moveAxesToSafe(P=self.P, N = self.axisCounter, AXIS=AXIS, POSITION=POSITION,THRESHOLD=THRESHOLD)
         self.axisCounter += 1
-        
+
         # If this is the last axis to add create the custom calc and instatiate main template
         if self.axisCounter == self.NO_OF_AXES + 1:
             inposCalc = ""
