@@ -81,11 +81,27 @@ record(ao, "$(P):USERXOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):USERXOFF:SYNCPOS") {
+  field(INPA, "$(P):USERXOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):X.SYNC PP")
+  field(OOPT, "Every Time")
+}
+
 substitute "VAR=&$(COORD)Q28,Q=:USERYOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERYOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
+}
+
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):USERYOFF:SYNCPOS") {
+  field(INPA, "$(P):USERYOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):Y.SYNC PP")
+  field(OOPT, "Every Time")
 }
 
 substitute "VAR=&$(COORD)Q29,Q=:USERZOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
@@ -95,11 +111,27 @@ record(ao, "$(P):USERZOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):USERZOFF:SYNCPOS") {
+  field(INPA, "$(P):USERZOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):Z.SYNC PP")
+  field(OOPT, "Every Time")
+}
+
 substitute "VAR=&$(COORD)Q30,Q=:USERPITCHOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERPITCHOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
+}
+
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):USERPITCHOFF:SYNCPOS") {
+  field(INPA, "$(P):USERPITCHOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):PITCH.SYNC PP")
+  field(OOPT, "Every Time")
 }
 
 substitute "VAR=&$(COORD)Q31,Q=:USERYAWOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
@@ -109,11 +141,27 @@ record(ao, "$(P):USERYAWOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):USERYAWOFF:SYNCPOS") {
+  field(INPA, "$(P):USERYAWOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):YAW.SYNC PP")
+  field(OOPT, "Every Time")
+}
+
 substitute "VAR=&$(COORD)Q32,Q=:USERROLLOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERROLLOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
+}
+
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):USERROLLOFF:SYNCPOS") {
+  field(INPA, "$(P):USERROLLOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):ROLL.SYNC PP")
+  field(OOPT, "Every Time")
 }
 
 ## Object Offsets ##
@@ -125,11 +173,27 @@ record(ao, "$(P):OBJECTXOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):OBJECTXOFF:SYNCPOS") {
+  field(INPA, "$(P):OBJECTXOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):X.SYNC PP")
+  field(OOPT, "Every Time")
+}
+
 substitute "VAR=&$(COORD)Q34,Q=:OBJECTYOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):OBJECTYOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
+}
+
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):OBJECTYOFF:SYNCPOS") {
+  field(INPA, "$(P):OBJECTYOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):Y.SYNC PP")
+  field(OOPT, "Every Time")
 }
 
 substitute "VAR=&$(COORD)Q35,Q=:OBJECTZOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
@@ -139,11 +203,27 @@ record(ao, "$(P):OBJECTZOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):OBJECTZOFF:SYNCPOS") {
+  field(INPA, "$(P):OBJECTZOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):Z.SYNC PP")
+  field(OOPT, "Every Time")
+}
+
 substitute "VAR=&$(COORD)Q36,Q=:OBJECTPITCHOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):OBJECTPITCHOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
+}
+
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):OBJECTPITCHOFF:SYNCPOS") {
+  field(INPA, "$(P):OBJECTPITCHOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):PITCH.SYNC PP")
+  field(OOPT, "Every Time")
 }
 
 substitute "VAR=&$(COORD)Q37,Q=:OBJECTYAWOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
@@ -153,11 +233,27 @@ record(ao, "$(P):OBJECTYAWOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):OBJECTYAWOFF:SYNCPOS") {
+  field(INPA, "$(P):OBJECTYAWOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):YAW.SYNC PP")
+  field(OOPT, "Every Time")
+}
+
 substitute "VAR=&$(COORD)Q38,Q=:OBJECTROLLOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):OBJECTROLLOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
+}
+
+# Poke Sync RBV to Demand when offset rbv is updated
+record(calcout, "$(P):OBJECTROLLOFF:SYNCPOS") {
+  field(INPA, "$(P):OBJECTROLLOFF:RBV CP")
+  field(CALC, "1")
+  field(OUT, "$(P):ROLL.SYNC PP")
+  field(OOPT, "Every Time")
 }
 
 ## Machine Limits ##
