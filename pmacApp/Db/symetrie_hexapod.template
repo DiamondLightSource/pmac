@@ -13,8 +13,11 @@
 # % macro, COORD, Co-ordinate system number
 # % macro, PREC, Precision of variables
 # % macro, name, Object name and gui association name
+
 # This associates an edm screen with the template
 # % gui, $(name=), edm, symetrie_hexapod_CS.edl, hexapod=$(P)
+
+
 # % archiver 1 monitor
 record(ai, "$(P):MACHXPOS") {
   field(EGU, "mm")
@@ -69,6 +72,8 @@ record(ai, "$(P):MACHROLLPOS") {
   field(INP, "@asyn($(PORT),0)PMAC_VDM_&$(COORD)Q96")
 }
 
+## User Offsets ##
+
 substitute "VAR=&$(COORD)Q27,Q=:USERXOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
@@ -111,6 +116,8 @@ record(ao, "$(P):USERROLLOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
+## Object Offsets ##
+
 substitute "VAR=&$(COORD)Q33,Q=:OBJECTXOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
@@ -152,6 +159,8 @@ include "pmacVariableWrite.template"
 record(ao, "$(P):OBJECTROLLOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
+
+## Machine Limits ##
 
 substitute "VAR=&$(COORD)Q39,Q=:MACHXNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
@@ -232,6 +241,8 @@ include "pmacVariableWrite.template"
 record(ao, "$(P):MACHROLLPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
+
+## User Limits ##
 
 substitute "VAR=&$(COORD)Q51,Q=:USERXNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
@@ -316,6 +327,8 @@ include "pmacVariableWrite.template"
 record(ao, "$(P):USERROLLPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
+
+## General Config and Status ##
 
 substitute "VAR=&$(COORD)Q63,Q=:STALLPERCENT,EGU=%,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
@@ -506,6 +519,8 @@ record(calcout, "$(P):ON_ERROR") {
 
 record(busy, "$(P):WAIT_MOVE") {
 }
+
+## Object User Offsets ##
 
 # % archiver 1 monitor
 record(ao, "$(P):OUXOFF") {
