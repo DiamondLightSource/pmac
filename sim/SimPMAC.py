@@ -517,7 +517,7 @@ class PMACSimulator():
                         num = num[:index + 1]
                         writing = True
                     ivar = int(filter(str.isdigit, num))
-                    if ivar > 99 and ivar < 801:
+                    if ivar > 99 and ivar < 901:
                         axno = int(ivar / 100)
                         # print "Axis no: " + str(axno)
                         varno = ivar - (100 * axno)
