@@ -485,7 +485,7 @@ class PMACSimulator():
                 if 'CPU' in word:
                     resp = "DSP56321"
                 elif 'P' in word:
-                    if '#' in word:
+                    if '#' in word or word.strip() == 'P':
                         resp = str(self.axes[self.caxis].readPosition())
                     else:
                         index = word.find('P')
