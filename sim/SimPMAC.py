@@ -149,7 +149,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 
             logging.debug("Request: %s", message)
             response = self.server.simulator.parse(message)
-            logging.debug("Response: %s", response)
+            logging.debug("Response: %s", response.replace('\r', '\\r'))
             self.request.sendall(response + '\6')
 
 
