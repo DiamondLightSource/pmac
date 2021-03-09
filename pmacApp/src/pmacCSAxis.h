@@ -8,6 +8,7 @@
 #ifndef PMACAPP_SRC_PMACCSAXIS_H_
 #define PMACAPP_SRC_PMACCSAXIS_H_
 
+#include "shareLib.h"
 #include "asynMotorController.h"
 #include "asynMotorAxis.h"
 #include "pmacCallbackInterface.h"

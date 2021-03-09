@@ -8,6 +8,7 @@
 #ifndef PMACAPP_SRC_PMACCSMONITOR_H_
 #define PMACAPP_SRC_PMACCSMONITOR_H_
 
+#include "shareLib.h"
 #include "asynMotorController.h"
 #include "asynMotorAxis.h"
 
