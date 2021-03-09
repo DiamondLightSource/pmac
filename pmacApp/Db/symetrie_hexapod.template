@@ -504,6 +504,12 @@ record(calc, "$(P):ERR") {
   field(HHSV, "MAJOR")
 }
 
+record(stringout, "$(P):HOME") {
+  field(VAL, "enable PLC9")
+  field(DTYP, "asynOctetWrite")
+  field(OUT,  "@asyn($(PORT),0)PMAC_C_WRITE_CMD")
+}
+
 # % gui, $(name=), sevr
 # % archiver 1 monitor
 record(mbbi, "$(P):RECOVERYSTA") {
