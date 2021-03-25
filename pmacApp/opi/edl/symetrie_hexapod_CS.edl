@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 141
-y 302
+x 1188
+y 62
 w 1341
 h 555
 font "helvetica-medium-r-18.0"
@@ -25,27 +25,43 @@ snapToGrid
 gridSize 5
 endScreenProperties
 
-# (Static Text)
-object activeXTextClass
+# (Lines)
+object activeLineClass
 beginObjectProperties
 major 4
-minor 1
+minor 0
 release 1
-x 195
-y 480
-w 120
-h 55
-font "helvetica-bold-r-18.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 16
-useDisplayBg
-value {
-  "Motors"
-  "Stationary"
+x 270
+y 150
+w 570
+h 40
+lineColor index 18
+fillColor index 3
+lineWidth 3
+arrows "to"
+numPoints 2
+xPoints {
+  0 270
+  1 840
 }
-border
+yPoints {
+  0 150
+  1 190
+}
 endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 195
+y 140
+w 120
+h 330
+
+beginGroup
 
 # (Group)
 object activeGroupClass
@@ -310,7 +326,7 @@ fillColor index 41
 closePolygon
 numPoints 5
 xPoints {
-  0 255
+  0 256
   1 250
   2 265
   3 245
@@ -352,6 +368,32 @@ endObjectProperties
 
 endGroup
 
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 195
+y 480
+w 120
+h 55
+font "helvetica-bold-r-18.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 16
+useDisplayBg
+value {
+  "Motors"
+  "Stationary"
+}
+border
 endObjectProperties
 
 # (Group)
@@ -667,34 +709,9 @@ beginObjectProperties
 major 4
 minor 0
 release 1
-x 255
-y 150
-w 615
-h 35
-lineColor index 18
-fillColor index 3
-lineWidth 3
-arrows "from"
-numPoints 2
-xPoints {
-  0 870
-  1 255
-}
-yPoints {
-  0 185
-  1 150
-}
-endObjectProperties
-
-# (Lines)
-object activeLineClass
-beginObjectProperties
-major 4
-minor 0
-release 1
-x 255
-y 340
-w 615
+x 320
+y 345
+w 500
 h 115
 lineColor index 24
 fillColor index 3
@@ -702,12 +719,12 @@ lineWidth 3
 arrows "to"
 numPoints 2
 xPoints {
-  0 255
-  1 870
+  0 320
+  1 820
 }
 yPoints {
-  0 455
-  1 340
+  0 460
+  1 345
 }
 endObjectProperties
 
@@ -734,7 +751,7 @@ minor 0
 release 0
 x 5
 y 45
-w 180
+w 205
 h 220
 lineColor index 42
 fill
@@ -1427,7 +1444,7 @@ minor 0
 release 0
 x 380
 y 75
-w 100
+w 95
 h 30
 controlPv "$(hexapod):USERXNLIM"
 fgColor index 25
@@ -1446,7 +1463,7 @@ minor 0
 release 0
 x 380
 y 110
-w 100
+w 95
 h 30
 controlPv "$(hexapod):USERYNLIM"
 fgColor index 25
@@ -1465,7 +1482,7 @@ minor 0
 release 0
 x 380
 y 145
-w 100
+w 95
 h 30
 controlPv "$(hexapod):USERZNLIM"
 fgColor index 25
@@ -1484,7 +1501,7 @@ minor 0
 release 0
 x 380
 y 180
-w 100
+w 95
 h 30
 controlPv "$(hexapod):USERPITCHNLIM"
 fgColor index 25
@@ -1503,7 +1520,7 @@ minor 0
 release 0
 x 380
 y 215
-w 100
+w 95
 h 30
 controlPv "$(hexapod):USERYAWNLIM"
 fgColor index 25
@@ -1522,7 +1539,7 @@ minor 0
 release 0
 x 380
 y 250
-w 100
+w 95
 h 30
 controlPv "$(hexapod):USERROLLNLIM"
 fgColor index 25
@@ -2601,16 +2618,16 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 60
+x 55
 y 230
-w 120
+w 70
 h 30
 controlPv "$(hexapod):USERROLLOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
 fill
-font "arial-bold-r-14.0"
+font "arial-bold-r-12.0"
 fontAlign "center"
 endObjectProperties
 
@@ -2622,7 +2639,7 @@ minor 1
 release 1
 x 10
 y 230
-w 45
+w 40
 h 30
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -2642,7 +2659,7 @@ minor 1
 release 1
 x 10
 y 195
-w 45
+w 40
 h 30
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -2660,16 +2677,16 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 60
+x 55
 y 195
-w 120
+w 70
 h 30
 controlPv "$(hexapod):USERYAWOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
 fill
-font "arial-bold-r-14.0"
+font "arial-bold-r-12.0"
 fontAlign "center"
 endObjectProperties
 
@@ -2679,16 +2696,16 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 60
+x 55
 y 160
-w 120
+w 70
 h 30
 controlPv "$(hexapod):USERPITCHOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
 fill
-font "arial-bold-r-14.0"
+font "arial-bold-r-12.0"
 fontAlign "center"
 endObjectProperties
 
@@ -2700,7 +2717,7 @@ minor 1
 release 1
 x 10
 y 160
-w 45
+w 40
 h 30
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -2718,16 +2735,16 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 60
+x 55
 y 125
-w 120
+w 70
 h 30
 controlPv "$(hexapod):USERZOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
 fill
-font "arial-bold-r-14.0"
+font "arial-bold-r-12.0"
 fontAlign "center"
 endObjectProperties
 
@@ -2739,7 +2756,7 @@ minor 1
 release 1
 x 10
 y 125
-w 45
+w 40
 h 30
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -2759,7 +2776,7 @@ minor 1
 release 1
 x 10
 y 90
-w 45
+w 40
 h 30
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -2777,16 +2794,16 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 60
-y 90
-w 120
-h 30
+x 55
+y 100
+w 70
+h 20
 controlPv "$(hexapod):USERYOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
 fill
-font "arial-bold-r-14.0"
+font "arial-bold-r-12.0"
 fontAlign "center"
 endObjectProperties
 
@@ -2798,7 +2815,7 @@ minor 1
 release 1
 x 10
 y 55
-w 45
+w 40
 h 30
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -2816,16 +2833,16 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 60
+x 55
 y 55
-w 120
-h 30
+w 70
+h 20
 controlPv "$(hexapod):USERXOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
 fill
-font "arial-bold-r-14.0"
+font "arial-bold-r-12.0"
 fontAlign "center"
 endObjectProperties
 
@@ -3611,16 +3628,16 @@ beginObjectProperties
 major 4
 minor 0
 release 1
-x 185
+x 210
 y 225
-w 70
+w 45
 h 0
 lineColor index 42
 fillColor index 3
 lineWidth 3
 numPoints 2
 xPoints {
-  0 185
+  0 210
   1 255
 }
 yPoints {
@@ -4074,5 +4091,113 @@ bgColor index 3
 fill
 font "arial-bold-r-14.0"
 fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 135
+y 55
+w 70
+h 20
+controlPv "$(hexapod):USERXOFF:RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-12.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 130
+y 100
+w 75
+h 20
+controlPv "$(hexapod):USERYOFF:RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-12.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 130
+y 125
+w 75
+h 30
+controlPv "$(hexapod):USERZOFF:RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-12.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 130
+y 160
+w 75
+h 30
+controlPv "$(hexapod):USERPITCHOFF:RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-12.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 130
+y 195
+w 75
+h 30
+controlPv "$(hexapod):USERYAWOFF:RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-12.0"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 130
+y 230
+w 75
+h 30
+controlPv "$(hexapod):USERROLLOFF:RBV"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-12.0"
 endObjectProperties
 
