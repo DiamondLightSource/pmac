@@ -149,7 +149,7 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
 
             logging.debug("Request: %s", message)
             response = self.server.simulator.parse(message)
-            logging.debug("Response: %s", response)
+            logging.debug("Response: %s", response.replace('\r', '\\r'))
             self.request.sendall(response + '\6')
 
 
@@ -485,7 +485,7 @@ class PMACSimulator():
                 if 'CPU' in word:
                     resp = "DSP56321"
                 elif 'P' in word:
-                    if '#' in word:
+                    if '#' in word or word.strip() == 'P':
                         resp = str(self.axes[self.caxis].readPosition())
                     else:
                         index = word.find('P')
@@ -517,7 +517,7 @@ class PMACSimulator():
                         num = num[:index + 1]
                         writing = True
                     ivar = int(filter(str.isdigit, num))
-                    if ivar > 99 and ivar < 801:
+                    if ivar > 99 and ivar < 901:
                         axno = int(ivar / 100)
                         # print "Axis no: " + str(axno)
                         varno = ivar - (100 * axno)
