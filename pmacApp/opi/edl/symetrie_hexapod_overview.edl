@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 17
-y 42
+x 130
+y 108
 w 1393
 h 554
 font "helvetica-medium-r-18.0"
@@ -81,7 +81,7 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 860
+x 855
 y 175
 w 120
 h 295
@@ -94,196 +94,20 @@ beginObjectProperties
 major 4
 minor 0
 release 1
-x 920
+x 915
 y 355
 w 35
 h 100
 lineColor index 8
 fill
 fillColor index 6
-closePolygon
-numPoints 4
-xPoints {
-  0 940
-  1 920
-  2 935
-  3 955
-}
-yPoints {
-  0 355
-  1 455
-  2 455
-  3 355
-}
-endObjectProperties
-
-# (Lines)
-object activeLineClass
-beginObjectProperties
-major 4
-minor 0
-release 1
-x 890
-y 355
-w 35
-h 100
-lineColor index 8
-fill
-fillColor index 6
-closePolygon
-numPoints 4
-xPoints {
-  0 905
-  1 925
-  2 910
-  3 890
-}
-yPoints {
-  0 355
-  1 455
-  2 455
-  3 355
-}
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 860
-y 455
-w 120
-h 15
-lineColor index 7
-fill
-fillColor index 6
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 875
-y 340
-w 90
-h 15
-lineColor index 24
-fill
-fillColor index 22
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 910
-y 195
-w 20
-h 145
-lineColor index 6
-fill
-fillColor index 4
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 900
-y 185
-w 40
-h 10
-lineColor index 6
-fill
-fillColor index 4
-endObjectProperties
-
-# (Lines)
-object activeLineClass
-beginObjectProperties
-major 4
-minor 0
-release 1
-x 875
-y 355
-w 20
-h 100
-lineColor index 7
-fill
-fillColor index 5
-closePolygon
-numPoints 4
-xPoints {
-  0 880
-  1 875
-  2 890
-  3 895
-}
-yPoints {
-  0 355
-  1 455
-  2 455
-  3 355
-}
-endObjectProperties
-
-# (Lines)
-object activeLineClass
-beginObjectProperties
-major 4
-minor 0
-release 1
-x 945
-y 355
-w 20
-h 100
-lineColor index 7
-fill
-fillColor index 5
-closePolygon
-numPoints 4
-xPoints {
-  0 960
-  1 945
-  2 950
-  3 965
-}
-yPoints {
-  0 355
-  1 355
-  2 455
-  3 455
-}
-endObjectProperties
-
-# (Lines)
-object activeLineClass
-beginObjectProperties
-major 4
-minor 0
-release 1
-x 920
-y 355
-w 35
-h 100
-lineColor index 6
-fill
-fillColor index 4
 closePolygon
 numPoints 4
 xPoints {
   0 935
-  1 955
-  2 940
-  3 920
+  1 915
+  2 930
+  3 950
 }
 yPoints {
   0 355
@@ -303,16 +127,105 @@ x 885
 y 355
 w 35
 h 100
-lineColor index 6
+lineColor index 8
 fill
-fillColor index 4
+fillColor index 6
 closePolygon
 numPoints 4
 xPoints {
-  0 905
-  1 885
-  2 900
-  3 920
+  0 900
+  1 920
+  2 905
+  3 885
+}
+yPoints {
+  0 355
+  1 455
+  2 455
+  3 355
+}
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 855
+y 455
+w 120
+h 15
+lineColor index 7
+fill
+fillColor index 6
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 870
+y 340
+w 90
+h 15
+lineColor index 24
+fill
+fillColor index 22
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 905
+y 195
+w 20
+h 145
+lineColor index 6
+fill
+fillColor index 4
+endObjectProperties
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 895
+y 185
+w 40
+h 10
+lineColor index 6
+fill
+fillColor index 4
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 870
+y 355
+w 20
+h 100
+lineColor index 7
+fill
+fillColor index 5
+closePolygon
+numPoints 4
+xPoints {
+  0 875
+  1 870
+  2 885
+  3 890
 }
 yPoints {
   0 355
@@ -328,7 +241,94 @@ beginObjectProperties
 major 4
 minor 0
 release 1
-x 910
+x 940
+y 355
+w 20
+h 100
+lineColor index 7
+fill
+fillColor index 5
+closePolygon
+numPoints 4
+xPoints {
+  0 955
+  1 940
+  2 945
+  3 960
+}
+yPoints {
+  0 355
+  1 355
+  2 455
+  3 455
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 915
+y 355
+w 35
+h 100
+lineColor index 6
+fill
+fillColor index 4
+closePolygon
+numPoints 4
+xPoints {
+  0 930
+  1 950
+  2 935
+  3 915
+}
+yPoints {
+  0 355
+  1 455
+  2 455
+  3 355
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 880
+y 355
+w 35
+h 100
+lineColor index 6
+fill
+fillColor index 4
+closePolygon
+numPoints 4
+xPoints {
+  0 900
+  1 880
+  2 895
+  3 915
+}
+yPoints {
+  0 355
+  1 455
+  2 455
+  3 355
+}
+endObjectProperties
+
+# (Lines)
+object activeLineClass
+beginObjectProperties
+major 4
+minor 0
+release 1
+x 905
 y 175
 w 20
 h 20
@@ -338,11 +338,11 @@ fillColor index 17
 closePolygon
 numPoints 5
 xPoints {
-  0 920
-  1 915
-  2 930
-  3 910
-  4 925
+  0 915
+  1 910
+  2 925
+  3 905
+  4 920
 }
 yPoints {
   0 175
@@ -359,7 +359,7 @@ beginObjectProperties
 major 4
 minor 0
 release 1
-x 920
+x 915
 y 185
 w 0
 h 155
@@ -369,8 +369,8 @@ lineWidth 3
 arrows "to"
 numPoints 2
 xPoints {
-  0 920
-  1 920
+  0 915
+  1 915
 }
 yPoints {
   0 340
@@ -390,7 +390,7 @@ minor 0
 release 0
 x 355
 y 305
-w 475
+w 480
 h 215
 lineColor index 24
 fill
@@ -653,7 +653,7 @@ minor 0
 release 0
 x 355
 y 45
-w 475
+w 480
 h 215
 lineColor index 18
 fill
@@ -689,7 +689,7 @@ minor 1
 release 1
 x 405
 y 50
-w 155
+w 160
 h 25
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -707,9 +707,9 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 650
+x 665
 y 50
-w 155
+w 160
 h 25
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -1248,7 +1248,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 565
+x 575
 y 50
 w 80
 h 25
@@ -1268,7 +1268,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 75
 w 80
 h 25
@@ -1278,6 +1278,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1286,7 +1287,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 105
 w 80
 h 25
@@ -1296,6 +1297,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1304,7 +1306,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 135
 w 80
 h 25
@@ -1314,6 +1316,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1322,7 +1325,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 165
 w 80
 h 25
@@ -1332,6 +1335,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1340,7 +1344,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 195
 w 80
 h 25
@@ -1350,6 +1354,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1358,7 +1363,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 225
 w 80
 h 25
@@ -1368,6 +1373,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Static Text)
@@ -1717,7 +1723,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 485
 w 80
 h 25
@@ -1727,6 +1733,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1735,7 +1742,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 455
 w 80
 h 25
@@ -1745,6 +1752,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1753,7 +1761,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 425
 w 80
 h 25
@@ -1763,6 +1771,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1771,7 +1780,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 395
 w 80
 h 25
@@ -1781,6 +1790,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1789,7 +1799,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 365
 w 80
 h 25
@@ -1799,6 +1809,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Textupdate)
@@ -1807,7 +1818,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 565
+x 575
 y 335
 w 80
 h 25
@@ -1817,6 +1828,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+fontAlign "center"
 endObjectProperties
 
 # (Static Text)
@@ -1827,7 +1839,7 @@ minor 1
 release 1
 x 405
 y 310
-w 155
+w 160
 h 25
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -1845,9 +1857,9 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 650
+x 665
 y 310
-w 155
+w 160
 h 25
 font "helvetica-bold-r-14.0"
 fontAlign "center"
@@ -1865,7 +1877,7 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 565
+x 575
 y 310
 w 80
 h 25
@@ -2364,7 +2376,7 @@ minor 0
 release 0
 x 485
 y 75
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERXNLIM:RBV"
 fgColor index 16
@@ -2382,7 +2394,7 @@ minor 0
 release 0
 x 485
 y 105
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERYNLIM:RBV"
 fgColor index 16
@@ -2400,7 +2412,7 @@ minor 0
 release 0
 x 485
 y 135
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERZNLIM:RBV"
 fgColor index 16
@@ -2418,7 +2430,7 @@ minor 0
 release 0
 x 485
 y 165
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERPITCHNLIM:RBV"
 fgColor index 16
@@ -2436,7 +2448,7 @@ minor 0
 release 0
 x 485
 y 195
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERYAWNLIM:RBV"
 fgColor index 16
@@ -2454,7 +2466,7 @@ minor 0
 release 0
 x 485
 y 225
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERROLLNLIM:RBV"
 fgColor index 16
@@ -2470,7 +2482,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 225
 w 75
 h 25
@@ -2489,7 +2501,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 195
 w 75
 h 25
@@ -2508,7 +2520,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 165
 w 75
 h 25
@@ -2527,7 +2539,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 135
 w 75
 h 25
@@ -2546,7 +2558,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 105
 w 75
 h 25
@@ -2565,7 +2577,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 75
 w 75
 h 25
@@ -2584,9 +2596,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 75
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERXPLIM:RBV"
 fgColor index 16
@@ -2602,9 +2614,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 105
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERYPLIM:RBV"
 fgColor index 16
@@ -2620,9 +2632,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 135
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERZPLIM:RBV"
 fgColor index 16
@@ -2638,9 +2650,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 165
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERPITCHPLIM:RBV"
 fgColor index 16
@@ -2656,9 +2668,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 195
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERYAWPLIM:RBV"
 fgColor index 16
@@ -2674,9 +2686,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 225
-w 75
+w 80
 h 25
 controlPv "$(hexapod):USERROLLPLIM:RBV"
 fgColor index 16
@@ -2808,7 +2820,7 @@ minor 0
 release 0
 x 485
 y 335
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHXNLIM:RBV"
 fgColor index 16
@@ -2826,7 +2838,7 @@ minor 0
 release 0
 x 485
 y 365
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHYNLIM:RBV"
 fgColor index 16
@@ -2844,7 +2856,7 @@ minor 0
 release 0
 x 485
 y 395
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHZNLIM:RBV"
 fgColor index 16
@@ -2862,7 +2874,7 @@ minor 0
 release 0
 x 485
 y 425
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHPITCHNLIM:RBV"
 fgColor index 16
@@ -2880,7 +2892,7 @@ minor 0
 release 0
 x 485
 y 455
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHYAWNLIM:RBV"
 fgColor index 16
@@ -2898,7 +2910,7 @@ minor 0
 release 0
 x 485
 y 485
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHROLLNLIM:RBV"
 fgColor index 16
@@ -3034,7 +3046,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 485
 w 75
 h 25
@@ -3053,7 +3065,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 455
 w 75
 h 25
@@ -3072,7 +3084,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 425
 w 75
 h 25
@@ -3091,7 +3103,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 395
 w 75
 h 25
@@ -3110,7 +3122,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 365
 w 75
 h 25
@@ -3129,7 +3141,7 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 650
+x 665
 y 335
 w 75
 h 25
@@ -3148,9 +3160,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 335
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHXPLIM:RBV"
 fgColor index 16
@@ -3166,9 +3178,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 365
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHYPLIM:RBV"
 fgColor index 16
@@ -3184,9 +3196,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 395
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHZPLIM:RBV"
 fgColor index 16
@@ -3202,9 +3214,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 425
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHPITCHPLIM:RBV"
 fgColor index 16
@@ -3220,9 +3232,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 455
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHYAWPLIM:RBV"
 fgColor index 16
@@ -3238,9 +3250,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 730
+x 745
 y 485
-w 75
+w 80
 h 25
 controlPv "$(hexapod):MACHROLLPLIM:RBV"
 fgColor index 16

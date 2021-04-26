@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1292
-y 194
-w 598
-h 344
+x 1555
+y 448
+w 599
+h 352
 font "helvetica-medium-r-18.0"
 ctlFont "courier-bold-r-18.0"
 btnFont "helvetica-medium-r-18.0"
@@ -31,9 +31,9 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 215
+x 210
 y 270
-w 170
+w 120
 h 30
 fgColor index 25
 onColor index 3
@@ -3141,9 +3141,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 215
+x 210
 y 305
-w 170
+w 120
 h 25
 controlPv "$(hexapod):RECOVERYSTA"
 fgColor index 16
@@ -3159,25 +3159,20 @@ beginObjectProperties
 major 4
 minor 4
 release 0
-x 500
+x 505
 y 305
-w 70
+w 65
 h 25
 fgColor index 43
 bgColor index 3
 topShadowColor index 1
 botShadowColor index 11
 font "arial-bold-r-14.0"
-buttonLabel "More..."
+buttonLabel "Offsets"
 numPvs 4
-numDsps 2
+numDsps 1
 displayFileName {
-  0 "symetrie_hexapod_overview"
-  1 "symetrie_hexapod_dynamic_offsets"
-}
-menuLabel {
-  0 "Overview"
-  1 "Offsets"
+  0 "symetrie_hexapod_dynamic_offsets"
 }
 endObjectProperties
 
@@ -3187,10 +3182,10 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 420
-y 305
-w 75
-h 25
+x 335
+y 270
+w 55
+h 30
 fgColor index 25
 onColor index 3
 offColor index 3
@@ -3202,5 +3197,28 @@ onLabel "Home"
 offLabel "Home"
 3d
 font "helvetica-bold-r-14.0"
+endObjectProperties
+
+# (Related Display)
+object relatedDisplayClass
+beginObjectProperties
+major 4
+minor 4
+release 0
+x 420
+y 305
+w 80
+h 25
+fgColor index 43
+bgColor index 3
+topShadowColor index 1
+botShadowColor index 11
+font "arial-bold-r-14.0"
+buttonLabel "Overview"
+numPvs 4
+numDsps 1
+displayFileName {
+  0 "symetrie_hexapod_overview"
+}
 endObjectProperties
 
