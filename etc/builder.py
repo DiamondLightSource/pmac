@@ -747,16 +747,17 @@ class SymetrieHexapodTemplate(AutoSubstitution):
 class CS_symetrie_hexapod(Device):
     Dependencies = (Pmac,)
 
-    def __init__(self, P, PORT, COORD, PREC=3):
+    def __init__(self, name, P, PORT, COORD, PREC=3):
         self.__super.__init__()
         self.__dict__.update(locals())
-        SymetrieHexapodTemplate(P=P, PORT=PORT, COORD=COORD, PREC=PREC)
+        SymetrieHexapodTemplate(name=name, P=P, PORT=PORT, COORD=COORD, PREC=PREC)
 
     def Initialise(self):
         print('pmacNoCsVelocity("%(PORT)s")' % self.__dict__)
 
     ArgInfo = makeArgInfo(
         __init__,
+        name = Simple("Object name", str),
         P=Simple("Device prefix", str),
         PORT=Ident("GeoBrick object", GeoBrick),
         COORD=Simple("Coordinate system number", int),
