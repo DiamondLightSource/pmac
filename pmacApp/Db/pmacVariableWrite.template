@@ -8,6 +8,9 @@
 # % macro, VAR, Variable on PMAC to write to, e.g. P700
 # % macro, EGU, Engineering units
 # % macro, VARIABLE_PREC, Variable Record precision
+# % macro, LABEL, Label for GUI
+
+# % gui, $(name=), edmembed, pmacVariableWrite.edl, P=$(P), Q=$(Q), LABEL=$(LABEL)
 
 ##########################################
 # Records for writing to PMAC variables
