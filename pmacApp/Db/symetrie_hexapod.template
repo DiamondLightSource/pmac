@@ -10,6 +10,7 @@
 # symetrie hexapod CS
 # % macro, P, Pv Prefix
 # % macro, PORT, Motor controller serial port
+# % macro, BRICK, PV prefix for brick
 # % macro, COORD, Co-ordinate system number
 # % macro, RX, Name of RX axis (axis 4)
 # % macro, RY, Name of RY axis (axis 5)
@@ -18,7 +19,7 @@
 # % macro, name, Object name and gui association name
 
 # This associates an edm screen with the template
-# % gui, $(name=), edm, symetrie_hexapod_CS.edl, hexapod=$(P),RX=$(RX),RY=$(RY),RZ=$(RZ)
+# % gui, $(name=), edm, symetrie_hexapod_CS.edl, hexapod=$(P),RX=$(RX),RY=$(RY),RZ=$(RZ),BRICK=$(BRICK),COORD=$(COORD)
 
 
 # % archiver 1 monitor
@@ -429,7 +430,7 @@ record(ao, "$(P):USERRZPLIM:SET") {
 
 ## General Config and Status ##
 
-substitute "VAR=&$(COORD)Q63,Q=:STALLPERCENT,EGU=%,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q63,Q=:STALLPERCENT,EGU=%,VARIABLE_PREC=2"
 include "pmacVariableWrite.template"
 
 # % archiver 1 monitor

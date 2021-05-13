@@ -751,7 +751,7 @@ class CS_symetrie_hexapod(Device):
         self.__super.__init__()
         self.__dict__.update(locals())
         SymetrieHexapodTemplate(
-            name=name, P=P, PORT=PORT, COORD=COORD, RX=RX, RY=RY, RZ=RZ, PREC=PREC
+            name=name, P=P, PORT=PORT, BRICK=PORT.P, COORD=COORD, RX=RX, RY=RY, RZ=RZ, PREC=PREC
         )
 
     def Initialise(self):
