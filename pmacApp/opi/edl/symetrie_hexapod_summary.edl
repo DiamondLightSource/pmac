@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1161
-y 636
+x 260
+y 310
 w 599
 h 352
 font "helvetica-medium-r-18.0"
@@ -21,6 +21,7 @@ topShadowColor index 1
 botShadowColor index 11
 title "Symetrie Hexapod - $(hexapod)"
 showGrid
+snapToGrid
 gridSize 5
 endScreenProperties
 
@@ -31,9 +32,9 @@ major 4
 minor 1
 release 0
 x 210
-y 270
-w 120
-h 30
+y 275
+w 75
+h 25
 fgColor index 25
 onColor index 3
 offColor index 3
@@ -41,8 +42,8 @@ topShadowColor index 1
 botShadowColor index 11
 controlPv "$(hexapod):RECOVER.PROC"
 pressValue "1"
-onLabel "Recover to Ref"
-offLabel "Recover to Ref"
+onLabel "Recover"
+offLabel "Recover"
 3d
 font "helvetica-bold-r-14.0"
 endObjectProperties
@@ -171,9 +172,9 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 420
+x 415
 y 270
-w 150
+w 160
 h 30
 fgColor index 22
 onColor index 3
@@ -232,9 +233,9 @@ beginObjectProperties
 major 10
 minor 0
 release 0
-x 210
-y 305
-w 120
+x 290
+y 275
+w 100
 h 25
 controlPv "$(hexapod):RECOVERYSTA"
 fgColor index 16
@@ -242,6 +243,7 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-14.0"
+fontAlign "center"
 endObjectProperties
 
 # (Related Display)
@@ -250,8 +252,8 @@ beginObjectProperties
 major 4
 minor 4
 release 0
-x 505
-y 305
+x 510
+y 310
 w 65
 h 25
 fgColor index 43
@@ -273,10 +275,10 @@ beginObjectProperties
 major 4
 minor 1
 release 0
-x 335
-y 270
-w 55
-h 30
+x 210
+y 310
+w 110
+h 25
 fgColor index 25
 onColor index 3
 offColor index 3
@@ -284,8 +286,8 @@ topShadowColor index 1
 botShadowColor index 11
 controlPv "$(hexapod):HOME.PROC"
 pressValue "1"
-onLabel "Home"
-offLabel "Home"
+onLabel "Home & Reset"
+offLabel "Home & Reset"
 3d
 font "helvetica-bold-r-14.0"
 endObjectProperties
@@ -296,9 +298,9 @@ beginObjectProperties
 major 4
 minor 4
 release 0
-x 420
-y 305
-w 80
+x 415
+y 310
+w 85
 h 25
 fgColor index 43
 bgColor index 3
@@ -3243,5 +3245,24 @@ endGroup
 visPv "CALC\\\{A&1\}(BL07I-MO-HEX-03:RZ:ELOSS)"
 visMin "1"
 visMax "2"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 325
+y 310
+w 65
+h 25
+controlPv "$(hexapod):ABSINITSTA"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
 endObjectProperties
 
