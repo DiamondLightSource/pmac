@@ -3,8 +3,8 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1555
-y 448
+x 1157
+y 636
 w 599
 h 352
 font "helvetica-medium-r-18.0"
@@ -3063,23 +3063,6 @@ visMin "1"
 visMax "2"
 endObjectProperties
 
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 165
-y 275
-w 20
-h 20
-controlPv "$(hexapod):HEXSTA"
-lineColor index 14
-onColor index 20
-offColor index 24
-numBits 1
-endObjectProperties
-
 # (Static Text)
 object activeXTextClass
 beginObjectProperties
@@ -3097,23 +3080,6 @@ useDisplayBg
 value {
   "General Status"
 }
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 165
-y 310
-w 20
-h 20
-controlPv "$(hexapod):MOTIONSTA"
-lineColor index 14
-onColor index 20
-offColor index 24
-numBits 1
 endObjectProperties
 
 # (Static Text)
@@ -3220,5 +3186,63 @@ numDsps 1
 displayFileName {
   0 "symetrie_hexapod_overview"
 }
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 165
+y 275
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 5
+minValues {
+  3 1
+}
+maxValues {
+  1 1
+  3 100000
+}
+controlPvs {
+  0 "$(hexapod):HEXSTA"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
+endObjectProperties
+
+# (Symbol)
+object activeSymbolClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 165
+y 310
+w 20
+h 20
+file "symbols-traffic-light-symbol.edl"
+numStates 5
+minValues {
+  3 1
+}
+maxValues {
+  1 1
+  3 100000
+}
+controlPvs {
+  0 "$(hexapod):MOTIONSTA"
+}
+numPvs 1
+useOriginalSize
+useOriginalColors
+fgColor index 14
+bgColor index 3
 endObjectProperties
 

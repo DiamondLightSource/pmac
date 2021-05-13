@@ -11,11 +11,14 @@
 # % macro, P, Pv Prefix
 # % macro, PORT, Motor controller serial port
 # % macro, COORD, Co-ordinate system number
+# % macro, RX, Name of RX axis (axis 4)
+# % macro, RY, Name of RY axis (axis 5)
+# % macro, RZ, Name of RZ axis (axis 6)
 # % macro, PREC, Precision of variables
 # % macro, name, Object name and gui association name
 
 # This associates an edm screen with the template
-# % gui, $(name=), edm, symetrie_hexapod_CS.edl, hexapod=$(P)
+# % gui, $(name=), edm, symetrie_hexapod_CS.edl, hexapod=$(P),RX=$(RX),RY=$(RY),RZ=$(RZ)
 
 
 # % archiver 1 monitor
@@ -46,7 +49,7 @@ record(ai, "$(P):MACHZPOS") {
 }
 
 # % archiver 1 monitor
-record(ai, "$(P):MACHPITCHPOS") {
+record(ai, "$(P):MACHRXPOS") {
   field(EGU, "deg")
   field(PREC, "$(PREC=3)")
   field(SCAN, "I/O Intr")
@@ -55,7 +58,7 @@ record(ai, "$(P):MACHPITCHPOS") {
 }
 
 # % archiver 1 monitor
-record(ai, "$(P):MACHYAWPOS") {
+record(ai, "$(P):MACHRYPOS") {
   field(EGU, "deg")
   field(PREC, "$(PREC=3)")
   field(SCAN, "I/O Intr")
@@ -64,7 +67,7 @@ record(ai, "$(P):MACHYAWPOS") {
 }
 
 # % archiver 1 monitor
-record(ai, "$(P):MACHROLLPOS") {
+record(ai, "$(P):MACHRZPOS") {
   field(EGU, "deg")
   field(PREC, "$(PREC=3)")
   field(SCAN, "I/O Intr")
@@ -119,48 +122,48 @@ record(calcout, "$(P):USERZOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q30,Q=:USERPITCHOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q30,Q=:USERRXOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):USERPITCHOFF:SET") {
+record(ao, "$(P):USERRXOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
 # Poke Sync RBV to Demand when offset rbv is updated
-record(calcout, "$(P):USERPITCHOFF:SYNCPOS") {
-  field(INPA, "$(P):USERPITCHOFF:RBV CP")
+record(calcout, "$(P):USERRXOFF:SYNCPOS") {
+  field(INPA, "$(P):USERRXOFF:RBV CP")
   field(CALC, "1")
-  field(OUT, "$(P):PITCH.SYNC PP")
+  field(OUT, "$(P):RX.SYNC PP")
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q31,Q=:USERYAWOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q31,Q=:USERRYOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):USERYAWOFF:SET") {
+record(ao, "$(P):USERRYOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
 # Poke Sync RBV to Demand when offset rbv is updated
-record(calcout, "$(P):USERYAWOFF:SYNCPOS") {
-  field(INPA, "$(P):USERYAWOFF:RBV CP")
+record(calcout, "$(P):USERRYOFF:SYNCPOS") {
+  field(INPA, "$(P):USERRYOFF:RBV CP")
   field(CALC, "1")
-  field(OUT, "$(P):YAW.SYNC PP")
+  field(OUT, "$(P):RY.SYNC PP")
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q32,Q=:USERROLLOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q32,Q=:USERRZOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):USERROLLOFF:SET") {
+record(ao, "$(P):USERRZOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
 # Poke Sync RBV to Demand when offset rbv is updated
-record(calcout, "$(P):USERROLLOFF:SYNCPOS") {
-  field(INPA, "$(P):USERROLLOFF:RBV CP")
+record(calcout, "$(P):USERRZOFF:SYNCPOS") {
+  field(INPA, "$(P):USERRZOFF:RBV CP")
   field(CALC, "1")
-  field(OUT, "$(P):ROLL.SYNC PP")
+  field(OUT, "$(P):RZ.SYNC PP")
   field(OOPT, "Every Time")
 }
 
@@ -211,48 +214,48 @@ record(calcout, "$(P):OBJECTZOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q36,Q=:OBJECTPITCHOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q36,Q=:OBJECTRXOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):OBJECTPITCHOFF:SET") {
+record(ao, "$(P):OBJECTRXOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
 # Poke Sync RBV to Demand when offset rbv is updated
-record(calcout, "$(P):OBJECTPITCHOFF:SYNCPOS") {
-  field(INPA, "$(P):OBJECTPITCHOFF:RBV CP")
+record(calcout, "$(P):OBJECTRXOFF:SYNCPOS") {
+  field(INPA, "$(P):OBJECTRXOFF:RBV CP")
   field(CALC, "1")
-  field(OUT, "$(P):PITCH.SYNC PP")
+  field(OUT, "$(P):RX.SYNC PP")
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q37,Q=:OBJECTYAWOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q37,Q=:OBJECTRYOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):OBJECTYAWOFF:SET") {
+record(ao, "$(P):OBJECTRYOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
 # Poke Sync RBV to Demand when offset rbv is updated
-record(calcout, "$(P):OBJECTYAWOFF:SYNCPOS") {
-  field(INPA, "$(P):OBJECTYAWOFF:RBV CP")
+record(calcout, "$(P):OBJECTRYOFF:SYNCPOS") {
+  field(INPA, "$(P):OBJECTRYOFF:RBV CP")
   field(CALC, "1")
-  field(OUT, "$(P):YAW.SYNC PP")
+  field(OUT, "$(P):RY.SYNC PP")
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q38,Q=:OBJECTROLLOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q38,Q=:OBJECTRZOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):OBJECTROLLOFF:SET") {
+record(ao, "$(P):OBJECTRZOFF:SET") {
   field(FLNK, "$(P):TRANSFCALC")
 }
 
 # Poke Sync RBV to Demand when offset rbv is updated
-record(calcout, "$(P):OBJECTROLLOFF:SYNCPOS") {
-  field(INPA, "$(P):OBJECTROLLOFF:RBV CP")
+record(calcout, "$(P):OBJECTRZOFF:SYNCPOS") {
+  field(INPA, "$(P):OBJECTRZOFF:RBV CP")
   field(CALC, "1")
-  field(OUT, "$(P):ROLL.SYNC PP")
+  field(OUT, "$(P):RZ.SYNC PP")
   field(OOPT, "Every Time")
 }
 
@@ -296,45 +299,45 @@ record(ao, "$(P):MACHZPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q45,Q=:MACHPITCHNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q45,Q=:MACHRXNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):MACHPITCHNLIM:SET") {
+record(ao, "$(P):MACHRXNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q46,Q=:MACHPITCHPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q46,Q=:MACHRXPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):MACHPITCHPLIM:SET") {
+record(ao, "$(P):MACHRXPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q47,Q=:MACHYAWNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q47,Q=:MACHRYNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):MACHYAWNLIM:SET") {
+record(ao, "$(P):MACHRYNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q48,Q=:MACHYAWPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q48,Q=:MACHRYPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):MACHYAWPLIM:SET") {
+record(ao, "$(P):MACHRYPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q49,Q=:MACHROLLNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q49,Q=:MACHRZNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):MACHROLLNLIM:SET") {
+record(ao, "$(P):MACHRZNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q50,Q=:MACHROLLPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q50,Q=:MACHRZPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):MACHROLLPLIM:SET") {
+record(ao, "$(P):MACHRZPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
@@ -382,45 +385,45 @@ record(ao, "$(P):USERZPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q57,Q=:USERPITCHNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q57,Q=:USERRXNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):USERPITCHNLIM:SET") {
+record(ao, "$(P):USERRXNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q58,Q=:USERPITCHPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q58,Q=:USERRXPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):USERPITCHPLIM:SET") {
+record(ao, "$(P):USERRXPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q59,Q=:USERYAWNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q59,Q=:USERRYNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):USERYAWNLIM:SET") {
+record(ao, "$(P):USERRYNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q60,Q=:USERYAWPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q60,Q=:USERRYPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):USERYAWPLIM:SET") {
+record(ao, "$(P):USERRYPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q61,Q=:USERROLLNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q61,Q=:USERRZNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):USERROLLNLIM:SET") {
+record(ao, "$(P):USERRZNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q62,Q=:USERROLLPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "VAR=&$(COORD)Q62,Q=:USERRZPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-record(ao, "$(P):USERROLLPLIM:SET") {
+record(ao, "$(P):USERRZPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
@@ -703,15 +706,15 @@ record(sseq, "$(P):OUZOFF_SEQ") {
 #! Record("$(P):MACHXPOS",140,2414,0,0,"$(P):MACHXPOS")
 #! Record("$(P):MACHYPOS",380,2414,0,0,"$(P):MACHYPOS")
 #! Record("$(P):MACHZPOS",620,2414,0,0,"$(P):MACHZPOS")
-#! Record("$(P):MACHPITCHPOS",860,2414,0,0,"$(P):MACHPITCHPOS")
-#! Record("$(P):MACHYAWPOS",1100,2414,0,0,"$(P):MACHYAWPOS")
-#! Record("$(P):MACHROLLPOS",1340,2414,0,0,"$(P):MACHROLLPOS")
+#! Record("$(P):MACHRXPOS",860,2414,0,0,"$(P):MACHRXPOS")
+#! Record("$(P):MACHRYPOS",1100,2414,0,0,"$(P):MACHRYPOS")
+#! Record("$(P):MACHRZPOS",1340,2414,0,0,"$(P):MACHRZPOS")
 #! Record("$(P):USERXPOS",140,2574,0,0,"$(P):USERXPOS")
 #! Record("$(P):USERYPOS",380,2574,0,0,"$(P):USERYPOS")
 #! Record("$(P):USERZPOS",620,2574,0,0,"$(P):USERZPOS")
-#! Record("$(P):USERPITCHPOS",860,2574,0,0,"$(P):USERPITCHPOS")
-#! Record("$(P):USERYAWPOS",1100,2574,0,0,"$(P):USERYAWPOS")
-#! Record("$(P):USERROLLPOS",1340,2574,0,0,"$(P):USERROLLPOS")
+#! Record("$(P):USERRXPOS",860,2574,0,0,"$(P):USERRXPOS")
+#! Record("$(P):USERRYPOS",1100,2574,0,0,"$(P):USERRYPOS")
+#! Record("$(P):USERRZPOS",1340,2574,0,0,"$(P):USERRZPOS")
 #! Record("$(P):KINEMATICERR",140,2768,0,0,"$(P):KINEMATICERR")
 #! Record("$(P):ABSINITSTA",380,2751,0,0,"$(P):ABSINITSTA")
 #! Record("$(P):MOTIONSTA",400,3121,0,0,"$(P):MOTIONSTA")

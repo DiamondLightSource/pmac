@@ -3,7 +3,7 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 756
+x 758
 y 767
 w 438
 h 293
@@ -230,7 +230,7 @@ fgColor index 14
 bgColor index 3
 useDisplayBg
 value {
-  "Roll"
+  "RZ"
 }
 endObjectProperties
 
@@ -250,7 +250,7 @@ fgColor index 14
 bgColor index 3
 useDisplayBg
 value {
-  "Yaw"
+  "RY"
 }
 endObjectProperties
 
@@ -270,7 +270,7 @@ fgColor index 14
 bgColor index 3
 useDisplayBg
 value {
-  "Pitch"
+  "RX"
 }
 endObjectProperties
 
@@ -284,7 +284,7 @@ x 70
 y 215
 w 98
 h 25
-controlPv "$(hexapod):OBJECTROLLOFF"
+controlPv "$(hexapod):OBJECTRZOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -303,7 +303,7 @@ x 70
 y 185
 w 98
 h 25
-controlPv "$(hexapod):OBJECTYAWOFF"
+controlPv "$(hexapod):OBJECTRYOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -322,7 +322,7 @@ x 70
 y 155
 w 98
 h 25
-controlPv "$(hexapod):OBJECTPITCHOFF"
+controlPv "$(hexapod):OBJECTRXOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -341,7 +341,7 @@ x 175
 y 155
 w 98
 h 25
-controlPv "$(hexapod):OBJECTPITCHOFF:RBV"
+controlPv "$(hexapod):OBJECTRXOFF:RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -359,7 +359,7 @@ x 175
 y 185
 w 98
 h 25
-controlPv "$(hexapod):OBJECTYAWOFF:RBV"
+controlPv "$(hexapod):OBJECTRYOFF:RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -377,7 +377,7 @@ x 175
 y 215
 w 98
 h 25
-controlPv "$(hexapod):OBJECTROLLOFF:RBV"
+controlPv "$(hexapod):OBJECTRZOFF:RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -842,7 +842,7 @@ x 70
 y 215
 w 98
 h 25
-controlPv "$(hexapod):USERROLLOFF"
+controlPv "$(hexapod):USERRZOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -867,7 +867,7 @@ fgColor index 14
 bgColor index 3
 useDisplayBg
 value {
-  "Roll"
+  "RZ"
 }
 endObjectProperties
 
@@ -887,7 +887,7 @@ fgColor index 14
 bgColor index 3
 useDisplayBg
 value {
-  "Yaw"
+  "RY"
 }
 endObjectProperties
 
@@ -901,7 +901,7 @@ x 70
 y 185
 w 98
 h 25
-controlPv "$(hexapod):USERYAWOFF"
+controlPv "$(hexapod):USERRYOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -920,7 +920,7 @@ x 70
 y 155
 w 98
 h 25
-controlPv "$(hexapod):USERPITCHOFF"
+controlPv "$(hexapod):USERRXOFF"
 fgColor index 25
 fgAlarm
 bgColor index 3
@@ -945,7 +945,7 @@ fgColor index 14
 bgColor index 3
 useDisplayBg
 value {
-  "Pitch"
+  "RX"
 }
 endObjectProperties
 
@@ -959,7 +959,7 @@ x 175
 y 155
 w 98
 h 25
-controlPv "$(hexapod):USERPITCHOFF:RBV"
+controlPv "$(hexapod):USERRXOFF:RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -977,7 +977,7 @@ x 175
 y 185
 w 98
 h 25
-controlPv "$(hexapod):USERYAWOFF:RBV"
+controlPv "$(hexapod):USERRYOFF:RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
@@ -995,7 +995,7 @@ x 175
 y 215
 w 98
 h 25
-controlPv "$(hexapod):USERROLLOFF:RBV"
+controlPv "$(hexapod):USERRZOFF:RBV"
 fgColor index 16
 fgAlarm
 bgColor index 10
