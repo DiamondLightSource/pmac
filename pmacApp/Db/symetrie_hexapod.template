@@ -602,9 +602,10 @@ record(stringout, "$(P):RESETMOTIONSTA") {
 record(stringout, "$(P):RESETDEMANDS") {
   field(DTYP, "asynOctetWrite")
   field(OUT,  "@asyn($(PORT),0)PMAC_C_WRITE_CMD")
-  field(VAL, "p4701=1")
-  field(SDIS, "$(P):WAIT_MOVE")
+  field(VAL, "P4701=1 P4702=1 P4703=1 P4704=1 P4705=1 P4706=1")
 }
+
+# Extra Offset + User + Move logic for I22 - Requires Custom PROG11
 
 record(stringout, "$(P):RUNPROG11") {
   field(DTYP, "asynOctetWrite")
@@ -624,16 +625,6 @@ record(ai, "$(P):PROG11ON")
 record(calcout, "$(P):ON_COMPLETE") {
   field(INPA, "$(P):PROG11ON")
   field(CALC, "A")
-  field(OOPT, "When Zero")
-  field(OUT, "$(P):WAIT_MOVE CA")
-  field(ODLY, "0.2")
-}
-
-record(calcout, "$(P):ON_ERROR") {
-  field(SCAN, "1 second")
-  field(INPA, "$(P):MOTIONSTA")
-  field(CALC, "A>0")
-  field(OOPT, "When Non-zero")
   field(OUT, "$(P):WAIT_MOVE CA")
   field(ODLY, "0.2")
 }
