@@ -432,12 +432,17 @@ record(ao, "$(P):USERRZPLIM:SET") {
 substitute "VAR=&$(COORD)Q63,Q=:STALLPERCENT,EGU=%,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-# % gui, $(name=), sevr
 # % archiver 1 monitor
-record(mbbi, "$(P):KINEMATICERR") {
+record(longin, "$(P):KINEMATICERR:READ") {
   field(SCAN, "I/O Intr")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_VIM_&$(COORD)Q64")
+}
+
+# % gui, $(name=), sevr
+record(mbbi, "$(P):KINEMATICERR") {
+  field(DTYP, "Soft Channel")
+  field(INP, "$(P):KINEMATICERR:READ CP")
   field(ZRST, "No Error")
   field(ONST, "Description 1")
   field(ONSV, "MAJOR")
@@ -451,12 +456,17 @@ record(mbbi, "$(P):KINEMATICERR") {
   field(FVSV, "MAJOR")
 }
 
-# % gui, $(name=), sevr
 # % archiver 1 monitor
-record(mbbi, "$(P):ABSINITSTA") {
+record(longin, "$(P):ABSINITSTA:READ") {
   field(SCAN, "I/O Intr")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_VIM_&$(COORD)Q65")
+}
+
+# % gui, $(name=), sevr
+record(mbbi, "$(P):ABSINITSTA") {
+  field(DTYP, "Soft Channel")
+  field(INP, "$(P):ABSINITSTA:READ CP")
   field(ZRST, "Undefined")
   field(ZRSV, "INVALID")
   field(ONST, "Done")
@@ -513,12 +523,17 @@ record(stringout, "$(P):HOME") {
   field(OUT,  "@asyn($(PORT),0)PMAC_C_WRITE_CMD")
 }
 
-# % gui, $(name=), sevr
 # % archiver 1 monitor
-record(mbbi, "$(P):RECOVERYSTA") {
+record(longin, "$(P):RECOVERYSTA:READ") {
   field(SCAN, "I/O Intr")
   field(DTYP, "asynInt32")
   field(INP, "@asyn($(PORT),0)PMAC_VIM_&$(COORD)Q69")
+}
+
+# % gui, $(name=), sevr
+record(mbbi, "$(P):RECOVERYSTA") {
+  field(DTYP, "Soft Channel")
+  field(INP, "$(P):RECOVERYSTA:READ CP")
   field(ZRST, "Undefined")
   field(ONST, "Error abort input")
   field(ONSV, "MAJOR")
