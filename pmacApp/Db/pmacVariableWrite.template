@@ -1,5 +1,13 @@
+##############################################################
+#
+# Template to write and read a variable on a PMAC/Geobrick.
+#
+##############################################################
+
+# Macros
 # % macro, __doc__, Simple template that reads and writes to a variable on a 
 # PMAC or geoBrick via dynamic parameters.
+# % macro, name, Object name and gui association name
 # % macro, P, Pv Prefix
 # % macro, Q, Pv Suffix
 # % macro, DTYP, asyn DTYP (e.g., asynFloat64, asynInt32)
@@ -10,6 +18,11 @@
 # % macro, VARIABLE_PREC, Variable Record precision
 # % macro, LABEL, Label for GUI
 
+# CSS GUI
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_variable_write_embed_box.opi, P=$(P),Q=$(Q),LABEL=$(LABEL), name=$(name=)
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_variable_write_embed.opi, P=$(P),Q=$(Q),LABEL=$(LABEL), name=$(name=)
+
+# EGM GUI
 # % gui, $(name=), edmembed, pmacVariableWrite.edl, P=$(P), Q=$(Q), LABEL=$(LABEL)
 
 ##########################################
