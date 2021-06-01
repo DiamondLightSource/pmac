@@ -16,8 +16,8 @@ site location of dependencies.
 Release Notes
 =============
 
-BETA (R2-5 April 2021)
-======================
+R2-5 June 1, 2021
+=================
 ### Changes
 * Added back one of the original velocity modes as mode 4.
 * The full set of velocity modes are now:
@@ -27,6 +27,7 @@ BETA (R2-5 April 2021)
     * 3: Velocity = 0
     * 4: Velocity = Average Current -> Next
 * Implemented trajectory scan offset and resolution for virtual motors
+* Improved the direct motion interface
 
 R2-4-22 (October 14 , 2020)
 =====================
