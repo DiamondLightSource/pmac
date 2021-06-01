@@ -39,26 +39,26 @@ int main()
   // Create an instance of the PMAC driver
   pmacController *pPmac = new pmacController(PMAC_PORT, "BRICK1Port", 0, 8, 0.2, 1.0);
   // Create the motor instances
-  pmacAxis *pAxis1 = new pmacAxis(pPmac, 1);
-  pmacAxis *pAxis2 = new pmacAxis(pPmac, 2);
-  pmacAxis *pAxis3 = new pmacAxis(pPmac, 3);
-  pmacAxis *pAxis4 = new pmacAxis(pPmac, 4);
-  pmacAxis *pAxis5 = new pmacAxis(pPmac, 5);
-  pmacAxis *pAxis6 = new pmacAxis(pPmac, 6);
-  pmacAxis *pAxis7 = new pmacAxis(pPmac, 7);
-  pmacAxis *pAxis8 = new pmacAxis(pPmac, 8);
+  new pmacAxis(pPmac, 1);
+  new pmacAxis(pPmac, 2);
+  new pmacAxis(pPmac, 3);
+  new pmacAxis(pPmac, 4);
+  new pmacAxis(pPmac, 5);
+  new pmacAxis(pPmac, 6);
+  new pmacAxis(pPmac, 7);
+  new pmacAxis(pPmac, 8);
   // Create an instance of a CS controller
   pmacCSController *pCs = new pmacCSController("CS1", PMAC_PORT, 1, 10);
   // Create the CS motor instances
-  pmacCSAxis *pCsAxis1 = new pmacCSAxis(pCs, 1);
-  pmacCSAxis *pCsAxis2 = new pmacCSAxis(pCs, 2);
-  pmacCSAxis *pCsAxis3 = new pmacCSAxis(pCs, 3);
-  pmacCSAxis *pCsAxis4 = new pmacCSAxis(pCs, 4);
-  pmacCSAxis *pCsAxis5 = new pmacCSAxis(pCs, 5);
-  pmacCSAxis *pCsAxis6 = new pmacCSAxis(pCs, 6);
-  pmacCSAxis *pCsAxis7 = new pmacCSAxis(pCs, 7);
-  pmacCSAxis *pCsAxis8 = new pmacCSAxis(pCs, 8);
-  pmacCSAxis *pCsAxis9 = new pmacCSAxis(pCs, 9);
+  new pmacCSAxis(pCs, 1);
+  new pmacCSAxis(pCs, 2);
+  new pmacCSAxis(pCs, 3);
+  new pmacCSAxis(pCs, 4);
+  new pmacCSAxis(pCs, 5);
+  new pmacCSAxis(pCs, 6);
+  new pmacCSAxis(pCs, 7);
+  new pmacCSAxis(pCs, 8);
+  new pmacCSAxis(pCs, 9);
 
   // Start the PMAC polling thread
   pPmac->startPMACPolling();
@@ -97,25 +97,11 @@ int main()
     pIntClient->read(&running);
     sleep(1);
   }
-  delete pCsAxis1;
-  delete pCsAxis2;
-  delete pCsAxis3;
-  delete pCsAxis4;
-  delete pCsAxis5;
-  delete pCsAxis6;
-  delete pCsAxis7;
-  delete pCsAxis8;
-  delete pCsAxis9;
-  delete pCs;
-  delete pAxis1;
-  delete pAxis2;
-  delete pAxis3;
-  delete pAxis4;
-  delete pAxis5;
-  delete pAxis6;
-  delete pAxis7;
-  delete pAxis8;
-  delete pPmac;
+  // Clean up clients
+  pFloatArrayClient.reset();
+  pIntArrayClient.reset();
+  pIntClient.reset();
+  // Motor classes are auto cleaned up when EPICS exit is called
   return 0;
 }
 

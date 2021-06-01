@@ -6,6 +6,8 @@
  */
 
 #include <math.h>
+#include <iostream>
+#include <sstream>
 #include "pmacCSAxis.h"
 #include "pmacCSController.h"
 #include "pmacMessageBroker.h"
@@ -90,6 +92,91 @@ void pmacCSAxis::goodConnection() {
   setIntegerParam(pC_->motorStatusCommsError_, false);
   statusChanged_ = 1;
   callParamCallbacks();
+}
+
+void pmacCSAxis::setKinematicResolution(double new_resolution)
+{
+  static const char *functionName = "setKinematicResolution";
+  debug(DEBUG_TRACE, functionName, "Setting CS axis kinematic resolution", new_resolution);
+  this->kinematic_resolution_ = new_resolution;
+}
+
+double pmacCSAxis::getResolution()
+{
+  static const char *functionName = "getResolution";
+  double resolution = 0.0;
+  int mappedAxis = 0;
+
+  // Find out if this motor is mapped directly to a raw motor
+  mappedAxis = pC_->pmacCSGetAxisDirectMapping(this->axisNo_);
+
+  // If the axis is not mapped then it is in a kinematic, use the stored values
+  if (mappedAxis == 0){
+    resolution = this->kinematic_resolution_ * this->scale_;
+  } else {
+    // Get the raw axis offset and resolution
+    pmacAxis *ptr = pC_->getRawAxis(mappedAxis);
+    resolution = ptr->getResolution();
+  }
+  debug(DEBUG_TRACE, functionName, "Returned resolution", resolution);
+  return resolution;
+}
+
+void pmacCSAxis::setKinematicOffset(double new_offset)
+{
+  static const char *functionName = "setKinematicOffset";
+  debug(DEBUG_TRACE, functionName, "Setting CS axis kinematic offset", new_offset);
+  this->kinematic_offset_ = new_offset;
+}
+
+double pmacCSAxis::getOffset()
+{
+  static const char *functionName = "getOffset";
+  double offset = 0.0;
+  int mappedAxis = 0;
+  // Find out if this motor is mapped directly to a raw motor
+  mappedAxis = pC_->pmacCSGetAxisDirectMapping(this->axisNo_);
+
+  // If the axis is not mapped then it is in a kinematic, use the stored values
+  if (mappedAxis == 0){
+    offset = this->kinematic_offset_;
+  } else {
+    // Get the raw axis offset
+    pmacAxis *ptr = pC_->getRawAxis(mappedAxis);
+    offset = ptr->getOffset();
+  }
+  debug(DEBUG_TRACE, functionName, "Returned offset", offset);
+  return offset;
+}
+
+asynStatus pmacCSAxis::directMove(double position, double min_velocity, double max_velocity, double acceleration) {
+  static const char *functionName = "directMove";
+  double raw_position = 0.0;
+  int mappedAxis = 0;
+
+  // Find out if this motor is mapped directly to a raw motor
+  mappedAxis = pC_->pmacCSGetAxisDirectMapping(this->axisNo_);
+
+  // If the axis is not mapped then it is in a kinematic, use the stored values
+  if (mappedAxis == 0){
+    debug(DEBUG_TRACE, functionName, "Scale", this->scale_);
+    debug(DEBUG_TRACE, functionName, "Kinematic resolution", this->kinematic_resolution_);
+    raw_position = (position - this->kinematic_offset_) / this->kinematic_resolution_;
+  } else {
+    // Get the raw axis offset and resolution
+    pmacAxis *ptr = pC_->getRawAxis(mappedAxis);
+    raw_position = (position - ptr->getOffset()) / ptr->getResolution() * this->scale_;
+  }
+
+  // Calculate the real position demand using the resolution and offset and then call the move command
+  
+  std::stringstream ss;
+  ss << "Direct move called for motor [" << this->axisNo_ << "] EGU Position: " << position;
+  ss << " Min Velocity: " << min_velocity << " Max velocity: " << max_velocity << " Acceleration: " << acceleration << std::endl;
+  ss << "Calculated raw position (in counts): " << (raw_position / this->scale_);
+  debug(DEBUG_TRACE, functionName, ss.str());
+
+  return this->move(raw_position, 0, min_velocity, max_velocity, acceleration);
 }
 
 asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_velocity, double max_velocity,
@@ -214,6 +301,7 @@ void pmacCSAxis::callback(pmacCommandStore *sPtr, int type) {
                 "Controller %s Axis %d. %s: getAxisStatus failed to return asynSuccess.\n",
                 pC_->portName, axisNo_, functionName);
     }
+
     pC_->unlock();
     callParamCallbacks();
   }
@@ -234,6 +322,7 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   std::string value;
   int homeSignal = 0;
   int direction = 0;
+  int mappedAxis = 0;
   int retStatus = asynSuccess;
 
   static const char *functionName = "pmacCSAxis::GetAxisStatus";
@@ -256,6 +345,20 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
 
   // Read in the status
   csStatus cStatus = pC_->getStatus();
+
+  // Update this CS motor resolution and offset
+  // Find out if this motor is mapped directly to a raw motor
+  mappedAxis = pC_->pmacCSGetAxisDirectMapping(this->axisNo_);
+  // If the axis is not mapped then it is in a kinematic, update resultion and offset
+  if (mappedAxis == 0){
+    setDoubleParam(pC_->PMAC_CS_DirectRes_, this->kinematic_resolution_);
+    setDoubleParam(pC_->PMAC_CS_DirectOffset_, this->kinematic_offset_);
+  } else {
+    // Use the raw axis offset and resolution
+    pmacAxis *ptr = pC_->getRawAxis(mappedAxis);
+    setDoubleParam(pC_->PMAC_CS_DirectRes_, ptr->getResolution());
+    setDoubleParam(pC_->PMAC_CS_DirectOffset_, ptr->getOffset());
+  }
 
   // Parse the position
   sprintf(key, "&%dQ8%d", pC_->getCSNumber(), axisNo_);

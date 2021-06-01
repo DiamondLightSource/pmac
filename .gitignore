@@ -25,3 +25,4 @@ deleteme
 #etc/LabPowerPmac/
 #etc/LabPowerPmac_Backup/
 .nfs*
+**/venv27

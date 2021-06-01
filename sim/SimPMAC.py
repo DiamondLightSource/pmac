@@ -367,13 +367,13 @@ class PMACSimulator():
 
     def setup_some_standard_mvars(self):
         # pmac interupt timings (for processor timing calcs)
-        self.mvars[70] = 11990   
+        self.mvars[70] = 11990
         self.mvars[71] = 554
         self.mvars[72] = 2621
         self.mvars[73] = 76
-        
+
     def setup_trajectory_interface(self):
-        self.mvars[M_TRAJ_VERSION] = 1.1
+        self.mvars[M_TRAJ_VERSION] = 3.0
         # Number of points in a buffer
         self.mvars[M_TRAJ_BUFSIZE] = 1000
         # Address of A and B buffers

@@ -7,15 +7,19 @@ verify_ssl = true
 pytest = "*"
 
 [packages]
-dls-pmaclib = "*"
+# NOTE: commented out dependencies are for tests in test_malcolm
+# these are specialist tests for investigating trajectory anomolies and
+# not for general module testing
+
+#dls-pmaclib = "*"
 cothread = "*"
-annotypes = "*"
-malcolm = {editable = true,path = "/scratch/work/pymalcolm"}
-scanpointgenerator = "*"
-ruamel-yaml = "*"
-tornado = "*"
-matplotlib = "==2.2.3"
-serial = "*"
+#annotypes = "*"
+# malcolm = {editable = true,path = "/scratch/work/pymalcolm"}
+#scanpointgenerator = "*"
+#ruamel-yaml = "*"
+#tornado = "*"
+#matplotlib = "==2.2.3"
+#serial = "*"
 
 [requires]
 python_version = "3.7"

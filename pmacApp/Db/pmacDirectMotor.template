@@ -26,26 +26,11 @@
 #% archiver 0.5 Monitor
 record(ao, "$(P)$(M):DirectDemand")
 {
-    field(FLNK, "$(P)$(M):DirectCountsCalc.PROC")
-    field(PREC, 4)
-}
-
-record(scalcout, "$(P)$(M):DirectCountsCalc")
-{
-    field(INPA, "$(P)$(M):DirectDemand")
-    field(INPB, "$(P)$(M):Mres PP")
-    field(INPC, "$(P)$(M):Offset PP")
-    field(INPD, "$(P)$(M):SCALE")
-    field(CALC, "(A-C)/B*D")
-    field(OUT, "$(P)$(M):RawDirectDemand PP")
-}
-
-record(ao, "$(P)$(M):RawDirectDemand")
-{
     field(DTYP, "asynFloat64")
     field(FLNK, "$(P)$(M):DirectMotorSeq")
-    field(OUT,  "@asyn($(PORT),$(ADDR),4)MOTOR_MOVE_ABS")
+    field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_C_DIRECT_MOVE")
     field(DESC, "$(DESC)")
+    field(PREC, 4)
 }
 
 # busy record to make ca_put_callback return only once the motor is done moving
@@ -105,54 +90,18 @@ record(longin, "$(P)$(M):DirectMotorNumber")
     field(DTYP, "asynInt32")
     field(SCAN, "I/O Intr")
     field(INP,  "@asyn($(PORT),$(ADDR),4)PMAC_REAL_MOTOR_NUMBER")
-    field(FLNK, "$(P)$(M):MresSource")
 }
 
-record(scalcout, $(P)$(M):MresSource)
-{
-    field(DTYP, "Soft Channel")
-    field(INPA, "$(P)$(M):DirectMotorNumber")
-    field(CALC, "A?(PRINTF('$(PMAC):M%d.MRES CPP',A)):1")
-    field(OUT, "$(P)$(M):Mres.INPA CA")
-    field(FLNK, "$(P)$(M):OffsetSource")
-}
-
-record(scalcout, "$(P)$(M):Mres")
-{
-    field(INPA, "1") # to be overwritten by MresSource
-    field(CALC, "A")
-    field(VAL, 1)
-    field(PINI, "YES")
-    field(OUT,  "$(P)$(M):MresDrv PP")
-    field(PREC, 6)
-}
-
-record(ao,"$(P)$(M):MresDrv") {
+record(ai,"$(P)$(M):Offset") {
     field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_MRES")
-}
-
-# todo non zero offset in CS kinematic axes no supported
-record(scalcout, $(P)$(M):OffsetSource)
-{
-    field(DTYP, "Soft Channel")
-    field(INPA, "$(P)$(M):DirectMotorNumber")
-    field(CALC, "A?(PRINTF('$(PMAC):M%d.OFF CPP',A)):0")
-    field(OUT, "$(P)$(M):Offset.INPA CA")
-}
-
-
-record(scalcout, $(P)$(M):Offset)
-{
-    field(INPA, "0") # to be overwritten by OffsetSource
-    field(CALC, "A")
-    field(PINI, "YES")
-    field(OUT,  "$(P)$(M):OffsetDrv PP")
+    field(INP,  "@asyn($(PORT),$(ADDR),4)PMAC_DIRECT_OFFSET")
     field(PREC, 4)
+    field(SCAN, "I/O Intr")
 }
 
-
-record(ao,"$(P)$(M):OffsetDrv") {
+record(ai,"$(P)$(M):Mres") {
     field(DTYP, "asynFloat64")
-    field(OUT,  "@asyn($(PORT),$(ADDR),4)PMAC_OFFSET")
+    field(INP,  "@asyn($(PORT),$(ADDR),4)PMAC_DIRECT_MRES")
+    field(PREC, 4)
+    field(SCAN, "I/O Intr")
 }

@@ -18,6 +18,7 @@
 #include "asynMotorController.h"
 #include "asynMotorAxis.h"
 #include "pmacCSAxis.h"
+#include "pmacAxis.h"
 #include "pmacCallbackInterface.h"
 #include "pmacDebugger.h"
 #include "pmacHardwareInterface.h"
@@ -32,9 +33,18 @@
 #define PMAC_CS_MotorScaleString           "PMAC_MOTOR_SCALE"
 #define PMAC_CS_MotorResString             "PMAC_MRES"
 #define PMAC_CS_MotorOffsetString          "PMAC_OFFSET"
-#define PMAC_CS_ForwardKinematicString      "PMAC_CS_FWD_KIN"
-#define PMAC_CS_InverseKinematicString      "PMAC_CS_INV_KIN"
-#define PMAC_CS_QVariablesString            "PMAC_CS_Q_VARIABLES"
+#define PMAC_CS_ForwardKinematicString     "PMAC_CS_FWD_KIN"
+#define PMAC_CS_InverseKinematicString     "PMAC_CS_INV_KIN"
+#define PMAC_CS_QVariablesString           "PMAC_CS_Q_VARIABLES"
+
+// direct moves
+#define PMAC_CS_DirectMoveString           "PMAC_C_DIRECT_MOVE"
+// The following 2 parameters are the direct mapped resolution and offset
+// These will be provided by the motor record if the axis is used for a kinematic
+// or else they will reflect a directly mapped axis resolution and offset.
+// Readback only parameters
+#define PMAC_CS_DirectResString             "PMAC_DIRECT_MRES"
+#define PMAC_CS_DirectOffsetString          "PMAC_DIRECT_OFFSET"
 
 #define PMAC_CS_MAXBUF 1024
 #define PMAC_CS_AXES_COUNT 9
@@ -65,6 +75,7 @@ public:
     asynStatus axisWriteRead(const char *command, char *response);
     pmacCSAxis *getAxis(asynUser *pasynUser);
     pmacCSAxis *getAxis(int axisNo);
+    pmacAxis *getRawAxis(int axisNo);
 
     // Registration for callbacks
     asynStatus registerForCallbacks(pmacCallbackInterface *cbPtr, int type);
@@ -80,6 +91,7 @@ public:
     asynStatus pmacSetAxisScale(int axis, int scale);
     asynStatus wakeupPoller();
     asynStatus pmacCSSetAxisDirectMapping(int axis, int mappedAxis);
+    int pmacCSGetAxisDirectMapping(int axis);
 
     // Read in the kinematics
     asynStatus storeKinematics();
@@ -100,6 +112,9 @@ protected:
     int PMAC_CS_ForwardKinematic_;
     int PMAC_CS_InverseKinematic_;
     int PMAC_CS_QVariables_;
+    int PMAC_CS_DirectMove_;
+    int PMAC_CS_DirectRes_;
+    int PMAC_CS_DirectOffset_;
 #define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_
 
 private:

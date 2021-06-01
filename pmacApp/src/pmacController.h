@@ -98,6 +98,11 @@
 #define PMAC_C_MVariablesString           "PMAC_M_VARIABLES"
 #define PMAC_C_PVariablesString           "PMAC_P_VARIABLES"
 
+// direct moves
+#define PMAC_C_DirectMoveString           "PMAC_C_DIRECT_MOVE"
+#define PMAC_C_DirectResString            "PMAC_DIRECT_MRES"
+#define PMAC_C_DirectOffsetString         "PMAC_DIRECT_OFFSET"
+
 
 #define PMAC_C_ProfileUseAxisAString      "PROFILE_USE_AXIS_A"
 #define PMAC_C_ProfileUseAxisBString      "PROFILE_USE_AXIS_B"
@@ -409,6 +414,9 @@ protected:
     int PMAC_C_MotorScale_;
     int PMAC_C_MotorRes_;
     int PMAC_C_MotorOffset_;
+    int PMAC_C_DirectMove_;
+    int PMAC_C_DirectRes_;
+    int PMAC_C_DirectOffset_;
     int PMAC_I_Variables_;
     int PMAC_M_Variables_;
     int PMAC_P_Variables_;
