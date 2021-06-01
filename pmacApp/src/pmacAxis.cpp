@@ -65,6 +65,8 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
 
   //Initialize non-static data members
   assignedCS_ = 0;
+  resolution_ = 1.0;
+  offset_ = 0.0;
   setpointPosition_ = 0.0;
   encoderPosition_ = 0.0;
   currentVelocity_ = 0.0;
@@ -107,6 +109,11 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   pC_->wakeupPoller();
 }
 
+double pmacAxis::getScale()
+{
+  return this->scale_;
+}
+
 void pmacAxis::badConnection() {
   setIntegerParam(pC_->motorStatusProblem_, true);
   setIntegerParam(pC_->motorStatusCommsError_, true);
@@ -120,6 +127,9 @@ void pmacAxis::goodConnection() {
   setIntegerParam(pC_->motorStatusCommsError_, false);
   connected_ = true;
   statusChanged_ = 1;
+  // We must send the value of the offset and resolution to the controller to ensure it is correct
+  this->setResolution(this->resolution_);
+  this->setOffset(this->offset_);
   callParamCallbacks();
 }
 
@@ -225,6 +235,61 @@ pmacAxis::~pmacAxis() {
   //Destructor
 }
 
+void pmacAxis::setResolution(double new_resolution)
+{
+  char command[PMAC_MAXBUF] = {0};
+  char response[PMAC_MAXBUF] = {0};
+  int p_var = 4800 + axisNo_;
+  static const char *functionName = "setResolution";
+  debug(DEBUG_TRACE, functionName, "Setting axis resolution", new_resolution);
+  this->resolution_ = new_resolution;
+  if (this->connected_){
+    sprintf(command, "P%d=%f", p_var, this->resolution_);
+    debug(DEBUG_TRACE, functionName, "Axis resolution P variable command", command);
+    pC_->axisWriteRead(command, response);
+  }
+}
+
+double pmacAxis::getResolution()
+{
+  return this->resolution_;
+}
+
+void pmacAxis::setOffset(double new_offset)
+{
+  char command[PMAC_MAXBUF] = {0};
+  char response[PMAC_MAXBUF] = {0};
+  int p_var = 4900 + axisNo_;
+  static const char *functionName = "setOffset";
+  debug(DEBUG_TRACE, functionName, "Setting axis offset", new_offset);
+  this->offset_ = new_offset;
+  if (this->connected_){
+    sprintf(command, "P%d=%f", p_var, this->offset_);
+    debug(DEBUG_TRACE, functionName, "Axis offset P variable command", command);
+    pC_->axisWriteRead(command, response);
+  }
+}
+
+double pmacAxis::getOffset()
+{
+  return this->offset_;
+}
+
+asynStatus pmacAxis::directMove(double position, double min_velocity, double max_velocity, double acceleration) {
+  static const char *functionName = "directMove";
+  double raw_position = 0.0;
+
+  // Calculate the real position demand using the resolution and offset and then call the move command
+  raw_position = (position - this->offset_) / this->resolution_ * this->scale_;
+
+  std::stringstream ss;
+  ss << "Direct move called for motor [" << this->axisNo_ << "] Position: " << position;
+  ss << " Min Velocity: " << min_velocity << " Max velocity: " << max_velocity << " Acceleration: " << acceleration << std::endl;
+  ss << "Calculated raw position (in counts): " << raw_position;
+  debug(DEBUG_TRACE, functionName, ss.str());
+
+  return this->move(raw_position, 0, min_velocity, max_velocity, acceleration);
+}
 
 /**
  * See asynMotorAxis::move

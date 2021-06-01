@@ -40,7 +40,7 @@ PrevBufferFill = BufferLength       ; Set PrevBufferFill to pass outer while loo
 GoSub101                            ; Check which axes are required
 GoSub103                            ; Set addresses for required axes
 GoSub108                            ; set all previous velocities to zero
-GoSub111                            ; initialize previous positions
+GoSub112                            ; initialize previous positions
 
 While(Abort = 0 and Error = 0 and CurrentBufferFill > 0 and PrevBufferFill = BufferLength)
 
@@ -50,7 +50,7 @@ While(Abort = 0 and Error = 0 and CurrentBufferFill > 0 and PrevBufferFill = Buf
 
         GoSub102                            ; Shift values through Next_* -> Current_* -> Prev_*
         GoSub104                            ; Calculate velocities
-        GoSub109                            ; Move axes
+        GoSub110                            ; Move axes
         CurrentIndex = CurrentIndex + 1
 
     End While
@@ -77,12 +77,12 @@ While(Abort = 0 and Error = 0 and CurrentBufferFill > 0 and PrevBufferFill = Buf
             CurrentIndex = 0                    ; Reset to start of next buffer
             GoSub103                            ; Update Next_* addresses to 0th point of next buffer
             GoSub104                            ; Calculate velocities
-            GoSub109                            ; Move axes to final point of previous buffer
+            GoSub110                            ; Move axes to final point of previous buffer
         Else
             ; Move to final point if the scan wasn't aborted
             If(Abort = 0)
                 GoSub108                ; Set velocity through final point to zero
-                GoSub109                ; Move axes
+                GoSub110                ; Move axes
             End If
         End If
     Else
@@ -90,7 +90,7 @@ While(Abort = 0 and Error = 0 and CurrentBufferFill > 0 and PrevBufferFill = Buf
             ; Move to final point if the scan wasn't aborted
             If(Abort = 0)
                 GoSub108                ; Set velocity through final point to zero
-                GoSub109                ; Move axes
+                GoSub110                ; Move axes
             End If
         End If
     End If
@@ -239,6 +239,9 @@ N104
     If(VelMode = 3)
         GoSub108			            ; Zero
     EndIf
+    If(VelMode = 4)
+        GoSub109			            ; Average Current -> Next
+    EndIf
 Return
 
 N105 ; Real Prev -> Current
@@ -292,14 +295,28 @@ N108 ; Zero
     Z_Vel = 0
 Return
 
-; Subroutine 9 ************************************************************************************
+N109 ; Average Current -> Next
+    InverseTmpTime = 1000000/Next_Time
+    A_Vel = A_Axis*InverseTmpTime*(Next_A - Current_A)
+    B_Vel = B_Axis*InverseTmpTime*(Next_B - Current_B)
+    C_Vel = C_Axis*InverseTmpTime*(Next_C - Current_C)
+    U_Vel = U_Axis*InverseTmpTime*(Next_U - Current_U)
+    V_Vel = V_Axis*InverseTmpTime*(Next_V - Current_V)
+    W_Vel = W_Axis*InverseTmpTime*(Next_W - Current_W)
+    X_Vel = X_Axis*InverseTmpTime*(Next_X - Current_X)
+    Y_Vel = Y_Axis*InverseTmpTime*(Next_Y - Current_Y)
+    Z_Vel = Z_Axis*InverseTmpTime*(Next_Z - Current_Z)
+Return
+
+
+; Subroutine 10 ************************************************************************************
 ; Move axes
 ; *************************************************************************************************
 
-N109
+N110
     if (Axes > 0)
         PVT (Time * 0.001)                        ; Set move time
-        GoSub110
+        GoSub(MoveRoutine)
     else
         DWELL (Time * 0.001)
     End If
@@ -309,11 +326,11 @@ N109
     End If
 Return
 
-N110
+N111
     A(Current_A):(A_Vel) B(Current_B):(B_Vel) C(Current_C):(C_Vel) U(Current_U):(U_Vel) V(Current_V):(V_Vel) W(Current_W):(W_Vel) X(Current_X):(X_Vel) Y(Current_Y):(Y_Vel) Z(Current_Z):(Z_Vel)
 Return
 
-N111 ; set previous positions to the starting position of the motors
+N112 ; set previous positions to the starting position of the motors
     Prev_A = Readback_A
     Prev_B = Readback_B
     Prev_C = Readback_C

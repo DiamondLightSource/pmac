@@ -9,8 +9,9 @@ To run these tests have an instance of the lab IOC running and its PVs contactab
 from the machine running the tests.
 
 
-Run the tests from a virtual env that has installed tests/requirements.txt by
-executing pytest in the root of pmac folder
+Run the tests, go to test folder and:
+  pipenv install --python python3 --dev
+  pipenv run pytest test_pmac/
 
 
 To set up a geobrick (with mo motors attached) to run against these tests do the following:-

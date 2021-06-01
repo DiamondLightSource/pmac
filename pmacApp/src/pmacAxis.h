@@ -28,13 +28,25 @@ public:
 
     virtual ~pmacAxis();
 
+    double getScale();
+
     void badConnection();
 
     void goodConnection();
 
+    void setResolution(double new_resolution);
+
+    double getResolution();
+
+    void setOffset(double new_offset);
+
+    double getOffset();
+
     void initialSetup(int axisNo);
 
     axisStatus getMotorStatus();
+
+    asynStatus directMove(double position, double min_velocity, double max_velocity, double acceleration);
 
     asynStatus move(double position, int relative, double min_velocity, double max_velocity,
                     double acceleration);
@@ -78,6 +90,8 @@ private:
     double getPosition();
 
     int assignedCS_;
+    double resolution_;
+    double offset_;
     double setpointPosition_;
     double encoderPosition_;
     double currentVelocity_;

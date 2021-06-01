@@ -3,6 +3,7 @@
 ; *****************************************************************************************
 #define VarAdr       B8     ; Prefix of address (eg VarAdr=300 then $30000 is the start address)
 #define BuffLen      950    ; Length of buffers
+#define MoveRoutine  111    ; The subroutine for movement (default 111), can be overridden for custom scan moves
 
 ; make sure the ubuffer is defined
 delete all
@@ -16,3 +17,12 @@ I8=4
 
 #include "./trajectory_scan_definitions.pmc"
 #include "./trajectory_scan_code.pmc"
+
+; If a non standard move routine has been specified then it must be defined after this line.
+; Call Open Program ProgramNum and then define the custom routine (do not clear) and then close.
+; Example:
+; Open Program ProgramNum
+; N113
+; Do something non-standard in here
+; Return
+; Close
