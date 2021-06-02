@@ -12,6 +12,7 @@
 #ifndef pmacAxis_H
 #define pmacAxis_H
 
+#include "shareLib.h"
 #include "asynMotorController.h"
 #include "asynMotorAxis.h"
 #include "pmacHardwareInterface.h"
