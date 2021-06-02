@@ -16,6 +16,12 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-5-1 June 1 2021
+==================
+### Changes
+* make build compatible with EPICS base 7.0.5
+* this involved minor changes in the configure folder
+
 R2-5 June 1, 2021
 =================
 ### Changes
