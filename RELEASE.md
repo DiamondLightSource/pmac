@@ -41,6 +41,18 @@ R2-5 June 1, 2021
 * Implemented trajectory scan offset and resolution for virtual motors
 * Improved the direct motion interface
 
+BETA (R2-5 April 2021)
+======================
+### Changes
+* Added back one of the original velocity modes as mode 4.
+* The full set of velocity modes are now:
+    * 0: Velocity = Average Prev -> Next
+    * 1: Velocity = Real Prev -> Current
+    * 2: Velocity = Average Prev -> Current
+    * 3: Velocity = 0
+    * 4: Velocity = Average Current -> Next
+* Implemented trajectory scan offset and resolution for virtual motors
+
 R2-4-22 (October 14 , 2020)
 =====================
 ### Changes
