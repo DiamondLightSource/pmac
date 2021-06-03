@@ -15,6 +15,12 @@ site location of dependencies.
 
 Release Notes
 =============
+R2-5-2 June 3 2021
+==================
+### Changes
+* fix power pmac trajectory scan prog 1 script
+  * now includes changes applied to tpmac prog
+* add etc/bootstrap with details of how to setup the system test hardware
 
 R2-5-1 June 1 2021
 ==================
