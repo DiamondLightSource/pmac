@@ -1,0 +1,3759 @@
+;####################################################
+; This file contains suggested definitions for M-variables on the GeoBrick LV.
+; Original Author: Delta Tau
+; These are the recommended M-variables as loaded by PeWin32Pro
+; (from ./ORIGINAL_Geobrick_Files_REFERENCE_ONLY/TP2MVAR_Delta_Tau_Original.pmc)
+; with the following changes:
+; - M0..32 (I/O setup) changed to point to the correct addresses (on J6)
+; - DLS additions at the end
+; Many of these M variable definitions will be relied upon by PLCs etc, so
+; do not redefine any of these in a standard GeoBrick system
+;####################################################
+
+; Clear existing definitions
+CLOSE								; Make sure no buffer is open
+M0..8191->*					; All M-variables are now self-referenced
+
+; JI/O Port M-variables
+M0-> Y:$78800,0,1       ;Input 1 Data Line, J6 Pin 1
+M1-> Y:$78800,1,1       ;Input 2 Data Line, J6 Pin 20
+M2-> Y:$78800,2,1       ;Input 3 Data Line, J6 Pin 2
+M3-> Y:$78800,3,1       ;Input 4 Data Line, J6 Pin 21
+M4-> Y:$78800,4,1       ;Input 5 Data Line, J6 Pin 3
+M5-> Y:$78800,5,1       ;Input 6 Data Line, J6 Pin 22
+M6-> Y:$78800,6,1       ;Input 7 Data Line, J6 Pin 4
+M7-> Y:$78800,7,1       ;Input 8 Data Line, J6 Pin 23
+M8-> Y:$78801,0,1       ;Input 9 Data Line, J6 Pin 5
+M9-> Y:$78801,1,1       ;Input 10 Data Line, J6 Pin 24
+M10-> Y:$78801,2,1      ;Input 11 Data Line, J6 Pin 6
+M11-> Y:$78801,3,1      ;Input 12 Data Line, J6 Pin 25
+M12-> Y:$78801,4,1      ;Input 13 Data Line, J6 Pin 7
+M13-> Y:$78801,5,1      ;Input 14 Data Line, J6 Pin 26
+M14-> Y:$78801,6,1      ;Input 15 Data Line, J6 Pin 8
+M15-> Y:$78801,7,1      ;Input 16 Data Line, J6 Pin 27
+M32-> Y:$078802,0,1     ;Output 1 Data Line Pin.. Source 12 / Sink 30
+M33-> Y:$078802,1,1     ;Output 1 Data Line 13 / 31
+M34-> Y:$078802,2,1     ;Output 1 Data Line 14 / 32
+M35-> Y:$078802,3,1     ;Output 1 Data Line 15 / 33
+M36-> Y:$078802,4,1     ;Output 1 Data Line 16 / 34
+M37-> Y:$078802,5,1     ;Output 1 Data Line 17 / 35
+M38-> Y:$078802,6,1     ;Output 1 Data Line 18 / 36
+M39-> Y:$078802,7,1     ;Output 1 Data Line 19 / 37
+
+; JTHW Thumbwheel Multiplexer Port M-variables
+M40->Y:$078402,8			; SEL0 Line; J2 Pin 4
+M41->Y:$078402,9			; SEL1 Line; J2 Pin 6
+M42->Y:$078402,10		; SEL2 Line; J2 Pin 8
+M43->Y:$078402,11		; SEL3 Line; J2 Pin 10
+M44->Y:$078402,12		; SEL4 Line; J2 Pin 12
+M45->Y:$078402,13		; SEL5 Line; J2 Pin 14
+M46->Y:$078402,14		; SEL6 Line; J2 Pin 16
+M47->Y:$078402,15		; SEL7 Line; J2 Pin 18
+M48->Y:$078402,8,8,U		; SEL0-7 Lines treated as a byte
+M50->Y:$078402,0			; DAT0 Line; J2 Pin 3
+M51->Y:$078402,1			; DAT1 Line; J2 Pin 5
+M52->Y:$078402,2			; DAT2 Line; J2 Pin 7
+M53->Y:$078402,3			; DAT3 Line; J2 Pin 9
+M54->Y:$078402,4			; DAT4 Line; J2 Pin 11
+M55->Y:$078402,5			; DAT5 Line; J2 Pin 13
+M56->Y:$078402,6			; DAT6 Line; J2 Pin 15
+M57->Y:$078402,7			; DAT7 Line; J2 Pin 17
+M58->Y:$078402,0,8,U		; DAT0-7 Lines treated as a byte
+M60->X:$078402,0,8		; Direction control for DAT0 to DAT7
+M61->Y:$070800,4			; Buffer direction control for DAT0 to DAT7, PCbus
+;M61->Y:$070802,0		; Buffer direction control for DAT0 to DAT7, VMEbus
+M62->X:$078400,8,8		; Direction control for SEL0 to SEL7
+M63->Y:$070800,5			; Buffer direction control for SEL0 to SEL7, PCbus
+;M63->Y:$070802,1		; Buffer direction control for SEL0 to SEL7, VMEbus
+
+; Miscellaneous global registers
+M70->X:$FFFF8C,0,24		; Time between phase interrupts (CPU cycles/2)
+M71->X:$000037,0,24		; Time for phase tasks (CPU cycles/2)
+M72->Y:$000037,0,24		; Time for servo tasks (CPU cycles/2)
+M73->X:$00000B,0,24		; Time for RTI tasks (CPU cycles/2)
+M80->X:$000025,0,24		; Minimum watchdog timer count
+M81->X:$000024,0,24		; Pointer to display buffer
+M82->Y:$001080,0,8		; First character of display buffer
+M83->X:$000006,12,1		; Firmware checksum error bit
+M84->X:$000006,13,1		; Any memory checksum error bit
+M85->X:$000006,5,1		; MACRO auxiliary communications error bit
+M86->X:$000006,6,1		; ACC-34 serial parity error bit
+
+; VME/DPRAM active setup registers
+M90->X:$070006,0,8	; VME Active Address Modifier (Bits 0-7; from I90)
+M91->X:$070007,0,8	; VME Active Address Modifier Don't Care Bits
+; (Bits 0-7; from I91)
+M92->X:$070008,0,8	; VME Active Base Address Bits A31-A24 (Bits 0-7; from I92)
+M93->X:$070009,0,8	; VME Active Mailbox Base Address Bits A23-A16
+; ISA Active DPRAM Base Address bits A23-A16
+; (Bits 0-7; from I93)
+M94->X:$07000A,0,8	; VME Active Mailbox Base Address Bits A15-A08
+; ISA Active DPRAM Base Address bits A15-A14, Enable &
+; Bank Select
+; (Bits 0-7; from I94)
+M95->X:$07000B,0,8	; VME Active Interrupt Level (Bits 0-7; from I95)
+M96->X:$07000C,0,8	; VME Active Interrupt Vector (Bits 0-7; from I96)
+M97->X:$07000D,0,8	; VME Active DPRAM Base Address Bits A23-A20
+; (Bits 0-7; from I97)
+M98->X:$07000E,0,8	; VME Active DPRAM Enable State (Bits 0-7; from I98)
+M99->X:$07000F,0,8	; VME Active Address Width Control (Bits 0-7; from I99)
+
+; Servo cycle counter (read only) -- counts up once per servo cycle
+M100->X:$000000,0,24,S	; 24-bit servo cycle counter
+
+
+; Servo IC 0 Registers for PMAC2 Channel 1 (usually for Motor #1)
+M101->X:$078001,0,24,S	; ENC1 24-bit counter position
+M102->Y:$078002,8,16,S	; OUT1A command value; DAC or PWM
+M103->X:$078003,0,24,S	; ENC1 captured position
+M104->Y:$078003,8,16,S	; OUT1B command value; DAC or PWM
+M105->Y:$078005,8,16,S	; ADC1A input value
+M106->Y:$078006,8,16,S	; ADC1B input value
+M107->Y:$078004,8,16,S	; OUT1C command value; PFM or PWM
+M108->Y:$078007,0,24,S	; ENC1 compare A position
+M109->X:$078007,0,24,S	; ENC1 compare B position
+M110->X:$078006,0,24,S	; ENC1 compare autoincrement value
+M111->X:$078005,11		; ENC1 compare initial state write enable
+M112->X:$078005,12		; ENC1 compare initial state
+M114->X:$078005,14		; AENA1 output status
+M115->X:$078000,19		; USER1 flag input status
+M116->X:$078000,9		; ENC1 compare output value
+M117->X:$078000,11		; ENC1 capture flag
+M118->X:$078000,8		; ENC1 count error flag
+M119->X:$078000,14		; CHC1 input status
+M120->X:$078000,16		; HMFL1 flag input status
+M121->X:$078000,17		; PLIM1 flag input status
+M122->X:$078000,18		; MLIM1 flag input status
+M123->X:$078000,15		; FAULT1 flag input status
+M124->X:$078000,20		; Channel 1 W flag input status
+M125->X:$078000,21		; Channel 1 V flag input status
+M126->X:$078000,22		; Channel 1 U flag input status
+M127->X:$078000,23		; Channel 1 T flag input status
+M128->X:$078000,20,4		; Channel 1 TUVW inputs as 4-bit value
+
+; Motor #1 Status Bits
+M130->Y:$0000C0,11,1		; #1 Stopped-on-position-limit bit
+M131->X:$0000B0,21,1		; #1 Positive-end-limit-set bit
+M132->X:$0000B0,22,1		; #1 Negative-end-limit-set bit
+M133->X:$0000B0,13,1		; #1 Desired-velocity-zero bit
+M135->X:$0000B0,15,1		; #1 Dwell-in-progress bit
+M137->X:$0000B0,17,1		; #1 Running-program bit
+M138->X:$0000B0,18,1		; #1 Open-loop-mode bit
+M139->X:$0000B0,19,1		; #1 Amplifier-enabled status bit
+M140->Y:$0000C0,0,1		; #1 Background in-position bit
+M141->Y:$0000C0,1,1		; #1 Warning-following error bit
+M142->Y:$0000C0,2,1		; #1 Fatal-following-error bit
+M143->Y:$0000C0,3,1		; #1 Amplifier-fault-error bit
+M144->Y:$0000C0,13,1		; #1 Foreground in-postion bit
+M145->Y:$0000C0,10,1		; #1 Home-complete bit
+M146->Y:$0000C0,6,1		; #1 Integrated following error fault bit
+M147->Y:$0000C0,5,1		; #1 I2T fault bit
+M148->Y:$0000C0,8,1		; #1 Phasing error fault bit
+M149->Y:$0000C0,9,1		; #1 Phasing search-in-progress bit
+
+; MACRO IC 0 Node 0 Flag Registers (usually used for Motor #1)
+M150->X:$003440,0,24		; MACRO IC 0 Node 0 flag status register
+M151->Y:$003440,0,24		; MACRO IC 0 Node 0 flag command register
+M153->X:$003440,20,4		; MACRO IC 0 Node 0 TUVW flags
+M154->Y:$003440,14,1		; MACRO IC 0 Node 0 amplifier enable flag
+M155->X:$003440,15,1		; MACRO IC 0 Node 0 node/amplifier fault flag
+M156->X:$003440,16,1		; MACRO IC 0 Node 0 home flag
+M157->X:$003440,17,1		; MACRO IC 0 Node 0 positive limit flag
+M158->X:$003440,18,1		; MACRO IC 0 Node 0 negative limit flag
+M159->X:$003440,19,1		; MACRO IC 0 Node 0 user flag
+
+; Motor #1 Move Registers
+M161->D:$000088			; #1 Commanded position (1/[Ixx08*32] cts)
+M162->D:$00008B			; #1 Actual position (1/[Ixx08*32] cts)
+M163->D:$0000C7			; #1 Target (end) position (1/[Ixx08*32] cts)
+M164->D:$0000CC			; #1 Position bias (1/[Ixx08*32] cts)
+M166->X:$00009D,0,24,S	; #1 Actual velocity (1/[Ixx09*32] cts/cyc)
+M167->D:$00008D			; #1 Present master pos (1/[Ixx07*32] cts)
+M168->X:$0000BF,8,16,S	; #1 Filter Output (16-bit DAC bits)
+M169->D:$000090			; #1 Compensation correction (1/[Ixx08*32] cts)
+M170->D:$0000B4			; #1 Present phase position (including fraction)
+M171->X:$0000B4,24,S		; #1 Present phase position (counts *Ixx70)
+M172->L:$0000D7			; #1 Variable jog position/distance (cts)
+M173->Y:$0000CE,0,24,S	; #1 Encoder home capture position (cts)
+M174->D:$0000EF			; #1 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M175->X:$0000B9,8,16,S	; #1 Actual quadrature current
+M176->Y:$0000B9,8,16,S	; #1 Actual direct current
+M177->X:$0000BC,8,16,S	; #1 Quadrature current-loop integrator output
+M178->Y:$0000BC,8,16,S	; #1 Direct current-loop integrator output
+M179->X:$0000AE,8,16,S	; #1 PID internal filter result (16-bit DAC bits)
+
+; Motor #1 Axis Definition Registers
+M191->L:$0000CF			; #1 X/U/A/B/C-Axis scale factor (cts/unit)
+M192->L:$0000D0			; #1 Y/V-Axis scale factor (cts/unit)
+M193->L:$0000D1			; #1 Z/W-Axis scale factor (cts/unit)
+M194->L:$0000D2			; #1 Axis offset (cts)
+
+
+; Servo IC 0 Registers for PMAC2 Channel 2 (usually for Motor #2)
+M201->X:$078009,0,24,S	; ENC2 24-bit counter position
+M202->Y:$07800A,8,16,S	; OUT2A command value; DAC or PWM
+M203->X:$07800B,0,24,S	; ENC2 captured position
+M204->Y:$07800B,8,16,S	; OUT2B command value; DAC or PWM
+M205->Y:$07800D,8,16,S	; ADC2A input value
+M206->Y:$07800E,8,16,S	; ADC2B input value
+M207->Y:$07800C,8,16,S	; OUT2C command value; PFM or PWM
+M208->Y:$07800F,0,24,S	; ENC2 compare A position
+M209->X:$07800F,0,24,S	; ENC2 compare B position
+M210->X:$07800E,0,24,S	; ENC2 compare autoincrement value
+M211->X:$07800D,11		; ENC2 compare initial state write enable
+M212->X:$07800D,12		; ENC2 compare initial state
+M214->X:$07800D,14		; AENA2 output status
+M215->X:$078008,19		; USER2 flag input status
+M216->X:$078008,9		; ENC2 compare output value
+M217->X:$078008,11		; ENC2 capture flag
+M218->X:$078008,8		; ENC2 count error flag
+M219->X:$078008,14		; CHC2 input status
+M220->X:$078008,16		; HMFL2 flag input status
+M221->X:$078008,17		; PLIM2 flag input status
+M222->X:$078008,18		; MLIM2 flag input status
+M223->X:$078008,15		; FAULT2 flag input status
+M224->X:$078008,20		; Channel 2 W flag input status
+M225->X:$078008,21		; Channel 2 V flag input status
+M226->X:$078008,22		; Channel 2 U flag input status
+M227->X:$078008,23		; Channel 2 T flag input status
+M228->X:$078008,20,4		; Channel 2 TUVW inputs as 4-bit value
+
+; Motor #2 Status Bits
+M230->Y:$000140,11,1		; #2 Stopped-on-position-limit bit
+M231->X:$000130,21,1		; #2 Positive-end-limit-set bit
+M232->X:$000130,22,1		; #2 Negative-end-limit-set bit
+M233->X:$000130,13,1		; #2 Desired-velocity-zero bit
+M235->X:$000130,15,1		; #2 Dwell-in-progress bit
+M237->X:$000130,17,1		; #2 Running-program bit
+M238->X:$000130,18,1		; #2 Open-loop-mode bit
+M239->X:$000130,19,1		; #2 Amplifier-enabled status bit
+M240->Y:$000140,0,1		; #2 Background in-position bit
+M241->Y:$000140,1,1		; #2 Warning-following error bit
+M242->Y:$000140,2,1		; #2 Fatal-following-error bit
+M243->Y:$000140,3,1		; #2 Amplifier-fault-error bit
+M244->Y:$000140,13,1		; #2 Foreground in-postion bit
+M245->Y:$000140,10,1		; #2 Home-complete bit
+M246->Y:$000140,6,1		; #2 Integrated following error fault bit
+M247->Y:$000140,5,1		; #2 I2T fault bit
+M248->Y:$000140,8,1		; #2 Phasing error fault bit
+M249->Y:$000140,9,1		; #2 Phasing search-in-progress bit
+
+; MACRO IC 0 Node 1 Flag Registers (usually used for Motor #2)
+M250->X:$003441,0,24		; MACRO IC 0 Node 1 flag status register
+M251->Y:$003441,0,24		; MACRO IC 0 Node 1 flag command register
+M253->X:$003441,20,4		; MACRO IC 0 Node 1 TUVW flags
+M254->Y:$003441,14,1		; MACRO IC 0 Node 1 amplifier enable flag
+M255->X:$003441,15,1		; MACRO IC 0 Node 1 node/amplifier fault flag
+M256->X:$003441,16,1		; MACRO IC 0 Node 1 home flag
+M257->X:$003441,17,1		; MACRO IC 0 Node 1 positive limit flag
+M258->X:$003441,18,1		; MACRO IC 0 Node 1 negative limit flag
+M259->X:$003441,19,1		; MACRO IC 0 Node 1 user flag
+
+; Motor #2 Move Registers
+M261->D:$000108			; #2 Commanded position (1/[Ixx08*32] cts)
+M262->D:$00010B			; #2 Actual position (1/[Ixx08*32] cts)
+M263->D:$000147			; #2 Target (end) position (1/[Ixx08*32] cts)
+M264->D:$00014C			; #2 Position bias (1/[Ixx08*32] cts)
+M266->X:$00011D,0,24,S	; #2 Actual velocity (1/[Ixx09*32] cts/cyc)
+M267->D:$00010D			; #2 Present master pos (1/[Ixx07*32] cts)
+M268->X:$00013F,8,16,S	; #2 Filter Output (16-bit DAC bits)
+M269->D:$000110			; #2 Compensation correction (1/[Ixx08*32] cts)
+M270->D:$000134			; #2 Present phase position (including fraction)
+M271->X:$000134,24,S		; #2 Present phase position (counts *Ixx70)
+M272->L:$000157			; #2 Variable jog position/distance (cts)
+M273->Y:$00014E,0,24,S	; #2 Encoder home capture position (cts)
+M274->D:$00016F			; #2 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M275->X:$000139,8,16,S	; #2 Actual quadrature current
+M276->Y:$000139,8,16,S	; #2 Actual direct current
+M277->X:$00013C,8,16,S	; #2 Quadrature current-loop integrator output
+M278->Y:$00013C,8,16,S	; #2 Direct current-loop integrator output
+M279->X:$00012E,8,16,S	; #2 PID internal filter result (16-bit DAC bits)
+
+; Motor #2 Axis Definition Registers
+M291->L:$00014F			; #2 X/U/A/B/C-Axis scale factor (cts/unit)
+M292->L:$000150			; #2 Y/V-Axis scale factor (cts/unit)
+M293->L:$000151			; #2 Z/W-Axis scale factor (cts/unit)
+M294->L:$000152			; #2 Axis offset (cts)
+
+
+; Servo IC 0 Registers for PMAC2 Channel 3 (usually for Motor #3)
+M301->X:$078011,0,24,S	; ENC3 24-bit counter position
+M302->Y:$078012,8,16,S	; OUT3A command value; DAC or PWM
+M303->X:$078013,0,24,S	; ENC3 captured position
+M304->Y:$078013,8,16,S	; OUT3B command value; DAC or PWM
+M305->Y:$078015,8,16,S	; ADC3A input value
+M306->Y:$078016,8,16,S	; ADC3B input value
+M307->Y:$078014,8,16,S	; OUT3C command value; PFM or PWM
+M308->Y:$078017,0,24,S	; ENC3 compare A position
+M309->X:$078017,0,24,S	; ENC3 compare B position
+M310->X:$078016,0,24,S	; ENC3 compare autoincrement value
+M311->X:$078015,11		; ENC3 compare initial state write enable
+M312->X:$078015,12		; ENC3 compare initial state
+M314->X:$078015,14		; AENA3 output status
+M315->X:$078010,19		; USER3 flag input status
+M316->X:$078010,9		; ENC3 compare output value
+M317->X:$078010,11		; ENC3 capture flag
+M318->X:$078010,8		; ENC3 count error flag
+M319->X:$078010,14		; CHC3 input status
+M320->X:$078010,16		; HMFL3 flag input status
+M321->X:$078010,17		; PLIM3 flag input status
+M322->X:$078010,18		; MLIM3 flag input status
+M323->X:$078010,15		; FAULT3 flag input status
+M324->X:$078010,20		; Channel 3 W flag input status
+M325->X:$078010,21		; Channel 3 V flag input status
+M326->X:$078010,22		; Channel 3 U flag input status
+M327->X:$078010,23		; Channel 3 T flag input status
+M328->X:$078010,20,4		; Channel 3 TUVW inputs as 4-bit value
+
+; Motor #3 Status Bits
+M330->Y:$0001C0,11,1		; #3 Stopped-on-position-limit bit
+M331->X:$0001B0,21,1		; #3 Positive-end-limit-set bit
+M332->X:$0001B0,22,1		; #3 Negative-end-limit-set bit
+M333->X:$0001B0,13,1		; #3 Desired-velocity-zero bit
+M335->X:$0001B0,15,1		; #3 Dwell-in-progress bit
+M337->X:$0001B0,17,1		; #3 Running-program bit
+M338->X:$0001B0,18,1		; #3 Open-loop-mode bit
+M339->X:$0001B0,19,1		; #3 Amplifier-enabled status bit
+M340->Y:$0001C0,0,1		; #3 Background in-position bit
+M341->Y:$0001C0,1,1		; #3 Warning-following error bit
+M342->Y:$0001C0,2,1		; #3 Fatal-following-error bit
+M343->Y:$0001C0,3,1		; #3 Amplifier-fault-error bit
+M344->Y:$0001C0,13,1		; #3 Foreground in-postion bit
+M345->Y:$0001C0,10,1		; #3 Home-complete bit
+M346->Y:$0001C0,6,1		; #3 Integrated following error fault bit
+M347->Y:$0001C0,5,1		; #3 I2T fault bit
+M348->Y:$0001C0,8,1		; #3 Phasing error fault bit
+M349->Y:$0001C0,9,1		; #3 Phasing search-in-progress bit
+
+; MACRO IC 0 Node 4 Flag Registers (usually used for Motor #3)
+M350->X:$003444,0,24		; MACRO IC 0 Node 4 flag status register
+M351->Y:$003444,0,24		; MACRO IC 0 Node 4 flag command register
+M353->X:$003444,20,4		; MACRO IC 0 Node 4 TUVW flags
+M354->Y:$003444,14,1		; MACRO IC 0 Node 4 amplifier enable flag
+M355->X:$003444,15,1		; MACRO IC 0 Node 4 node/amplifier fault flag
+M356->X:$003444,16,1		; MACRO IC 0 Node 4 home flag
+M357->X:$003444,17,1		; MACRO IC 0 Node 4 positive limit flag
+M358->X:$003444,18,1		; MACRO IC 0 Node 4 negative limit flag
+M359->X:$003444,19,1		; MACRO IC 0 Node 4 user flag
+
+; Motor #3 Move Registers
+M361->D:$000188			; #3 Commanded position (1/[Ixx08*32] cts)
+M362->D:$00018B			; #3 Actual position (1/[Ixx08*32] cts)
+M363->D:$0001C7			; #3 Target (end) position (1/[Ixx08*32] cts)
+M364->D:$0001CC			; #3 Position bias (1/[Ixx08*32] cts)
+M366->X:$00019D,0,24,S	; #3 Actual velocity (1/[Ixx09*32] cts/cyc)
+M367->D:$00018D			; #3 Present master pos (1/[Ixx07*32] cts)
+M368->X:$0001BF,8,16,S	; #3 Filter Output (16-bit DAC bits)
+M369->D:$000190			; #3 Compensation correction (1/[Ixx08*32] cts)
+M370->D:$0001B4			; #3 Present phase position (including fraction)
+M371->X:$0001B4,24,S		; #3 Present phase position (counts *Ixx70)
+M372->L:$0001D7			; #3 Variable jog position/distance (cts)
+M373->Y:$0001CE,0,24,S	; #3 Encoder home capture position (cts)
+M374->D:$0001EF			; #3 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M375->X:$0001B9,8,16,S	; #3 Actual quadrature current
+M376->Y:$0001B9,8,16,S	; #3 Actual direct current
+M377->X:$0001BC,8,16,S	; #3 Quadrature current-loop integrator output
+M378->Y:$0001BC,8,16,S	; #3 Direct current-loop integrator output
+M379->X:$0001AE,8,16,S	; #3 PID internal filter result (16-bit DAC bits)
+
+; Motor #3 Axis Definition Registers
+M391->L:$0001CF			; #3 X/U/A/B/C-Axis scale factor (cts/unit)
+M392->L:$0001D0			; #3 Y/V-Axis scale factor (cts/unit)
+M393->L:$0001D1			; #3 Z/W-Axis scale factor (cts/unit)
+M394->L:$0001D2			; #3 Axis offset (cts)
+
+
+; Servo IC 0 Registers for PMAC2 Channel 4 (usually for Motor #4)
+M401->X:$078019,0,24,S	; ENC4 24-bit counter position
+M402->Y:$07801A,8,16,S	; OUT4A command value; DAC or PWM
+M403->X:$07801B,0,24,S	; ENC4 captured position
+M404->Y:$07801B,8,16,S	; OUT4B command value; DAC or PWM
+M405->Y:$07801D,8,16,S	; ADC4A input value
+M406->Y:$07801E,8,16,S	; ADC4B input value
+M407->Y:$07801C,8,16,S	; OUT4C command value; PFM or PWM
+M408->Y:$07801F,0,24,S	; ENC4 compare A position
+M409->X:$07801F,0,24,S	; ENC4 compare B position
+M410->X:$07801E,0,24,S	; ENC4 compare autoincrement value
+M411->X:$07801D,11		; ENC4 compare initial state write enable
+M412->X:$07801D,12		; ENC4 compare initial state
+M414->X:$07801D,14		; AENA4 output status
+M415->X:$078018,19		; USER4 flag input status
+M416->X:$078018,9		; ENC4 compare output value
+M417->X:$078018,11		; ENC4 capture flag
+M418->X:$078018,8		; ENC4 count error flag
+M419->X:$078018,14		; HMFL4 flag input status
+M420->X:$078018,16		; CHC4 input status
+M421->X:$078018,17		; PLIM4 flag input status
+M422->X:$078018,18		; MLIM4 flag input status
+M423->X:$078018,15		; FAULT4 flag input status
+M424->X:$078018,20		; Channel 4 W flag input status
+M425->X:$078018,21		; Channel 4 V flag input status
+M426->X:$078018,22		; Channel 4 U flag input status
+M427->X:$078018,23		; Channel 4 T flag input status
+M428->X:$078018,20,4		; Channel 4 TUVW inputs as 4-bit value
+
+; Motor #4 Status Bits
+M430->Y:$000240,11,1		; #4 Stopped-on-position-limit bit
+M431->X:$000230,21,1		; #4 Positive-end-limit-set bit
+M432->X:$000230,22,1		; #4 Negative-end-limit-set bit
+M433->X:$000230,13,1		; #4 Desired-velocity-zero bit
+M435->X:$000230,15,1		; #4 Dwell-in-progress bit
+M437->X:$000230,17,1		; #4 Running-program bit
+M438->X:$000230,18,1		; #4 Open-loop-mode bit
+M439->X:$000230,19,1		; #4 Amplifier-enabled status bit
+M440->Y:$000240,0,1		; #4 Background in-position bit
+M441->Y:$000240,1,1		; #4 Warning-following error bit
+M442->Y:$000240,2,1		; #4 Fatal-following-error bit
+M443->Y:$000240,3,1		; #4 Amplifier-fault-error bit
+M444->Y:$000240,13,1		; #2 Foreground in-postion bit
+M445->Y:$000240,10,1		; #4 Home-complete bit
+M446->Y:$000240,6,1		; #4 Integrated following error fault bit
+M447->Y:$000240,5,1		; #4 I2T fault bit
+M448->Y:$000240,8,1		; #4 Phasing error fault bit
+M449->Y:$000240,9,1		; #4 Phasing search-in-progress bit
+
+; MACRO IC 0 Node 5 Flag Registers (usually used for Motor #4)
+M450->X:$003445,0,24		; MACRO IC 0 Node 5 flag status register
+M451->Y:$003445,0,24		; MACRO IC 0 Node 5 flag command register
+M453->X:$003445,20,4		; MACRO IC 0 Node 5 TUVW flags
+M454->Y:$003445,14,1		; MACRO IC 0 Node 5 amplifier enable flag
+M455->X:$003445,15,1		; MACRO IC 0 Node 5 node/amplifier fault flag
+M456->X:$003445,16,1		; MACRO IC 0 Node 5 home flag
+M457->X:$003445,17,1		; MACRO IC 0 Node 5 positive limit flag
+M458->X:$003445,18,1		; MACRO IC 0 Node 5 negative limit flag
+M459->X:$003445,19,1		; MACRO IC 0 Node 5 user flag
+
+; Motor #4 Move Registers
+M461->D:$000208			; #4 Commanded position (1/[Ixx08*32] cts)
+M462->D:$00020B			; #4 Actual position (1/[Ixx08*32] cts)
+M463->D:$000247			; #4 Target (end) position (1/[Ixx08*32] cts)
+M464->D:$00024C			; #4 Position bias (1/[Ixx08*32] cts)
+M466->X:$00021D,0,24,S	; #4 Actual velocity (1/[Ixx09*32] cts/cyc)
+M467->D:$00020D			; #4 Present master pos (1/[Ixx07*32] cts)
+M468->X:$00023F,8,16,S	; #4 Filter Output (16-bit DAC bits)
+M469->D:$000210			; #4 Compensation correction (1/[Ixx08*32] cts)
+M470->D:$000234			; #4 Present phase position (including fraction)
+M471->X:$000234,24,S		; #4 Present phase position (counts *Ixx70)
+M472->L:$000257			; #4 Variable jog position/distance (cts)
+M473->Y:$00024E,0,24,S	; #4 Encoder home capture position (cts)
+M474->D:$00026F			; #4 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M475->X:$000239,8,16,S	; #4 Actual quadrature current
+M476->Y:$000239,8,16,S	; #4 Actual direct current
+M477->X:$00023C,8,16,S	; #4 Quadrature current-loop integrator output
+M478->Y:$00023C,8,16,S	; #4 Direct current-loop integrator output
+M479->X:$00022E,8,16,S	; #4 PID internal filter result (16-bit DAC bits)
+
+; Motor #4 Axis Definition Registers
+M491->L:$00024F			; #4 X/U/A/B/C-Axis scale factor (cts/unit)
+M492->L:$000250			; #4 Y/V-Axis scale factor (cts/unit)
+M493->L:$000251			; #4 Z/W-Axis scale factor (cts/unit)
+M494->L:$000252			; #4 Axis offset (cts)
+
+
+; Servo IC 1 Registers for PMAC2 Channel 5 (usually for Motor #5)
+M501->X:$078101,0,24,S	; ENC5 24-bit counter position
+M502->Y:$078102,8,16,S	; OUT5A command value; DAC or PWM
+M503->X:$078103,0,24,S	; ENC5 captured position
+M504->Y:$078103,8,16,S	; OUT5B command value; DAC or PWM
+M505->Y:$078105,8,16,S	; ADC5A input value
+M506->Y:$078106,8,16,S	; ADC5B input value
+M507->Y:$078104,8,16,S	; OUT5C command value; PFM or PWM
+M508->Y:$078107,0,24,S	; ENC5 compare A position
+M509->X:$078107,0,24,S	; ENC5 compare B position
+M510->X:$078106,0,24,S	; ENC5 compare autoincrement value
+M511->X:$078105,11		; ENC5 compare initial state write enable
+M512->X:$078105,12		; ENC5 compare initial state
+M514->X:$078105,14		; AENA5 output status
+M515->X:$078100,19		; USER5 flag input status
+M516->X:$078100,9		; ENC5 compare output value
+M517->X:$078100,11		; ENC5 capture flag
+M518->X:$078100,8		; ENC5 count error flag
+M519->X:$078100,14		; CHC5 input status
+M520->X:$078100,16		; HMFL5 flag input status
+M521->X:$078100,17		; PLIM5 flag input status
+M522->X:$078100,18		; MLIM5 flag input status
+M523->X:$078100,15		; FAULT5 flag input status
+M524->X:$078100,20		; Channel 5 W flag input status
+M525->X:$078100,21		; Channel 5 V flag input status
+M526->X:$078100,22		; Channel 5 U flag input status
+M527->X:$078100,23		; Channel 5 T flag input status
+M528->X:$078100,20,4		; Channel 5 TUVW inputs as 4-bit value
+
+; Motor #5 Status Bits
+M530->Y:$0002C0,11,1		; #5 Stopped-on-position-limit bit
+M531->X:$0002B0,21,1		; #5 Positive-end-limit-set bit
+M532->X:$0002B0,22,1		; #5 Negative-end-limit-set bit
+M533->X:$0002B0,13,1		; #5 Desired-velocity-zero bit
+M535->X:$0002B0,15,1		; #5 Dwell-in-progress bit
+M537->X:$0002B0,17,1		; #5 Running-program bit
+M538->X:$0002B0,18,1		; #5 Open-loop-mode bit
+M539->X:$0002B0,19,1		; #5 Amplifier-enabled status bit
+M540->Y:$0002C0,0,1		; #5 Background in-position bit
+M541->Y:$0002C0,1,1		; #5 Warning-following error bit
+M542->Y:$0002C0,2,1		; #5 Fatal-following-error bit
+M543->Y:$0002C0,3,1		; #5 Amplifier-fault-error bit
+M544->Y:$0002C0,13,1		; #5 Foreground in-postion bit
+M545->Y:$0002C0,10,1		; #5 Home-complete bit
+M546->Y:$0002C0,6,1		; #5 Integrated following error fault bit
+M547->Y:$0002C0,5,1		; #5 I2T fault bit
+M548->Y:$0002C0,8,1		; #5 Phasing error fault bit
+M549->Y:$0002C0,9,1		; #5 Phasing search-in-progress bit
+
+; MACRO IC 0 Node 8 Flag Registers (usually used for Motor #5)
+M550->X:$003448,0,24		; MACRO IC 0 Node 8 flag status register
+M551->Y:$003448,0,24		; MACRO IC 0 Node 8 flag command register
+M553->X:$003448,20,4		; MACRO IC 0 Node 8 TUVW flags
+M554->Y:$003448,14,1		; MACRO IC 0 Node 8 amplifier enable flag
+M555->X:$003448,15,1		; MACRO IC 0 Node 8 node/amplifier fault flag
+M556->X:$003448,16,1		; MACRO IC 0 Node 8 home flag
+M557->X:$003448,17,1		; MACRO IC 0 Node 8 positive limit flag
+M558->X:$003448,18,1		; MACRO IC 0 Node 8 negative limit flag
+M559->X:$003448,19,1		; MACRO IC 0 Node 8 user flag
+
+; Motor #5 Move Registers
+M561->D:$000288			; #5 Commanded position (1/[Ixx08*32] cts)
+M562->D:$00028B			; #5 Actual position (1/[Ixx08*32] cts)
+M563->D:$0002C7			; #5 Target (end) position (1/[Ixx08*32] cts)
+M564->D:$0002CC			; #5 Position bias (1/[Ixx08*32] cts)
+M566->X:$00029D,0,24,S	; #5 Actual velocity (1/[Ixx09*32] cts/cyc)
+M567->D:$00028D			; #5 Present master pos (1/[Ixx07*32] cts)
+M568->X:$0002BF,8,16,S	; #5 Filter Output (16-bit DAC bits)
+M569->D:$000290			; #5 Compensation correction (1/[Ixx08*32] cts)
+M570->D:$0002B4			; #5 Present phase position (including fraction)
+M571->X:$0002B4,24,S		; #5 Present phase position (counts *Ixx70)
+M572->L:$0002D7			; #5 Variable jog position/distance (cts)
+M573->Y:$0002CE,0,24,S	; #5 Encoder home capture position (cts)
+M574->D:$0002EF			; #5 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M575->X:$0002B9,8,16,S	; #5 Actual quadrature current
+M576->Y:$0002B9,8,16,S	; #5 Actual direct current
+M577->X:$0002BC,8,16,S	; #5 Quadrature current-loop integrator output
+M578->Y:$0002BC,8,16,S	; #5 Direct current-loop integrator output
+M579->X:$0002AE,8,16,S	; #5 PID internal filter result (16-bit DAC bits)
+
+; Motor #5 Axis Definition Registers
+M591->L:$0002CF			; #5 X/U/A/B/C-Axis scale factor (cts/unit)
+M592->L:$0002D0			; #5 Y/V-Axis scale factor (cts/unit)
+M593->L:$0002D1			; #5 Z/W-Axis scale factor (cts/unit)
+M594->L:$0002D2			; #5 Axis offset (cts)
+
+
+; Servo IC 1 Registers for PMAC2 Channel 6 (usually for Motor #6)
+M601->X:$078109,0,24,S	; ENC6 24-bit counter position
+M602->Y:$07810A,8,16,S	; OUT6A command value; DAC or PWM
+M603->X:$07810B,0,24,S	; ENC6 captured position
+M604->Y:$07810B,8,16,S	; OUT6B command value; DAC or PWM
+M605->Y:$07810D,8,16,S	; ADC6A input value
+M606->Y:$07810E,8,16,S	; ADC6B input value
+M607->Y:$07810C,8,16,S	; OUT6C command value; PFM or PWM
+M608->Y:$07810F,0,24,S	; ENC6 compare A position
+M609->X:$07810F,0,24,S	; ENC6 compare B position
+M610->X:$07810E,0,24,S	; ENC6 compare autoincrement value
+M611->X:$07810D,11		; ENC6 compare initial state write enable
+M612->X:$07810D,12		; ENC6 compare initial state
+M614->X:$07810D,14		; AENA6 output status
+M615->X:$078108,19		; USER6 flag input status
+M616->X:$078108,9		; ENC6 compare output value
+M617->X:$078108,11		; ENC6 capture flag
+M618->X:$078108,8		; ENC6 count error flag
+M619->X:$078108,14		; CHC6 input status
+M620->X:$078108,16		; HMFL6 flag input status
+M621->X:$078108,17		; PLIM6 flag input status
+M622->X:$078108,18		; MLIM6 flag input status
+M623->X:$078108,15		; FAULT6 flag input status
+M624->X:$078108,20		; Channel 6 W flag input status
+M625->X:$078108,21		; Channel 6 V flag input status
+M626->X:$078108,22		; Channel 6 U flag input status
+M627->X:$078108,23		; Channel 6 T flag input status
+M628->X:$078108,20,4		; Channel 6 TUVW inputs as 4-bit value
+
+; Motor #6 Status Bits
+M630->Y:$000340,11,1		; #6 Stopped-on-position-limit bit
+M631->X:$000330,21,1		; #6 Positive-end-limit-set bit
+M632->X:$000330,22,1		; #6 Negative-end-limit-set bit
+M633->X:$000330,13,1		; #6 Desired-velocity-zero bit
+M635->X:$000330,15,1		; #6 Dwell-in-progress bit
+M637->X:$000330,17,1		; #6 Running-program bit
+M638->X:$000330,18,1		; #6 Open-loop-mode bit
+M639->X:$000330,19,1		; #6 Amplifier-enabled status bit
+M640->Y:$000340,0,1		; #6 Background in-position bit
+M641->Y:$000340,1,1		; #6 Warning-following error bit
+M642->Y:$000340,2,1		; #6 Fatal-following-error bit
+M643->Y:$000340,3,1		; #6 Amplifier-fault-error bit
+M644->Y:$000340,13,1		; #6 Foreground in-postion bit
+M645->Y:$000340,10,1		; #6 Home-complete bit
+M646->Y:$000340,6,1		; #6 Integrated following error fault bit
+M647->Y:$000340,5,1		; #6 I2T fault bit
+M648->Y:$000340,8,1		; #6 Phasing error fault bit
+M649->Y:$000340,9,1		; #6 Phasing search-in-progress bit
+
+; MACRO IC 0 Node 9 Flag Registers (usually used for Motor #6)
+M650->X:$003449,0,24		; MACRO IC 0 Node 9 flag status register
+M651->Y:$003449,0,24		; MACRO IC 0 Node 9 flag command register
+M653->X:$003449,20,4		; MACRO IC 0 Node 9 TUVW flags
+M654->Y:$003449,14,1		; MACRO IC 0 Node 9 amplifier enable flag
+M655->X:$003449,15,1		; MACRO IC 0 Node 9 node/amplifier fault flag
+M656->X:$003449,16,1		; MACRO IC 0 Node 9 home flag
+M657->X:$003449,17,1		; MACRO IC 0 Node 9 positive limit flag
+M658->X:$003449,18,1		; MACRO IC 0 Node 9 negative limit flag
+M659->X:$003449,19,1		; MACRO IC 0 Node 9 user flag
+
+; Motor #6 Move Registers
+M661->D:$000308			; #6 Commanded position (1/[Ixx08*32] cts)
+M662->D:$00030B			; #6 Actual position (1/[Ixx08*32] cts)
+M663->D:$000347			; #6 Target (end) position (1/[Ixx08*32] cts)
+M664->D:$00034C			; #6 Position bias (1/[Ixx08*32] cts)
+M666->X:$00031D,0,24,S	; #6 Actual velocity (1/[Ixx09*32] cts/cyc)
+M667->D:$00030D			; #6 Present master pos (1/[Ixx07*32] cts)
+M668->X:$00033F,8,16,S	; #6 Filter Output (16-bit DAC bits)
+M669->D:$000310			; #6 Compensation correction (1/[Ixx08*32] cts)
+M670->D:$000334			; #6 Present phase position (including fraction)
+M671->X:$000334,24,S		; #6 Present phase position (counts *Ixx70)
+M672->L:$000357			; #6 Variable jog position/distance (cts)
+M673->Y:$00034E,0,24,S	; #6 Encoder home capture position (cts)
+M674->D:$00036F			; #6 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M675->X:$000339,8,16,S	; #6 Actual quadrature current
+M676->Y:$000339,8,16,S	; #6 Actual direct current
+M677->X:$00033C,8,16,S	; #6 Quadrature current-loop integrator output
+M678->Y:$00033C,8,16,S	; #6 Direct current-loop integrator output
+M679->X:$00032E,8,16,S	; #6 PID internal filter result (16-bit DAC bits)
+
+; Motor #6 Axis Definition Registers
+M691->L:$00034F			; #6 X/U/A/B/C-Axis scale factor (cts/unit)
+M692->L:$000350			; #6 Y/V-Axis scale factor (cts/unit)
+M693->L:$000351			; #6 Z/W-Axis scale factor (cts/unit)
+M694->L:$000352			; #6 Axis offset (cts)
+
+
+; Servo IC 1 Registers for PMAC2 Channel 7 (usually for Motor #7)
+M701->X:$078111,0,24,S	; ENC7 24-bit counter position
+M702->Y:$078112,8,16,S	; OUT7A command value; DAC or PWM
+M703->X:$078113,0,24,S	; ENC7 captured position
+M704->Y:$078113,8,16,S	; OUT7B command value; DAC or PWM
+M705->Y:$078115,8,16,S	; ADC7A input value
+M706->Y:$078116,8,16,S	; ADC7B input value
+M707->Y:$078114,8,16,S	; OUT7C command value; PFM or PWM
+M708->Y:$078117,0,24,S	; ENC7 compare A position
+M709->X:$078117,0,24,S	; ENC7 compare B position
+M710->X:$078116,0,24,S	; ENC7 compare autoincrement value
+M711->X:$078115,11		; ENC7 compare initial state write enable
+M712->X:$078115,12		; ENC7 compare initial state
+M714->X:$078115,14		; AENA7 output status
+M715->X:$078110,19		; CHC7 input status
+M716->X:$078110,9		; ENC7 compare output value
+M717->X:$078110,11		; ENC7 capture flag
+M718->X:$078110,8		; ENC7 count error flag
+M719->X:$078110,14		; CHC7 input status
+M720->X:$078110,16		; HMFL7 flag input status
+M721->X:$078110,17		; PLIM7 flag input status
+M722->X:$078110,18		; MLIM7 flag input status
+M723->X:$078110,15		; FAULT7 flag input status
+M724->X:$078110,20		; Channel 7 W flag input status
+M725->X:$078110,21		; Channel 7 V flag input status
+M726->X:$078110,22		; Channel 7 U flag input status
+M727->X:$078110,23		; Channel 7 T flag input status
+M728->X:$078110,20,4		; Channel 7 TUVW inputs as 4-bit value
+
+; Motor #7 Status Bits
+M730->Y:$0003C0,11,1		; #7 Stopped-on-position-limit bit
+M731->X:$0003B0,21,1		; #7 Positive-end-limit-set bit
+M732->X:$0003B0,22,1		; #7 Negative-end-limit-set bit
+M733->X:$0003B0,13,1		; #7 Desired-velocity-zero bit
+M735->X:$0003B0,15,1		; #7 Dwell-in-progress bit
+M737->X:$0003B0,17,1		; #7 Running-program bit
+M738->X:$0003B0,18,1		; #7 Open-loop-mode bit
+M739->X:$0003B0,19,1		; #7 Amplifier-enabled status bit
+M740->Y:$0003C0,0,1		; #7 Background in-position bit
+M741->Y:$0003C0,1,1		; #7 Warning-following error bit
+M742->Y:$0003C0,2,1		; #7 Fatal-following-error bit
+M743->Y:$0003C0,3,1		; #7 Amplifier-fault-error bit
+M744->Y:$0003C0,13,1		; #7 Foreground in-postion bit
+M745->Y:$0003C0,10,1		; #7 Home-complete bit
+M746->Y:$0003C0,6,1		; #7 Integrated following error fault bit
+M747->Y:$0003C0,5,1		; #7 I2T fault bit
+M748->Y:$0003C0,8,1		; #7 Phasing error fault bit
+M749->Y:$0003C0,9,1		; #7 Phasing search-in-progress bit
+
+; MACRO IC 0 Node 12 Flag Registers (usually used for Motor #7)
+M750->X:$00344C,0,24		; MACRO IC 0 Node 12 flag status register
+M751->Y:$00344C,0,24		; MACRO IC 0 Node 12 flag command register
+M753->X:$00344C,20,4		; MACRO IC 0 Node 12 TUVW flags
+M754->Y:$00344C,14,1		; MACRO IC 0 Node 12 amplifier enable flag
+M755->X:$00344C,15,1		; MACRO IC 0 Node 12 node/amplifier fault flag
+M756->X:$00344C,16,1		; MACRO IC 0 Node 12 home flag
+M757->X:$00344C,17,1		; MACRO IC 0 Node 12 positive limit flag
+M758->X:$00344C,18,1		; MACRO IC 0 Node 12 negative limit flag
+M759->X:$00344C,19,1		; MACRO IC 0 Node 12 user flag
+
+; Motor #7 Move Registers
+M761->D:$000388			; #7 Commanded position (1/[Ixx08*32] cts)
+M762->D:$00038B			; #7 Actual position (1/[Ixx08*32] cts)
+M763->D:$0003C7			; #7 Target (end) position (1/[Ixx08*32] cts)
+M764->D:$0003CC			; #7 Position bias (1/[Ixx08*32] cts)
+M766->X:$00039D,0,24,S	; #7 Actual velocity (1/[Ixx09*32] cts/cyc)
+M767->D:$00038D			; #7 Present master pos (1/[Ixx07*32] cts)
+M768->X:$0003BF,8,16,S	; #7 Filter Output (16-bit DAC bits)
+M769->D:$000390			; #7 Compensation correction (1/[Ixx08*32] cts)
+M770->D:$0003B4			; #7 Present phase position (including fraction)
+M771->X:$0003B4,24,S		; #7 Present phase position (counts *Ixx70)
+M772->L:$0003D7			; #7 Variable jog position/distance (cts)
+M773->Y:$0003CE,0,24,S	; #7 Encoder home capture position (cts)
+M774->D:$0003EF			; #7 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M775->X:$0003B9,8,16,S	; #7 Actual quadrature current
+M776->Y:$0003B9,8,16,S	; #7 Actual direct current
+M777->X:$0003BC,8,16,S	; #7 Quadrature current-loop integrator output
+M778->Y:$0003BC,8,16,S	; #7 Direct current-loop integrator output
+M779->X:$0003AE,8,16,S	; #7 PID internal filter result (16-bit DAC bits)
+
+; Motor #7 Axis Definition Registers
+M791->L:$0003CF			; #7 X/U/A/B/C-Axis scale factor (cts/unit)
+M792->L:$0003D0			; #7 Y/V-Axis scale factor (cts/unit)
+M793->L:$0003D1			; #7 Z/W-Axis scale factor (cts/unit)
+M794->L:$0003D2			; #7 Axis offset (cts)
+
+
+; Servo IC 1 Registers for PMAC2 Channel 8 (usually for Motor #8)
+M801->X:$078119,0,24,S	; ENC8 24-bit counter position
+M802->Y:$07811A,8,16,S	; OUT8A command value; DAC or PWM
+M803->X:$07811B,0,24,S	; ENC8 captured position
+M804->Y:$07811B,8,16,S	; OUT8B command value; DAC or PWM
+M805->Y:$07811D,8,16,S	; ADC8A input value
+M806->Y:$07811E,8,16,S	; ADC8B input value
+M807->Y:$07811C,8,16,S	; OUT8C command value; PFM or PWM
+M808->Y:$07811F,0,24,S	; ENC8 compare A position
+M809->X:$07811F,0,24,S	; ENC8 compare B position
+M810->X:$07811E,0,24,S	; ENC8 compare autoincrement value
+M811->X:$07811D,11		; ENC8 compare initial state write enable
+M812->X:$07811D,12		; ENC8 compare initial state
+M814->X:$07811D,14		; AENA8 output status
+M815->X:$078118,19		; USER8 flag input status
+M816->X:$078118,9		; ENC8 compare output value
+M817->X:$078118,11		; ENC8 capture flag
+M818->X:$078118,8		; ENC8 count error flag
+M819->X:$078118,14		; CHC8 input status
+M820->X:$078118,16		; HMFL8 flag input status
+M821->X:$078118,17		; PLIM8 flag input status
+M822->X:$078118,18		; MLIM8 flag input status
+M823->X:$078118,15		; FAULT8 flag input status
+M824->X:$078118,20		; Channel 8 W flag input status
+M825->X:$078118,21		; Channel 8 V flag input status
+M826->X:$078118,22		; Channel 8 U flag input status
+M827->X:$078118,23		; Channel 8 T flag input status
+M828->X:$078118,20,4		; Channel 8 TUVW inputs as 4-bit value
+
+; Motor #8 Status Bits
+M830->Y:$000440,11,1		; #8 Stopped-on-position-limit bit
+M831->X:$000430,21,1		; #8 Positive-end-limit-set bit
+M832->X:$000430,22,1		; #8 Negative-end-limit-set bit
+M833->X:$000430,13,1		; #8 Desired-velocity-zero bit
+M835->X:$000430,15,1		; #8 Dwell-in-progress bit
+M837->X:$000430,17,1		; #8 Running-program bit
+M838->X:$000430,18,1		; #8 Open-loop-mode bit
+M839->X:$000430,19,1		; #8 Amplifier-enabled status bit
+M840->Y:$000440,0,1		; #8 Background in-position bit
+M841->Y:$000440,1,1		; #8 Warning-following error bit
+M842->Y:$000440,2,1		; #8 Fatal-following-error bit
+M843->Y:$000440,3,1		; #8 Amplifier-fault-error bit
+M844->Y:$000440,13,1		; #8 Foreground in-postion bit
+M845->Y:$000440,10,1		; #8 Home-complete bit
+M846->Y:$000440,6,1		; #8 Integrated following error fault bit
+M847->Y:$000440,5,1		; #8 I2T fault bit
+M848->Y:$000440,8,1		; #8 Phasing error fault bit
+M849->Y:$000440,9,1		; #8 Phasing search-in-progress bit
+
+; MACRO IC 0 Node 13 Flag Registers (usually used for Motor #8)
+M850->X:$00344D,0,24		; MACRO IC 0 Node 13 flag status register
+M851->Y:$00344D,0,24		; MACRO IC 0 Node 13 flag command register
+M853->X:$00344D,20,4		; MACRO IC 0 Node 13 TUVW flags
+M854->Y:$00344D,14,1		; MACRO IC 0 Node 13 amplifier enable flag
+M855->X:$00344D,15,1		; MACRO IC 0 Node 13 node/amplifier fault flag
+M856->X:$00344D,16,1		; MACRO IC 0 Node 13 home flag
+M857->X:$00344D,17,1		; MACRO IC 0 Node 13 positive limit flag
+M858->X:$00344D,18,1		; MACRO IC 0 Node 13 negative limit flag
+M859->X:$00344D,19,1		; MACRO IC 0 Node 13 user flag
+
+; Motor #8 Move Registers
+M861->D:$000408			; #8 Commanded position (1/[Ixx08*32] cts)
+M862->D:$00040B			; #8 Actual position (1/[Ixx08*32] cts)
+M863->D:$000447			; #8 Target (end) position (1/[Ixx08*32] cts)
+M864->D:$00044C			; #8 Position bias (1/[Ixx08*32] cts)
+M866->X:$00041D,0,24,S	; #8 Actual velocity (1/[Ixx09*32] cts/cyc)
+M867->D:$00040D			; #8 Present master pos (1/[Ixx07*32] cts)
+M868->X:$00043F,8,16,S	; #8 Filter Output (16-bit DAC bits)
+M869->D:$000410			; #8 Compensation correction (1/[Ixx08*32] cts)
+M870->D:$000434			; #8 Present phase position (including fraction)
+M871->X:$000434,24,S		; #8 Present phase position (counts *Ixx70)
+M872->L:$000457			; #8 Variable jog position/distance (cts)
+M873->Y:$00044E,0,24,S	; #8 Encoder home capture position (cts)
+M874->D:$00046F			; #8 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M875->X:$000439,8,16,S	; #8 Actual quadrature current
+M876->Y:$000439,8,16,S	; #8 Actual direct current
+M877->X:$00043C,8,16,S	; #8 Quadrature current-loop integrator output
+M878->Y:$00043C,8,16,S	; #8 Direct current-loop integrator output
+M879->X:$00042E,8,16,S	; #8 PID internal filter result (16-bit DAC bits)
+
+; Motor #8 Axis Definition Registers
+M891->L:$00044F			; #8 X/U/A/B/C-Axis scale factor (cts/unit)
+M892->L:$000450			; #8 Y/V-Axis scale factor (cts/unit)
+M893->L:$000451			; #8 Z/W-Axis scale factor (cts/unit)
+M894->L:$000452			; #8 Axis offset (cts)
+
+
+; Servo IC 2 Registers for 1st ACC-24 Channel 1 (usually for Motor #9)
+M901->X:$078201,0,24,S	; ENC1 24-bit counter position
+M902->Y:$078202,8,16,S	; OUT1A command value; DAC or PWM
+M903->X:$078203,0,24,S	; ENC1 captured position
+M904->Y:$078203,8,16,S	; OUT1B command value; DAC or PWM
+M905->Y:$078205,8,16,S	; ADC1A input value
+M906->Y:$078206,8,16,S	; ADC1B input value
+M907->Y:$078204,8,16,S	; OUT1C command value; PFM or PWM
+M908->Y:$078207,0,24,S	; ENC1 compare A position
+M909->X:$078207,0,24,S	; ENC1 compare B position
+M910->X:$078206,0,24,S	; ENC1 compare autoincrement value
+M911->X:$078205,11		; ENC1 compare initial state write enable
+M912->X:$078205,12		; ENC1 compare initial state
+M914->X:$078205,14		; AENA1 output status
+M915->X:$078200,19		; USER1 flag input status
+M916->X:$078200,9		; ENC1 compare output value
+M917->X:$078200,11		; ENC1 capture flag
+M918->X:$078200,8		; ENC1 count error flag
+M919->X:$078200,14		; CHC1 input status
+M920->X:$078200,16		; HMFL1 flag input status
+M921->X:$078200,17		; PLIM1 flag input status
+M922->X:$078200,18		; MLIM1 flag input status
+M923->X:$078200,15		; FAULT1 flag input status
+M924->X:$078200,20		; Channel 1 W flag input status
+M925->X:$078200,21		; Channel 1 V flag input status
+M926->X:$078200,22		; Channel 1 U flag input status
+M927->X:$078200,23		; Channel 1 T flag input status
+M928->X:$078200,20,4		; Channel 1 TUVW inputs as 4-bit value
+
+; Motor #9 Status Bits
+M930->Y:$0004C0,11,1		; #9 Stopped-on-position-limit bit
+M931->X:$0004B0,21,1		; #9 Positive-end-limit-set bit
+M932->X:$0004B0,22,1		; #9 Negative-end-limit-set bit
+M933->X:$0004B0,13,1		; #9 Desired-velocity-zero bit
+M935->X:$0004B0,15,1		; #9 Dwell-in-progress bit
+M937->X:$0004B0,17,1		; #9 Running-program bit
+M938->X:$0004B0,18,1		; #9 Open-loop-mode bit
+M939->X:$0004B0,19,1		; #9 Amplifier-enabled status bit
+M940->Y:$0004C0,0,1		; #9 Background in-position bit
+M941->Y:$0004C0,1,1		; #9 Warning-following error bit
+M942->Y:$0004C0,2,1		; #9 Fatal-following-error bit
+M943->Y:$0004C0,3,1		; #9 Amplifier-fault-error bit
+M944->Y:$0004C0,13,1		; #9 Foreground in-postion bit
+M945->Y:$0004C0,10,1		; #9 Home-complete bit
+M946->Y:$0004C0,6,1		; #9 Integrated following error fault bit
+M947->Y:$0004C0,5,1		; #9 I2T fault bit
+M948->Y:$0004C0,8,1		; #9 Phasing error fault bit
+M949->Y:$0004C0,9,1		; #9 Phasing search-in-progress bit
+
+; MACRO IC 1 Node 0 Flag Registers (usually used for Motor #9)
+M950->X:$003450,0,24		; MACRO IC 1 Node 0 flag status register
+M951->Y:$003450,0,24		; MACRO IC 1 Node 0 flag command register
+M953->X:$003450,20,4		; MACRO IC 1 Node 0 TUVW flags
+M954->Y:$003450,14,1		; MACRO IC 1 Node 0 amplifier enable flag
+M955->X:$003450,15,1		; MACRO IC 1 Node 0 node/amplifier fault flag
+M956->X:$003450,16,1		; MACRO IC 1 Node 0 home flag
+M957->X:$003450,17,1		; MACRO IC 1 Node 0 positive limit flag
+M958->X:$003450,18,1		; MACRO IC 1 Node 0 negative limit flag
+M959->X:$003450,19,1		; MACRO IC 1 Node 0 user flag
+
+; Motor #9 Move Registers
+M961->D:$000488			; #9 Commanded position (1/[Ixx08*32] cts)
+M962->D:$00048B			; #9 Actual position (1/[Ixx08*32] cts)
+M963->D:$0004C7			; #9 Target (end) position (1/[Ixx08*32] cts)
+M964->D:$0004CC			; #9 Position bias (1/[Ixx08*32] cts)
+M966->X:$00049D,0,24,S	; #9 Actual velocity (1/[Ixx09*32] cts/cyc)
+M967->D:$00048D			; #9 Present master pos (1/[Ixx07*32] cts)
+M968->X:$0004BF,8,16,S	; #9 Filter Output (16-bit DAC bits)
+M969->D:$000490			; #9 Compensation correction (1/[Ixx08*32] cts)
+M970->D:$0004B4			; #9 Present phase position (including fraction)
+M971->X:$0004B4,24,S		; #9 Present phase position (counts *Ixx70)
+M972->L:$0004D7			; #9 Variable jog position/distance (cts)
+M973->Y:$0004CE,0,24,S	; #9 Encoder home capture position (cts)
+M974->D:$0004EF			; #9 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M975->X:$0004B9,8,16,S	; #9 Actual quadrature current
+M976->Y:$0004B9,8,16,S	; #9 Actual direct current
+M977->X:$0004BC,8,16,S	; #9 Quadrature current-loop integrator output
+M978->Y:$0004BC,8,16,S	; #9 Direct current-loop integrator output
+M979->X:$0004AE,8,16,S	; #9 PID internal filter result (16-bit DAC bits)
+
+; Motor #9 Axis Definition Registers
+M991->L:$0004CF			; #9 X/U/A/B/C-Axis scale factor (cts/unit)
+M992->L:$0004D0			; #9 Y/V-Axis scale factor (cts/unit)
+M993->L:$0004D1			; #9 Z/W-Axis scale factor (cts/unit)
+M994->L:$0004D2			; #9 Axis offset (cts)
+
+
+; Servo IC 2 Registers for 1st ACC-24 Channel 2 (usually for Motor #10)
+M1001->X:$078209,0,24,S	; ENC2 24-bit counter position
+M1002->Y:$07820A,8,16,S	; OUT2A command value; DAC or PWM
+M1003->X:$07820B,0,24,S	; ENC2 captured position
+M1004->Y:$07820B,8,16,S	; OUT2B command value; DAC or PWM
+M1005->Y:$07820D,8,16,S	; ADC2A input value
+M1006->Y:$07820E,8,16,S	; ADC2B input value
+M1007->Y:$07820C,8,16,S	; OUT2C command value; PFM or PWM
+M1008->Y:$07820F,0,24,S	; ENC2 compare A position
+M1009->X:$07820F,0,24,S	; ENC2 compare B position
+M1010->X:$07820E,0,24,S	; ENC2 compare autoincrement value
+M1011->X:$07820D,11		; ENC2 compare initial state write enable
+M1012->X:$07820D,12		; ENC2 compare initial state
+M1014->X:$07820D,14		; AENA2 output status
+M1015->X:$078208,19		; USER2 flag input status
+M1016->X:$078208,9		; ENC2 compare output value
+M1017->X:$078208,11		; ENC2 capture flag
+M1018->X:$078208,8		; ENC2 count error flag
+M1019->X:$078208,14		; CHC2 input status
+M1020->X:$078208,16		; HMFL2 flag input status
+M1021->X:$078208,17		; PLIM2 flag input status
+M1022->X:$078208,18		; MLIM2 flag input status
+M1023->X:$078208,15		; FAULT2 flag input status
+M1024->X:$078208,20		; Channel 2 W flag input status
+M1025->X:$078208,21		; Channel 2 V flag input status
+M1026->X:$078208,22		; Channel 2 U flag input status
+M1027->X:$078208,23		; Channel 2 T flag input status
+M1028->X:$078208,20,4		; Channel 2 TUVW inputs as 4-bit value
+
+; Motor #10 Status Bits
+M1030->Y:$000540,11,1		; #10 Stopped-on-position-limit bit
+M1031->X:$000530,21,1		; #10 Positive-end-limit-set bit
+M1032->X:$000530,22,1		; #10 Negative-end-limit-set bit
+M1033->X:$000530,13,1		; #10 Desired-velocity-zero bit
+M1035->X:$000530,15,1		; #10 Dwell-in-progress bit
+M1037->X:$000530,17,1		; #10 Running-program bit
+M1038->X:$000530,18,1		; #10 Open-loop-mode bit
+M1039->X:$000530,19,1		; #10 Amplifier-enabled status bit
+M1040->Y:$000540,0,1		; #10 Background in-position bit
+M1041->Y:$000540,1,1		; #10 Warning-following error bit
+M1042->Y:$000540,2,1		; #10 Fatal-following-error bit
+M1043->Y:$000540,3,1		; #10 Amplifier-fault-error bit
+M1044->Y:$000540,13,1		; #10 Foreground in-postion bit
+M1045->Y:$000540,10,1		; #10 Home-complete bit
+M1046->Y:$000540,6,1		; #10 Integrated following error fault bit
+M1047->Y:$000540,5,1		; #10 I2T fault bit
+M1048->Y:$000540,8,1		; #10 Phasing error fault bit
+M1049->Y:$000540,9,1		; #10 Phasing search-in-progress bit
+
+; MACRO IC 1 Node 1 Flag Registers (usually used for Motor #10)
+M1050->X:$003451,0,24		; MACRO IC 1 Node 1 flag status register
+M1051->Y:$003451,0,24		; MACRO IC 1 Node 1 flag command register
+M1053->X:$003451,20,4		; MACRO IC 1 Node 1 TUVW flags
+M1054->Y:$003451,14,1		; MACRO IC 1 Node 1 amplifier enable flag
+M1055->X:$003451,15,1		; MACRO IC 1 Node 1 node/amplifier fault flag
+M1056->X:$003451,16,1		; MACRO IC 1 Node 1 home flag
+M1057->X:$003451,17,1		; MACRO IC 1 Node 1 positive limit flag
+M1058->X:$003451,18,1		; MACRO IC 1 Node 1 negative limit flag
+M1059->X:$003451,19,1		; MACRO IC 1 Node 1 user flag
+
+; Motor #10 Move Registers
+M1061->D:$000508			; #10 Commanded position (1/[Ixx08*32] cts)
+M1062->D:$00050B			; #10 Actual position (1/[Ixx08*32] cts)
+M1063->D:$000547			; #10 Target (end) position (1/[Ixx08*32] cts)
+M1064->D:$00054C			; #10 Position bias (1/[Ixx08*32] cts)
+M1066->X:$00051D,0,24,S	; #10 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1067->D:$00050D			; #10 Present master pos (1/[Ixx07*32] cts)
+M1068->X:$00053F,8,16,S	; #10 Filter Output (16-bit DAC bits)
+M1069->D:$000510			; #10 Compensation correction (1/[Ixx08*32] cts)
+M1070->D:$000534			; #10 Present phase position (including fraction)
+M1071->X:$000534,24,S		; #10 Present phase position (counts *Ixx70)
+M1072->L:$000557			; #10 Variable jog position/distance (cts)
+M1073->Y:$00054E,0,24,S	; #10 Encoder home capture position (cts)
+M1074->D:$00056F			; #10 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1075->X:$000539,8,16,S	; #10 Actual quadrature current
+M1076->Y:$000539,8,16,S	; #10 Actual direct current
+M1077->X:$00053C,8,16,S	; #10 Quadrature current-loop integrator output
+M1078->Y:$00053C,8,16,S	; #10 Direct current-loop integrator output
+M1079->X:$00052E,8,16,S	; #10 PID internal filter result (16-bit DAC bits)
+
+; Motor #10 Axis Definition Registers
+M1091->L:$00054F			; #10 X/U/A/B/C-Axis scale factor (cts/unit)
+M1092->L:$000550			; #10 Y/V-Axis scale factor (cts/unit)
+M1093->L:$000551			; #10 Z/W-Axis scale factor (cts/unit)
+M1094->L:$000552			; #10 Axis offset (cts)
+
+
+; Servo IC 2 Registers for 1st ACC-24 Channel 3 (usually for Motor #11)
+M1101->X:$078211,0,24,S	; ENC3 24-bit counter position
+M1102->Y:$078212,8,16,S	; OUT3A command value; DAC or PWM
+M1103->X:$078213,0,24,S	; ENC3 captured position
+M1104->Y:$078213,8,16,S	; OUT3B command value; DAC or PWM
+M1105->Y:$078215,8,16,S	; ADC3A input value
+M1106->Y:$078216,8,16,S	; ADC3B input value
+M1107->Y:$078214,8,16,S	; OUT3C command value; PFM or PWM
+M1108->Y:$078217,0,24,S	; ENC3 compare A position
+M1109->X:$078217,0,24,S	; ENC3 compare B position
+M1110->X:$078216,0,24,S	; ENC3 compare autoincrement value
+M1111->X:$078215,11		; ENC3 compare initial state write enable
+M1112->X:$078215,12		; ENC3 compare initial state
+M1114->X:$078215,14		; AENA3 output status
+M1115->X:$078210,19		; USER3 flag input status
+M1116->X:$078210,9		; ENC3 compare output value
+M1117->X:$078210,11		; ENC3 capture flag
+M1118->X:$078210,8		; ENC3 count error flag
+M1119->X:$078210,14		; CHC3 input status
+M1120->X:$078210,16		; HMFL3 flag input status
+M1121->X:$078210,17		; PLIM3 flag input status
+M1122->X:$078210,18		; MLIM3 flag input status
+M1123->X:$078210,15		; FAULT3 flag input status
+M1124->X:$078210,20		; Channel 3 W flag input status
+M1125->X:$078210,21		; Channel 3 V flag input status
+M1126->X:$078210,22		; Channel 3 U flag input status
+M1127->X:$078210,23		; Channel 3 T flag input status
+M1128->X:$078210,20,4		; Channel 3 TUVW inputs as 4-bit value
+
+; Motor #11 Status Bits
+M1130->Y:$0005C0,11,1		; #11 Stopped-on-position-limit bit
+M1131->X:$0005B0,21,1		; #11 Positive-end-limit-set bit
+M1132->X:$0005B0,22,1		; #11 Negative-end-limit-set bit
+M1133->X:$0005B0,13,1		; #11 Desired-velocity-zero bit
+M1135->X:$0005B0,15,1		; #11 Dwell-in-progress bit
+M1137->X:$0005B0,17,1		; #11 Running-program bit
+M1138->X:$0005B0,18,1		; #11 Open-loop-mode bit
+M1139->X:$0005B0,19,1		; #11 Amplifier-enabled status bit
+M1140->Y:$0005C0,0,1		; #11 Background in-position bit
+M1141->Y:$0005C0,1,1		; #11 Warning-following error bit
+M1142->Y:$0005C0,2,1		; #11 Fatal-following-error bit
+M1143->Y:$0005C0,3,1		; #11 Amplifier-fault-error bit
+M1144->Y:$0005C0,13,1		; #11 Foreground in-postion bit
+M1145->Y:$0005C0,10,1		; #11 Home-complete bit
+M1146->Y:$0005C0,6,1		; #11 Integrated following error fault bit
+M1147->Y:$0005C0,5,1		; #11 I2T fault bit
+M1148->Y:$0005C0,8,1		; #11 Phasing error fault bit
+M1149->Y:$0005C0,9,1		; #11 Phasing search-in-progress bit
+
+; MACRO IC 1 Node 4 Flag Registers (usually used for Motor #11)
+M1150->X:$003454,0,24		; MACRO IC 1 Node 4 flag status register
+M1151->Y:$003454,0,24		; MACRO IC 1 Node 4 flag command register
+M1153->X:$003454,20,4		; MACRO IC 1 Node 4 TUVW flags
+M1154->Y:$003454,14,1		; MACRO IC 1 Node 4 amplifier enable flag
+M1155->X:$003454,15,1		; MACRO IC 1 Node 4 node/amplifier fault flag
+M1156->X:$003454,16,1		; MACRO IC 1 Node 4 home flag
+M1157->X:$003454,17,1		; MACRO IC 1 Node 4 positive limit flag
+M1158->X:$003454,18,1		; MACRO IC 1 Node 4 negative limit flag
+M1159->X:$003454,19,1		; MACRO IC 1 Node 4 user flag
+
+; Motor #11 Move Registers
+M1161->D:$000588			; #11 Commanded position (1/[Ixx08*32] cts)
+M1162->D:$00058B			; #11 Actual position (1/[Ixx08*32] cts)
+M1163->D:$0005C7			; #11 Target (end) position (1/[Ixx08*32] cts)
+M1164->D:$0005CC			; #11 Position bias (1/[Ixx08*32] cts)
+M1166->X:$00059D,0,24,S	; #11 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1167->D:$00058D			; #11 Present master pos (1/[Ixx07*32] cts)
+M1168->X:$0005BF,8,16,S	; #11 Filter Output (16-bit DAC bits)
+M1169->D:$000590			; #11 Compensation correction (1/[Ixx08*32] cts)
+M1170->D:$0005B4			; #11 Present phase position (including fraction)
+M1171->X:$0005B4,24,S		; #11 Present phase position (counts *Ixx70)
+M1172->L:$0005D7			; #11 Variable jog position/distance (cts)
+M1173->Y:$0005CE,0,24,S	; #11 Encoder home capture position (cts)
+M1174->D:$0005EF			; #11 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1175->X:$0005B9,8,16,S	; #11 Actual quadrature current
+M1176->Y:$0005B9,8,16,S	; #11 Actual direct current
+M1177->X:$0005BC,8,16,S	; #11 Quadrature current-loop integrator output
+M1178->Y:$0005BC,8,16,S	; #11 Direct current-loop integrator output
+M1179->X:$0005AE,8,16,S	; #11 PID internal filter result (16-bit DAC bits)
+
+; Motor #11 Axis Definition Registers
+M1191->L:$0005CF			; #11 X/U/A/B/C-Axis scale factor (cts/unit)
+M1192->L:$0005D0			; #11 Y/V-Axis scale factor (cts/unit)
+M1193->L:$0005D1			; #11 Z/W-Axis scale factor (cts/unit)
+M1194->L:$0005D2			; #11 Axis offset (cts)
+
+
+; Servo IC 2 Registers for 1st ACC-24 Channel 4 (usually for Motor #12)
+M1201->X:$078219,0,24,S	; ENC4 24-bit counter position
+M1202->Y:$07821A,8,16,S	; OUT4A command value; DAC or PWM
+M1203->X:$07821B,0,24,S	; ENC4 captured position
+M1204->Y:$07821B,8,16,S	; OUT4B command value; DAC or PWM
+M1205->Y:$07821D,8,16,S	; ADC4A input value
+M1206->Y:$07821E,8,16,S	; ADC4B input value
+M1207->Y:$07821C,8,16,S	; OUT4C command value; PFM or PWM
+M1208->Y:$07821F,0,24,S	; ENC4 compare A position
+M1209->X:$07821F,0,24,S	; ENC4 compare B position
+M1210->X:$07821E,0,24,S	; ENC4 compare autoincrement value
+M1211->X:$07821D,11		; ENC4 compare initial state write enable
+M1212->X:$07821D,12		; ENC4 compare initial state
+M1214->X:$07821D,14		; AENA4 output status
+M1215->X:$078218,19		; USER4 flag input status
+M1216->X:$078218,9		; ENC4 compare output value
+M1217->X:$078218,11		; ENC4 capture flag
+M1218->X:$078218,8		; ENC4 count error flag
+M1219->X:$078218,14		; HMFL4 flag input status
+M1220->X:$078218,16		; CHC4 input status
+M1221->X:$078218,17		; PLIM4 flag input status
+M1222->X:$078218,18		; MLIM4 flag input status
+M1223->X:$078218,15		; FAULT4 flag input status
+M1224->X:$078218,20		; Channel 4 W flag input status
+M1225->X:$078218,21		; Channel 4 V flag input status
+M1226->X:$078218,22		; Channel 4 U flag input status
+M1227->X:$078218,23		; Channel 4 T flag input status
+M1228->X:$078218,20,4		; Channel 4 TUVW inputs as 4-bit value
+
+; Motor #12 Status Bits
+M1230->Y:$000640,11,1		; #12 Stopped-on-position-limit bit
+M1231->X:$000630,21,1		; #12 Positive-end-limit-set bit
+M1232->X:$000630,22,1		; #12 Negative-end-limit-set bit
+M1233->X:$000630,13,1		; #12 Desired-velocity-zero bit
+M1235->X:$000630,15,1		; #12 Dwell-in-progress bit
+M1237->X:$000630,17,1		; #12 Running-program bit
+M1238->X:$000630,18,1		; #12 Open-loop-mode bit
+M1239->X:$000630,19,1		; #12 Amplifier-enabled status bit
+M1240->Y:$000640,0,1		; #12 Background in-position bit
+M1241->Y:$000640,1,1		; #12 Warning-following error bit
+M1242->Y:$000640,2,1		; #12 Fatal-following-error bit
+M1243->Y:$000640,3,1		; #12 Amplifier-fault-error bit
+M1244->Y:$000640,13,1		; #12 Foreground in-postion bit
+M1245->Y:$000640,10,1		; #12 Home-complete bit
+M1246->Y:$000640,6,1		; #12 Integrated following error fault bit
+M1247->Y:$000640,5,1		; #12 I2T fault bit
+M1248->Y:$000640,8,1		; #12 Phasing error fault bit
+M1249->Y:$000640,9,1		; #12 Phasing search-in-progress bit
+
+; MACRO IC 1 Node 5 Flag Registers (usually used for Motor #12)
+M1250->X:$003455,0,24		; MACRO IC 1 Node 5 flag status register
+M1251->Y:$003455,0,24		; MACRO IC 1 Node 5 flag command register
+M1253->X:$003455,20,4		; MACRO IC 1 Node 5 TUVW flags
+M1254->Y:$003455,14,1		; MACRO IC 1 Node 5 amplifier enable flag
+M1255->X:$003455,15,1		; MACRO IC 1 Node 5 node/amplifier fault flag
+M1256->X:$003455,16,1		; MACRO IC 1 Node 5 home flag
+M1257->X:$003455,17,1		; MACRO IC 1 Node 5 positive limit flag
+M1258->X:$003455,18,1		; MACRO IC 1 Node 5 negative limit flag
+M1259->X:$003455,19,1		; MACRO IC 1 Node 5 user flag
+
+; Motor #12 Move Registers
+M1261->D:$000608			; #12 Commanded position (1/[Ixx08*32] cts)
+M1262->D:$00060B			; #12 Actual position (1/[Ixx08*32] cts)
+M1263->D:$000647			; #12 Target (end) position (1/[Ixx08*32] cts)
+M1264->D:$00064C			; #12 Position bias (1/[Ixx08*32] cts)
+M1266->X:$00061D,0,24,S	; #12 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1267->D:$00060D			; #12 Present master pos (1/[Ixx07*32] cts)
+M1268->X:$00063F,8,16,S	; #12 Filter Output (16-bit DAC bits)
+M1269->D:$000610			; #12 Compensation correction (1/[Ixx08*32] cts)
+M1270->D:$000634			; #12 Present phase position (including fraction)
+M1271->X:$000634,24,S		; #12 Present phase position (counts *Ixx70)
+M1272->L:$000657			; #12 Variable jog position/distance (cts)
+M1273->Y:$00064E,0,24,S	; #12 Encoder home capture position (cts)
+M1274->D:$00066F			; #12 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1275->X:$000639,8,16,S	; #12 Actual quadrature current
+M1276->Y:$000639,8,16,S	; #12 Actual direct current
+M1277->X:$00063C,8,16,S	; #12 Quadrature current-loop integrator output
+M1278->Y:$00063C,8,16,S	; #12 Direct current-loop integrator output
+M1279->X:$00062E,8,16,S	; #12 PID internal filter result (16-bit DAC bits)
+
+; Motor #12 Axis Definition Registers
+M1291->L:$00064F			; #12 X/U/A/B/C-Axis scale factor (cts/unit)
+M1292->L:$000650			; #12 Y/V-Axis scale factor (cts/unit)
+M1293->L:$000651			; #12 Z/W-Axis scale factor (cts/unit)
+M1294->L:$000652			; #12 Axis offset (cts)
+
+
+; Servo IC 3 Registers for 1st ACC-24 Channel 5 (usually for Motor #13)
+M1301->X:$078301,0,24,S	; ENC5 24-bit counter position
+M1302->Y:$078302,8,16,S	; OUT5A command value; DAC or PWM
+M1303->X:$078303,0,24,S	; ENC5 captured position
+M1304->Y:$078303,8,16,S	; OUT5B command value; DAC or PWM
+M1305->Y:$078305,8,16,S	; ADC5A input value
+M1306->Y:$078306,8,16,S	; ADC5B input value
+M1307->Y:$078304,8,16,S	; OUT5C command value; PFM or PWM
+M1308->Y:$078307,0,24,S	; ENC5 compare A position
+M1309->X:$078307,0,24,S	; ENC5 compare B position
+M1310->X:$078306,0,24,S	; ENC5 compare autoincrement value
+M1311->X:$078305,11		; ENC5 compare initial state write enable
+M1312->X:$078305,12		; ENC5 compare initial state
+M1314->X:$078305,14		; AENA5 output status
+M1315->X:$078300,19		; USER5 flag input status
+M1316->X:$078300,9		; ENC5 compare output value
+M1317->X:$078300,11		; ENC5 capture flag
+M1318->X:$078300,8		; ENC5 count error flag
+M1319->X:$078300,14		; CHC5 input status
+M1320->X:$078300,16		; HMFL5 flag input status
+M1321->X:$078300,17		; PLIM5 flag input status
+M1322->X:$078300,18		; MLIM5 flag input status
+M1323->X:$078300,15		; FAULT5 flag input status
+M1324->X:$078300,20		; Channel 5 W flag input status
+M1325->X:$078300,21		; Channel 5 V flag input status
+M1326->X:$078300,22		; Channel 5 U flag input status
+M1327->X:$078300,23		; Channel 5 T flag input status
+M1328->X:$078300,20,4		; Channel 5 TUVW inputs as 4-bit value
+
+; Motor #13 Status Bits
+M1330->Y:$0006C0,11,1		; #13 Stopped-on-position-limit bit
+M1331->X:$0006B0,21,1		; #13 Positive-end-limit-set bit
+M1332->X:$0006B0,22,1		; #13 Negative-end-limit-set bit
+M1333->X:$0006B0,13,1		; #13 Desired-velocity-zero bit
+M1335->X:$0006B0,15,1		; #13 Dwell-in-progress bit
+M1337->X:$0006B0,17,1		; #13 Running-program bit
+M1338->X:$0006B0,18,1		; #13 Open-loop-mode bit
+M1339->X:$0006B0,19,1		; #13 Amplifier-enabled status bit
+M1340->Y:$0006C0,0,1		; #13 Background in-position bit
+M1341->Y:$0006C0,1,1		; #13 Warning-following error bit
+M1342->Y:$0006C0,2,1		; #13 Fatal-following-error bit
+M1343->Y:$0006C0,3,1		; #13 Amplifier-fault-error bit
+M1344->Y:$0006C0,13,1		; #13 Foreground in-postion bit
+M1345->Y:$0006C0,10,1		; #13 Home-complete bit
+M1346->Y:$0006C0,6,1		; #13 Integrated following error fault bit
+M1347->Y:$0006C0,5,1		; #13 I2T fault bit
+M1348->Y:$0006C0,8,1		; #13 Phasing error fault bit
+M1349->Y:$0006C0,9,1		; #13 Phasing search-in-progress bit
+
+; MACRO IC 1 Node 8 Flag Registers (usually used for Motor #13)
+M1350->X:$003458,0,24		; MACRO IC 1 Node 8 flag status register
+M1351->Y:$003458,0,24		; MACRO IC 1 Node 8 flag command register
+M1353->X:$003458,20,4		; MACRO IC 1 Node 8 TUVW flags
+M1354->Y:$003458,14,1		; MACRO IC 1 Node 8 amplifier enable flag
+M1355->X:$003458,15,1		; MACRO IC 1 Node 8 node/amplifier fault flag
+M1356->X:$003458,16,1		; MACRO IC 1 Node 8 home flag
+M1357->X:$003458,17,1		; MACRO IC 1 Node 8 positive limit flag
+M1358->X:$003458,18,1		; MACRO IC 1 Node 8 negative limit flag
+M1359->X:$003458,19,1		; MACRO IC 1 Node 8 user flag
+
+; Motor #13 Move Registers
+M1361->D:$000688			; #13 Commanded position (1/[Ixx08*32] cts)
+M1362->D:$00068B			; #13 Actual position (1/[Ixx08*32] cts)
+M1363->D:$0006C7			; #13 Target (end) position (1/[Ixx08*32] cts)
+M1364->D:$0006CC			; #13 Position bias (1/[Ixx08*32] cts)
+M1366->X:$00069D,0,24,S	; #13 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1367->D:$00068D			; #13 Present master pos (1/[Ixx07*32] cts)
+M1368->X:$0006BF,8,16,S	; #13 Filter Output (16-bit DAC bits)
+M1369->D:$000690			; #13 Compensation correction (1/[Ixx08*32] cts)
+M1370->D:$0006B4			; #13 Present phase position (including fraction)
+M1371->X:$0006B4,24,S		; #13 Present phase position (counts *Ixx70)
+M1372->L:$0006D7			; #13 Variable jog position/distance (cts)
+M1373->Y:$0006CE,0,24,S	; #13 Encoder home capture position (cts)
+M1374->D:$0006EF			; #13 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1375->X:$0006B9,8,16,S	; #13 Actual quadrature current
+M1376->Y:$0006B9,8,16,S	; #13 Actual direct current
+M1377->X:$0006BC,8,16,S	; #13 Quadrature current-loop integrator output
+M1378->Y:$0006BC,8,16,S	; #13 Direct current-loop integrator output
+M1379->X:$0006AE,8,16,S	; #13 PID internal filter result (16-bit DAC bits)
+
+; Motor #13 Axis Definition Registers
+M1391->L:$0006CF			; #13 X/U/A/B/C-Axis scale factor (cts/unit)
+M1392->L:$0006D0			; #13 Y/V-Axis scale factor (cts/unit)
+M1393->L:$0006D1			; #13 Z/W-Axis scale factor (cts/unit)
+M1394->L:$0006D2			; #13 Axis offset (cts)
+
+
+; Servo IC 3 Registers for 1st ACC-24 Channel 6 (usually for Motor #14)
+M1401->X:$078309,0,24,S	; ENC6 24-bit counter position
+M1402->Y:$07830A,8,16,S	; OUT6A command value; DAC or PWM
+M1403->X:$07830B,0,24,S	; ENC6 captured position
+M1404->Y:$07830B,8,16,S	; OUT6B command value; DAC or PWM
+M1405->Y:$07830D,8,16,S	; ADC6A input value
+M1406->Y:$07830E,8,16,S	; ADC6B input value
+M1407->Y:$07830C,8,16,S	; OUT6C command value; PFM or PWM
+M1408->Y:$07830F,0,24,S	; ENC6 compare A position
+M1409->X:$07830F,0,24,S	; ENC6 compare B position
+M1410->X:$07830E,0,24,S	; ENC6 compare autoincrement value
+M1411->X:$07830D,11		; ENC6 compare initial state write enable
+M1412->X:$07830D,12		; ENC6 compare initial state
+M1414->X:$07830D,14		; AENA6 output status
+M1415->X:$078308,19		; USER6 flag input status
+M1416->X:$078308,9		; ENC6 compare output value
+M1417->X:$078308,11		; ENC6 capture flag
+M1418->X:$078308,8		; ENC6 count error flag
+M1419->X:$078308,14		; CHC6 input status
+M1420->X:$078308,16		; HMFL6 flag input status
+M1421->X:$078308,17		; PLIM6 flag input status
+M1422->X:$078308,18		; MLIM6 flag input status
+M1423->X:$078308,15		; FAULT6 flag input status
+M1424->X:$078308,20		; Channel 6 W flag input status
+M1425->X:$078308,21		; Channel 6 V flag input status
+M1426->X:$078308,22		; Channel 6 U flag input status
+M1427->X:$078308,23		; Channel 6 T flag input status
+M1428->X:$078308,20,4		; Channel 6 TUVW inputs as 4-bit value
+
+; Motor #14 Status Bits
+M1430->Y:$000740,11,1		; #14 Stopped-on-position-limit bit
+M1431->X:$000730,21,1		; #14 Positive-end-limit-set bit
+M1432->X:$000730,22,1		; #14 Negative-end-limit-set bit
+M1433->X:$000730,13,1		; #14 Desired-velocity-zero bit
+M1435->X:$000730,15,1		; #14 Dwell-in-progress bit
+M1437->X:$000730,17,1		; #14 Running-program bit
+M1438->X:$000730,18,1		; #14 Open-loop-mode bit
+M1439->X:$000730,19,1		; #14 Amplifier-enabled status bit
+M1440->Y:$000740,0,1		; #14 Background in-position bit
+M1441->Y:$000740,1,1		; #14 Warning-following error bit
+M1442->Y:$000740,2,1		; #14 Fatal-following-error bit
+M1443->Y:$000740,3,1		; #14 Amplifier-fault-error bit
+M1444->Y:$000540,13,1		; #14 Foreground in-postion bit
+M1445->Y:$000740,10,1		; #14 Home-complete bit
+M1446->Y:$000740,6,1		; #14 Integrated following error fault bit
+M1447->Y:$000740,5,1		; #14 I2T fault bit
+M1448->Y:$000740,8,1		; #14 Phasing error fault bit
+M1449->Y:$000740,9,1		; #14 Phasing search-in-progress bit
+
+; MACRO IC 1 Node 9 Flag Registers (usually used for Motor #14)
+M1450->X:$003459,0,24		; MACRO IC 1 Node 9 flag status register
+M1451->Y:$003459,0,24		; MACRO IC 1 Node 9 flag command register
+M1453->X:$003459,20,4		; MACRO IC 1 Node 9 TUVW flags
+M1454->Y:$003459,14,1		; MACRO IC 1 Node 9 amplifier enable flag
+M1455->X:$003459,15,1		; MACRO IC 1 Node 9 node/amplifier fault flag
+M1456->X:$003459,16,1		; MACRO IC 1 Node 9 home flag
+M1457->X:$003459,17,1		; MACRO IC 1 Node 9 positive limit flag
+M1458->X:$003459,18,1		; MACRO IC 1 Node 9 negative limit flag
+M1459->X:$003459,19,1		; MACRO IC 1 Node 9 user flag
+
+; Motor #14 Move Registers
+M1461->D:$000708			; #14 Commanded position (1/[Ixx08*32] cts)
+M1462->D:$00070B			; #14 Actual position (1/[Ixx08*32] cts)
+M1463->D:$000747			; #14 Target (end) position (1/[Ixx08*32] cts)
+M1464->D:$00074C			; #14 Position bias (1/[Ixx08*32] cts)
+M1466->X:$00071D,0,24,S	; #14 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1467->D:$00070D			; #14 Present master pos (1/[Ixx07*32] cts)
+M1468->X:$00073F,8,16,S	; #14 Filter Output (16-bit DAC bits)
+M1469->D:$000710			; #14 Compensation correction (1/[Ixx08*32] cts)
+M1470->D:$000734			; #14 Present phase position (including fraction)
+M1471->X:$000734,24,S		; #14 Present phase position (counts *Ixx70)
+M1472->L:$000757			; #14 Variable jog position/distance (cts)
+M1473->Y:$00074E,0,24,S	; #14 Encoder home capture position (cts)
+M1474->D:$00076F			; #14 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1475->X:$000739,8,16,S	; #14 Actual quadrature current
+M1476->Y:$000739,8,16,S	; #14 Actual direct current
+M1477->X:$00073C,8,16,S	; #14 Quadrature current-loop integrator output
+M1478->Y:$00073C,8,16,S	; #14 Direct current-loop integrator output
+M1479->X:$00072E,8,16,S	; #14 PID internal filter result (16-bit DAC bits)
+
+; Motor #14 Axis Definition Registers
+M1491->L:$00074F			; #14 X/U/A/B/C-Axis scale factor (cts/unit)
+M1492->L:$000750			; #14 Y/V-Axis scale factor (cts/unit)
+M1493->L:$000751			; #14 Z/W-Axis scale factor (cts/unit)
+M1494->L:$000752			; #14 Axis offset (cts)
+
+
+; Servo IC 3 Registers for 1st ACC-24 Channel 7 (usually for Motor #15)
+M1501->X:$078311,0,24,S	; ENC7 24-bit counter position
+M1502->Y:$078312,8,16,S	; OUT7A command value; DAC or PWM
+M1503->X:$078313,0,24,S	; ENC7 captured position
+M1504->Y:$078313,8,16,S	; OUT7B command value; DAC or PWM
+M1505->Y:$078315,8,16,S	; ADC7A input value
+M1506->Y:$078316,8,16,S	; ADC7B input value
+M1507->Y:$078314,8,16,S	; OUT7C command value; PFM or PWM
+M1508->Y:$078317,0,24,S	; ENC7 compare A position
+M1509->X:$078317,0,24,S	; ENC7 compare B position
+M1510->X:$078316,0,24,S	; ENC7 compare autoincrement value
+M1511->X:$078315,11		; ENC7 compare initial state write enable
+M1512->X:$078315,12		; ENC7 compare initial state
+M1514->X:$078315,14		; AENA7 output status
+M1515->X:$078310,19		; CHC7 input status
+M1516->X:$078310,9		; ENC7 compare output value
+M1517->X:$078310,11		; ENC7 capture flag
+M1518->X:$078310,8		; ENC7 count error flag
+M1519->X:$078310,14		; CHC7 input status
+M1520->X:$078310,16		; HMFL7 flag input status
+M1521->X:$078310,17		; PLIM7 flag input status
+M1522->X:$078310,18		; MLIM7 flag input status
+M1523->X:$078310,15		; FAULT7 flag input status
+M1524->X:$078310,20		; Channel 7 W flag input status
+M1525->X:$078310,21		; Channel 7 V flag input status
+M1526->X:$078310,22		; Channel 7 U flag input status
+M1527->X:$078310,23		; Channel 7 T flag input status
+M1528->X:$078310,20,4		; Channel 7 TUVW inputs as 4-bit value
+
+; Motor #15 Status Bits
+M1530->Y:$0007C0,11,1		; #15 Stopped-on-position-limit bit
+M1531->X:$0007B0,21,1		; #15 Positive-end-limit-set bit
+M1532->X:$0007B0,22,1		; #15 Negative-end-limit-set bit
+M1533->X:$0007B0,13,1		; #15 Desired-velocity-zero bit
+M1535->X:$0007B0,15,1		; #15 Dwell-in-progress bit
+M1537->X:$0007B0,17,1		; #15 Running-program bit
+M1538->X:$0007B0,18,1		; #15 Open-loop-mode bit
+M1539->X:$0007B0,19,1		; #15 Amplifier-enabled status bit
+M1540->Y:$0007C0,0,1		; #15 Background in-position bit
+M1541->Y:$0007C0,1,1		; #15 Warning-following error bit
+M1542->Y:$0007C0,2,1		; #15 Fatal-following-error bit
+M1543->Y:$0007C0,3,1		; #15 Amplifier-fault-error bit
+M1544->Y:$0007C0,13,1		; #15 Foreground in-postion bit
+M1545->Y:$0007C0,10,1		; #15 Home-complete bit
+M1546->Y:$0007C0,6,1		; #15 Integrated following error fault bit
+M1547->Y:$0007C0,5,1		; #15 I2T fault bit
+M1548->Y:$0007C0,8,1		; #15 Phasing error fault bit
+M1549->Y:$0007C0,9,1		; #15 Phasing search-in-progress bit
+
+; MACRO IC 1 Node 12 Flag Registers (usually used for Motor #15)
+M1550->X:$00345C,0,24		; MACRO IC 1 Node 12 flag status register
+M1551->Y:$00345C,0,24		; MACRO IC 1 Node 12 flag command register
+M1553->X:$00345C,20,4		; MACRO IC 1 Node 12 TUVW flags
+M1554->Y:$00345C,14,1		; MACRO IC 1 Node 12 amplifier enable flag
+M1555->X:$00345C,15,1		; MACRO IC 1 Node 12 node/amplifier fault flag
+M1556->X:$00345C,16,1		; MACRO IC 1 Node 12 home flag
+M1557->X:$00345C,17,1		; MACRO IC 1 Node 12 positive limit flag
+M1558->X:$00345C,18,1		; MACRO IC 1 Node 12 negative limit flag
+M1559->X:$00345C,19,1		; MACRO IC 1 Node 12 user flag
+
+; Motor #15 Move Registers
+M1561->D:$000788			; #15 Commanded position (1/[Ixx08*32] cts)
+M1562->D:$00078B			; #15 Actual position (1/[Ixx08*32] cts)
+M1563->D:$0007C7			; #15 Target (end) position (1/[Ixx08*32] cts)
+M1564->D:$0007CC			; #15 Position bias (1/[Ixx08*32] cts)
+M1566->X:$00079D,0,24,S	; #15 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1567->D:$00078D			; #15 Present master pos (1/[Ixx07*32] cts)
+M1568->X:$0007BF,8,16,S	; #15 Filter Output (16-bit DAC bits)
+M1569->D:$000790			; #15 Compensation correction (1/[Ixx08*32] cts)
+M1570->D:$0007B4			; #15 Present phase position (including fraction)
+M1571->X:$0007B4,24,S		; #15 Present phase position (counts *Ixx70)
+M1572->L:$0007D7			; #15 Variable jog position/distance (cts)
+M1573->Y:$0007CE,0,24,S	; #15 Encoder home capture position (cts)
+M1574->D:$0007EF			; #15 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1575->X:$0007B9,8,16,S	; #15 Actual quadrature current
+M1576->Y:$0007B9,8,16,S	; #15 Actual direct current
+M1577->X:$0007BC,8,16,S	; #15 Quadrature current-loop integrator output
+M1578->Y:$0007BC,8,16,S	; #15 Direct current-loop integrator output
+M1579->X:$0007AE,8,16,S	; #15 PID internal filter result (16-bit DAC bits)
+
+; Motor #15 Axis Definition Registers
+M1591->L:$0007CF			; #15 X/U/A/B/C-Axis scale factor (cts/unit)
+M1592->L:$0007D0			; #15 Y/V-Axis scale factor (cts/unit)
+M1593->L:$0007D1			; #15 Z/W-Axis scale factor (cts/unit)
+M1594->L:$0007D2			; #15 Axis offset (cts)
+
+
+; Servo IC 3 Registers for 1st ACC-24 Channel 8 (usually for Motor #16)
+M1601->X:$078319,0,24,S	; ENC8 24-bit counter position
+M1602->Y:$07831A,8,16,S	; OUT8A command value; DAC or PWM
+M1603->X:$07831B,0,24,S	; ENC8 captured position
+M1604->Y:$07831B,8,16,S	; OUT8B command value; DAC or PWM
+M1605->Y:$07831D,8,16,S	; ADC8A input value
+M1606->Y:$07831E,8,16,S	; ADC8B input value
+M1607->Y:$07831C,8,16,S	; OUT8C command value; PFM or PWM
+M1608->Y:$07831F,0,24,S	; ENC8 compare A position
+M1609->X:$07831F,0,24,S	; ENC8 compare B position
+M1610->X:$07831E,0,24,S	; ENC8 compare autoincrement value
+M1611->X:$07831D,11		; ENC8 compare initial state write enable
+M1612->X:$07831D,12		; ENC8 compare initial state
+M1614->X:$07831D,14		; AENA8 output status
+M1615->X:$078318,19		; USER8 flag input status
+M1616->X:$078318,9		; ENC8 compare output value
+M1617->X:$078318,11		; ENC8 capture flag
+M1618->X:$078318,8		; ENC8 count error flag
+M1619->X:$078318,14		; CHC8 input status
+M1620->X:$078318,16		; HMFL8 flag input status
+M1621->X:$078318,17		; PLIM8 flag input status
+M1622->X:$078318,18		; MLIM8 flag input status
+M1623->X:$078318,15		; FAULT8 flag input status
+M1624->X:$078318,20		; Channel 8 W flag input status
+M1625->X:$078318,21		; Channel 8 V flag input status
+M1626->X:$078318,22		; Channel 8 U flag input status
+M1627->X:$078318,23		; Channel 8 T flag input status
+M1628->X:$078318,20,4		; Channel 8 TUVW inputs as 4-bit value
+
+; Motor #16 Status Bits
+M1630->Y:$000840,11,1		; #16 Stopped-on-position-limit bit
+M1631->X:$000830,21,1		; #16 Positive-end-limit-set bit
+M1632->X:$000830,22,1		; #16 Negative-end-limit-set bit
+M1633->X:$000830,13,1		; #16 Desired-velocity-zero bit
+M1635->X:$000830,15,1		; #16 Dwell-in-progress bit
+M1637->X:$000830,17,1		; #16 Running-program bit
+M1638->X:$000830,18,1		; #16 Open-loop-mode bit
+M1639->X:$000830,19,1		; #16 Amplifier-enabled status bit
+M1640->Y:$000840,0,1		; #16 Background in-position bit
+M1641->Y:$000840,1,1		; #16 Warning-following error bit
+M1642->Y:$000840,2,1		; #16 Fatal-following-error bit
+M1643->Y:$000840,3,1		; #16 Amplifier-fault-error bit
+M1644->Y:$000840,13,1		; #16 Foreground in-postion bit
+M1645->Y:$000840,10,1		; #16 Home-complete bit
+M1646->Y:$000840,6,1		; #16 Integrated following error fault bit
+M1647->Y:$000840,5,1		; #16 I2T fault bit
+M1648->Y:$000840,8,1		; #16 Phasing error fault bit
+
+; MACRO IC 1 Node 13 Flag Registers (usually used for Motor #16)
+M1650->X:$00345D,0,24		; MACRO IC 1 Node 13 flag status register
+M1651->Y:$00345D,0,24		; MACRO IC 1 Node 13 flag command register
+M1653->X:$00345D,20,4		; MACRO IC 1 Node 13 TUVW flags
+M1654->Y:$00345D,14,1		; MACRO IC 1 Node 13 amplifier enable flag
+M1655->X:$00345D,15,1		; MACRO IC 1 Node 13 node/amplifier fault flag
+M1656->X:$00345D,16,1		; MACRO IC 1 Node 13 home flag
+M1657->X:$00345D,17,1		; MACRO IC 1 Node 13 positive limit flag
+M1658->X:$00345D,18,1		; MACRO IC 1 Node 13 negative limit flag
+M1659->X:$00345D,19,1		; MACRO IC 1 Node 13 user flag
+
+; Motor #16 Move Registers
+M1661->D:$000808			; #16 Commanded position (1/[Ixx08*32] cts)
+M1662->D:$00080B			; #16 Actual position (1/[Ixx08*32] cts)
+M1663->D:$000847			; #16 Target (end) position (1/[Ixx08*32] cts)
+M1664->D:$00084C			; #16 Position bias (1/[Ixx08*32] cts)
+M1666->X:$00081D,0,24,S	; #16 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1667->D:$00080D			; #16 Present master pos (1/[Ixx07*32] cts)
+M1668->X:$00083F,8,16,S	; #16 Filter Output (16-bit DAC bits)
+M1669->D:$000810			; #16 Compensation correction (1/[Ixx08*32] cts)
+M1670->D:$000834			; #16 Present phase position (including fraction)
+M1671->X:$000834,24,S		; #16 Present phase position (counts *Ixx70)
+M1672->L:$000857			; #16 Variable jog position/distance (cts)
+M1673->Y:$00084E,0,24,S	; #16 Encoder home capture position (cts)
+M1674->D:$00086F			; #16 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1675->X:$000839,8,16,S	; #16 Actual quadrature current
+M1676->Y:$000839,8,16,S	; #16 Actual direct current
+M1677->X:$00083C,8,16,S	; #16 Quadrature current-loop integrator output
+M1678->Y:$00083C,8,16,S	; #16 Direct current-loop integrator output
+M1679->X:$00082E,8,16,S	; #16 PID internal filter result (16-bit DAC bits)
+
+; Motor #16 Axis Definition Registers
+M1691->L:$00084F			; #16 X/U/A/B/C-Axis scale factor (cts/unit)
+M1692->L:$000850			; #16 Y/V-Axis scale factor (cts/unit)
+M1693->L:$000851			; #16 Z/W-Axis scale factor (cts/unit)
+M1694->L:$000852			; #16 Axis offset (cts)
+
+
+; Servo IC 4 Registers for 2nd ACC-24 Channel 1 (usually for Motor #17)
+M1701->X:$079201,0,24,S	; ENC1 24-bit counter position
+M1702->Y:$079202,8,16,S	; OUT1A command value; DAC or PWM
+M1703->X:$079203,0,24,S	; ENC1 captured position
+M1704->Y:$079203,8,16,S	; OUT1B command value; DAC or PWM
+M1705->Y:$079205,8,16,S	; ADC1A input value
+M1706->Y:$079206,8,16,S	; ADC1B input value
+M1707->Y:$079204,8,16,S	; OUT1C command value; PFM or PWM
+M1708->Y:$079207,0,24,S	; ENC1 compare A position
+M1709->X:$079207,0,24,S	; ENC1 compare B position
+M1710->X:$079206,0,24,S	; ENC1 compare autoincrement value
+M1711->X:$079205,11		; ENC1 compare initial state write enable
+M1712->X:$079205,12		; ENC1 compare initial state
+M1714->X:$079205,14		; AENA1 output status
+M1715->X:$079200,19		; USER1 flag input status
+M1716->X:$079200,9		; ENC1 compare output value
+M1717->X:$079200,11		; ENC1 capture flag
+M1718->X:$079200,8		; ENC1 count error flag
+M1719->X:$079200,14		; CHC1 input status
+M1720->X:$079200,16		; HMFL1 flag input status
+M1721->X:$079200,17		; PLIM1 flag input status
+M1722->X:$079200,18		; MLIM1 flag input status
+M1723->X:$079200,15		; FAULT1 flag input status
+M1724->X:$079200,20		; Channel 1 W flag input status
+M1725->X:$079200,21		; Channel 1 V flag input status
+M1726->X:$079200,22		; Channel 1 U flag input status
+M1727->X:$079200,23		; Channel 1 T flag input status
+M1728->X:$079200,20,4		; Channel 1 TUVW inputs as 4-bit value
+
+; Motor #17 Status Bits
+M1730->Y:$0008C0,11,1		; #17 Stopped-on-position-limit bit
+M1731->X:$0008B0,21,1		; #17 Positive-end-limit-set bit
+M1732->X:$0008B0,22,1		; #17 Negative-end-limit-set bit
+M1733->X:$0008B0,13,1		; #17 Desired-velocity-zero bit
+M1735->X:$0008B0,15,1		; #17 Dwell-in-progress bit
+M1737->X:$0008B0,17,1		; #17 Running-program bit
+M1738->X:$0008B0,18,1		; #17 Open-loop-mode bit
+M1739->X:$0008B0,19,1		; #17 Amplifier-enabled status bit
+M1740->Y:$0008C0,0,1		; #17 Background in-position bit
+M1741->Y:$0008C0,1,1		; #17 Warning-following error bit
+M1742->Y:$0008C0,2,1		; #17 Fatal-following-error bit
+M1743->Y:$0008C0,3,1		; #17 Amplifier-fault-error bit
+M1744->Y:$0008C0,13,1		; #17 Foreground in-postion bit
+M1745->Y:$0008C0,10,1		; #17 Home-complete bit
+M1746->Y:$0008C0,6,1		; #17 Integrated following error fault bit
+M1747->Y:$0008C0,5,1		; #17 I2T fault bit
+M1748->Y:$0008C0,8,1		; #17 Phasing error fault bit
+M1749->Y:$0008C0,9,1		; #17 Phasing search-in-progress bit
+
+; MACRO IC 2 Node 0 Flag Registers (usually used for Motor #17)
+M1750->X:$003460,0,24		; MACRO IC 2 Node 0 flag status register
+M1751->Y:$003460,0,24		; MACRO IC 2 Node 0 flag command register
+M1753->X:$003460,20,4		; MACRO IC 2 Node 0 TUVW flags
+M1754->Y:$003460,14,1		; MACRO IC 2 Node 0 amplifier enable flag
+M1755->X:$003460,15,1		; MACRO IC 2 Node 0 node/amplifier fault flag
+M1756->X:$003460,16,1		; MACRO IC 2 Node 0 home flag
+M1757->X:$003460,17,1		; MACRO IC 2 Node 0 positive limit flag
+M1758->X:$003460,18,1		; MACRO IC 2 Node 0 negative limit flag
+M1759->X:$003460,19,1		; MACRO IC 2 Node 0 user flag
+
+; Motor #17 Move Registers
+M1761->D:$000888			; #17 Commanded position (1/[Ixx08*32] cts)
+M1762->D:$00088B			; #17 Actual position (1/[Ixx08*32] cts)
+M1763->D:$0008C7			; #17 Target (end) position (1/[Ixx08*32] cts)
+M1764->D:$0008CC			; #17 Position bias (1/[Ixx08*32] cts)
+M1766->X:$00089D,0,24,S	; #17 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1767->D:$00088D			; #17 Present master pos (1/[Ixx07*32] cts)
+M1768->X:$0008BF,8,16,S	; #17 Filter Output (16-bit DAC bits)
+M1769->D:$000890			; #17 Compensation correction (1/[Ixx08*32] cts)
+M1770->D:$0008B4			; #17 Present phase position (including fraction)
+M1771->X:$0008B4,24,S		; #17 Present phase position (counts *Ixx70)
+M1772->L:$0008D7			; #17 Variable jog position/distance (cts)
+M1773->Y:$0008CE,0,24,S	; #17 Encoder home capture position (cts)
+M1774->D:$0008EF			; #17 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1775->X:$0008B9,8,16,S	; #17 Actual quadrature current
+M1776->Y:$0008B9,8,16,S	; #17 Actual direct current
+M1777->X:$0008BC,8,16,S	; #17 Quadrature current-loop integrator output
+M1778->Y:$0008BC,8,16,S	; #17 Direct current-loop integrator output
+M1779->X:$0008AE,8,16,S	; #17 PID internal filter result (16-bit DAC bits)
+
+; Motor #17 Axis Definition Registers
+M1791->L:$0008CF			; #17 X/U/A/B/C-Axis scale factor (cts/unit)
+M1792->L:$0008D0			; #17 Y/V-Axis scale factor (cts/unit)
+M1793->L:$0008D1			; #17 Z/W-Axis scale factor (cts/unit)
+M1794->L:$0008D2			; #17 Axis offset (cts)
+
+
+; Servo IC 4 Registers for 2nd ACC-24 Channel 2 (usually for Motor #18)
+M1801->X:$079209,0,24,S	; ENC2 24-bit counter position
+M1802->Y:$07920A,8,16,S	; OUT2A command value; DAC or PWM
+M1803->X:$07920B,0,24,S	; ENC2 captured position
+M1804->Y:$07920B,8,16,S	; OUT2B command value; DAC or PWM
+M1805->Y:$07920D,8,16,S	; ADC2A input value
+M1806->Y:$07920E,8,16,S	; ADC2B input value
+M1807->Y:$07920C,8,16,S	; OUT2C command value; PFM or PWM
+M1808->Y:$07920F,0,24,S	; ENC2 compare A position
+M1809->X:$07920F,0,24,S	; ENC2 compare B position
+M1810->X:$07920E,0,24,S	; ENC2 compare autoincrement value
+M1811->X:$07920D,11		; ENC2 compare initial state write enable
+M1812->X:$07920D,12		; ENC2 compare initial state
+M1814->X:$07920D,14		; AENA2 output status
+M1815->X:$079208,19		; USER2 flag input status
+M1816->X:$079208,9		; ENC2 compare output value
+M1817->X:$079208,11		; ENC2 capture flag
+M1818->X:$079208,8		; ENC2 count error flag
+M1819->X:$079208,14		; CHC2 input status
+M1820->X:$079208,16		; HMFL2 flag input status
+M1821->X:$079208,17		; PLIM2 flag input status
+M1822->X:$079208,18		; MLIM2 flag input status
+M1823->X:$079208,15		; FAULT2 flag input status
+M1824->X:$079208,20		; Channel 2 W flag input status
+M1825->X:$079208,21		; Channel 2 V flag input status
+M1826->X:$079208,22		; Channel 2 U flag input status
+M1827->X:$079208,23		; Channel 2 T flag input status
+M1828->X:$079208,20,4		; Channel 2 TUVW inputs as 4-bit value
+
+; Motor #18 Status Bits
+M1830->Y:$000940,11,1		; #18 Stopped-on-position-limit bit
+M1831->X:$000930,21,1		; #18 Positive-end-limit-set bit
+M1832->X:$000930,22,1		; #18 Negative-end-limit-set bit
+M1833->X:$000930,13,1		; #18 Desired-velocity-zero bit
+M1835->X:$000930,15,1		; #18 Dwell-in-progress bit
+M1837->X:$000930,17,1		; #18 Running-program bit
+M1838->X:$000930,18,1		; #18 Open-loop-mode bit
+M1839->X:$000930,19,1		; #18 Amplifier-enabled status bit
+M1840->Y:$000940,0,1		; #18 Background in-position bit
+M1841->Y:$000940,1,1		; #18 Warning-following error bit
+M1842->Y:$000940,2,1		; #18 Fatal-following-error bit
+M1843->Y:$000940,3,1		; #18 Amplifier-fault-error bit
+M1844->Y:$000940,13,1		; #18 Foreground in-postion bit
+M1845->Y:$000940,10,1		; #18 Home-complete bit
+M1846->Y:$000940,6,1		; #18 Integrated following error fault bit
+M1847->Y:$000940,5,1		; #18 I2T fault bit
+M1848->Y:$000940,8,1		; #18 Phasing error fault bit
+M1849->Y:$000940,9,1		; #18 Phasing search-in-progress bit
+
+; MACRO IC 2 Node 1 Flag Registers (usually used for Motor #18)
+M1850->X:$003461,0,24		; MACRO IC 2 Node 1 flag status register
+M1851->Y:$003461,0,24		; MACRO IC 2 Node 1 flag command register
+M1853->X:$003461,20,4		; MACRO IC 2 Node 1 TUVW flags
+M1854->Y:$003461,14,1		; MACRO IC 2 Node 1 amplifier enable flag
+M1855->X:$003461,15,1		; MACRO IC 2 Node 1 node/amplifier fault flag
+M1856->X:$003461,16,1		; MACRO IC 2 Node 1 home flag
+M1857->X:$003461,17,1		; MACRO IC 2 Node 1 positive limit flag
+M1858->X:$003461,18,1		; MACRO IC 2 Node 1 negative limit flag
+M1859->X:$003461,19,1		; MACRO IC 2 Node 1 user flag
+
+; Motor #18 Move Registers
+M1861->D:$000908			; #18 Commanded position (1/[Ixx08*32] cts)
+M1862->D:$00090B			; #18 Actual position (1/[Ixx08*32] cts)
+M1863->D:$000947			; #18 Target (end) position (1/[Ixx08*32] cts)
+M1864->D:$00094C			; #18 Position bias (1/[Ixx08*32] cts)
+M1866->X:$00091D,0,24,S	; #18 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1867->D:$00090D			; #18 Present master pos (1/[Ixx07*32] cts)
+M1868->X:$00093F,8,16,S	; #18 Filter Output (16-bit DAC bits)
+M1869->D:$000910			; #18 Compensation correction (1/[Ixx08*32] cts)
+M1870->D:$000934			; #18 Present phase position (including fraction)
+M1871->X:$000934,24,S		; #18 Present phase position (counts *Ixx70)
+M1872->L:$000957			; #18 Variable jog position/distance (cts)
+M1873->Y:$00094E,0,24,S	; #18 Encoder home capture position (cts)
+M1874->D:$00096F			; #18 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1875->X:$000939,8,16,S	; #18 Actual quadrature current
+M1876->Y:$000939,8,16,S	; #18 Actual direct current
+M1877->X:$00093C,8,16,S	; #18 Quadrature current-loop integrator output
+M1878->Y:$00093C,8,16,S	; #18 Direct current-loop integrator output
+M1879->X:$00092E,8,16,S	; #18 PID internal filter result (16-bit DAC bits)
+
+; Motor #18 Axis Definition Registers
+M1891->L:$00094F			; #18 X/U/A/B/C-Axis scale factor (cts/unit)
+M1892->L:$000950			; #18 Y/V-Axis scale factor (cts/unit)
+M1893->L:$000951			; #18 Z/W-Axis scale factor (cts/unit)
+M1894->L:$000952			; #18 Axis offset (cts)
+
+
+; Servo IC 4 Registers for 2nd ACC-24 Channel 3 (usually for Motor #19)
+M1901->X:$079211,0,24,S	; ENC3 24-bit counter position
+M1902->Y:$079212,8,16,S	; OUT3A command value; DAC or PWM
+M1903->X:$079213,0,24,S	; ENC3 captured position
+M1904->Y:$079213,8,16,S	; OUT3B command value; DAC or PWM
+M1905->Y:$079215,8,16,S	; ADC3A input value
+M1906->Y:$079216,8,16,S	; ADC3B input value
+M1907->Y:$079214,8,16,S	; OUT3C command value; PFM or PWM
+M1908->Y:$079217,0,24,S	; ENC3 compare A position
+M1909->X:$079217,0,24,S	; ENC3 compare B position
+M1910->X:$079216,0,24,S	; ENC3 compare autoincrement value
+M1911->X:$079215,11		; ENC3 compare initial state write enable
+M1912->X:$079215,12		; ENC3 compare initial state
+M1914->X:$079215,14		; AENA3 output status
+M1915->X:$079210,19		; USER3 flag input status
+M1916->X:$079210,9		; ENC3 compare output value
+M1917->X:$079210,11		; ENC3 capture flag
+M1918->X:$079210,8		; ENC3 count error flag
+M1919->X:$079210,14		; CHC3 input status
+M1920->X:$079210,16		; HMFL3 flag input status
+M1921->X:$079210,17		; PLIM3 flag input status
+M1922->X:$079210,18		; MLIM3 flag input status
+M1923->X:$079210,15		; FAULT3 flag input status
+M1924->X:$079210,20		; Channel 3 W flag input status
+M1925->X:$079210,21		; Channel 3 V flag input status
+M1926->X:$079210,22		; Channel 3 U flag input status
+M1927->X:$079210,23		; Channel 3 T flag input status
+M1928->X:$079210,20,4		; Channel 3 TUVW inputs as 4-bit value
+
+; Motor #19 Status Bits
+M1930->Y:$0009C0,11,1		; #19 Stopped-on-position-limit bit
+M1931->X:$0009B0,21,1		; #19 Positive-end-limit-set bit
+M1932->X:$0009B0,22,1		; #19 Negative-end-limit-set bit
+M1933->X:$0009B0,13,1		; #19 Desired-velocity-zero bit
+M1935->X:$0009B0,15,1		; #19 Dwell-in-progress bit
+M1937->X:$0009B0,17,1		; #19 Running-program bit
+M1938->X:$0009B0,18,1		; #19 Open-loop-mode bit
+M1939->X:$0009B0,19,1		; #19 Amplifier-enabled status bit
+M1940->Y:$0009C0,0,1		; #19 Background in-position bit
+M1941->Y:$0009C0,1,1		; #19 Warning-following error bit
+M1942->Y:$0009C0,2,1		; #19 Fatal-following-error bit
+M1943->Y:$0009C0,3,1		; #19 Amplifier-fault-error bit
+M1944->Y:$0009C0,13,1		; #19 Foreground in-postion bit
+M1945->Y:$0009C0,10,1		; #19 Home-complete bit
+M1946->Y:$0009C0,6,1		; #19 Integrated following error fault bit
+M1947->Y:$0009C0,5,1		; #19 I2T fault bit
+M1948->Y:$0009C0,8,1		; #19 Phasing error fault bit
+M1949->Y:$0009C0,9,1		; #19 Phasing search-in-progress bit
+
+; MACRO IC 2 Node 4 Flag Registers (usually used for Motor #19)
+M1950->X:$003464,0,24		; MACRO IC 2 Node 4 flag status register
+M1951->Y:$003464,0,24		; MACRO IC 2 Node 4 flag command register
+M1953->X:$003464,20,4		; MACRO IC 2 Node 4 TUVW flags
+M1954->Y:$003464,14,1		; MACRO IC 2 Node 4 amplifier enable flag
+M1955->X:$003464,15,1		; MACRO IC 2 Node 4 node/amplifier fault flag
+M1956->X:$003464,16,1		; MACRO IC 2 Node 4 home flag
+M1957->X:$003464,17,1		; MACRO IC 2 Node 4 positive limit flag
+M1958->X:$003464,18,1		; MACRO IC 2 Node 4 negative limit flag
+M1959->X:$003464,19,1		; MACRO IC 2 Node 4 user flag
+
+; Motor #19 Move Registers
+M1961->D:$000988			; #19 Commanded position (1/[Ixx08*32] cts)
+M1962->D:$00098B			; #19 Actual position (1/[Ixx08*32] cts)
+M1963->D:$0009C7			; #19 Target (end) position (1/[Ixx08*32] cts)
+M1964->D:$0009CC			; #19 Position bias (1/[Ixx08*32] cts)
+M1966->X:$00099D,0,24,S	; #19 Actual velocity (1/[Ixx09*32] cts/cyc)
+M1967->D:$00098D			; #19 Present master pos (1/[Ixx07*32] cts)
+M1968->X:$0009BF,8,16,S	; #19 Filter Output (16-bit DAC bits)
+M1969->D:$000990			; #19 Compensation correction (1/[Ixx08*32] cts)
+M1970->D:$0009B4			; #19 Present phase position (including fraction)
+M1971->X:$0009B4,24,S		; #19 Present phase position (counts *Ixx70)
+M1972->L:$0009D7			; #19 Variable jog position/distance (cts)
+M1973->Y:$0009CE,0,24,S	; #19 Encoder home capture position (cts)
+M1974->D:$0009EF			; #19 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M1975->X:$0009B9,8,16,S	; #19 Actual quadrature current
+M1976->Y:$0009B9,8,16,S	; #19 Actual direct current
+M1977->X:$0009BC,8,16,S	; #19 Quadrature current-loop integrator output
+M1978->Y:$0009BC,8,16,S	; #19 Direct current-loop integrator output
+M1979->X:$0009AE,8,16,S	; #19 PID internal filter result (16-bit DAC bits)
+
+; Motor #19 Axis Definition Registers
+M1991->L:$0009CF			; #19 X/U/A/B/C-Axis scale factor (cts/unit)
+M1992->L:$0009D0			; #19 Y/V-Axis scale factor (cts/unit)
+M1993->L:$0009D1			; #19 Z/W-Axis scale factor (cts/unit)
+M1994->L:$0009D2			; #19 Axis offset (cts)
+
+
+; Servo IC 4 Registers for 2nd ACC-24 Channel 4 (usually for Motor #20)
+M2001->X:$079219,0,24,S	; ENC4 24-bit counter position
+M2002->Y:$07921A,8,16,S	; OUT4A command value; DAC or PWM
+M2003->X:$07921B,0,24,S	; ENC4 captured position
+M2004->Y:$07921B,8,16,S	; OUT4B command value; DAC or PWM
+M2005->Y:$07921D,8,16,S	; ADC4A input value
+M2006->Y:$07921E,8,16,S	; ADC4B input value
+M2007->Y:$07921C,8,16,S	; OUT4C command value; PFM or PWM
+M2008->Y:$07921F,0,24,S	; ENC4 compare A position
+M2009->X:$07921F,0,24,S	; ENC4 compare B position
+M2010->X:$07921E,0,24,S	; ENC4 compare autoincrement value
+M2011->X:$07921D,11		; ENC4 compare initial state write enable
+M2012->X:$07921D,12		; ENC4 compare initial state
+M2014->X:$07921D,14		; AENA4 output status
+M2015->X:$079218,19		; USER4 flag input status
+M2016->X:$079218,9		; ENC4 compare output value
+M2017->X:$079218,11		; ENC4 capture flag
+M2018->X:$079218,8		; ENC4 count error flag
+M2019->X:$079218,14		; HMFL4 flag input status
+M2020->X:$079218,16		; CHC4 input status
+M2021->X:$079218,17		; PLIM4 flag input status
+M2022->X:$079218,18		; MLIM4 flag input status
+M2023->X:$079218,15		; FAULT4 flag input status
+M2024->X:$079218,20		; Channel 4 W flag input status
+M2025->X:$079218,21		; Channel 4 V flag input status
+M2026->X:$079218,22		; Channel 4 U flag input status
+M2027->X:$079218,23		; Channel 4 T flag input status
+M2028->X:$079218,20,4		; Channel 4 TUVW inputs as 4-bit value
+
+; Motor #20 Status Bits
+M2030->Y:$000A40,11,1		; #20 Stopped-on-position-limit bit
+M2031->X:$000A30,21,1		; #20 Positive-end-limit-set bit
+M2032->X:$000A30,22,1		; #20 Negative-end-limit-set bit
+M2033->X:$000A30,13,1		; #20 Desired-velocity-zero bit
+M2035->X:$000A30,15,1		; #20 Dwell-in-progress bit
+M2037->X:$000A30,17,1		; #20 Running-program bit
+M2038->X:$000A30,18,1		; #20 Open-loop-mode bit
+M2039->X:$000A30,19,1		; #20 Amplifier-enabled status bit
+M2040->Y:$000A40,0,1		; #20 Background in-position bit
+M2041->Y:$000A40,1,1		; #20 Warning-following error bit
+M2042->Y:$000A40,2,1		; #20 Fatal-following-error bit
+M2043->Y:$000A40,3,1		; #20 Amplifier-fault-error bit
+M2044->Y:$000A40,13,1		; #20 Foreground in-postion bit
+M2045->Y:$000A40,10,1		; #20 Home-complete bit
+M2046->Y:$000A40,6,1		; #20 Integrated following error fault bit
+M2047->Y:$000A40,5,1		; #20 I2T fault bit
+M2048->Y:$000A40,8,1		; #20 Phasing error fault bit
+M2049->Y:$000A40,9,1		; #20 Phasing search-in-progress bit
+
+; MACRO IC 2 Node 5 Flag Registers (usually used for Motor #20)
+M2050->X:$003465,0,24		; MACRO IC 2 Node 5 flag status register
+M2051->Y:$003465,0,24		; MACRO IC 2 Node 5 flag command register
+M2053->X:$003465,20,4		; MACRO IC 2 Node 5 TUVW flags
+M2054->Y:$003465,14,1		; MACRO IC 2 Node 5 amplifier enable flag
+M2055->X:$003465,15,1		; MACRO IC 2 Node 5 node/amplifier fault flag
+M2056->X:$003465,16,1		; MACRO IC 2 Node 5 home flag
+M2057->X:$003465,17,1		; MACRO IC 2 Node 5 positive limit flag
+M2058->X:$003465,18,1		; MACRO IC 2 Node 5 negative limit flag
+M2059->X:$003465,19,1		; MACRO IC 2 Node 5 user flag
+
+; Motor #20 Move Registers
+M2061->D:$000A08			; #20 Commanded position (1/[Ixx08*32] cts)
+M2062->D:$000A0B			; #20 Actual position (1/[Ixx08*32] cts)
+M2063->D:$000A47			; #20 Target (end) position (1/[Ixx08*32] cts)
+M2064->D:$000A4C			; #20 Position bias (1/[Ixx08*32] cts)
+M2066->X:$000A1D,0,24,S	; #20 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2067->D:$000A0D			; #20 Present master pos (1/[Ixx07*32] cts)
+M2068->X:$000A3F,8,16,S	; #20 Filter Output (16-bit DAC bits)
+M2069->D:$000A10			; #20 Compensation correction (1/[Ixx08*32] cts)
+M2070->D:$000A34			; #20 Present phase position (including fraction)
+M2071->X:$000A34,24,S		; #20 Present phase position (counts *Ixx70)
+M2072->L:$000A57			; #20 Variable jog position/distance (cts)
+M2073->Y:$000A4E,0,24,S	; #20 Encoder home capture position (cts)
+M2074->D:$000A6F			; #20 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2075->X:$000A39,8,16,S	; #20 Actual quadrature current
+M2076->Y:$000A39,8,16,S	; #20 Actual direct current
+M2077->X:$000A3C,8,16,S	; #20 Quadrature current-loop integrator output
+M2078->Y:$000A3C,8,16,S	; #20 Direct current-loop integrator output
+M2079->X:$000A2E,8,16,S	; #20 PID internal filter result (16-bit DAC bits)
+
+; Motor #20 Axis Definition Registers
+M2091->L:$000A4F			; #20 X/U/A/B/C-Axis scale factor (cts/unit)
+M2092->L:$000A50			; #20 Y/V-Axis scale factor (cts/unit)
+M2093->L:$000A51			; #20 Z/W-Axis scale factor (cts/unit)
+M2094->L:$000A52			; #20 Axis offset (cts)
+
+
+; Servo IC 5 Registers for 2nd ACC-24 Channel 5 (usually for Motor #21)
+M2101->X:$079301,0,24,S	; ENC5 24-bit counter position
+M2102->Y:$079302,8,16,S	; OUT5A command value; DAC or PWM
+M2103->X:$079303,0,24,S	; ENC5 captured position
+M2104->Y:$079303,8,16,S	; OUT5B command value; DAC or PWM
+M2105->Y:$079305,8,16,S	; ADC5A input value
+M2106->Y:$079306,8,16,S	; ADC5B input value
+M2107->Y:$079304,8,16,S	; OUT5C command value; PFM or PWM
+M2108->Y:$079307,0,24,S	; ENC5 compare A position
+M2109->X:$079307,0,24,S	; ENC5 compare B position
+M2110->X:$079306,0,24,S	; ENC5 compare autoincrement value
+M2111->X:$079305,11		; ENC5 compare initial state write enable
+M2112->X:$079305,12		; ENC5 compare initial state
+M2114->X:$079305,14		; AENA5 output status
+M2115->X:$079300,19		; USER5 flag input status
+M2116->X:$079300,9		; ENC5 compare output value
+M2117->X:$079300,11		; ENC5 capture flag
+M2118->X:$079300,8		; ENC5 count error flag
+M2119->X:$079300,14		; CHC5 input status
+M2120->X:$079300,16		; HMFL5 flag input status
+M2121->X:$079300,17		; PLIM5 flag input status
+M2122->X:$079300,18		; MLIM5 flag input status
+M2123->X:$079300,15		; FAULT5 flag input status
+M2124->X:$079300,20		; Channel 5 W flag input status
+M2125->X:$079300,21		; Channel 5 V flag input status
+M2126->X:$079300,22		; Channel 5 U flag input status
+M2127->X:$079300,23		; Channel 5 T flag input status
+M2128->X:$079300,20,4		; Channel 5 TUVW inputs as 4-bit value
+
+; Motor #21 Status Bits
+M2130->Y:$000AC0,11,1		; #21 Stopped-on-position-limit bit
+M2131->X:$000AB0,21,1		; #21 Positive-end-limit-set bit
+M2132->X:$000AB0,22,1		; #21 Negative-end-limit-set bit
+M2133->X:$000AB0,13,1		; #21 Desired-velocity-zero bit
+M2135->X:$000AB0,15,1		; #21 Dwell-in-progress bit
+M2137->X:$000AB0,17,1		; #21 Running-program bit
+M2138->X:$000AB0,18,1		; #21 Open-loop-mode bit
+M2139->X:$000AB0,19,1		; #21 Amplifier-enabled status bit
+M2140->Y:$000AC0,0,1		; #21 Background in-position bit
+M2141->Y:$000AC0,1,1		; #21 Warning-following error bit
+M2142->Y:$000AC0,2,1		; #21 Fatal-following-error bit
+M2143->Y:$000AC0,3,1		; #21 Amplifier-fault-error bit
+M2144->Y:$000AC0,13,1		; #21 Foreground in-postion bit
+M2145->Y:$000AC0,10,1		; #21 Home-complete bit
+M2146->Y:$000AC0,6,1		; #21 Integrated following error fault bit
+M2147->Y:$000AC0,5,1		; #21 I2T fault bit
+M2148->Y:$000AC0,8,1		; #21 Phasing error fault bit
+M2149->Y:$000AC0,9,1		; #21 Phasing search-in-progress bit
+
+; MACRO IC 2 Node 8 Flag Registers (usually used for Motor #21)
+M2150->X:$003468,0,24		; MACRO IC 2 Node 8 flag status register
+M2151->Y:$003468,0,24		; MACRO IC 2 Node 8 flag command register
+M2153->X:$003468,20,4		; MACRO IC 2 Node 8 TUVW flags
+M2154->Y:$003468,14,1		; MACRO IC 2 Node 8 amplifier enable flag
+M2155->X:$003468,15,1		; MACRO IC 2 Node 8 node/amplifier fault flag
+M2156->X:$003468,16,1		; MACRO IC 2 Node 8 home flag
+M2157->X:$003468,17,1		; MACRO IC 2 Node 8 positive limit flag
+M2158->X:$003468,18,1		; MACRO IC 2 Node 8 negative limit flag
+M2159->X:$003468,19,1		; MACRO IC 2 Node 8 user flag
+
+; Motor #21 Move Registers
+M2161->D:$000A88			; #21 Commanded position (1/[Ixx08*32] cts)
+M2162->D:$000A8B			; #21 Actual position (1/[Ixx08*32] cts)
+M2163->D:$000AC7			; #21 Target (end) position (1/[Ixx08*32] cts)
+M2164->D:$000ACC			; #21 Position bias (1/[Ixx08*32] cts)
+M2166->X:$000A9D,0,24,S	; #21 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2167->D:$000A8D			; #21 Present master pos (1/[Ixx07*32] cts)
+M2168->X:$000ABF,8,16,S	; #21 Filter Output (16-bit DAC bits)
+M2169->D:$000A90			; #21 Compensation correction (1/[Ixx08*32] cts)
+M2170->D:$000AB4			; #21 Present phase position (including fraction)
+M2171->X:$000AB4,24,S		; #21 Present phase position (counts *Ixx70)
+M2172->L:$000AD7			; #21 Variable jog position/distance (cts)
+M2173->Y:$000ACE,0,24,S	; #21 Encoder home capture position (cts)
+M2174->D:$000AEF			; #21 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2175->X:$000AB9,8,16,S	; #21 Actual quadrature current
+M2176->Y:$000AB9,8,16,S	; #21 Actual direct current
+M2177->X:$000ABC,8,16,S	; #21 Quadrature current-loop integrator output
+M2178->Y:$000ABC,8,16,S	; #21 Direct current-loop integrator output
+M2179->X:$000AAE,8,16,S	; #21 PID internal filter result (16-bit DAC bits)
+
+; Motor #21 Axis Definition Registers
+M2191->L:$000ACF			; #21 X/U/A/B/C-Axis scale factor (cts/unit)
+M2192->L:$000AD0			; #21 Y/V-Axis scale factor (cts/unit)
+M2193->L:$000AD1			; #21 Z/W-Axis scale factor (cts/unit)
+M2194->L:$000AD2			; #21 Axis offset (cts)
+
+
+; Servo IC 5 Registers for 2nd ACC-24 Channel 6 (usually for Motor #22)
+M2201->X:$079309,0,24,S	; ENC6 24-bit counter position
+M2202->Y:$07930A,8,16,S	; OUT6A command value; DAC or PWM
+M2203->X:$07930B,0,24,S	; ENC6 captured position
+M2204->Y:$07930B,8,16,S	; OUT6B command value; DAC or PWM
+M2205->Y:$07930D,8,16,S	; ADC6A input value
+M2206->Y:$07930E,8,16,S	; ADC6B input value
+M2207->Y:$07930C,8,16,S	; OUT6C command value; PFM or PWM
+M2208->Y:$07930F,0,24,S	; ENC6 compare A position
+M2209->X:$07930F,0,24,S	; ENC6 compare B position
+M2210->X:$07930E,0,24,S	; ENC6 compare autoincrement value
+M2211->X:$07930D,11		; ENC6 compare initial state write enable
+M2212->X:$07930D,12		; ENC6 compare initial state
+M2214->X:$07930D,14		; AENA6 output status
+M2215->X:$079308,19		; USER6 flag input status
+M2216->X:$079308,9		; ENC6 compare output value
+M2217->X:$079308,11		; ENC6 capture flag
+M2218->X:$079308,8		; ENC6 count error flag
+M2219->X:$079308,14		; CHC6 input status
+M2220->X:$079308,16		; HMFL6 flag input status
+M2221->X:$079308,17		; PLIM6 flag input status
+M2222->X:$079308,18		; MLIM6 flag input status
+M2223->X:$079308,15		; FAULT6 flag input status
+M2224->X:$079308,20		; Channel 6 W flag input status
+M2225->X:$079308,21		; Channel 6 V flag input status
+M2226->X:$079308,22		; Channel 6 U flag input status
+M2227->X:$079308,23		; Channel 6 T flag input status
+M2228->X:$079308,20,4		; Channel 6 TUVW inputs as 4-bit value
+
+; Motor #22 Status Bits
+M2230->Y:$000B40,11,1		; #22 Stopped-on-position-limit bit
+M2231->X:$000B30,21,1		; #22 Positive-end-limit-set bit
+M2232->X:$000B30,22,1		; #22 Negative-end-limit-set bit
+M2233->X:$000B30,13,1		; #22 Desired-velocity-zero bit
+M2235->X:$000B30,15,1		; #22 Dwell-in-progress bit
+M2237->X:$000B30,17,1		; #22 Running-program bit
+M2238->X:$000B30,18,1		; #22 Open-loop-mode bit
+M2239->X:$000B30,19,1		; #22 Amplifier-enabled status bit
+M2240->Y:$000B40,0,1		; #22 Background in-position bit
+M2241->Y:$000B40,1,1		; #22 Warning-following error bit
+M2242->Y:$000B40,2,1		; #22 Fatal-following-error bit
+M2243->Y:$000B40,3,1		; #22 Amplifier-fault-error bit
+M2244->Y:$000B40,13,1		; #22 Foreground in-postion bit
+M2245->Y:$000B40,10,1		; #22 Home-complete bit
+M2246->Y:$000B40,6,1		; #22 Integrated following error fault bit
+M2247->Y:$000B40,5,1		; #22 I2T fault bit
+M2248->Y:$000B40,8,1		; #22 Phasing error fault bit
+M2249->Y:$000B40,9,1		; #22 Phasing search-in-progress bit
+
+; MACRO IC 2 Node 9 Flag Registers (usually used for Motor #22)
+M2250->X:$003469,0,24		; MACRO IC 2 Node 9 flag status register
+M2251->Y:$003469,0,24		; MACRO IC 2 Node 9 flag command register
+M2253->X:$003469,20,4		; MACRO IC 2 Node 9 TUVW flags
+M2254->Y:$003469,14,1		; MACRO IC 2 Node 9 amplifier enable flag
+M2255->X:$003469,15,1		; MACRO IC 2 Node 9 node/amplifier fault flag
+M2256->X:$003469,16,1		; MACRO IC 2 Node 9 home flag
+M2257->X:$003469,17,1		; MACRO IC 2 Node 9 positive limit flag
+M2258->X:$003469,18,1		; MACRO IC 2 Node 9 negative limit flag
+M2259->X:$003469,19,1		; MACRO IC 2 Node 9 user flag
+
+; Motor #22 Move Registers
+M2261->D:$000B08			; #22 Commanded position (1/[Ixx08*32] cts)
+M2262->D:$000B0B			; #22 Actual position (1/[Ixx08*32] cts)
+M2263->D:$000B47			; #22 Target (end) position (1/[Ixx08*32] cts)
+M2264->D:$000B4C			; #22 Position bias (1/[Ixx08*32] cts)
+M2266->X:$000B1D,0,24,S	; #22 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2267->D:$000B0D			; #22 Present master pos (1/[Ixx07*32] cts)
+M2268->X:$000B3F,8,16,S	; #22 Filter Output (16-bit DAC bits)
+M2269->D:$000B10			; #22 Compensation correction (1/[Ixx08*32] cts)
+M2270->D:$000B34			; #22 Present phase position (including fraction)
+M2271->X:$000B34,24,S		; #22 Present phase position (counts *Ixx70)
+M2272->L:$000B57			; #22 Variable jog position/distance (cts)
+M2273->Y:$000B4E,0,24,S	; #22 Encoder home capture position (cts)
+M2274->D:$000B6F			; #22 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2275->X:$000B39,8,16,S	; #22 Actual quadrature current
+M2276->Y:$000B39,8,16,S	; #22 Actual direct current
+M2277->X:$000B3C,8,16,S	; #22 Quadrature current-loop integrator output
+M2278->Y:$000B3C,8,16,S	; #22 Direct current-loop integrator output
+M2279->X:$000B2E,8,16,S	; #22 PID internal filter result (16-bit DAC bits)
+
+; Motor #22 Axis Definition Registers
+M2291->L:$000B4F			; #22 X/U/A/B/C-Axis scale factor (cts/unit)
+M2292->L:$000B50			; #22 Y/V-Axis scale factor (cts/unit)
+M2293->L:$000B51			; #22 Z/W-Axis scale factor (cts/unit)
+M2294->L:$000B52			; #22 Axis offset (cts)
+
+
+; Servo IC 5 Registers for 2nd ACC-24 Channel 7 (usually for Motor #23)
+M2301->X:$079311,0,24,S	; ENC7 24-bit counter position
+M2302->Y:$079312,8,16,S	; OUT7A command value; DAC or PWM
+M2303->X:$079313,0,24,S	; ENC7 captured position
+M2304->Y:$079313,8,16,S	; OUT7B command value; DAC or PWM
+M2305->Y:$079315,8,16,S	; ADC7A input value
+M2306->Y:$079316,8,16,S	; ADC7B input value
+M2307->Y:$079314,8,16,S	; OUT7C command value; PFM or PWM
+M2308->Y:$079317,0,24,S	; ENC7 compare A position
+M2309->X:$079317,0,24,S	; ENC7 compare B position
+M2310->X:$079316,0,24,S	; ENC7 compare autoincrement value
+M2311->X:$079315,11		; ENC7 compare initial state write enable
+M2312->X:$079315,12		; ENC7 compare initial state
+M2314->X:$079315,14		; AENA7 output status
+M2315->X:$079310,19		; CHC7 input status
+M2316->X:$079310,9		; ENC7 compare output value
+M2317->X:$079310,11		; ENC7 capture flag
+M2318->X:$079310,8		; ENC7 count error flag
+M2319->X:$079310,14		; CHC7 input status
+M2320->X:$079310,16		; HMFL7 flag input status
+M2321->X:$079310,17		; PLIM7 flag input status
+M2322->X:$079310,18		; MLIM7 flag input status
+M2323->X:$079310,15		; FAULT7 flag input status
+M2324->X:$079310,20		; Channel 7 W flag input status
+M2325->X:$079310,21		; Channel 7 V flag input status
+M2326->X:$079310,22		; Channel 7 U flag input status
+M2327->X:$079310,23		; Channel 7 T flag input status
+M2328->X:$079310,20,4		; Channel 7 TUVW inputs as 4-bit value
+
+; Motor #23 Status Bits
+M2330->Y:$000BC0,11,1		; #23 Stopped-on-position-limit bit
+M2331->X:$000BB0,21,1		; #23 Positive-end-limit-set bit
+M2332->X:$000BB0,22,1		; #23 Negative-end-limit-set bit
+M2333->X:$000BB0,13,1		; #23 Desired-velocity-zero bit
+M2335->X:$000BB0,15,1		; #23 Dwell-in-progress bit
+M2337->X:$000BB0,17,1		; #23 Running-program bit
+M2338->X:$000BB0,18,1		; #23 Open-loop-mode bit
+M2339->X:$000BB0,19,1		; #23 Amplifier-enabled status bit
+M2340->Y:$000BC0,0,1		; #23 Background in-position bit
+M2341->Y:$000BC0,1,1		; #23 Warning-following error bit
+M2342->Y:$000BC0,2,1		; #23 Fatal-following-error bit
+M2343->Y:$000BC0,3,1		; #23 Amplifier-fault-error bit
+M2344->Y:$000BC0,13,1		; #23 Foreground in-postion bit
+M2345->Y:$000BC0,10,1		; #23 Home-complete bit
+M2346->Y:$000BC0,6,1		; #23 Integrated following error fault bit
+M2347->Y:$000BC0,5,1		; #23 I2T fault bit
+M2348->Y:$000BC0,8,1		; #23 Phasing error fault bit
+M2349->Y:$000BC0,9,1		; #23 Phasing search-in-progress bit
+
+; MACRO IC 2 Node 12 Flag Registers (usually used for Motor #23)
+M2350->X:$00346C,0,24		; MACRO IC 2 Node 12 flag status register
+M2351->Y:$00346C,0,24		; MACRO IC 2 Node 12 flag command register
+M2353->X:$00346C,20,4		; MACRO IC 2 Node 12 TUVW flags
+M2354->Y:$00346C,14,1		; MACRO IC 2 Node 12 amplifier enable flag
+M2355->X:$00346C,15,1		; MACRO IC 2 Node 12 node/amplifier fault flag
+M2356->X:$00346C,16,1		; MACRO IC 2 Node 12 home flag
+M2357->X:$00346C,17,1		; MACRO IC 2 Node 12 positive limit flag
+M2358->X:$00346C,18,1		; MACRO IC 2 Node 12 negative limit flag
+M2359->X:$00346C,19,1		; MACRO IC 2 Node 12 user flag
+
+; Motor #23 Move Registers
+M2361->D:$000B88			; #23 Commanded position (1/[Ixx08*32] cts)
+M2362->D:$000B8B			; #23 Actual position (1/[Ixx08*32] cts)
+M2363->D:$000BC7			; #23 Target (end) position (1/[Ixx08*32] cts)
+M2364->D:$000BCC			; #23 Position bias (1/[Ixx08*32] cts)
+M2366->X:$000B9D,0,24,S	; #23 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2367->D:$000B8D			; #23 Present master pos (1/[Ixx07*32] cts)
+M2368->X:$000BBF,8,16,S	; #23 Filter Output (16-bit DAC bits)
+M2369->D:$000B90			; #23 Compensation correction (1/[Ixx08*32] cts)
+M2370->D:$000BB4			; #23 Present phase position (including fraction)
+M2371->X:$000BB4,24,S		; #23 Present phase position (counts *Ixx70)
+M2372->L:$000BD7			; #23 Variable jog position/distance (cts)
+M2373->Y:$000BCE,0,24,S	; #23 Encoder home capture position (cts)
+M2374->D:$000BEF			; #23 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2375->X:$000BB9,8,16,S	; #23 Actual quadrature current
+M2376->Y:$000BB9,8,16,S	; #23 Actual direct current
+M2377->X:$000BBC,8,16,S	; #23 Quadrature current-loop integrator output
+M2378->Y:$000BBC,8,16,S	; #23 Direct current-loop integrator output
+M2379->X:$000BAE,8,16,S	; #23 PID internal filter result (16-bit DAC bits)
+
+; Motor #23 Axis Definition Registers
+M2391->L:$000BCF			; #23 X/U/A/B/C-Axis scale factor (cts/unit)
+M2392->L:$000BD0			; #23 Y/V-Axis scale factor (cts/unit)
+M2393->L:$000BD1			; #23 Z/W-Axis scale factor (cts/unit)
+M2394->L:$000BD2			; #23 Axis offset (cts)
+
+
+; Servo IC 5 Registers for 2nd ACC-24 Channel 8 (usually for Motor #24)
+M2401->X:$079319,0,24,S	; ENC8 24-bit counter position
+M2402->Y:$07931A,8,16,S	; OUT8A command value; DAC or PWM
+M2403->X:$07931B,0,24,S	; ENC8 captured position
+M2404->Y:$07931B,8,16,S	; OUT8B command value; DAC or PWM
+M2405->Y:$07931D,8,16,S	; ADC8A input value
+M2406->Y:$07931E,8,16,S	; ADC8B input value
+M2407->Y:$07931C,8,16,S	; OUT8C command value; PFM or PWM
+M2408->Y:$07931F,0,24,S	; ENC8 compare A position
+M2409->X:$07931F,0,24,S	; ENC8 compare B position
+M2410->X:$07931E,0,24,S	; ENC8 compare autoincrement value
+M2411->X:$07931D,11		; ENC8 compare initial state write enable
+M2412->X:$07931D,12		; ENC8 compare initial state
+M2414->X:$07931D,14		; AENA8 output status
+M2415->X:$079318,19		; USER8 flag input status
+M2416->X:$079318,9		; ENC8 compare output value
+M2417->X:$079318,11		; ENC8 capture flag
+M2418->X:$079318,8		; ENC8 count error flag
+M2419->X:$079318,14		; CHC8 input status
+M2420->X:$079318,16		; HMFL8 flag input status
+M2421->X:$079318,17		; PLIM8 flag input status
+M2422->X:$079318,18		; MLIM8 flag input status
+M2423->X:$079318,15		; FAULT8 flag input status
+M2424->X:$079318,20		; Channel 8 W flag input status
+M2425->X:$079318,21		; Channel 8 V flag input status
+M2426->X:$079318,22		; Channel 8 U flag input status
+M2427->X:$079318,23		; Channel 8 T flag input status
+M2428->X:$079318,20,4		; Channel 8 TUVW inputs as 4-bit value
+
+; Motor #24 Status Bits
+M2430->Y:$000C40,11,1		; #24 Stopped-on-position-limit bit
+M2431->X:$000C30,21,1		; #24 Positive-end-limit-set bit
+M2432->X:$000C30,22,1		; #24 Negative-end-limit-set bit
+M2433->X:$000C30,13,1		; #24 Desired-velocity-zero bit
+M2435->X:$000C30,15,1		; #24 Dwell-in-progress bit
+M2437->X:$000C30,17,1		; #24 Running-program bit
+M2438->X:$000C30,18,1		; #24 Open-loop-mode bit
+M2439->X:$000C30,19,1		; #24 Amplifier-enabled status bit
+M2440->Y:$000C40,0,1		; #24 Background in-position bit
+M2441->Y:$000C40,1,1		; #24 Warning-following error bit
+M2442->Y:$000C40,2,1		; #24 Fatal-following-error bit
+M2443->Y:$000C40,3,1		; #24 Amplifier-fault-error bit
+M2444->Y:$000C40,13,1		; #24 Foreground in-postion bit
+M2445->Y:$000C40,10,1		; #24 Home-complete bit
+M2446->Y:$000C40,6,1		; #24 Integrated following error fault bit
+M2447->Y:$000C40,5,1		; #24 I2T fault bit
+M2448->Y:$000C40,8,1		; #24 Phasing error fault bit
+M2449->Y:$000C40,9,1		; #24 Phasing search-in-progress bit
+
+; MACRO IC 2 Node 13 Flag Registers (usually used for Motor #24)
+M2450->X:$00346D,0,24		; MACRO IC 2 Node 13 flag status register
+M2451->Y:$00346D,0,24		; MACRO IC 2 Node 13 flag command register
+M2453->X:$00346D,20,4		; MACRO IC 2 Node 13 TUVW flags
+M2454->Y:$00346D,14,1		; MACRO IC 2 Node 13 amplifier enable flag
+M2455->X:$00346D,15,1		; MACRO IC 2 Node 13 node/amplifier fault flag
+M2456->X:$00346D,16,1		; MACRO IC 2 Node 13 home flag
+M2457->X:$00346D,17,1		; MACRO IC 2 Node 13 positive limit flag
+M2458->X:$00346D,18,1		; MACRO IC 2 Node 13 negative limit flag
+M2459->X:$00346D,19,1		; MACRO IC 2 Node 13 user flag
+
+; Motor #24 Move Registers
+M2461->D:$000C08			; #24 Commanded position (1/[Ixx08*32] cts)
+M2462->D:$000C0B			; #24 Actual position (1/[Ixx08*32] cts)
+M2463->D:$000C47			; #24 Target (end) position (1/[Ixx08*32] cts)
+M2464->D:$000C4C			; #24 Position bias (1/[Ixx08*32] cts)
+M2466->X:$000C1D,0,24,S	; #24 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2467->D:$000C0D			; #24 Present master pos (1/[Ixx07*32] cts)
+M2468->X:$000C3F,8,16,S	; #24 Filter Output (16-bit DAC bits)
+M2469->D:$000C10			; #24 Compensation correction (1/[Ixx08*32] cts)
+M2470->D:$000C34			; #24 Present phase position (including fraction)
+M2471->X:$000C34,24,S		; #24 Present phase position (counts *Ixx70)
+M2472->L:$000C57			; #24 Variable jog position/distance (cts)
+M2473->Y:$000C4E,0,24,S	; #24 Encoder home capture position (cts)
+M2474->D:$000C6F			; #24 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2475->X:$000C39,8,16,S	; #24 Actual quadrature current
+M2476->Y:$000C39,8,16,S	; #24 Actual direct current
+M2477->X:$000C3C,8,16,S	; #24 Quadrature current-loop integrator output
+M2478->Y:$000C3C,8,16,S	; #24 Direct current-loop integrator output
+M2479->X:$000C2E,8,16,S	; #24 PID internal filter result (16-bit DAC bits)
+
+; Motor #24 Axis Definition Registers
+M2491->L:$000C4F			; #24 X/U/A/B/C-Axis scale factor (cts/unit)
+M2492->L:$000C50			; #24 Y/V-Axis scale factor (cts/unit)
+M2493->L:$000C51			; #24 Z/W-Axis scale factor (cts/unit)
+M2494->L:$000C52			; #24 Axis offset (cts)
+
+
+; Servo IC 6 Registers for 3rd ACC-24 Channel 1 (usually for Motor #25)
+M2501->X:$07A201,0,24,S	; ENC1 24-bit counter position
+M2502->Y:$07A202,8,16,S	; OUT1A command value; DAC or PWM
+M2503->X:$07A203,0,24,S	; ENC1 captured position
+M2504->Y:$07A203,8,16,S	; OUT1B command value; DAC or PWM
+M2505->Y:$07A205,8,16,S	; ADC1A input value
+M2506->Y:$07A206,8,16,S	; ADC1B input value
+M2507->Y:$07A204,8,16,S	; OUT1C command value; PFM or PWM
+M2508->Y:$07A207,0,24,S	; ENC1 compare A position
+M2509->X:$07A207,0,24,S	; ENC1 compare B position
+M2510->X:$07A206,0,24,S	; ENC1 compare autoincrement value
+M2511->X:$07A205,11		; ENC1 compare initial state write enable
+M2512->X:$07A205,12		; ENC1 compare initial state
+M2514->X:$07A205,14		; AENA1 output status
+M2515->X:$07A200,19		; USER1 flag input status
+M2516->X:$07A200,9		; ENC1 compare output value
+M2517->X:$07A200,11		; ENC1 capture flag
+M2518->X:$07A200,8		; ENC1 count error flag
+M2519->X:$07A200,14		; CHC1 input status
+M2520->X:$07A200,16		; HMFL1 flag input status
+M2521->X:$07A200,17		; PLIM1 flag input status
+M2522->X:$07A200,18		; MLIM1 flag input status
+M2523->X:$07A200,15		; FAULT1 flag input status
+M2524->X:$07A200,20		; Channel 1 W flag input status
+M2525->X:$07A200,21		; Channel 1 V flag input status
+M2526->X:$07A200,22		; Channel 1 U flag input status
+M2527->X:$07A200,23		; Channel 1 T flag input status
+M2528->X:$07A200,20,4		; Channel 1 TUVW inputs as 4-bit value
+
+; Motor #25 Status Bits
+M2530->Y:$000CC0,11,1		; #25 Stopped-on-position-limit bit
+M2531->X:$000CB0,21,1		; #25 Positive-end-limit-set bit
+M2532->X:$000CB0,22,1		; #25 Negative-end-limit-set bit
+M2533->X:$000CB0,13,1		; #25 Desired-velocity-zero bit
+M2535->X:$000CB0,15,1		; #25 Dwell-in-progress bit
+M2537->X:$000CB0,17,1		; #25 Running-program bit
+M2538->X:$000CB0,18,1		; #25 Open-loop-mode bit
+M2539->X:$000CB0,19,1		; #25 Amplifier-enabled status bit
+M2540->Y:$000CC0,0,1		; #25 Background in-position bit
+M2541->Y:$000CC0,1,1		; #25 Warning-following error bit
+M2542->Y:$000CC0,2,1		; #25 Fatal-following-error bit
+M2543->Y:$000CC0,3,1		; #25 Amplifier-fault-error bit
+M2544->Y:$000CC0,13,1		; #25 Foreground in-postion bit
+M2545->Y:$000CC0,10,1		; #25 Home-complete bit
+M2546->Y:$000CC0,6,1		; #25 Integrated following error fault bit
+M2547->Y:$000CC0,5,1		; #25 I2T fault bit
+M2548->Y:$000CC0,8,1		; #25 Phasing error fault bit
+M2549->Y:$000CC0,9,1		; #25 Phasing search-in-progress bit
+
+; MACRO IC 3 Node 0 Flag Registers (usually used for Motor #25)
+M2550->X:$003470,0,24		; MACRO IC 3 Node 0 flag status register
+M2551->Y:$003470,0,24		; MACRO IC 3 Node 0 flag command register
+M2553->X:$003470,20,4		; MACRO IC 3 Node 0 TUVW flags
+M2554->Y:$003470,14,1		; MACRO IC 3 Node 0 amplifier enable flag
+M2555->X:$003470,15,1		; MACRO IC 3 Node 0 node/amplifier fault flag
+M2556->X:$003470,16,1		; MACRO IC 3 Node 0 home flag
+M2557->X:$003470,17,1		; MACRO IC 3 Node 0 positive limit flag
+M2558->X:$003470,18,1		; MACRO IC 3 Node 0 negative limit flag
+M2559->X:$003470,19,1		; MACRO IC 3 Node 0 user flag
+
+; Motor #25 Move Registers
+M2561->D:$000C88			; #25 Commanded position (1/[Ixx08*32] cts)
+M2562->D:$000C8B			; #25 Actual position (1/[Ixx08*32] cts)
+M2563->D:$000CC7			; #25 Target (end) position (1/[Ixx08*32] cts)
+M2564->D:$000CCC			; #25 Position bias (1/[Ixx08*32] cts)
+M2566->X:$000C9D,0,24,S	; #25 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2567->D:$000C8D			; #25 Present master pos (1/[Ixx07*32] cts)
+M2568->X:$000CBF,8,16,S	; #25 Filter Output (16-bit DAC bits)
+M2569->D:$000C90			; #25 Compensation correction (1/[Ixx08*32] cts)
+M2570->D:$000CB4			; #25 Present phase position (including fraction)
+M2571->X:$000CB4,24,S		; #25 Present phase position (counts *Ixx70)
+M2572->L:$000CD7			; #25 Variable jog position/distance (cts)
+M2573->Y:$000CCE,0,24,S	; #25 Encoder home capture position (cts)
+M2574->D:$000CEF			; #25 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2575->X:$000CB9,8,16,S	; #25 Actual quadrature current
+M2576->Y:$000CB9,8,16,S	; #25 Actual direct current
+M2577->X:$000CBC,8,16,S	; #25 Quadrature current-loop integrator output
+M2578->Y:$000CBC,8,16,S	; #25 Direct current-loop integrator output
+M2579->X:$000CAE,8,16,S	; #25 PID internal filter result (16-bit DAC bits)
+
+; Motor #25 Axis Definition Registers
+M2591->L:$000CCF			; #25 X/U/A/B/C-Axis scale factor (cts/unit)
+M2592->L:$000CD0			; #25 Y/V-Axis scale factor (cts/unit)
+M2593->L:$000CD1			; #25 Z/W-Axis scale factor (cts/unit)
+M2594->L:$000CD2			; #25 Axis offset (cts)
+
+
+; Servo IC 6 Registers for 3rd ACC-24 Channel 2 (usually for Motor #26)
+M2601->X:$07A209,0,24,S	; ENC2 24-bit counter position
+M2602->Y:$07A20A,8,16,S	; OUT2A command value; DAC or PWM
+M2603->X:$07A20B,0,24,S	; ENC2 captured position
+M2604->Y:$07A20B,8,16,S	; OUT2B command value; DAC or PWM
+M2605->Y:$07A20D,8,16,S	; ADC2A input value
+M2606->Y:$07A20E,8,16,S	; ADC2B input value
+M2607->Y:$07A20C,8,16,S	; OUT2C command value; PFM or PWM
+M2608->Y:$07A20F,0,24,S	; ENC2 compare A position
+M2609->X:$07A20F,0,24,S	; ENC2 compare B position
+M2610->X:$07A20E,0,24,S	; ENC2 compare autoincrement value
+M2611->X:$07A20D,11		; ENC2 compare initial state write enable
+M2612->X:$07A20D,12		; ENC2 compare initial state
+M2614->X:$07A20D,14		; AENA2 output status
+M2615->X:$07A208,19		; USER2 flag input status
+M2616->X:$07A208,9		; ENC2 compare output value
+M2617->X:$07A208,11		; ENC2 capture flag
+M2618->X:$07A208,8		; ENC2 count error flag
+M2619->X:$07A208,14		; CHC2 input status
+M2620->X:$07A208,16		; HMFL2 flag input status
+M2621->X:$07A208,17		; PLIM2 flag input status
+M2622->X:$07A208,18		; MLIM2 flag input status
+M2623->X:$07A208,15		; FAULT2 flag input status
+M2624->X:$07A208,20		; Channel 2 W flag input status
+M2625->X:$07A208,21		; Channel 2 V flag input status
+M2626->X:$07A208,22		; Channel 2 U flag input status
+M2627->X:$07A208,23		; Channel 2 T flag input status
+M2628->X:$07A208,20,4		; Channel 2 TUVW inputs as 4-bit value
+
+; Motor #26 Status Bits
+M2630->Y:$000D40,11,1		; #26 Stopped-on-position-limit bit
+M2631->X:$000D30,21,1		; #26 Positive-end-limit-set bit
+M2632->X:$000D30,22,1		; #26 Negative-end-limit-set bit
+M2633->X:$000D30,13,1		; #26 Desired-velocity-zero bit
+M2635->X:$000D30,15,1		; #26 Dwell-in-progress bit
+M2637->X:$000D30,17,1		; #26 Running-program bit
+M2638->X:$000D30,18,1		; #26 Open-loop-mode bit
+M2639->X:$000D30,19,1		; #26 Amplifier-enabled status bit
+M2640->Y:$000D40,0,1		; #26 Background in-position bit
+M2641->Y:$000D40,1,1		; #26 Warning-following error bit
+M2642->Y:$000D40,2,1		; #26 Fatal-following-error bit
+M2643->Y:$000D40,3,1		; #26 Amplifier-fault-error bit
+M2644->Y:$000D40,13,1		; #26 Foreground in-postion bit
+M2645->Y:$000D40,10,1		; #26 Home-complete bit
+M2646->Y:$000D40,6,1		; #26 Integrated following error fault bit
+M2647->Y:$000D40,5,1		; #26 I2T fault bit
+M2648->Y:$000D40,8,1		; #26 Phasing error fault bit
+M2649->Y:$000D40,9,1		; #26 Phasing search-in-progress bit
+
+; MACRO IC 3 Node 1 Flag Registers (usually used for Motor #26)
+M2650->X:$003471,0,24		; MACRO IC 3 Node 1 flag status register
+M2651->Y:$003471,0,24		; MACRO IC 3 Node 1 flag command register
+M2653->X:$003471,20,4		; MACRO IC 3 Node 1 TUVW flags
+M2654->Y:$003471,14,1		; MACRO IC 3 Node 1 amplifier enable flag
+M2655->X:$003471,15,1		; MACRO IC 3 Node 1 node/amplifier fault flag
+M2656->X:$003471,16,1		; MACRO IC 3 Node 1 home flag
+M2657->X:$003471,17,1		; MACRO IC 3 Node 1 positive limit flag
+M2658->X:$003471,18,1		; MACRO IC 3 Node 1 negative limit flag
+M2659->X:$003471,19,1		; MACRO IC 3 Node 1 user flag
+
+; Motor #26 Move Registers
+M2661->D:$000D08			; #26 Commanded position (1/[Ixx08*32] cts)
+M2662->D:$000D0B			; #26 Actual position (1/[Ixx08*32] cts)
+M2663->D:$000D47			; #26 Target (end) position (1/[Ixx08*32] cts)
+M2664->D:$000D4C			; #26 Position bias (1/[Ixx08*32] cts)
+M2666->X:$000D1D,0,24,S	; #26 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2667->D:$000D0D			; #26 Present master pos (1/[Ixx07*32] cts)
+M2668->X:$000D3F,8,16,S	; #26 Filter Output (16-bit DAC bits)
+M2669->D:$000D10			; #26 Compensation correction (1/[Ixx08*32] cts)
+M2670->D:$000D34			; #26 Present phase position (including fraction)
+M2671->X:$000D34,24,S		; #26 Present phase position (counts *Ixx70)
+M2672->L:$000D57			; #26 Variable jog position/distance (cts)
+M2673->Y:$000D4E,0,24,S	; #26 Encoder home capture position (cts)
+M2674->D:$000D6F			; #26 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2675->X:$000D39,8,16,S	; #26 Actual quadrature current
+M2676->Y:$000D39,8,16,S	; #26 Actual direct current
+M2677->X:$000D3C,8,16,S	; #26 Quadrature current-loop integrator output
+M2678->Y:$000D3C,8,16,S	; #26 Direct current-loop integrator output
+M2679->X:$000D2E,8,16,S	; #26 PID internal filter result (16-bit DAC bits)
+
+; Motor #26 Axis Definition Registers
+M2691->L:$000D4F			; #26 X/U/A/B/C-Axis scale factor (cts/unit)
+M2692->L:$000D50			; #26 Y/V-Axis scale factor (cts/unit)
+M2693->L:$000D51			; #26 Z/W-Axis scale factor (cts/unit)
+M2694->L:$000D52			; #26 Axis offset (cts)
+
+
+; Servo IC 6 Registers for 3rd ACC-24 Channel 3 (usually for Motor #27)
+M2701->X:$07A211,0,24,S	; ENC3 24-bit counter position
+M2702->Y:$07A212,8,16,S	; OUT3A command value; DAC or PWM
+M2703->X:$07A213,0,24,S	; ENC3 captured position
+M2704->Y:$07A213,8,16,S	; OUT3B command value; DAC or PWM
+M2705->Y:$07A215,8,16,S	; ADC3A input value
+M2706->Y:$07A216,8,16,S	; ADC3B input value
+M2707->Y:$07A214,8,16,S	; OUT3C command value; PFM or PWM
+M2708->Y:$07A217,0,24,S	; ENC3 compare A position
+M2709->X:$07A217,0,24,S	; ENC3 compare B position
+M2710->X:$07A216,0,24,S	; ENC3 compare autoincrement value
+M2711->X:$07A215,11		; ENC3 compare initial state write enable
+M2712->X:$07A215,12		; ENC3 compare initial state
+M2714->X:$07A215,14		; AENA3 output status
+M2715->X:$07A210,19		; USER3 flag input status
+M2716->X:$07A210,9		; ENC3 compare output value
+M2717->X:$07A210,11		; ENC3 capture flag
+M2718->X:$07A210,8		; ENC3 count error flag
+M2719->X:$07A210,14		; CHC3 input status
+M2720->X:$07A210,16		; HMFL3 flag input status
+M2721->X:$07A210,17		; PLIM3 flag input status
+M2722->X:$07A210,18		; MLIM3 flag input status
+M2723->X:$07A210,15		; FAULT3 flag input status
+M2724->X:$07A210,20		; Channel 3 W flag input status
+M2725->X:$07A210,21		; Channel 3 V flag input status
+M2726->X:$07A210,22		; Channel 3 U flag input status
+M2727->X:$07A210,23		; Channel 3 T flag input status
+M2728->X:$07A210,20,4		; Channel 3 TUVW inputs as 4-bit value
+
+; Motor #27 Status Bits
+M2730->Y:$000DC0,11,1		; #27 Stopped-on-position-limit bit
+M2731->X:$000DB0,21,1		; #27 Positive-end-limit-set bit
+M2732->X:$000DB0,22,1		; #27 Negative-end-limit-set bit
+M2733->X:$000DB0,13,1		; #27 Desired-velocity-zero bit
+M2735->X:$000DB0,15,1		; #27 Dwell-in-progress bit
+M2737->X:$000DB0,17,1		; #27 Running-program bit
+M2738->X:$000DB0,18,1		; #27 Open-loop-mode bit
+M2739->X:$000DB0,19,1		; #27 Amplifier-enabled status bit
+M2740->Y:$000DC0,0,1		; #27 Background in-position bit
+M2741->Y:$000DC0,1,1		; #27 Warning-following error bit
+M2742->Y:$000DC0,2,1		; #27 Fatal-following-error bit
+M2743->Y:$000DC0,3,1		; #27 Amplifier-fault-error bit
+M2744->Y:$000DC0,13,1		; #27 Foreground in-postion bit
+M2745->Y:$000DC0,10,1		; #27 Home-complete bit
+M2746->Y:$000DC0,6,1		; #27 Integrated following error fault bit
+M2747->Y:$000DC0,5,1		; #27 I2T fault bit
+M2748->Y:$000DC0,8,1		; #27 Phasing error fault bit
+M2749->Y:$000DC0,9,1		; #27 Phasing search-in-progress bit
+
+; MACRO IC 3 Node 4 Flag Registers (usually used for Motor #27)
+M2750->X:$003474,0,24		; MACRO IC 3 Node 4 flag status register
+M2751->Y:$003474,0,24		; MACRO IC 3 Node 4 flag command register
+M2753->X:$003474,20,4		; MACRO IC 3 Node 4 TUVW flags
+M2754->Y:$003474,14,1		; MACRO IC 3 Node 4 amplifier enable flag
+M2755->X:$003474,15,1		; MACRO IC 3 Node 4 node/amplifier fault flag
+M2756->X:$003474,16,1		; MACRO IC 3 Node 4 home flag
+M2757->X:$003474,17,1		; MACRO IC 3 Node 4 positive limit flag
+M2758->X:$003474,18,1		; MACRO IC 3 Node 4 negative limit flag
+M2759->X:$003474,19,1		; MACRO IC 3 Node 4 user flag
+
+; Motor #27 Move Registers
+M2761->D:$000D88			; #27 Commanded position (1/[Ixx08*32] cts)
+M2762->D:$000D8B			; #27 Actual position (1/[Ixx08*32] cts)
+M2763->D:$000DC7			; #27 Target (end) position (1/[Ixx08*32] cts)
+M2764->D:$000DCC			; #27 Position bias (1/[Ixx08*32] cts)
+M2766->X:$000D9D,0,24,S	; #27 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2767->D:$000D8D			; #27 Present master pos (1/[Ixx07*32] cts)
+M2768->X:$000DBF,8,16,S	; #27 Filter Output (16-bit DAC bits)
+M2769->D:$000D90			; #27 Compensation correction (1/[Ixx08*32] cts)
+M2770->D:$000DB4			; #27 Present phase position (including fraction)
+M2771->X:$000DB4,24,S		; #27 Present phase position (counts *Ixx70)
+M2772->L:$000DD7			; #27 Variable jog position/distance (cts)
+M2773->Y:$000DCE,0,24,S	; #27 Encoder home capture position (cts)
+M2774->D:$000DEF			; #27 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2775->X:$000DB9,8,16,S	; #27 Actual quadrature current
+M2776->Y:$000DB9,8,16,S	; #27 Actual direct current
+M2777->X:$000DBC,8,16,S	; #27 Quadrature current-loop integrator output
+M2778->Y:$000DBC,8,16,S	; #27 Direct current-loop integrator output
+M2779->X:$000DAE,8,16,S	; #27 PID internal filter result (16-bit DAC bits)
+
+; Motor #27 Axis Definition Registers
+M2791->L:$000DCF			; #27 X/U/A/B/C-Axis scale factor (cts/unit)
+M2792->L:$000DD0			; #27 Y/V-Axis scale factor (cts/unit)
+M2793->L:$000DD1			; #27 Z/W-Axis scale factor (cts/unit)
+M2794->L:$000DD2			; #27 Axis offset (cts)
+
+
+; Servo IC 6 Registers for 3rd ACC-24 Channel 4 (usually for Motor #28)
+M2801->X:$07A219,0,24,S	; ENC4 24-bit counter position
+M2802->Y:$07A21A,8,16,S	; OUT4A command value; DAC or PWM
+M2803->X:$07A21B,0,24,S	; ENC4 captured position
+M2804->Y:$07A21B,8,16,S	; OUT4B command value; DAC or PWM
+M2805->Y:$07A21D,8,16,S	; ADC4A input value
+M2806->Y:$07A21E,8,16,S	; ADC4B input value
+M2807->Y:$07A21C,8,16,S	; OUT4C command value; PFM or PWM
+M2808->Y:$07A21F,0,24,S	; ENC4 compare A position
+M2809->X:$07A21F,0,24,S	; ENC4 compare B position
+M2810->X:$07A21E,0,24,S	; ENC4 compare autoincrement value
+M2811->X:$07A21D,11		; ENC4 compare initial state write enable
+M2812->X:$07A21D,12		; ENC4 compare initial state
+M2814->X:$07A21D,14		; AENA4 output status
+M2815->X:$07A218,19		; USER4 flag input status
+M2816->X:$07A218,9		; ENC4 compare output value
+M2817->X:$07A218,11		; ENC4 capture flag
+M2818->X:$07A218,8		; ENC4 count error flag
+M2819->X:$07A218,14		; HMFL4 flag input status
+M2820->X:$07A218,16		; CHC4 input status
+M2821->X:$07A218,17		; PLIM4 flag input status
+M2822->X:$07A218,18		; MLIM4 flag input status
+M2823->X:$07A218,15		; FAULT4 flag input status
+M2824->X:$07A218,20		; Channel 4 W flag input status
+M2825->X:$07A218,21		; Channel 4 V flag input status
+M2826->X:$07A218,22		; Channel 4 U flag input status
+M2827->X:$07A218,23		; Channel 4 T flag input status
+M2828->X:$07A218,20,4		; Channel 4 TUVW inputs as 4-bit value
+
+; Motor #28 Status Bits
+M2830->Y:$000E40,11,1		; #28 Stopped-on-position-limit bit
+M2831->X:$000E30,21,1		; #28 Positive-end-limit-set bit
+M2832->X:$000E30,22,1		; #28 Negative-end-limit-set bit
+M2833->X:$000E30,13,1		; #28 Desired-velocity-zero bit
+M2835->X:$000E30,15,1		; #28 Dwell-in-progress bit
+M2837->X:$000E30,17,1		; #28 Running-program bit
+M2838->X:$000E30,18,1		; #28 Open-loop-mode bit
+M2839->X:$000E30,19,1		; #28 Amplifier-enabled status bit
+M2840->Y:$000E40,0,1		; #28 Background in-position bit
+M2841->Y:$000E40,1,1		; #28 Warning-following error bit
+M2842->Y:$000E40,2,1		; #28 Fatal-following-error bit
+M2843->Y:$000E40,3,1		; #28 Amplifier-fault-error bit
+M2844->Y:$000E40,13,1		; #28 Foreground in-postion bit
+M2845->Y:$000E40,10,1		; #28 Home-complete bit
+M2846->Y:$000E40,6,1		; #28 Integrated following error fault bit
+M2847->Y:$000E40,5,1		; #28 I2T fault bit
+M2848->Y:$000E40,8,1		; #28 Phasing error fault bit
+M2849->Y:$000E40,9,1		; #28 Phasing search-in-progress bit
+
+; MACRO IC 3 Node 5 Flag Registers (usually used for Motor #28)
+M2850->X:$003475,0,24		; MACRO IC 3 Node 5 flag status register
+M2851->Y:$003475,0,24		; MACRO IC 3 Node 5 flag command register
+M2853->X:$003475,20,4		; MACRO IC 3 Node 5 TUVW flags
+M2854->Y:$003475,14,1		; MACRO IC 3 Node 5 amplifier enable flag
+M2855->X:$003475,15,1		; MACRO IC 3 Node 5 node/amplifier fault flag
+M2856->X:$003475,16,1		; MACRO IC 3 Node 5 home flag
+M2857->X:$003475,17,1		; MACRO IC 3 Node 5 positive limit flag
+M2858->X:$003475,18,1		; MACRO IC 3 Node 5 negative limit flag
+M2859->X:$003475,19,1		; MACRO IC 3 Node 5 user flag
+
+; Motor #28 Move Registers
+M2861->D:$000E08			; #28 Commanded position (1/[Ixx08*32] cts)
+M2862->D:$000E0B			; #28 Actual position (1/[Ixx08*32] cts)
+M2863->D:$000E47			; #28 Target (end) position (1/[Ixx08*32] cts)
+M2864->D:$000E4C			; #28 Position bias (1/[Ixx08*32] cts)
+M2866->X:$000E1D,0,24,S	; #28 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2867->D:$000E0D			; #28 Present master pos (1/[Ixx07*32] cts)
+M2868->X:$000E3F,8,16,S	; #28 Filter Output (16-bit DAC bits)
+M2869->D:$000E10			; #28 Compensation correction (1/[Ixx08*32] cts)
+M2870->D:$000E34			; #28 Present phase position (including fraction)
+M2871->X:$000E34,24,S		; #28 Present phase position (counts *Ixx70)
+M2872->L:$000E57			; #28 Variable jog position/distance (cts)
+M2873->Y:$000E4E,0,24,S	; #28 Encoder home capture position (cts)
+M2874->D:$000E6F			; #28 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2875->X:$000E39,8,16,S	; #28 Actual quadrature current
+M2876->Y:$000E39,8,16,S	; #28 Actual direct current
+M2877->X:$000E3C,8,16,S	; #28 Quadrature current-loop integrator output
+M2878->Y:$000E3C,8,16,S	; #28 Direct current-loop integrator output
+M2879->X:$000E2E,8,16,S	; #28 PID internal filter result (16-bit DAC bits)
+
+; Motor #28 Axis Definition Registers
+M2891->L:$000E4F			; #28 X/U/A/B/C-Axis scale factor (cts/unit)
+M2892->L:$000E50			; #28 Y/V-Axis scale factor (cts/unit)
+M2893->L:$000E51			; #28 Z/W-Axis scale factor (cts/unit)
+M2894->L:$000E52			; #28 Axis offset (cts)
+
+
+; Servo IC 7 Registers for 3rd ACC-24 Channel 5 (usually for Motor #29)
+M2901->X:$07A301,0,24,S	; ENC5 24-bit counter position
+M2902->Y:$07A302,8,16,S	; OUT5A command value; DAC or PWM
+M2903->X:$07A303,0,24,S	; ENC5 captured position
+M2904->Y:$07A303,8,16,S	; OUT5B command value; DAC or PWM
+M2905->Y:$07A305,8,16,S	; ADC5A input value
+M2906->Y:$07A306,8,16,S	; ADC5B input value
+M2907->Y:$07A304,8,16,S	; OUT5C command value; PFM or PWM
+M2908->Y:$07A307,0,24,S	; ENC5 compare A position
+M2909->X:$07A307,0,24,S	; ENC5 compare B position
+M2910->X:$07A306,0,24,S	; ENC5 compare autoincrement value
+M2911->X:$07A305,11		; ENC5 compare initial state write enable
+M2912->X:$07A305,12		; ENC5 compare initial state
+M2914->X:$07A305,14		; AENA5 output status
+M2915->X:$07A300,19		; USER5 flag input status
+M2916->X:$07A300,9		; ENC5 compare output value
+M2917->X:$07A300,11		; ENC5 capture flag
+M2918->X:$07A300,8		; ENC5 count error flag
+M2919->X:$07A300,14		; CHC5 input status
+M2920->X:$07A300,16		; HMFL5 flag input status
+M2921->X:$07A300,17		; PLIM5 flag input status
+M2922->X:$07A300,18		; MLIM5 flag input status
+M2923->X:$07A300,15		; FAULT5 flag input status
+M2924->X:$07A300,20		; Channel 5 W flag input status
+M2925->X:$07A300,21		; Channel 5 V flag input status
+M2926->X:$07A300,22		; Channel 5 U flag input status
+M2927->X:$07A300,23		; Channel 5 T flag input status
+M2928->X:$07A300,20,4		; Channel 5 TUVW inputs as 4-bit value
+
+; Motor #29 Status Bits
+M2930->Y:$000EC0,11,1		; #29 Stopped-on-position-limit bit
+M2931->X:$000EB0,21,1		; #29 Positive-end-limit-set bit
+M2932->X:$000EB0,22,1		; #29 Negative-end-limit-set bit
+M2933->X:$000EB0,13,1		; #29 Desired-velocity-zero bit
+M2935->X:$000EB0,15,1		; #29 Dwell-in-progress bit
+M2937->X:$000EB0,17,1		; #29 Running-program bit
+M2938->X:$000EB0,18,1		; #29 Open-loop-mode bit
+M2939->X:$000EB0,19,1		; #29 Amplifier-enabled status bit
+M2940->Y:$000EC0,0,1		; #29 Background in-position bit
+M2941->Y:$000EC0,1,1		; #29 Warning-following error bit
+M2942->Y:$000EC0,2,1		; #29 Fatal-following-error bit
+M2943->Y:$000EC0,3,1		; #29 Amplifier-fault-error bit
+M2944->Y:$000EC0,13,1		; #29 Foreground in-postion bit
+M2945->Y:$000EC0,10,1		; #29 Home-complete bit
+M2946->Y:$000EC0,6,1		; #29 Integrated following error fault bit
+M2947->Y:$000EC0,5,1		; #29 I2T fault bit
+M2948->Y:$000EC0,8,1		; #29 Phasing error fault bit
+M2949->Y:$000EC0,9,1		; #29 Phasing search-in-progress bit
+
+; MACRO IC 3 Node 8 Flag Registers (usually used for Motor #29)
+M2950->X:$003478,0,24		; MACRO IC 3 Node 8 flag status register
+M2951->Y:$003478,0,24		; MACRO IC 3 Node 8 flag command register
+M2953->X:$003478,20,4		; MACRO IC 3 Node 8 TUVW flags
+M2954->Y:$003478,14,1		; MACRO IC 3 Node 8 amplifier enable flag
+M2955->X:$003478,15,1		; MACRO IC 3 Node 8 node/amplifier fault flag
+M2956->X:$003478,16,1		; MACRO IC 3 Node 8 home flag
+M2957->X:$003478,17,1		; MACRO IC 3 Node 8 positive limit flag
+M2958->X:$003478,18,1		; MACRO IC 3 Node 8 negative limit flag
+M2959->X:$003478,19,1		; MACRO IC 3 Node 8 user flag
+
+; Motor #29 Move Registers
+M2961->D:$000E88			; #29 Commanded position (1/[Ixx08*32] cts)
+M2962->D:$000E8B			; #29 Actual position (1/[Ixx08*32] cts)
+M2963->D:$000EC7			; #29 Target (end) position (1/[Ixx08*32] cts)
+M2964->D:$000ECC			; #29 Position bias (1/[Ixx08*32] cts)
+M2966->X:$000E9D,0,24,S	; #29 Actual velocity (1/[Ixx09*32] cts/cyc)
+M2967->D:$000E8D			; #29 Present master pos (1/[Ixx07*32] cts)
+M2968->X:$000EBF,8,16,S	; #29 Filter Output (16-bit DAC bits)
+M2969->D:$000E90			; #29 Compensation correction (1/[Ixx08*32] cts)
+M2970->D:$000EB4			; #29 Present phase position (including fraction)
+M2971->X:$000EB4,24,S		; #29 Present phase position (counts *Ixx70)
+M2972->L:$000ED7			; #29 Variable jog position/distance (cts)
+M2973->Y:$000ECE,0,24,S	; #29 Encoder home capture position (cts)
+M2974->D:$000EEF			; #29 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M2975->X:$000EB9,8,16,S	; #29 Actual quadrature current
+M2976->Y:$000EB9,8,16,S	; #29 Actual direct current
+M2977->X:$000EBC,8,16,S	; #29 Quadrature current-loop integrator output
+M2978->Y:$000EBC,8,16,S	; #29 Direct current-loop integrator output
+M2979->X:$000EAE,8,16,S	; #29 PID internal filter result (16-bit DAC bits)
+
+; Motor #29 Axis Definition Registers
+M2991->L:$000ECF			; #29 X/U/A/B/C-Axis scale factor (cts/unit)
+M2992->L:$000ED0			; #29 Y/V-Axis scale factor (cts/unit)
+M2993->L:$000ED1			; #29 Z/W-Axis scale factor (cts/unit)
+M2994->L:$000ED2			; #29 Axis offset (cts)
+
+
+; Servo IC 7 Registers for 3rd ACC-24 Channel 6 (usually for Motor #30)
+M3001->X:$07A309,0,24,S	; ENC6 24-bit counter position
+M3002->Y:$07A30A,8,16,S	; OUT6A command value; DAC or PWM
+M3003->X:$07A30B,0,24,S	; ENC6 captured position
+M3004->Y:$07A30B,8,16,S	; OUT6B command value; DAC or PWM
+M3005->Y:$07A30D,8,16,S	; ADC6A input value
+M3006->Y:$07A30E,8,16,S	; ADC6B input value
+M3007->Y:$07A30C,8,16,S	; OUT6C command value; PFM or PWM
+M3008->Y:$07A30F,0,24,S	; ENC6 compare A position
+M3009->X:$07A30F,0,24,S	; ENC6 compare B position
+M3010->X:$07A30E,0,24,S	; ENC6 compare autoincrement value
+M3011->X:$07A30D,11		; ENC6 compare initial state write enable
+M3012->X:$07A30D,12		; ENC6 compare initial state
+M3014->X:$07A30D,14		; AENA6 output status
+M3015->X:$07A308,19		; USER6 flag input status
+M3016->X:$07A308,9		; ENC6 compare output value
+M3017->X:$07A308,11		; ENC6 capture flag
+M3018->X:$07A308,8		; ENC6 count error flag
+M3019->X:$07A308,14		; CHC6 input status
+M3020->X:$07A308,16		; HMFL6 flag input status
+M3021->X:$07A308,17		; PLIM6 flag input status
+M3022->X:$07A308,18		; MLIM6 flag input status
+M3023->X:$07A308,15		; FAULT6 flag input status
+M3024->X:$07A308,20		; Channel 6 W flag input status
+M3025->X:$07A308,21		; Channel 6 V flag input status
+M3026->X:$07A308,22		; Channel 6 U flag input status
+M3027->X:$07A308,23		; Channel 6 T flag input status
+M3028->X:$07A308,20,4		; Channel 6 TUVW inputs as 4-bit value
+
+; Motor #30 Status Bits
+M3030->Y:$000F40,11,1		; #30 Stopped-on-position-limit bit
+M3031->X:$000F30,21,1		; #30 Positive-end-limit-set bit
+M3032->X:$000F30,22,1		; #30 Negative-end-limit-set bit
+M3033->X:$000F30,13,1		; #30 Desired-velocity-zero bit
+M3035->X:$000F30,15,1		; #30 Dwell-in-progress bit
+M3037->X:$000F30,17,1		; #30 Running-program bit
+M3038->X:$000F30,18,1		; #30 Open-loop-mode bit
+M3039->X:$000F30,19,1		; #30 Amplifier-enabled status bit
+M3040->Y:$000F40,0,1		; #30 Background in-position bit
+M3041->Y:$000F40,1,1		; #30 Warning-following error bit
+M3042->Y:$000F40,2,1		; #30 Fatal-following-error bit
+M3043->Y:$000F40,3,1		; #30 Amplifier-fault-error bit
+M3044->Y:$000F40,13,1		; #30 Foreground in-postion bit
+M3045->Y:$000F40,10,1		; #30 Home-complete bit
+M3046->Y:$000F40,6,1		; #30 Integrated following error fault bit
+M3047->Y:$000F40,5,1		; #30 I2T fault bit
+M3048->Y:$000F40,8,1		; #30 Phasing error fault bit
+M3049->Y:$000F40,9,1		; #30 Phasing search-in-progress bit
+
+; MACRO IC 3 Node 9 Flag Registers (usually used for Motor #30)
+M3050->X:$003479,0,24		; MACRO IC 3 Node 9 flag status register
+M3051->Y:$003479,0,24		; MACRO IC 3 Node 9 flag command register
+M3053->X:$003479,20,4		; MACRO IC 3 Node 9 TUVW flags
+M3054->Y:$003479,14,1		; MACRO IC 3 Node 9 amplifier enable flag
+M3055->X:$003479,15,1		; MACRO IC 3 Node 9 node/amplifier fault flag
+M3056->X:$003479,16,1		; MACRO IC 3 Node 9 home flag
+M3057->X:$003479,17,1		; MACRO IC 3 Node 9 positive limit flag
+M3058->X:$003479,18,1		; MACRO IC 3 Node 9 negative limit flag
+M3059->X:$003479,19,1		; MACRO IC 3 Node 9 user flag
+
+; Motor #30 Move Registers
+M3061->D:$000F08			; #30 Commanded position (1/[Ixx08*32] cts)
+M3062->D:$000F0B			; #30 Actual position (1/[Ixx08*32] cts)
+M3063->D:$000F47			; #30 Target (end) position (1/[Ixx08*32] cts)
+M3064->D:$000F4C			; #30 Position bias (1/[Ixx08*32] cts)
+M3066->X:$000F1D,0,24,S	; #30 Actual velocity (1/[Ixx09*32] cts/cyc)
+M3067->D:$000F0D			; #30 Present master pos (1/[Ixx07*32] cts)
+M3068->X:$000F3F,8,16,S	; #30 Filter Output (16-bit DAC bits)
+M3069->D:$000F10			; #30 Compensation correction (1/[Ixx08*32] cts)
+M3070->D:$000F34			; #30 Present phase position (including fraction)
+M3071->X:$000F34,24,S		; #30 Present phase position (counts *Ixx70)
+M3072->L:$000F57			; #30 Variable jog position/distance (cts)
+M3073->Y:$000F4E,0,24,S	; #30 Encoder home capture position (cts)
+M3074->D:$000F6F			; #30 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M3075->X:$000F39,8,16,S	; #30 Actual quadrature current
+M3076->Y:$000F39,8,16,S	; #30 Actual direct current
+M3077->X:$000F3C,8,16,S	; #30 Quadrature current-loop integrator output
+M3078->Y:$000F3C,8,16,S	; #30 Direct current-loop integrator output
+M3079->X:$000F2E,8,16,S	; #30 PID internal filter result (16-bit DAC bits)
+
+; Motor #30 Axis Definition Registers
+M3091->L:$000F4F			; #30 X/U/A/B/C-Axis scale factor (cts/unit)
+M3092->L:$000F50			; #30 Y/V-Axis scale factor (cts/unit)
+M3093->L:$000F51			; #30 Z/W-Axis scale factor (cts/unit)
+M3094->L:$000F52			; #30 Axis offset (cts)
+
+
+; Servo IC 7 Registers for 3rd ACC-24 Channel 7 (usually for Motor #31)
+M3101->X:$07A311,0,24,S	; ENC7 24-bit counter position
+M3102->Y:$07A312,8,16,S	; OUT7A command value; DAC or PWM
+M3103->X:$07A313,0,24,S	; ENC7 captured position
+M3104->Y:$07A313,8,16,S	; OUT7B command value; DAC or PWM
+M3105->Y:$07A315,8,16,S	; ADC7A input value
+M3106->Y:$07A316,8,16,S	; ADC7B input value
+M3107->Y:$07A314,8,16,S	; OUT7C command value; PFM or PWM
+M3108->Y:$07A317,0,24,S	; ENC7 compare A position
+M3109->X:$07A317,0,24,S	; ENC7 compare B position
+M3110->X:$07A316,0,24,S	; ENC7 compare autoincrement value
+M3111->X:$07A315,11		; ENC7 compare initial state write enable
+M3112->X:$07A315,12		; ENC7 compare initial state
+M3114->X:$07A315,14		; AENA7 output status
+M3115->X:$07A310,19		; CHC7 input status
+M3116->X:$07A310,9		; ENC7 compare output value
+M3117->X:$07A310,11		; ENC7 capture flag
+M3118->X:$07A310,8		; ENC7 count error flag
+M3119->X:$07A310,14		; CHC7 input status
+M3120->X:$07A310,16		; HMFL7 flag input status
+M3121->X:$07A310,17		; PLIM7 flag input status
+M3122->X:$07A310,18		; MLIM7 flag input status
+M3123->X:$07A310,15		; FAULT7 flag input status
+M3124->X:$07A310,20		; Channel 7 W flag input status
+M3125->X:$07A310,21		; Channel 7 V flag input status
+M3126->X:$07A310,22		; Channel 7 U flag input status
+M3127->X:$07A310,23		; Channel 7 T flag input status
+M3128->X:$07A310,20,4		; Channel 7 TUVW inputs as 4-bit value
+
+; Motor #31 Status Bits
+M3130->Y:$000FC0,11,1		; #31 Stopped-on-position-limit bit
+M3131->X:$000FB0,21,1		; #31 Positive-end-limit-set bit
+M3132->X:$000FB0,22,1		; #31 Negative-end-limit-set bit
+M3133->X:$000FB0,13,1		; #31 Desired-velocity-zero bit
+M3135->X:$000FB0,15,1		; #31 Dwell-in-progress bit
+M3137->X:$000FB0,17,1		; #31 Running-program bit
+M3138->X:$000FB0,18,1		; #31 Open-loop-mode bit
+M3139->X:$000FB0,19,1		; #31 Amplifier-enabled status bit
+M3140->Y:$000FC0,0,1		; #31 Background in-position bit
+M3141->Y:$000FC0,1,1		; #31 Warning-following error bit
+M3142->Y:$000FC0,2,1		; #31 Fatal-following-error bit
+M3143->Y:$000FC0,3,1		; #31 Amplifier-fault-error bit
+M3144->Y:$000FC0,13,1		; #31 Foreground in-postion bit
+M3145->Y:$000FC0,10,1		; #31 Home-complete bit
+M3146->Y:$000FC0,6,1		; #31 Integrated following error fault bit
+M3147->Y:$000FC0,5,1		; #31 I2T fault bit
+M3148->Y:$000FC0,8,1		; #31 Phasing error fault bit
+M3149->Y:$000FC0,9,1		; #31 Phasing search-in-progress bit
+
+; MACRO IC 3 Node 12 Flag Registers (usually used for Motor #31)
+M3150->X:$00347C,0,24		; MACRO IC 3 Node 12 flag status register
+M3151->Y:$00347C,0,24		; MACRO IC 3 Node 12 flag command register
+M3153->X:$00347C,20,4		; MACRO IC 3 Node 12 TUVW flags
+M3154->Y:$00347C,14,1		; MACRO IC 3 Node 12 amplifier enable flag
+M3155->X:$00347C,15,1		; MACRO IC 3 Node 12 node/amplifier fault flag
+M3156->X:$00347C,16,1		; MACRO IC 3 Node 12 home flag
+M3157->X:$00347C,17,1		; MACRO IC 3 Node 12 positive limit flag
+M3158->X:$00347C,18,1		; MACRO IC 3 Node 12 negative limit flag
+M3159->X:$00347C,19,1		; MACRO IC 3 Node 12 user flag
+
+; Motor #31 Move Registers
+M3161->D:$000F88			; #31 Commanded position (1/[Ixx08*32] cts)
+M3162->D:$000F8B			; #31 Actual position (1/[Ixx08*32] cts)
+M3163->D:$000FC7			; #31 Target (end) position (1/[Ixx08*32] cts)
+M3164->D:$000FCC			; #31 Position bias (1/[Ixx08*32] cts)
+M3166->X:$000F9D,0,24,S	; #31 Actual velocity (1/[Ixx09*32] cts/cyc)
+M3167->D:$000F8D			; #31 Present master pos (1/[Ixx07*32] cts)
+M3168->X:$000FBF,8,16,S	; #31 Filter Output (16-bit DAC bits)
+M3169->D:$000F90			; #31 Compensation correction (1/[Ixx08*32] cts)
+M3170->D:$000FB4			; #31 Present phase position (including fraction)
+M3171->X:$000FB4,24,S		; #31 Present phase position (counts *Ixx70)
+M3172->L:$000FD7			; #31 Variable jog position/distance (cts)
+M3173->Y:$000FCE,0,24,S	; #31 Encoder home capture position (cts)
+M3174->D:$000FEF			; #31 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M3175->X:$000FB9,8,16,S	; #31 Actual quadrature current
+M3176->Y:$000FB9,8,16,S	; #31 Actual direct current
+M3177->X:$000FBC,8,16,S	; #31 Quadrature current-loop integrator output
+M3178->Y:$000FBC,8,16,S	; #31 Direct current-loop integrator output
+M3179->X:$000FAE,8,16,S	; #31 PID internal filter result (16-bit DAC bits)
+
+; Motor #31 Axis Definition Registers
+M3191->L:$000FCF			; #31 X/U/A/B/C-Axis scale factor (cts/unit)
+M3192->L:$000FD0			; #31 Y/V-Axis scale factor (cts/unit)
+M3193->L:$000FD1			; #31 Z/W-Axis scale factor (cts/unit)
+M3194->L:$000FD2			; #31 Axis offset (cts)
+
+
+; Servo IC 7 Registers for 3rd ACC-24 Channel 8 (usually for Motor #32)
+M3201->X:$07A319,0,24,S	; ENC8 24-bit counter position
+M3202->Y:$07A31A,8,16,S	; OUT8A command value; DAC or PWM
+M3203->X:$07A31B,0,24,S	; ENC8 captured position
+M3204->Y:$07A31B,8,16,S	; OUT8B command value; DAC or PWM
+M3205->Y:$07A31D,8,16,S	; ADC8A input value
+M3206->Y:$07A31E,8,16,S	; ADC8B input value
+M3207->Y:$07A31C,8,16,S	; OUT8C command value; PFM or PWM
+M3208->Y:$07A31F,0,24,S	; ENC8 compare A position
+M3209->X:$07A31F,0,24,S	; ENC8 compare B position
+M3210->X:$07A31E,0,24,S	; ENC8 compare autoincrement value
+M3211->X:$07A31D,11		; ENC8 compare initial state write enable
+M3212->X:$07A31D,12		; ENC8 compare initial state
+M3214->X:$07A31D,14		; AENA8 output status
+M3215->X:$07A318,19		; USER8 flag input status
+M3216->X:$07A318,9		; ENC8 compare output value
+M3217->X:$07A318,11		; ENC8 capture flag
+M3218->X:$07A318,8		; ENC8 count error flag
+M3219->X:$07A318,14		; CHC8 input status
+M3220->X:$07A318,16		; HMFL8 flag input status
+M3221->X:$07A318,17		; PLIM8 flag input status
+M3222->X:$07A318,18		; MLIM8 flag input status
+M3223->X:$07A318,15		; FAULT8 flag input status
+M3224->X:$07A318,20		; Channel 8 W flag input status
+M3225->X:$07A318,21		; Channel 8 V flag input status
+M3226->X:$07A318,22		; Channel 8 U flag input status
+M3227->X:$07A318,23		; Channel 8 T flag input status
+M3228->X:$07A318,20,4		; Channel 8 TUVW inputs as 4-bit value
+
+; Motor #32 Status Bits
+M3230->Y:$001040,11,1		; #32 Stopped-on-position-limit bit
+M3231->X:$001030,21,1		; #32 Positive-end-limit-set bit
+M3232->X:$001030,22,1		; #32 Negative-end-limit-set bit
+M3233->X:$001030,13,1		; #32 Desired-velocity-zero bit
+M3235->X:$001030,15,1		; #32 Dwell-in-progress bit
+M3237->X:$001030,17,1		; #32 Running-program bit
+M3238->X:$001030,18,1		; #32 Open-loop-mode bit
+M3239->X:$001030,19,1		; #32 Amplifier-enabled status bit
+M3240->Y:$001040,0,1		; #32 Background in-position bit
+M3241->Y:$001040,1,1		; #32 Warning-following error bit
+M3242->Y:$001040,2,1		; #32 Fatal-following-error bit
+M3243->Y:$001040,3,1		; #32 Amplifier-fault-error bit
+M3244->Y:$001040,13,1		; #32 Foreground in-postion bit
+M3245->Y:$001040,10,1		; #32 Home-complete bit
+M3246->Y:$001040,6,1		; #32 Integrated following error fault bit
+M3247->Y:$001040,5,1		; #32 I2T fault bit
+M3248->Y:$001040,8,1		; #32 Phasing error fault bit
+M3249->Y:$001040,9,1		; #32 Phasing search-in-progress bit
+
+; MACRO IC 3 Node 13 Flag Registers (usually used for Motor #32)
+M3250->X:$00347D,0,24		; MACRO IC 3 Node 13 flag status register
+M3251->Y:$00347D,0,24		; MACRO IC 3 Node 13 flag command register
+M3253->X:$00347D,20,4		; MACRO IC 3 Node 13 TUVW flags
+M3254->Y:$00347D,14,1		; MACRO IC 3 Node 13 amplifier enable flag
+M3255->X:$00347D,15,1		; MACRO IC 3 Node 13 node/amplifier fault flag
+M3256->X:$00347D,16,1		; MACRO IC 3 Node 13 home flag
+M3257->X:$00347D,17,1		; MACRO IC 3 Node 13 positive limit flag
+M3258->X:$00347D,18,1		; MACRO IC 3 Node 13 negative limit flag
+M3259->X:$00347D,19,1		; MACRO IC 3 Node 13 user flag
+
+; Motor #32 Move Registers
+M3261->D:$001008			; #32 Commanded position (1/[Ixx08*32] cts)
+M3262->D:$00100B			; #32 Actual position (1/[Ixx08*32] cts)
+M3263->D:$001047			; #32 Target (end) position (1/[Ixx08*32] cts)
+M3264->D:$00104C			; #32 Position bias (1/[Ixx08*32] cts)
+M3266->X:$00101D,0,24,S	; #32 Actual velocity (1/[Ixx09*32] cts/cyc)
+M3267->D:$00100D			; #32 Present master pos (1/[Ixx07*32] cts)
+M3268->X:$00103F,8,16,S	; #32 Filter Output (16-bit DAC bits)
+M3269->D:$001010			; #32 Compensation correction (1/[Ixx08*32] cts)
+M3270->D:$001034			; #32 Present phase position (including fraction)
+M3271->X:$001034,24,S		; #32 Present phase position (counts *Ixx70)
+M3272->L:$001057			; #32 Variable jog position/distance (cts)
+M3273->Y:$00104E,0,24,S	; #32 Encoder home capture position (cts)
+M3274->D:$00106F			; #32 Averaged actual velocity (1/[Ixx09*32] cts/cyc)
+M3275->X:$001039,8,16,S	; #32 Actual quadrature current
+M3276->Y:$001039,8,16,S	; #32 Actual direct current
+M3277->X:$00103C,8,16,S	; #32 Quadrature current-loop integrator output
+M3278->Y:$00103C,8,16,S	; #32 Direct current-loop integrator output
+M3279->X:$00102E,8,16,S	; #32 PID internal filter result (16-bit DAC bits)
+
+; Motor #32 Axis Definition Registers
+M3291->L:$00104F			; #32 X/U/A/B/C-Axis scale factor (cts/unit)
+M3292->L:$001050			; #32 Y/V-Axis scale factor (cts/unit)
+M3293->L:$001051			; #32 Z/W-Axis scale factor (cts/unit)
+M3294->L:$001052			; #32 Axis offset (cts)
+
+
+; De-multiplexed ADC values from Opt. 12, ACC-36
+M5061->Y:$003400,12,12,U	; Demuxed low ADC register from I5061
+M5062->Y:$003402,12,12,U	; Demuxed low ADC register from I5062
+M5063->Y:$003404,12,12,U	; Demuxed low ADC register from I5063
+M5064->Y:$003406,12,12,U	; Demuxed low ADC register from I5064
+M5065->Y:$003408,12,12,U	; Demuxed low ADC register from I5065
+M5066->Y:$00340A,12,12,U	; Demuxed low ADC register from I5066
+M5067->Y:$00340C,12,12,U	; Demuxed low ADC register from I5067
+M5068->Y:$00340E,12,12,U	; Demuxed low ADC register from I5068
+M5069->Y:$003410,12,12,U	; Demuxed low ADC register from I5069
+M5070->Y:$003412,12,12,U	; Demuxed low ADC register from I5070
+M5071->Y:$003414,12,12,U	; Demuxed low ADC register from I5071
+M5072->Y:$003416,12,12,U	; Demuxed low ADC register from I5072
+M5073->Y:$003418,12,12,U	; Demuxed low ADC register from I5073
+M5074->Y:$00341A,12,12,U	; Demuxed low ADC register from I5074
+M5075->Y:$00341C,12,12,U	; Demuxed low ADC register from I5075
+M5076->Y:$00341E,12,12,U	; Demuxed low ADC register from I5076
+M5081->Y:$003401,12,12,U	; Demuxed high ADC register from I5061
+M5082->Y:$003403,12,12,U	; Demuxed high ADC register from I5062
+M5083->Y:$003405,12,12,U	; Demuxed high ADC register from I5063
+M5084->Y:$003407,12,12,U	; Demuxed high ADC register from I5064
+M5085->Y:$003409,12,12,U	; Demuxed high ADC register from I5065
+M5086->Y:$00340B,12,12,U	; Demuxed high ADC register from I5066
+M5087->Y:$00340D,12,12,U	; Demuxed high ADC register from I5067
+M5088->Y:$00340F,12,12,U	; Demuxed high ADC register from I5068
+M5089->Y:$003411,12,12,U	; Demuxed high ADC register from I5069
+M5090->Y:$003413,12,12,U	; Demuxed high ADC register from I5070
+M5091->Y:$003415,12,12,U	; Demuxed high ADC register from I5071
+M5092->Y:$003417,12,12,U	; Demuxed high ADC register from I5072
+M5093->Y:$003419,12,12,U	; Demuxed high ADC register from I5073
+M5094->Y:$00341B,12,12,U	; Demuxed high ADC register from I5074
+M5095->Y:$00341D,12,12,U	; Demuxed high ADC register from I5075
+M5096->Y:$00341F,12,12,U	; Demuxed high ADC register from I5076
+
+
+; Coordinate System 1 (&1) timers
+M5111->X:$002015,0,24,S			; &1 Isx11 timer (for synchronous assignment)
+M5112->Y:$002015,0,24,S			; &1 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 1 (&1) end-of-calculated-move positions
+M5141->L:$002041			; &1 A-axis target position (engineering units)
+M5142->L:$002042			; &1 B-axis target position (engineering units)
+M5143->L:$002043			; &1 C-axis target position (engineering units)
+M5144->L:$002044			; &1 U-axis target position (engineering units)
+M5145->L:$002045			; &1 V-axis target position (engineering units)
+M5146->L:$002046			; &1 W-axis target position (engineering units)
+M5147->L:$002047			; &1 X-axis target position (engineering units)
+M5148->L:$002048			; &1 Y-axis target position (engineering units)
+M5149->L:$002049			; &1 Z-axis target position (engineering units)
+
+; Coordinate System 1 (&1) Status Bits
+M5180->X:$002040,0,1		; &1 Program-running bit
+M5181->Y:$00203F,21,1		; &1 Circle-radius-error bit
+M5182->Y:$00203F,22,1		; &1 Run-time-error bit
+M5184->X:$002040,0,4		; &1 Continuous motion request
+M5187->Y:$00203F,17,1		; &1 In-position bit (AND of motors)
+M5188->Y:$00203F,18,1		; &1 Warning-following-error bit (OR)
+M5189->Y:$00203F,19,1		; &1 Fatal-following-error bit (OR)
+M5190->Y:$00203F,20,1		; &1 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 1 (&1) Variables
+M5197->X:$002000,0,24,S	; &1 Host commanded time base (I10 units)
+M5198->X:$002002,0,24,S	; &1 Present time base (I10 units)
+
+
+; Coordinate System 2 (&2) timers
+M5211->X:$002115,0,24,S			; &2 Isx11 timer (for synchronous assignment)
+M5212->Y:$002115,0,24,S			; &2 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 2 (&2) end-of-calculated-move positions
+M5241->L:$002141			; &2 A-axis target position (engineering units)
+M5242->L:$002142			; &2 B-axis target position (engineering units)
+M5243->L:$002143			; &2 C-axis target position (engineering units)
+M5244->L:$002144			; &2 U-axis target position (engineering units)
+M5245->L:$002145			; &2 V-axis target position (engineering units)
+M5246->L:$002146			; &2 W-axis target position (engineering units)
+M5247->L:$002147			; &2 X-axis target position (engineering units)
+M5248->L:$002148			; &2 Y-axis target position (engineering units)
+M5249->L:$002149			; &2 Z-axis target position (engineering units)
+
+; Coordinate System 2 (&2) Status Bits
+M5280->X:$002140,0,1		; &2 Program-running bit
+M5281->Y:$00213F,21,1		; &2 Circle-radius-error bit
+M5282->Y:$00213F,22,1		; &2 Run-time-error bit
+M5284->X:$002140,0,4		; &2 Continuous motion request
+M5287->Y:$00213F,17,1		; &2 In-position bit (AND of motors)
+M5288->Y:$00213F,18,1		; &2 Warning-following-error bit (OR)
+M5289->Y:$00213F,19,1		; &2 Fatal-following-error bit (OR)
+M5290->Y:$00213F,20,1		; &2 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 2 (&2) Variables
+M5297->X:$002100,0,24,S	; &2 Host commanded time base (I10 units)
+M5298->X:$002102,0,24,S	; &2 Present time base (I10 units)
+
+
+; Coordinate System 3 (&3) timers
+M5311->X:$002215,0,24,S			; &3 Isx11 timer (for synchronous assignment)
+M5312->Y:$002215,0,24,S			; &3 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 3 (&3) end-of-calculated-move positions
+M5341->L:$002241			; &3 A-axis target position (engineering units)
+M5342->L:$002242			; &3 B-axis target position (engineering units)
+M5343->L:$002243			; &3 C-axis target position (engineering units)
+M5344->L:$002244			; &3 U-axis target position (engineering units)
+M5345->L:$002245			; &3 V-axis target position (engineering units)
+M5346->L:$002246			; &3 W-axis target position (engineering units)
+M5347->L:$002247			; &3 X-axis target position (engineering units)
+M5348->L:$002248			; &3 Y-axis target position (engineering units)
+M5349->L:$002249			; &3 Z-axis target position (engineering units)
+
+; Coordinate System 3 (&3) Status Bits
+M5380->X:$002240,0,1		; &3 Program-running bit
+M5381->Y:$00223F,21,1		; &3 Circle-radius-error bit
+M5382->Y:$00223F,22,1		; &3 Run-time-error bit
+M5384->X:$002240,0,4		; &3 Continuous motion request
+M5387->Y:$00223F,17,1		; &3 In-position bit (AND of motors)
+M5388->Y:$00223F,18,1		; &3 Warning-following-error bit (OR)
+M5389->Y:$00223F,19,1		; &3 Fatal-following-error bit (OR)
+M5390->Y:$00223F,20,1		; &3 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 3 (&3) Variables
+M5397->X:$002200,0,24,S	; &3 Host commanded time base (I10 units)
+M5398->X:$002202,0,24,S	; &3 Present time base (I10 units)
+
+
+; Coordinate System 4 (&4) timers
+M5411->X:$002315,0,24,S			; &4 Isx11 timer (for synchronous assignment)
+M5412->Y:$002315,0,24,S			; &4 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 4 (&4) end-of-calculated-move positions
+M5441->L:$002341			; &4 A-axis target position (engineering units)
+M5442->L:$002342			; &4 B-axis target position (engineering units)
+M5443->L:$002343			; &4 C-axis target position (engineering units)
+M5444->L:$002344			; &4 U-axis target position (engineering units)
+M5445->L:$002345			; &4 V-axis target position (engineering units)
+M5446->L:$002346			; &4 W-axis target position (engineering units)
+M5447->L:$002347			; &4 X-axis target position (engineering units)
+M5448->L:$002348			; &4 Y-axis target position (engineering units)
+M5449->L:$002349			; &4 Z-axis target position (engineering units)
+
+; Coordinate System 4 (&4) Status Bits
+M5480->X:$002340,0,1		; &4 Program-running bit
+M5481->Y:$00233F,21,1		; &4 Circle-radius-error bit
+M5482->Y:$00233F,22,1		; &4 Run-time-error bit
+M5484->X:$002340,0,4		; &4 Continuous motion request
+M5487->Y:$00233F,17,1		; &4 In-position bit (AND of motors)
+M5488->Y:$00233F,18,1		; &4 Warning-following-error bit (OR)
+M5489->Y:$00233F,19,1		; &4 Fatal-following-error bit (OR)
+M5490->Y:$00233F,20,1		; &4 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 4 (&4) Variables
+M5497->X:$002300,0,24,S	; &4 Host commanded time base (I10 units)
+M5498->X:$002302,0,24,S	; &4 Present time base (I10 units)
+
+
+; Coordinate System 5 (&5) timers
+M5511->X:$002415,0,24,S			; &5 Isx11 timer (for synchronous assignment)
+M5512->Y:$002415,0,24,S			; &5 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 5 (&5) end-of-calculated-move positions
+M5541->L:$002441			; &5 A-axis target position (engineering units)
+M5542->L:$002442			; &5 B-axis target position (engineering units)
+M5543->L:$002443			; &5 C-axis target position (engineering units)
+M5544->L:$002444			; &5 U-axis target position (engineering units)
+M5545->L:$002445			; &5 V-axis target position (engineering units)
+M5546->L:$002446			; &5 W-axis target position (engineering units)
+M5547->L:$002447			; &5 X-axis target position (engineering units)
+M5548->L:$002448			; &5 Y-axis target position (engineering units)
+M5549->L:$002449			; &5 Z-axis target position (engineering units)
+
+; Coordinate System 5 (&5) Status Bits
+M5580->X:$002440,0,1		; &5 Program-running bit
+M5581->Y:$00243F,21,1		; &5 Circle-radius-error bit
+M5582->Y:$00243F,22,1		; &5 Run-time-error bit
+M5584->X:$002440,0,4		; &5 Continuous motion request
+M5587->Y:$00243F,17,1		; &5 In-position bit (AND of motors)
+M5588->Y:$00243F,18,1		; &5 Warning-following-error bit (OR)
+M5589->Y:$00243F,19,1		; &5 Fatal-following-error bit (OR)
+M5590->Y:$00243F,20,1		; &5 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 5 (&5) Variables
+M5597->X:$002400,0,24,S	; &5 Host commanded time base (I10 units)
+M5598->X:$002402,0,24,S	; &5 Present time base (I10 units)
+
+
+; Coordinate System 6 (&6) timers
+M5611->X:$002515,0,24,S			; &6 Isx11 timer (for synchronous assignment)
+M5612->Y:$002515,0,24,S			; &6 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 6 (&6) end-of-calculated-move positions
+M5641->L:$002541			; &6 A-axis target position (engineering units)
+M5642->L:$002542			; &6 B-axis target position (engineering units)
+M5643->L:$002543			; &6 C-axis target position (engineering units)
+M5644->L:$002544			; &6 U-axis target position (engineering units)
+M5645->L:$002545			; &6 V-axis target position (engineering units)
+M5646->L:$002546			; &6 W-axis target position (engineering units)
+M5647->L:$002547			; &6 X-axis target position (engineering units)
+M5648->L:$002548			; &6 Y-axis target position (engineering units)
+M5649->L:$002549			; &6 Z-axis target position (engineering units)
+
+; Coordinate System 6 (&6) Status Bits
+M5680->X:$002540,0,1		; &6 Program-running bit
+M5681->Y:$00253F,21,1		; &6 Circle-radius-error bit
+M5682->Y:$00253F,22,1		; &6 Run-time-error bit
+M5684->X:$002540,0,4		; &6 Continuous motion request
+M5687->Y:$00253F,17,1		; &6 In-position bit (AND of motors)
+M5688->Y:$00253F,18,1		; &6 Warning-following-error bit (OR)
+M5689->Y:$00253F,19,1		; &6 Fatal-following-error bit (OR)
+M5690->Y:$00253F,20,1		; &6 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 6 (&6) Variables
+M5697->X:$002500,0,24,S	; &6 Host commanded time base (I10 units)
+M5698->X:$002502,0,24,S	; &6 Present time base (I10 units)
+
+
+; Coordinate System 7 (&7) timers
+M5711->X:$002615,0,24,S			; &7 Isx11 timer (for synchronous assignment)
+M5712->Y:$002615,0,24,S			; &7 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 7 (&7) end-of-calculated-move positions
+M5741->L:$002641			; &7 A-axis target position (engineering units)
+M5742->L:$002642			; &7 B-axis target position (engineering units)
+M5743->L:$002643			; &7 C-axis target position (engineering units)
+M5744->L:$002644			; &7 U-axis target position (engineering units)
+M5745->L:$002645			; &7 V-axis target position (engineering units)
+M5746->L:$002646			; &7 W-axis target position (engineering units)
+M5747->L:$002647			; &7 X-axis target position (engineering units)
+M5748->L:$002648			; &7 Y-axis target position (engineering units)
+M5749->L:$002649			; &7 Z-axis target position (engineering units)
+
+; Coordinate System 7 (&7) Status Bits
+M5780->X:$002640,0,1		; &7 Program-running bit
+M5781->Y:$00263F,21,1		; &7 Circle-radius-error bit
+M5782->Y:$00263F,22,1		; &7 Run-time-error bit
+M5784->X:$002640,0,4		; &7 Continuous motion request
+M5787->Y:$00263F,17,1		; &7 In-position bit (AND of motors)
+M5788->Y:$00263F,18,1		; &7 Warning-following-error bit (OR)
+M5789->Y:$00263F,19,1		; &7 Fatal-following-error bit (OR)
+M5790->Y:$00263F,20,1		; &7 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 7 (&7) Variables
+M5797->X:$002600,0,24,S	; &7 Host commanded time base (I10 units)
+M5798->X:$002602,0,24,S	; &7 Present time base (I10 units)
+
+
+; Coordinate System 8 (&8) timers
+M5811->X:$002715,0,24,S			; &8 Isx11 timer (for synchronous assignment)
+M5812->Y:$002715,0,24,S			; &8 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 8 (&8) end-of-calculated-move positions
+M5841->L:$002741			; &8 A-axis target position (engineering units)
+M5842->L:$002742			; &8 B-axis target position (engineering units)
+M5843->L:$002743			; &8 C-axis target position (engineering units)
+M5844->L:$002744			; &8 U-axis target position (engineering units)
+M5845->L:$002745			; &8 V-axis target position (engineering units)
+M5846->L:$002746			; &8 W-axis target position (engineering units)
+M5847->L:$002747			; &8 X-axis target position (engineering units)
+M5848->L:$002748			; &8 Y-axis target position (engineering units)
+M5849->L:$002749			; &8 Z-axis target position (engineering units)
+
+; Coordinate System 8 (&8) Status Bits
+M5880->X:$002740,0,1		; &8 Program-running bit
+M5881->Y:$00273F,21,1		; &8 Circle-radius-error bit
+M5882->Y:$00273F,22,1		; &8 Run-time-error bit
+M5884->X:$002740,0,4		; &8 Continuous motion request
+M5887->Y:$00273F,17,1		; &8 In-position bit (AND of motors)
+M5888->Y:$00273F,18,1		; &8 Warning-following-error bit (OR)
+M5889->Y:$00273F,19,1		; &8 Fatal-following-error bit (OR)
+M5890->Y:$00273F,20,1		; &8 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 8 (&8) Variables
+M5897->X:$002700,0,24,S	; &8 Host commanded time base (I10 units)
+M5898->X:$002702,0,24,S	; &8 Present time base (I10 units)
+
+; Coordinate System 9 (&9) timers
+M5911->X:$002815,0,24,S			; &9 Isx11 timer (for synchronous assignment)
+M5912->Y:$002815,0,24,S			; &9 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 9 (&9) end-of-calculated-move positions
+M5941->L:$002841			; &9 A-axis target position (engineering units)
+M5942->L:$002842			; &9 B-axis target position (engineering units)
+M5943->L:$002843			; &9 C-axis target position (engineering units)
+M5944->L:$002844			; &9 U-axis target position (engineering units)
+M5945->L:$002845			; &9 V-axis target position (engineering units)
+M5946->L:$002846			; &9 W-axis target position (engineering units)
+M5947->L:$002847			; &9 X-axis target position (engineering units)
+M5948->L:$002848			; &9 Y-axis target position (engineering units)
+M5949->L:$002849			; &9 Z-axis target position (engineering units)
+
+; Coordinate System 1 (&1) Status Bits
+M5980->X:$002840,0,1		; &9 Program-running bit
+M5981->Y:$00283F,21,1		; &9 Circle-radius-error bit
+M5982->Y:$00283F,22,1		; &9 Run-time-error bit
+M5984->X:$002840,0,4		; &9 Continuous motion request
+M5987->Y:$00283F,17,1		; &9 In-position bit (AND of motors)
+M5988->Y:$00283F,18,1		; &9 Warning-following-error bit (OR)
+M5989->Y:$00283F,19,1		; &9 Fatal-following-error bit (OR)
+M5990->Y:$00283F,20,1		; &9 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 1 (&1) Variables
+M5997->X:$002800,0,24,S	; &9 Host commanded time base (I10 units)
+M5998->X:$002802,0,24,S	; &9 Present time base (I10 units)
+
+
+; Coordinate System 10 (&10) timers
+M6011->X:$002915,0,24,S			; &10 Isx11 timer (for synchronous assignment)
+M6012->Y:$002915,0,24,S			; &10 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 10 (&10) end-of-calculated-move positions
+M6041->L:$002941			; &10 A-axis target position (engineering units)
+M6042->L:$002942			; &10 B-axis target position (engineering units)
+M6043->L:$002943			; &10 C-axis target position (engineering units)
+M6044->L:$002944			; &10 U-axis target position (engineering units)
+M6045->L:$002945			; &10 V-axis target position (engineering units)
+M6046->L:$002946			; &10 W-axis target position (engineering units)
+M6047->L:$002947			; &10 X-axis target position (engineering units)
+M6048->L:$002948			; &10 Y-axis target position (engineering units)
+M6049->L:$002949			; &10 Z-axis target position (engineering units)
+
+; Coordinate System 10 (&10) Status Bits
+M6080->X:$002940,0,1		; &10 Program-running bit
+M6081->Y:$00293F,21,1		; &10 Circle-radius-error bit
+M6082->Y:$00293F,22,1		; &10 Run-time-error bit
+M6084->X:$002940,0,4		; &10 Continuous motion request
+M6087->Y:$00293F,17,1		; &10 In-position bit (AND of motors)
+M6088->Y:$00293F,18,1		; &10 Warning-following-error bit (OR)
+M6089->Y:$00293F,19,1		; &10 Fatal-following-error bit (OR)
+M6090->Y:$00293F,20,1		; &10 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 10 (&10) Variables
+M6097->X:$002900,0,24,S	; &10 Host commanded time base (I10 units)
+M6098->X:$002902,0,24,S	; &10 Present time base (I10 units)
+
+
+; Coordinate System 11 (&11) timers
+M6111->X:$002A15,0,24,S			; &11 Isx11 timer (for synchronous assignment)
+M6112->Y:$002A15,0,24,S			; &11 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 11 (&11) end-of-calculated-move positions
+M6141->L:$002A41			; &11 A-axis target position (engineering units)
+M6142->L:$002A42			; &11 B-axis target position (engineering units)
+M6143->L:$002A43			; &11 C-axis target position (engineering units)
+M6144->L:$002A44			; &11 U-axis target position (engineering units)
+M6145->L:$002A45			; &11 V-axis target position (engineering units)
+M6146->L:$002A46			; &11 W-axis target position (engineering units)
+M6147->L:$002A47			; &11 X-axis target position (engineering units)
+M6148->L:$002A48			; &11 Y-axis target position (engineering units)
+M6149->L:$002A49			; &11 Z-axis target position (engineering units)
+
+; Coordinate System 11 (&11) Status Bits
+M6180->X:$002A40,0,1		; &11 Program-running bit
+M6181->Y:$002A3F,21,1		; &11 Circle-radius-error bit
+M6182->Y:$002A3F,22,1		; &11 Run-time-error bit
+M6184->X:$002A40,0,4		; &11 Continuous motion request
+M6187->Y:$002A3F,17,1		; &11 In-position bit (AND of motors)
+M6188->Y:$002A3F,18,1		; &11 Warning-following-error bit (OR)
+M6189->Y:$002A3F,19,1		; &11 Fatal-following-error bit (OR)
+M6190->Y:$002A3F,20,1		; &11 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 11 (&11) Variables
+M6197->X:$002A00,0,24,S	; &11 Host commanded time base (I10 units)
+M6198->X:$002A02,0,24,S	; &11 Present time base (I10 units)
+
+
+; Coordinate System 12 (&12) timers
+M6211->X:$002B15,0,24,S			; &12 Isx11 timer (for synchronous assignment)
+M6212->Y:$002B15,0,24,S			; &12 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 12 (&12) end-of-calculated-move positions
+M6241->L:$002B41			; &12 A-axis target position (engineering units)
+M6242->L:$002B42			; &12 B-axis target position (engineering units)
+M6243->L:$002B43			; &12 C-axis target position (engineering units)
+M6244->L:$002B44			; &12 U-axis target position (engineering units)
+M6245->L:$002B45			; &12 V-axis target position (engineering units)
+M6246->L:$002B46			; &12 W-axis target position (engineering units)
+M6247->L:$002B47			; &12 X-axis target position (engineering units)
+M6248->L:$002B48			; &12 Y-axis target position (engineering units)
+M6249->L:$002B49			; &12 Z-axis target position (engineering units)
+
+; Coordinate System 12 (&12) Status Bits
+M6280->X:$002B40,0,1		; &12 Program-running bit
+M6281->Y:$002B3F,21,1		; &12 Circle-radius-error bit
+M6282->Y:$002B3F,22,1		; &12 Run-time-error bit
+M6284->X:$002B40,0,4		; &12 Continuous motion request
+M6287->Y:$002B3F,17,1		; &12 In-position bit (AND of motors)
+M6288->Y:$002B3F,18,1		; &12 Warning-following-error bit (OR)
+M6289->Y:$002B3F,19,1		; &12 Fatal-following-error bit (OR)
+M6290->Y:$002B3F,20,1		; &12 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 12 (&12) Variables
+M6297->X:$002B00,0,24,S	; &12 Host commanded time base (I10 units)
+M6298->X:$002B02,0,24,S	; &12 Present time base (I10 units)
+
+
+; Coordinate System 13 (&13) timers
+M6311->X:$002C15,0,24,S			; &13 Isx11 timer (for synchronous assignment)
+M6312->Y:$002C15,0,24,S			; &13 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 13 (&13) end-of-calculated-move positions
+M6341->L:$002C41			; &13 A-axis target position (engineering units)
+M6342->L:$002C42			; &13 B-axis target position (engineering units)
+M6343->L:$002C43			; &13 C-axis target position (engineering units)
+M6344->L:$002C44			; &13 U-axis target position (engineering units)
+M6345->L:$002C45			; &13 V-axis target position (engineering units)
+M6346->L:$002C46			; &13 W-axis target position (engineering units)
+M6347->L:$002C47			; &13 X-axis target position (engineering units)
+M6348->L:$002C48			; &13 Y-axis target position (engineering units)
+M6349->L:$002C49			; &13 Z-axis target position (engineering units)
+
+; Coordinate System 13 (&13) Status Bits
+M6380->X:$002C40,0,1		; &13 Program-running bit
+M6381->Y:$002C3F,21,1		; &13 Circle-radius-error bit
+M6382->Y:$002C3F,22,1		; &13 Run-time-error bit
+M6384->X:$002C40,0,4		; &13 Continuous motion request
+M6387->Y:$002C3F,17,1		; &13 In-position bit (AND of motors)
+M6388->Y:$002C3F,18,1		; &13 Warning-following-error bit (OR)
+M6389->Y:$002C3F,19,1		; &13 Fatal-following-error bit (OR)
+M6390->Y:$002C3F,20,1		; &13 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 13 (&13) Variables
+M6397->X:$002C00,0,24,S	; &13 Host commanded time base (I10 units)
+M6398->X:$002C02,0,24,S	; &13 Present time base (I10 units)
+
+
+; Coordinate System 14 (&14) timers
+M6411->X:$002D15,0,24,S			; &14 Isx11 timer (for synchronous assignment)
+M6412->Y:$002D15,0,24,S			; &14 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 14 (&14) end-of-calculated-move positions
+M6441->L:$002D41			; &14 A-axis target position (engineering units)
+M6442->L:$002D42			; &14 B-axis target position (engineering units)
+M6443->L:$002D43			; &14 C-axis target position (engineering units)
+M6444->L:$002D44			; &14 U-axis target position (engineering units)
+M6445->L:$002D45			; &14 V-axis target position (engineering units)
+M6446->L:$002D46			; &14 W-axis target position (engineering units)
+M6447->L:$002D47			; &14 X-axis target position (engineering units)
+M6448->L:$002D48			; &14 Y-axis target position (engineering units)
+M6449->L:$002D49			; &14 Z-axis target position (engineering units)
+
+; Coordinate System 14 (&14) Status Bits
+M6480->X:$002D40,0,1		; &14 Program-running bit
+M6481->Y:$002D3F,21,1		; &14 Circle-radius-error bit
+M6482->Y:$002D3F,22,1		; &14 Run-time-error bit
+M6484->X:$002D40,0,4		; &14 Continuous motion request
+M6487->Y:$002D3F,17,1		; &14 In-position bit (AND of motors)
+M6488->Y:$002D3F,18,1		; &14 Warning-following-error bit (OR)
+M6489->Y:$002D3F,19,1		; &14 Fatal-following-error bit (OR)
+M6490->Y:$002D3F,20,1		; &14 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 14 (&14) Variables
+M6497->X:$002D00,0,24,S	; &14 Host commanded time base (I10 units)
+M6498->X:$002D02,0,24,S	; &14 Present time base (I10 units)
+
+
+; Coordinate System 15 (&15) timers
+M6511->X:$002E15,0,24,S			; &15 Isx11 timer (for synchronous assignment)
+M6512->Y:$002E15,0,24,S			; &15 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 15 (&15) end-of-calculated-move positions
+M6541->L:$002E41			; &15 A-axis target position (engineering units)
+M6542->L:$002E42			; &15 B-axis target position (engineering units)
+M6543->L:$002E43			; &15 C-axis target position (engineering units)
+M6544->L:$002E44			; &15 U-axis target position (engineering units)
+M6545->L:$002E45			; &15 V-axis target position (engineering units)
+M6546->L:$002E46			; &15 W-axis target position (engineering units)
+M6547->L:$002E47			; &15 X-axis target position (engineering units)
+M6548->L:$002E48			; &15 Y-axis target position (engineering units)
+M6549->L:$002E49			; &15 Z-axis target position (engineering units)
+
+; Coordinate System 15 (&15) Status Bits
+M6580->X:$002E40,0,1		; &15 Program-running bit
+M6581->Y:$002E3F,21,1		; &15 Circle-radius-error bit
+M6582->Y:$002E3F,22,1		; &15 Run-time-error bit
+M6584->X:$002E40,0,4		; &15 Continuous motion request
+M6587->Y:$002E3F,17,1		; &15 In-position bit (AND of motors)
+M6588->Y:$002E3F,18,1		; &15 Warning-following-error bit (OR)
+M6589->Y:$002E3F,19,1		; &15 Fatal-following-error bit (OR)
+M6590->Y:$002E3F,20,1		; &15 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 15 (&15) Variables
+M6597->X:$002E00,0,24,S	; &15 Host commanded time base (I10 units)
+M6598->X:$002E02,0,24,S	; &15 Present time base (I10 units)
+
+
+; Coordinate System 16 (&16) timers
+M6611->X:$002F15,0,24,S			; &16 Isx11 timer (for synchronous assignment)
+M6612->Y:$002F15,0,24,S			; &16 Isx12 timer (for synchronous assignment)
+
+; Coordinate System 16 (&16) end-of-calculated-move positions
+M6641->L:$002F41			; &16 A-axis target position (engineering units)
+M6642->L:$002F42			; &16 B-axis target position (engineering units)
+M6643->L:$002F43			; &16 C-axis target position (engineering units)
+M6644->L:$002F44			; &16 U-axis target position (engineering units)
+M6645->L:$002F45			; &16 V-axis target position (engineering units)
+M6646->L:$002F46			; &16 W-axis target position (engineering units)
+M6647->L:$002F47			; &16 X-axis target position (engineering units)
+M6648->L:$002F48			; &16 Y-axis target position (engineering units)
+M6649->L:$002F49			; &16 Z-axis target position (engineering units)
+
+; Coordinate System 16 (&16) Status Bits
+M6680->X:$002F40,0,1		; &16 Program-running bit
+M6681->Y:$002F3F,21,1		; &16 Circle-radius-error bit
+M6682->Y:$002F3F,22,1		; &16 Run-time-error bit
+M6684->X:$002F40,0,4		; &16 Continuous motion request
+M6687->Y:$002F3F,17,1		; &16 In-position bit (AND of motors)
+M6688->Y:$002F3F,18,1		; &16 Warning-following-error bit (OR)
+M6689->Y:$002F3F,19,1		; &16 Fatal-following-error bit (OR)
+M6690->Y:$002F3F,20,1		; &16 Amp-fault-error bit (OR of motors)
+
+; Coordinate System 16 (&16) Variables
+M6697->X:$002F00,0,24,S	; &16 Host commanded time base (I10 units)
+M6698->X:$002F02,0,24,S	; &16 Present time base (I10 units)
+
+
+; Accessory 14 I/O M-Variables (1st ACC-14)
+M7000->Y:$078A00,0,1		; MI/O0
+M7001->Y:$078A00,1,1		; MI/O1
+M7002->Y:$078A00,2,1		; MI/O2
+M7003->Y:$078A00,3,1		; MI/O3
+M7004->Y:$078A00,4,1		; MI/O4
+M7005->Y:$078A00,5,1		; MI/O5
+M7006->Y:$078A00,6,1		; MI/O6
+M7007->Y:$078A00,7,1		; MI/O7
+M7008->Y:$078A00,8,1		; MI/O8
+M7009->Y:$078A00,9,1		; MI/O9
+M7010->Y:$078A00,10,1		; MI/O10
+M7011->Y:$078A00,11,1		; MI/O11
+M7012->Y:$078A00,12,1		; MI/O12
+M7013->Y:$078A00,13,1		; MI/O13
+M7014->Y:$078A00,14,1		; MI/O14
+M7015->Y:$078A00,15,1		; MI/O15
+M7016->Y:$078A00,16,1		; MI/O16
+M7017->Y:$078A00,17,1		; MI/O17
+M7018->Y:$078A00,18,1		; MI/O18
+M7019->Y:$078A00,19,1		; MI/O19
+M7020->Y:$078A00,20,1		; MI/O20
+M7021->Y:$078A00,21,1		; MI/O21
+M7022->Y:$078A00,22,1		; MI/O22
+M7023->Y:$078A00,23,1		; MI/O23
+M7024->Y:$078A01,0,1		; MI/O24
+M7025->Y:$078A01,1,1		; MI/O25
+M7026->Y:$078A01,2,1		; MI/O26
+M7027->Y:$078A01,3,1		; MI/O27
+M7028->Y:$078A01,4,1		; MI/O28
+M7029->Y:$078A01,5,1		; MI/O29
+M7030->Y:$078A01,6,1		; MI/O30
+M7031->Y:$078A01,7,1		; MI/O31
+M7032->Y:$078A01,8,1		; MI/O32
+M7033->Y:$078A01,9,1		; MI/O33
+M7034->Y:$078A01,10,1		; MI/O34
+M7035->Y:$078A01,11,1		; MI/O35
+M7036->Y:$078A01,12,1		; MI/O36
+M7037->Y:$078A01,13,1		; MI/O37
+M7038->Y:$078A01,14,1		; MI/O38
+M7039->Y:$078A01,15,1		; MI/O39
+M7040->Y:$078A01,16,1		; MI/O40
+M7041->Y:$078A01,17,1		; MI/O41
+M7042->Y:$078A01,18,1		; MI/O42
+M7043->Y:$078A01,19,1		; MI/O43
+M7044->Y:$078A01,20,1		; MI/O44
+M7045->Y:$078A01,21,1		; MI/O45
+M7046->Y:$078A01,22,1		; MI/O46
+M7047->Y:$078A01,23,1		; MI/O47
+
+
+; Encoder Conversion Table Result Registers (M8xxx matches I8xxx)
+M8000->X:$003501,0,24,S	; Line 0 result from conversion table
+M8001->X:$003502,0,24,S	; Line 1 result from conversion table
+M8002->X:$003503,0,24,S	; Line 2 result from conversion table
+M8003->X:$003504,0,24,S	; Line 3 result from conversion table
+M8004->X:$003505,0,24,S	; Line 4 result from conversion table
+M8005->X:$003506,0,24,S	; Line 5 result from conversion table
+M8006->X:$003507,0,24,S	; Line 6 result from conversion table
+M8007->X:$003508,0,24,S	; Line 7 result from conversion table
+M8008->X:$003509,0,24,S	; Line 8 result from conversion table
+M8009->X:$00350A,0,24,S	; Line 9 result from conversion table
+M8010->X:$00350B,0,24,S	; Line 10 result from conversion table
+M8011->X:$00350C,0,24,S	; Line 11 result from conversion table
+M8012->X:$00350D,0,24,S	; Line 12 result from conversion table
+M8013->X:$00350E,0,24,S	; Line 13 result from conversion table
+M8014->X:$00350F,0,24,S	; Line 14 result from conversion table
+M8015->X:$003510,0,24,S	; Line 15 result from conversion table
+M8016->X:$003511,0,24,S	; Line 16 result from conversion table
+M8017->X:$003512,0,24,S	; Line 17 result from conversion table
+M8018->X:$003513,0,24,S	; Line 18 result from conversion table
+M8019->X:$003514,0,24,S	; Line 19 result from conversion table
+M8020->X:$003515,0,24,S	; Line 20 result from conversion table
+M8021->X:$003516,0,24,S	; Line 21 result from conversion table
+M8022->X:$003517,0,24,S	; Line 22 result from conversion table
+M8023->X:$003518,0,24,S	; Line 23 result from conversion table
+M8024->X:$003519,0,24,S	; Line 24 result from conversion table
+M8025->X:$00351A,0,24,S	; Line 25 result from conversion table
+M8026->X:$00351B,0,24,S	; Line 26 result from conversion table
+M8027->X:$00351C,0,24,S	; Line 27 result from conversion table
+M8028->X:$00351D,0,24,S	; Line 28 result from conversion table
+M8029->X:$00351E,0,24,S	; Line 29 result from conversion table
+M8030->X:$00351F,0,24,S	; Line 30 result from conversion table
+M8031->X:$003520,0,24,S	; Line 31 result from conversion table
+M8032->X:$003521,0,24,S	; Line 32 result from conversion table
+M8033->X:$003522,0,24,S	; Line 33 result from conversion table
+M8034->X:$003523,0,24,S	; Line 34 result from conversion table
+M8035->X:$003524,0,24,S	; Line 35 result from conversion table
+M8036->X:$003525,0,24,S	; Line 36 result from conversion table
+M8037->X:$003526,0,24,S	; Line 37 result from conversion table
+M8038->X:$003527,0,24,S	; Line 38 result from conversion table
+M8039->X:$003528,0,24,S	; Line 39 result from conversion table
+M8040->X:$003529,0,24,S	; Line 40 result from conversion table
+M8041->X:$00352A,0,24,S	; Line 41 result from conversion table
+M8042->X:$00352B,0,24,S	; Line 42 result from conversion table
+M8043->X:$00352C,0,24,S	; Line 43 result from conversion table
+M8044->X:$00352D,0,24,S	; Line 44 result from conversion table
+M8045->X:$00352E,0,24,S	; Line 45 result from conversion table
+M8046->X:$00352F,0,24,S	; Line 46 result from conversion table
+M8047->X:$003530,0,24,S	; Line 47 result from conversion table
+M8048->X:$003531,0,24,S	; Line 48 result from conversion table
+M8049->X:$003532,0,24,S	; Line 49 result from conversion table
+M8050->X:$003533,0,24,S	; Line 50 result from conversion table
+M8051->X:$003534,0,24,S	; Line 51 result from conversion table
+M8052->X:$003535,0,24,S	; Line 52 result from conversion table
+M8053->X:$003536,0,24,S	; Line 53 result from conversion table
+M8054->X:$003537,0,24,S	; Line 54 result from conversion table
+M8055->X:$003538,0,24,S	; Line 55 result from conversion table
+M8056->X:$003539,0,24,S	; Line 56 result from conversion table
+M8057->X:$00353A,0,24,S	; Line 57 result from conversion table
+M8058->X:$00353B,0,24,S	; Line 58 result from conversion table
+M8059->X:$00353C,0,24,S	; Line 59 result from conversion table
+M8060->X:$00353D,0,24,S	; Line 60 result from conversion table
+M8061->X:$00353E,0,24,S	; Line 61 result from conversion table
+M8062->X:$00353F,0,24,S	; Line 62 result from conversion table
+M8063->X:$003540,0,24,S	; Line 63 result from conversion table
+
+
+;####################################################
+; This section contains additional DLS M variables for PMAC or GeoBrick
+; These are used in various PLCs distributed in pmacUtil
+;####################################################
+
+; Set up the M-variables to look for the CS number
+m185->Y:$0000C0,20,4
+m285->Y:$000140,20,4
+m385->Y:$0001C0,20,4
+m485->Y:$000240,20,4
+m585->Y:$0002C0,20,4
+m685->Y:$000340,20,4
+m785->Y:$0003C0,20,4
+m885->Y:$000440,20,4
+m985->Y:$0004C0,20,4
+m1085->Y:$000540,20,4
+m1185->Y:$0005C0,20,4
+m1285->Y:$000640,20,4
+m1385->Y:$0006C0,20,4
+m1485->Y:$000740,20,4
+m1585->Y:$0007C0,20,4
+m1685->Y:$000840,20,4
+m1785->Y:$0008C0,20,4
+m1885->Y:$000940,20,4
+m1985->Y:$0009C0,20,4
+m2085->Y:$000A40,20,4
+m2185->Y:$000AC0,20,4
+m2285->Y:$000B40,20,4
+m2385->Y:$000BC0,20,4
+m2485->Y:$000C40,20,4
+m2585->Y:$000CC0,20,4
+m2685->Y:$000D40,20,4
+m2785->Y:$000DC0,20,4
+m2885->Y:$000E40,20,4
+m2985->Y:$000EC0,20,4
+m3085->Y:$000F40,20,4
+m3185->Y:$000FC0,20,4
+m3285->Y:$001040,20,4
+
+; Set up the M-variables to see if the motor is in a CS
+m186->Y:$0000C0,15,1
+m286->Y:$000140,15,1
+m386->Y:$0001C0,15,1
+m486->Y:$000240,15,1
+m586->Y:$0002C0,15,1
+m686->Y:$000340,15,1
+m786->Y:$0003C0,15,1
+m886->Y:$000440,15,1
+m986->Y:$0004C0,15,1
+m1086->Y:$000540,15,1
+m1186->Y:$0005C0,15,1
+m1286->Y:$000640,15,1
+m1386->Y:$0006C0,15,1
+m1486->Y:$000740,15,1
+m1586->Y:$0007C0,15,1
+m1686->Y:$000840,15,1
+m1786->Y:$0008C0,15,1
+m1886->Y:$000940,15,1
+m1986->Y:$0009C0,15,1
+m2086->Y:$000A40,15,1
+m2186->Y:$000AC0,15,1
+m2286->Y:$000B40,15,1
+m2386->Y:$000BC0,15,1
+m2486->Y:$000C40,15,1
+m2586->Y:$000CC0,15,1
+m2686->Y:$000D40,15,1
+m2786->Y:$000DC0,15,1
+m2886->Y:$000E40,15,1
+m2986->Y:$000EC0,15,1
+m3086->Y:$000F40,15,1
+m3186->Y:$000FC0,15,1
+m3286->Y:$001040,15,1
+
+;####################################################
+; Note on memory from P381 of PMAC USER MANUAL
+; For general data memory, most users will utilize some of Turbo PMAC’s 8192 P-variables for floatingpoint
+; values. If just a few open registers are desired for use, the registers at X/Y:$0010F0 –
+; X/Y:$0010FF are unused by any firmware task, other than to be zeroed automatically at power-up/reset.
+;####################################################
+; This is used by PLC1 to test whether it has been run yet
+M4900->Y:$0010F0,0,1
+; These are used by autosave to tell if an axis has been restored
+; Axis 1-16
+M4901->Y:$0010F1,0,1
+M4902->Y:$0010F1,1,1
+M4903->Y:$0010F1,2,1
+M4904->Y:$0010F1,3,1
+M4905->Y:$0010F1,4,1
+M4906->Y:$0010F1,5,1
+M4907->Y:$0010F1,6,1
+M4908->Y:$0010F1,7,1
+M4909->Y:$0010F1,8,1
+M4910->Y:$0010F1,9,1
+M4911->Y:$0010F1,10,1
+M4912->Y:$0010F1,11,1
+M4913->Y:$0010F1,12,1
+M4914->Y:$0010F1,13,1
+M4915->Y:$0010F1,14,1
+M4916->Y:$0010F1,15,1
+; Axis 17-32
+M4917->Y:$0010F2,0,1
+M4918->Y:$0010F2,1,1
+M4919->Y:$0010F2,2,1
+M4920->Y:$0010F2,3,1
+M4921->Y:$0010F2,4,1
+M4922->Y:$0010F2,5,1
+M4923->Y:$0010F2,6,1
+M4924->Y:$0010F2,7,1
+M4925->Y:$0010F2,8,1
+M4926->Y:$0010F2,9,1
+M4927->Y:$0010F2,10,1
+M4928->Y:$0010F2,11,1
+M4929->Y:$0010F2,12,1
+M4930->Y:$0010F2,13,1
+M4931->Y:$0010F2,14,1
+M4932->Y:$0010F2,15,1
+; These are reserved for the ACC-11E mirroring in PLC3
+M4933->Y:$0010F3,0,24
+M4934->Y:$0010F4,0,24
+; These are reserved for future dls plc use
+M4935->Y:$0010F5,0,24
+M4936->Y:$0010F6,0,24
+M4937->Y:$0010F7,0,24
+M4938->Y:$0010F8,0,24
+M4939->Y:$0010F9,0,24
+M4940->Y:$0010FA,0,24
+M4941->Y:$0010FB,0,24
+M4942->Y:$0010FC,0,24
+M4943->Y:$0010FD,0,24
+M4944->Y:$0010FE,0,24
+M4945->Y:$0010FF,0,24
+; These are unused, but can be used as user memory
+M4950->X:$0010F0,0,24
+M4951->X:$0010F1,0,24
+M4952->X:$0010F2,0,24
+M4953->X:$0010F3,0,24
+M4954->X:$0010F4,0,24
+M4955->X:$0010F5,0,24
+M4956->X:$0010F6,0,24
+M4957->X:$0010F7,0,24
+M4958->X:$0010F8,0,24
+M4959->X:$0010F9,0,24
+M4960->X:$0010FA,0,24
+M4961->X:$0010FB,0,24
+M4962->X:$0010FC,0,24
+M4963->X:$0010FD,0,24
+M4964->X:$0010FE,0,24
+; This is always set to $60000 in PLC1 so it can be used to tell an axis 
+; "your limits are on, stop now"
+; Set ixx43 to $10FF to redirect limits to this variable
+
+M4965->X:$0010FF,0,24
+
+; M variables to determine whether PLCs are running
+; from "Turbo PMAC/PMAC2 Software Reference Manual"
+M5000->Y:$003100,22,1      ; PLC 0
+M5001->Y:$003101,22,1      ; PLC 1
+M5002->Y:$003102,22,1      ; PLC 2
+M5003->Y:$003103,22,1      ; PLC 3
+M5004->Y:$003104,22,1      ; PLC 4
+M5005->Y:$003105,22,1      ; PLC 5
+M5006->Y:$003106,22,1      ; PLC 6
+M5007->Y:$003107,22,1      ; PLC 7
+M5008->Y:$003108,22,1      ; PLC 8
+M5009->Y:$003109,22,1      ; PLC 9
+M5010->Y:$00310A,22,1      ; PLC 10
+M5011->Y:$00310B,22,1      ; PLC 11
+M5012->Y:$00310C,22,1      ; PLC 12
+M5013->Y:$00310D,22,1      ; PLC 13
+M5014->Y:$00310E,22,1      ; PLC 14
+M5015->Y:$00310F,22,1      ; PLC 15
+M5016->Y:$003110,22,1      ; PLC 16 0x10
+M5017->Y:$003111,22,1      ; PLC 17 0x11
+M5018->Y:$003112,22,1      ; PLC 18 0x12
+M5019->Y:$003113,22,1      ; PLC 19 0x13
+M5020->Y:$003114,22,1      ; PLC 20 0x14
+M5021->Y:$003115,22,1      ; PLC 21 0x15
+M5022->Y:$003116,22,1      ; PLC 22 0x16
+M5023->Y:$003117,22,1      ; PLC 23 0x17
+M5024->Y:$003118,22,1      ; PLC 24 0x18
+M5025->Y:$003119,22,1      ; PLC 25 0x19
+M5026->Y:$00311A,22,1      ; PLC 26 0x1A
+M5027->Y:$00311B,22,1      ; PLC 27 0x1B
+M5028->Y:$00311C,22,1      ; PLC 27 0x1C
+M5029->Y:$00311D,22,1      ; PLC 28 0x1D
+M5030->Y:$00311E,22,1      ; PLC 29 0x1E
+M5031->Y:$00311F,22,1      ; PLC 31 0x1F
+
+;Macro ring errors
+M5035->X:$003430,0,24      ; Total MACRO ring error count (from power-up/reset)
+M5036->Y:$003430,0,24      ; Latest check-cycle MACRO ring error count
+
+
+;############################################################
+; This section contains additional DLS M variables for GeoBrick only
+;############################################################
+
+; Set up the M-variable definitions to point to
+; the encoder loss memory locations
+M184->Y:$78807,0
+M284->Y:$78807,1
+M384->Y:$78807,2
+M484->Y:$78807,3
+M584->Y:$78807,4
+M684->Y:$78807,5
+M784->Y:$78807,6
+M884->Y:$78807,7
+
+; Set up position compare output readout registers
+M113->X:$078000,9
+M213->X:$078008,9
+M313->X:$078010,9
+M413->X:$078018,9
+M513->X:$078100,9
+M613->X:$078108,9
+M713->X:$078110,9
+M813->X:$078118,9
+
+; Look at amplifier mode bit
+M189->Y:$78005,9
+M289->Y:$7800D,9
+M389->Y:$78015,9
+M489->Y:$7801D,9
+M589->Y:$78105,9
+M689->Y:$7810D,9
+M789->Y:$78115,9
+M889->Y:$7811D,9
+
+; Look at amplifier status flags
+M190->Y:$78005,0,16
+M290->Y:$7800D,0,16
+M390->Y:$78015,0,16
+M490->Y:$7801D,0,16
+M590->Y:$78105,0,16
+M690->Y:$7810D,0,16
+M790->Y:$78115,0,16
+M890->Y:$7811D,0,16
+
+; Set up motion stop
+M7647->Y:$70801,5,1

@@ -1,0 +1,29 @@
+;##################################################
+; M-variable defintions
+;##################################################
+
+; common variables
+#include "BRICK_M_variables.pmc"
+
+; clipper specific, overwrites common variables
+M32->Y:$78400,0,1	; Digital Output M01
+M33->Y:$78400,1,1	; Digital Output M02
+M34->Y:$78400,2,1	; Digital Output M03
+M35->Y:$78400,3,1	; Digital Output M04
+M36->Y:$78400,4,1	; Digital Output M05
+M37->Y:$78400,5,1	; Digital Output M06
+M38->Y:$78400,6,1	; Digital Output M07
+M39->Y:$78400,7,1	; Digital Output M08
+M0->Y:$78400,8		; Digital Input MI1
+M1->Y:$78400,9		; Digital Input MI2
+M2->Y:$78400,10		; Digital Input MI3
+M3->Y:$78400,11		; Digital Input MI4
+M4->Y:$78400,12		; Digital Input MI5
+M5->Y:$78400,13		; Digital Input MI6
+M6->Y:$78400,14		; Digital Input MI7
+M7->Y:$78400,15		; Digital Input MI8
+M16->X:$78400,0,8 ; Direction Control bits 0-7  (1=output,  0 = input)
+M62->X:$78400,8,8 ; Direction Control bits 8-15 (1=output,  0 = input), already defined in BRICK_M_variables.pmc
+M20->X:$78404,0,24 ; Inversion control (0 = 0V, 1 = 5V)
+M22->Y:$78404,0,24 ; J9 port data type control (1 = I/O)
+

@@ -5,7 +5,7 @@
 i128,8,100=32      ; in position band
 i188,8,100=100    ; count of cycles in position before move complete
 
-#include "../pmacApp/pmc/PROG10_CS_motion.pmc"          ; motion program for making CS moves
+#include "../../pmacApp/pmc/PROG10_CS_motion.pmc"          ; motion program for making CS moves
 #include "lab-home.pmc"                                 ; auto homing PLC
 ; NOTE also requires standard MVariables etc from "/dls_sw/work/motion/Common/PMAC_CLIPPER_Startup.pmc"
 
