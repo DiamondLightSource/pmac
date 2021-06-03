@@ -763,9 +763,9 @@ class CS_symetrie_hexapod(Device):
         P=Simple("Device prefix", str),
         PORT=Ident("GeoBrick object", GeoBrick),
         COORD=Simple("Coordinate system number", int),
-        RX=Simple("Name of RX axis (axis 4)", str),
-        RY=Simple("Name of RY axis (axis 5)", str),
-        RZ=Simple("Name of RZ axis (axis 6)", str),
+        RX=Simple("GUI label for RX axis (axis 4)", str),
+        RY=Simple("GUI label for RY axis (axis 5)", str),
+        RZ=Simple("GUI label for RZ axis (axis 6)", str),
         PREC=Simple("Precision of records", int)
     )
 

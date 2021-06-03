@@ -12,9 +12,9 @@
 # % macro, PORT, Motor controller serial port
 # % macro, BRICK, PV prefix for brick
 # % macro, COORD, Co-ordinate system number
-# % macro, RX, Name of RX axis (axis 4)
-# % macro, RY, Name of RY axis (axis 5)
-# % macro, RZ, Name of RZ axis (axis 6)
+# % macro, RX, GUI label for RX axis (axis 4)
+# % macro, RY, GUI label for RY axis (axis 5)
+# % macro, RZ, GUI label for RZ axis (axis 6)
 # % macro, PREC, Precision of variables
 # % macro, name, Object name and gui association name
 
