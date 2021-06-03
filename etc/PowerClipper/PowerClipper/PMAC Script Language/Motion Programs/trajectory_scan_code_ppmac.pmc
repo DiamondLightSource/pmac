@@ -6,7 +6,7 @@
 BufferLength = BuffLen                          // BuffLen defined in header file
 BufferAdr_A = 0                                 // BufferAdr defined in header file
 BufferAdr_B = 2 * BufferLength                  // each individual array holds 2 buffers
-TrajStatus = 0
+Status = 0
 AbortTrigger = 0
 Error = 0
 
@@ -19,7 +19,7 @@ Open PROG ProgramNum
 Abs
 FRAX(A,B,C,U,V,W,X,Y,Z)
 
-TrajStatus = 1                          // Reset values to defaults
+Status = 1                          // Reset values to defaults
 AbortTrigger = 0
 Error = 0
 CurrentIndex = 0
@@ -33,6 +33,8 @@ PrevBufferFill = BufferLength       // Set PrevBufferFill to pass outer while lo
 
 GoSub101                            // Check which axes are required
 GoSub103                            // Set addresses for required axes
+GoSub108                            // set all previous velocities to zero
+GoSub112                            // initialize previous positions
 
 While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill == BufferLength)
 {
@@ -42,7 +44,7 @@ While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill
     {
         GoSub102                            // Shift values through Next_* -> Current_* -> Prev_*
         GoSub104                            // Calculate velocities
-        GoSub109                            // Move axes
+        GoSub110                            // Move axes
         CurrentIndex = CurrentIndex + 1
 
     }
@@ -73,7 +75,7 @@ While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill
             CurrentIndex = 0                    // Reset to start of next buffer
             GoSub103                            // Update Next_* addresses to 0th point of next buffer
             GoSub104                            // Calculate velocities
-            GoSub109                            // Move axes to final point of previous buffer
+            GoSub110                            // Move axes to final point of previous buffer
         }
         Else
         {
@@ -81,31 +83,31 @@ While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill
             If(AbortTrigger == 0)
             {
                 GoSub108                // Set velocity through final point to zero
-                GoSub109                // Move axes
+                GoSub110                // Move axes
             }
         }
     }
     Else
     {
-        If(TrajStatus == 1)
+        If(Status == 1)
 		{
             // Move to final point if the scan wasn't aborted
             If(AbortTrigger == 0)
             {
                 GoSub108                // Set velocity through final point to zero
-                GoSub109                // Move axes
+                GoSub110                // Move axes
             }
         }
     }
 }
 
 Dwell 0                         // Stop program aborting before above lines are complete
-// Set Idle TrajStatus if no error occurred
-If(TrajStatus == 1)
+// Set Idle Status if no error occurred
+If(Status == 1)
 {
-    TrajStatus = 2                  // Set program finished (Idle TrajStatus)
+    Status = 2                  // Set program finished (Idle status)
 }
-Dwell 200                       // Ensure the driver receives an updated TrajStatus before killing the program
+Dwell 200                       // Ensure the driver receives an updated status before killing the program
 Return
 
 // Subroutine 1 ************************************************************************************
@@ -115,7 +117,7 @@ Return
 N101:
     If(Axes > 511)
     {
-        TrajStatus = 3
+        Status = 3
         Error = 1
     }
     Else
@@ -137,46 +139,55 @@ N102:
     {
         Prev_A = Current_A
         Current_A = Next_A(CalculatedBase)
+        A_Prev_Vel = A_Vel
     }
     If (B_Axis == 1)
     {
         Prev_B = Current_B
         Current_B = Next_B(CalculatedBase)
+        B_Prev_Vel = B_Vel
     }
     If (C_Axis == 1)
     {
         Prev_C = Current_C
         Current_C = Next_C(CalculatedBase)
+        C_Prev_Vel = C_Vel
     }
     If (U_Axis == 1)
     {
         Prev_U = Current_U
         Current_U = Next_U(CalculatedBase)
+        U_Prev_Vel = U_Vel
     }
     If (V_Axis == 1)
     {
         Prev_V = Current_V
         Current_V = Next_V(CalculatedBase)
+        V_Prev_Vel = V_Vel
     }
     If (W_Axis == 1)
     {
         Prev_W = Current_W
         Current_W = Next_W(CalculatedBase)
+        W_Prev_Vel = W_Vel
     }
     If (X_Axis == 1)
     {
         Prev_X = Current_X
         Current_X = Next_X(CalculatedBase)
+        X_Prev_Vel = X_Vel
     }
     If (Y_Axis == 1)
     {
         Prev_Y = Current_Y
         Current_Y = Next_Y(CalculatedBase)
+        Y_Prev_Vel = Y_Vel
     }
     If (Z_Axis == 1)
     {
         Prev_Z = Current_Z
         Current_Z = Next_Z(CalculatedBase)
+        Z_Prev_Vel = Z_Vel
     }
 
     // All Prev <- Current <- Next shifts done so now
@@ -207,7 +218,7 @@ Return
 N104:
     If(Time == 0)
     {                      // Set error and abort if demanded move time is zero
-        TrajStatus = 3
+        Status = 3
         Error = 2
         CMD"A"
         Dwell 0
@@ -217,62 +228,66 @@ N104:
     // Select velocity calculation based on VelMode value
     If(VelMode == 1)
     {
-        GoSub105                        // Prev -> Current
+        GoSub105                        // Real Prev -> Current
     }
     If(VelMode == 0)
     {
-        GoSub106                        // Prev -> Next
+        GoSub106                        // Average Prev -> Next
     }
     If(VelMode == 2)
     {
-        GoSub107                        // Current -> Next
+        GoSub107                        //  Average Prev -> Current
     }
     If(VelMode == 3)
     {
-        GoSub108			// Zero
+        GoSub108			            // Zero
+    }
+    If(VelMode == 4)
+    {
+        GoSub109			            // Average Current -> Next
     }
 Return
 
-N105:
-    TmpTime = 1000000/Time
-    A_Vel = A_Axis*TmpTime*(Current_A - Prev_A)
-    B_Vel = B_Axis*TmpTime*(Current_B - Prev_B)
-    C_Vel = C_Axis*TmpTime*(Current_C - Prev_C)
-    U_Vel = U_Axis*TmpTime*(Current_U - Prev_U)
-    V_Vel = V_Axis*TmpTime*(Current_V - Prev_V)
-    W_Vel = W_Axis*TmpTime*(Current_W - Prev_W)
-    X_Vel = X_Axis*TmpTime*(Current_X - Prev_X)
-    Y_Vel = Y_Axis*TmpTime*(Current_Y - Prev_Y)
-    Z_Vel = Z_Axis*TmpTime*(Current_Z - Prev_Z)
+N105: // Real Prev -> Current
+    InverseTmpTime = 1000000/Time
+    A_Vel = A_Axis*((2.0*(Current_A - Prev_A) * InverseTmpTime) - A_Prev_Vel)
+    B_Vel = B_Axis*((2.0*(Current_B - Prev_B) * InverseTmpTime) - B_Prev_Vel)
+    C_Vel = C_Axis*((2.0*(Current_C - Prev_C) * InverseTmpTime) - C_Prev_Vel)
+    U_Vel = U_Axis*((2.0*(Current_U - Prev_U) * InverseTmpTime) - U_Prev_Vel)
+    V_Vel = V_Axis*((2.0*(Current_V - Prev_V) * InverseTmpTime) - V_Prev_Vel)
+    W_Vel = W_Axis*((2.0*(Current_W - Prev_W) * InverseTmpTime) - W_Prev_Vel)
+    X_Vel = X_Axis*((2.0*(Current_X - Prev_X) * InverseTmpTime) - X_Prev_Vel)
+    Y_Vel = Y_Axis*((2.0*(Current_Y - Prev_Y) * InverseTmpTime) - Y_Prev_Vel)
+    Z_Vel = Z_Axis*((2.0*(Current_Z - Prev_Z) * InverseTmpTime) - Z_Prev_Vel)
 Return
 
-N106:
-    TmpTime = 1000000/(Time + Next_Time(CalculatedBase))
-    A_Vel = A_Axis*TmpTime*(Next_A(CalculatedBase) - Prev_A)
-    B_Vel = B_Axis*TmpTime*(Next_B(CalculatedBase) - Prev_B)
-    C_Vel = C_Axis*TmpTime*(Next_C(CalculatedBase) - Prev_C)
-    U_Vel = U_Axis*TmpTime*(Next_U(CalculatedBase) - Prev_U)
-    V_Vel = V_Axis*TmpTime*(Next_V(CalculatedBase) - Prev_V)
-    W_Vel = W_Axis*TmpTime*(Next_W(CalculatedBase) - Prev_W)
-    X_Vel = X_Axis*TmpTime*(Next_X(CalculatedBase) - Prev_X)
-    Y_Vel = Y_Axis*TmpTime*(Next_Y(CalculatedBase) - Prev_Y)
-    Z_Vel = Z_Axis*TmpTime*(Next_Z(CalculatedBase) - Prev_Z)
+N106: // Average Prev -> Next
+    InverseTmpTime = 1000000/(Time + Next_Time(CalculatedBase))
+    A_Vel = A_Axis*InverseTmpTime*(Next_A(CalculatedBase) - Prev_A)
+    B_Vel = B_Axis*InverseTmpTime*(Next_B(CalculatedBase) - Prev_B)
+    C_Vel = C_Axis*InverseTmpTime*(Next_C(CalculatedBase) - Prev_C)
+    U_Vel = U_Axis*InverseTmpTime*(Next_U(CalculatedBase) - Prev_U)
+    V_Vel = V_Axis*InverseTmpTime*(Next_V(CalculatedBase) - Prev_V)
+    W_Vel = W_Axis*InverseTmpTime*(Next_W(CalculatedBase) - Prev_W)
+    X_Vel = X_Axis*InverseTmpTime*(Next_X(CalculatedBase) - Prev_X)
+    Y_Vel = Y_Axis*InverseTmpTime*(Next_Y(CalculatedBase) - Prev_Y)
+    Z_Vel = Z_Axis*InverseTmpTime*(Next_Z(CalculatedBase) - Prev_Z)
 Return
 
-N107:
-    TmpTime = 1000000/Next_Time(CalculatedBase)
-    A_Vel = A_Axis*TmpTime*(Next_A(CalculatedBase) - Current_A)
-    B_Vel = B_Axis*TmpTime*(Next_B(CalculatedBase) - Current_B)
-    C_Vel = C_Axis*TmpTime*(Next_C(CalculatedBase) - Current_C)
-    U_Vel = U_Axis*TmpTime*(Next_U(CalculatedBase) - Current_U)
-    V_Vel = V_Axis*TmpTime*(Next_V(CalculatedBase) - Current_V)
-    W_Vel = W_Axis*TmpTime*(Next_W(CalculatedBase) - Current_W)
-    X_Vel = X_Axis*TmpTime*(Next_X(CalculatedBase) - Current_X)
-    Y_Vel = Y_Axis*TmpTime*(Next_Y(CalculatedBase) - Current_Y)
-    Z_Vel = Z_Axis*TmpTime*(Next_Z(CalculatedBase) - Current_Z)
+N107: // Average Prev -> Current
+    InverseTmpTime = 1000000/Next_Time(CalculatedBase)
+    A_Vel = A_Axis*InverseTmpTime*(Current_A - Prev_A)
+    B_Vel = B_Axis*InverseTmpTime*(Current_B - Prev_B)
+    C_Vel = C_Axis*InverseTmpTime*(Current_C - Prev_C)
+    U_Vel = U_Axis*InverseTmpTime*(Current_U - Prev_U)
+    V_Vel = V_Axis*InverseTmpTime*(Current_V - Prev_V)
+    W_Vel = W_Axis*InverseTmpTime*(Current_W - Prev_W)
+    X_Vel = X_Axis*InverseTmpTime*(Current_X - Prev_X)
+    Y_Vel = Y_Axis*InverseTmpTime*(Current_Y - Prev_Y)
+    Z_Vel = Z_Axis*InverseTmpTime*(Current_Z - Prev_Z)
 Return
 
-N108:
+N108: // Zero
     A_Vel = 0
     B_Vel = 0
     C_Vel = 0
@@ -284,14 +299,27 @@ N108:
     Z_Vel = 0
 Return
 
+N109: // Average Current -> Next
+    InverseTmpTime = 1000000/Next_Time(CalculatedBase)
+    A_Vel = A_Axis*InverseTmpTime*(Next_A(CalculatedBase) - Current_A)
+    B_Vel = B_Axis*InverseTmpTime*(Next_B(CalculatedBase) - Current_B)
+    C_Vel = C_Axis*InverseTmpTime*(Next_C(CalculatedBase) - Current_C)
+    U_Vel = U_Axis*InverseTmpTime*(Next_U(CalculatedBase) - Current_U)
+    V_Vel = V_Axis*InverseTmpTime*(Next_V(CalculatedBase) - Current_V)
+    W_Vel = W_Axis*InverseTmpTime*(Next_W(CalculatedBase) - Current_W)
+    X_Vel = X_Axis*InverseTmpTime*(Next_X(CalculatedBase) - Current_X)
+    Y_Vel = Y_Axis*InverseTmpTime*(Next_Y(CalculatedBase) - Current_Y)
+    Z_Vel = Z_Axis*InverseTmpTime*(Next_Z(CalculatedBase) - Current_Z)
+Return
+
 // Subroutine 9 ************************************************************************************
 // Move axes
 // *************************************************************************************************
 
-N109:
+N110:
     if (Axes > 0) {
         PVT (Time * 0.001)                        // Set move time
-        GoSub110
+        GoSub111
     }
     TotalPoints = TotalPoints + 1
     If(UserFunc > 0) {
@@ -299,8 +327,20 @@ N109:
     }
 Return
 
-N110:
+N111:
     A(Current_A):(A_Vel) B(Current_B):(B_Vel) C(Current_C):(C_Vel) U(Current_U):(U_Vel) V(Current_V):(V_Vel) W(Current_W):(W_Vel) X(Current_X):(X_Vel) Y(Current_Y):(Y_Vel) Z(Current_Z):(Z_Vel)
+Return
+
+N112: // set previous positions to the starting position of the motors
+    Prev_A = Readback_A
+    Prev_B = Readback_B
+    Prev_C = Readback_C
+    Prev_U = Readback_U
+    Prev_V = Readback_V
+    Prev_W = Readback_W
+    Prev_X = Readback_X
+    Prev_Y = Readback_Y
+    Prev_Z = Readback_Z
 Return
 
 // User Subroutines ********************************************************************************
