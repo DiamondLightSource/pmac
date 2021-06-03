@@ -1,0 +1,27 @@
+##############################################################
+#
+# Run a command on a specific Geobrick with some bonus GUI!
+# 
+##############################################################
+
+# Macros
+# % macro, name,    Object name and gui association name
+# % macro, P,       PV Prefix
+# % macro, R,       PV Suffix
+# % macro, PORT,    PMAC controller Port
+# % macro, COMMAND, Command to send to brick
+# % macro, DESC,    Description of command
+
+# CSS GUI
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_command_embed.opi, P=$(P), R=$(R), DESC=$(DESC), name=$(name=)
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_command_embed_box.opi, P=$(P), R=$(R), DESC=$(DESC), name=$(name=)
+
+# EDM GUI
+# % gui, $(name=), edmembed, pmac_command.edl, P=$(P), R=$(R), DESC=$(DESC)
+
+record(stringout, "$(P)$(R)") {
+  field(DESC, "$(DESC)")
+  field(VAL,  "$(COMMAND)")
+  field(DTYP, "asynOctetWrite")
+  field(OUT,  "@asyn($(PORT),0)PMAC_C_WRITE_CMD")
+}

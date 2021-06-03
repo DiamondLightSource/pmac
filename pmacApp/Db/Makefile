@@ -30,6 +30,7 @@ DB += pmacVariableRead.template
 DB += autohome.template
 DB += encoder_readback.template
 DB += run_plc.template
+DB += run_command.template
 
 
 # The following templates are used for Coordinate Systems
