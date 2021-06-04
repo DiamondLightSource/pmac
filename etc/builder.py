@@ -938,10 +938,35 @@ class RunPlc(Device):
         )
 
     ArgInfo = makeArgInfo(__init__,
-        name = Simple("Object name", str),
+        name  = Simple("Object name", str),
         BRICK = Ident("Geobrick/PMAC", GeoBrick),
-        PLC  = Simple("PLC number", int),
-        DESC = Simple("Description", str)
+        PLC   = Simple("PLC number", int),
+        DESC  = Simple("Description", str)
+    )
+
+
+# Template for running a command on a pmac
+class _RunCommandTemplate(AutoSubstitution):
+    TemplateFile = 'run_command.template'
+
+class RunCommand(Device):
+    def __init__(self, name, P, R, BRICK, COMMAND, DESC):
+        _RunCommandTemplate(
+            name=name,
+            P=P,
+            R=R,
+            PORT=BRICK.name,
+            COMMAND=COMMAND,
+            DESC=DESC
+        )
+
+    ArgInfo = makeArgInfo(__init__,
+        name    = Simple("Object name", str),
+        P       = Simple("PV prefix", str),
+        R       = Simple("PV prefix", str),
+        BRICK   = Ident("Geobrick/PMAC", GeoBrick),
+        COMMAND = Simple("Command", str),
+        DESC    = Simple("Description", str)
     )
 
 
