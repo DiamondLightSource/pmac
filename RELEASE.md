@@ -15,6 +15,13 @@ site location of dependencies.
 
 Release Notes
 =============
+
+R2-5-3 June 4 2021
+==================
+### Changes
+* Various fixes for symetrie hexapod template (#89)
+* add template and EDM/CSS screens for running commands on a pmac
+
 R2-5-2 June 3 2021
 ==================
 ### Changes
