@@ -331,15 +331,15 @@ N111
 Return
 
 N112 ; set previous positions to the starting position of the motors
-    Prev_A = Readback_A
-    Prev_B = Readback_B
-    Prev_C = Readback_C
-    Prev_U = Readback_U
-    Prev_V = Readback_V
-    Prev_W = Readback_W
-    Prev_X = Readback_X
-    Prev_Y = Readback_Y
-    Prev_Z = Readback_Z
+    Prev_A = Current_A
+    Prev_B = Current_B
+    Prev_C = Current_C
+    Prev_U = Current_U
+    Prev_V = Current_V
+    Prev_W = Current_W
+    Prev_X = Current_X
+    Prev_Y = Current_Y
+    Prev_Z = Current_Z
 Return
 
 
