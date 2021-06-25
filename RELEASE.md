@@ -16,27 +16,32 @@ site location of dependencies.
 Release Notes
 =============
 
-R2-5-3 June 4 2021
-==================
+R2-5-4 (June 25, 2021)
+======================
+### Changes
+* Updated trajectory scan PMC to use latest demand Q variables for motor starting points
+
+R2-5-3 (June 4, 2021)
+=====================
 ### Changes
 * Various fixes for symetrie hexapod template (#89)
 * add template and EDM/CSS screens for running commands on a pmac
 
-R2-5-2 June 3 2021
-==================
+R2-5-2 (June 3, 2021)
+=====================
 ### Changes
 * fix power pmac trajectory scan prog 1 script
   * now includes changes applied to tpmac prog
 * add etc/bootstrap with details of how to setup the system test hardware
 
-R2-5-1 June 1 2021
-==================
+R2-5-1 (June 1, 2021)
+=====================
 ### Changes
 * make build compatible with EPICS base 7.0.5
 * this involved minor changes in the configure folder
 
-R2-5 June 1, 2021
-=================
+R2-5 (June 1, 2021)
+===================
 ### Changes
 * Added back one of the original velocity modes as mode 4.
 * The full set of velocity modes are now:
@@ -49,31 +54,31 @@ R2-5 June 1, 2021
 * Improved the direct motion interface
 
 R2-4-22 (October 14 , 2020)
-=====================
+===========================
 ### Changes
 * Add template for enabling a PLC on a pmac controller
 
 R2-4-21 (October 06 , 2020)
-=====================
+===========================
 ### Changes
 * Add template for reading just the encoder position of an axis
 
 R2-4-20 (September 08, 2020)
-=====================
+============================
 ### Changes
 * Add CSS screens for dls-pmac-control.py and pmac status
     * Copy style of EDM screens
     * Trajectory, CS, Axes and Debugging screens included
 
 R2-4-19 (Apr 16, 2020)
-=====================
+======================
 ### Changes
 * Updated asyn to 4-39
 * Updated motor to 7-0dls5
 * Updated busy to 1-7-2dls3
 
 R2-4-18 (Apr 15, 2020)
-=====================
+======================
 ### Changes
 * Updates to support VME pmac devices
 * Avoid long at startup pause waiting to list kinematics on Power Pmac
@@ -115,7 +120,7 @@ R2-0-1 (May 23, 2018)
 * fix example IOC to build outside of Diamond
 
 R2-0 (May 23, 2018)
-======================
+===================
 ### Changes
 * fixes to issues with Coordinate System motors demand and read-back
 inconsistency
