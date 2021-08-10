@@ -2,11 +2,22 @@
 # % macro, PORT, The asyn port for the pmac controller
 # % macro, P, PV Prefix
 
-record(longin, "$(P):CALC_SERVO_FREQ") {
+record(ai, "$(P):SERVO_PERIOD") {
   field(DESC, "Servo Interrupt Time")
-  field(DTYP, "asynInt32")
-  field(INP, "@asyn($(PORT),0)PMAC_VIS_Sys.ServoPeriod")
+  field(EGU, "ms")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_VDS_Sys.ServoPeriod")
   field(SCAN, "I/O Intr")
+}
+
+record(calcout, "$(P):CALC_SERVO_FREQ") {
+  field(SCAN, "Passive")
+  field(DTYP, "Soft Channel")
+  field(CALC, "1000.0/A")
+  field(INPA, "$(P):SERVO_PERIOD CP")
+  field(OOPT, "On Change")
+  field(DOPT, "Use CALC")
+  field(OUT, "$(P):SERVO_FREQ PP")
 }
 
 record(longin, "$(P):READ_ECHO") {
