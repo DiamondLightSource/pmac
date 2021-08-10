@@ -1,0 +1,22 @@
+# Database to read the motion stop input variable
+# Requires PLC2 to be running on the PMAC
+# Note that 0 means the motion stop is active
+
+# Macros:
+#% macro, name, Device name
+#% macro, P, PV Prefix
+#% macro, BRICK_PORT, Motor controller port, e.g. a GeoBrick object
+
+substitute "PORT=$(BRICK_PORT),VAR=P200,Q=:MOTIONSTOP,DTYP=asynInt32,TYPE=I,SPEED=S,EGU=,VARIABLE_PREC=0"
+include "pmacVariableRead.template"
+
+#% gui, $(name), edmembed, bi_embed.edl, P=$(P),R=:MOTIONSTOP
+#% alh $SEVRCOMMAND UP_ANY dls-alh-handler.py $(P):MOTIONSTOP
+#% archiver 1 Monitor
+record(bi, "$(P):MOTIONSTOP") {
+  field(INP, "$(P):MOTIONSTOP:RBV CP")
+  field(ZSV, "MAJOR")
+  field(OSV, "NO_ALARM")
+  field(ZNAM, "ACTIVE")
+  field(ONAM, "NOT ACTIVE")
+}
