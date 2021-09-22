@@ -13,7 +13,6 @@
 MockPMACAsynDriver::MockPMACAsynDriver(const char *portName, double delay, int noAutoConnect) :
   asynPortDriver(portName,
                  0,
-                 0,
                  asynOctetMask,
                  asynOctetMask,
                  ASYN_CANBLOCK,

@@ -17,11 +17,9 @@ USE_GRAPHICSMAGICK=NO
 # built with this flag
 # EPICS_LIBCOM_ONLY=YES
 
-# Definitions required for compiling the unit tests
-BOOST           = /dls_sw/prod/tools/RHEL6-x86_64/boost/1-48-0/prefix
-BOOST_LIB       = $(BOOST)/lib
-BOOST_INCLUDE   = -I$(BOOST)/include
-
 SSH             = /usr
 SSH_LIB         = $(SSH)/lib64
 SSH_INCLUDE     = -I$(SSH)/include
+
+# Build unit tests (requires BOOST)
+WITH_BOOST = YES

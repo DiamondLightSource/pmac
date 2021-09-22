@@ -123,7 +123,6 @@ BOOST_AUTO_TEST_CASE(test_IntHashtable)
 BOOST_AUTO_TEST_CASE(test_IntHashtableMemory)
 {
   IntegerHashtable t1;
-  int value;
   double vm = 0.0;
   double res = 0.0;
   double vm_base = 0.0;
