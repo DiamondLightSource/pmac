@@ -16,6 +16,17 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-5-6 (September 22, 2021)
+==========================
+### Changes
+* Fix iocbuilder support for RunPlc when used for single digit PLC numbers
+
+R2-5-5 (September 1, 2021)
+==========================
+### Changes
+* Fix servo interrupt frequency for Power PMAC
+* Add motion stop template
+
 R2-5-4 (June 25, 2021)
 ======================
 ### Changes
