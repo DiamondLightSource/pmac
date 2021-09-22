@@ -5,7 +5,7 @@ include $(TOP)/configure/CONFIG
 #=============================
 # The unit test executable with the actual unit tests depends on the boost 
 # unit test framework so we can only build it if boost has been configured
-ifdef BOOST
+ifeq ($(WITH_BOOST), YES)
   PROD_IOC_Linux += pmac-test
   pmac-test_SRCS += pmac-test.cpp
   pmac-test_SRCS += pmacTestUtilities.cpp  
@@ -22,12 +22,11 @@ ifdef BOOST
 
   # Add pmac tests for new classes like this:
   #pmac-test_SRCS += test_<test name>.cpp
-  
-  #pmac-test_LIBS += boost_unit_test_framework
+
   pmac-test_LIBS += pmacAsynMotorPort
   pmac-test_LIBS += asyn
-	pmac-test_LIBS += $(EPICS_BASE_IOC_LIBS)
-  #boost_unit_test_framework_DIR=$(BOOST_LIB)
+  pmac-test_LIBS += $(EPICS_BASE_IOC_LIBS)
+
   ifdef BOOST_LIB
     boost_unit_test_framework_DIR=$(BOOST_LIB)
     pmac-test_LIBS += boost_unit_test_framework
