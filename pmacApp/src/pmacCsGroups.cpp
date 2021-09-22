@@ -151,7 +151,7 @@ asynStatus pmacCsGroups::switchToGroup(int id) {
   static const char *functionName = "switchToGroup";
   char command[PMAC_MAXBUF] = {0};
   char response[PMAC_MAXBUF] = {0};
-  asynStatus cmdStatus;
+  asynStatus cmdStatus = asynSuccess;
   pmacCsGroup *pGrp;
   pmacCsAxisDefList *pAxisDefs;
   debug(DEBUG_FLOW, functionName);
