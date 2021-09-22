@@ -7,7 +7,7 @@
 # Macros
 # % macro, name, Object name and gui association name
 # % macro, P,    PV Prefix
-# % macro, PLC,  PLC number
+# % macro, PLC,  PLC number (to 2 sf, e.g. 03 or 17)
 # % macro, PORT, PMAC controller Port
 # % macro, DESC, Description
 

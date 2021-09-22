@@ -935,6 +935,8 @@ class _RunPlcTemplate(AutoSubstitution):
 
 class RunPlc(Device):
     def __init__(self, name, BRICK, PLC, DESC):
+        # Format the plc number to 2 digits
+        PLC="{plc:0>2}".format(plc=PLC)
         _RunPlcTemplate(
             name=name,
             P=BRICK.P,
