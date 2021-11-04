@@ -884,7 +884,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
         }
 
         // if the motor stopped in an unexpected fashion, make sure the CS demands are reset
-        if (!amp_enabled_ || axStatus.followingError_ || !axStatus.power_||
+        if ( axStatus.followingError_ ||
                 axStatus.lowLimit_|| axStatus.highLimit_) {
             // make sure that pmacController->makeCSDemandsConsistent will reset the demand for all axes
             int csNum = getAxisCSNo();
