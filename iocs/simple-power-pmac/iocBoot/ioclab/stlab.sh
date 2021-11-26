@@ -13,4 +13,8 @@ if [ -n "$1" ]; then
         exit 1
     }
 fi
+
+export INSTALL=$(realpath $(dirname ${BASH_SOURCE[0]})/../..)
+
+
 exec ./lab stlab.boot
