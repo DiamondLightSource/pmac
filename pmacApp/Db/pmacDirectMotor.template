@@ -16,7 +16,6 @@
 # % macro, PORT, The asyn port (motor controller or CS controller)
 # % macro, ADDR, The asyn address (real or CS axis number)
 # % macro, DESC, Description
-# % macro, PMAC, PV Prefix for the motor controller
 # % macro, P, PV Prefix for direct motors
 # % macro, M, Motor PV suffix ('Mx' for real and 'CSx:My' for CS axes)
 

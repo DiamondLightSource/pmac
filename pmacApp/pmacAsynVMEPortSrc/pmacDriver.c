@@ -13,6 +13,7 @@
 /* vxWorks headers */
 #include <iosLib.h>    /* For DEV_HDR, iosDrvCreate and iosDevAdd */
 #include <logLib.h>    /* For logMsg */
+#include <taskLib.h>   /* For taskDelay */
 
 /* EPICS headers */
 #include <epicsRingBytes.h>

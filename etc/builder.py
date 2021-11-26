@@ -935,6 +935,8 @@ class _RunPlcTemplate(AutoSubstitution):
 
 class RunPlc(Device):
     def __init__(self, name, BRICK, PLC, DESC):
+        # Format the plc number to 2 digits
+        PLC="{plc:0>2}".format(plc=PLC)
         _RunPlcTemplate(
             name=name,
             P=BRICK.P,
@@ -978,13 +980,9 @@ class RunCommand(Device):
 
 # hiding templates which are just used in includes so as to not
 # dirty the auto list of builder objects (is this the best way to do this?)
-class _hide1(AutoSubstitution):
+class _pmacDirectMotorTemplate(AutoSubstitution):
     TemplateFile = 'pmacDirectMotor.template'
 
 
-class _hide2(AutoSubstitution):
+class _pmacCsAxisTemplate(AutoSubstitution):
     TemplateFile = 'pmac_cs_axis.template'
-
-
-class _hide3(AutoSubstitution):
-    TemplateFile = 'pmacDirectMotor.template'
