@@ -20,6 +20,7 @@
 
 # This associates an edm screen with the template
 # % gui, $(name=), edm, symetrie_hexapod_CS.edl, hexapod=$(P),RX=$(RX),RY=$(RY),RZ=$(RZ),BRICK=$(BRICK),COORD=$(COORD)
+# included pmacVariableWrite templates have name=noGuiObjectAssociation so that only symetrie_hexapod_CS.edl is associated with the gui name
 
 
 # % archiver 1 monitor
@@ -78,7 +79,7 @@ record(ai, "$(P):MACHRZPOS") {
 
 ## User Offsets ##
 
-substitute "VAR=&$(COORD)Q27,Q=:USERXOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q27,Q=:USERXOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERXOFF:SET") {
@@ -93,7 +94,7 @@ record(calcout, "$(P):USERXOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q28,Q=:USERYOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q28,Q=:USERYOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERYOFF:SET") {
@@ -108,7 +109,7 @@ record(calcout, "$(P):USERYOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q29,Q=:USERZOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q29,Q=:USERZOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERZOFF:SET") {
@@ -123,7 +124,7 @@ record(calcout, "$(P):USERZOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q30,Q=:USERRXOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q30,Q=:USERRXOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERRXOFF:SET") {
@@ -138,7 +139,7 @@ record(calcout, "$(P):USERRXOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q31,Q=:USERRYOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q31,Q=:USERRYOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERRYOFF:SET") {
@@ -153,7 +154,7 @@ record(calcout, "$(P):USERRYOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q32,Q=:USERRZOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q32,Q=:USERRZOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERRZOFF:SET") {
@@ -170,7 +171,7 @@ record(calcout, "$(P):USERRZOFF:SYNCPOS") {
 
 ## Object Offsets ##
 
-substitute "VAR=&$(COORD)Q33,Q=:OBJECTXOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q33,Q=:OBJECTXOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):OBJECTXOFF:SET") {
@@ -185,7 +186,7 @@ record(calcout, "$(P):OBJECTXOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q34,Q=:OBJECTYOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q34,Q=:OBJECTYOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):OBJECTYOFF:SET") {
@@ -200,7 +201,7 @@ record(calcout, "$(P):OBJECTYOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q35,Q=:OBJECTZOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q35,Q=:OBJECTZOFF,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):OBJECTZOFF:SET") {
@@ -215,7 +216,7 @@ record(calcout, "$(P):OBJECTZOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q36,Q=:OBJECTRXOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q36,Q=:OBJECTRXOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):OBJECTRXOFF:SET") {
@@ -230,7 +231,7 @@ record(calcout, "$(P):OBJECTRXOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q37,Q=:OBJECTRYOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q37,Q=:OBJECTRYOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):OBJECTRYOFF:SET") {
@@ -245,7 +246,7 @@ record(calcout, "$(P):OBJECTRYOFF:SYNCPOS") {
   field(OOPT, "Every Time")
 }
 
-substitute "VAR=&$(COORD)Q38,Q=:OBJECTRZOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q38,Q=:OBJECTRZOFF,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):OBJECTRZOFF:SET") {
@@ -262,80 +263,80 @@ record(calcout, "$(P):OBJECTRZOFF:SYNCPOS") {
 
 ## Machine Limits ##
 
-substitute "VAR=&$(COORD)Q39,Q=:MACHXNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q39,Q=:MACHXNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
-substitute "VAR=&$(COORD)Q40,Q=:MACHXPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q40,Q=:MACHXPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHXPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q41,Q=:MACHYNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q41,Q=:MACHYNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHYNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q42,Q=:MACHYPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q42,Q=:MACHYPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHYPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q43,Q=:MACHZNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q43,Q=:MACHZNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHZNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q44,Q=:MACHZPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q44,Q=:MACHZPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHZPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q45,Q=:MACHRXNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q45,Q=:MACHRXNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHRXNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q46,Q=:MACHRXPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q46,Q=:MACHRXPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHRXPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q47,Q=:MACHRYNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q47,Q=:MACHRYNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHRYNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q48,Q=:MACHRYPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q48,Q=:MACHRYPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHRYPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q49,Q=:MACHRZNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q49,Q=:MACHRZNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHRZNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q50,Q=:MACHRZPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q50,Q=:MACHRZPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):MACHRZPLIM:SET") {
@@ -344,84 +345,84 @@ record(ao, "$(P):MACHRZPLIM:SET") {
 
 ## User Limits ##
 
-substitute "VAR=&$(COORD)Q51,Q=:USERXNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q51,Q=:USERXNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERXNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q52,Q=:USERXPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q52,Q=:USERXPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERXPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q53,Q=:USERYNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q53,Q=:USERYNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERYNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q54,Q=:USERYPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q54,Q=:USERYPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERYPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q55,Q=:USERZNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q55,Q=:USERZNLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERZNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q56,Q=:USERZPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q56,Q=:USERZPLIM,EGU=mm,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERZPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q57,Q=:USERRXNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q57,Q=:USERRXNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERRXNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q58,Q=:USERRXPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q58,Q=:USERRXPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERRXPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q59,Q=:USERRYNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q59,Q=:USERRYNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERRYNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q60,Q=:USERRYPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q60,Q=:USERRYPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERRYPLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q61,Q=:USERRZNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q61,Q=:USERRZNLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERRZNLIM:SET") {
   field(FLNK, "$(P):RESETMOTIONSTA")
 }
 
-substitute "VAR=&$(COORD)Q62,Q=:USERRZPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q62,Q=:USERRZPLIM,EGU=deg,VARIABLE_PREC=$(PREC=3)"
 include "pmacVariableWrite.template"
 
 record(ao, "$(P):USERRZPLIM:SET") {
@@ -430,7 +431,7 @@ record(ao, "$(P):USERRZPLIM:SET") {
 
 ## General Config and Status ##
 
-substitute "VAR=&$(COORD)Q63,Q=:STALLPERCENT,EGU=%,VARIABLE_PREC=2"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q63,Q=:STALLPERCENT,EGU=%,VARIABLE_PREC=2"
 include "pmacVariableWrite.template"
 
 # % archiver 1 monitor
