@@ -717,7 +717,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
         // Parse the position
         sprintf(key, "#%dP", axisNo_);
         value = sPtr->readValue(key);
-        nvals = sscanf(value.c_str(), "%lf", &enc_position);
+        nvals = sscanf(value.c_str(), "%lf", &position);
         if (nvals != 1) {
             asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
                       "%s: Failed to parse position. Key: %s  Value: %s\n",
@@ -734,7 +734,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
             sprintf(key, "#%dF", axisNo_);
         }
         value = sPtr->readValue(key);
-        nvals = sscanf(value.c_str(), "%lf", &position);
+        nvals = sscanf(value.c_str(), "%lf", &enc_position);
         if (nvals != 1) {
             asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
                       "%s: Failed to parse following error. Key: %s  Value: %s\n",
