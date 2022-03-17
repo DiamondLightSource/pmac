@@ -412,6 +412,25 @@ class pmacDisableLimitsCheck(Device):
                           Controller = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
                           Axis       = Simple('Axis number to disable limit check, defaults to all', int))
 
+class pmacSetOpenLoopEncoderAxis(Device):
+    Dependencies = (Pmac,)
+
+    def __init__(self, Controller, Axis, Encoder_axis):
+        self.__super.__init__()
+        self.Controller = Controller
+        self.Axis = Axis
+        self.Encoder_axis = Encoder_axis
+
+    def Initialise(self):
+
+        # model 3 version of pmacDisableLimitsCheck uses port instead of card
+        self.ControllerPort = self.Controller.DeviceName()
+        print 'pmacSetOpenLoopEncoderAxis("%(ControllerPort)s", %(Axis)d, %(Encoder_axis)d)' % self.__dict__
+
+    ArgInfo = makeArgInfo(__init__,
+                          Controller    = Ident ('Underlying PMAC or GeoBrick object', DeltaTau),
+                          Axis          = Simple('Motor axis number', int),
+                          Encoder_axis  = Simple('Encoder axis number', int))
 
 class pmacMonitorVariables(Device):
     Dependencies = (Pmac,)
