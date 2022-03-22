@@ -24,6 +24,8 @@
 # % macro, name, Object name and gui association name
 # This associates an edm screen with the template
 # % gui, $(name=), edm, aperture_slits.edl, slits=$(P)
+# This associates a BOY screen with the template
+# % gui, $(name=), boycomponent, pmacApp_opi/pmac_aperture_slits.opi, slits=$(P)
 
 # # This record will zero raw motors when processed
 record(fanout, "$(P):ZERO") {
@@ -45,7 +47,7 @@ record(calcout, "$(P):ZEROAM") {
   field(OUT, "$(AMPV).OFF PP")
 }
 
-substitute "VAR=&$(COORD)Q20,Q=:ASIZE,EGU=mm,VARIABLE_PREC=$(PREC=3)"
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q20,Q=:ASIZE,EGU=mm,VARIABLE_PREC=$(PREC=3),LABEL=$(name=)"
 include "pmacVariableWrite.template"
 
 #! Further lines contain data used by VisualDCT
