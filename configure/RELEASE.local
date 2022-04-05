@@ -2,9 +2,9 @@
 
 # These following three base definitions are overwritten by definitions in 
 # the RELEASE.<arch>.Common files. Included here for information only.
-# SUPPORT         = /dls_sw/prod/R3.14.12.7/support
-# WORK            = /dls_sw/work/R3.14.12.7/support
-# EPICS_BASE      = /dls_sw/epics/R3.14.12.7/base
+# SUPPORT        
+# WORK           
+# EPICS_BASE     
 
 ASYN=       $(SUPPORT)/asyn/4-41
 CALC=       $(SUPPORT)/calc/3-7-3

@@ -1,6 +1,5 @@
 # The following definitions must be changed for each site
 
-SUPPORT       = /dls_sw/prod/R3.14.12.7/support
-WORK          = /dls_sw/work/R3.14.12.7/support
-EPICS_BASE    = /dls_sw/epics/R3.14.12.7/base
+SUPPORT       = /epics/support
+EPICS_BASE    = /epics/epics-base
 

@@ -1,0 +1,48 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.194.0/containers/ubuntu
+{
+    "name": "pmac-dev",
+    "image": "ghcr.io/epics-containers/ioc-pmac:main",
+// these two lines mount the local workspace folder so that the path is the same inside and outside the container.
+    "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind,consistency=cached", 
+    "workspaceFolder": "${localWorkspaceFolder}",
+    "remoteEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "HOSTNAME": "dev-pmac",
+        "USER": "37630:37795",
+    },
+    // Set *default* container specific settings.json values on container create.
+    "settings": {},
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+		"ms-vscode.cpptools",
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+		"ms-vscode.cmake-tools",
+		"streetsidesoftware.code-spell-checker",
+		"ryanluker.vscode-coverage-gutters",
+		"mhutchie.git-graph",
+		"eamodio.gitlens",
+		"gruntfuggly.todo-tree",
+		"redhat.vscode-yaml",
+		"nsd.vscode-epics",
+		"alefragnani.bookmarks"
+	],
+    "mounts": [
+        "source=/scratch,target=/scratch,type=bind,consistency=cached",
+        "source=/tmp,target=/tmp,type=bind,consistency=cached",
+        // brings in your home directory but does not make it your guest user's home
+        "source=${localEnv:HOME},target=${localEnv:HOME},type=bind,consistency=cached",
+    ],
+    "runArgs": [
+        "--user=37630:37795"
+        "-h=dev-pmac",
+        "-v/dev/ttyS0:/dev/ttyS0",
+        "--privileged",
+        "--net=host",
+        "-ti",
+        "-v",
+        "/dev/dri:/dev/dri",
+        "--security-opt=label=type:container_runtime_t",
+    ],
+}
