@@ -1,14 +1,22 @@
 # % macro, __doc__, Simple template that reads a variable on a 
 # PMAC or geoBrick via dynamic parameters.
-# % macro, P, Pv Prefix
-# % macro, Q, Pv Suffix
+# % macro, P, PV prefix
+# % macro, Q, PV suffix
 # % macro, DTYP, asyn DTYP (e.g., asynFloat64, asynInt32)
 # % macro, PORT, Motor controller serial port
 # % macro, TYPE, PMAC variable type (D=double, I=integer, H=hex, S=string)
 # % macro, SPEED, Speed to read at (F=motor scan rates, M=medium (2 s), S=slow (5 s))
-# % macro, VAR, Variable on PMAC to write to, e.g. P700
+# % macro, VAR, Variable on PMAC to read from, e.g. P700
 # % macro, EGU, Engineering units
 # % macro, VARIABLE_PREC, Variable Record precision
+# % macro, LABEL, Label for GUI
+
+# CSS GUI
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_variable_read_embed_box.opi, P=$(P),Q=$(Q),LABEL=$(LABEL), name=$(name=)
+# % gui, $(name=), boyembed, pmacApp_opi/pmac_variable_read_embed.opi, P=$(P),Q=$(Q),LABEL=$(LABEL), name=$(name=)
+
+# EGM GUI
+# % gui, $(name=), edmembed, pmacVariableRead.edl, P=$(P), Q=$(Q), LABEL=$(LABEL)
 
 ##########################################
 # Records for reading from PMAC variables
