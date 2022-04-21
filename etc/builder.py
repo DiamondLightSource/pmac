@@ -632,6 +632,20 @@ def setPortArgInfo(cls):
 
 
 @setPortArgInfo
+class pmacVariableRead(AutoSubstitution):
+    WarnMacros = False
+    Dependencies = (Pmac,)
+    TemplateFile = 'pmacVariableRead.template'
+
+
+@setPortArgInfo
+class pmacVariableReadLED(AutoSubstitution):
+    WarnMacros = False
+    Dependencies = (Pmac,)
+    TemplateFile = 'pmacVariableReadLED.template'
+
+
+@setPortArgInfo
 class pmacVariableWrite(AutoSubstitution):
     WarnMacros = False
     Dependencies = (Pmac,)

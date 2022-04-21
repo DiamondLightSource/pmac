@@ -27,6 +27,7 @@ DB += motor_in_cs.template
 DB += eloss_kill_autohome_records.template
 DB += pmacVariableWrite.template
 DB += pmacVariableRead.template
+DB += pmacVariableReadLED.template
 DB += autohome.template
 DB += encoder_readback.template
 DB += run_plc.template
