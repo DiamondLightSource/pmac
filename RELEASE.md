@@ -16,6 +16,47 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-5-14 (May 3, 2022)
+==========================
+### Changes
+* pmacAxis: increase setting resolution and offset precision to 12 d.p. to fully fix loss of precision introduced in 2-5
+
+R2-5-13 (April 21, 2022)
+==========================
+### Changes
+* add pmacVariableRead screens
+
+R2-5-12 (April 19, 2022)
+==========================
+### Changes
+* pmacAxis: increase setting resolution and offset precision to 9 d.p. to partially fix loss of precision introduced in 2-5
+
+R2-5-11 (March 25, 2022)
+==========================
+### Changes
+* add CSS screens for aperture slits
+
+R2-5-10 (March 4, 2022)
+==========================
+### Changes
+* make simple-power-pmac non DLS dependent
+* add builder support for open loop encoder axis (Jira BC-1427)
+
+R2-5-9 (March 4, 2022)
+==========================
+### Changes
+* stop adding pmacVariableWrite screens when using symetrie_hexapod_CS screen
+
+R2-5-8 (November 15, 2021)
+==========================
+### Changes
+* add pmac_autohome.opi screen
+
+R2-5-7 (November 4, 2021)
+==========================
+### Changes
+* remove amplifier enabled and axis status power flags from check used to reset CS demand values
+
 R2-5-6 (September 22, 2021)
 ==========================
 ### Changes
