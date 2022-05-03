@@ -244,7 +244,7 @@ void pmacAxis::setResolution(double new_resolution)
   debug(DEBUG_TRACE, functionName, "Setting axis resolution", new_resolution);
   this->resolution_ = new_resolution;
   if (this->connected_){
-    sprintf(command, "P%d=%.9f", p_var, this->resolution_);
+    sprintf(command, "P%d=%.12f", p_var, this->resolution_);
     debug(DEBUG_TRACE, functionName, "Axis resolution P variable command", command);
     pC_->axisWriteRead(command, response);
   }
@@ -264,7 +264,7 @@ void pmacAxis::setOffset(double new_offset)
   debug(DEBUG_TRACE, functionName, "Setting axis offset", new_offset);
   this->offset_ = new_offset;
   if (this->connected_){
-    sprintf(command, "P%d=%.9f", p_var, this->offset_);
+    sprintf(command, "P%d=%.12f", p_var, this->offset_);
     debug(DEBUG_TRACE, functionName, "Axis offset P variable command", command);
     pC_->axisWriteRead(command, response);
   }
