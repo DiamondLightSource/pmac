@@ -188,8 +188,6 @@ asynStatus pmacAxis::getAxisInitialStatus(void) {
   char command[PMAC_MAXBUF] = {0};
   char response[PMAC_MAXBUF] = {0};
   int cmdStatus = 0;
-  double low_limit = 0.0;
-  double high_limit = 0.0;
   double pgain = 0.0;
   double igain = 0.0;
   double dgain = 0.0;
@@ -203,7 +201,7 @@ asynStatus pmacAxis::getAxisInitialStatus(void) {
 
     sprintf(command, "I%d13 I%d14 I%d30 I%d31 I%d33", axisNo_, axisNo_, axisNo_, axisNo_, axisNo_);
     cmdStatus = pC_->lowLevelWriteRead(command, response);
-    nvals = sscanf(response, "%lf %lf %lf %lf %lf", &high_limit, &low_limit, &pgain, &dgain,
+    nvals = sscanf(response, "%lf %lf %lf %lf %lf", &highLimit_, &lowLimit_, &pgain, &dgain,
                    &igain);
 
     if (cmdStatus || nvals != 5) {
@@ -211,8 +209,8 @@ asynStatus pmacAxis::getAxisInitialStatus(void) {
                 "%s: Error: initial status poll failed on axis %d.\n", functionName, axisNo_);
       return asynError;
     } else {
-      setDoubleParam(pC_->motorLowLimit_, low_limit * scale_);
-      setDoubleParam(pC_->motorHighLimit_, high_limit * scale_);
+      setDoubleParam(pC_->motorLowLimit_, lowLimit_ * scale_);
+      setDoubleParam(pC_->motorHighLimit_, highLimit_ * scale_);
       setDoubleParam(pC_->motorPGain_, pgain);
       setDoubleParam(pC_->motorIGain_, igain);
       setDoubleParam(pC_->motorDGain_, dgain);
