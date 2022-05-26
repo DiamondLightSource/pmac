@@ -749,6 +749,8 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
             // For closed loop axes, position is actually following error up to this point
             if (encoder_axis_ == 0) {
                 position += enc_position;
+                // Now restore the encoder position to match
+                enc_position = position;
             }
 
             // Store the raw position
