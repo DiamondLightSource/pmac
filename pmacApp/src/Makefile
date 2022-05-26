@@ -69,6 +69,9 @@ pmacAsynMotorPort_SRCS += pmacCallbackInterface.cpp
 # do debug build
 # CXXFLAGS= -g -O0 -fPIC
 
+# Enable wonderful C++ 11 features
+USR_CXXFLAGS_Linux += -std=c++11
+
 # specify all source files to be compiled and added to the library
 #pmac_SRCS += xxx
 
