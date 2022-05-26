@@ -16,6 +16,13 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-5-15 (May 26, 2022)
+==========================
+### Changes
+* Soft limit behaviour has been changed in pmacController. When setting soft limits which result in
+either ix13 or ix14 being zero (i.e. not both) the soft limit is now set to 1 count to avoid disabling
+it. To disable soft limits you can set DHLM=DLLM=0, which is consistent with the motor record behaviour.
+
 R2-5-14 (May 3, 2022)
 ==========================
 ### Changes
