@@ -16,6 +16,15 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-5-16 (May 26, 2022)
+==========================
+### Changes
+* A fix in 2-5-10 caused the .REP field to just show the following error when the encoder is on the same
+  axis (versus another channel). Previous behaviour has now been restored for this type of axis:
+    * .RMP is reported position plus following error
+    * .REP is reported position without following error
+    * This allows the following error and max following error records to work again.
+
 R2-5-15 (May 26, 2022)
 ==========================
 ### Changes

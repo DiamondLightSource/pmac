@@ -728,7 +728,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
             sprintf(key, "#%dP", encoder_axis_);
         } else {
             // Encoder position comes back on this axis - note we initially read
-            // the following error into the position variable
+            // the following error into the encoder position variable
             sprintf(key, "#%dF", axisNo_);
         }
         value = sPtr->readValue(key);
@@ -746,11 +746,12 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
             //int homeSignal = ((status[1] & pC_->PMAC_STATUS2_HOME_COMPLETE) != 0);
             int direction = 0;
 
-            // For closed loop axes, position is actually following error up to this point
+            // For closed loop axes, encoder position is actually following error up to this point
             if (encoder_axis_ == 0) {
+                // Set raw motor position to be position + following error
                 position += enc_position;
-                // Now restore the encoder position to match
-                enc_position = position;
+                // Set encoder position to be position (no following error)
+                enc_position = position - enc_position;
             }
 
             // Store the raw position
