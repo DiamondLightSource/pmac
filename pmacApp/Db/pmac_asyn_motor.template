@@ -1,0 +1,313 @@
+#% macro, __doc__, Basic template, including motor record and associated tags
+#% macro, P      , Device Prefix
+#% macro, M      , Device Suffix
+#% macro, PORT   , Asyn port for motor record
+#% macro, ADDR   , Address on controller
+#% macro, DESC   , Description, displayed on EDM screen
+#% macro, MRES   , Motor Step Size (EGU)
+#% macro, DTYP   , DTYP of record
+#% macro, DIR    , User Direction
+#% macro, VBAS   , Base Velocity (EGU/s)
+#% macro, VELO   , Velocity (EGU/s)
+#% macro, VMAX   , Max Velocity (EGU/s), defaults to VELO
+#% macro, ACCL   , Seconds to Velocity
+#% macro, BDST   , BL Distance (EGU)
+#% macro, BVEL   , BL Velocity (EGU/s)
+#% macro, BACC   , BL Seconds to Veloc.
+#% macro, PREC   , Display Precision
+#% macro, EGU    , Engineering Units
+#% macro, DHLM   , Dial High Limit
+#% macro, DLLM   , Dial Low Limit
+#% macro, HLM    , User High Limit
+#% macro, LLM    , User Low Limit
+#% macro, HLSV   , HW Lim. Violation Svr
+#% macro, INIT   , Startup commands
+#% macro, SREV   , Steps per Revolution
+#% macro, RRES   , Readback Step Size (EGU)
+#% macro, TWV    , Tweak Step Size (EGU)
+#% macro, ERES   , Encoder Step Size (EGU)
+#% macro, JAR    , Jog Acceleration (EGU/s^2)
+#% macro, UEIP   , Use Encoder If Present
+#% macro, URIP   , Use RDBL If Present
+#% macro, RDBL   , Readback Location, set URIP = 1 if you specify this
+#% macro, RLNK   , Readback output link
+#% macro, RTRY   , Max retry count
+#% macro, DLY    , Readback settle time (s)
+#% macro, OFF    , User Offset (EGU)
+#% macro, RDBD   , Retry Deadband (EGU)
+#% macro, FOFF   , Freeze Offset, 0=variable, 1=frozen
+#% macro, ADEL   , Alarm monitor deadband (EGU)
+#% macro, NTM    , New Target Monitor, only set to 0 for soft motors
+#% macro, FEHIGH , HIGH limit for following error
+#% macro, FEHIHI , HIHI limit for following error
+#% macro, FEHHSV , HIHI alarm severity for following error
+#% macro, FEHSV  , HIGH alarm severity for following error
+#% macro, SCALE  , Scale factor, if pmacSetAxisScale is used this should be set
+#% macro, HOMEVIS, If 1 then home is visible on the gui
+#% macro, HOMEVISSTR, If HOMEVIS=0, then display this text on the gui instead
+#% macro, name   , Object name and gui association name
+#% macro, alh    , Set this to alh to add the motor to the alarm handler and send emails, 
+#                  set to '#' to comment out alh lines
+#% macro, gda_name, Name to export this as to GDA
+#% macro, gda_desc, Description to export this as to GDA
+
+# AUTOSAVE: level 0 = before record init, level 1 = before AND after record init
+#% autosave 0 DVAL OFF
+#% autosave 1 DIR DHLM DLLM TWV VBAS VELO ACCL BDST BVEL BACC RDBD EGU RTRY UEIP URIP DLY PREC DISA DISP FOFF OFF FRAC OMSL JVEL JAR ADEL MDEL
+#% archiver 0.5 Monitor
+#% archiver 0.5 Monitor RBV
+#% archiver 10 Monitor OFF
+#% archiver 10 Monitor MRES
+#% gdatag,template,simpleMotor,$(gda_name=),$(gda_desc=$(DESC))
+#% gdatag,motor,rw,$(gda_name=),RECORD,Motor
+#% alh
+#% $(alh=None) $SEVRCOMMAND UP_ANY dls-alh-handler.py $(P)$(M)
+
+# This associates an edm screen with the template
+# % gui, $(name=), edm, motor.edl, motor=$(P)$(M)
+# % gui, $(name=), edmembed, motor-embed-small.edl, motor=$(P)$(M),filename=motor.edl,box-label=$(DESC)
+
+# This associates a BOY screen with the template
+# % gui, $(name=), boydetail, motorApp_opi/motor_detail.opi, P=$(P),M=$(M),DESC=$(DESC), name=$(name=)
+# % gui, $(name=), boyembed, motorApp_opi/motor_embed_box.opi, P=$(P),M=$(M),DESC=$(DESC), name=$(name=)
+# % gui, $(name=), boyembed, motorApp_opi/motor_embed.opi, P=$(P),M=$(M),DESC=$(DESC), name=$(name=)
+# FIXME: this should be in pmacUtil or tpmac
+# % gui, $(name=), boyembed, motorApp_opi/motor_homed_embed.opi, P=$(P),M=$(M)
+
+# This makes the component icon reflect the status and severity
+# % gui, $(name=), status, <pv>.MOVN
+# % gui, $(name=), sevr
+
+# These define what PVs a motor detail screen should contain
+# % gui, $(name=), statusbits, Status,  <pv>.MSTA, Direction Positive, Done, High Limit, Home Limit, Unused, Closed Loop, Following Error, At Home, Encoder Present, Problem, Moving, Gain Support, Comms Error, Low Limit, Homed
+# % gui, $(name=), statusbits, ELoss,  <pv>:ELOSS, Encoder Loss, Amplifier Loss, Sys Fail
+# % gui, $(name=), command, ELoss Clear,  <pv>:ELOSSRC.A
+# % gui, $(name=), statusbits, Limit Violation,  <pv>.LVIO, Lim
+# % gui, $(name=), statusbits, At High Limit,  <pv>.HLS, High
+# % gui, $(name=), statusbits, At Low Limit,  <pv>.LLS, Low
+# % gui, $(name=), demand, User High Limit,  <pv>.HLM
+# % gui, $(name=), demand, User Low Limit,  <pv>.LLM
+# % gui, $(name=), demand, Dial High Limit, <pv>.DHLM
+# % gui, $(name=), demand, Dial Low Limit, <pv>.DLLM
+
+# % gui, $(name=), demand, Motor demand,  <pv>.VAL
+# % gui, $(name=), readback, Motor readback,  <pv>.RBV
+# % gui, $(name=), command, Stop,  <pv>.STOP
+# % gui, $(name=), command, Home Forward,  <pv>.HOMF
+# % gui, $(name=), command, Home Reverse,  <pv>.HOMR
+# % gui, $(name=), command, Jog Forward, <pv>.JOGF
+# % gui, $(name=), command, Jog Reverse, <pv>.JOGR
+# % gui, $(name=), command, Tweak Forward,  <pv>.TWF
+# % gui, $(name=), command, Tweak Reverse,  <pv>.TWR
+# % gui, $(name=), demand, Tweak Step,  <pv>.TWV
+# % gui, $(name=), command, Kill,  <pv>:KILL.PROC, Kill
+# % gui, $(name=), command, Sync VAL=RBV,  <pv>.SYNC
+
+# % gui, $(name=), enum, Direction,   <pv>.DIR
+# % gui, $(name=), demand, User Offset,  <pv>.OFF
+# % gui, $(name=), enum, Set/Use,   <pv>.SET
+# % gui, $(name=), enum, Offset,   <pv>.FOFF
+# % gui, $(name=), enum, Use Encoder,   <pv>.UEIP
+
+# % gui, $(name=), demand, Motor Step Size,  <pv>.MRES
+# % gui, $(name=), readback, Steps per Rev,   <pv>.SREV
+# % gui, $(name=), readback, EGUs per Rev,   <pv>.UREV
+# % gui, $(name=), demand, Encoder Step Size,  <pv>.ERES
+# % gui, $(name=), readback, Readback Step Size,   <pv>.RRES
+# % gui, $(name=), readback, Use Encoder if Present,   <pv>.UEIP
+
+# % gui, $(name=), demand, Max Velocity,  <pv>.VMAX
+# % gui, $(name=), demand, Base Velocity,   <pv>.VBAS
+# % gui, $(name=), demand, Velocity,  <pv>.VELO
+# % gui, $(name=), demand, Secs to Velocity,  <pv>.ACCL
+# % gui, $(name=), demand, JVEL,   <pv>.JVEL
+# % gui, $(name=), demand, Jog Acceleration,   <pv>.JAR
+# % gui, $(name=), demand, Backlash Distance,   <pv>.BDST
+# % gui, $(name=), demand, Backlash Velocity,   <pv>.BVEL
+# % gui, $(name=), demand, Backlash Secs to Vel,   <pv>.BACC
+# % gui, $(name=), demand, Move Fraction,   <pv>.FRAC
+# % gui, $(name=), demand, Retry Deadband,   <pv>.RDBD
+# % gui, $(name=), demand, Max Retrys,   <pv>.RTRY
+
+# % gui, $(name=), demand, PREC,   <pv>.PREC
+# % gui, $(name=), demand, EGU,   <pv>.EGU
+
+# % gui, $(name=), demand, Output Specification,   <pv>.OUT
+# % gui, $(name=), readback, Readback Location,   <pv>.RDBL
+# % gui, $(name=), readback, Desired Output Loc,   <pv>.DOL
+# % gui, $(name=), readback, Output Mode Select,   <pv>.OMSL
+# % gui, $(name=), readback, Readback Out Link,   <pv>.RLNK
+# % gui, $(name=), demand, DMOV Input Link,   <pv>.DINP
+# % gui, $(name=), demand, RMP Input Link,   <pv>.RINP
+# % gui, $(name=), demand, Stop Out Link,   <pv>.STOO
+
+
+record(motor,"$(P)$(M)")
+{
+	field(DESC,"$(DESC)")
+	field(DTYP,"$(DTYP=asynMotor)")
+	field(DIR,"$(DIR=0)")
+	field(VELO,"$(VELO)")
+	field(VBAS,"$(VBAS=0)")
+	field(ACCL,"$(ACCL=0.5)")
+	field(BDST,"$(BDST=0)")
+	field(BVEL,"$(BVEL=0)")
+	field(BACC,"$(BACC=)")
+	field(OUT,"@asyn($(PORT),$(ADDR))")
+	field(MRES,"$(MRES)")
+	field(PREC,"$(PREC)")
+	field(EGU,"$(EGU)")
+	field(DHLM,"$(DHLM=)")
+	field(DLLM,"$(DLLM=)")
+	field(HLM,"$(HLM=)")
+	field(LLM,"$(LLM=)")	
+	field(HLSV,"$(HLSV=MAJOR)")
+	field(INIT,"$(INIT=)")
+	field(RTRY,"$(RTRY=0)")
+	field(DLY,"$(DLY=0)")	
+	field(HVEL,"0")
+	field(SREV, "$(SREV=1000)")
+	field(RRES, "$(RRES=)")
+	field(TWV, "$(TWV)")
+	field(ERES, "$(ERES=)")
+	field(JVEL, "$(VELO)")
+	field(JAR, "$(JAR=)")
+	field(UEIP, "$(UEIP=0)")
+	field(URIP, "$(URIP=0)")	
+	field(RDBL, "$(RDBL=)")		
+	field(VMAX, "$(VMAX=$(VELO))")
+	field(OFF, "$(OFF=0)")
+	field(RDBD, "$(RDBD=)")
+	field(FOFF, "$(FOFF=0)")
+	field(ADEL, "$(ADEL=0)")
+	field(NTM, "$(NTM=1)")
+	field(SDIS, "$(P)$(M):SDIS.VAL")	
+	field(RLNK, "$(RLNK=)")
+}
+
+# record that holds the ADDR
+record(ao, "$(P)$(M):ADDR") {
+    field(PINI, "YES")
+    field(VAL, "$(ADDR)")
+}
+
+# record that holds the PORT
+record(stringout, "$(P)$(M):PORT") {
+    field(PINI, "YES")
+    field(VAL, "$(PORT)")
+}
+
+# record that holds the SCALE
+record(ao, "$(P)$(M):SCALE") {
+    field(PINI, "YES")
+    field(VAL, "$(SCALE=1)")
+}
+
+# Write a 1 to this record over Channel Access to disable the motor record and prevent CA writes to any field
+# including the demand field.
+record(ai, "$(P)$(M):USER:SDIS") {
+    field(VAL, "0")
+    field(FLNK, "$(P)$(M):SDIS")
+}
+
+# Note: This record forms part of the interface to auto-homing, which uses the "A" field to disable the motor record
+# when homing.
+# record that will disable and re-enable record if any of its inputs are non-zero
+record(calcout, "$(P)$(M):SDIS") {
+  field(DESC, "Disable on non-zero input")
+  field(INPL, "$(P)$(M):USER:SDIS")
+  field(CALC, "(A|B|C|D|E|F|G|H|I|J|K|L)>0")
+  field(OUT, "$(P)$(M).DISP PP")
+}
+
+# dummy record that looks like a kill command
+record(ao, "$(P)$(M):KILL") {
+    field(VAL, "1")
+}
+
+# dummy record that looks like eloss status
+#% archiver 10 Monitor VAL
+#% $(alh=None) $SEVRCOMMAND UP_ANY dls-alh-handler.py $(P)$(M):ELOSS
+record(ai, "$(P)$(M):ELOSS") {
+    field(PINI, "YES")
+    field(HIHI, "1")
+    field(HHSV, "MAJOR")    
+}
+
+# dummy record that looks like an eloss reset
+record(calcout, "$(P)$(M):ELOSSRC") {
+}
+
+# check if SYNC has been pressed
+record(calcout, "$(P)$(M):CHECK_SYNC") {
+  field(INPA, "$(P)$(M).SYNC CP")  
+  field(CALC, "A>0")
+  field(OOPT, "When Non-zero")
+  field(OUT, "$(P)$(M):MR_MOVE_WRITE.PROC PP")
+}
+
+# dummy record that looks like a record to notify a CS about a raw motor move
+record(longout, "$(P)$(M):MR_MOVE_WRITE") {
+}
+
+#Record to calculate the following error
+#% archiver 1 Monitor
+record(calc, "$(P)$(M):FERROR")
+{
+	field(DESC,"Following Error")
+	field(INPA,"$(P)$(M).RMP CP")
+	field(INPB,"$(P)$(M).REP NPP")
+	field(INPC,"$(P)$(M).MRES NPP")
+	field(INPD,"$(P)$(M).ERES NPP")
+	field(CALC,"ABS((A*C)-(B*D))")
+	field(FLNK,"$(P)$(M):FERRORMAX")
+	field(PREC,"$(PREC)")
+	field(EGU, "$(EGU)")
+}
+
+#Record to store the maximum following error
+#% archiver 10 Monitor VAL
+#% autosave 1 VAL
+#% $(alh=None) $SEVRCOMMAND UP_ANY dls-alh-handler.py $(P)$(M):FERRORMAX
+record(calc, "$(P)$(M):FERRORMAX")
+{
+	field(DESC,"Following Error Max")
+	field(INPA,"$(P)$(M):FERROR.VAL")
+	field(INPB,"$(P)$(M):FERRORMAX.VAL")
+	field(CALC,"(A>B)?A:B")
+	field(HIGH,"$(FEHIGH=0)")
+	field(HIHI,"$(FEHIHI=0)")
+	field(HHSV,"$(FEHHSV=NO_ALARM)")
+	field(HSV, "$(FEHSV=NO_ALARM)")
+	field(PREC,"$(PREC)")
+	field(EGU, "$(EGU)")
+}	
+
+#Record to reset the maximum following error
+record(bo, "$(P)$(M):FEMAXRESET")
+{
+	field(DESC,"Reset max following error")
+	field(DTYP,"Soft Channel")
+	field(OUT, "$(P)$(M):FERRORMAX.VAL")
+	field(VAL, "0")
+}	
+
+
+#Record to determin HOME button visibility on the motor.edl screen.
+record(bo, "$(P)$(M):HOMEVIS")
+{
+	field(DESC,"Home button visibility")
+	field(DTYP,"Soft Channel")
+	field(VAL, "$(HOMEVIS=1)")
+        field(ZNAM, "Invisible")
+	field(ONAM, "Visible")
+}	 
+
+#Record to display a message if the HOME buttons are not visible (if HOMEVIS=0).
+record(stringout, "$(P)$(M):HOMEVISSTR")
+{
+	field(DESC, "Home visibility string")
+	field(DTYP,"Soft Channel")
+	field(VAL, "$(HOMEVISSTR=Use motor summary screen)")
+}
+

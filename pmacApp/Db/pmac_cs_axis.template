@@ -1,2 +1,2 @@
 include "profileMoveAxis.template"
-include "basic_asyn_motor.template"
+include "pmac_asyn_motor.template"

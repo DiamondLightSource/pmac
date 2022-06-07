@@ -1,10 +1,10 @@
 # A Coordinate system axis.
 
-# macros listed here are those not described in basic_asyn_motor.template
+# macros listed here are those not described in pmac_asyn_motor.template
 # % macro, PMAC, The P prefix for the motor controller (must match P in pmacController.template)
 # % macro, CS, The CS num for this axis (must match CS in pmacCsController.template)
 
-include "basic_asyn_motor.template"
+include "pmac_asyn_motor.template"
 
 record(stringin, "$(P)$(M):CS_PORT_NAME") {
   field(DESC, "Port name for CS")

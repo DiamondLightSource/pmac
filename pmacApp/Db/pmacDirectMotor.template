@@ -51,7 +51,7 @@ record(busy, "$(P)$(M):DirectMotorBusy")
 
 
 # record that holds the SCALE
-# this overrides the definition in basic_asyn_motor.template and connects it to the
+# this overrides the definition in pmac_asyn_motor.template and connects it to the
 # asyn parameter that tracks the scale factor in the driver. This is set by calling
 # pmacSetAxisScale (for CS axes this function is exposed to startup via
 # pmacSetCoordStepsPerUnit)

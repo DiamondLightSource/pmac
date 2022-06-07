@@ -3,15 +3,15 @@
 # this template defines a motor with two names:-
 # (1) root is $(P)$(M), the macros fully define the name of the motor
 # (2) 'numbered' names of the form $(PMAC):Mx where x is the motor number
-# names are both assigned to the same PV via aliases in the case basic_asyn_motor
+# names are both assigned to the same PV via aliases in the case pmac_asyn_motor
 # or simply duplicated for all other included templates, this approach works because
 # the PVs all point to the same ASYN parameters and improves maintainability of this
 # file
 
 # include motor record from the motor module
-include "basic_asyn_motor.template"
+include "pmac_asyn_motor.template"
 
-# numbered name aliases for all PVs in basic_asyn_motor.template
+# numbered name aliases for all PVs in pmac_asyn_motor.template
 alias($(P)$(M), $(PMAC):M$(ADDR))
 alias($(P)$(M):ADDR, $(PMAC):M$(ADDR):ADDR)
 alias($(P)$(M):PORT, $(PMAC):M$(ADDR):PORT)
