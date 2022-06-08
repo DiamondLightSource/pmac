@@ -66,8 +66,9 @@ include "eloss_kill_autohome_records.template"
 include "pmacDirectMotor.template"
 
 
+# TODO RESTORE FUNCTIONALITY BELOW
 # add numbered name aliases for above 3 templates
-substitute "P=$(PMAC):, M=M$(ADDR)"
-include "motor_in_cs.template"
-include "eloss_kill_autohome_records.template"
-include "pmacDirectMotor.template"
+# substitute "P=$(PMAC):, M=M$(ADDR)"
+# include "motor_in_cs.template"
+# include "eloss_kill_autohome_records.template"
+# include "pmacDirectMotor.template"
