@@ -1934,28 +1934,6 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
       status = (lowLevelWriteRead(command, response) == asynSuccess) && status;
     }
 
-    /*Now set position on encoder axis, if one is in use.*/
-
-    if (pAxis->encoder_axis_) {
-      getDoubleParam(motorEncoderRatio_, &encRatio);
-      encposition = (epicsInt32) floor((position * encRatio) + 0.5);
-
-      sprintf(command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
-              pAxis->encoder_axis_,
-              pAxis->encoder_axis_, encposition, pAxis->encoder_axis_,
-              pAxis->encoder_axis_, encposition, pAxis->encoder_axis_);
-
-      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
-                "%s: Set encoder axis %d on controller %s to position %f\n",
-                functionName, pAxis->axisNo_, portName, value);
-
-      if (command[0] != 0 && status) {
-        status = (lowLevelWriteRead(command, response) == asynSuccess) && status;
-      }
-
-      sprintf(command, "#%dJ/", pAxis->encoder_axis_);
-      //The lowLevelWriteRead will be done at the end of this function.
-    }
 
   } else if (function == PMAC_C_MotorRes_){
     pAxis->setResolution(value);
