@@ -547,6 +547,11 @@ class _pmacStatusAxis(AutoSubstitution):
     TemplateFile = 'pmacStatusAxis.template'
 
 
+class GeoBricketteMStop(AutoSubstitution):
+    """Creates some PVs for monitoring motion stop specific to a GeoBrickette pmac"""
+    TemplateFile = 'geobrickette_motion_stop.template'
+
+
 class _CsControlT(AutoSubstitution):
     TemplateFile = "pmacCsController.template"
     Dependencies = (Pmac,)

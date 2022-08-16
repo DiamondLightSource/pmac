@@ -33,7 +33,7 @@ DB += encoder_readback.template
 DB += run_plc.template
 DB += run_command.template
 DB += motion_stop.template
-
+DB += geobrickette_motion_stop.template
 
 # The following templates are used for Coordinate Systems
 DB += dls_pmac_cs_asyn_motor.template
