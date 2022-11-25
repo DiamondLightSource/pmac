@@ -11,31 +11,31 @@
 # % macro, PLC, PLC number
 # % macro, PORT,  Serial port to do communications across
 # % macro, CTRL, Controller record name prefix for disabling axis writes
-# % macro, GRP1,  Homing group 1 description
-# % macro, GRP2,  Homing group 2 description
-# % macro, GRP3,  Homing group 3 description
-# % macro, GRP4,  Homing group 4 description
-# % macro, GRP5,  Homing group 5 description
-# % macro, GRP6,  Homing group 6 description
-# % macro, GRP7,  Homing group 7 description
-# % macro, GRP8,  Homing group 8 description
-# % macro, GRP9,  Homing group 9 description
-# % macro, GRP10, Homing group 10 description
-# % macro, STATE11, Homing state 11 description
-# % macro, STATE12, Homing state 12 description
-# % macro, STATE13, Homing state 13 description
-# % macro, STATE14, Homing state 14 description
-# % macro, STATE15, Homing state 15 description
-# % macro, STATUS11, Homing status 11 description (e.g. for custom limit checks)
-# % macro, STATUS12, Homing status 12 description (e.g. for custom limit checks)
-# % macro, STATUS13, Homing status 13 description (e.g. for custom limit checks)
-# % macro, STATUS14, Homing status 14 description (e.g. for custom limit checks)
-# % macro, STATUS15, Homing status 15 description (e.g. for custom limit checks)
-# % macro, STATUSSV11, Homing status 11 severity
-# % macro, STATUSSV12, Homing status 12 severity
-# % macro, STATUSSV13, Homing status 13 severity
-# % macro, STATUSSV14, Homing status 14 severity
-# % macro, STATUSSV15, Homing status 15 severity
+# % macro, GRP1, Optional.  Homing group 1 description.  Defaults to "All".
+# % macro, GRP2, Optional.  Homing group 2 description.  Defaults to give empty description string.
+# % macro, GRP3, Optional.  Homing group 3 description.  Defaults to give empty description string.
+# % macro, GRP4, Optional.  Homing group 4 description.  Defaults to give empty description string.
+# % macro, GRP5, Optional.  Homing group 5 description.  Defaults to give empty description string.
+# % macro, GRP6, Optional.  Homing group 6 description.  Defaults to give empty description string.
+# % macro, GRP7, Optional.  Homing group 7 description.  Defaults to give empty description string.
+# % macro, GRP8, Optional.  Homing group 8 description.  Defaults to give empty description string.
+# % macro, GRP9, Optional.  Homing group 9 description.  Defaults to give empty description string.
+# % macro, GRP10, Optional.  Homing group 10 description.  Defaults to give empty description string.
+# % macro, STATE11, Optional.  Homing state 11 description.  Defaults to give empty description string.
+# % macro, STATE12, Optional.  Homing state 12 description.  Defaults to give empty description string.
+# % macro, STATE13, Optional.  Homing state 13 description.  Defaults to give empty description string.
+# % macro, STATE14, Optional.  Homing state 14 description.  Defaults to give empty description string.
+# % macro, STATE15, Optional.  Homing state 15 description.  Defaults to give empty description string.
+# % macro, STATUS11, Optional.  Homing status 11 description (e.g. for custom limit checks).  Defaults to give empty description string.
+# % macro, STATUS12, Optional.  Homing status 12 description (e.g. for custom limit checks).  Defaults to give empty description string.
+# % macro, STATUS13, Optional.  Homing status 13 description (e.g. for custom limit checks).  Defaults to give empty description string.
+# % macro, STATUS14, Optional.  Homing status 14 description (e.g. for custom limit checks).  Defaults to give empty description string.
+# % macro, STATUS15, Optional.  Homing status 15 description (e.g. for custom limit checks).  Defaults to give empty description string.
+# % macro, STATUSSV11, Optional.  Homing status 11 severity.  Defaults to NO_ALARM.
+# % macro, STATUSSV12, Optional.  Homing status 12 severity.  Defaults to NO_ALARM.
+# % macro, STATUSSV13, Optional.  Homing status 13 severity.  Defaults to NO_ALARM.
+# % macro, STATUSSV14, Optional.  Homing status 14 severity.  Defaults to NO_ALARM.
+# % macro, STATUSSV15, Optional.  Homing status 15 severity.  Defaults to NO_ALARM.
 # % macro, DESC, Description
 
 # % macro, name, Object name and gui association name

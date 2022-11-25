@@ -1,0 +1,73 @@
+# File geobrickette_motion_stop.template
+#
+# % macro, __doc__, To read the motion stop info and interpret the status for a pmac GeoBrickette.  They do motion stop in firmware and (unlike earlier pmac models like GeoBricks and pmac/umac systems) do not need PLC2.
+#
+# The relevant variable values are read but never written.
+#
+# % macro, P,           Mandatory.                           The PV device name prefix for the GeoBrickette for the motion stop.
+# % macro, PORT,        Mandatory.                           The PMAC GeoBrickette serial comms port.
+#
+# % macro, TIMEOUT,     Optional.  Defaults to 5.            The asyn timeout - the EPICS aysn record TMOT fields.
+# % macro, SCAN,        Optional.  Defaults to 5 second.     The scan rate on the status records - the EPICS record SCAN fields.
+# % macro, mstop_VAR,   Optional.  Defaults to M7647.        The pmac variable containing the Motion stop status.
+# % macro, active_VAR,  Optional.  Defaults to I35.          The pmac variable containing the Motion stop active status.  If this is not set to active then the GeoBrickette will IGNORE its motion stop input signal.  While it is sometimes made inactive during commissioning, it should not be the case during operation when it should be active.
+#
+# % macro, mstop_R,     Optional.  Defaults to :MOTIONSTOP   The record prefix for motion stop.
+# % macro, mstop_DESC,  Optional.  Defaults to motion stop.  The description of the motion stop signal.
+# % macro, mstop_ZNAM,  Optional.  Defaults to Stopped.      The zero value string label for the Motion Stop status - the EPICS record ZNAM field.
+# % macro, mstop_ONAM,  Optional.  Defaults to Not Stopped.  The one value string label for the Motion Stop status - the EPICS record ONAM field.
+# % macro, mstop_ZSV,   Optional.  Defaults to MAJOR.        The zero value motion stop alarm severity - the EPICS record ZSV field.
+# % macro, mstop_OSV,   Optional.  Defaults to NO_ALARM.     The one value motion stop alarm severity - the EPICS record OSV field.
+#
+# % macro, active_R,    Optional.  Defaults to :MOTIONSTOP_ACTIVE   The record prefix for active status.
+# % macro, active_DESC, Optional.  Defaults to mstop active. The description of the motion stop signal.
+# % macro, active_ZNAM, Optional.  Defaults to Not Active.   The zero value string label for the active status - the EPICS record ZNAM field.
+# % macro, active_ONAM, Optional.  Defaults to Active.       The one value string label for the active status - the EPICS record ONAM field.
+# % macro, active_ZSV,  Optional.  Defaults to MINOR.        The zero value alarm severity for the active status - the EPICS record ZSV field.
+# % macro, active_OSV,  Optional.  Defaults to NO_ALARM.     The one value alarm severity for the active status - the EPICS record OSV field.
+#
+
+# Record to read the specified motion stop variable from the GeoBrickette.
+#
+record(asyn, "$(P)$(mstop_R=:MOTIONSTOP):GET") {
+  field(DESC, "Get $(P) $(mstop_DESC=motion stop) status")
+  field(DTYP, "asynRecordDevice")
+  field(PORT, "$(PORT)")
+  field(TMOT, "$(TIMEOUT=5)")
+  field(AOUT, "$(mstop_VAR=M7647)")
+}
+
+# The motion stop readback status value with interpreted levels.
+# Defaults appropriate for the usual motion stop requirements.
+record(bi, "$(P)$(mstop_R=:MOTIONSTOP):RBV") {
+  field(DESC, "$(P) $(mstop_DESC=motion stop) readback" )
+  field(INP,  "$(P)(mstop_R=:MOTIONSTOP):GET.AINP PP")
+  field(SCAN, "$(SCAN=5 second)")
+  field(ZNAM, "$(mstop_ZNAM=Stopped)")
+  field(ZSV,  "$(mstop_ZSV=MAJOR)")
+  field(ONAM, "$(mstop_ONAM=Not Stopped)")
+  field(OSV,  "$(mstop_OSV=NO_ALARM)")
+}
+
+# Record to read the specified motion stop active variable from the GeoBrickette.
+# 
+record(asyn, "$(P)$(active_R=:MOTIONSTOP_ACTIVE):GET") {
+  field(DESC, "Get $(P) $(active_DESC=mstop active) status")
+  field(DTYP, "asynRecordDevice")
+  field(PORT, "$(PORT)")
+  field(TMOT, "$(TIMEOUT=5)")
+  field(AOUT, "$(active_VAR=I35)")
+}
+
+# The motion stop active readback status value with interpreted levels.
+# Defaults appropriate for usual requirements.
+record(bi, "$(P)$(active_R=:MOTIONSTOP_ACTIVE):RBV") {
+  field(DESC, "$(P) $(active_DESC=mstop active) readback" )
+  field(INP,  "$(P)$(active_R=:MOTIONSTOP_ACTIVE):GET.AINP PP")
+  field(SCAN, "$(SCAN=5 second)")
+  field(ZNAM, "$(active_ZNAM=Not Active)")
+  field(ZSV,  "$(active_ZSV=MINOR)")
+  field(ONAM, "$(active_ONAM=Active)")
+  field(OSV,  "$(active_OSV=NO_ALARM)")
+}
+
