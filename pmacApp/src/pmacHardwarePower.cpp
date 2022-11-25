@@ -40,7 +40,7 @@ const int pmacHardwarePower::PMAC_STATUS1_IN_POSITION = (0x1 << 11);
 const int pmacHardwarePower::PMAC_STATUS1_BLOCK_REQUEST = (0x1 << 9);
 const int pmacHardwarePower::PMAC_STATUS1_PHASED_MOTOR = (0x1 << 8);
 
-pmacHardwarePower::pmacHardwarePower() : pmacDebugger("pmacHardwareTurbo") {
+pmacHardwarePower::pmacHardwarePower() : pmacDebugger("pmacHardwarePower") {
 }
 
 pmacHardwarePower::~pmacHardwarePower() {
@@ -116,6 +116,7 @@ pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus 
   std::string csString = "";
   char var[16];
   static const char *functionName = "parseAxisStatus";
+  char msg[47];
 
   statusString = sPtr->readValue(this->getAxisStatusCmd(axis));
 
@@ -124,7 +125,8 @@ pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus 
   nvals = sscanf(statusString.c_str(), " $%8x%8x", &axStatus.status24Bit1_,
                  &axStatus.status24Bit2_);
   if (nvals != 2) {
-    debug(DEBUG_ERROR, functionName, "Failed to parse axis status (24 bit)", statusString);
+    sprintf(msg, "Failed to parse axis %d status (24 bit)", axis);
+    debug(DEBUG_ERROR, functionName, msg, statusString);
     axStatus.status24Bit1_ = 0;
     axStatus.status24Bit2_ = 0;
     status = asynError;
@@ -132,7 +134,8 @@ pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus 
   nvals = sscanf(statusString.c_str(), " $%4x%4x%4x%4x", &axStatus.status16Bit1_,
                  &axStatus.status16Bit2_, &axStatus.status16Bit3_, &dummyVal);
   if (nvals != 4) {
-    debug(DEBUG_ERROR, functionName, "Failed to parse axis status (16 bit)", statusString);
+    sprintf(msg, "Failed to parse axis %d status (16 bit)", axis);
+    debug(DEBUG_ERROR, functionName, msg, statusString);
     axStatus.status16Bit1_ = 0;
     axStatus.status16Bit2_ = 0;
     axStatus.status16Bit3_ = 0;

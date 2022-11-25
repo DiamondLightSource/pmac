@@ -278,7 +278,7 @@ class PowerPMAC(DeltaTau):
         self.statusT = _powerPmacStatusT(PORT=name, P=self.P)
 
         # instantiate an axis status template for each axis
-        assert self.NAxes in range(1,33), "Number of axes (%d) must be in range 1..32" % self.NAxes
+        assert self.NAxes in range(1,257), "Number of axes (%d) must be in range 1..256" % self.NAxes
         self.axes = []
         # for each axis
         for i in range(1, self.NAxes + 1):
