@@ -1470,7 +1470,11 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
     if (this->getAxis(axis) != NULL) {
       axisCs = this->getAxis(axis)->getAxisCSNo();
     }
-    if (axisCs > 0) {
+
+    //Power pmac coordinate systems are from 0 - 15 so subtract 1
+    int power_cs_edit = (cid_ == PMAC_CID_POWER_) ? -1 : 0;
+
+    if (axisCs > 0 && axisCs <= PMAC_MAX_CS + power_cs_edit) {
       if (pCSControllers_[axisCs]) {
         setIntegerParam(axis, PMAC_C_GroupCSPortRBV_, axisCs);
       } else {
