@@ -1960,8 +1960,8 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     wakeupPoller();
   } else if (function == motorLowLimit_) {
     // Limits in counts
-    int lowLimitCounts = int(std::round(value/pAxis->scale_));
-    int highLimitCounts = int(std::round(pAxis->highLimit_/pAxis->scale_));
+    int lowLimitCounts = int(std::floor(value/pAxis->scale_ + 0.5));
+    int highLimitCounts = int(std::floor(pAxis->highLimit_/pAxis->scale_ + 0.5));
     // Check if requested limit is zero counts
     if (lowLimitCounts == 0) {
       // Check the other limit
@@ -2001,8 +2001,8 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     pAxis->lowLimit_ = value;
   } else if (function == motorHighLimit_) {
     // Limits in counts
-    int lowLimitCounts = int(std::round(pAxis->lowLimit_/pAxis->scale_));
-    int highLimitCounts = int(std::round(value/pAxis->scale_));
+    int lowLimitCounts = int(std::floor(pAxis->lowLimit_/pAxis->scale_ + 0.5));
+    int highLimitCounts = int(std::floor(value/pAxis->scale_ + 0.5));
     // Check if requested limit is zero counts
     if (highLimitCounts == 0) {
       // Check the other limit
