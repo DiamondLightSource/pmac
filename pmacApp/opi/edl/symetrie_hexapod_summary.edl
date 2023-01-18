@@ -402,7 +402,7 @@ setPosition {
   0 "button"
 }
 symbols {
-  0 "box-label=X,motor=BL07I-MO-HEX-03:X"
+  0 "box-label=X,motor=$(hexapod):X"
 }
 endObjectProperties
 
@@ -436,7 +436,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:X.STOP"
+controlPv "$(hexapod):X.STOP"
 pressValue "1"
 onLabel "STOP"
 offLabel "STOP"
@@ -470,7 +470,7 @@ maxValues {
   4 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:X.SEVR"
+  0 "$(hexapod):X.SEVR"
 }
 numPvs 1
 useOriginalSize
@@ -499,7 +499,7 @@ maxValues {
   5 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:X.DMOV"
+  0 "$(hexapod):X.DMOV"
 }
 numPvs 1
 useOriginalSize
@@ -530,7 +530,7 @@ displayFileName {
   0 "motor.edl"
 }
 symbols {
-  0 "motor=BL07I-MO-HEX-03:X"
+  0 "motor=$(hexapod):X"
 }
 endObjectProperties
 
@@ -564,7 +564,7 @@ x 76
 y 120
 w 60
 h 16
-controlPv "BL07I-MO-HEX-03:X.TWV"
+controlPv "$(hexapod):X.TWV"
 font "arial-bold-r-14.0"
 fontAlign "center"
 fgColor index 14
@@ -594,7 +594,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:X.TWR"
+controlPv "$(hexapod):X.TWR"
 pressValue "1"
 onLabel "-"
 offLabel "-"
@@ -614,7 +614,7 @@ x 64
 y 54
 w 83
 h 33
-controlPv "BL07I-MO-HEX-03:X"
+controlPv "$(hexapod):X"
 displayMode "decimal"
 precision 4
 fgColor index 25
@@ -639,7 +639,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:X.TWF"
+controlPv "$(hexapod):X.TWF"
 pressValue "1"
 onLabel "+"
 offLabel "+"
@@ -664,8 +664,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:X.SPMG"
-indicatorPv "BL07I-MO-HEX-03:X.SPMG"
+controlPv "$(hexapod):X.SPMG"
+indicatorPv "$(hexapod):X.SPMG"
 font "helvetica-medium-r-8.0"
 endObjectProperties
 
@@ -679,7 +679,7 @@ x 49
 y 92
 w 115
 h 20
-controlPv "BL07I-MO-HEX-03:X.RBV"
+controlPv "$(hexapod):X.RBV"
 fgColor index 15
 fgAlarm
 bgColor index 10
@@ -716,7 +716,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:X:KILL.PROC"
+controlPv "$(hexapod):X:KILL.PROC"
 pressValue "1"
 onLabel "Kill"
 offLabel "Kill"
@@ -726,7 +726,7 @@ endObjectProperties
 
 endGroup
 
-visPv "BL07I-MO-HEX-03:X:KILL"
+visPv "$(hexapod):X:KILL"
 visMin "0"
 visMax "1"
 endObjectProperties
@@ -765,7 +765,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&2\}(BL07I-MO-HEX-03:X:ELOSS)"
+visPv "CALC\\\{A&2\}($(hexapod):X:ELOSS)"
 visMin "2"
 visMax "3"
 endObjectProperties
@@ -804,7 +804,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&4\}(BL07I-MO-HEX-03:X:ELOSS)"
+visPv "CALC\\\{A&4\}($(hexapod):X:ELOSS)"
 visMin "4"
 visMax "5"
 endObjectProperties
@@ -837,7 +837,7 @@ onColor index 21
 offColor index 20
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:X:ELOSSRC.A"
+controlPv "$(hexapod):X:ELOSSRC.A"
 pressValue "0"
 onLabel "ELoss"
 offLabel "Eloss"
@@ -847,7 +847,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&1\}(BL07I-MO-HEX-03:X:ELOSS)"
+visPv "CALC\\\{A&1\}($(hexapod):X:ELOSS)"
 visMin "1"
 visMax "2"
 endObjectProperties
@@ -881,7 +881,7 @@ setPosition {
   0 "button"
 }
 symbols {
-  0 "box-label=Y,motor=BL07I-MO-HEX-03:Y"
+  0 "box-label=Y,motor=$(hexapod):Y"
 }
 endObjectProperties
 
@@ -915,7 +915,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Y.STOP"
+controlPv "$(hexapod):Y.STOP"
 pressValue "1"
 onLabel "STOP"
 offLabel "STOP"
@@ -949,7 +949,7 @@ maxValues {
   4 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:Y.SEVR"
+  0 "$(hexapod):Y.SEVR"
 }
 numPvs 1
 useOriginalSize
@@ -978,7 +978,7 @@ maxValues {
   5 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:Y.DMOV"
+  0 "$(hexapod):Y.DMOV"
 }
 numPvs 1
 useOriginalSize
@@ -1009,7 +1009,7 @@ displayFileName {
   0 "motor.edl"
 }
 symbols {
-  0 "motor=BL07I-MO-HEX-03:Y"
+  0 "motor=$(hexapod):Y"
 }
 endObjectProperties
 
@@ -1043,7 +1043,7 @@ x 271
 y 120
 w 60
 h 16
-controlPv "BL07I-MO-HEX-03:Y.TWV"
+controlPv "$(hexapod):Y.TWV"
 font "arial-bold-r-14.0"
 fontAlign "center"
 fgColor index 14
@@ -1073,7 +1073,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Y.TWR"
+controlPv "$(hexapod):Y.TWR"
 pressValue "1"
 onLabel "-"
 offLabel "-"
@@ -1093,7 +1093,7 @@ x 259
 y 54
 w 83
 h 33
-controlPv "BL07I-MO-HEX-03:Y"
+controlPv "$(hexapod):Y"
 displayMode "decimal"
 precision 4
 fgColor index 25
@@ -1118,7 +1118,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Y.TWF"
+controlPv "$(hexapod):Y.TWF"
 pressValue "1"
 onLabel "+"
 offLabel "+"
@@ -1143,8 +1143,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Y.SPMG"
-indicatorPv "BL07I-MO-HEX-03:Y.SPMG"
+controlPv "$(hexapod):Y.SPMG"
+indicatorPv "$(hexapod):Y.SPMG"
 font "helvetica-medium-r-8.0"
 endObjectProperties
 
@@ -1158,7 +1158,7 @@ x 244
 y 92
 w 115
 h 20
-controlPv "BL07I-MO-HEX-03:Y.RBV"
+controlPv "$(hexapod):Y.RBV"
 fgColor index 15
 fgAlarm
 bgColor index 10
@@ -1195,7 +1195,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Y:KILL.PROC"
+controlPv "$(hexapod):Y:KILL.PROC"
 pressValue "1"
 onLabel "Kill"
 offLabel "Kill"
@@ -1205,7 +1205,7 @@ endObjectProperties
 
 endGroup
 
-visPv "BL07I-MO-HEX-03:Y:KILL"
+visPv "$(hexapod):Y:KILL"
 visMin "0"
 visMax "1"
 endObjectProperties
@@ -1244,7 +1244,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&2\}(BL07I-MO-HEX-03:Y:ELOSS)"
+visPv "CALC\\\{A&2\}($(hexapod):Y:ELOSS)"
 visMin "2"
 visMax "3"
 endObjectProperties
@@ -1283,7 +1283,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&4\}(BL07I-MO-HEX-03:Y:ELOSS)"
+visPv "CALC\\\{A&4\}($(hexapod):Y:ELOSS)"
 visMin "4"
 visMax "5"
 endObjectProperties
@@ -1316,7 +1316,7 @@ onColor index 21
 offColor index 20
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Y:ELOSSRC.A"
+controlPv "$(hexapod):Y:ELOSSRC.A"
 pressValue "0"
 onLabel "ELoss"
 offLabel "Eloss"
@@ -1326,7 +1326,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&1\}(BL07I-MO-HEX-03:Y:ELOSS)"
+visPv "CALC\\\{A&1\}($(hexapod):Y:ELOSS)"
 visMin "1"
 visMax "2"
 endObjectProperties
@@ -1360,7 +1360,7 @@ setPosition {
   0 "button"
 }
 symbols {
-  0 "box-label=Z,motor=BL07I-MO-HEX-03:Z"
+  0 "box-label=Z,motor=$(hexapod):Z"
 }
 endObjectProperties
 
@@ -1394,7 +1394,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Z.STOP"
+controlPv "$(hexapod):Z.STOP"
 pressValue "1"
 onLabel "STOP"
 offLabel "STOP"
@@ -1428,7 +1428,7 @@ maxValues {
   4 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:Z.SEVR"
+  0 "$(hexapod):Z.SEVR"
 }
 numPvs 1
 useOriginalSize
@@ -1457,7 +1457,7 @@ maxValues {
   5 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:Z.DMOV"
+  0 "$(hexapod):Z.DMOV"
 }
 numPvs 1
 useOriginalSize
@@ -1488,7 +1488,7 @@ displayFileName {
   0 "motor.edl"
 }
 symbols {
-  0 "motor=BL07I-MO-HEX-03:Z"
+  0 "motor=$(hexapod):Z"
 }
 endObjectProperties
 
@@ -1522,7 +1522,7 @@ x 466
 y 120
 w 60
 h 16
-controlPv "BL07I-MO-HEX-03:Z.TWV"
+controlPv "$(hexapod):Z.TWV"
 font "arial-bold-r-14.0"
 fontAlign "center"
 fgColor index 14
@@ -1552,7 +1552,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Z.TWR"
+controlPv "$(hexapod):Z.TWR"
 pressValue "1"
 onLabel "-"
 offLabel "-"
@@ -1572,7 +1572,7 @@ x 454
 y 54
 w 83
 h 33
-controlPv "BL07I-MO-HEX-03:Z"
+controlPv "$(hexapod):Z"
 displayMode "decimal"
 precision 4
 fgColor index 25
@@ -1597,7 +1597,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Z.TWF"
+controlPv "$(hexapod):Z.TWF"
 pressValue "1"
 onLabel "+"
 offLabel "+"
@@ -1622,8 +1622,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Z.SPMG"
-indicatorPv "BL07I-MO-HEX-03:Z.SPMG"
+controlPv "$(hexapod):Z.SPMG"
+indicatorPv "$(hexapod):Z.SPMG"
 font "helvetica-medium-r-8.0"
 endObjectProperties
 
@@ -1637,7 +1637,7 @@ x 439
 y 92
 w 115
 h 20
-controlPv "BL07I-MO-HEX-03:Z.RBV"
+controlPv "$(hexapod):Z.RBV"
 fgColor index 15
 fgAlarm
 bgColor index 10
@@ -1674,7 +1674,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Z:KILL.PROC"
+controlPv "$(hexapod):Z:KILL.PROC"
 pressValue "1"
 onLabel "Kill"
 offLabel "Kill"
@@ -1684,7 +1684,7 @@ endObjectProperties
 
 endGroup
 
-visPv "BL07I-MO-HEX-03:Z:KILL"
+visPv "$(hexapod):Z:KILL"
 visMin "0"
 visMax "1"
 endObjectProperties
@@ -1723,7 +1723,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&2\}(BL07I-MO-HEX-03:Z:ELOSS)"
+visPv "CALC\\\{A&2\}($(hexapod):Z:ELOSS)"
 visMin "2"
 visMax "3"
 endObjectProperties
@@ -1762,7 +1762,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&4\}(BL07I-MO-HEX-03:Z:ELOSS)"
+visPv "CALC\\\{A&4\}($(hexapod):Z:ELOSS)"
 visMin "4"
 visMax "5"
 endObjectProperties
@@ -1795,7 +1795,7 @@ onColor index 21
 offColor index 20
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:Z:ELOSSRC.A"
+controlPv "$(hexapod):Z:ELOSSRC.A"
 pressValue "0"
 onLabel "ELoss"
 offLabel "Eloss"
@@ -1805,7 +1805,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&1\}(BL07I-MO-HEX-03:Z:ELOSS)"
+visPv "CALC\\\{A&1\}($(hexapod):Z:ELOSS)"
 visMin "1"
 visMax "2"
 endObjectProperties
@@ -1839,7 +1839,7 @@ setPosition {
   0 "button"
 }
 symbols {
-  0 "box-label=Rx,motor=BL07I-MO-HEX-03:RX"
+  0 "box-label=Rx,motor=$(hexapod):RX"
 }
 endObjectProperties
 
@@ -1873,7 +1873,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RX.STOP"
+controlPv "$(hexapod):RX.STOP"
 pressValue "1"
 onLabel "STOP"
 offLabel "STOP"
@@ -1907,7 +1907,7 @@ maxValues {
   4 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:RX.SEVR"
+  0 "$(hexapod):RX.SEVR"
 }
 numPvs 1
 useOriginalSize
@@ -1936,7 +1936,7 @@ maxValues {
   5 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:RX.DMOV"
+  0 "$(hexapod):RX.DMOV"
 }
 numPvs 1
 useOriginalSize
@@ -1967,7 +1967,7 @@ displayFileName {
   0 "motor.edl"
 }
 symbols {
-  0 "motor=BL07I-MO-HEX-03:RX"
+  0 "motor=$(hexapod):RX"
 }
 endObjectProperties
 
@@ -2001,7 +2001,7 @@ x 76
 y 235
 w 60
 h 16
-controlPv "BL07I-MO-HEX-03:RX.TWV"
+controlPv "$(hexapod):RX.TWV"
 font "arial-bold-r-14.0"
 fontAlign "center"
 fgColor index 14
@@ -2031,7 +2031,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RX.TWR"
+controlPv "$(hexapod):RX.TWR"
 pressValue "1"
 onLabel "-"
 offLabel "-"
@@ -2051,7 +2051,7 @@ x 64
 y 169
 w 83
 h 33
-controlPv "BL07I-MO-HEX-03:RX"
+controlPv "$(hexapod):RX"
 displayMode "decimal"
 precision 4
 fgColor index 25
@@ -2076,7 +2076,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RX.TWF"
+controlPv "$(hexapod):RX.TWF"
 pressValue "1"
 onLabel "+"
 offLabel "+"
@@ -2101,8 +2101,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RX.SPMG"
-indicatorPv "BL07I-MO-HEX-03:RX.SPMG"
+controlPv "$(hexapod):RX.SPMG"
+indicatorPv "$(hexapod):RX.SPMG"
 font "helvetica-medium-r-8.0"
 endObjectProperties
 
@@ -2116,7 +2116,7 @@ x 49
 y 207
 w 115
 h 20
-controlPv "BL07I-MO-HEX-03:RX.RBV"
+controlPv "$(hexapod):RX.RBV"
 fgColor index 15
 fgAlarm
 bgColor index 10
@@ -2153,7 +2153,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RX:KILL.PROC"
+controlPv "$(hexapod):RX:KILL.PROC"
 pressValue "1"
 onLabel "Kill"
 offLabel "Kill"
@@ -2163,7 +2163,7 @@ endObjectProperties
 
 endGroup
 
-visPv "BL07I-MO-HEX-03:RX:KILL"
+visPv "$(hexapod):RX:KILL"
 visMin "0"
 visMax "1"
 endObjectProperties
@@ -2202,7 +2202,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&2\}(BL07I-MO-HEX-03:RX:ELOSS)"
+visPv "CALC\\\{A&2\}($(hexapod):RX:ELOSS)"
 visMin "2"
 visMax "3"
 endObjectProperties
@@ -2241,7 +2241,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&4\}(BL07I-MO-HEX-03:RX:ELOSS)"
+visPv "CALC\\\{A&4\}($(hexapod):RX:ELOSS)"
 visMin "4"
 visMax "5"
 endObjectProperties
@@ -2274,7 +2274,7 @@ onColor index 21
 offColor index 20
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RX:ELOSSRC.A"
+controlPv "$(hexapod):RX:ELOSSRC.A"
 pressValue "0"
 onLabel "ELoss"
 offLabel "Eloss"
@@ -2284,7 +2284,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&1\}(BL07I-MO-HEX-03:RX:ELOSS)"
+visPv "CALC\\\{A&1\}($(hexapod):RX:ELOSS)"
 visMin "1"
 visMax "2"
 endObjectProperties
@@ -2318,7 +2318,7 @@ setPosition {
   0 "button"
 }
 symbols {
-  0 "box-label=Ry,motor=BL07I-MO-HEX-03:RY"
+  0 "box-label=Ry,motor=$(hexapod):RY"
 }
 endObjectProperties
 
@@ -2352,7 +2352,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RY.STOP"
+controlPv "$(hexapod):RY.STOP"
 pressValue "1"
 onLabel "STOP"
 offLabel "STOP"
@@ -2386,7 +2386,7 @@ maxValues {
   4 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:RY.SEVR"
+  0 "$(hexapod):RY.SEVR"
 }
 numPvs 1
 useOriginalSize
@@ -2415,7 +2415,7 @@ maxValues {
   5 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:RY.DMOV"
+  0 "$(hexapod):RY.DMOV"
 }
 numPvs 1
 useOriginalSize
@@ -2446,7 +2446,7 @@ displayFileName {
   0 "motor.edl"
 }
 symbols {
-  0 "motor=BL07I-MO-HEX-03:RY"
+  0 "motor=$(hexapod):RY"
 }
 endObjectProperties
 
@@ -2480,7 +2480,7 @@ x 271
 y 235
 w 60
 h 16
-controlPv "BL07I-MO-HEX-03:RY.TWV"
+controlPv "$(hexapod):RY.TWV"
 font "arial-bold-r-14.0"
 fontAlign "center"
 fgColor index 14
@@ -2510,7 +2510,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RY.TWR"
+controlPv "$(hexapod):RY.TWR"
 pressValue "1"
 onLabel "-"
 offLabel "-"
@@ -2530,7 +2530,7 @@ x 259
 y 169
 w 83
 h 33
-controlPv "BL07I-MO-HEX-03:RY"
+controlPv "$(hexapod):RY"
 displayMode "decimal"
 precision 4
 fgColor index 25
@@ -2555,7 +2555,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RY.TWF"
+controlPv "$(hexapod):RY.TWF"
 pressValue "1"
 onLabel "+"
 offLabel "+"
@@ -2580,8 +2580,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RY.SPMG"
-indicatorPv "BL07I-MO-HEX-03:RY.SPMG"
+controlPv "$(hexapod):RY.SPMG"
+indicatorPv "$(hexapod):RY.SPMG"
 font "helvetica-medium-r-8.0"
 endObjectProperties
 
@@ -2595,7 +2595,7 @@ x 244
 y 207
 w 115
 h 20
-controlPv "BL07I-MO-HEX-03:RY.RBV"
+controlPv "$(hexapod):RY.RBV"
 fgColor index 15
 fgAlarm
 bgColor index 10
@@ -2632,7 +2632,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RY:KILL.PROC"
+controlPv "$(hexapod):RY:KILL.PROC"
 pressValue "1"
 onLabel "Kill"
 offLabel "Kill"
@@ -2642,7 +2642,7 @@ endObjectProperties
 
 endGroup
 
-visPv "BL07I-MO-HEX-03:RY:KILL"
+visPv "$(hexapod):RY:KILL"
 visMin "0"
 visMax "1"
 endObjectProperties
@@ -2681,7 +2681,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&2\}(BL07I-MO-HEX-03:RY:ELOSS)"
+visPv "CALC\\\{A&2\}($(hexapod):RY:ELOSS)"
 visMin "2"
 visMax "3"
 endObjectProperties
@@ -2720,7 +2720,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&4\}(BL07I-MO-HEX-03:RY:ELOSS)"
+visPv "CALC\\\{A&4\}($(hexapod):RY:ELOSS)"
 visMin "4"
 visMax "5"
 endObjectProperties
@@ -2753,7 +2753,7 @@ onColor index 21
 offColor index 20
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RY:ELOSSRC.A"
+controlPv "$(hexapod):RY:ELOSSRC.A"
 pressValue "0"
 onLabel "ELoss"
 offLabel "Eloss"
@@ -2763,7 +2763,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&1\}(BL07I-MO-HEX-03:RY:ELOSS)"
+visPv "CALC\\\{A&1\}($(hexapod):RY:ELOSS)"
 visMin "1"
 visMax "2"
 endObjectProperties
@@ -2797,7 +2797,7 @@ setPosition {
   0 "button"
 }
 symbols {
-  0 "box-label=Rz,motor=BL07I-MO-HEX-03:RZ"
+  0 "box-label=Rz,motor=$(hexapod):RZ"
 }
 endObjectProperties
 
@@ -2831,7 +2831,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RZ.STOP"
+controlPv "$(hexapod):RZ.STOP"
 pressValue "1"
 onLabel "STOP"
 offLabel "STOP"
@@ -2865,7 +2865,7 @@ maxValues {
   4 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:RZ.SEVR"
+  0 "$(hexapod):RZ.SEVR"
 }
 numPvs 1
 useOriginalSize
@@ -2894,7 +2894,7 @@ maxValues {
   5 1
 }
 controlPvs {
-  0 "BL07I-MO-HEX-03:RZ.DMOV"
+  0 "$(hexapod):RZ.DMOV"
 }
 numPvs 1
 useOriginalSize
@@ -2925,7 +2925,7 @@ displayFileName {
   0 "motor.edl"
 }
 symbols {
-  0 "motor=BL07I-MO-HEX-03:RZ"
+  0 "motor=$(hexapod):RZ"
 }
 endObjectProperties
 
@@ -2959,7 +2959,7 @@ x 466
 y 234
 w 60
 h 16
-controlPv "BL07I-MO-HEX-03:RZ.TWV"
+controlPv "$(hexapod):RZ.TWV"
 font "arial-bold-r-14.0"
 fontAlign "center"
 fgColor index 14
@@ -2989,7 +2989,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RZ.TWR"
+controlPv "$(hexapod):RZ.TWR"
 pressValue "1"
 onLabel "-"
 offLabel "-"
@@ -3009,7 +3009,7 @@ x 454
 y 168
 w 83
 h 33
-controlPv "BL07I-MO-HEX-03:RZ"
+controlPv "$(hexapod):RZ"
 displayMode "decimal"
 precision 4
 fgColor index 25
@@ -3034,7 +3034,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RZ.TWF"
+controlPv "$(hexapod):RZ.TWF"
 pressValue "1"
 onLabel "+"
 offLabel "+"
@@ -3059,8 +3059,8 @@ bgColor index 3
 inconsistentColor index 14
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RZ.SPMG"
-indicatorPv "BL07I-MO-HEX-03:RZ.SPMG"
+controlPv "$(hexapod):RZ.SPMG"
+indicatorPv "$(hexapod):RZ.SPMG"
 font "helvetica-medium-r-8.0"
 endObjectProperties
 
@@ -3074,7 +3074,7 @@ x 439
 y 206
 w 115
 h 20
-controlPv "BL07I-MO-HEX-03:RZ.RBV"
+controlPv "$(hexapod):RZ.RBV"
 fgColor index 15
 fgAlarm
 bgColor index 10
@@ -3111,7 +3111,7 @@ onColor index 4
 offColor index 3
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RZ:KILL.PROC"
+controlPv "$(hexapod):RZ:KILL.PROC"
 pressValue "1"
 onLabel "Kill"
 offLabel "Kill"
@@ -3121,7 +3121,7 @@ endObjectProperties
 
 endGroup
 
-visPv "BL07I-MO-HEX-03:RZ:KILL"
+visPv "$(hexapod):RZ:KILL"
 visMin "0"
 visMax "1"
 endObjectProperties
@@ -3160,7 +3160,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&2\}(BL07I-MO-HEX-03:RZ:ELOSS)"
+visPv "CALC\\\{A&2\}($(hexapod):RZ:ELOSS)"
 visMin "2"
 visMax "3"
 endObjectProperties
@@ -3199,7 +3199,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&4\}(BL07I-MO-HEX-03:RZ:ELOSS)"
+visPv "CALC\\\{A&4\}($(hexapod):RZ:ELOSS)"
 visMin "4"
 visMax "5"
 endObjectProperties
@@ -3232,7 +3232,7 @@ onColor index 21
 offColor index 20
 topShadowColor index 1
 botShadowColor index 11
-controlPv "BL07I-MO-HEX-03:RZ:ELOSSRC.A"
+controlPv "$(hexapod):RZ:ELOSSRC.A"
 pressValue "0"
 onLabel "ELoss"
 offLabel "Eloss"
@@ -3242,7 +3242,7 @@ endObjectProperties
 
 endGroup
 
-visPv "CALC\\\{A&1\}(BL07I-MO-HEX-03:RZ:ELOSS)"
+visPv "CALC\\\{A&1\}($(hexapod):RZ:ELOSS)"
 visMin "1"
 visMax "2"
 endObjectProperties
