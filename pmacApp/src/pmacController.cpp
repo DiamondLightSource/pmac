@@ -452,6 +452,14 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_ProfilePositionsXString, asynParamFloat64Array, &PMAC_C_ProfilePositionsX_);
   createParam(PMAC_C_ProfilePositionsYString, asynParamFloat64Array, &PMAC_C_ProfilePositionsY_);
   createParam(PMAC_C_ProfilePositionsZString, asynParamFloat64Array, &PMAC_C_ProfilePositionsZ_);
+  createParam(PMAC_C_CompTable0_WString, asynParamFloat64Array, &PMAC_C_CompTable0_W);
+  createParam(PMAC_C_CompTable1_WString, asynParamFloat64Array, &PMAC_C_CompTable1_W);
+  createParam(PMAC_C_CompTable2_WString, asynParamFloat64Array, &PMAC_C_CompTable2_W);
+  createParam(PMAC_C_CompTable3_WString, asynParamFloat64Array, &PMAC_C_CompTable3_W);
+  createParam(PMAC_C_CompTable4_WString, asynParamFloat64Array, &PMAC_C_CompTable4_W);
+  createParam(PMAC_C_CompTable5_WString, asynParamFloat64Array, &PMAC_C_CompTable5_W);
+  createParam(PMAC_C_CompTable6_WString, asynParamFloat64Array, &PMAC_C_CompTable6_W);
+  createParam(PMAC_C_CompTable7_WString, asynParamFloat64Array, &PMAC_C_CompTable7_W);
   createParam(PMAC_C_ProfileAppendString, asynParamInt32, &PMAC_C_ProfileAppend_);
   createParam(PMAC_C_ProfileAppendStateString, asynParamInt32, &PMAC_C_ProfileAppendState_);
   createParam(PMAC_C_ProfileAppendStatusString, asynParamInt32, &PMAC_C_ProfileAppendStatus_);
@@ -2068,6 +2076,12 @@ asynStatus
 pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements) {
   asynStatus status = asynSuccess;
   int function = pasynUser->reason;
+  int index = 0;
+  int dataIndex = index;
+  int compTableIndex = -1;
+  char command[PMAC_MAXBUF_] = {0};
+  char response[PMAC_MAXBUF_] = {0};
+  char buf[256];
   static const char *functionName = "writeFloat64Array";
   debug(DEBUG_FLOW, functionName);
 
@@ -2101,9 +2115,57 @@ pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size
       memcpy(eguProfilePositions_[7], value, nElements * sizeof(double));
     } else if (function == PMAC_C_ProfilePositionsZ_) {
       memcpy(eguProfilePositions_[8], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_CompTable0_W) {
+      compTableIndex=0;
+    } else if (function == PMAC_C_CompTable1_W) {
+      compTableIndex=1;
+    } else if (function == PMAC_C_CompTable2_W) {
+      compTableIndex=2;
+    } else if (function == PMAC_C_CompTable3_W) {
+      compTableIndex=3;
+    } else if (function == PMAC_C_CompTable4_W) {
+      compTableIndex=4;
+    } else if (function == PMAC_C_CompTable5_W) {
+      compTableIndex=5;
+    } else if (function == PMAC_C_CompTable6_W) {
+      compTableIndex=6;
+    } else if (function == PMAC_C_CompTable7_W) {
+      compTableIndex=7;
     } else {
       status = asynMotorController::writeFloat64Array(pasynUser, value, nElements);
     }
+
+    /*
+      Constructs the compensation table configuration commands
+      If the compensation table can be written in a single command then it will be,
+      else it will be sent over multiple commands, eg:
+      CompTable[0].Data[0]=0,1,2,3
+      CompTable[0].Data[3]=4,5,6
+    */
+    if(cid_ == PMAC_CID_POWER_){
+      if(compTableIndex >= 0){
+          sprintf(command, "CompTable[%d].Data[%d]=", compTableIndex,index);
+
+          for(index = 0; index < nElements; index++){
+              if(index == dataIndex)
+                  sprintf(buf,"%f",value[index]);
+              else
+                  sprintf(buf,", %f",value[index]);
+              
+              // If the constructed command is greater than the max buffer
+              // then split the command over multiple writes
+              if(strlen(buf) + strlen(command) <= PMAC_MAXBUF_ -10){
+                  strcat(command, buf);
+              } else {
+                  this->immediateWriteRead(command, response);
+                  dataIndex = index;
+                  sprintf(command, "CompTable[%d].Data[%d]=%f", compTableIndex,index,value[index]);
+              }
+          }
+          this->immediateWriteRead(command, response);
+      }
+    }
+
   } else {
     debug(DEBUG_ERROR, functionName, "Failed to initialise trajectory scan interface");
   }
