@@ -123,6 +123,14 @@
 #define PMAC_C_ProfilePositionsXString    "PROFILE_POSITIONS_X"
 #define PMAC_C_ProfilePositionsYString    "PROFILE_POSITIONS_Y"
 #define PMAC_C_ProfilePositionsZString    "PROFILE_POSITIONS_Z"
+#define PMAC_C_CompTable0_WString         "PMAC_C_COMP_0"
+#define PMAC_C_CompTable1_WString         "PMAC_C_COMP_1"
+#define PMAC_C_CompTable2_WString         "PMAC_C_COMP_2"
+#define PMAC_C_CompTable3_WString         "PMAC_C_COMP_3"
+#define PMAC_C_CompTable4_WString         "PMAC_C_COMP_4"
+#define PMAC_C_CompTable5_WString         "PMAC_C_COMP_5"
+#define PMAC_C_CompTable6_WString         "PMAC_C_COMP_6"
+#define PMAC_C_CompTable7_WString         "PMAC_C_COMP_7"
 #define PMAC_C_ProfileAppendString        "PROFILE_APPEND"
 #define PMAC_C_ProfileAppendStateString   "PROFILE_APPEND_STATE"
 #define PMAC_C_ProfileAppendStatusString  "PROFILE_APPEND_STATUS"
@@ -367,6 +375,14 @@ protected:
     int PMAC_C_ProfilePositionsX_;
     int PMAC_C_ProfilePositionsY_;
     int PMAC_C_ProfilePositionsZ_;
+    int PMAC_C_CompTable0_W;
+    int PMAC_C_CompTable1_W;
+    int PMAC_C_CompTable2_W;
+    int PMAC_C_CompTable3_W;
+    int PMAC_C_CompTable4_W;
+    int PMAC_C_CompTable5_W;
+    int PMAC_C_CompTable6_W;
+    int PMAC_C_CompTable7_W;
     int PMAC_C_ProfileAppend_;
     int PMAC_C_ProfileAppendState_;
     int PMAC_C_ProfileAppendStatus_;
