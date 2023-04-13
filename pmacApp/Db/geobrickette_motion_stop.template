@@ -41,7 +41,7 @@ record(asyn, "$(P)$(mstop_R=:MOTIONSTOP):GET") {
 # Defaults appropriate for the usual motion stop requirements.
 record(bi, "$(P)$(mstop_R=:MOTIONSTOP):RBV") {
   field(DESC, "$(P) $(mstop_DESC=motion stop) readback" )
-  field(INP,  "$(P)(mstop_R=:MOTIONSTOP):GET.AINP PP")
+  field(INP,  "$(P)$(mstop_R=:MOTIONSTOP):GET.AINP PP")
   field(SCAN, "$(SCAN=5 second)")
   field(ZNAM, "$(mstop_ZNAM=Stopped)")
   field(ZSV,  "$(mstop_ZSV=MAJOR)")
