@@ -55,10 +55,10 @@ def trajectory_quick_scan(test, test_brick):
     while test_brick.height.moving:
         Sleep(0.01)  # allow deceleration todo need to put this in the driver itself
 
-    test.assertEquals(test_brick.m1.pos, rows[-1])
-    test.assertEquals(test_brick.m2.pos, cols[-1])
-    test.assertEquals(test_brick.height.pos, heights[-1])
-    test.assertEquals(test_brick.angle.pos, angles[-1])
+    test.assertEqual(test_brick.m1.pos, rows[-1])
+    test.assertEqual(test_brick.m2.pos, cols[-1])
+    test.assertEqual(test_brick.height.pos, heights[-1])
+    test.assertEqual(test_brick.angle.pos, angles[-1])
 
 
 def trajectory_fast_scan(

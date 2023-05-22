@@ -41,14 +41,14 @@ public:
 
     std::string parseCSMappingResult(const std::string mappingResult);
 
-    void startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
-                                      char *time_cmd, int addr);
+    void startTrajectoryTimePointsCmd(char *user_cmd, char *time_cmd,
+                                      int addr);
 
-    void addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
-                                   int velocityMode, int userFunc, int time,
+    void addTrajectoryTimePointCmd(char *userCmd, char *timeCmd,
+                                   int userFunc, int time,
                                    bool firstVal);
 
-    void startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffSize);
+    void startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffSize, bool posCmd);
 
     void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffSize,
                                  bool firstVal);

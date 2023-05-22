@@ -123,6 +123,15 @@
 #define PMAC_C_ProfilePositionsXString    "PROFILE_POSITIONS_X"
 #define PMAC_C_ProfilePositionsYString    "PROFILE_POSITIONS_Y"
 #define PMAC_C_ProfilePositionsZString    "PROFILE_POSITIONS_Z"
+#define PMAC_C_ProfileVelocitiesAString   "PROFILE_VELOCITIES_A"
+#define PMAC_C_ProfileVelocitiesBString   "PROFILE_VELOCITIES_B"
+#define PMAC_C_ProfileVelocitiesCString   "PROFILE_VELOCITIES_C"
+#define PMAC_C_ProfileVelocitiesUString   "PROFILE_VELOCITIES_U"
+#define PMAC_C_ProfileVelocitiesVString   "PROFILE_VELOCITIES_V"
+#define PMAC_C_ProfileVelocitiesWString   "PROFILE_VELOCITIES_W"
+#define PMAC_C_ProfileVelocitiesXString   "PROFILE_VELOCITIES_X"
+#define PMAC_C_ProfileVelocitiesYString   "PROFILE_VELOCITIES_Y"
+#define PMAC_C_ProfileVelocitiesZString   "PROFILE_VELOCITIES_Z"
 #define PMAC_C_CompTable0_WString         "PMAC_C_COMP_0"
 #define PMAC_C_CompTable1_WString         "PMAC_C_COMP_1"
 #define PMAC_C_CompTable2_WString         "PMAC_C_COMP_2"
@@ -156,10 +165,11 @@
 #define PMAC_C_TrajPercentString          "PMAC_C_TRAJ_PERCENT" // Percentage of scan complete
 #define PMAC_C_TrajEStatusString          "PMAC_C_TRAJ_ESTATUS" // Our report of tScan status
 #define PMAC_C_TrajProgString             "PMAC_C_TRAJ_PROG"    // Which motion program to execute
+#define PMAC_C_TrajCalcVelString          "PMAC_TRAJ_CALCVEL"   // Velocity array calculation - 0: No calculation - receives velocities directly; 1: Calculate - calculate the velocities base on time, position and velocity mode
 #define PMAC_C_TrajProgVersionString      "PMAC_C_TRAJ_PROG_V"  // Motion program version number
 #define PMAC_C_TrajCodeVersionString      "PMAC_C_TRAJ_CODE_V"  // Version of this control code
 
-#define PMAC_TRAJECTORY_VERSION 3
+#define PMAC_TRAJECTORY_VERSION 4
 
 #define PMAC_CPU_GEO_240MHZ               "DSP56321"            // Approved geobrick for trajectory scans
 #define PMAC_CPU_CLIPPER                  "DSP56303"            // Allowed for trajectory scans
@@ -180,12 +190,12 @@
 
 #define PMAC_PVT_TIME_MODE       "I42"   // PVT Time Control Mode (0=4,095 ms max time, 1=8,388,607 ms max time)
 
-#define PMAC_CPU_PHASE_INTR      "M70" // Time between phase interrupts (CPU cycles/2)
-#define PMAC_CPU_PHASE_TIME      "M71" // Time for phase tasks (CPU cycles/2)
-#define PMAC_CPU_SERVO_TIME      "M72" // Time for servo tasks (CPU cycles/2)
-#define PMAC_CPU_RTI_TIME        "M73" // Time for RTI tasks (CPU cycles/2)
-#define PMAC_CPU_I8              "I8"
-#define PMAC_CPU_I7002           "I7002"
+#define PMAC_CPU_PHASE_INTR      "M70"   // Time between phase interrupts (CPU cycles/2)
+#define PMAC_CPU_PHASE_TIME      "M71"   // Time for phase tasks (CPU cycles/2)
+#define PMAC_CPU_SERVO_TIME      "M72"   // Time for servo tasks (CPU cycles/2)
+#define PMAC_CPU_RTI_TIME        "M73"   // Time for RTI tasks (CPU cycles/2)
+#define PMAC_CPU_I8              "I8"    // RTI period (Servo cycles - 1)
+#define PMAC_CPU_I7002           "I7002" // Servo clock divider (ServoClockFreq = PhaseClockFreq/(ServoClockDiv + 1) )
 
 #define PPMAC_CPU_FREQ           "Sys.CPUFreq"
 #define PPMAC_CPU_TYPE           "Sys.CPUType"
@@ -215,13 +225,16 @@
 #define PMAC_TRAJ_BUFF_FILL_A    "M4044" // Fill level of buffer A
 #define PMAC_TRAJ_BUFF_FILL_B    "M4045" // Fill level of buffer B
 #define PMAC_TRAJ_CURR_FILL      "M4046" // The indexes that current buffer has been filled up to
-#define PMAC_TRAJ_PROG_VERSION   "M4049" // The indexes that current buffer has been filled up to
+#define PMAC_TRAJ_PROG_VERSION   "M4049" // Trajectory program version
 
 #define PMAC_TRAJ_BUFFER_A 0
 #define PMAC_TRAJ_BUFFER_B 1
 
 #define PMAC_TRAJ_STATUS_RUNNING 1
 #define PMAC_TRAJ_STATUS_FINISHED 2
+
+#define PMAC_TRAJ_VELOCITY_PROVIDED 0
+#define PMAC_TRAJ_VELOCITY_CALCULATED 1
 
 class pmacCSMonitor;
 
@@ -329,7 +342,9 @@ public:
     asynStatus executeManualGroup();
     asynStatus updateCsAssignmentParameters();
     asynStatus copyCsReadbackToDemand(bool manual);
-    asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
+    asynStatus tScanBuildProfileArray(double *positions, double *velocities, double *times, int axis, int numPoints);
+    asynStatus tScanCalculateVelocityArray(double *positions, double *velocities, double *times, int index);
+    // asynStatus tScanBuildVelocityProfileArray(double *velocities, int axis, int numPoints);
     asynStatus tScanIncludedAxes(int *axisMask);
     void registerForLock(asynPortDriver *controller);
 
@@ -394,6 +409,15 @@ protected:
     int PMAC_C_ProfilePositionsX_;
     int PMAC_C_ProfilePositionsY_;
     int PMAC_C_ProfilePositionsZ_;
+    int PMAC_C_ProfileVelocitiesA_;
+    int PMAC_C_ProfileVelocitiesB_;
+    int PMAC_C_ProfileVelocitiesC_;
+    int PMAC_C_ProfileVelocitiesU_;
+    int PMAC_C_ProfileVelocitiesV_;
+    int PMAC_C_ProfileVelocitiesW_;
+    int PMAC_C_ProfileVelocitiesX_;
+    int PMAC_C_ProfileVelocitiesY_;
+    int PMAC_C_ProfileVelocitiesZ_;
     int PMAC_C_CompTable0_W;
     int PMAC_C_CompTable1_W;
     int PMAC_C_CompTable2_W;
@@ -425,6 +449,7 @@ protected:
     int PMAC_C_TrajPercent_;
     int PMAC_C_TrajEStatus_;
     int PMAC_C_TrajProg_;
+    int PMAC_C_TrajCalcVel_;
     int PMAC_C_TrajProgVersion_;
     int PMAC_C_TrajCodeVersion_;
     int PMAC_C_NoOfMsgs_;
@@ -527,6 +552,8 @@ private:
     double tScanPmacProgVersion_;
     double **eguProfilePositions_;  // 2D array of profile positions in EGU (1 array for each axis)
     double **tScanPositions_;       // 2D array of profile positions (1 array for each axis)
+    double **eguProfileVelocities_; // 2D array of profile velocities in EGU (1 array for each axis)
+    double **tScanVelocities_;      // 2D array of profile velocities (1 array for each axis)
     int *profileUser_;              // Array of profile user values
     int *profileVelMode_;           // Array of profile velocity modes
     epicsEventId startEventId_;

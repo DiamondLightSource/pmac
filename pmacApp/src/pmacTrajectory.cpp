@@ -12,6 +12,7 @@ pmacTrajectory::pmacTrajectory() : pmacDebugger("pmacTrajectory") {
   totalNoOfPoints_ = 0;
   noOfValidPoints_ = 0;
   profilePositions_ = NULL;
+  profileVelocities_ = NULL;
   profileTimes_ = NULL;
   profileUser_ = NULL;
   profileVelMode_ = NULL;
@@ -30,6 +31,16 @@ pmacTrajectory::~pmacTrajectory() {
     }
     free(profilePositions_);
   }
+
+  if (profileVelocities_) {
+    for (axis = 0; axis < noOfAxes_; axis++) {
+      if (profileVelocities_[axis]) {
+        free(profileVelocities_[axis]);
+      }
+    }
+    free(profileVelocities_);
+  }
+
   if (profileTimes_) {
     free(profileTimes_);
   }
@@ -68,6 +79,31 @@ asynStatus pmacTrajectory::initialise(int noOfPoints) {
       if (profilePositions_[axis] == NULL) {
         debug(DEBUG_ERROR, functionName,
               "Unable to allocate memory for the trajectory scan positions");
+        status = asynError;
+      }
+    }
+  }
+
+  // Initialise the velocity array
+  if (profileVelocities_) {
+    for (axis = 0; axis < noOfAxes_; axis++) {
+      if (profileVelocities_[axis]) {
+        free(profileVelocities_[axis]);
+      }
+    }
+    free(profileVelocities_);
+  }
+  profileVelocities_ = (double **) malloc(sizeof(double *) * noOfAxes_);
+  if (profileVelocities_ == NULL) {
+    debug(DEBUG_ERROR, functionName, "Unable to allocate memory for the trajectory scan velocities");
+    status = asynError;
+  }
+  if (status == asynSuccess) {
+    for (axis = 0; axis < noOfAxes_; axis++) {
+      profileVelocities_[axis] = (double *) malloc(sizeof(double) * noOfPoints);
+      if (profileVelocities_[axis] == NULL) {
+        debug(DEBUG_ERROR, functionName,
+              "Unable to allocate memory for the trajectory scan velocities");
         status = asynError;
       }
     }
@@ -120,7 +156,7 @@ asynStatus pmacTrajectory::initialise(int noOfPoints) {
   return status;
 }
 
-asynStatus pmacTrajectory::append(double **positions, double *times, int *user, int *velocity,
+asynStatus pmacTrajectory::append(double **positions, double **velocities, double *times, int *user,
                                   int noOfPoints) {
   asynStatus status = asynSuccess;
   int axis = 0;
@@ -163,26 +199,19 @@ asynStatus pmacTrajectory::append(double **positions, double *times, int *user, 
     }
   }
 
-  // Check that the supplied velocity mode values are not out of range (> 4 bit)
-  if (status == asynSuccess) {
-    counter = 0;
-    // Check for any invalid velocity mode values
-    while (counter < noOfPoints && status == asynSuccess) {
-      // Velocity mode values must be less than 4bit
-      if (velocity[counter] > 0xF) {
-        debug(DEBUG_ERROR, functionName, "Invalid velocity mode value (> 4 bit)",
-              velocity[counter]);
-        status = asynError;
-      }
-      counter++;
-    }
-  }
-
   // Memory copy the positions into the correct locations
   if (status == asynSuccess) {
     for (axis = 0; axis < noOfAxes_; axis++) {
       double *pPtr = &profilePositions_[axis][noOfValidPoints_];
       memcpy(pPtr, positions[axis], (noOfPoints * sizeof(double)));
+    }
+  }
+
+    // Memory copy the velocities into the correct locations
+  if (status == asynSuccess) {
+    for (axis = 0; axis < noOfAxes_; axis++) {
+      double *vPtr = &profileVelocities_[axis][noOfValidPoints_];
+      memcpy(vPtr, velocities[axis], (noOfPoints * sizeof(double)));
     }
   }
 
@@ -199,12 +228,6 @@ asynStatus pmacTrajectory::append(double **positions, double *times, int *user, 
   if (status == asynSuccess) {
     int *uPtr = &profileUser_[noOfValidPoints_];
     memcpy(uPtr, user, (noOfPoints * sizeof(int)));
-  }
-
-  // Memory copy the velocity modes into the correct locations
-  if (status == asynSuccess) {
-    int *vPtr = &profileVelMode_[noOfValidPoints_];
-    memcpy(vPtr, velocity, (noOfPoints * sizeof(int)));
   }
 
   // Set the number of valid points
@@ -271,25 +294,6 @@ asynStatus pmacTrajectory::getUserMode(int index, int *user) {
   return status;
 }
 
-asynStatus pmacTrajectory::getVelocityMode(int index, int *velocity) {
-  asynStatus status = asynSuccess;
-  static const char *functionName = "readVelocityMode";
-
-  debug(DEBUG_TRACE, functionName, "Called with index", index);
-
-  // Check the index is valid
-  if (index < 0 || index >= noOfValidPoints_) {
-    debug(DEBUG_ERROR, functionName, "Invalid index requested", index);
-    status = asynError;
-  }
-
-  if (status == asynSuccess) {
-    *velocity = profileVelMode_[index];
-  }
-
-  return status;
-}
-
 asynStatus pmacTrajectory::getPosition(int axis, int index, double *position) {
   asynStatus status = asynSuccess;
   static const char *functionName = "readPosition";
@@ -314,6 +318,31 @@ asynStatus pmacTrajectory::getPosition(int axis, int index, double *position) {
   }
 
   return status;
+}
+
+asynStatus pmacTrajectory::getVelocity(int axis, int index, double *velocity) {
+  asynStatus status = asynSuccess;
+  static const char *functionName = "readVelocity";
+  debug(DEBUG_TRACE, functionName, "Called with axis", axis);
+  debug(DEBUG_TRACE, functionName, "Called with index", index);
+
+  // Check the axis is valid
+  if (axis < 0 || axis >= noOfAxes_) {
+    debug(DEBUG_ERROR, functionName, "Invalid axis requested", axis);
+    status = asynError;
+  }
+
+  // Check the index is valid
+  if (index < 0 || index >= noOfValidPoints_) {
+    debug(DEBUG_ERROR, functionName, "Invalid index requested", index);
+    status = asynError;
+  }
+  if (status == asynSuccess) {
+    *velocity = profileVelocities_[axis][index];
+  }
+
+  return status;
+
 }
 
 void pmacTrajectory::report() {

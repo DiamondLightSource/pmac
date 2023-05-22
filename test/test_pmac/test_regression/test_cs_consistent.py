@@ -162,7 +162,7 @@ class TestMakeCsConsistent(TestCase):
         command = "&3 Q71=90000"
         tb.send_command(command)
         # this check is probably not required but leaving it in to verify reliability
-        self.assertEquals(tb.get_command(), command)
+        self.assertEqual(tb.get_command(), command)
 
         # if this succeeds without error then we are all good
         trajectory_quick_scan(self, tb)
@@ -231,7 +231,7 @@ class TestMakeCsConsistent(TestCase):
             tb.send_command("#1J:{}".format(move))
             monitor.wait_for_one_move(1, throw=False)
             # this should put axis 1 at {move}mm
-            self.assertEquals(tb.m1.pos, move)
+            self.assertEqual(tb.m1.pos, move)
 
             # now move the CS axis Height
             tb.height.go(cs_move)
