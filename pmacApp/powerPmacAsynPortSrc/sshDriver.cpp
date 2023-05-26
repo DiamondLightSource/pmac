@@ -100,6 +100,11 @@ SSHDriver::SSHDriver(const char *host)
   strcpy(password_, "");
   // Store the host address
   strcpy(host_, host);
+
+  error_checking_ = false;
+  potential_errors_ = 0;
+  caught_errors_ = 0;
+  caught_delays_ = 0;
 }
 
 /**
@@ -267,6 +272,8 @@ SSHDriverStatus SSHDriver::connectSSH()
   // Here we should wait for the initial welcome line
   char buffer[1024];
   size_t bytes = 0;
+  read(buffer, 512, &bytes, 0x06, 100, false);
+
   const char *ps1_last_txt = "!?%#";
   for (unsigned int i=0; i <strlen(ps1_last_txt); i++)
   {
@@ -274,10 +281,11 @@ SSHDriverStatus SSHDriver::connectSSH()
     sprintf(buffer, "PS1=%c\n", ps1_last_txt[i]);
 
     write(buffer, strlen(buffer), &bytes, 1000);
-    read(buffer, 512, &bytes, ps1_last_txt[i], 3000);
+    read(buffer, 512, &bytes, ps1_last_txt[i], 3000, false);
+    buffer[bytes] = '\0';
   }
   /* Read the final '\n' */
-  read(buffer, 512, &bytes, '\n', 1000);
+  read(buffer, 512, &bytes, '\n', 100, false);
   debugPrint("%s : Connection ready...\n", functionName);
 
   return SSHDriverSuccess;
@@ -320,9 +328,19 @@ SSHDriverStatus SSHDriver::flush()
   rc |= libssh2_channel_flush_ex(channel_, 1);
   rc |= libssh2_channel_flush_ex(channel_, 2);
   rc = libssh2_channel_read(channel_, buff, 2048);
+  if (rc > 0){
+    printf("Flushed %d bytes\n", rc);
+  }
+
   if (rc < 0){
     return SSHDriverError;
   }
+  return SSHDriverSuccess;
+}
+
+SSHDriverStatus SSHDriver::setErrorChecking(bool error_check)
+{
+  error_checking_ = error_check;
   return SSHDriverSuccess;
 }
 
@@ -360,7 +378,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   LogComPrint("LogCom sshDriver Writing %02lu bytes => ", (unsigned long)bufferSize);
   LogComStrPrintEscapedNL(buffer, bufferSize);
 
-  int rc = libssh2_channel_write(channel_, buffer, bufferSize);
+  int rc = libssh2_channel_write(channel_, input, bufferSize);
   if (rc > 0){
     debugPrint("%s : %d bytes written\n", functionName, rc);
     *bytesWritten = rc;
@@ -377,18 +395,38 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   rc = 0;
   int crCount = 0;
   // Count the number of \n characters sent
+  // Build the expected ECHO string
+  char expected_response[512];
+  memset(expected_response, 0, 512);
+  int expected_index = 0;
   for (int index = 0; index < (int)*bytesWritten; index++){
     if (buffer[index] == '\n'){
       // CR, need to read back 1 extra character
       crCount++;
+      expected_response[expected_index] = '\r';
+      expected_index++;
     }
+    expected_response[expected_index] = buffer[index];
+    expected_index++;
   }
   bytesToRead += crCount;
-  while ((bytesToRead > 0) && (tnow < mtimeout)){
+  int matched = 0;
+//  while ((bytesToRead > 0) && (tnow < mtimeout)){
+  while ((matched == 0) && (tnow < mtimeout)){
     rc = libssh2_channel_read(channel_, &buff[bytes], bytesToRead);
     if (rc > 0){
       bytes+=rc;
       bytesToRead-=rc;
+
+      // Loop over end of strings in reverse, to check for a match
+      if (bytes >= expected_index){
+        matched = 1;
+        for (int mid = 1; mid <= expected_index; mid++){
+          if (buff[bytes-mid] != expected_response[expected_index-mid]){
+            matched = 0;
+          }
+        }
+      }
     }
     if (bytesToRead > 0){
       usleep(50);
@@ -397,9 +435,32 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
     }
   }
 
+  if (error_checking_){
+    if (buff[0] == '\r' && input[0] != '\r' && expected_index > 2){
+      caught_errors_++;
+      printf("***** Caught original error\n");
+      printf("Matched: %d\n", matched);
+      for (int index=0; index <= expected_index; index++){
+        printf("[%d] ", expected_response[index]);
+      }
+      printf("\n");
+      for (int index=0; index <= expected_index; index++){
+        printf("[%d] ", input[index]);
+      }
+      printf("\n");
+      for (int index=0; index <= expected_index; index++){
+        printf("[%d] ", buff[index]);
+      }
+      printf("\n");
+      printf("Input: %s\n", input);
+    }
+  }
+
   buff[bytes] = '\0';
+
   LogComPrint("LogCom sshDriver Echoed  %02d bytes => ", bytes);
   LogComStrPrintEscapedNL(buff, bytes);
+
 
   gettimeofday(&ctime, NULL);
   tnow = ((ctime.tv_sec - stime.tv_sec) * 1000) + (ctime.tv_usec / 1000);
@@ -424,7 +485,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
  * @param timeout - A timeout in ms for the read.
  * @return - Success or failure.
  */
-SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRead, int readTerm, int timeout)
+SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRead, int readTerm, int timeout, bool crlf)
 {
   static const char *functionName = "SSHDriver::read";
   char ch = readTerm;
@@ -441,15 +502,15 @@ SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRe
   timeval ctime;
   gettimeofday(&stime, NULL);
   long mtimeout = (stime.tv_usec / 1000) + timeout;
-  long tnow = 0;
+  long tnow = stime.tv_usec / 1000;
   int rc = 0;
   int matched = 0;
   int matchedindex = 0;
   int lastCount = 0;
   *bytesRead = 0;
-#ifdef DEBUG
+//#ifdef DEBUG
   memset(buffer, 0, bufferSize);
-#endif
+//#endif
   while ((matched == 0) && (tnow < mtimeout)){
     /* TODO: Make sure that this loop does not run over bufferSize when
      a match is not found and matched is never set to 1 */
@@ -457,11 +518,26 @@ SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRe
     if (rc > 0){
       *bytesRead+=rc;
     }
+    // Catch instances where the previous version would have failed
+    if (error_checking_){
+      if (buffer[(*bytesRead) - 1] == readTerm){
+        debugPrint("Captured potential failure in the previous software version\n");
+        potential_errors_++;
+      }
+    }
+
     for (int index = lastCount; index < (int)*bytesRead; index++){
-      // Match against output terminator
-      if (buffer[index] == readTerm){
-        matched = 1;
-        matchedindex = index;
+      if (crlf){
+        // Match against output terminator
+        if (buffer[index-2] == readTerm && buffer[index-1] == '\r' && buffer[index-0] == '\n'){
+          matched = 1;
+          matchedindex = index;
+        }
+      } else {
+        if (buffer[index] == readTerm){
+          matched = 1;
+          matchedindex = index;
+        }
       }
     }
     lastCount = *bytesRead;
@@ -469,6 +545,14 @@ SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRe
       usleep(50);
       gettimeofday(&ctime, NULL);
       tnow = ((ctime.tv_sec - stime.tv_sec) * 1000) + (ctime.tv_usec / 1000);
+    }
+  }
+
+  if (error_checking_){
+    if ((mtimeout - tnow) < 100){
+      printf("Delay in read response: %ld ms\n", (timeout - (mtimeout - tnow)));
+      printf("[IN]: %s\n", buffer);
+      caught_delays_++;
     }
   }
 
@@ -507,7 +591,6 @@ SSHDriverStatus SSHDriver::syncInteractive(const char *snd_str,  const char *exp
   size_t exp_str_len = strlen(exp_str);
   char buff[512];
   size_t bytes = 0;
-  int terminator = exp_str[exp_str_len-1];
   SSHDriverStatus status = SSHDriverError;
 
   debugPrint("%s : Method called exp_str => ", functionName);
@@ -519,7 +602,7 @@ SSHDriverStatus SSHDriver::syncInteractive(const char *snd_str,  const char *exp
   for (unsigned int cnt = 0; cnt < 10; cnt++) {
     write(snd_str, strlen(snd_str), &bytes, 1000);
     buff[0] = 0;
-    read(buff, sizeof(buff), &bytes, terminator, 1000);
+    read(buff, sizeof(buff), &bytes, exp_str[exp_str_len-1], 1000);
 
     if (bytes == strlen(exp_str) && !memcmp(exp_str, buff, bytes)) {
       status = SSHDriverSuccess;
@@ -569,3 +652,11 @@ SSHDriver::~SSHDriver()
   debugPrint("%s : Method called\n", functionName);
 }
 
+SSHDriverStatus SSHDriver::report(FILE *fp)
+{
+  fprintf(fp, "    Potential error cases: %d\n", potential_errors_);
+  fprintf(fp, "      (These might have been flushed or caused a real error)\n");
+  fprintf(fp, "    Caught error cases that have been handled: %d\n", caught_errors_);
+  fprintf(fp, "    Write/Reads that have take more than 100ms: %d\n", caught_delays_);
+  return SSHDriverSuccess;
+}

@@ -30,6 +30,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
+#include <fstream>
+
 typedef enum e_SSHDriverStatus
 {
   SSHDriverSuccess,
@@ -52,11 +54,13 @@ class SSHDriver {
     SSHDriverStatus setPassword(const char *password);
     SSHDriverStatus connectSSH();
     SSHDriverStatus flush();
+    SSHDriverStatus setErrorChecking(bool error_check);
     SSHDriverStatus write(const char *buffer, size_t bufferSize, size_t *bytesWritten, int timeout);
-    SSHDriverStatus read(char *buffer, size_t bufferSize, size_t *bytesRead, int readTerm, int timeout);
+    SSHDriverStatus read(char *buffer, size_t bufferSize, size_t *bytesRead, int readTerm, int timeout, bool crlf=true);
     SSHDriverStatus syncInteractive(const char *snd_str,  const char *exp_str);
     SSHDriverStatus disconnectSSH();
     virtual ~SSHDriver();
+    SSHDriverStatus report(FILE *fp);
 
   private:
     int sock_;
@@ -72,6 +76,10 @@ class SSHDriver {
 
     SSHDriverStatus setBlocking(int blocking);
 
+    bool error_checking_;
+    int potential_errors_;
+    int caught_errors_;
+    int caught_delays_;
 };
 
 

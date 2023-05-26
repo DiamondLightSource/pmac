@@ -87,6 +87,7 @@ asynCommonReport(void *drvPvt, FILE *fp, int details)
         fprintf(fp, "    Characters written: %lu\n", ssh->nWritten);
         fprintf(fp, "       Characters read: %lu\n", ssh->nRead);
     }
+    ssh->fd->report(fp);
 }
 
 /*
@@ -163,6 +164,9 @@ connectIt(void *drvPvt, asynUser *pasynUser)
     ssh->fd->write(gpascii_txt, strlen(gpascii_txt), &bytes, 1000);
     ssh->fd->read(buff, sizeof(buff), &bytes, '\n', 1000);
     ssh->fd->syncInteractive("#\n", "\006");
+
+    // Finally turn on error checking in the driver
+    ssh->fd->setErrorChecking(true);
 
     asynPrint(pasynUser, ASYN_TRACE_FLOW, "Opened connection to %s\n", ssh->SSHDeviceName);
     return asynSuccess;
