@@ -273,16 +273,23 @@ SSHDriverStatus SSHDriver::connectSSH()
   // Here we should wait for the initial welcome line
   char buffer[1024];
   size_t bytes = 0;
+  printf("1A\n");
   read(buffer, 512, &bytes, 0x06, 100, false);
+  buffer[bytes] = 0;
+  printf("Buffer: %s\n", buffer);
+  printf("1B\n");
 
   const char *ps1_last_txt = "!?%#";
   for (unsigned int i=0; i <strlen(ps1_last_txt); i++)
   {
+  printf("1C\n");
     // Set the prompt and read it back
     sprintf(buffer, "PS1=%c\n", ps1_last_txt[i]);
 
     write(buffer, strlen(buffer), &bytes, 1000);
+  printf("1D\n");
     read(buffer, 512, &bytes, ps1_last_txt[i], 3000, false);
+  printf("1E\n");
     buffer[bytes] = '\0';
   }
   printf("Completed PS1=!?%#\n");
