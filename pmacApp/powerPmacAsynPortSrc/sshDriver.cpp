@@ -269,6 +269,7 @@ SSHDriverStatus SSHDriver::connectSSH()
 
   setBlocking(0);
 
+  printf("Connected, calling PS1=!?%#\n");
   // Here we should wait for the initial welcome line
   char buffer[1024];
   size_t bytes = 0;
@@ -284,9 +285,11 @@ SSHDriverStatus SSHDriver::connectSSH()
     read(buffer, 512, &bytes, ps1_last_txt[i], 3000, false);
     buffer[bytes] = '\0';
   }
+  printf("Completed PS1=!?%#\n");
   /* Read the final '\n' */
   read(buffer, 512, &bytes, '\n', 100, false);
   debugPrint("%s : Connection ready...\n", functionName);
+  printf("Final read after connection\n");
 
   return SSHDriverSuccess;
 }
@@ -593,6 +596,8 @@ SSHDriverStatus SSHDriver::syncInteractive(const char *snd_str,  const char *exp
   size_t bytes = 0;
   SSHDriverStatus status = SSHDriverError;
 
+  printf("Starting syncInteractive\n");
+
   debugPrint("%s : Method called exp_str => ", functionName);
   debugStrPrintEscapedNL(exp_str, exp_str_len);
 
@@ -613,6 +618,9 @@ SSHDriverStatus SSHDriver::syncInteractive(const char *snd_str,  const char *exp
       return status;
     }
   }
+
+  printf("Exiting syncInteractive\n");
+
   return SSHDriverError;
 }
 
