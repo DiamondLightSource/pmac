@@ -15,6 +15,7 @@
 
 #include <osiUnistd.h>
 #include <osiSock.h>
+#include <poll.h>
 
 /*
  * Uncomment the DEBUG define and recompile for lots of
@@ -53,6 +54,28 @@ void PrintEscapedNL(const char *buff, size_t bytes)
   printf("\n");
 }
 #endif
+
+
+void gnxPrint(const char *buff, size_t bytes)
+{
+  for (unsigned int j = 0; j < bytes; j++){
+    char ch =  buff[j];
+    if (isprint(ch)) {
+      printf("%c", ch);
+    } else if (ch == '\\') {
+      printf("\\\\");
+    } else if (ch == '\t') {
+      printf("\\t");
+    } else if (ch == '\n') {
+      printf("\\n");
+    } else if (ch == '\r') {
+      printf("\\r");
+    } else {
+      printf("\\%03o", ch);
+    }
+  }
+  printf("\n");
+}
 
 
 #ifdef DEBUG
@@ -248,6 +271,8 @@ SSHDriverStatus SSHDriver::connectSSH()
     }
   }
 
+  libssh2_trace(session_, LIBSSH2_TRACE_CONN);
+
   // Open the channel for read/write
   channel_ = libssh2_channel_open_session(session_);
   debugPrint("%s : SSH channel opened\n", functionName);
@@ -268,16 +293,53 @@ SSHDriverStatus SSHDriver::connectSSH()
   }
 
   setBlocking(0);
+//  usleep(500000);
+  SSHDriverStatus st;
+
+  long tnow = 0;
+  timeval stime;
+  timeval ctime;
+  gettimeofday(&stime, NULL);
+
+	const char numfds = 1;
+	struct pollfd pfds[numfds];
+	memset(pfds, 0, sizeof(struct pollfd) * numfds);
+  bool first_read = false;
+  printf("Waiting for first read...\n");
+  while (!first_read){
+		pfds[0].fd = sock_;
+		pfds[0].events = POLLIN;
+		pfds[0].revents = 0;
+		rc = poll(pfds, numfds, -1);  
+		if (-1 == rc) {
+			perror("poll");
+			break;
+		}
+		if (pfds[0].revents & POLLIN) {
+      first_read = true;
+    } else {
+      printf("Polled socket, no bytes ready for reading...\n");
+    }
+  }
+
+  gettimeofday(&ctime, NULL);
+  tnow = ((ctime.tv_sec - stime.tv_sec) * 1000) + ((ctime.tv_usec - stime.tv_usec) / 1000);
+  printf("Time taken for first read to arrive: %ld\n", tnow);
 
   printf("Connected, calling PS1=!?%#\n");
   // Here we should wait for the initial welcome line
   char buffer[1024];
   size_t bytes = 0;
   printf("1A\n");
-  read(buffer, 512, &bytes, 0x06, 100, false);
+  st = read(buffer, 512, &bytes, 0x06, 500, false);
   buffer[bytes] = 0;
   printf("Buffer: %s\n", buffer);
+  printf("Reading status: %d\n", (int)st);
   printf("1B\n");
+
+//  setBlocking(0);
+
+//  usleep(500000);
 
   const char *ps1_last_txt = "!?%#";
   for (unsigned int i=0; i <strlen(ps1_last_txt); i++)
@@ -288,7 +350,8 @@ SSHDriverStatus SSHDriver::connectSSH()
 
     write(buffer, strlen(buffer), &bytes, 1000);
   printf("1D\n");
-    read(buffer, 512, &bytes, ps1_last_txt[i], 3000, false);
+  st = read(buffer, 512, &bytes, ps1_last_txt[i], 3000, false);
+  printf("Reading status: %d\n", (int)st);
   printf("1E\n");
     buffer[bytes] = '\0';
   }
@@ -388,6 +451,9 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   LogComPrint("LogCom sshDriver Writing %02lu bytes => ", (unsigned long)bufferSize);
   LogComStrPrintEscapedNL(buffer, bufferSize);
 
+//  printf("Writing buffer: \n");
+//  gnxPrint(buffer, bufferSize);
+
   int rc = libssh2_channel_write(channel_, input, bufferSize);
   if (rc > 0){
     debugPrint("%s : %d bytes written\n", functionName, rc);
@@ -404,6 +470,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   char buff[512];
   rc = 0;
   int crCount = 0;
+
   // Count the number of \n characters sent
   // Build the expected ECHO string
   char expected_response[512];
@@ -419,6 +486,8 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
     expected_response[expected_index] = buffer[index];
     expected_index++;
   }
+//  printf("Expected echo: \n");
+//  gnxPrint(expected_response, expected_index);
   bytesToRead += crCount;
   int matched = 0;
 //  while ((bytesToRead > 0) && (tnow < mtimeout)){
@@ -437,8 +506,15 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
           }
         }
       }
+//      if (matched == 0){
+//        bytesToRead+=rc;
+//      }
+
+//      printf("Read back: \n");
+//      gnxPrint(buff, bytes);
+//      printf("Match: %d   bytesToRead: %d\n", matched, bytesToRead);
     }
-    if (bytesToRead > 0){
+    if (bytesToRead > 0 || matched == 0){
       usleep(50);
       gettimeofday(&ctime, NULL);
       tnow = ((ctime.tv_sec - stime.tv_sec) * 1000) + (ctime.tv_usec / 1000);
