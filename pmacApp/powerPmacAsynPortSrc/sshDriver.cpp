@@ -56,28 +56,6 @@ void PrintEscapedNL(const char *buff, size_t bytes)
 #endif
 
 
-void gnxPrint(const char *buff, size_t bytes)
-{
-  for (unsigned int j = 0; j < bytes; j++){
-    char ch =  buff[j];
-    if (isprint(ch)) {
-      printf("%c", ch);
-    } else if (ch == '\\') {
-      printf("\\\\");
-    } else if (ch == '\t') {
-      printf("\\t");
-    } else if (ch == '\n') {
-      printf("\\n");
-    } else if (ch == '\r') {
-      printf("\\r");
-    } else {
-      printf("\\%03o", ch);
-    }
-  }
-  printf("\n");
-}
-
-
 #ifdef DEBUG
 #define debugPrint printf
 #define debugStrPrintEscapedNL(a,b) PrintEscapedNL((a),(b))
@@ -293,19 +271,22 @@ SSHDriverStatus SSHDriver::connectSSH()
   }
 
   setBlocking(0);
-//  usleep(500000);
-  SSHDriverStatus st;
 
   long tnow = 0;
   timeval stime;
   timeval ctime;
   gettimeofday(&stime, NULL);
 
+  // Poll the underlying socket for bytes once connection established
+  // Do not read or write using libssh2 until the socket has received
+  // bytes from the server.  These first bytes will contain the welcome
+  // message and then it is safe to proceed with reading  and writing
+  // through the established connection.
 	const char numfds = 1;
 	struct pollfd pfds[numfds];
 	memset(pfds, 0, sizeof(struct pollfd) * numfds);
   bool first_read = false;
-  printf("Waiting for first read...\n");
+  debugPrint("Poll underlying socket for first bytes...\n");
   while (!first_read){
 		pfds[0].fd = sock_;
 		pfds[0].events = POLLIN;
@@ -318,48 +299,39 @@ SSHDriverStatus SSHDriver::connectSSH()
 		if (pfds[0].revents & POLLIN) {
       first_read = true;
     } else {
-      printf("Polled socket, no bytes ready for reading...\n");
+      debugPrint("Polled underlying socket, no bytes ready for reading.\n");
     }
   }
 
   gettimeofday(&ctime, NULL);
   tnow = ((ctime.tv_sec - stime.tv_sec) * 1000) + ((ctime.tv_usec - stime.tv_usec) / 1000);
-  printf("Time taken for first read to arrive: %ld\n", tnow);
+  debugPrint("Time taken for first read to arrive: %ld ms\n", tnow);
 
-  printf("Connected, calling PS1=!?%#\n");
   // Here we should wait for the initial welcome line
   char buffer[1024];
   size_t bytes = 0;
-  printf("1A\n");
-  st = read(buffer, 512, &bytes, 0x06, 500, false);
+  debugPrint("Pre-read the buffer for any characters.\n");
+  read(buffer, 512, &bytes, 0x06, 500, false);
   buffer[bytes] = 0;
-  printf("Buffer: %s\n", buffer);
-  printf("Reading status: %d\n", (int)st);
-  printf("1B\n");
+  debugPrint("Buffer read: %s\n", buffer);
 
-//  setBlocking(0);
-
-//  usleep(500000);
-
+  debugPrint("Cycle through the prompt, calling PS1=!?\%#\n");
   const char *ps1_last_txt = "!?%#";
   for (unsigned int i=0; i <strlen(ps1_last_txt); i++)
   {
-  printf("1C\n");
     // Set the prompt and read it back
     sprintf(buffer, "PS1=%c\n", ps1_last_txt[i]);
 
+    debugPrint("Setting prompt command to: %s\n", buffer);
     write(buffer, strlen(buffer), &bytes, 1000);
-  printf("1D\n");
-  st = read(buffer, 512, &bytes, ps1_last_txt[i], 3000, false);
-  printf("Reading status: %d\n", (int)st);
-  printf("1E\n");
+    read(buffer, 512, &bytes, ps1_last_txt[i], 3000, false);
     buffer[bytes] = '\0';
+    debugPrint("Read back: %s\n", buffer);
   }
-  printf("Completed PS1=!?%#\n");
+  debugPrint("Completed cycling through the command prompt.\n");
   /* Read the final '\n' */
   read(buffer, 512, &bytes, '\n', 100, false);
   debugPrint("%s : Connection ready...\n", functionName);
-  printf("Final read after connection\n");
 
   return SSHDriverSuccess;
 }
@@ -402,7 +374,7 @@ SSHDriverStatus SSHDriver::flush()
   rc |= libssh2_channel_flush_ex(channel_, 2);
   rc = libssh2_channel_read(channel_, buff, 2048);
   if (rc > 0){
-    printf("Flushed %d bytes\n", rc);
+    debugPrint("Flushed %d bytes\n", rc);
   }
 
   if (rc < 0){
@@ -451,9 +423,6 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   LogComPrint("LogCom sshDriver Writing %02lu bytes => ", (unsigned long)bufferSize);
   LogComStrPrintEscapedNL(buffer, bufferSize);
 
-//  printf("Writing buffer: \n");
-//  gnxPrint(buffer, bufferSize);
-
   int rc = libssh2_channel_write(channel_, input, bufferSize);
   if (rc > 0){
     debugPrint("%s : %d bytes written\n", functionName, rc);
@@ -486,11 +455,8 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
     expected_response[expected_index] = buffer[index];
     expected_index++;
   }
-//  printf("Expected echo: \n");
-//  gnxPrint(expected_response, expected_index);
   bytesToRead += crCount;
   int matched = 0;
-//  while ((bytesToRead > 0) && (tnow < mtimeout)){
   while ((matched == 0) && (tnow < mtimeout)){
     rc = libssh2_channel_read(channel_, &buff[bytes], bytesToRead);
     if (rc > 0){
@@ -506,13 +472,6 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
           }
         }
       }
-//      if (matched == 0){
-//        bytesToRead+=rc;
-//      }
-
-//      printf("Read back: \n");
-//      gnxPrint(buff, bytes);
-//      printf("Match: %d   bytesToRead: %d\n", matched, bytesToRead);
     }
     if (bytesToRead > 0 || matched == 0){
       usleep(50);
@@ -524,21 +483,23 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   if (error_checking_){
     if (buff[0] == '\r' && input[0] != '\r' && expected_index > 2){
       caught_errors_++;
-      printf("***** Caught original error\n");
-      printf("Matched: %d\n", matched);
+      debugPrint("Caught communication error\n");
+      debugPrint("Matched status: %d\n", matched);
+      debugPrint("Input string: ");
       for (int index=0; index <= expected_index; index++){
-        printf("[%d] ", expected_response[index]);
+        debugPrint("[%d] ", input[index]);
       }
-      printf("\n");
+      debugPrint("\n");
+      debugPrint("Expected response: ");
       for (int index=0; index <= expected_index; index++){
-        printf("[%d] ", input[index]);
+        debugPrint("[%d] ", expected_response[index]);
       }
-      printf("\n");
+      debugPrint("\n");
+      debugPrint("Actual response: ");
       for (int index=0; index <= expected_index; index++){
-        printf("[%d] ", buff[index]);
+        debugPrint("[%d] ", buff[index]);
       }
-      printf("\n");
-      printf("Input: %s\n", input);
+      debugPrint("\n");
     }
   }
 
@@ -636,8 +597,8 @@ SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRe
 
   if (error_checking_){
     if ((mtimeout - tnow) < 100){
-      printf("Delay in read response: %ld ms\n", (timeout - (mtimeout - tnow)));
-      printf("[IN]: %s\n", buffer);
+      debugPrint("Delay in read response: %ld ms\n", (timeout - (mtimeout - tnow)));
+      debugPrint("Input buffer: %s\n", buffer);
       caught_delays_++;
     }
   }
@@ -679,8 +640,6 @@ SSHDriverStatus SSHDriver::syncInteractive(const char *snd_str,  const char *exp
   size_t bytes = 0;
   SSHDriverStatus status = SSHDriverError;
 
-  printf("Starting syncInteractive\n");
-
   debugPrint("%s : Method called exp_str => ", functionName);
   debugStrPrintEscapedNL(exp_str, exp_str_len);
 
@@ -701,8 +660,6 @@ SSHDriverStatus SSHDriver::syncInteractive(const char *snd_str,  const char *exp
       return status;
     }
   }
-
-  printf("Exiting syncInteractive\n");
 
   return SSHDriverError;
 }
