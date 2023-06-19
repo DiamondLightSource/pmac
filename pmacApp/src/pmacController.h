@@ -165,11 +165,11 @@
 #define PMAC_C_TrajPercentString          "PMAC_C_TRAJ_PERCENT" // Percentage of scan complete
 #define PMAC_C_TrajEStatusString          "PMAC_C_TRAJ_ESTATUS" // Our report of tScan status
 #define PMAC_C_TrajProgString             "PMAC_C_TRAJ_PROG"    // Which motion program to execute
-#define PMAC_C_TrajVelTypeString          "PMAC_TRAJ_VELTYPE"   // Type of velocity for trajectory scan - 0: Velocity mode, 1: Velocity value
+#define PMAC_C_TrajCalcVelString          "PMAC_TRAJ_CALCVEL"   // Velocity array calculation - 0: No calculation - receives velocities directly; 1: Calculate - calculate the velocities base on time, position and velocity mode
 #define PMAC_C_TrajProgVersionString      "PMAC_C_TRAJ_PROG_V"  // Motion program version number
 #define PMAC_C_TrajCodeVersionString      "PMAC_C_TRAJ_CODE_V"  // Version of this control code
 
-#define PMAC_TRAJECTORY_VERSION 3
+#define PMAC_TRAJECTORY_VERSION 4
 
 #define PMAC_CPU_GEO_240MHZ               "DSP56321"            // Approved geobrick for trajectory scans
 #define PMAC_CPU_CLIPPER                  "DSP56303"            // Allowed for trajectory scans
@@ -227,16 +227,14 @@
 #define PMAC_TRAJ_CURR_FILL      "M4046" // The indexes that current buffer has been filled up to
 #define PMAC_TRAJ_PROG_VERSION   "M4049" // Trajectory program version
 
-#define PMAC_TRAJ_VELOCITY_TYPE  "M4085" // An int to indicate the usage of the velocities - 0: Pass the VelMode to the controller, 1: Pass the velocities values to the controller //TODO Check M-variable availability [lmds]
-
 #define PMAC_TRAJ_BUFFER_A 0
 #define PMAC_TRAJ_BUFFER_B 1
 
 #define PMAC_TRAJ_STATUS_RUNNING 1
 #define PMAC_TRAJ_STATUS_FINISHED 2
 
-#define PMAC_TRAJ_VELOCITY_MODE 0
-#define PMAC_TRAJ_VELOCITY_ARRAY 1
+#define PMAC_TRAJ_VELOCITY_PROVIDED 0
+#define PMAC_TRAJ_VELOCITY_CALCULATED 1
 
 class pmacCSMonitor;
 
@@ -344,8 +342,9 @@ public:
     asynStatus executeManualGroup();
     asynStatus updateCsAssignmentParameters();
     asynStatus copyCsReadbackToDemand(bool manual);
-    asynStatus tScanBuildProfileArray(double *positions, int axis, int numPoints);
-    asynStatus tScanBuildVelocityProfileArray(double *velocities, int axis, int numPoints);
+    asynStatus tScanBuildProfileArray(double *positions, double *velocities, double *times, int axis, int numPoints);
+    asynStatus tScanCalculateVelocityArray(double *positions, double *velocities, double *times, int index);
+    // asynStatus tScanBuildVelocityProfileArray(double *velocities, int axis, int numPoints);
     asynStatus tScanIncludedAxes(int *axisMask);
     void registerForLock(asynPortDriver *controller);
 
@@ -450,7 +449,7 @@ protected:
     int PMAC_C_TrajPercent_;
     int PMAC_C_TrajEStatus_;
     int PMAC_C_TrajProg_;
-    int PMAC_C_TrajVelType_;
+    int PMAC_C_TrajCalcVel_;
     int PMAC_C_TrajProgVersion_;
     int PMAC_C_TrajCodeVersion_;
     int PMAC_C_NoOfMsgs_;
@@ -538,7 +537,7 @@ private:
     bool profileBuilt_;
     bool appendAvailable_;
     bool tScanShortScan_;           // Is the scan a short scan (< 3.0 seconds)
-    int tScanVelType_;              // Which velocity type () // TODO Improve comment [lmds]
+    int tScanCalcVel_;              // Is the velocities being calculated
     int tScanExecuting_;            // Is a scan executing
     int tScanCSNo_;                 // The CS number of the executing scan
     int tScanNumPoints_;            // Total number of points in the scan
