@@ -19,9 +19,7 @@ public:
 
     asynStatus initialise(int noOfPoints);
 
-    asynStatus appendVelMode(double **positions, double *times, int *user, int *velocityMode, int noOfPoints);
-    
-    asynStatus appendVelArray(double **positions, double **velocities, double *times, int *user, int noOfPoints);
+    asynStatus append(double **positions, double **velocities, double *times, int *user, int noOfPoints);
 
     int getNoOfAxes();
 
@@ -29,13 +27,9 @@ public:
 
     int getNoOfValidPoints();
 
-    int getTypeOfVelocityProfile();
-
     asynStatus getTime(int index, int *time);
 
     asynStatus getUserMode(int index, int *user);
-
-    asynStatus getVelocityMode(int index, int *velocityMode);
 
     asynStatus getPosition(int axis, int index, double *position);
 
@@ -47,12 +41,11 @@ private:
     int noOfAxes_;
     int totalNoOfPoints_;           // Total number of points in the scan
     int noOfValidPoints_;           // Number of prepared points in the scan (based on delta times)
-    int typeOfVelocityProfile_;     // TODO: ADD comment [lmds]
     double **profilePositions_;     // 2D array of profile positions (1 array for each axis)
     double **profileVelocities_;    // 2D array of profile velocities (1 array for each axis)
     int *profileTimes_;             // Array of profile delta times for scan
     int *profileUser_;              // Array of profile user values
     int *profileVelMode_;           // Array of profile velocity modes
 };
-    
+
 #endif /* PMACAPP_SRC_PMACTRAJECTORY_H_ */
