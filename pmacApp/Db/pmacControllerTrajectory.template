@@ -170,29 +170,29 @@ record(waveform,"$(PMAC):UserArray") {
 }
 
 ##
-## Records to set the velocity type for the trajectory scan
-## MODE => An array of velocity mode is used for velocity calculation on the pmac
-## ARRAY => An array of velocity values is supplied
+## Records to set the velocities calculation
+## NO => The velocities arrays are supplied
+## YES => The velocities arrays are calculated using the VelocityMode
 ##
-record(bo, "$(PMAC):ProfileVelType")
+record(bo, "$(PMAC):ProfileCalcVel")
 {
-  field(DESC, "Time mode for trajectory scan")
+  field(DESC, "Calculate the velocities arrays")
   field(DTYP, "asynInt32")
-  field(OUT,  "@asyn($(PORT),0)PMAC_TRAJ_VELTYPE")
-  field(ZNAM, "MODE")
-  field(ONAM, "ARRAY")
-  field(VAL,  "0")
+  field(OUT,  "@asyn($(PORT),0)PMAC_TRAJ_CALCVEL")
+  field(ZNAM, "NO")
+  field(ONAM, "YES")
+  field(VAL,  "1")
   field(PINI, "YES")
 }
 
-record(bi, "$(PMAC):ProfileVelType_RBV")
+record(bi, "$(PMAC):ProfileCalcVel_RBV")
 {
-  field(DESC, "Time mode for trajectory scan")
+  field(DESC, "Calculate the velocities arrays")
   field(DTYP, "asynInt32")
-  field(INP,  "@asyn($(PORT),0)PMAC_TRAJ_VELTYPE")
-  field(ZNAM, "MODE")
-  field(ONAM, "ARRAY")
-  field(SCAN, "I/O Intr")  
+  field(INP,  "@asyn($(PORT),0)PMAC_TRAJ_CALCVEL")
+  field(ZNAM, "NO")
+  field(ONAM, "YES")
+  field(SCAN, "I/O Intr")
 }
 
 ## Record to specific the Velocity mode to use at each point
