@@ -220,6 +220,13 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   i7002_ = 0;
   csResetAllDemands = false;
   csCount = 0;
+  Sys_CPUFreq_ = 0;
+  Sys_CPUType_ = 0;
+  Sys_BgSleepTime_ = 0;
+  Sys_ServoPeriod_ = 0.0;
+  Sys_RtIntPeriod_ = 0.0;
+  Sys_PhaseOverServoPeriod_ = 0.0;
+
 
   // Create the message broker
   pBroker_ = new pmacMessageBroker(this->pasynUserSelf);
@@ -663,6 +670,21 @@ void pmacController::setupBrokerVariables(void) {
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_CPU_RTI_TIME);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_CPU_I8);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_CPU_I7002);
+
+  if(cid_ == PMAC_CID_POWER_){
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FPHASE_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FSERVO_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_PHASED_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_SERVOD_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FRTI_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FBG_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_BGSLEEP_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_FREQ);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_TYPE);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_RTI_PERIOD);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_PHASE_SERV_PER);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_SERVO_PERIOD);
+  }
 
   // Add the PMAC P variables required for trajectory scanning
   // Fast readout required of these values
@@ -1249,6 +1271,22 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
                                   "Servo clock frequency", i7002_);
   }
 
+  if (cid_ == PMAC_CID_POWER_){
+    status = parseIntegerVariable(PPMAC_CPU_FREQ, sPtr->readValue(PPMAC_CPU_FREQ),
+                                  "PPMAC cpu freq", Sys_CPUFreq_);
+    status = parseIntegerVariable(PPMAC_CPU_TYPE, sPtr->readValue(PPMAC_CPU_TYPE),
+                                  "PPMAC cpu type", Sys_CPUType_);
+    status = parseIntegerVariable(PPMAC_CPU_BGSLEEP_TIME, sPtr->readValue(PPMAC_CPU_BGSLEEP_TIME),
+                                  "PPMAC BG clock sleep time", Sys_BgSleepTime_);
+    status = parseDoubleVariable(PPMAC_CPU_SERVO_PERIOD, sPtr->readValue(PPMAC_CPU_SERVO_PERIOD),
+                                  "PPMAC Servo period", Sys_ServoPeriod_);
+    status = parseDoubleVariable(PPMAC_CPU_RTI_PERIOD, sPtr->readValue(PPMAC_CPU_RTI_PERIOD),
+                                  "PPMAC RTI period", Sys_RtIntPeriod_);
+    status = parseDoubleVariable(PPMAC_CPU_PHASE_SERV_PER, sPtr->readValue(PPMAC_CPU_PHASE_SERV_PER),
+                                  "PPMAC Phase over servo per", Sys_PhaseOverServoPeriod_);
+
+  }
+
   // Read out the size of the pmac command stores
   if (pBroker_->readStoreSize(pmacMessageBroker::PMAC_FAST_READ, &storeSize) == asynSuccess) {
     setIntegerParam(PMAC_C_FastStore_, storeSize);
@@ -1722,6 +1760,87 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
     }
   }*/
 
+  if(cid_ ==  PMAC_CID_POWER_){
+    
+    // Values to read from the hardware
+    double phaseTaskTimeUs = 0.0, servoTimeUs = 0.0;
+    double phaseDeltaTime = 0.0, servoDeltaTime = 0.0, rtTimeUs = 0.0, bgTaskTimeUs = 0.0;
+
+    // Values to be calcuated
+    double phaseTaskTime = 0.0, phaseFreq = 0.0, phasePercent = 0.0;
+    double servoTaskTimeUs = 0.0, servoTaskTime = 0.0, servoFreq = 0.0, servoPercent = 0.0;
+    double rtTaskTimeUs = 0.0, rtTaskTime = 0.0, rtFreq = 0.0, rtPrecent = 0.0;
+    double bgTaskTime = 0.0, bgFreq = 0.0, bgPercent = 0.0, bgSleepTime = 0.0;
+    
+    // Final result
+    double cpuLoad = 0.0;
+
+    // If CPU is dual core calculate the CPU load for CPU[1] (real time)
+    if (Sys_CPUType_ >= 3) { 
+      if (status == asynSuccess) {
+        status = parseDoubleVariable(PPMAC_CPU_FPHASE_TIME, sPtr->readValue(PPMAC_CPU_FPHASE_TIME),
+                                      "Phase interrupt time", phaseTaskTimeUs);
+        // Convert phaseTime from uS as reported by the controller to seconds
+        phaseTaskTime = phaseTaskTimeUs / 1000000;
+      }
+  
+      if (status == asynSuccess) {
+        status = parseDoubleVariable(PPMAC_CPU_FSERVO_TIME, sPtr->readValue(PPMAC_CPU_FSERVO_TIME),
+                                      "Servo interrup time", servoTimeUs);
+      }
+      if (status == asynSuccess) {
+        status = parseDoubleVariable(PPMAC_CPU_PHASED_TIME, sPtr->readValue(PPMAC_CPU_PHASED_TIME),
+                                      "Phase delta time", phaseDeltaTime);
+      }
+      if (status == asynSuccess) {
+        status = parseDoubleVariable(PPMAC_CPU_SERVOD_TIME, sPtr->readValue(PPMAC_CPU_SERVOD_TIME),
+                                      "Servo delta time", servoDeltaTime);
+      }
+      if (status == asynSuccess) {
+        status = parseDoubleVariable(PPMAC_CPU_FRTI_TIME, sPtr->readValue(PPMAC_CPU_FRTI_TIME),
+                                      "Real time interrupt period", rtTimeUs);
+        // Convert phaseTime from uS as reported by the controller to seconds
+        rtTaskTime = rtTimeUs / 1000000;
+      }
+      if (status == asynSuccess) {
+        status = parseDoubleVariable(PPMAC_CPU_FBG_TIME, sPtr->readValue(PPMAC_CPU_FBG_TIME),
+                                      "Background task time", bgTaskTimeUs);
+        bgTaskTime = bgTaskTimeUs / 1000000;
+      }
+    
+      // Determine phase percentage
+      phaseFreq = 1/((Sys_ServoPeriod_/1000) * Sys_PhaseOverServoPeriod_);
+      phasePercent = (phaseFreq * phaseTaskTime)*100;
+
+      // Determine servo percentage
+      servoFreq = 1/(Sys_ServoPeriod_/1000);
+      servoTaskTimeUs = servoTimeUs - (((double)(int)(servoTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
+      servoTaskTime = servoTaskTimeUs / 1000000;
+      servoPercent = (servoFreq * servoTaskTime)*100;
+
+      // Determine real time percentage
+      rtFreq = 1/((Sys_ServoPeriod_*(Sys_RtIntPeriod_+1))/1000);
+      rtTaskTimeUs = rtTimeUs - (((double)(int)(rtTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
+      rtTaskTimeUs = rtTaskTimeUs - (((double)(int)(rtTimeUs/servoDeltaTime))+1) * servoTaskTimeUs;
+      rtTaskTime = rtTaskTimeUs / 1000000;
+      rtPrecent = (rtFreq * rtTaskTime)*100;
+
+      // Background tasks. These have dedicated core so calcs not actually used
+      if(Sys_BgSleepTime_ == 0)
+        bgSleepTime = 0.001;
+      else
+        bgSleepTime = (double)Sys_BgSleepTime_ / 1000000;
+
+        bgFreq = 1/ (bgSleepTime + bgTaskTime);
+        bgPercent = (bgFreq * bgTaskTime)*100;
+
+      // Final CPU load calculation
+      cpuLoad = phasePercent + servoPercent + rtPrecent;
+
+      setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);
+    }
+
+  }
 
   if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_CLIPPER_) {
     // CPU Calculation
@@ -1804,6 +1923,32 @@ asynStatus pmacController::parseIntegerVariable(const std::string &command,
     status = asynError;
   } else {
     nvals = sscanf(response.c_str(), "%d", &iValue);
+    if (nvals != 1) {
+      debug(DEBUG_ERROR, functionName, "Read Error [" + desc + "]", command);
+      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+      debug(DEBUG_ERROR, functionName, "    response", response);
+      status = asynError;
+    } else {
+      value = iValue;
+    }
+  }
+  return status;
+}
+
+asynStatus pmacController::parseDoubleVariable(const std::string &command,
+                                                const std::string &response,
+                                                const std::string &desc,
+                                                double &value) {
+  asynStatus status = asynSuccess;
+  static const char *functionName = "parseDoubleVariable";
+  double iValue = 0;
+  int nvals = 0;
+
+  if (response == "") {
+    debug(DEBUG_ERROR, functionName, "Read Error [" + desc + "]", command);
+    status = asynError;
+  } else {
+    nvals = sscanf(response.c_str(), "%lf", &iValue);
     if (nvals != 1) {
       debug(DEBUG_ERROR, functionName, "Read Error [" + desc + "]", command);
       debug(DEBUG_ERROR, functionName, "    nvals", nvals);
