@@ -7,7 +7,7 @@ Del Gat
 ; Set Initial Values
 BufferLength = BuffLen                          ; BuffLen defined in header file
 BufferAdr_A = $BufferAdr                        ; BufferAdr defined in header file
-BufferAdr_B = BufferAdr_A + 10*BufferLength
+BufferAdr_B = BufferAdr_A + 19*BufferLength
 Status = 0
 Abort = 0
 Error = 0
@@ -40,7 +40,6 @@ PrevBufferFill = BufferLength       ; Set PrevBufferFill to pass outer while loo
 GoSub101                            ; Check which axes are required
 GoSub103                            ; Set addresses for required axes
 GoSub108                            ; set all previous velocities to zero
-GoSub112                            ; initialize previous positions
 
 While(Abort = 0 and Error = 0 and CurrentBufferFill > 0 and PrevBufferFill = BufferLength)
 
@@ -49,7 +48,7 @@ While(Abort = 0 and Error = 0 and CurrentBufferFill > 0 and PrevBufferFill = Buf
     While(Abort = 0 and Error = 0 and CurrentIndex < CurrentBufferFill)
 
         GoSub102                            ; Shift values through Next_* -> Current_* -> Prev_*
-        GoSub104                            ; Calculate velocities
+        GoSub104                            ; Check time
         GoSub110                            ; Move axes
         CurrentIndex = CurrentIndex + 1
 
@@ -76,7 +75,7 @@ While(Abort = 0 and Error = 0 and CurrentBufferFill > 0 and PrevBufferFill = Buf
 
             CurrentIndex = 0                    ; Reset to start of next buffer
             GoSub103                            ; Update Next_* addresses to 0th point of next buffer
-            GoSub104                            ; Calculate velocities
+            GoSub104                            ; Check time
             GoSub110                            ; Move axes to final point of previous buffer
         Else
             ; Move to final point if the scan wasn't aborted
@@ -124,67 +123,64 @@ Return
 N102
     Time = Next_Time
     User = Next_User
-    VelMode = NextVelMode
     CalculatedBase = CurrentBufferAdr + CurrentIndex
     Time_Adr = CalculatedBase
     User_Adr = CalculatedBase
-    VelMode_Adr = CalculatedBase
 
 
     If(A_Axis = 1)
-        Prev_A = Current_A
         Current_A = Next_A
-        A_Prev_Vel = A_Vel
+        A_Vel = Next_A_Vel
     End If
     A_Adr = CalculatedBase + BufferLength
+    A_Vel_Adr = Z_Adr + BufferLength
     If(B_Axis = 1)
-        Prev_B = Current_B
         Current_B = Next_B
-        B_Prev_Vel = B_Vel
+        B_Vel = Next_B_Vel
     End If
     B_Adr = A_Adr + BufferLength
+    B_Vel_Adr = A_Vel_Adr + BufferLength
     If (C_Axis = 1)
-        Prev_C = Current_C
         Current_C = Next_C
-        C_Prev_Vel = C_Vel
+        C_Vel = Next_C_Vel
     End If
     C_Adr = B_Adr + BufferLength
+    C_Vel_Adr = B_Vel_Adr + BufferLength
     If (U_Axis = 1)
-        Prev_U = Current_U
         Current_U = Next_U
-        U_Prev_Vel = U_Vel
+        U_Vel = Next_U_Vel
     End If
     U_Adr = C_Adr + BufferLength
+    U_Vel_Adr = C_Vel_Adr + BufferLength
     If (V_Axis = 1)
-        Prev_V = Current_V
         Current_V = Next_V
-        V_Prev_Vel = V_Vel
+        V_Vel = Next_V_Vel
     End If
     V_Adr = U_Adr + BufferLength
+    V_Vel_Adr = U_Vel_Adr + BufferLength
     If (W_Axis = 1)
-        Prev_W = Current_W
         Current_W = Next_W
-        W_Prev_Vel = W_Vel
+        W_Vel = Next_W_Vel
     End If
     W_Adr = V_Adr + BufferLength
     If (X_Axis = 1)
-        Prev_X = Current_X
         Current_X = Next_X
-        X_Prev_Vel = X_Vel
+        X_Vel = Next_X_Vel
     End If
     X_Adr = W_Adr + BufferLength
+    X_Vel_Adr = W_Vel_Adr + BufferLength
     If (Y_Axis = 1)
-        Prev_Y = Current_Y
         Current_Y = Next_Y
-        Y_Prev_Vel = Y_Vel
+        Y_Vel = Next_Y_Vel
     End If
     Y_Adr = X_Adr + BufferLength
+    Y_Vel_Adr = X_Vel_Adr + BufferLength
     If (Z_Axis = 1)
-        Prev_Z = Current_Z
         Current_Z = Next_Z
-        Z_Prev_Vel = Z_Vel
+        Z_Vel = Next_Z_Vel
     End If
     Z_Adr = Y_Adr + BufferLength
+    Z_Vel_Adr = Y_Vel_Adr + BufferLength
 Return
 
 ; Subroutine 3 ************************************************************************************
@@ -198,7 +194,6 @@ N103
     CalculatedBase = CurrentBufferAdr + CurrentIndex
     Time_Adr = CalculatedBase
     User_Adr = CalculatedBase
-    VelMode_Adr = CalculatedBase
     A_Adr = CalculatedBase + BufferLength
     B_Adr = A_Adr + BufferLength
     C_Adr = B_Adr + BufferLength
@@ -208,13 +203,20 @@ N103
     X_Adr = W_Adr + BufferLength
     Y_Adr = X_Adr + BufferLength
     Z_Adr = Y_Adr + BufferLength
+    A_Vel_Adr = Z_Adr + BufferLength
+    B_Vel_Adr = A_Vel_Adr + BufferLength 
+    C_Vel_Adr = B_Vel_Adr + BufferLength
+    U_Vel_Adr = C_Vel_Adr + BufferLength
+    V_Vel_Adr = U_Vel_Adr + BufferLength
+    W_Vel_Adr = V_Vel_Adr + BufferLength
+    X_Vel_Adr = W_Vel_Adr + BufferLength
+    Y_Vel_Adr = X_Vel_Adr + BufferLength
+    Z_Vel_Adr = Y_Vel_Adr + BufferLength
+    
 Return
 
-; Subroutines 4-8 *********************************************************************************
-; Calculate velocities for next move - 4: Master, 5: Prev->Current, 6: Prev->Next, 7: Current->Next
-; 8: Zero velocity for final move
-; Velocities are multiplied by 1000000 because the units of Time are microseconds and the units
-; of velocity are EGUs/second in the PVT move definition
+; Subroutines 4 *********************************************************************************
+; Check time value for the next movement and set error if it is zero
 ; *************************************************************************************************
 
 N104
@@ -226,62 +228,7 @@ N104
         Time = 1000
     End If
 
-    ; Select velocity calculation based on VelMode value
-    If(VelMode = 1)
-        GoSub105                        ; Real Prev -> Current
-    EndIf
-    If(VelMode = 0)
-        GoSub106                        ; Average Prev -> Next
-    EndIf
-    If(VelMode = 2)
-        GoSub107                        ; Average Prev -> Current
-    EndIf
-    If(VelMode = 3)
-        GoSub108			            ; Zero
-    EndIf
-    If(VelMode = 4)
-        GoSub109			            ; Average Current -> Next
-    EndIf
-Return
 
-N105 ; Real Prev -> Current
-    InverseTmpTime = 1000000/Time
-    A_Vel = A_Axis*((2.0*(Current_A - Prev_A) * InverseTmpTime) - A_Prev_Vel)
-    B_Vel = B_Axis*((2.0*(Current_B - Prev_B) * InverseTmpTime) - B_Prev_Vel)
-    C_Vel = C_Axis*((2.0*(Current_C - Prev_C) * InverseTmpTime) - C_Prev_Vel)
-    U_Vel = U_Axis*((2.0*(Current_U - Prev_U) * InverseTmpTime) - U_Prev_Vel)
-    V_Vel = V_Axis*((2.0*(Current_V - Prev_V) * InverseTmpTime) - V_Prev_Vel)
-    W_Vel = W_Axis*((2.0*(Current_W - Prev_W) * InverseTmpTime) - W_Prev_Vel)
-    X_Vel = X_Axis*((2.0*(Current_X - Prev_X) * InverseTmpTime) - X_Prev_Vel)
-    Y_Vel = Y_Axis*((2.0*(Current_Y - Prev_Y) * InverseTmpTime) - Y_Prev_Vel)
-    Z_Vel = Z_Axis*((2.0*(Current_Z - Prev_Z) * InverseTmpTime) - Z_Prev_Vel)
-Return
-
-N106 ; Average Prev -> Next
-    InverseTmpTime = 1000000/(Time + Next_Time)
-    A_Vel = A_Axis*InverseTmpTime*(Next_A - Prev_A)
-    B_Vel = B_Axis*InverseTmpTime*(Next_B - Prev_B)
-    C_Vel = C_Axis*InverseTmpTime*(Next_C - Prev_C)
-    U_Vel = U_Axis*InverseTmpTime*(Next_U - Prev_U)
-    V_Vel = V_Axis*InverseTmpTime*(Next_V - Prev_V)
-    W_Vel = W_Axis*InverseTmpTime*(Next_W - Prev_W)
-    X_Vel = X_Axis*InverseTmpTime*(Next_X - Prev_X)
-    Y_Vel = Y_Axis*InverseTmpTime*(Next_Y - Prev_Y)
-    Z_Vel = Z_Axis*InverseTmpTime*(Next_Z - Prev_Z)
-Return
-
-N107 ; Average Prev -> Current
-    InverseTmpTime = 1000000/Time
-    A_Vel = A_Axis*InverseTmpTime*(Current_A - Prev_A)
-    B_Vel = B_Axis*InverseTmpTime*(Current_B - Prev_B)
-    C_Vel = C_Axis*InverseTmpTime*(Current_C - Prev_C)
-    U_Vel = U_Axis*InverseTmpTime*(Current_U - Prev_U)
-    V_Vel = V_Axis*InverseTmpTime*(Current_V - Prev_V)
-    W_Vel = W_Axis*InverseTmpTime*(Current_W - Prev_W)
-    X_Vel = X_Axis*InverseTmpTime*(Current_X - Prev_X)
-    Y_Vel = Y_Axis*InverseTmpTime*(Current_Y - Prev_Y)
-    Z_Vel = Z_Axis*InverseTmpTime*(Current_Z - Prev_Z)
-Return
 
 N108 ; Zero
     A_Vel = 0
@@ -293,19 +240,6 @@ N108 ; Zero
     X_Vel = 0
     Y_Vel = 0
     Z_Vel = 0
-Return
-
-N109 ; Average Current -> Next
-    InverseTmpTime = 1000000/Next_Time
-    A_Vel = A_Axis*InverseTmpTime*(Next_A - Current_A)
-    B_Vel = B_Axis*InverseTmpTime*(Next_B - Current_B)
-    C_Vel = C_Axis*InverseTmpTime*(Next_C - Current_C)
-    U_Vel = U_Axis*InverseTmpTime*(Next_U - Current_U)
-    V_Vel = V_Axis*InverseTmpTime*(Next_V - Current_V)
-    W_Vel = W_Axis*InverseTmpTime*(Next_W - Current_W)
-    X_Vel = X_Axis*InverseTmpTime*(Next_X - Current_X)
-    Y_Vel = Y_Axis*InverseTmpTime*(Next_Y - Current_Y)
-    Z_Vel = Z_Axis*InverseTmpTime*(Next_Z - Current_Z)
 Return
 
 
@@ -330,17 +264,6 @@ N111
     A(Current_A):(A_Vel) B(Current_B):(B_Vel) C(Current_C):(C_Vel) U(Current_U):(U_Vel) V(Current_V):(V_Vel) W(Current_W):(W_Vel) X(Current_X):(X_Vel) Y(Current_Y):(Y_Vel) Z(Current_Z):(Z_Vel)
 Return
 
-N112 ; set previous positions to the starting position of the motors
-    Prev_A = Current_A
-    Prev_B = Current_B
-    Prev_C = Current_C
-    Prev_U = Current_U
-    Prev_V = Current_V
-    Prev_W = Current_W
-    Prev_X = Current_X
-    Prev_Y = Current_Y
-    Prev_Z = Current_Z
-Return
 
 
 ; User Subroutines ********************************************************************************
