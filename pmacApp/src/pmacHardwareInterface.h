@@ -84,14 +84,14 @@ public:
 
     virtual std::string parseCSMappingResult(const std::string mappingResult) = 0;
 
-    virtual void startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
-                                              char *time_cmd, int addr) = 0;
+    virtual void startTrajectoryTimePointsCmd(char *user_cmd, char *time_cmd, 
+                                              int addr) = 0;
 
-    virtual void addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
-                                           int velocityMode, int userFunc, int time,
+    virtual void addTrajectoryTimePointCmd(char *userCmd, char *timeCmd,
+                                           int userFunc, int time,
                                            bool firstVal) = 0;
 
-    virtual void startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffSize) = 0;
+    virtual void startAxisPointsCmd(char *axis_cmd, int axis, int addr, int buffSize, bool posCmd) = 0;
 
     virtual void addAxisPointCmd(char *axis_cmd, int axis, double pos, int buffSize,
                                  bool firstVal) = 0;

@@ -3631,6 +3631,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
   char cstr[1024];
   const char *functionName = "sendTrajectoryDemands";
   bool firstVal = true;
+  bool posCmd = true;
 
   debug(DEBUG_FLOW, functionName);
   startTimer(DEBUG_TIMING, functionName);
@@ -3673,13 +3674,22 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     // Count how many buffers to fill
     char cmd[20][1024];
     // cmd[18,19] are reserved for the time, velocity, user values
-    //TODO: #define more readable idx
     pHardware_->startTrajectoryTimePointsCmd(cmd[2*PMAC_MAX_CS_AXES], cmd[2*PMAC_MAX_CS_AXES+1], writeAddress);
 
+    posCmd = true;
     // cmd[0..8] are reserved for axis positions
     for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
       if ((1 << index & tScanAxisMask_) > 0) {
-        pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_);
+        pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_,
+                                       posCmd);
+      }
+    }
+    posCmd = false;
+    // cmd[9..17] are reserved for axis velocities
+    for (int index = PMAC_MAX_CS_AXES; index < (2*PMAC_MAX_CS_AXES); index++) {
+      if ((1 << index & tScanAxisMask_) > 0) {
+        pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_,
+                                       posCmd);
       }
     }
 
