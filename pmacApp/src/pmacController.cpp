@@ -1780,10 +1780,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       if (status == asynSuccess) {
         status = parseDoubleVariable(PPMAC_CPU_FPHASE_TIME, sPtr->readValue(PPMAC_CPU_FPHASE_TIME),
                                       "Phase interrupt time", phaseTaskTimeUs);
-        // Convert phaseTime from uS as reported by the controller to seconds
-        phaseTaskTime = phaseTaskTimeUs / 1000000;
       }
-  
       if (status == asynSuccess) {
         status = parseDoubleVariable(PPMAC_CPU_FSERVO_TIME, sPtr->readValue(PPMAC_CPU_FSERVO_TIME),
                                       "Servo interrup time", servoTimeUs);
@@ -1799,45 +1796,51 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       if (status == asynSuccess) {
         status = parseDoubleVariable(PPMAC_CPU_FRTI_TIME, sPtr->readValue(PPMAC_CPU_FRTI_TIME),
                                       "Real time interrupt period", rtTimeUs);
-        // Convert phaseTime from uS as reported by the controller to seconds
-        rtTaskTime = rtTimeUs / 1000000;
+        
       }
       if (status == asynSuccess) {
         status = parseDoubleVariable(PPMAC_CPU_FBG_TIME, sPtr->readValue(PPMAC_CPU_FBG_TIME),
                                       "Background task time", bgTaskTimeUs);
-        bgTaskTime = bgTaskTimeUs / 1000000;
       }
-    
-      // Determine phase percentage
-      phaseFreq = 1/((Sys_ServoPeriod_/1000) * Sys_PhaseOverServoPeriod_);
-      phasePercent = (phaseFreq * phaseTaskTime)*100;
 
-      // Determine servo percentage
-      servoFreq = 1/(Sys_ServoPeriod_/1000);
-      servoTaskTimeUs = servoTimeUs - (((double)(int)(servoTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
-      servoTaskTime = servoTaskTimeUs / 1000000;
-      servoPercent = (servoFreq * servoTaskTime)*100;
+      if(phaseTaskTimeUs != 0.0 && servoTimeUs != 0.0 && phaseDeltaTime != 0.0 && servoDeltaTime != 0.0 && rtTimeUs != 0.0 && bgTaskTimeUs != 0.0){
+        
+        phaseTaskTime = phaseTaskTimeUs / 1000000;
+        bgTaskTime = bgTaskTimeUs / 1000000;
+        rtTaskTime = rtTimeUs / 1000000;
 
-      // Determine real time percentage
-      rtFreq = 1/((Sys_ServoPeriod_*(Sys_RtIntPeriod_+1))/1000);
-      rtTaskTimeUs = rtTimeUs - (((double)(int)(rtTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
-      rtTaskTimeUs = rtTaskTimeUs - (((double)(int)(rtTimeUs/servoDeltaTime))+1) * servoTaskTimeUs;
-      rtTaskTime = rtTaskTimeUs / 1000000;
-      rtPrecent = (rtFreq * rtTaskTime)*100;
 
-      // Background tasks. These have dedicated core so calcs not actually used
-      if(Sys_BgSleepTime_ == 0)
-        bgSleepTime = 0.001;
-      else
-        bgSleepTime = (double)Sys_BgSleepTime_ / 1000000;
+        // Determine phase percentage
+        phaseFreq = 1/((Sys_ServoPeriod_/1000) * Sys_PhaseOverServoPeriod_);
+        phasePercent = (phaseFreq * phaseTaskTime)*100;
 
-        bgFreq = 1/ (bgSleepTime + bgTaskTime);
-        bgPercent = (bgFreq * bgTaskTime)*100;
+        // Determine servo percentage
+        servoFreq = 1/(Sys_ServoPeriod_/1000);
+        servoTaskTimeUs = servoTimeUs - (((double)(int)(servoTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
+        servoTaskTime = servoTaskTimeUs / 1000000;
+        servoPercent = (servoFreq * servoTaskTime)*100;
 
-      // Final CPU load calculation
-      cpuLoad = phasePercent + servoPercent + rtPrecent;
+        // Determine real time percentage
+        rtFreq = 1/((Sys_ServoPeriod_*(Sys_RtIntPeriod_+1))/1000);
+        rtTaskTimeUs = rtTimeUs - (((double)(int)(rtTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
+        rtTaskTimeUs = rtTaskTimeUs - (((double)(int)(rtTimeUs/servoDeltaTime))+1) * servoTaskTimeUs;
+        rtTaskTime = rtTaskTimeUs / 1000000;
+        rtPrecent = (rtFreq * rtTaskTime)*100;
 
-      setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);
+        // Background tasks. These have dedicated core so calcs not actually used
+        if(Sys_BgSleepTime_ == 0)
+          bgSleepTime = 0.001;
+        else
+          bgSleepTime = (double)Sys_BgSleepTime_ / 1000000;
+
+          bgFreq = 1/ (bgSleepTime + bgTaskTime);
+          bgPercent = (bgFreq * bgTaskTime)*100;
+
+        // Final CPU load calculation
+        cpuLoad = phasePercent + servoPercent + rtPrecent;
+
+        setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);
+      }
     }
 
   }
