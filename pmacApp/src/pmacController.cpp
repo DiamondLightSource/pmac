@@ -1774,69 +1774,78 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
     
     // Final result
     double cpuLoad = 0.0;
+    
+    // Calculation of each task
+    if (status == asynSuccess) {
+      status = parseDoubleVariable(PPMAC_CPU_FPHASE_TIME, sPtr->readValue(PPMAC_CPU_FPHASE_TIME),
+                                    "Phase interrupt time", phaseTaskTimeUs);
+    }
+    if (status == asynSuccess) {
+      status = parseDoubleVariable(PPMAC_CPU_FSERVO_TIME, sPtr->readValue(PPMAC_CPU_FSERVO_TIME),
+                                    "Servo interrup time", servoTimeUs);
+    }
+    if (status == asynSuccess) {
+      status = parseDoubleVariable(PPMAC_CPU_PHASED_TIME, sPtr->readValue(PPMAC_CPU_PHASED_TIME),
+                                    "Phase delta time", phaseDeltaTime);
+    }
+    if (status == asynSuccess) {
+      status = parseDoubleVariable(PPMAC_CPU_SERVOD_TIME, sPtr->readValue(PPMAC_CPU_SERVOD_TIME),
+                                    "Servo delta time", servoDeltaTime);
+    }
+    if (status == asynSuccess) {
+      status = parseDoubleVariable(PPMAC_CPU_FRTI_TIME, sPtr->readValue(PPMAC_CPU_FRTI_TIME),
+                                    "Real time interrupt period", rtTimeUs);
+      
+    }
+    if (status == asynSuccess) {
+      status = parseDoubleVariable(PPMAC_CPU_FBG_TIME, sPtr->readValue(PPMAC_CPU_FBG_TIME),
+                                    "Background task time", bgTaskTimeUs);
+    }
 
-    // If CPU is dual core calculate the CPU load for CPU[1] (real time)
-    if (Sys_CPUType_ >= 3) { 
-      if (status == asynSuccess) {
-        status = parseDoubleVariable(PPMAC_CPU_FPHASE_TIME, sPtr->readValue(PPMAC_CPU_FPHASE_TIME),
-                                      "Phase interrupt time", phaseTaskTimeUs);
-      }
-      if (status == asynSuccess) {
-        status = parseDoubleVariable(PPMAC_CPU_FSERVO_TIME, sPtr->readValue(PPMAC_CPU_FSERVO_TIME),
-                                      "Servo interrup time", servoTimeUs);
-      }
-      if (status == asynSuccess) {
-        status = parseDoubleVariable(PPMAC_CPU_PHASED_TIME, sPtr->readValue(PPMAC_CPU_PHASED_TIME),
-                                      "Phase delta time", phaseDeltaTime);
-      }
-      if (status == asynSuccess) {
-        status = parseDoubleVariable(PPMAC_CPU_SERVOD_TIME, sPtr->readValue(PPMAC_CPU_SERVOD_TIME),
-                                      "Servo delta time", servoDeltaTime);
-      }
-      if (status == asynSuccess) {
-        status = parseDoubleVariable(PPMAC_CPU_FRTI_TIME, sPtr->readValue(PPMAC_CPU_FRTI_TIME),
-                                      "Real time interrupt period", rtTimeUs);
-        
-      }
-      if (status == asynSuccess) {
-        status = parseDoubleVariable(PPMAC_CPU_FBG_TIME, sPtr->readValue(PPMAC_CPU_FBG_TIME),
-                                      "Background task time", bgTaskTimeUs);
-      }
-
-      if(phaseTaskTimeUs != 0.0 && servoTimeUs != 0.0 && phaseDeltaTime != 0.0 && servoDeltaTime != 0.0 && rtTimeUs != 0.0 && bgTaskTimeUs != 0.0){
-        
-        phaseTaskTime = phaseTaskTimeUs / 1000000;
-        bgTaskTime = bgTaskTimeUs / 1000000;
-        rtTaskTime = rtTimeUs / 1000000;
+    if(phaseTaskTimeUs != 0.0 && servoTimeUs != 0.0 && phaseDeltaTime != 0.0 && servoDeltaTime != 0.0 && rtTimeUs != 0.0 && bgTaskTimeUs != 0.0){
+      
+      phaseTaskTime = phaseTaskTimeUs / 1000000;
+      bgTaskTime = bgTaskTimeUs / 1000000;
+      rtTaskTime = rtTimeUs / 1000000;
 
 
-        // Determine phase percentage
-        phaseFreq = 1/((Sys_ServoPeriod_/1000) * Sys_PhaseOverServoPeriod_);
-        phasePercent = (phaseFreq * phaseTaskTime)*100;
+      // Determine phase percentage
+      phaseFreq = 1/((Sys_ServoPeriod_/1000) * Sys_PhaseOverServoPeriod_);
+      phasePercent = (phaseFreq * phaseTaskTime)*100;
 
-        // Determine servo percentage
-        servoFreq = 1/(Sys_ServoPeriod_/1000);
-        servoTaskTimeUs = servoTimeUs - (((double)(int)(servoTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
-        servoTaskTime = servoTaskTimeUs / 1000000;
-        servoPercent = (servoFreq * servoTaskTime)*100;
+      // Determine servo percentage
+      servoFreq = 1/(Sys_ServoPeriod_/1000);
+      servoTaskTimeUs = servoTimeUs - (((double)(int)(servoTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
+      servoTaskTime = servoTaskTimeUs / 1000000;
+      servoPercent = (servoFreq * servoTaskTime)*100;
 
-        // Determine real time percentage
-        rtFreq = 1/((Sys_ServoPeriod_*(Sys_RtIntPeriod_+1))/1000);
-        rtTaskTimeUs = rtTimeUs - (((double)(int)(rtTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
-        rtTaskTimeUs = rtTaskTimeUs - (((double)(int)(rtTimeUs/servoDeltaTime))+1) * servoTaskTimeUs;
-        rtTaskTime = rtTaskTimeUs / 1000000;
-        rtPrecent = (rtFreq * rtTaskTime)*100;
+      // Determine real time percentage
+      rtFreq = 1/((Sys_ServoPeriod_*(Sys_RtIntPeriod_+1))/1000);
+      rtTaskTimeUs = rtTimeUs - (((double)(int)(rtTimeUs/phaseDeltaTime))+1) * phaseTaskTimeUs;
+      rtTaskTimeUs = rtTaskTimeUs - (((double)(int)(rtTimeUs/servoDeltaTime))+1) * servoTaskTimeUs;
+      rtTaskTime = rtTaskTimeUs / 1000000;
+      rtPrecent = (rtFreq * rtTaskTime)*100;
 
-        // Background tasks. These have dedicated core so calcs not actually used
-        if(Sys_BgSleepTime_ == 0)
-          bgSleepTime = 0.001;
-        else
-          bgSleepTime = (double)Sys_BgSleepTime_ / 1000000;
+      // Background tasks percentage
+      if(Sys_BgSleepTime_ == 0)
+        bgSleepTime = 0.001;
+      else
+        bgSleepTime = (double)Sys_BgSleepTime_ / 1000000;
 
-          bgFreq = 1/ (bgSleepTime + bgTaskTime);
-          bgPercent = (bgFreq * bgTaskTime)*100;
+        bgFreq = 1/ (bgSleepTime + bgTaskTime);
+        bgPercent = (bgFreq * bgTaskTime)*100;
 
+      // Single-core Power PC
+      if (!strcmp(cpu_.c_str(), "PowerPC,460EX")) {
         // Final CPU load calculation
+        cpuLoad = phasePercent + servoPercent + rtPrecent + bgPercent;
+        
+        setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);      
+      }
+
+      // If CPU is dual core calculate the CPU load for CPU[1] (real time)
+      if ((!strcmp(cpu_.c_str(), "x86")) || (!strcmp(cpu_.c_str(), "PowerPC,APM86xxx")) || (!strcmp(cpu_.c_str(), "arm,LS1021A"))) { 
+        // Final CPU load calculation - Background tasks have dedicated core so calcs not actually used
         cpuLoad = phasePercent + servoPercent + rtPrecent;
 
         setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);
