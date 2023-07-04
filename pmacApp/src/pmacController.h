@@ -31,6 +31,7 @@
 #define PMAC_C_KillAllString              "PMAC_C_KILLALL"
 #define PMAC_C_GlobalStatusString         "PMAC_C_GLOBALSTATUS"
 #define PMAC_C_CommsErrorString           "PMAC_C_COMMSERROR"
+#define PMAC_C_CommsMismatchString        "PMAC_C_COMMSMISMATCH"
 
 #define PMAC_C_FeedRateString             "PMAC_C_FEEDRATE"
 #define PMAC_C_FeedRateLimitString        "PMAC_C_FEEDRATE_LIMIT"
@@ -343,6 +344,7 @@ protected:
     int PMAC_C_PollAllNow_;
     int PMAC_C_GlobalStatus_;
     int PMAC_C_CommsError_;
+    int PMAC_C_CommsMismatch_;
     int PMAC_C_FeedRate_;
     int PMAC_C_FeedRateLimit_;
     int PMAC_C_FeedRatePoll_;

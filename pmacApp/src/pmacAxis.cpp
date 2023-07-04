@@ -835,6 +835,16 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
                 }
                 axisProblemFlag = 1;
             }
+            int comms_mismatch = 0;
+            pC_->getIntegerParam(0, pC_->PMAC_C_CommsMismatch_, &comms_mismatch);
+            if (comms_mismatch) {
+                if (printErrors) {
+                    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
+                              "*** Warning *** Controller communications mismatch\n");
+                    printNextError_ = false;
+                }
+                axisProblemFlag = 1;
+            }
             // Check limits disabled bit in ix24, and if we haven't intentially disabled limits
             // because we are homing, set the motorAxisProblem bit. Also check the limitsCheckDisable
             // flag, which the user can set to disable this feature.*/

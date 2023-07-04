@@ -18,6 +18,7 @@
 #include "pmacCallbackStore.h"
 #include "pmacCallbackInterface.h"
 #include <string.h>
+#include <algorithm>
 
 class pmacMessageBroker : public pmacDebugger {
 public:
@@ -50,6 +51,8 @@ public:
     asynStatus addReadVariable(int type, const char *variable);
 
     asynStatus updateVariables(int type);
+
+    void logMismatch(epicsTimeStamp ts1, std::string cmd, std::string respString, const std::string& loop);
 
     asynStatus supressStatusReads();
 
@@ -127,6 +130,10 @@ private:
 
     // Update time in ms
     double updateTime_;
+
+    // Has there been an update error
+    bool updateError_;
+    int lastErrorTime_;
 
     // number of registered locks
     int lock_count;

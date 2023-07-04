@@ -407,6 +407,7 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_KillAllString, asynParamInt32, &PMAC_C_KillAll_);
   createParam(PMAC_C_GlobalStatusString, asynParamInt32, &PMAC_C_GlobalStatus_);
   createParam(PMAC_C_CommsErrorString, asynParamInt32, &PMAC_C_CommsError_);
+  createParam(PMAC_C_CommsMismatchString, asynParamInt32, &PMAC_C_CommsMismatch_);
   createParam(PMAC_C_FeedRateString, asynParamInt32, &PMAC_C_FeedRate_);
   createParam(PMAC_C_FeedRateLimitString, asynParamInt32, &PMAC_C_FeedRateLimit_);
   createParam(PMAC_C_FeedRatePollString, asynParamInt32, &PMAC_C_FeedRatePoll_);
@@ -598,14 +599,18 @@ void pmacController::initAsynParams(void) {
 
 void pmacController::pollAllNow(void) {
   static const char *functionName = "pollAllNow";
+  int status = asynSuccess;
 
   debug(DEBUG_FLOW, functionName);
   // Force updates of each loop
-  pBroker_->updateVariables(pmacMessageBroker::PMAC_PRE_FAST_READ);
-  pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
-  pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
-  pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
-
+  status |= pBroker_->updateVariables(pmacMessageBroker::PMAC_PRE_FAST_READ);
+  status |= pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+  status |= pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+  status |= pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+  if (status != asynSuccess){
+    // If the variable update fails then set the comms mismatch error
+    setIntegerParam(PMAC_C_CommsMismatch_, PMAC_ERROR_);
+  }
 }
 
 void pmacController::addBrokerVariables(const std::string &monitorVariables) {
@@ -2668,6 +2673,7 @@ pmacAxis *pmacController::getAxis(int axisNo) {
 asynStatus pmacController::poll() {
   char tBuff[32];
   static const char *functionName = "poll";
+  asynStatus status = asynSuccess;
   debug(DEBUG_FLOW, functionName);
   epicsTimeGetCurrent(&nowTime_);
 
@@ -2678,7 +2684,11 @@ asynStatus pmacController::poll() {
     // Always call for a fast update
     epicsTimeToStrftime(tBuff, 32, "%Y/%m/%d %H:%M:%S.%03f", &nowTime_);
     debug(DEBUG_TIMING, functionName, "Fast update has been called", tBuff);
-    pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+    status = pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+    if (status != asynSuccess){
+      // If the variable update fails then set the comms mismatch error
+      setIntegerParam(PMAC_C_CommsMismatch_, PMAC_ERROR_);
+    }
     this->updateStatistics();
     setDoubleParam(PMAC_C_FastUpdateTime_, pBroker_->readUpdateTime());
     if (epicsTimeDiffInSeconds(&nowTime_, &lastMediumTime_) >= PMAC_MEDIUM_LOOP_TIME / 1000.0) {
@@ -2686,7 +2696,11 @@ asynStatus pmacController::poll() {
       debug(DEBUG_TIMING, functionName, "Medium update has been called", tBuff);
       // Check if we are connected
       if (connected_ != 0 && initialised_ != 0) {
-        pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+        status = pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+        if (status != asynSuccess){
+          // If the variable update fails then set the comms mismatch error
+          setIntegerParam(PMAC_C_CommsMismatch_, PMAC_ERROR_);
+        }
       }
     }
     if (epicsTimeDiffInSeconds(&nowTime_, &lastSlowTime_) >= PMAC_SLOW_LOOP_TIME / 1000.0) {
@@ -2694,7 +2708,11 @@ asynStatus pmacController::poll() {
       debug(DEBUG_TIMING, functionName, "Slow update has been called", tBuff);
       // Check if we are connected
       if (connected_ != 0 && initialised_ != 0) {
-        pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+        status = pBroker_->updateVariables(pmacMessageBroker::PMAC_SLOW_READ);
+        if (status != asynSuccess){
+          // If the variable update fails then set the comms mismatch error
+          setIntegerParam(PMAC_C_CommsMismatch_, PMAC_ERROR_);
+        }
       }
     }
   } else {
@@ -4250,12 +4268,24 @@ asynStatus pmacController::updateCsAssignmentParameters() {
 
   debug(DEBUG_FLOW, functionName);
   // Force updates of the fast loop to pickup any new CS numbers
-  pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+  status = pBroker_->updateVariables(pmacMessageBroker::PMAC_FAST_READ);
+  if (status != asynSuccess){
+    // If the variable update fails then set the comms mismatch error
+    setIntegerParam(PMAC_C_CommsMismatch_, PMAC_ERROR_);
+  }
   // Force two updates of the medium loop to pickup any new axis assignments
   // The first update adds any extra assignment variables to the store if required
-  pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+  status = pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+  if (status != asynSuccess){
+    // If the variable update fails then set the comms mismatch error
+    setIntegerParam(PMAC_C_CommsMismatch_, PMAC_ERROR_);
+  }
   // The second update picks up the assigned axis values for each motor
-  pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+  status = pBroker_->updateVariables(pmacMessageBroker::PMAC_MEDIUM_READ);
+  if (status != asynSuccess){
+    // If the variable update fails then set the comms mismatch error
+    setIntegerParam(PMAC_C_CommsMismatch_, PMAC_ERROR_);
+  }
 
   callParamCallbacks();
 

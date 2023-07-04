@@ -6,9 +6,46 @@
  */
 
 #include "pmacMessageBroker.h"
+#include <sstream>
+
+// Reprint the update error message once every 5 minutes (300 seconds)
+#define ERR_MSG_PRINT_TIME 300
 
 const epicsUInt32  pmacMessageBroker::PMAC_MAXBUF_ = 1024;
 const epicsFloat64 pmacMessageBroker::PMAC_TIMEOUT_ = 2.0;
+
+void escapeString(char *output, const char *buff, size_t bytes)
+{
+  int index = 0;
+  for (unsigned int j = 0; j < bytes; j++){
+    char ch =  buff[j];
+    if (isprint(ch)) {
+      output[index++] = ch;
+//      printf("%c", ch);
+    } else if (ch == '\\') {
+      output[index++] = '\\';
+      output[index++] = '\\';
+//      printf("\\\\");
+    } else if (ch == '\t') {
+      output[index++] = '\\';
+      output[index++] = 't';
+//      printf("\\t");
+    } else if (ch == '\n') {
+      output[index++] = '\\';
+      output[index++] = 'n';
+//      printf("\\n");
+    } else if (ch == '\r') {
+      output[index++] = '\\';
+      output[index++] = 'r';
+//      printf("\\r");
+    } else {
+      sprintf((char *)(output + index), "%03o", ch);
+      index += 3;
+//      printf("\\%03o", ch);
+    }
+  }
+  output[index++] = '\0';
+}
 
 pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
         pmacDebugger("pmacMessageBroker"),
@@ -26,6 +63,8 @@ pmacMessageBroker::pmacMessageBroker(asynUser *pasynUser) :
         lastMsgBytesRead_(0),
         lastMsgTime_(0),
         updateTime_(0.0),
+        updateError_(false),
+        lastErrorTime_(0),
         lock_count(0),
         connected_(false),
         newConnection_(true)
@@ -147,6 +186,9 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
   std::string cmd;
   int noOfCmds = 0;
   epicsTimeStamp ts1, ts2;
+  int commandCount = 0;
+  int respCount = 0;
+  asynStatus status = asynSuccess;
 
   // Keep a record of start time for the update
   epicsTimeGetCurrent(&ts1);
@@ -172,10 +214,24 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
           for (int index = 0; index < noOfCmds; index++) {
             cmd = prefastStore_.readCommandString(index);
             if (cmd.length() > 0) {
+              // Count the number of variable requests
+              commandCount = std::count(cmd.begin(), cmd.end(), ' ');
+              commandCount++;
+
               this->immediateWriteRead(cmd.c_str(), response, false);
-              debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
-              // Update the store with the response
-              prefastStore_.updateReply(cmd, response);
+              // Count the number of replies
+              std::string respString(response);
+              respCount = std::count(respString.begin(), respString.end(), '\r');
+
+              // Check the number of requests matches the number of replies
+              if (respCount == commandCount){
+                debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
+                // Update the store with the response
+                prefastStore_.updateReply(cmd, response);
+              } else {
+                status = asynError;
+                logMismatch(ts1, cmd, respString, "prefast");
+              }
             }
           }
           // Perform the necessary callbacks
@@ -188,10 +244,25 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
           for (int index = 0; index < noOfCmds; index++) {
             cmd = fastStore_.readCommandString(index);
             if (cmd.length() > 0) {
+              // Count the number of variable requests
+              commandCount = std::count(cmd.begin(), cmd.end(), ' ');
+              commandCount++;
+
               this->immediateWriteRead(cmd.c_str(), response, false);
-              debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
-              // Update the store with the response
-              fastStore_.updateReply(cmd, response);
+
+              // Count the number of replies
+              std::string respString(response);
+              respCount = std::count(respString.begin(), respString.end(), '\r');
+
+              // Check the number of requests matches the number of replies
+              if (respCount == commandCount){
+                debug(DEBUG_VARIABLE, functionName, "PMAC reply string length", (int) strlen(response));
+                // Update the store with the response
+                fastStore_.updateReply(cmd, response);
+              } else {
+                status = asynError;
+                logMismatch(ts1, cmd, respString, "fast");
+              }
             }
           }
           // Perform the necessary callbacks
@@ -205,9 +276,24 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
         for (int index = 0; index < noOfCmds; index++) {
           cmd = mediumStore_.readCommandString(index);
           if (cmd.length() > 0) {
+            // Count the number of variable requests
+            commandCount = std::count(cmd.begin(), cmd.end(), ' ');
+            commandCount++;
+
             this->immediateWriteRead(cmd.c_str(), response, false);
-            // Update the store with the response
-            mediumStore_.updateReply(cmd, response);
+
+            // Count the number of replies
+            std::string respString(response);
+            respCount = std::count(respString.begin(), respString.end(), '\r');
+
+            // Check the number of requests matches the number of replies
+            if (respCount == commandCount){
+              // Update the store with the response
+              mediumStore_.updateReply(cmd, response);
+            } else {
+              status = asynError;
+              logMismatch(ts1, cmd, respString, "medium");
+            }
           }
         }
         // Perform the necessary callbacks
@@ -220,9 +306,24 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
         for (int index = 0; index < noOfCmds; index++) {
           cmd = slowStore_.readCommandString(index);
           if (cmd.length() > 0) {
+            // Count the number of variable requests
+            commandCount = std::count(cmd.begin(), cmd.end(), ' ');
+            commandCount++;
+
             this->immediateWriteRead(cmd.c_str(), response, false);
-            // Update the store with the response
-            slowStore_.updateReply(cmd, response);
+
+            // Count the number of replies
+            std::string respString(response);
+            respCount = std::count(respString.begin(), respString.end(), '\r');
+
+            // Check the number of requests matches the number of replies
+            if (respCount == commandCount){
+              // Update the store with the response
+              slowStore_.updateReply(cmd, response);
+            } else {
+              status = asynError;
+              logMismatch(ts1, cmd, respString, "slow");
+            }
           }
         }
         // Perform the necessary callbacks
@@ -244,7 +345,32 @@ asynStatus pmacMessageBroker::updateVariables(int type) {
   // Calculate the time taken to perform the update (and convert to ms)
   updateTime_ = 1000.0 * epicsTimeDiffInSeconds(&ts2, &ts1);
 
-  return asynSuccess;
+  return status;
+}
+
+void pmacMessageBroker::logMismatch(epicsTimeStamp ts1, std::string cmd, std::string respString, const std::string& loop) {
+  char escaped_response[2048];
+  static const char *functionName = "updateVariables";
+  if ((ts1.secPastEpoch - lastErrorTime_) > ERR_MSG_PRINT_TIME) {
+    int commandCount = std::count(cmd.begin(), cmd.end(), ' ');
+    int respCount = std::count(respString.begin(), respString.end(), '\r');
+    commandCount++;
+    std::stringstream ss;
+    ss << loop << " loop update mismatch between commands and responses.";
+    debug(DEBUG_ERROR, functionName, ss.str());
+    debug(DEBUG_ERROR, functionName, "Command count:  ", commandCount);
+    debug(DEBUG_ERROR, functionName, "Response count: ", respCount);
+    debug(DEBUG_ERROR, functionName, "Command:  ", cmd.c_str());
+    escapeString(escaped_response, respString.c_str(), respString.length());
+    debug(DEBUG_ERROR, functionName, "Response: ", escaped_response);
+    debug(DEBUG_ERROR, functionName, "This is a serious error that may result in dangerous behaviour.");
+    ss.clear();
+    ss.str("");
+    ss << "Check the variable entries in the " << loop << " loop, fix and then restart this IOC.";
+    debug(DEBUG_ERROR, functionName, ss.str());
+    updateError_ = true;
+    lastErrorTime_ = ts1.secPastEpoch;
+  }
 }
 
 asynStatus pmacMessageBroker::supressStatusReads() {
