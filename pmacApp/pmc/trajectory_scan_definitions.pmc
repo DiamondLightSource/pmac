@@ -32,7 +32,7 @@
 #define Next_Y              M4008
 #define Next_Z              M4009
 #define Next_User           M4010
-; //#define NextVelMode         M4011
+
 #define Next_A_Vel          M4085
 #define Next_B_Vel          M4086
 #define Next_C_Vel          M4087
@@ -43,7 +43,7 @@
 #define Next_Y_Vel          M4092
 #define Next_Z_Vel          M4093
 
-; //NextVelMode->X:$BlankAdr0,4,4                        ; Set initial pointers and type
+
 Next_User->X:$BlankAdr0,0,4
 Next_Time->Y:$BlankAdr0,0,24
 
@@ -79,7 +79,7 @@ Next_Z_Vel->L:$BufferAdr
 #define Y_Adr               M4020
 #define Z_Adr               M4021
 #define User_Adr            M4022
-;//#define VelMode_Adr         M4023
+
 #define A_Vel_Adr           M4094
 #define B_Vel_Adr           M4095
 #define C_Vel_Adr           M4096
@@ -101,7 +101,6 @@ X_Adr->Y:$4FA7,0,24
 Y_Adr->Y:$4FA8,0,24
 Z_Adr->Y:$4FA9,0,24
 User_Adr->Y:$4FAA,0,24
-;//VelMode_Adr->Y:$4FAB,0,24
 A_Vel_Adr->Y:$4FAC,0,24
 B_Vel_Adr->Y:$4FAD,0,24
 C_Vel_Adr->Y:$4FAE,0,24
@@ -163,15 +162,6 @@ Z_Axis->Y:$AxisAdr,8
 ; *****************************************************************************************
 ; Motion Program Variables
 ; *****************************************************************************************
-; // #define Prev_A              M4050           ; Previous coordinates for velocity calculations
-; // #define Prev_B              M4051
-; // #define Prev_C              M4052
-; // #define Prev_U              M4053
-; // #define Prev_V              M4054
-; // #define Prev_W              M4055
-; // #define Prev_X              M4056
-; // #define Prev_Y              M4057
-; // #define Prev_Z              M4058
 
 #define Time                M4059           ; Current coordinate values
 #define Current_A           Q71
@@ -184,7 +174,6 @@ Z_Axis->Y:$AxisAdr,8
 #define Current_Y           Q78
 #define Current_Z           Q79
 #define User                M4060
-;//#define VelMode             M4061
 
 #define Readback_A           Q81
 #define Readback_B           Q82
@@ -206,20 +195,7 @@ Z_Axis->Y:$AxisAdr,8
 #define Y_Vel               M4069
 #define Z_Vel               M4070
 
-; // #define A_Prev_Vel          M4071          ; Previous velocity values
-; // #define B_Prev_Vel          M4072
-; // #define C_Prev_Vel          M4073
-; // #define U_Prev_Vel          M4074
-; // #define V_Prev_Vel          M4075
-; // #define W_Prev_Vel          M4076
-; // #define X_Prev_Vel          M4077
-; // #define Y_Prev_Vel          M4078
-; // #define Z_Prev_Vel          M4079
-
 #define CalculatedBase      M4081           ; Calculated temporary variable for Current base address
-;// #define InverseTmpTime      M4082           ; Calculated temporary variable for time in velocity calcs
-;// #define TmpVelX             M4083           ; Calculated temporary variable for velocity in velocity calcs
-;// #define TmpVelY             M4084
 
 ; *****************************************************************************************
 ; Progran variable assignments
@@ -240,18 +216,8 @@ CurrentBufferFill->Y:$VarAdr0C,0,24
 PrevBufferFill->Y:$VarAdr0D,0,24
 Error->Y:$VarAdr0E,0,24
 Version->* ; this is deliberately unmapped so that the value assigned survives a brick swap
-Prev_A->L:$VarAdr10
-Prev_B->L:$VarAdr11
-Prev_C->L:$VarAdr12
-Prev_U->L:$VarAdr13
-Prev_V->L:$VarAdr14
-Prev_W->L:$VarAdr15
-Prev_X->L:$VarAdr16
-Prev_Y->L:$VarAdr17
-Prev_Z->L:$VarAdr18
 Time->L:$VarAdr19
 User->L:$VarAdr1A
-;//VelMode->L:$VarAdr1B
 A_Vel->L:$VarAdr1C
 B_Vel->L:$VarAdr1D
 C_Vel->L:$VarAdr1E
@@ -261,19 +227,7 @@ W_Vel->L:$VarAdr21
 X_Vel->L:$VarAdr22
 Y_Vel->L:$VarAdr23
 Z_Vel->L:$VarAdr24
-;// A_Prev_Vel->L:$VarAdr25
-;// B_Prev_Vel->L:$VarAdr26
-;// C_Prev_Vel->L:$VarAdr27
-;// U_Prev_Vel->L:$VarAdr28
-;// V_Prev_Vel->L:$VarAdr29
-;// W_Prev_Vel->L:$VarAdr2A
-;// X_Prev_Vel->L:$VarAdr2B
-;// Y_Prev_Vel->L:$VarAdr2C
-;// Z_Prev_Vel->L:$VarAdr2D
 CalculatedBase->L:$VarAdr2E
-// InverseTmpTime->L:$VarAdr2E
-// TmpVelX->L:$VarAdr2F
-// TmpVelY->L:$VarAdr30
 
 
 ; *****************************************************************************************
