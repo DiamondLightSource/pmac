@@ -680,7 +680,7 @@ void pmacController::setupBrokerVariables(void) {
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FBG_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_BGSLEEP_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_FREQ);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_TYPE);
+    // pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_TYPE);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_RTI_PERIOD);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_PHASE_SERV_PER);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_SERVO_PERIOD);
@@ -1274,8 +1274,8 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
   if (cid_ == PMAC_CID_POWER_){
     status = parseIntegerVariable(PPMAC_CPU_FREQ, sPtr->readValue(PPMAC_CPU_FREQ),
                                   "PPMAC cpu freq", Sys_CPUFreq_);
-    status = parseIntegerVariable(PPMAC_CPU_TYPE, sPtr->readValue(PPMAC_CPU_TYPE),
-                                  "PPMAC cpu type", Sys_CPUType_);
+    // status = parseIntegerVariable(PPMAC_CPU_TYPE, sPtr->readValue(PPMAC_CPU_TYPE),
+    //                               "PPMAC cpu type", Sys_CPUType_);
     status = parseIntegerVariable(PPMAC_CPU_BGSLEEP_TIME, sPtr->readValue(PPMAC_CPU_BGSLEEP_TIME),
                                   "PPMAC BG clock sleep time", Sys_BgSleepTime_);
     status = parseDoubleVariable(PPMAC_CPU_SERVO_PERIOD, sPtr->readValue(PPMAC_CPU_SERVO_PERIOD),
