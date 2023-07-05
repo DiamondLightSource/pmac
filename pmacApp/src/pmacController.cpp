@@ -1837,18 +1837,20 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
 
       // Single-core Power PC
       if (!strcmp(cpu_.c_str(), "PowerPC,460EX")) {
+        debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
         // Final CPU load calculation
         cpuLoad = phasePercent + servoPercent + rtPrecent + bgPercent;
-        
+        debug(DEBUG_TRACE, functionName, "Calculated CPU %", cpuLoad);
         setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);      
-      }
-
-      // If CPU is dual core calculate the CPU load for CPU[1] (real time)
-      if ((!strcmp(cpu_.c_str(), "x86")) || (!strcmp(cpu_.c_str(), "PowerPC,APM86xxx")) || (!strcmp(cpu_.c_str(), "arm,LS1021A"))) { 
+      } else if ((!strcmp(cpu_.c_str(), "x86")) || (!strcmp(cpu_.c_str(), "PowerPC,APM86xxx")) || (!strcmp(cpu_.c_str(), "arm,LS1021A"))) {
+        // If CPU is dual core calculate the CPU load for CPU[1] (real time)
+        debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
         // Final CPU load calculation - Background tasks have dedicated core so calcs not actually used
         cpuLoad = phasePercent + servoPercent + rtPrecent;
-
+        debug(DEBUG_TRACE, functionName, "Calculated CPU %", cpuLoad);
         setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);
+      } else {
+        debugf(DEBUG_ERROR, functionName, "CPU [%s] not suppported", cpu_.c_str());
       }
     }
 
