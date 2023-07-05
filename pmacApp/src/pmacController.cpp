@@ -4057,6 +4057,10 @@ asynStatus pmacController::readDeviceType() {
       if (cpu_.find("\r") != std::string::npos) {
         cpu_ = cpu_.substr(0, cpu_.find("\r"));
       }
+      // Remove any LF characters
+      if (cpu_.find("\n") != std::string::npos) {
+        cpu_ = cpu_.erase(cpu_.find("\n"),1);
+      }
     } else {
       debug(DEBUG_ERROR, functionName, "Error reading card cpu");
       debug(DEBUG_ERROR, functionName, "    response", reply);
