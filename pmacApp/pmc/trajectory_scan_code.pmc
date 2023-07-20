@@ -163,6 +163,7 @@ N102
         W_Vel = Next_W_Vel
     End If
     W_Adr = V_Adr + BufferLength
+    W_Vel_Adr = V_Vel_Adr + BufferLength
     If (X_Axis = 1)
         Current_X = Next_X
         X_Vel = Next_X_Vel
