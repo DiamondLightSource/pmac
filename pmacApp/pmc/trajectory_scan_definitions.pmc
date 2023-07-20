@@ -101,15 +101,15 @@ X_Adr->Y:$4FA7,0,24
 Y_Adr->Y:$4FA8,0,24
 Z_Adr->Y:$4FA9,0,24
 User_Adr->Y:$4FAA,0,24
-A_Vel_Adr->Y:$4FAC,0,24
-B_Vel_Adr->Y:$4FAD,0,24
-C_Vel_Adr->Y:$4FAE,0,24
-U_Vel_Adr->Y:$4FAF,0,24
-V_Vel_Adr->Y:$4FB0,0,24
-W_Vel_Adr->Y:$4FB1,0,24
-X_Vel_Adr->Y:$4FB2,0,24
-Y_Vel_Adr->Y:$4FB3,0,24
-Z_Vel_Adr->Y:$4FB4,0,24
+A_Vel_Adr->Y:$4FAB,0,24
+B_Vel_Adr->Y:$4FAC,0,24
+C_Vel_Adr->Y:$4FAD,0,24
+U_Vel_Adr->Y:$4FAE,0,24
+V_Vel_Adr->Y:$4FAF,0,24
+W_Vel_Adr->Y:$4FB0,0,24
+X_Vel_Adr->Y:$4FB1,0,24
+Y_Vel_Adr->Y:$4FB2,0,24
+Z_Vel_Adr->Y:$4FB3,0,24
 
 #define AxesParser          M4024                   ; Specifiers for what axes are activated
 #define A_Axis              M4025
