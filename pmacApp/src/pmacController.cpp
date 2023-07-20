@@ -2916,14 +2916,14 @@ asynStatus pmacController::buildProfile(int csNo) {
       }
     } else {
       // Old Geobrick without additional memory.
-      // Check memory addresses are less than of equal to (0x10800-18*buffer_size)
-      if (tScanPmacBufferAddressA_ > (0x10800 - (10 * tScanPmacBufferSize_))) {
+      // Check memory addresses are less than of equal to (0x10800-19*buffer_size)
+      if (tScanPmacBufferAddressA_ > (0x10800 - (19 * tScanPmacBufferSize_))) {
         // Set the status to failure
         this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE,
                              "Buffer A memory address invalid");
         status = asynError;
       }
-      if (tScanPmacBufferAddressB_ > (0x10800 - (10 * tScanPmacBufferSize_))) {
+      if (tScanPmacBufferAddressB_ > (0x10800 - (19 * tScanPmacBufferSize_))) {
         // Set the status to failure
         this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE,
                              "Buffer B memory address invalid");
