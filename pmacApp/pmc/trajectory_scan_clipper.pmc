@@ -2,7 +2,7 @@
 ; Set these values for your PMAC
 ; *****************************************************************************************
 #define VarAdr       B8     ; Prefix of address (eg VarAdr=300 then $30000 is the start address)
-#define BuffLen      950    ; Length of buffers
+#define BuffLen      500    ; Length of buffers
 #define MoveRoutine  111    ; The subroutine for movement (default 111), can be overridden for custom scan moves
 
 ; make sure the ubuffer is defined
