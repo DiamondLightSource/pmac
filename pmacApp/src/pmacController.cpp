@@ -203,7 +203,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   profileBuilt_ = false;
   appendAvailable_ = false;
   tScanShortScan_ = false;
-  tScanCalcVel_ = true;
   tScanExecuting_ = 0;
   tScanCSNo_ = 0;
   tScanAxisMask_ = 0;
@@ -2604,8 +2603,6 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     status = (this->pBroker_->report(pmacMessageBroker::PMAC_MEDIUM_READ) == asynSuccess) && status;
   } else if (function == PMAC_C_ReportSlow_) {
     status = (this->pBroker_->report(pmacMessageBroker::PMAC_SLOW_READ) == asynSuccess) && status;
-  } else if (function == PMAC_C_TrajCalcVel_) {
-    status = ((setIntegerParam(tScanCalcVel_, value) == asynSuccess) && status);
   } else if (function == PMAC_C_ProfileAppend_) {
     status = (this->appendToProfile() == asynSuccess) && status;
   } else if (function == PMAC_C_DebugCmd_) {

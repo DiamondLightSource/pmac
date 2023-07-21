@@ -537,7 +537,6 @@ private:
     bool profileBuilt_;
     bool appendAvailable_;
     bool tScanShortScan_;           // Is the scan a short scan (< 3.0 seconds)
-    int tScanCalcVel_;              // Is the velocities being calculated
     int tScanExecuting_;            // Is a scan executing
     int tScanCSNo_;                 // The CS number of the executing scan
     int tScanNumPoints_;            // Total number of points in the scan
