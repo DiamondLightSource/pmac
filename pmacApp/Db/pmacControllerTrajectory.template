@@ -181,8 +181,6 @@ record(bo, "$(PMAC):ProfileCalcVel")
   field(OUT,  "@asyn($(PORT),0)PMAC_TRAJ_CALCVEL")
   field(ZNAM, "NO")
   field(ONAM, "YES")
-  field(VAL,  "1")
-  field(PINI, "YES")
 }
 
 record(bi, "$(PMAC):ProfileCalcVel_RBV")
