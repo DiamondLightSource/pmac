@@ -4485,7 +4485,8 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
 
   switch(profileVelMode_[index]) {
     // Average Previous -> Next
-    case 0:     
+    case 0:
+      if(times[index] ==  0 || times[index+1] == 0) break;
       inverse_deltaTime = 1000000 / (times[index]+times[index+1]);
       deltaPos = positions[index+1] - positions[index-1];
       velocities[index] = inverse_deltaTime * deltaPos;
@@ -4493,6 +4494,7 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
 
     // Real Previous -> Current
     case 1:
+    if(times[index] ==  0) break;
       inverse_deltaTime = 1000000 / (times[index]);
       deltaPos = positions[index] - positions[index-1];
       velocities[index] = 2.0 * inverse_deltaTime * deltaPos - velocities[index-1];
@@ -4500,6 +4502,7 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
 
     // Average Previous -> Current
     case 2:
+      if(times[index] ==  0) break;
       inverse_deltaTime = 1000000 / (times[index]);
       deltaPos = positions[index] - positions[index-1];
       velocities[index] = inverse_deltaTime * deltaPos;
@@ -4512,6 +4515,7 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
     
     // Average Current -> Next
     case 4:
+      if(times[index+1] == 0) break;
       inverse_deltaTime = 1000000 / (times[index+1]);
       deltaPos = positions[index+1] - positions[index];
       velocities[index] = inverse_deltaTime * deltaPos;
