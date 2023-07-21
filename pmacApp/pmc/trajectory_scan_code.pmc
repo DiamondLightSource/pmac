@@ -228,7 +228,7 @@ N104
         Dwell 0
         Time = 1000
     End If
-
+Return
 
 
 N108 ; Zero
