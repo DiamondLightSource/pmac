@@ -4454,9 +4454,12 @@ asynStatus pmacController::tScanBuildProfileArray(double *positions, double *vel
     debug(DEBUG_VARIABLE, functionName, "Resolution", resolution);
     debug(DEBUG_VARIABLE, functionName, "Offset", offset);
 
-    // Now loop over the points, applying offset and resolution and store
+    // Now loop over the points, applying offset and resolution to positions and store
     for (index = 0; index < numPoints; index++) {
       positions[index] = (eguProfilePositions_[axis][index] - offset) / resolution;
+    }
+    // Iterates over points, applying resolution to velocities or calculating from velocity mode
+    for (index = 0; index < numPoints; index++) {
       if(calculateVel == PMAC_TRAJ_VELOCITY_PROVIDED){
         velocities[index] = (eguProfileVelocities_[axis][index]) / resolution;
       } else if(calculateVel == PMAC_TRAJ_VELOCITY_CALCULATED){
