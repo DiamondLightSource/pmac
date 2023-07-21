@@ -4430,7 +4430,7 @@ asynStatus pmacController::tScanBuildProfileArray(double *positions, double *vel
   asynStatus status = asynSuccess;
   int index = 0;
   int csEnum = 0;
-  int calculateVel = -1;
+  int calculateVel = 1;
   double resolution = 1.0;
   double offset = 0.0;
   static const char *functionName = "tScanBuildProfileArray";
