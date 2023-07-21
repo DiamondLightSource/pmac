@@ -3669,7 +3669,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     writeAddress += epicsBufferPtr;
 
     // Count how many buffers to fill
-    char cmd[20][1024];
+    char cmd[2*PMAC_MAX_CS_AXES+2][1024];  // 2 buffers (positions and velocities) per axis, plus time and user buffers
     // cmd[18,19] are reserved for the time, velocity, user values
     pHardware_->startTrajectoryTimePointsCmd(cmd[2*PMAC_MAX_CS_AXES], cmd[2*PMAC_MAX_CS_AXES+1], writeAddress);
 
@@ -3744,9 +3744,9 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
         }
       }
       // And the axis velocities
-      for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
-        if ((1 << index & tScanAxisMask_) > 0) {
-          sprintf(cstr, "%s", cmd[index+PMAC_MAX_CS_AXES]);
+      for (int index = PMAC_MAX_CS_AXES; index < (2*PMAC_MAX_CS_AXES); index++) {
+        if ((1 << (index-PMAC_MAX_CS_AXES) & tScanAxisMask_) > 0) {
+          sprintf(cstr, "%s", cmd[index]);
           debug(DEBUG_VARIABLE, functionName, "Command", cstr);
           status = this->immediateWriteRead(cstr, response);
         }
