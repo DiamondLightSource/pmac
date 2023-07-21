@@ -3670,7 +3670,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
 
     // Count how many buffers to fill
     char cmd[2*PMAC_MAX_CS_AXES+2][1024];  // 2 buffers (positions and velocities) per axis, plus time and user buffers
-    // cmd[18,19] are reserved for the time, velocity, user values
+    // cmd[18,19] are reserved for the user and time values
     pHardware_->startTrajectoryTimePointsCmd(cmd[2*PMAC_MAX_CS_AXES], cmd[2*PMAC_MAX_CS_AXES+1], writeAddress);
 
     posCmd = true;
@@ -3684,7 +3684,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     posCmd = false;
     // cmd[9..17] are reserved for axis velocities
     for (int index = PMAC_MAX_CS_AXES; index < (2*PMAC_MAX_CS_AXES); index++) {
-      if ((1 << index & tScanAxisMask_) > 0) {
+      if ((1 << index-PMAC_MAX_CS_AXES & tScanAxisMask_) > 0) {     
         pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_,
                                        posCmd);
       }
