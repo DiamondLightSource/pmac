@@ -205,7 +205,7 @@ N103
     Y_Adr = X_Adr + BufferLength
     Z_Adr = Y_Adr + BufferLength
     A_Vel_Adr = Z_Adr + BufferLength
-    B_Vel_Adr = A_Vel_Adr + BufferLength 
+    B_Vel_Adr = A_Vel_Adr + BufferLength
     C_Vel_Adr = B_Vel_Adr + BufferLength
     U_Vel_Adr = C_Vel_Adr + BufferLength
     V_Vel_Adr = U_Vel_Adr + BufferLength
@@ -213,7 +213,7 @@ N103
     X_Vel_Adr = W_Vel_Adr + BufferLength
     Y_Vel_Adr = X_Vel_Adr + BufferLength
     Z_Vel_Adr = Y_Vel_Adr + BufferLength
-    
+
 Return
 
 ; Subroutines 4 *********************************************************************************
