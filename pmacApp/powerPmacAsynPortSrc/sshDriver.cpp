@@ -369,15 +369,20 @@ SSHDriverStatus SSHDriver::flush()
     return SSHDriverError;
   }
 
-  int rc = libssh2_channel_flush_ex(channel_, 0);
-  rc |= libssh2_channel_flush_ex(channel_, 1);
-  rc |= libssh2_channel_flush_ex(channel_, 2);
+  // Call the underlying libssh2 flush for all channel streams
+  int rc = libssh2_channel_flush_ex(channel_, LIBSSH2_CHANNEL_FLUSH_ALL);
+  if (rc < 0){
+    debugPrint("Flush: libssh2_channel_flush_ex failed with error code %d\n", rc);
+    return SSHDriverError;
+  }
+  // Read out any remaining bytes from t he channel
   rc = libssh2_channel_read(channel_, buff, 2048);
   if (rc > 0){
     debugPrint("Flushed %d bytes\n", rc);
   }
 
   if (rc < 0){
+    debugPrint("Flush: libssh2_channel_read failed with error code %d\n", rc);
     return SSHDriverError;
   }
   return SSHDriverSuccess;
