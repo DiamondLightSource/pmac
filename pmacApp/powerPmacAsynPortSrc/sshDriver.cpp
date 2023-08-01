@@ -527,9 +527,10 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
  *
  * @param buffer - A string buffer to hold the read data.
  * @param bufferSize - The maximum number of bytes to read.
- * @param bytesWritten - The number of bytes that have been read.
+ * @param bytesRead - The number of bytes that have been read.
  * @param readTerm - A terminator to use as a check for EOM (End Of Message).
  * @param timeout - A timeout in ms for the read.
+ * @param crlf - Boolean. If true then match against the terminator followed by CRLF.
  * @return - Success or failure.
  */
 SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRead, int readTerm, int timeout, bool crlf)
