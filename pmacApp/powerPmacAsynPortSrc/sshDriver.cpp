@@ -429,7 +429,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
     *bytesWritten = rc;
   } else {
     debugPrint("%s : No bytes were written, libssh2 error (%d)\n", functionName, rc);
-    bytesWritten = 0;
+    *bytesWritten = 0;
     return SSHDriverError;
   }
 
