@@ -163,7 +163,7 @@ N102:
     If (W_Axis == 1)
     {
         Current_W = Next_W(CalculatedBase)
-        V_Vel = Next_V_Vel(CalculatedBase)
+        W_Vel = Next_W_Vel(CalculatedBase)
     }
     If (X_Axis == 1)
     {
