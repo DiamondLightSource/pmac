@@ -1293,9 +1293,6 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
                  pvtTimeMode_);
       }
     }
-  } else if(cid_ == PMAC_CID_POWER_) {
-      debug(DEBUG_ERROR, functionName, "PVT time control mode not supported for PowerPMAC", PMAC_PVT_TIME_MODE);
-      status = asynError;
   }
 
   // Used for CPU calculation
@@ -2986,10 +2983,11 @@ asynStatus pmacController::buildProfile(int csNo) {
 
     // Check for any invalid times
     int maxValue = 0xFFFFFF;
-    // TODO:  Add cid check for pppmac
-    if (pvtTimeMode_ == 0) {
-      // In this mode the maximum time is 4095 ms
-      maxValue = 0x3E7C18;
+    if (cid_ == PMAC_CID_PMAC_ || cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_CLIPPER_) {
+      if (pvtTimeMode_ == 0) {
+        // In this mode the maximum time is 4095 ms
+        maxValue = 0x3E7C18;
+      }
     }
     while (counter < numPointsToBuild) {
       // Profile times must be less than 24bit
