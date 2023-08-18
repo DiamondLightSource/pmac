@@ -1905,7 +1905,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
         debug(DEBUG_TRACE, functionName, "Calculated CPU %", cpuLoad);
         setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);
       } else {
-        debugf(DEBUG_ERROR, functionName, "CPU [%s] not suppported", cpu_.c_str());
+        debugf(DEBUG_ERROR, functionName, "CPU [%s] not supported", cpu_.c_str());
       }
     }
 
