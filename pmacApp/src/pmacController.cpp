@@ -1680,10 +1680,12 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   int gStat2 = 0;
   int gStat3 = 0;
   bool hardwareProblem;
+  /* avoid filling up the console logs with hardware problem message logs*/
+  static bool loggedToggle = false;
   int nvals;
   std::string trajBufPtr = "";
   static const char *functionName = "fastUpdate";
-
+  
   // Read the current trajectory buffer index read from the PMAC (within current buffer)
   trajBufPtr = sPtr->readValue(PMAC_TRAJ_CURRENT_INDEX);
   if (trajBufPtr == "") {
@@ -1893,7 +1895,9 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
         cpuLoad = phasePercent + servoPercent + rtPercent + bgPercent;
         debug(DEBUG_TRACE, functionName, "Calculated CPU %", cpuLoad);
         setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);
-      } else if ((!strcmp(cpu_.c_str(), "x86")) || (!strcmp(cpu_.c_str(), "PowerPC,APM86xxx")) || (!strcmp(cpu_.c_str(), "arm,LS1021A"))) {
+      } else if ((!strcmp(cpu_.c_str(), "x86"))
+                 || (!strcmp(cpu_.c_str(), "PowerPC,APM86xxx"))
+                 || (!strcmp(cpu_.c_str(), "arm,LS1021A"))) {
         // If CPU is dual core calculate the CPU load for CPU[1] (real time)
         debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
         // Final CPU load calculation - Background tasks have dedicated core so calcs not actually used
@@ -1956,9 +1960,14 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   if (status == asynSuccess) {
     hardwareProblem = ((gStatus & PMAC_HARDWARE_PROB) != 0);
     status = setIntegerParam(this->PMAC_C_GlobalStatus_, hardwareProblem);
-    if (hardwareProblem) {
+    if (hardwareProblem & !loggedToggle) {
       debug(DEBUG_ERROR, functionName, "*** Hardware Problem *** global status [???]",
             (int) gStatus);
+      loggedToggle = true;
+    }
+    if (loggedToggle & !hardwareProblem) {
+        // reset loggedToggle
+        loggedToggle = false;
     }
   }
 
