@@ -1685,7 +1685,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   int nvals;
   std::string trajBufPtr = "";
   static const char *functionName = "fastUpdate";
-  
+
   // Read the current trajectory buffer index read from the PMAC (within current buffer)
   trajBufPtr = sPtr->readValue(PMAC_TRAJ_CURRENT_INDEX);
   if (trajBufPtr == "") {
@@ -1796,7 +1796,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   }*/
 
   if(cid_ ==  PMAC_CID_POWER_) {
-    
+
     // Values to read from the hardware
     double phaseTaskTimeUs = 0.0, servoTimeUs = 0.0, rtTimeUs = 0.0, bgTaskTimeUs = 0.0;
     double phaseDeltaTime = 0.0, servoDeltaTime = 0.0, rtiDeltaTime = 0.0, bgDeltaTime = 0.0;
@@ -1806,11 +1806,11 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
     double servoTaskTimeUs = 0.0, servoTaskTime = 0.0, servoFreq = 0.0, servoPercent = 0.0;
     double rtTaskTimeUs = 0.0, rtTaskTime = 0.0, rtFreq = 0.0, rtPercent = 0.0;
     double bgTaskTime = 0.0, bgFreq = 0.0, bgPercent = 0.0, bgSleepTime = 0.0;
-    
+
 
     // Final result
     double cpuLoad = 0.0;
-    
+
     // Calculation of each task
     if (status == asynSuccess) {
       status = parseDoubleVariable(PPMAC_CPU_FPHASE_TIME, sPtr->readValue(PPMAC_CPU_FPHASE_TIME),
