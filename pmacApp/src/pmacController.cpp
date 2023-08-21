@@ -779,7 +779,6 @@ void pmacController::setupBrokerVariables(void) {
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFFER_LENGTH);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_A);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_BUFF_ADR_B);
-  // pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_VELOCITY_TYPE);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_TRAJ_PROG_VERSION);
 
 
@@ -1422,7 +1421,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
           } else {
             gpioOutputs += gpioBit << gpio;
           }
-         }
+        }
       }
       // Inputs
       for (gpio = 0; gpio < 16; gpio++) {
@@ -3026,7 +3025,7 @@ asynStatus pmacController::buildProfile(int csNo) {
   if (status == asynSuccess) {
     // Initialise the trajectory store
     status = pTrajectory_->initialise(numPoints);
-    
+
     if (status == asynSuccess) {
       // Set the trajectory store initial values
       status = pTrajectory_->append(tScanPositions_, tScanVelocities_, profileTimes_, profileUser_,
@@ -3682,7 +3681,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     posCmd = false;
     // cmd[9..17] are reserved for axis velocities
     for (int index = PMAC_MAX_CS_AXES; index < (2*PMAC_MAX_CS_AXES); index++) {
-      if ((1 << index-PMAC_MAX_CS_AXES & tScanAxisMask_) > 0) {     
+      if ((1 << (index-PMAC_MAX_CS_AXES) & tScanAxisMask_) > 0) {
         pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_,
                                        posCmd);
       }
@@ -3694,7 +3693,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
            (tScanPointCtr_ < tScanNumPoints_)) {
       // Create the velmode/user/time memory writes:
       // First 4 bits are for user buffer %01X
-      // Remaining 24 bits are for delta times %06X
+      // Next 24 bits are for delta times %06X
       if (status == asynSuccess) {
         status = pTrajectory_->getUserMode(tScanPointCtr_, &userValue);
       }
@@ -4822,29 +4821,6 @@ asynStatus pmacMonitorVariables(const char *controller, const char *variablesStr
 
   return asynSuccess;
 }
-
-// /**
-//  * Set as true the PMAC controller boolean
-//  * tScanUseVelArray_ to use the velocity array in trajectory scans.
-//  * Default value is false.
-//  * @param controller The Asyn port name for the PMAC controller.
-//  */
-// asynStatus pmacSetTrajectoryUseVelArray(const char *controller)
-// {
-//   pmacController *pC = NULL;
-
-//   static const char *functionName = "pmacSetTrajectoryUseVelArray";
-
-//   pC = (pmacController *)findAsynPortDriver(controller);
-//   if (!pC)
-//   {
-//     printf("%s:%s: Error port %s not found\n",
-//            driverName, functionName, controller);
-//     return asynError;
-//   }
-
-//   return pC->pmacSetTrajectoryUseVelArray();
-// }
 
 /* Code for iocsh registration */
 
