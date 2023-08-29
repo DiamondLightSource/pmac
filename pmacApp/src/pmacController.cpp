@@ -2379,7 +2379,7 @@ pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size
                   sprintf(buf,"%f",value[index]);
               else
                   sprintf(buf,", %f",value[index]);
-              
+
               // If the constructed command is greater than the max buffer
               // then split the command over multiple writes
               if(strlen(buf) + strlen(command) <= PMAC_MAXBUF_ -10){
@@ -3748,7 +3748,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
           status = this->immediateWriteRead(cstr, response);
         }
       }
-      
+
       // Set the parameter according to the filled points
       if (buffer == PMAC_TRAJ_BUFFER_A) {
         setIntegerParam(PMAC_C_TrajBuffFillA_, epicsBufferPtr);
@@ -4462,7 +4462,7 @@ asynStatus pmacController::tScanBuildProfileArray(double *positions, double *vel
       } else if(calculateVel == PMAC_TRAJ_VELOCITY_CALCULATED){
         status = this->tScanCalculateVelocityArray(positions, velocities, times, index);
       } else {
-        debug(DEBUG_ERROR, functionName, "Invalid calculate velocity flag values", calculateVel);
+        debug(DEBUG_ERROR, functionName, "Invalid velocity assignment option", calculateVel);
         status = asynError;
       }
     }
@@ -4483,7 +4483,12 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
   switch(profileVelMode_[index]) {
     // Average Previous -> Next
     case 0:
-      if(times[index] ==  0 || times[index+1] == 0) break;
+      if(times[index] <=  0 && times[index+1] <= 0) {
+        debugf(DEBUG_ERROR, functionName, "Invalid times (%d and %d) at points %d and %d",
+               times[index],times[index+1], index, (index+1));
+        status = asynError;
+        break;
+      }
       inverse_deltaTime = 1000000 / (times[index]+times[index+1]);
       deltaPos = positions[index+1] - positions[index-1];
       velocities[index] = inverse_deltaTime * deltaPos;
@@ -4491,7 +4496,12 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
 
     // Real Previous -> Current
     case 1:
-    if(times[index] ==  0) break;
+    if(times[index] <=  0) {
+        debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
+               times[index],index);
+        status = asynError;
+        break;
+      }
       inverse_deltaTime = 1000000 / (times[index]);
       deltaPos = positions[index] - positions[index-1];
       velocities[index] = 2.0 * inverse_deltaTime * deltaPos - velocities[index-1];
@@ -4499,7 +4509,12 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
 
     // Average Previous -> Current
     case 2:
-      if(times[index] ==  0) break;
+      if(times[index] <=  0) {
+        debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
+               times[index], index);
+        status = asynError;
+        break;
+      }
       inverse_deltaTime = 1000000 / (times[index]);
       deltaPos = positions[index] - positions[index-1];
       velocities[index] = inverse_deltaTime * deltaPos;
@@ -4509,17 +4524,23 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
     case 3:
       velocities[index] = 0.0;
       break;
-    
+
     // Average Current -> Next
     case 4:
-      if(times[index+1] == 0) break;
+      if(times[index+1] <= 0) {
+        debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
+               times[index+1], (index+1));
+        status = asynError;
+        break;
+      }
       inverse_deltaTime = 1000000 / (times[index+1]);
       deltaPos = positions[index+1] - positions[index];
       velocities[index] = inverse_deltaTime * deltaPos;
       break;
 
     default:
-      debug(DEBUG_ERROR, functionName, "Invalid velocity mode", profileVelMode_[index]);
+      debugf(DEBUG_ERROR, functionName, "Invalid velocity mode (%d) at point %d",
+             profileVelMode_[index], index);
       status = asynError;
       break;
   }
