@@ -41,7 +41,7 @@ public:
 
     std::string parseCSMappingResult(const std::string mappingResult);
 
-    void startTrajectoryTimePointsCmd(char *user_cmd, char *time_cmd, 
+    void startTrajectoryTimePointsCmd(char *user_cmd, char *time_cmd,
                                       int addr);
 
     void addTrajectoryTimePointCmd(char *userCmd, char *timeCmd,

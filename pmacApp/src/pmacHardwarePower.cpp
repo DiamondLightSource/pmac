@@ -306,7 +306,7 @@ std::string pmacHardwarePower::parseCSMappingResult(const std::string mappingRes
   return result;
 }
 
-void pmacHardwarePower::startTrajectoryTimePointsCmd(char *userCmd, char *timeCmd, 
+void pmacHardwarePower::startTrajectoryTimePointsCmd(char *userCmd, char *timeCmd,
                                                      int addr) {
   static const char *functionName = "startTrajectoryTimePointsCmd";
 

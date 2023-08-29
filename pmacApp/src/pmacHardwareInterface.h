@@ -84,7 +84,7 @@ public:
 
     virtual std::string parseCSMappingResult(const std::string mappingResult) = 0;
 
-    virtual void startTrajectoryTimePointsCmd(char *user_cmd, char *time_cmd, 
+    virtual void startTrajectoryTimePointsCmd(char *user_cmd, char *time_cmd,
                                               int addr) = 0;
 
     virtual void addTrajectoryTimePointCmd(char *userCmd, char *timeCmd,

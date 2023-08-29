@@ -189,7 +189,7 @@
 #define PMAC_SLOW_LOOP_TIME   5000
 
 #define PMAC_PVT_TIME_MODE       "I42"   // PVT Time Control Mode (0=4,095 ms max time, 1=8,388,607 ms max time)
- 
+
 #define PMAC_CPU_PHASE_INTR      "M70"   // Time between phase interrupts (CPU cycles/2)
 #define PMAC_CPU_PHASE_TIME      "M71"   // Time for phase tasks (CPU cycles/2)
 #define PMAC_CPU_SERVO_TIME      "M72"   // Time for servo tasks (CPU cycles/2)

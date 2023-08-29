@@ -40,7 +40,7 @@ pmacTrajectory::~pmacTrajectory() {
     }
     free(profileVelocities_);
   }
-  
+
   if (profileTimes_) {
     free(profileTimes_);
   }
@@ -325,7 +325,7 @@ asynStatus pmacTrajectory::getVelocity(int axis, int index, double *velocity) {
   static const char *functionName = "readVelocity";
   debug(DEBUG_TRACE, functionName, "Called with axis", axis);
   debug(DEBUG_TRACE, functionName, "Called with index", index);
-  
+
   // Check the axis is valid
   if (axis < 0 || axis >= noOfAxes_) {
     debug(DEBUG_ERROR, functionName, "Invalid axis requested", axis);
