@@ -51,7 +51,7 @@ asynStatus pmacMessageBroker::connect(const char *port, int addr) {
   debug(DEBUG_FLOW, functionName, "Connecting to low level asynOctetSyncIO port", port);
 
   //Connect our Asyn user to the low level port that is a parameter to this constructor
-  status = lowLevelPortConnect(port, addr, &lowLevelPortUser_, (char *) "\006", (char *) "\r");
+  status = lowLevelPortConnect(port, addr, &lowLevelPortUser_, (char *) "\006", (char *) "\n");
   if (status != asynSuccess) {
     debug(DEBUG_ERROR, functionName, "Failed to connect to low level asynOctetSyncIO port", port);
   }
