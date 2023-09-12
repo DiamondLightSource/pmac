@@ -55,41 +55,41 @@ class TestGeneral(TestCase):
 
         try:
             problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
-            self.assertEquals(problem, 0)
+            self.assertEqual(problem, 0)
 
             # create a feedrate problem by manually setting a configured feedrate
             tb.send_command("&2%50")
             tb.poll_all_now()
             Sleep(2)  # Todo, does requiring this represent an issue?
             problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
-            self.assertEquals(problem, 1)
+            self.assertEqual(problem, 1)
 
             # use driver feature to reset All feedrates
             ca.caput("{}:FEEDRATE".format(brick_pv_root), 100, wait=True)
             tb.poll_all_now()
             Sleep(2)
             problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
-            self.assertEquals(problem, 0)
+            self.assertEqual(problem, 0)
 
             # create a feedrate problem by manually setting another configured feedrate
             tb.send_command("&3%50")
             tb.poll_all_now()
             Sleep(2)
             problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
-            self.assertEquals(problem, 1)
+            self.assertEqual(problem, 1)
 
             # use driver feature to reset All feedrates
             ca.caput("{}:FEEDRATE".format(brick_pv_root), 100, wait=True)
             tb.poll_all_now()
             Sleep(2)
             problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
-            self.assertEquals(problem, 0)
+            self.assertEqual(problem, 0)
 
             # check that non-configured CS has no effect
             tb.send_command("&4%50")
             tb.poll_all_now()
             Sleep(2)
             problem = ca.caget("{}:FEEDRATE_PROBLEM_RBV".format(brick_pv_root))
-            self.assertEquals(problem, 0)
+            self.assertEqual(problem, 0)
         finally:
             ca.caput("{}:FEEDRATE".format(brick_pv_root), 100, wait=True)

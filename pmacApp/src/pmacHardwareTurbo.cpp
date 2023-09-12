@@ -326,29 +326,29 @@ std::string pmacHardwareTurbo::parseCSMappingResult(const std::string mappingRes
   return mappingResult;
 }
 
-void pmacHardwareTurbo::startTrajectoryTimePointsCmd(char *vel_cmd, char *user_cmd,
-                                                     char *time_cmd, int addr) {
+void pmacHardwareTurbo::startTrajectoryTimePointsCmd(char *user_cmd, char *time_cmd,
+                                                     int addr) {
   static const char *functionName = "startTrajectoryTimePointsCmd";
 
   debug(DEBUG_FLOW, functionName, "addr %d", addr);
 
-  sprintf(vel_cmd, "WL:$%X", addr);
-  user_cmd[0] = time_cmd[0] = 0;
+  sprintf(user_cmd, "WL:$%X", addr);
+  time_cmd[0] = 0;
 }
 
-void pmacHardwareTurbo::addTrajectoryTimePointCmd(char *velCmd, char *userCmd, char *timeCmd,
-                                                  int velocityMode, int userFunc, int time,
+void pmacHardwareTurbo::addTrajectoryTimePointCmd(char *userCmd, char *timeCmd,
+                                                  int userFunc, int time,
                                                   bool ) {
   static const char *functionName = "addTrajectoryTimePointCmd";
 
-  debugf(DEBUG_FLOW, functionName, "velCmd %s\nuserCmd %s\ntimeCmd %s\nvel %d, user %d, time %d",
-         velCmd, userCmd, timeCmd, velocityMode, userFunc, time);
+  debugf(DEBUG_FLOW, functionName, "userCmd %s\ntimeCmd %s\nuser %d, time %d",
+         userCmd, timeCmd, userFunc, time);
 
-  sprintf(velCmd, "%s,$%01X%01X%06X", velCmd, velocityMode, userFunc, time);
-  userCmd[0] = timeCmd[0] = 0;
+  sprintf(userCmd, "%s,$%01X%06X", userCmd, userFunc, time);
+  timeCmd[0] = 0;
 }
 
-void pmacHardwareTurbo::startAxisPointsCmd(char *axisCmd, int axis, int addr, int buffSize) {
+void pmacHardwareTurbo::startAxisPointsCmd(char *axisCmd, int axis, int addr, int buffSize, bool) {
   static const char *functionName = "startAxisPointsCmd";
 
   debugf(DEBUG_FLOW, functionName, "cmd %s, axis %d, addr %d", axisCmd, axis, addr);

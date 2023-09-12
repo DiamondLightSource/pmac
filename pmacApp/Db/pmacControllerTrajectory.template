@@ -169,6 +169,30 @@ record(waveform,"$(PMAC):UserArray") {
     field(PREC, "3")
 }
 
+##
+## Records to set the velocities calculation
+## NO => The velocities arrays are supplied
+## YES => The velocities arrays are calculated using the VelocityMode
+##
+record(bo, "$(PMAC):ProfileCalcVel")
+{
+  field(DESC, "Calculate the velocities arrays")
+  field(DTYP, "asynInt32")
+  field(OUT,  "@asyn($(PORT),0)PMAC_TRAJ_CALCVEL")
+  field(ZNAM, "NO")
+  field(ONAM, "YES")
+}
+
+record(bi, "$(PMAC):ProfileCalcVel_RBV")
+{
+  field(DESC, "Calculate the velocities arrays")
+  field(DTYP, "asynInt32")
+  field(INP,  "@asyn($(PORT),0)PMAC_TRAJ_CALCVEL")
+  field(ZNAM, "NO")
+  field(ONAM, "YES")
+  field(SCAN, "I/O Intr")
+}
+
 ## Record to specific the Velocity mode to use at each point
 record(waveform,"$(PMAC):VelocityMode") {
     field(DESC, "Velocity mode at each point")
@@ -547,6 +571,17 @@ record(waveform,"$(PMAC):A:Positions") {
     field(PINI, "YES")
 }
 
+# Target velocity array for this axis
+record(waveform,"$(PMAC):A:Velocities") {
+    field(DESC, "Axis A velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_A")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
 record(longout,"$(PMAC):A:NoOfPts") {
     field(DESC, "Axis A Qty Points")
     field(SCAN, "1 second")
@@ -574,6 +609,17 @@ record(waveform,"$(PMAC):B:Positions") {
     field(DESC, "Axis B positions")
     field(DTYP, "asynFloat64ArrayOut")
     field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_B")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):B:Velocities") {
+    field(DESC, "Axis B velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_B")
     field(NELM, "$(NPOINTS)")
     field(FTVL, "DOUBLE")
     field(PREC, "$(PREC=3)")
@@ -614,6 +660,17 @@ record(waveform,"$(PMAC):C:Positions") {
     field(PINI, "YES")
 }
 
+# Target velocity array for this axis
+record(waveform,"$(PMAC):C:Velocities") {
+    field(DESC, "Axis C velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_C")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
 record(longout,"$(PMAC):C:NoOfPts") {
     field(DESC, "Axis C Qty Points")
     field(SCAN, "1 second")
@@ -642,6 +699,17 @@ record(waveform,"$(PMAC):U:Positions") {
     field(DESC, "Axis U positions")
     field(DTYP, "asynFloat64ArrayOut")
     field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_U")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):U:Velocities") {
+    field(DESC, "Axis U velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_U")
     field(NELM, "$(NPOINTS)")
     field(FTVL, "DOUBLE")
     field(PREC, "$(PREC=3)")
@@ -682,6 +750,17 @@ record(waveform,"$(PMAC):V:Positions") {
     field(PINI, "YES")
 }
 
+# Target velocity array for this axis
+record(waveform,"$(PMAC):V:Velocities") {
+    field(DESC, "Axis V velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_V")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
 record(longout,"$(PMAC):V:NoOfPts") {
     field(DESC, "Axis V Qty Points")
     field(SCAN, "1 second")
@@ -709,6 +788,17 @@ record(waveform,"$(PMAC):W:Positions") {
     field(DESC, "Axis W positions")
     field(DTYP, "asynFloat64ArrayOut")
     field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_W")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):W:Velocities") {
+    field(DESC, "Axis W velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_W")
     field(NELM, "$(NPOINTS)")
     field(FTVL, "DOUBLE")
     field(PREC, "$(PREC=3)")
@@ -748,6 +838,17 @@ record(waveform,"$(PMAC):X:Positions") {
     field(PINI, "YES")
 }
 
+# Target velocity array for this axis
+record(waveform,"$(PMAC):X:Velocities") {
+    field(DESC, "Axis X velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_X")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
 record(longout,"$(PMAC):X:NoOfPts") {
     field(DESC, "Axis X Qty Points")
     field(SCAN, "1 second")
@@ -781,6 +882,17 @@ record(waveform,"$(PMAC):Y:Positions") {
     field(PINI, "YES")
 }
 
+# Target velocity array for this axis
+record(waveform,"$(PMAC):Y:Velocities") {
+    field(DESC, "Axis Y velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_Y")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
 record(longout,"$(PMAC):Y:NoOfPts") {
     field(DESC, "Axis Y Qty Points")
     field(SCAN, "1 second")
@@ -808,6 +920,17 @@ record(waveform,"$(PMAC):Z:Positions") {
     field(DESC, "Axis Z positions")
     field(DTYP, "asynFloat64ArrayOut")
     field(INP,  "@asyn($(PORT),0)PROFILE_POSITIONS_Z")
+    field(NELM, "$(NPOINTS)")
+    field(FTVL, "DOUBLE")
+    field(PREC, "$(PREC=3)")
+    field(PINI, "YES")
+}
+
+# Target velocity array for this axis
+record(waveform,"$(PMAC):Z:Velocities") {
+    field(DESC, "Axis Z velocities")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PROFILE_VELOCITIES_Z")
     field(NELM, "$(NPOINTS)")
     field(FTVL, "DOUBLE")
     field(PREC, "$(PREC=3)")

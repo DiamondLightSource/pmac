@@ -215,6 +215,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   tScanPmacBufferAddressB_ = 0;
   tScanPmacBufferSize_ = 0;
   tScanPositions_ = NULL;
+  tScanVelocities_ = NULL;
   tScanPmacProgVersion_ = 0.0;
   i8_ = 0;
   i7002_ = 0;
@@ -459,6 +460,15 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_ProfilePositionsXString, asynParamFloat64Array, &PMAC_C_ProfilePositionsX_);
   createParam(PMAC_C_ProfilePositionsYString, asynParamFloat64Array, &PMAC_C_ProfilePositionsY_);
   createParam(PMAC_C_ProfilePositionsZString, asynParamFloat64Array, &PMAC_C_ProfilePositionsZ_);
+  createParam(PMAC_C_ProfileVelocitiesAString, asynParamFloat64Array, &PMAC_C_ProfileVelocitiesA_);
+  createParam(PMAC_C_ProfileVelocitiesBString, asynParamFloat64Array, &PMAC_C_ProfileVelocitiesB_);
+  createParam(PMAC_C_ProfileVelocitiesCString, asynParamFloat64Array, &PMAC_C_ProfileVelocitiesC_);
+  createParam(PMAC_C_ProfileVelocitiesUString, asynParamFloat64Array, &PMAC_C_ProfileVelocitiesU_);
+  createParam(PMAC_C_ProfileVelocitiesVString, asynParamFloat64Array, &PMAC_C_ProfileVelocitiesV_);
+  createParam(PMAC_C_ProfileVelocitiesWString, asynParamFloat64Array, &PMAC_C_ProfileVelocitiesW_);
+  createParam(PMAC_C_ProfileVelocitiesXString, asynParamFloat64Array, &PMAC_C_ProfileVelocitiesX_);
+  createParam(PMAC_C_ProfileVelocitiesYString, asynParamFloat64Array, &PMAC_C_ProfileVelocitiesY_);
+  createParam(PMAC_C_ProfileVelocitiesZString, asynParamFloat64Array, &PMAC_C_ProfileVelocitiesZ_);
   createParam(PMAC_C_CompTable0_WString, asynParamFloat64Array, &PMAC_C_CompTable0_W);
   createParam(PMAC_C_CompTable1_WString, asynParamFloat64Array, &PMAC_C_CompTable1_W);
   createParam(PMAC_C_CompTable2_WString, asynParamFloat64Array, &PMAC_C_CompTable2_W);
@@ -490,6 +500,7 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_TrajPercentString, asynParamFloat64, &PMAC_C_TrajPercent_);
   createParam(PMAC_C_TrajEStatusString, asynParamInt32, &PMAC_C_TrajEStatus_);
   createParam(PMAC_C_TrajProgString, asynParamInt32, &PMAC_C_TrajProg_);
+  createParam(PMAC_C_TrajCalcVelString, asynParamInt32, &PMAC_C_TrajCalcVel_);
   createParam(PMAC_C_TrajProgVersionString, asynParamFloat64, &PMAC_C_TrajProgVersion_);
   createParam(PMAC_C_TrajCodeVersionString, asynParamFloat64, &PMAC_C_TrajCodeVersion_);
   createParam(PMAC_C_NoOfMsgsString, asynParamInt32, &PMAC_C_NoOfMsgs_);
@@ -560,6 +571,7 @@ void pmacController::initAsynParams(void) {
   //paramStatus = ((setStringParam(PMAC_C_TrajCSPort_, "") == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajEStatus_, 0) == asynSuccess) && paramStatus);
   paramStatus = ((setIntegerParam(PMAC_C_TrajProg_, 1) == asynSuccess) && paramStatus);
+  paramStatus = ((setIntegerParam(PMAC_C_TrajCalcVel_, 1) == asynSuccess) && paramStatus);
   paramStatus = ((setDoubleParam(PMAC_C_TrajProgVersion_, 0.0) == asynSuccess) && paramStatus);
   paramStatus = (
           (setDoubleParam(PMAC_C_TrajCodeVersion_, PMAC_TRAJECTORY_VERSION) == asynSuccess) &&
@@ -688,7 +700,24 @@ void pmacController::setupBrokerVariables(void) {
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_SERVO_PERIOD);
   }
 
-  // Add the PMAC P variables required for trajectory scanning
+  if(cid_ == PMAC_CID_POWER_){
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FPHASE_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FSERVO_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_PHASED_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_SERVOD_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_RTID_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_BGD_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FRTI_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FBG_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_BGSLEEP_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_FREQ);
+    // pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_TYPE);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_RTI_PERIOD);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_PHASE_SERV_PER);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_SERVO_PERIOD);
+  }
+
+  // Add the PMAC M variables required for trajectory scanning
   // Fast readout required of these values
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, PMAC_TRAJ_STATUS);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_TRAJ_CURRENT_INDEX);
@@ -1246,20 +1275,22 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
   }
 
   // Read the value of PVT time control mode
-  trajPtr = sPtr->readValue(PMAC_PVT_TIME_MODE);
-  if (trajPtr == "") {
-    debug(DEBUG_ERROR, functionName, "Problem reading PVT time control mode", PMAC_PVT_TIME_MODE);
-    status = asynError;
-  } else {
-    nvals = sscanf(trajPtr.c_str(), "%d", &pvtTimeMode_);
-    if (nvals != 1) {
-      debug(DEBUG_ERROR, functionName, "Error reading PVT time control mode", PMAC_PVT_TIME_MODE);
-      debug(DEBUG_ERROR, functionName, "    nvals", nvals);
-      debug(DEBUG_ERROR, functionName, "    response", trajPtr);
+  if (cid_ == PMAC_CID_PMAC_ || cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_CLIPPER_) {
+    trajPtr = sPtr->readValue(PMAC_PVT_TIME_MODE);
+    if (trajPtr == "") {
+      debug(DEBUG_ERROR, functionName, "Problem reading PVT time control mode", PMAC_PVT_TIME_MODE);
       status = asynError;
     } else {
-      debugf(DEBUG_VARIABLE, functionName, "PVT time control mode [%s] => %X", PMAC_PVT_TIME_MODE,
-             pvtTimeMode_);
+        nvals = sscanf(trajPtr.c_str(), "%d", &pvtTimeMode_);
+        if (nvals != 1) {
+          debug(DEBUG_ERROR, functionName, "Error reading PVT time control mode", PMAC_PVT_TIME_MODE);
+          debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+          debug(DEBUG_ERROR, functionName, "    response", trajPtr);
+          status = asynError;
+    	} else {
+          debugf(DEBUG_VARIABLE, functionName, "PVT time control mode [%s] => %X", PMAC_PVT_TIME_MODE,
+                 pvtTimeMode_);
+      }
     }
   }
 
@@ -2294,6 +2325,24 @@ pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size
       memcpy(eguProfilePositions_[7], value, nElements * sizeof(double));
     } else if (function == PMAC_C_ProfilePositionsZ_) {
       memcpy(eguProfilePositions_[8], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_ProfileVelocitiesA_) {
+      memcpy(eguProfileVelocities_[0], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_ProfileVelocitiesB_) {
+      memcpy(eguProfileVelocities_[1], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_ProfileVelocitiesC_) {
+      memcpy(eguProfileVelocities_[2], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_ProfileVelocitiesU_) {
+      memcpy(eguProfileVelocities_[3], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_ProfileVelocitiesV_) {
+      memcpy(eguProfileVelocities_[4], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_ProfileVelocitiesW_) {
+      memcpy(eguProfileVelocities_[5], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_ProfileVelocitiesX_) {
+      memcpy(eguProfileVelocities_[6], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_ProfileVelocitiesY_) {
+      memcpy(eguProfileVelocities_[7], value, nElements * sizeof(double));
+    } else if (function == PMAC_C_ProfileVelocitiesZ_) {
+      memcpy(eguProfileVelocities_[8], value, nElements * sizeof(double));
     } else if (function == PMAC_C_CompTable0_W) {
       compTableIndex=0;
     } else if (function == PMAC_C_CompTable1_W) {
@@ -2330,7 +2379,7 @@ pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size
                   sprintf(buf,"%f",value[index]);
               else
                   sprintf(buf,", %f",value[index]);
-              
+
               // If the constructed command is greater than the max buffer
               // then split the command over multiple writes
               if(strlen(buf) + strlen(command) <= PMAC_MAXBUF_ -10){
@@ -2728,6 +2777,20 @@ asynStatus pmacController::initializeProfile(size_t maxPoints) {
     eguProfilePositions_[axis] = (double *) malloc(sizeof(double) * maxPoints);
   }
 
+  // Allocate the pointers
+  tScanVelocities_ = (double **)malloc(sizeof(double *) * PMAC_MAX_CS_AXES);
+  // Now allocate each position array
+  for (int axis = 0; axis < PMAC_MAX_CS_AXES; axis++) {
+    tScanVelocities_[axis] = (double *)malloc(sizeof(double) * maxPoints);
+  }
+
+  // Allocate the pointers
+  eguProfileVelocities_ = (double **) malloc(sizeof(double *) * PMAC_MAX_CS_AXES);
+  // Now allocate each velocity array
+  for (int axis = 0; axis < PMAC_MAX_CS_AXES; axis++) {
+    eguProfileVelocities_[axis] = (double *) malloc(sizeof(double) * maxPoints);
+  }
+
   // Allocate memory required for user buffer
   if (profileUser_) {
     free(profileUser_);
@@ -2846,14 +2909,14 @@ asynStatus pmacController::buildProfile(int csNo) {
       }
     } else {
       // Old Geobrick without additional memory.
-      // Check memory addresses are less than of equal to (0x10800-18*buffer_size)
-      if (tScanPmacBufferAddressA_ > (0x10800 - (10 * tScanPmacBufferSize_))) {
+      // Check memory addresses are less than of equal to (0x10800-19*buffer_size)
+      if (tScanPmacBufferAddressA_ > (0x10800 - (19 * tScanPmacBufferSize_))) {
         // Set the status to failure
         this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE,
                              "Buffer A memory address invalid");
         status = asynError;
       }
-      if (tScanPmacBufferAddressB_ > (0x10800 - (10 * tScanPmacBufferSize_))) {
+      if (tScanPmacBufferAddressB_ > (0x10800 - (19 * tScanPmacBufferSize_))) {
         // Set the status to failure
         this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE,
                              "Buffer B memory address invalid");
@@ -2919,9 +2982,11 @@ asynStatus pmacController::buildProfile(int csNo) {
 
     // Check for any invalid times
     int maxValue = 0xFFFFFF;
-    if (pvtTimeMode_ == 0) {
-      // In this mode the maximum time is 4095 ms
-      maxValue = 0x3E7C18;
+    if (cid_ == PMAC_CID_PMAC_ || cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_CLIPPER_) {
+      if (pvtTimeMode_ == 0) {
+        // In this mode the maximum time is 4095 ms
+        maxValue = 0x3E7C18;
+      }
     }
     while (counter < numPointsToBuild) {
       // Profile times must be less than 24bit
@@ -2945,7 +3010,7 @@ asynStatus pmacController::buildProfile(int csNo) {
           if (status == asynSuccess) {
             // If the axis is going to be included then copy the position array into local
             // storage ready for the trajectory execution
-            status = this->tScanBuildProfileArray(tScanPositions_[index], index, numPointsToBuild);
+            status = this->tScanBuildProfileArray(tScanPositions_[index], tScanVelocities_[index], profileTimes_, index, numPointsToBuild);
             if (status != asynSuccess) {
               // Set the status to failure
               this->setBuildStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE,
@@ -2963,7 +3028,7 @@ asynStatus pmacController::buildProfile(int csNo) {
 
     if (status == asynSuccess) {
       // Set the trajectory store initial values
-      status = pTrajectory_->append(tScanPositions_, profileTimes_, profileUser_, profileVelMode_,
+      status = pTrajectory_->append(tScanPositions_, tScanVelocities_, profileTimes_, profileUser_,
                                     numPointsToBuild);
       setIntegerParam(PMAC_C_ProfileBuiltPoints_, pTrajectory_->getNoOfValidPoints());
       // Set the scan size to be equal to the number of built points
@@ -3028,17 +3093,18 @@ asynStatus pmacController::appendToProfile() {
         if (status == asynSuccess) {
           // If the axis is going to be included then copy the position array into local
           // storage ready for the trajectory execution
-          status = this->tScanBuildProfileArray(tScanPositions_[index], index, numPointsToBuild);
+          status = this->tScanBuildProfileArray(tScanPositions_[index], tScanVelocities_[index], profileTimes_, index, numPointsToBuild);
           if (status != asynSuccess) {
             // Set the status to failure
             this->setAppendStatus(PROFILE_BUILD_DONE, PROFILE_STATUS_FAILURE,
-                                  "Failed to compile profile positions");
+                                  "Failed to compile profile position and velocities");
           }
         }
       }
     }
     // Append the points to the store
-    status = pTrajectory_->append(tScanPositions_, profileTimes_, profileUser_, profileVelMode_,
+
+    status = pTrajectory_->append(tScanPositions_, tScanVelocities_, profileTimes_, profileUser_,
                                   numPointsToBuild);
     setIntegerParam(PMAC_C_ProfileBuiltPoints_, pTrajectory_->getNoOfValidPoints());
     // Set the scan size to be equal to the number of built points
@@ -3551,14 +3617,15 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
   int nBuffers = 0;
   int epicsBufferPtr = 0;
   int writeAddress = 0;
-  int velModeValue = 0;
   double posValue = 0.0;
+  double velValue = 0.0;
   int userValue = 0;
   int timeValue = 0;
   char response[1024];
   char cstr[1024];
   const char *functionName = "sendTrajectoryDemands";
   bool firstVal = true;
+  bool posCmd = true;
 
   debug(DEBUG_FLOW, functionName);
   startTimer(DEBUG_TIMING, functionName);
@@ -3599,14 +3666,24 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     writeAddress += epicsBufferPtr;
 
     // Count how many buffers to fill
-    char cmd[12][1024];
-    // cmd[9,10,11] are reserved for the time, velocity, user values
-    pHardware_->startTrajectoryTimePointsCmd(cmd[9], cmd[10], cmd[11], writeAddress);
+    char cmd[2*PMAC_MAX_CS_AXES+2][1024];  // 2 buffers (positions and velocities) per axis, plus time and user buffers
+    // cmd[18,19] are reserved for the user and time values
+    pHardware_->startTrajectoryTimePointsCmd(cmd[2*PMAC_MAX_CS_AXES], cmd[2*PMAC_MAX_CS_AXES+1], writeAddress);
 
+    posCmd = true;
     // cmd[0..8] are reserved for axis positions
     for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
       if ((1 << index & tScanAxisMask_) > 0) {
-        pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_);
+        pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_,
+                                       posCmd);
+      }
+    }
+    posCmd = false;
+    // cmd[9..17] are reserved for axis velocities
+    for (int index = PMAC_MAX_CS_AXES; index < (2*PMAC_MAX_CS_AXES); index++) {
+      if ((1 << (index-PMAC_MAX_CS_AXES) & tScanAxisMask_) > 0) {
+        pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_,
+                                       posCmd);
       }
     }
 
@@ -3615,12 +3692,8 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     while ((bufferCount < nBuffers) && (epicsBufferPtr < tScanPmacBufferSize_) &&
            (tScanPointCtr_ < tScanNumPoints_)) {
       // Create the velmode/user/time memory writes:
-      // First 4 bits are for velocity mode %01X
-      // Second 4 bits are for user buffer %01X
-      // Remaining 24 bits are for delta times %06X
-      if (status == asynSuccess) {
-        status = pTrajectory_->getVelocityMode(tScanPointCtr_, &velModeValue);
-      }
+      // First 4 bits are for user buffer %01X
+      // Next 24 bits are for delta times %06X
       if (status == asynSuccess) {
         status = pTrajectory_->getUserMode(tScanPointCtr_, &userValue);
       }
@@ -3628,16 +3701,20 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
         status = pTrajectory_->getTime(tScanPointCtr_, &timeValue);
       }
       if (status == asynSuccess) {
-        pHardware_->addTrajectoryTimePointCmd(cmd[9], cmd[10], cmd[11],
-                velModeValue, userValue, timeValue, firstVal);
+        pHardware_->addTrajectoryTimePointCmd(cmd[2*PMAC_MAX_CS_AXES], cmd[2*PMAC_MAX_CS_AXES+1],
+                                              userValue, timeValue, firstVal);
         for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
           if ((1 << index & tScanAxisMask_) > 0) {
             status = pTrajectory_->getPosition(index, tScanPointCtr_, &posValue);
             pHardware_->addAxisPointCmd(cmd[index], index, posValue, tScanPmacBufferSize_,
                                         firstVal);
+            status = pTrajectory_->getVelocity(index, tScanPointCtr_, &velValue);
+            pHardware_->addAxisPointCmd(cmd[index+PMAC_MAX_CS_AXES], (index+PMAC_MAX_CS_AXES), velValue, tScanPmacBufferSize_,
+                                        firstVal);
           }
         }
       }
+
       // Increment the scan point counter
       tScanPointCtr_++;
       // Increment the buffer count
@@ -3649,7 +3726,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
 
     if (status == asynSuccess) {
       // First send the times/user buffer
-      for (int index = 9; index <= 11; index++)
+      for (int index = 2*PMAC_MAX_CS_AXES; index <= 2*PMAC_MAX_CS_AXES+1; index++)
       {
         sprintf(cstr, "%s", cmd[index]);
         debug(DEBUG_VARIABLE, functionName, "Command", cstr);
@@ -3658,6 +3735,14 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
       // Now send the axis positions
       for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
         if ((1 << index & tScanAxisMask_) > 0) {
+          sprintf(cstr, "%s", cmd[index]);
+          debug(DEBUG_VARIABLE, functionName, "Command", cstr);
+          status = this->immediateWriteRead(cstr, response);
+        }
+      }
+      // And the axis velocities
+      for (int index = PMAC_MAX_CS_AXES; index < (2*PMAC_MAX_CS_AXES); index++) {
+        if ((1 << (index-PMAC_MAX_CS_AXES) & tScanAxisMask_) > 0) {
           sprintf(cstr, "%s", cmd[index]);
           debug(DEBUG_VARIABLE, functionName, "Command", cstr);
           status = this->immediateWriteRead(cstr, response);
@@ -4338,10 +4423,11 @@ asynStatus pmacController::copyCsReadbackToDemand(bool manual)
   return status;
 }
 
-asynStatus pmacController::tScanBuildProfileArray(double *positions, int axis, int numPoints) {
+asynStatus pmacController::tScanBuildProfileArray(double *positions, double *velocities, double *times, int axis, int numPoints) {
   asynStatus status = asynSuccess;
   int index = 0;
   int csEnum = 0;
+  int calculateVel = 1;
   double resolution = 1.0;
   double offset = 0.0;
   static const char *functionName = "tScanBuildProfileArray";
@@ -4355,6 +4441,7 @@ asynStatus pmacController::tScanBuildProfileArray(double *positions, int axis, i
 
   // Determine which CS we currently are using for trajectory scans
   getIntegerParam(PMAC_C_TrajCSPort_, &csEnum);
+  getIntegerParam(PMAC_C_TrajCalcVel_, &calculateVel);
 
   // ask the CS for its axis resolution (axis no.s of CS are 1 based)
   resolution = pCSControllers_[csEnum]->getAxisResolution(axis + 1);
@@ -4364,12 +4451,99 @@ asynStatus pmacController::tScanBuildProfileArray(double *positions, int axis, i
     debug(DEBUG_VARIABLE, functionName, "Resolution", resolution);
     debug(DEBUG_VARIABLE, functionName, "Offset", offset);
 
-    // Now loop over the points, applying offset and resolution and store
+    // Now loop over the points, applying offset and resolution to positions and store
     for (index = 0; index < numPoints; index++) {
       positions[index] = (eguProfilePositions_[axis][index] - offset) / resolution;
     }
+    // Iterates over points, applying resolution to velocities or calculating from velocity mode
+    for (index = 0; index < numPoints; index++) {
+      if(calculateVel == PMAC_TRAJ_VELOCITY_PROVIDED){
+        velocities[index] = (eguProfileVelocities_[axis][index]) / resolution;
+      } else if(calculateVel == PMAC_TRAJ_VELOCITY_CALCULATED){
+        status = this->tScanCalculateVelocityArray(positions, velocities, times, index);
+      } else {
+        debug(DEBUG_ERROR, functionName, "Invalid velocity assignment option", calculateVel);
+        status = asynError;
+      }
+    }
   }
 
+  return status;
+}
+
+asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double *velocities, double *times, int index) {
+  asynStatus status = asynSuccess;
+  static const char *functionName = "tScanCalculateVelocityArray";
+
+  double inverse_deltaTime = 0;
+  double deltaPos = 0.0;
+
+  debug(DEBUG_TRACE, functionName, "Called for index", index);
+
+  switch(profileVelMode_[index]) {
+    // Average Previous -> Next
+    case 0:
+      if(times[index] <=  0 && times[index+1] <= 0) {
+        debugf(DEBUG_ERROR, functionName, "Invalid times (%d and %d) at points %d and %d",
+               times[index],times[index+1], index, (index+1));
+        status = asynError;
+        break;
+      }
+      inverse_deltaTime = 1000000 / (times[index]+times[index+1]);
+      deltaPos = positions[index+1] - positions[index-1];
+      velocities[index] = inverse_deltaTime * deltaPos;
+      break;
+
+    // Real Previous -> Current
+    case 1:
+    if(times[index] <=  0) {
+        debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
+               times[index],index);
+        status = asynError;
+        break;
+      }
+      inverse_deltaTime = 1000000 / (times[index]);
+      deltaPos = positions[index] - positions[index-1];
+      velocities[index] = 2.0 * inverse_deltaTime * deltaPos - velocities[index-1];
+      break;
+
+    // Average Previous -> Current
+    case 2:
+      if(times[index] <=  0) {
+        debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
+               times[index], index);
+        status = asynError;
+        break;
+      }
+      inverse_deltaTime = 1000000 / (times[index]);
+      deltaPos = positions[index] - positions[index-1];
+      velocities[index] = inverse_deltaTime * deltaPos;
+      break;
+
+    // Zero
+    case 3:
+      velocities[index] = 0.0;
+      break;
+
+    // Average Current -> Next
+    case 4:
+      if(times[index+1] <= 0) {
+        debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
+               times[index+1], (index+1));
+        status = asynError;
+        break;
+      }
+      inverse_deltaTime = 1000000 / (times[index+1]);
+      deltaPos = positions[index+1] - positions[index];
+      velocities[index] = inverse_deltaTime * deltaPos;
+      break;
+
+    default:
+      debugf(DEBUG_ERROR, functionName, "Invalid velocity mode (%d) at point %d",
+             profileVelMode_[index], index);
+      status = asynError;
+      break;
+  }
   return status;
 }
 

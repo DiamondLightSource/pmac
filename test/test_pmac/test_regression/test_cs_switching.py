@@ -34,7 +34,7 @@ class TestCsSwitching(TestCase):
             tb.m4.set_cs_assignment("I")
             tb.height.go_direct(1)
 
-            self.assertEquals(tb.height.alarm, 0)
+            self.assertEqual(tb.height.alarm, 0)
             self.assertAlmostEqual(tb.m3.pos, 1, DECIMALS)
 
     def test_group_switch(self):
