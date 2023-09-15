@@ -660,24 +660,6 @@ void pmacController::setupBrokerVariables(void) {
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_BGD_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FRTI_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FBG_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_BGSLEEP_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_FREQ);
-    // pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_TYPE);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_RTI_PERIOD);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_PHASE_SERV_PER);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_SERVO_PERIOD);
-  }
-
-  if(cid_ == PMAC_CID_POWER_){
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FPHASE_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FSERVO_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_PHASED_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_SERVOD_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_RTID_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_BGD_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FRTI_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FBG_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_BGSLEEP_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_FREQ);
     // pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_TYPE);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_RTI_PERIOD);
@@ -1277,8 +1259,6 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
                                   "PPMAC cpu freq", Sys_CPUFreq_);
     // status = parseIntegerVariable(PPMAC_CPU_TYPE, sPtr->readValue(PPMAC_CPU_TYPE),
     //                               "PPMAC cpu type", Sys_CPUType_);
-    status = parseIntegerVariable(PPMAC_CPU_BGSLEEP_TIME, sPtr->readValue(PPMAC_CPU_BGSLEEP_TIME),
-                                  "PPMAC BG clock sleep time", Sys_BgSleepTime_);
     status = parseDoubleVariable(PPMAC_CPU_SERVO_PERIOD, sPtr->readValue(PPMAC_CPU_SERVO_PERIOD),
                                   "PPMAC Servo period", Sys_ServoPeriod_);
     status = parseDoubleVariable(PPMAC_CPU_RTI_PERIOD, sPtr->readValue(PPMAC_CPU_RTI_PERIOD),
@@ -1771,7 +1751,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
     double phaseTaskTime = 0.0, phaseFreq = 0.0, phasePercent = 0.0;
     double servoTaskTimeUs = 0.0, servoTaskTime = 0.0, servoFreq = 0.0, servoPercent = 0.0;
     double rtTaskTimeUs = 0.0, rtTaskTime = 0.0, rtFreq = 0.0, rtPercent = 0.0;
-    double bgTaskTime = 0.0, bgFreq = 0.0, bgPercent = 0.0, bgSleepTime = 0.0;
+    double bgTaskTime = 0.0, bgFreq = 0.0, bgPercent = 0.0;
 
 
     // Final result
@@ -1840,19 +1820,15 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       debug(DEBUG_TRACE, functionName, "Real Time Interrupt %", rtPercent);
 
       // Background tasks percentage
-      if(Sys_BgSleepTime_ == 0)
-        bgSleepTime = 0.001;
-      else
-        bgSleepTime = (double)Sys_BgSleepTime_ / 1000000;
-        bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTaskTimeUs/phaseDeltaTime)*phaseTaskTimeUs;
-        bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTaskTimeUs/servoDeltaTime)*servoTaskTimeUs;
-        bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTaskTimeUs/rtiDeltaTime)*rtTaskTimeUs;
-        bgTaskTime = bgTaskTimeUs / 1000000;
-        bgFreq = 1/ (bgSleepTime + bgDeltaTime/1000000);
-        bgPercent = (bgFreq * bgTaskTime)*100;
-        debug(DEBUG_TRACE, functionName, "Background Interrupt Frequency (Hz)", bgFreq);
-        debug(DEBUG_TRACE, functionName, "Background Interrupt Time (us)", bgTaskTimeUs);
-        debug(DEBUG_TRACE, functionName, "Background Interrupt %", bgPercent);
+      bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTaskTimeUs/phaseDeltaTime)*phaseTaskTimeUs;
+      bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTaskTimeUs/servoDeltaTime)*servoTaskTimeUs;
+      bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTaskTimeUs/rtiDeltaTime)*rtTaskTimeUs;
+      bgTaskTime = bgTaskTimeUs / 1000000;
+      bgFreq = 1/ (bgDeltaTime/1000000);
+      bgPercent = (bgFreq * bgTaskTime)*100;
+      debug(DEBUG_TRACE, functionName, "Background Interrupt Frequency (Hz)", bgFreq);
+      debug(DEBUG_TRACE, functionName, "Background Interrupt Time (us)", bgTaskTimeUs);
+      debug(DEBUG_TRACE, functionName, "Background Interrupt %", bgPercent);
 
       // Single-core Power PCservoDeltaTime
       if (!strcmp(cpu_.c_str(), "PowerPC,460EX")) {
