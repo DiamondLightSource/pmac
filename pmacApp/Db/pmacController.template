@@ -229,13 +229,66 @@ record(mbbi, "$(P):PMACTYPE") {
   field(INP, "@asyn($(PORT),0)PMAC_VIM_cid")
 }
 
+# pmac number of CPU cores
+record(ai, "$(P):CPUNUMCORES") {
+  field(DESC, "Number of CPU cores")
+  field(DTYP, "asynInt32")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_CPU_NUM_CORES")
+}
+
 # % archiver 10 Monitor
 # This makes the component icon reflect the severity
 # % gui, $(PORT), sevr
-record(ai, "$(P):CPULOAD") {
+record(ai, "$(P):CPULOAD_0") {
   field(DTYP, "asynFloat64")
   field(SCAN, "I/O Intr")
-  field(INP, "@asyn($(PORT),0)PMAC_C_CPU_USAGE")
+  field(INP, "@asyn($(PORT),0)PMAC_C_CPU_USAGE_0")
+  field(PREC, "2")
+  field(EGU, "%")
+  field(HIGH, "60")
+  field(HSV, "MINOR")
+  field(HIHI, "80")
+  field(HHSV, "MAJOR")
+}
+
+# % archiver 10 Monitor
+# This makes the component icon reflect the severity
+# % gui, $(PORT), sevr
+record(ai, "$(P):CPULOAD_1") {
+  field(DTYP, "asynFloat64")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_CPU_USAGE_1")
+  field(PREC, "2")
+  field(EGU, "%")
+  field(HIGH, "60")
+  field(HSV, "MINOR")
+  field(HIHI, "80")
+  field(HHSV, "MAJOR")
+}
+
+# % archiver 10 Monitor
+# This makes the component icon reflect the severity
+# % gui, $(PORT), sevr
+record(ai, "$(P):CPULOAD_2") {
+  field(DTYP, "asynFloat64")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_CPU_USAGE_2")
+  field(PREC, "2")
+  field(EGU, "%")
+  field(HIGH, "60")
+  field(HSV, "MINOR")
+  field(HIHI, "80")
+  field(HHSV, "MAJOR")
+}
+
+# % archiver 10 Monitor
+# This makes the component icon reflect the severity
+# % gui, $(PORT), sevr
+record(ai, "$(P):CPULOAD_3") {
+  field(DTYP, "asynFloat64")
+  field(SCAN, "I/O Intr")
+  field(INP, "@asyn($(PORT),0)PMAC_C_CPU_USAGE_3")
   field(PREC, "2")
   field(EGU, "%")
   field(HIGH, "60")

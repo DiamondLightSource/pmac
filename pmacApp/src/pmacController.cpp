@@ -190,7 +190,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   csResetAllDemands = false;
   csCount = 0;
   Sys_CPUFreq_ = 0;
-  Sys_CPUType_ = 0;
+  //Sys_CPUType_ = 0;
   Sys_BgSleepTime_ = 0;
   Sys_ServoPeriod_ = 0.0;
   Sys_RtIntPeriod_ = 0.0;
@@ -246,6 +246,10 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   // Do nothing if we have failed to connect. Requires a restart once
   // the brick is restored
   initAsynParams();
+
+  // Get CPU settings for CPU usage calculation
+  this->getCpuNumCores();
+  this->getTasksCore();
 
   // Create the epicsEvents for signaling to start and stop scanning
   this->startEventId_ = epicsEventCreate(epicsEventEmpty);
@@ -329,6 +333,7 @@ asynStatus pmacController::initialSetup() {
       pBroker_->markAsPowerPMAC();
       // set the echo to 7
       this->lowLevelWriteRead("echo 7", response);
+
     } else if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_PMAC_ ||
                cid_ == PMAC_CID_CLIPPER_) {
       pHardware_ = new pmacHardwareTurbo();
@@ -394,7 +399,11 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_DisablePollingString, asynParamInt32, &PMAC_C_DisablePolling_);
   createParam(PMAC_C_FastUpdateTimeString, asynParamFloat64, &PMAC_C_FastUpdateTime_);
   createParam(PMAC_C_LastParamString, asynParamInt32, &PMAC_C_LastParam_);
-  createParam(PMAC_C_CpuUsageString, asynParamFloat64, &PMAC_C_CpuUsage_);
+  createParam(PMAC_C_CpuNumCoresString, asynParamInt32,&PMAC_C_CpuNumCores_);
+  createParam(PMAC_C_CpuUsage0String, asynParamFloat64, &PMAC_C_CpuUsage0_);
+  createParam(PMAC_C_CpuUsage1String, asynParamFloat64, &PMAC_C_CpuUsage1_);
+  createParam(PMAC_C_CpuUsage2String, asynParamFloat64, &PMAC_C_CpuUsage2_);
+  createParam(PMAC_C_CpuUsage3String, asynParamFloat64, &PMAC_C_CpuUsage3_);
   createParam(PMAC_C_AxisCSString, asynParamInt32, &PMAC_C_AxisCS_);
   createParam(PMAC_C_AxisReadonlyString, asynParamInt32, &PMAC_C_AxisReadonly_);
   createParam(PMAC_C_WriteCmdString, asynParamOctet, &PMAC_C_WriteCmd_);
@@ -568,6 +577,13 @@ void pmacController::initAsynParams(void) {
     //paramStatus = ((setDoubleParam(index, PMAC_C_MotorRes_, 1.0) == asynSuccess) && paramStatus);
     //paramStatus = ((setDoubleParam(index, PMAC_C_MotorOffset_, 0.0) == asynSuccess) && paramStatus);
   }
+
+  paramStatus = ((setIntegerParam(PMAC_C_CpuNumCores_, 0) == asynSuccess) && paramStatus);
+  paramStatus = (( setDoubleParam(PMAC_C_CpuUsage0_, 0.0) == asynSuccess) && paramStatus);
+  paramStatus = (( setDoubleParam(PMAC_C_CpuUsage1_, 0.0) == asynSuccess) && paramStatus);
+  paramStatus = (( setDoubleParam(PMAC_C_CpuUsage2_, 0.0) == asynSuccess) && paramStatus);
+  paramStatus = (( setDoubleParam(PMAC_C_CpuUsage3_, 0.0) == asynSuccess) && paramStatus);
+
   callParamCallbacks();
 
   if (!paramStatus) {
@@ -643,6 +659,7 @@ void pmacController::setupBrokerVariables(void) {
   // Add I42 to the slow loop to monitor PVT time control mode
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PMAC_PVT_TIME_MODE);
 
+
   // CPU Calculation requires a set of I and M variables
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_CPU_PHASE_INTR);
   pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PMAC_CPU_PHASE_TIME);
@@ -660,6 +677,7 @@ void pmacController::setupBrokerVariables(void) {
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_BGD_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FRTI_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FBG_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_BGSLEEP_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_FREQ);
     // pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_TYPE);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_RTI_PERIOD);
@@ -1744,18 +1762,19 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   if(cid_ ==  PMAC_CID_POWER_) {
 
     // Values to read from the hardware
-    double phaseTaskTimeUs = 0.0, servoTimeUs = 0.0, rtTimeUs = 0.0, bgTaskTimeUs = 0.0;
+    double phaseTaskTimeUs = 0.0, servoTimeUs = 0.0, rtTimeUs = 0.0, bgTimeUs = 0.0;
     double phaseDeltaTime = 0.0, servoDeltaTime = 0.0, rtiDeltaTime = 0.0, bgDeltaTime = 0.0;
 
     // Values to be calcuated
-    double phaseTaskTime = 0.0, phaseFreq = 0.0, phasePercent = 0.0;
-    double servoTaskTimeUs = 0.0, servoTaskTime = 0.0, servoFreq = 0.0, servoPercent = 0.0;
-    double rtTaskTimeUs = 0.0, rtTaskTime = 0.0, rtFreq = 0.0, rtPercent = 0.0;
-    double bgTaskTime = 0.0, bgFreq = 0.0, bgPercent = 0.0;
+    double phaseTaskTime = 0.0,   phaseFreq = 0.0, phasePercent = 0.0;
+    double servoTaskTimeUs = 0.0, servoFreq = 0.0, servoPercent = 0.0;
+    double rtTaskTimeUs = 0.0,    rtFreq = 0.0,    rtPercent = 0.0;
+    double bgTaskTimeUs = 0.0,    bgFreq = 0.0,    bgPercent = 0.0;
 
+    double tasksPercent[PPMAC_CPU_TASKS_NUM];
 
     // Final result
-    double cpuLoad = 0.0;
+    double cpuLoad_[cpuNumCores_];
 
     // Calculation of each task
     if (status == asynSuccess) {
@@ -1772,7 +1791,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
     }
    if (status == asynSuccess) {
       status = parseDoubleVariable(PPMAC_CPU_FBG_TIME, sPtr->readValue(PPMAC_CPU_FBG_TIME),
-                                    "Background task time", bgTaskTimeUs);
+                                    "Background task time", bgTimeUs);
     }
     if (status == asynSuccess) {
       status = parseDoubleVariable(PPMAC_CPU_PHASED_TIME, sPtr->readValue(PPMAC_CPU_PHASED_TIME),
@@ -1791,12 +1810,13 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
                                     "Background delta time", bgDeltaTime);
     }
 
-    if(phaseTaskTimeUs != 0.0 && servoTimeUs != 0.0 && phaseDeltaTime != 0.0 && servoDeltaTime != 0.0 && rtTimeUs != 0.0 && bgTaskTimeUs != 0.0) {
+    if(phaseDeltaTime != 0.0 && servoDeltaTime  != 0.0 &&
+       rtiDeltaTime != 0.0 && bgDeltaTime != 0.0) {
 
       // Determine phase percentage
       phaseFreq = 1/(phaseDeltaTime/1000000);
-      phaseTaskTime = phaseTaskTimeUs / 1000000;
-      phasePercent = (phaseFreq * phaseTaskTime)*100;
+      phasePercent = (phaseTaskTimeUs / phaseDeltaTime)*100;
+      tasksPercent[PPMAC_CPU_PHASETASK] = phasePercent;
       debug(DEBUG_TRACE, functionName, "Phase Interrupt Frequency (Hz)", phaseFreq);
       debug(DEBUG_TRACE, functionName, "Phase Interrupt Time (us)", phaseTaskTimeUs);
       debug(DEBUG_TRACE, functionName, "Phase Interrupt %", phasePercent);
@@ -1804,51 +1824,46 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       // Determine servo percentage
       servoFreq = 1/(servoDeltaTime/1000000);
       servoTaskTimeUs = servoTimeUs - ((double)(int)((servoTimeUs/phaseDeltaTime)+1)) * phaseTaskTimeUs;
-      servoTaskTime = servoTaskTimeUs / 1000000;
-      servoPercent = (servoFreq * servoTaskTime)*100;
+      servoPercent = (servoTaskTimeUs / servoDeltaTime)*100;
+      tasksPercent[PPMAC_CPU_SERVOTASK] = servoPercent;
       debug(DEBUG_TRACE, functionName, "Servo Interrupt Frequency (Hz)", servoFreq);
       debug(DEBUG_TRACE, functionName, "Servo Interrupt Time (us)", servoTaskTimeUs);
       debug(DEBUG_TRACE, functionName, "Servo Interrupt %", servoPercent);
 
       // Determine real time percentage
       rtFreq = 1/(rtiDeltaTime/1000000);
-      rtTaskTimeUs = rtTimeUs - ((double)(int)((rtTimeUs/phaseDeltaTime)+1)) * phaseTaskTimeUs - ((double)(int)((rtTimeUs/servoDeltaTime)+1)) * servoTaskTimeUs;
-      rtTaskTime = rtTaskTimeUs / 1000000;
-      rtPercent = (rtFreq * rtTaskTime)*100;
+      rtTaskTimeUs = rtTimeUs - ((double)(int)((rtTimeUs/phaseDeltaTime)+1)) * phaseTaskTimeUs;
+      rtTaskTimeUs = rtTaskTimeUs - ((double)(int)((rtTimeUs/servoDeltaTime)+1)) * servoTaskTimeUs;
+      rtPercent = (rtTaskTimeUs / rtiDeltaTime)*100;
+      tasksPercent[PPMAC_CPU_RTTASK] = rtPercent;
       debug(DEBUG_TRACE, functionName, "Real Time Interrupt Frequency (Hz)", rtFreq);
       debug(DEBUG_TRACE, functionName, "Real Time Interrupt Time (us)", rtTaskTimeUs);
       debug(DEBUG_TRACE, functionName, "Real Time Interrupt %", rtPercent);
 
       // Background tasks percentage
-      bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTaskTimeUs/phaseDeltaTime)*phaseTaskTimeUs;
-      bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTaskTimeUs/servoDeltaTime)*servoTaskTimeUs;
-      bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTaskTimeUs/rtiDeltaTime)*rtTaskTimeUs;
-      bgTaskTime = bgTaskTimeUs / 1000000;
       bgFreq = 1/ (bgDeltaTime/1000000);
-      bgPercent = (bgFreq * bgTaskTime)*100;
+      bgTaskTimeUs = bgTimeUs     - (double)(int)(bgTimeUs/phaseDeltaTime)*phaseTaskTimeUs;
+      bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTimeUs/servoDeltaTime)*servoTaskTimeUs;
+      bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTimeUs/rtiDeltaTime)*rtTaskTimeUs;
+      bgPercent = (bgTaskTimeUs / bgDeltaTime)*100;
+      tasksPercent[PPMAC_CPU_BGTASK] = bgPercent;
       debug(DEBUG_TRACE, functionName, "Background Interrupt Frequency (Hz)", bgFreq);
       debug(DEBUG_TRACE, functionName, "Background Interrupt Time (us)", bgTaskTimeUs);
       debug(DEBUG_TRACE, functionName, "Background Interrupt %", bgPercent);
 
-      // Single-core Power PCservoDeltaTime
-      if (!strcmp(cpu_.c_str(), "PowerPC,460EX")) {
-        debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
-        // Final CPU load calculation
-        cpuLoad = phasePercent + servoPercent + rtPercent + bgPercent;
-        debug(DEBUG_TRACE, functionName, "Calculated CPU %", cpuLoad);
-        setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);
-      } else if ((!strcmp(cpu_.c_str(), "x86")) || (!strcmp(cpu_.c_str(), "PowerPC,APM86xxx")) || (!strcmp(cpu_.c_str(), "arm,LS1021A"))) {
-        // If CPU is dual core calculate the CPU load for CPU[1] (real time)
-        debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
-        // Final CPU load calculation - Background tasks have dedicated core so calcs not actually used
-        cpuLoad = phasePercent + servoPercent + rtPercent;
-        debug(DEBUG_TRACE, functionName, "Calculated CPU %", cpuLoad);
-        setDoubleParam(PMAC_C_CpuUsage_, cpuLoad);
-      } else {
-        debugf(DEBUG_ERROR, functionName, "CPU [%s] not suppported", cpu_.c_str());
+      for (int task_idx = 0; task_idx < 4; task_idx++) {
+        int core = cpuCoreTasks_[task_idx];
+        cpuLoad_[core] += tasksPercent[task_idx];
       }
-    }
 
+      int cpuParams[] = {PMAC_C_CpuUsage0_, PMAC_C_CpuUsage1_, PMAC_C_CpuUsage2_, PMAC_C_CpuUsage3_};
+      for (int core = 0; core < cpuNumCores_; core++) {
+        debugf(DEBUG_TRACE, functionName, "Calculated CPU[%d] %.2f%", core, cpuLoad_[core]);
+        setDoubleParam(cpuParams[core], cpuLoad_[core]);
+      }
+
+    }
+    return status;
   }
 
   if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_CLIPPER_) {
@@ -1892,7 +1907,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       double P74 = 100.0 * (P71 + P72 +
                             P73);                                             // Latest total foreground duty cycle
       debug(DEBUG_TRACE, functionName, "Calculated CPU %", P74);
-      setDoubleParam(PMAC_C_CpuUsage_, P74);
+      setDoubleParam(PMAC_C_CpuUsage0_, P74);
     }
   }
   //Set any controller specific parameters.
@@ -2258,8 +2273,8 @@ asynStatus
 pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements) {
   asynStatus status = asynSuccess;
   int function = pasynUser->reason;
-  int index = 0;
-  int dataIndex = index;
+  unsigned int index = 0;
+  unsigned int dataIndex = index;
   int compTableIndex = -1;
   char command[PMAC_MAXBUF_] = {0};
   char response[PMAC_MAXBUF_] = {0};
@@ -4144,7 +4159,107 @@ asynStatus pmacController::readDeviceType() {
     }
   }
   debug(DEBUG_VARIABLE, functionName, "Read device CPU", cpu_);
+
   return status;
+}
+
+asynStatus pmacController::getCpuNumCores() {
+  asynStatus status = asynSuccess;
+  char reply[PMAC_MAXBUF];
+  char cmd[PMAC_MAXBUF];
+  static const char *functionName = "getCpuNumCores";
+
+  debug(DEBUG_FLOW, functionName);
+
+  if (strcmp(cpu_.c_str(),"") == 0) {
+    status = asynError;
+    debug(DEBUG_ERROR, functionName, "Error reading card cpu");
+  }
+
+  if (status == asynSuccess) {
+    if (strcmp(cpu_.c_str(),"PowerPC,460EX") == 0) {
+      cpuNumCores_ = 1;
+    } else if (strcmp(cpu_.c_str(),"PowerPC,APM86xxx") == 0) {
+      cpuNumCores_ = 2;
+    } else if (strcmp(cpu_.c_str(),"arm,LS1021A") == 0) {
+      strcpy(cmd, "Sys.Cores");
+      status = pBroker_->immediateWriteRead(cmd, reply);
+      status = parseIntegerVariable(cmd, reply,
+                                    "Read the number of CPU cores", cpuNumCores_);
+    } else {
+      debug(DEBUG_ERROR, functionName, "CPU not recognized");
+    }
+  }
+
+  if (status == asynSuccess) {
+    status = setIntegerParam(PMAC_C_CpuNumCores_, cpuNumCores_);
+  }
+
+  return status;
+}
+
+asynStatus pmacController::getTasksCore() {
+  asynStatus status = asynSuccess;
+  char reply[PMAC_MAXBUF];
+  char cmd[PMAC_MAXBUF];
+  static const char *functionName = "getTasksCore";
+
+  debug(DEBUG_FLOW, functionName);
+
+  // Single-core Power PC
+  if (strcmp(cpu_.c_str(), "PowerPC,460EX") == 0) {
+    debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
+    debug(DEBUG_TRACE, functionName, "Number of cores", cpuNumCores_);
+
+    // CPU Core 0 executes all tasks: Phase, Servo, RT and Background
+    cpuCoreTasks_[PPMAC_CPU_PHASETASK] = 0;
+    cpuCoreTasks_[PPMAC_CPU_SERVOTASK] = 0;
+    cpuCoreTasks_[PPMAC_CPU_RTTASK]    = 0;
+    cpuCoreTasks_[PPMAC_CPU_BGTASK]    = 0;
+
+  // Dual-core Power PC
+  } else if (strcmp(cpu_.c_str(), "PowerPC,APM86xxx") == 0) {
+    debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
+    debug(DEBUG_TRACE, functionName, "Number of cores", cpuNumCores_);
+
+    // CPU Core 0 executes: Background tasks
+    cpuCoreTasks_[PPMAC_CPU_BGTASK] = 0;
+    // CPU Core 1 executes: Phase, Servo and RT tasks
+    cpuCoreTasks_[PPMAC_CPU_PHASETASK] = 1;
+    cpuCoreTasks_[PPMAC_CPU_SERVOTASK] = 1;
+    cpuCoreTasks_[PPMAC_CPU_RTTASK]    = 1;
+
+  // Dual-core ARM
+  } else if(strcmp(cpu_.c_str(), "arm,LS1021A") == 0) {
+    debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
+    debug(DEBUG_TRACE, functionName, "Number of cores", cpuNumCores_);
+
+    for (int task_idx = 0; task_idx < 4; task_idx++) {
+      // get task Core command
+      int taskCore;
+      switch (task_idx) {
+        case 0:   strcpy(cmd, "Sys.CorePhase")      ; break;
+        case 1:   strcpy(cmd, "Sys.CoreServo")      ; break;
+        case 2:   strcpy(cmd, "Sys.CoreRti")        ; break;
+        case 3:   strcpy(cmd, "Sys.CoreBackground") ; break;
+      }
+      // get task Core
+      status = pBroker_->immediateWriteRead(cmd, reply);
+      status = parseIntegerVariable(cmd, reply,
+                                    "Read CPU core to execute task", taskCore);
+      if (status == asynSuccess) {
+        cpuCoreTasks_[task_idx] = taskCore;
+      } else {
+        debugf(DEBUG_ERROR, functionName,
+               "Error reading CPU core to execute task [%d]",task_idx);
+      }
+    }
+  }
+  else {
+
+  }
+
+  return  status;
 }
 
 asynStatus pmacController::listPLCProgram(int plcNo, char *buffer, size_t size) {

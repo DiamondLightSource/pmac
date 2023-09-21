@@ -53,7 +53,11 @@
 
 #define PMAC_C_FastUpdateTimeString       "PMAC_C_FAST_UPDATE_TIME"
 
-#define PMAC_C_CpuUsageString             "PMAC_C_CPU_USAGE"
+#define PMAC_C_CpuNumCoresString          "PMAC_C_CPU_NUM_CORES"
+#define PMAC_C_CpuUsage0String            "PMAC_C_CPU_USAGE_0"
+#define PMAC_C_CpuUsage1String            "PMAC_C_CPU_USAGE_1"
+#define PMAC_C_CpuUsage2String            "PMAC_C_CPU_USAGE_2"
+#define PMAC_C_CpuUsage3String            "PMAC_C_CPU_USAGE_3"
 #define PMAC_C_AxisCSString               "PMAC_C_AXIS_CS"
 #define PMAC_C_AxisReadonlyString         "PMAC_C_AXIS_READONLY"
 #define PMAC_C_WriteCmdString             "PMAC_C_WRITE_CMD"
@@ -212,6 +216,13 @@
 #define PPMAC_CPU_RTI_PERIOD     "Sys.RtIntPeriod"
 #define PPMAC_CPU_BGSLEEP_TIME   "Sys.BgSleepTime"
 
+#define PPMAC_CPU_MAXCORES      4
+#define PPMAC_CPU_TASKS_NUM     4
+#define PPMAC_CPU_PHASETASK     0
+#define PPMAC_CPU_SERVOTASK     1
+#define PPMAC_CPU_RTTASK        2
+#define PPMAC_CPU_BGTASK        3
+
 #define PMAC_TRAJ_STATUS         "M4034" // Status of motion program for EPICS - 0: Idle, 1: Running, 2: Finished, 3: Error
 #define PMAC_TRAJ_ABORT          "M4035" // Abort trigger for EPICS
 #define PMAC_TRAJ_AXES           "M4036" // An int between 1 and 511 specifying which axes to use
@@ -337,6 +348,12 @@ public:
     // Read out the device type (cid)
     asynStatus readDeviceType();
 
+    // Set number of CPU cores based on CPU type
+    asynStatus getCpuNumCores();
+
+    // Get CPU core for each task
+    asynStatus getTasksCore();
+
     // List PLC program
     asynStatus listPLCProgram(int plcNo, char *buffer, size_t size);
     asynStatus executeManualGroup();
@@ -375,7 +392,11 @@ protected:
     int PMAC_C_DebugCmd_;
     int PMAC_C_DisablePolling_;
     int PMAC_C_FastUpdateTime_;
-    int PMAC_C_CpuUsage_;
+    int PMAC_C_CpuNumCores_;
+    int PMAC_C_CpuUsage0_;
+    int PMAC_C_CpuUsage1_;
+    int PMAC_C_CpuUsage2_;
+    int PMAC_C_CpuUsage3_;
     int PMAC_C_AxisCS_;
     int PMAC_C_AxisReadonly_;
     int PMAC_C_WriteCmd_;
@@ -497,6 +518,8 @@ private:
     int initialised_;
     int cid_;
     std::string cpu_;
+    int cpuNumCores_;
+    int cpuCoreTasks_[PPMAC_CPU_TASKS_NUM];
     int parameterIndex_;
     pmacMessageBroker *pBroker_;
     pmacTrajectory *pTrajectory_;
@@ -524,7 +547,7 @@ private:
     bool csResetAllDemands;
     int csCount;
     int Sys_CPUFreq_;
-    int Sys_CPUType_;
+    // int Sys_CPUType_;
     int Sys_BgSleepTime_;
     double Sys_ServoPeriod_;
     double Sys_RtIntPeriod_;
