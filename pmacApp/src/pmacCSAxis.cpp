@@ -391,11 +391,12 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
     direction = 0;
   }
   setIntegerParam(pC_->motorStatusDirection_, direction);
+
+  moving_ = !cStatus.done_ || deferredMove_ || position != previous_position_;
+
   // Store position to calculate direction for next poll.
   previous_position_ = position;
   previous_direction_ = direction;
-
-  moving_ = !cStatus.done_ || deferredMove_;
 
   setIntegerParam(pC_->motorStatusDone_, !moving_);
   setIntegerParam(pC_->motorStatusMoving_, moving_);
