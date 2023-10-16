@@ -76,7 +76,7 @@ class SSHDriver {
 
     // Memory blocks used when writing to the PowerPMAC
     char *write_input_;
-    char *write_buffer_;
+    char *read_buffer_;
     char *write_expected_echo_;
 
     SSHDriverStatus setBlocking(int blocking);

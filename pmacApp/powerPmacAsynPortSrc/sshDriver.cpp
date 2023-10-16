@@ -23,7 +23,8 @@
 #define SSH_CONNECTED 1
 #define SSH_ERROR_TIMEOUT_MS 100
 
-#define PPMAC_MAX_CHAR_LENGTH 8192
+#define PPMAC_MAX_CHAR_LENGTH 7168
+#define PPMAC_DOUBLE_MAX_LENGTH 2*PPMAC_MAX_CHAR_LENGTH
 
 /*
  * Uncomment the DEBUG define and recompile for lots of
@@ -110,8 +111,8 @@ SSHDriver::SSHDriver(const char *host)
 
   // Allocate memory required for the write method buffers
   write_input_ = (char *)malloc(PPMAC_MAX_CHAR_LENGTH);
-  write_buffer_ = (char *)malloc(2*PPMAC_MAX_CHAR_LENGTH);
-  write_expected_echo_ = (char *)malloc(2*PPMAC_MAX_CHAR_LENGTH);
+  read_buffer_ = (char *)malloc(PPMAC_DOUBLE_MAX_LENGTH);
+  write_expected_echo_ = (char *)malloc(PPMAC_DOUBLE_MAX_LENGTH);
 
   // Allocate the memory required to store the host address
   host_ = (char *)malloc(strlen(host));
@@ -403,7 +404,7 @@ SSHDriverStatus SSHDriver::flush()
     return SSHDriverError;
   }
   // Read out any remaining bytes from t he channel
-  rc = libssh2_channel_read(channel_, write_buffer_, PPMAC_MAX_CHAR_LENGTH);
+  rc = libssh2_channel_read(channel_, read_buffer_, PPMAC_DOUBLE_MAX_LENGTH);
   if (rc > 0){
     debugPrint("Flushed %d bytes\n", rc);
   }
@@ -479,7 +480,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
 
   // Count the number of \n characters sent
   // Build the expected ECHO string
-  memset(write_expected_echo_, 0, 2*PPMAC_MAX_CHAR_LENGTH);
+  memset(write_expected_echo_, 0, PPMAC_DOUBLE_MAX_LENGTH);
   int expected_index = 0;
   for (int index = 0; index < (int)*bytesWritten; index++){
     if (buffer[index] == '\n'){
@@ -494,7 +495,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   bytesToRead += crCount;
   int matched = 0;
   while ((matched == 0) && (tnow < mtimeout)){
-    rc = libssh2_channel_read(channel_, &write_buffer_[bytes], bytesToRead);
+    rc = libssh2_channel_read(channel_, &read_buffer_[bytes], bytesToRead);
     if (rc > 0){
       bytes+=rc;
       bytesToRead-=rc;
@@ -503,7 +504,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
       if (bytes >= expected_index){
         matched = 1;
         for (int mid = 1; mid <= expected_index; mid++){
-          if (write_buffer_[bytes-mid] != write_expected_echo_[expected_index-mid]){
+          if (read_buffer_[bytes-mid] != write_expected_echo_[expected_index-mid]){
             matched = 0;
           }
         }
@@ -517,7 +518,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   }
 
   if (error_checking_){
-    if (write_buffer_[0] == '\r' && write_input_[0] != '\r' && expected_index > 2){
+    if (read_buffer_[0] == '\r' && write_input_[0] != '\r' && expected_index > 2){
       caught_errors_++;
       debugPrint("Caught communication error\n");
       debugPrint("Matched status: %d\n", matched);
@@ -533,16 +534,16 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
       debugPrint("\n");
       debugPrint("Actual response: ");
       for (int index=0; index <= expected_index; index++){
-        debugPrint("[%d] ", write_buffer_[index]);
+        debugPrint("[%d] ", read_buffer_[index]);
       }
       debugPrint("\n");
     }
   }
 
-  write_buffer_[bytes] = '\0';
+  read_buffer_[bytes] = '\0';
 
   LogComPrint("LogCom sshDriver Echoed  %02d bytes => ", bytes);
-  LogComStrPrintEscapedNL(write_buffer_, bytes);
+  LogComStrPrintEscapedNL(read_buffer_, bytes);
 
 
   gettimeofday(&ctime, NULL);
@@ -737,7 +738,7 @@ SSHDriver::~SSHDriver()
   debugPrint("%s : Method called\n", functionName);
 
   free(write_input_);
-  free(write_buffer_);
+  free(read_buffer_);
   free(write_expected_echo_);
 
   free(host_);
