@@ -97,6 +97,8 @@ public:
     asynStatus storeKinematics();
     asynStatus listKinematic(int csNo, const std::string &type, char *buffer, size_t size);
 
+    asynStatus updateAxis();
+
 protected:
     pmacCSAxis **pAxes_; // Array of pointers to axis objects
 
