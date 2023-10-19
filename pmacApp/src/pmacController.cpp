@@ -2135,12 +2135,19 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
 
   if (function == motorPosition_) {
     /*Set position on motor axis.*/
-    epicsInt32 position = (epicsInt32) floor(value * 32 / pAxis->scale_ + 0.5);
+    epicsInt32 position = (epicsInt32) floor(value / pAxis->scale_ + 0.5);
 
-    sprintf(command, "#%dK M%d61=%d*I%d08 M%d62=%d*I%d08",
-            pAxis->axisNo_,
-            pAxis->axisNo_, position, pAxis->axisNo_,
-            pAxis->axisNo_, position, pAxis->axisNo_);
+    if (cid_ == PMAC_CID_POWER_) {
+      sprintf(command, "#%dK Motor[%d].HomePos=Motor[%d].ActPos-(%d)",
+              pAxis->axisNo_, pAxis->axisNo_,
+              pAxis->axisNo_, position);
+    }
+    else{
+      sprintf(command, "#%dK M%d61=%d*32*I%d08 M%d62=%d*32*I%d08",
+              pAxis->axisNo_,
+              pAxis->axisNo_, position, pAxis->axisNo_,
+              pAxis->axisNo_, position, pAxis->axisNo_);
+    }
 
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
               "%s: Set axis %d on controller %s to position %f\n",
