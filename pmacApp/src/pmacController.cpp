@@ -2132,11 +2132,13 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     }
 
 
-  } else if (function == PMAC_C_MotorRes_){
+  }
+  else if (function == PMAC_C_MotorRes_){
     pAxis->setResolution(value);
     // Direct resolution parameter will always match the raw motor
     setDoubleParam(pAxis->axisNo_, PMAC_C_DirectRes_, value);
-  } else if (function == PMAC_C_MotorOffset_){
+  }
+  else if (function == PMAC_C_MotorOffset_){
     pAxis->setOffset(value);
     // Direct offset parameter will always match the raw motor
     setDoubleParam(pAxis->axisNo_, PMAC_C_DirectOffset_, value);
@@ -2151,7 +2153,8 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     pAxis->setIntegerParam(motorStatusDone_, 0);
     pAxis->callParamCallbacks();
     wakeupPoller();
-  } else if (function == motorLowLimit_) {
+  }
+  else if (function == motorLowLimit_) {
     // Limits in counts
     int lowLimitCounts = int(std::floor(value/pAxis->scale_ + 0.5));
     int highLimitCounts = int(std::floor(pAxis->highLimit_/pAxis->scale_ + 0.5));
