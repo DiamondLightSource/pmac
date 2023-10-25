@@ -1794,7 +1794,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   }*/
 
   if(cid_ ==  PMAC_CID_POWER_) {
-    
+
     // Values to read from the hardware
     double phaseTaskTimeUs = 0.0, servoTimeUs = 0.0, rtTimeUs = 0.0, bgTaskTimeUs = 0.0;
     double phaseDeltaTime = 0.0, servoDeltaTime = 0.0, rtiDeltaTime = 0.0, bgDeltaTime = 0.0;
@@ -1804,11 +1804,11 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
     double servoTaskTimeUs = 0.0, servoTaskTime = 0.0, servoFreq = 0.0, servoPercent = 0.0;
     double rtTaskTimeUs = 0.0, rtTaskTime = 0.0, rtFreq = 0.0, rtPercent = 0.0;
     double bgTaskTime = 0.0, bgFreq = 0.0, bgPercent = 0.0, bgSleepTime = 0.0;
-    
+
 
     // Final result
     double cpuLoad = 0.0;
-    
+
     // Calculation of each task
     if (status == asynSuccess) {
       status = parseDoubleVariable(PPMAC_CPU_FPHASE_TIME, sPtr->readValue(PPMAC_CPU_FPHASE_TIME),
@@ -2548,12 +2548,20 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     }
   } else if (function == PMAC_C_StopAll_) {
     // Send the abort all command to the PMAC immediately
-    status = (this->immediateWriteRead("\x01", response) == asynSuccess) && status;
+    if (cid_ == PMAC_CID_POWER_) {
+      status = (this->immediateWriteRead("&*abort", response) == asynSuccess) && status;
+    } else {
+      status = (this->immediateWriteRead("\x01", response) == asynSuccess) && status;
+    }
     // Force all CS demands to refresh
     csResetAllDemands = true;
   } else if (function == PMAC_C_KillAll_) {
     // Send the kill all command to the PMAC immediately
-    status = (this->immediateWriteRead("\x0b", response) == asynSuccess) && status;
+    if (cid_ == PMAC_CID_POWER_) {
+      status = (this->immediateWriteRead("#*k", response) == asynSuccess) && status;
+    } else {
+      status = (this->immediateWriteRead("\x0b", response) == asynSuccess) && status;
+    }
     // Force all CS demands to refresh
     csResetAllDemands = true;
   } else if (function == PMAC_C_FeedRatePoll_) {
