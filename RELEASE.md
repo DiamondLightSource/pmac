@@ -16,6 +16,17 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-6-0 (Oct 18, 2023)
+==========================
+### Changes
+* Remove harcoded PVs for symetrie heaxapod summary screen - PR #100
+* Enhanced PVT trajectories scan to add capabilitiy to receive the velocities, and moved velocities calculation from motion program to driver - PR #102
+* Fix low-level SSH driver for ARM PowerPMACs - PR #103
+* Add support for CPU load reading for PowerPMACs
+* Fix bug in geobrickette_motion_stop
+* Remove round function dependency
+
+
 R2-5-16 (May 26, 2022)
 ==========================
 ### Changes
