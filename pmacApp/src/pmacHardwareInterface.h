@@ -62,6 +62,8 @@ public:
 
     virtual std::string getGlobalStatusCmd() = 0;
 
+    virtual int getGlobalStatusError() = 0;
+
     virtual asynStatus parseGlobalStatus(const std::string &statusString, globalStatus &status) = 0;
 
     virtual std::string getAxisStatusCmd(int axis) = 0;

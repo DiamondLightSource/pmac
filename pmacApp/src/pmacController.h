@@ -622,33 +622,6 @@ private:
     static const epicsUInt32 PMAC_STATUS2_NA14;
     static const epicsUInt32 PMAC_STATUS2_ASSIGNED_CS;
 
-    /*Global status ???*/
-    static const epicsUInt32 PMAC_GSTATUS_CARD_ADDR;
-    static const epicsUInt32 PMAC_GSTATUS_ALL_CARD_ADDR;
-    static const epicsUInt32 PMAC_GSTATUS_RESERVED;
-    static const epicsUInt32 PMAC_GSTATUS_PHASE_CLK_MISS;
-    static const epicsUInt32 PMAC_GSTATUS_MACRO_RING_ERRORCHECK;
-    static const epicsUInt32 PMAC_GSTATUS_MACRO_RING_COMMS;
-    static const epicsUInt32 PMAC_GSTATUS_TWS_PARITY_ERROR;
-    static const epicsUInt32 PMAC_GSTATUS_CONFIG_ERROR;
-    static const epicsUInt32 PMAC_GSTATUS_ILLEGAL_LVAR;
-    static const epicsUInt32 PMAC_GSTATUS_REALTIME_INTR;
-    static const epicsUInt32 PMAC_GSTATUS_FLASH_ERROR;
-    static const epicsUInt32 PMAC_GSTATUS_DPRAM_ERROR;
-    static const epicsUInt32 PMAC_GSTATUS_CKSUM_ACTIVE;
-    static const epicsUInt32 PMAC_GSTATUS_CKSUM_ERROR;
-    static const epicsUInt32 PMAC_GSTATUS_LEADSCREW_COMP;
-    static const epicsUInt32 PMAC_GSTATUS_WATCHDOG;
-    static const epicsUInt32 PMAC_GSTATUS_SERVO_REQ;
-    static const epicsUInt32 PMAC_GSTATUS_DATA_GATHER_START;
-    static const epicsUInt32 PMAC_GSTATUS_RESERVED2;
-    static const epicsUInt32 PMAC_GSTATUS_DATA_GATHER_ON;
-    static const epicsUInt32 PMAC_GSTATUS_SERVO_ERROR;
-    static const epicsUInt32 PMAC_GSTATUS_CPUTYPE;
-    static const epicsUInt32 PMAC_GSTATUS_REALTIME_INTR_RE;
-    static const epicsUInt32 PMAC_GSTATUS_RESERVED3;
-
-    static const epicsUInt32 PMAC_HARDWARE_PROB;
     static const epicsUInt32 PMAX_AXIS_GENERAL_PROB1;
     static const epicsUInt32 PMAX_AXIS_GENERAL_PROB2;
 

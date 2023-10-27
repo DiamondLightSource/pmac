@@ -40,6 +40,36 @@ const int pmacHardwarePower::PMAC_STATUS1_IN_POSITION = (0x1 << 11);
 const int pmacHardwarePower::PMAC_STATUS1_BLOCK_REQUEST = (0x1 << 9);
 const int pmacHardwarePower::PMAC_STATUS1_PHASED_MOTOR = (0x1 << 8);
 
+/*Global status ?*/
+const int pmacHardwarePower::PMAC_GSTATUS_FOREGROUND_WDT_FAULT = (0x1 << 0);
+const int pmacHardwarePower::PMAC_GSTATUS_BACKGROUND_WDT_FAULT = (0x1 << 1);
+const int pmacHardwarePower::PMAC_GSTATUS_PWR_ON_FAULT = (0x1 << 2);
+const int pmacHardwarePower::PMAC_GSTATUS_PROJECT_LOAD_ERROR = (0x1 << 3);
+const int pmacHardwarePower::PMAC_GSTATUS_CONFIG_LOAD_ERROR = (0x1 << 4);
+const int pmacHardwarePower::PMAC_GSTATUS_HW_CHANGE_ERROR = (0x1 << 5);
+const int pmacHardwarePower::PMAC_GSTATUS_FILE_CONFIG_ERROR = (0x1 << 6);
+const int pmacHardwarePower::PMAC_GSTATUS_DEFAULT = (0x1 << 7);
+const int pmacHardwarePower::PMAC_GSTATUS_NO_CLOCKS = (0x1 << 8);
+const int pmacHardwarePower::PMAC_GSTATUS_ABORTALL = (0x1 << 9);
+const int pmacHardwarePower::PMAC_GSTATUS_BUF_SIZE_ERROR = (0x1 << 10);
+const int pmacHardwarePower::PMAC_GSTATUS_FLASH_SIZE_ERROR = (0x1 << 11);
+const int pmacHardwarePower::PMAC_GSTATUS_CK3W_CONFIG_ERROR0 = (0x1 << 12);
+const int pmacHardwarePower::PMAC_GSTATUS_CK3W_CONFIG_ERROR1 = (0x1 << 13);
+const int pmacHardwarePower::PMAC_GSTATUS_CK3W_CONFIG_ERROR2 = (0x1 << 14);
+const int pmacHardwarePower::PMAC_GSTATUS_CK3W_HW_CHANGE = (0x1 << 15);
+
+const int pmacHardwarePower::PMAC_HARDWARE_PROB = (PMAC_GSTATUS_FOREGROUND_WDT_FAULT |
+                                                   PMAC_GSTATUS_BACKGROUND_WDT_FAULT |
+                                                   PMAC_GSTATUS_PROJECT_LOAD_ERROR |
+                                                   PMAC_GSTATUS_CONFIG_LOAD_ERROR |
+                                                   PMAC_GSTATUS_HW_CHANGE_ERROR |
+                                                   PMAC_GSTATUS_FILE_CONFIG_ERROR |
+                                                   PMAC_GSTATUS_NO_CLOCKS |
+                                                   //PMAC_GSTATUS_ABORTALL |
+                                                   PMAC_GSTATUS_BUF_SIZE_ERROR |
+                                                   PMAC_GSTATUS_FLASH_SIZE_ERROR);
+
+
 pmacHardwarePower::pmacHardwarePower() : pmacDebugger("pmacHardwarePower") {
 }
 
@@ -49,6 +79,10 @@ pmacHardwarePower::~pmacHardwarePower() {
 
 std::string pmacHardwarePower::getGlobalStatusCmd() {
   return GLOBAL_STATUS;
+}
+
+int pmacHardwarePower::getGlobalStatusError() {
+  return PMAC_HARDWARE_PROB;
 }
 
 asynStatus

@@ -97,38 +97,6 @@ const epicsUInt32 pmacController::PMAC_STATUS2_FORE_IN_POS = (0x1 << 13);
 const epicsUInt32 pmacController::PMAC_STATUS2_NA14 = (0x1 << 14);
 const epicsUInt32 pmacController::PMAC_STATUS2_ASSIGNED_CS = (0x1 << 15);
 
-/*Global status ???*/
-const epicsUInt32 pmacController::PMAC_GSTATUS_CARD_ADDR = (0x1 << 0);
-const epicsUInt32 pmacController::PMAC_GSTATUS_ALL_CARD_ADDR = (0x1 << 1);
-const epicsUInt32 pmacController::PMAC_GSTATUS_RESERVED = (0x1 << 2);
-const epicsUInt32 pmacController::PMAC_GSTATUS_PHASE_CLK_MISS = (0x1 << 3);
-const epicsUInt32 pmacController::PMAC_GSTATUS_MACRO_RING_ERRORCHECK = (0x1 << 4);
-const epicsUInt32 pmacController::PMAC_GSTATUS_MACRO_RING_COMMS = (0x1 << 5);
-const epicsUInt32 pmacController::PMAC_GSTATUS_TWS_PARITY_ERROR = (0x1 << 6);
-const epicsUInt32 pmacController::PMAC_GSTATUS_CONFIG_ERROR = (0x1 << 7);
-const epicsUInt32 pmacController::PMAC_GSTATUS_ILLEGAL_LVAR = (0x1 << 8);
-const epicsUInt32 pmacController::PMAC_GSTATUS_REALTIME_INTR = (0x1 << 9);
-const epicsUInt32 pmacController::PMAC_GSTATUS_FLASH_ERROR = (0x1 << 10);
-const epicsUInt32 pmacController::PMAC_GSTATUS_DPRAM_ERROR = (0x1 << 11);
-const epicsUInt32 pmacController::PMAC_GSTATUS_CKSUM_ACTIVE = (0x1 << 12);
-const epicsUInt32 pmacController::PMAC_GSTATUS_CKSUM_ERROR = (0x1 << 13);
-const epicsUInt32 pmacController::PMAC_GSTATUS_LEADSCREW_COMP = (0x1 << 14);
-const epicsUInt32 pmacController::PMAC_GSTATUS_WATCHDOG = (0x1 << 15);
-const epicsUInt32 pmacController::PMAC_GSTATUS_SERVO_REQ = (0x1 << 16);
-const epicsUInt32 pmacController::PMAC_GSTATUS_DATA_GATHER_START = (0x1 << 17);
-const epicsUInt32 pmacController::PMAC_GSTATUS_RESERVED2 = (0x1 << 18);
-const epicsUInt32 pmacController::PMAC_GSTATUS_DATA_GATHER_ON = (0x1 << 19);
-const epicsUInt32 pmacController::PMAC_GSTATUS_SERVO_ERROR = (0x1 << 20);
-const epicsUInt32 pmacController::PMAC_GSTATUS_CPUTYPE = (0x1 << 21);
-const epicsUInt32 pmacController::PMAC_GSTATUS_REALTIME_INTR_RE = (0x1 << 22);
-const epicsUInt32 pmacController::PMAC_GSTATUS_RESERVED3 = (0x1 << 23);
-
-const epicsUInt32 pmacController::PMAC_HARDWARE_PROB = (PMAC_GSTATUS_REALTIME_INTR |
-                                                        PMAC_GSTATUS_FLASH_ERROR |
-                                                        PMAC_GSTATUS_DPRAM_ERROR |
-                                                        PMAC_GSTATUS_CKSUM_ERROR |
-                                                        PMAC_GSTATUS_WATCHDOG |
-                                                        PMAC_GSTATUS_SERVO_ERROR);
 
 const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB1 = 0;
 const epicsUInt32 pmacController::PMAX_AXIS_GENERAL_PROB2 = (PMAC_STATUS2_DESIRED_STOP |
@@ -1954,7 +1922,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
   //Set any controller specific parameters.
   //Some of these may be used by the axis poll to set axis problem bits.
   if (status == asynSuccess) {
-    hardwareProblem = ((gStatus & PMAC_HARDWARE_PROB) != 0);
+    hardwareProblem = ((gStatus & pHardware_->getGlobalStatusError()) != 0);
     status = setIntegerParam(this->PMAC_C_GlobalStatus_, hardwareProblem);
     if (hardwareProblem) {
       debug(DEBUG_ERROR, functionName, "*** Hardware Problem *** global status [???]",
