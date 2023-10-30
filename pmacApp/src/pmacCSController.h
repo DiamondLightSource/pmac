@@ -1,15 +1,15 @@
 /********************************************
- *  pmacCSController.h 
- * 
+ *  pmacCSController.h
+ *
  *  PMAC Asyn Coordinate System Axes based on
  *  the asynMotorController class.
- * 
+ *
  *  For instructions see class file
  *  pmacCSController.cpp
  *
  *  Alan Greer
  *  23 February 2016
- * 
+ *
  ********************************************/
 
 #ifndef pmacCSController_H
@@ -97,7 +97,7 @@ public:
     asynStatus storeKinematics();
     asynStatus listKinematic(int csNo, const std::string &type, char *buffer, size_t size);
 
-    asynStatus updateAxis();
+    asynStatus updateCsDemands();
 
 protected:
     pmacCSAxis **pAxes_; // Array of pointers to axis objects

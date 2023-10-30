@@ -2164,24 +2164,23 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     }
 
 
-  } 
-  else if (function == PMAC_C_MotorRes_){
+  } else if (function == PMAC_C_MotorRes_){
     pAxis->setResolution(value);
     // Direct resolution parameter will always match the raw motor
     setDoubleParam(pAxis->axisNo_, PMAC_C_DirectRes_, value);
-  } 
-  else if (function == PMAC_C_MotorOffset_){
+  } else if (function == PMAC_C_MotorOffset_){
     pAxis->setOffset(value);
     // Direct offset parameter will always match the raw motor
     setDoubleParam(pAxis->axisNo_, PMAC_C_DirectOffset_, value);
 
     int csNum = this->getAxis(pAxis->axisNo_)->getAxisCSNo();
     if (csNum > 0) {
+        // Make sure that pmacController->makeCSDemandsConsistent will reset the demand for all axes;
         csResetAllDemands = true;
-        pCSControllers_[csNum]->updateAxis();
+        // Indicate rawMotorChanged to propagate the "movement" to the axes
+        pCSControllers_[csNum]->updateCsDemands();
     }
-  }
-  else if (function == PMAC_C_DirectMove_){
+  } else if (function == PMAC_C_DirectMove_){
     double baseVelocity = 0.0;
     double velocity = 0.0;
     double acceleration = 0.0;
@@ -2192,8 +2191,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     pAxis->setIntegerParam(motorStatusDone_, 0);
     pAxis->callParamCallbacks();
     wakeupPoller();
-  } 
-  else if (function == motorLowLimit_) {
+  } else if (function == motorLowLimit_) {
     // Limits in counts
     int lowLimitCounts = int(std::floor(value/pAxis->scale_ + 0.5));
     int highLimitCounts = int(std::floor(pAxis->highLimit_/pAxis->scale_ + 0.5));
@@ -2214,8 +2212,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
           "%s: Setting low soft limit on controller %s, axis %d to 1 count\n",
           functionName, portName, pAxis->axisNo_);
       }
-    }
-    else {
+    } else {
       // Otherwise check if we also need to re-enable the other limit
       if (highLimitCounts == 0) {
         // Set low limit and re-enable the high limit by setting to 1 count

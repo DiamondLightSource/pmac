@@ -404,17 +404,17 @@ asynStatus pmacCSController::processDeferredMoves(void) {
   return status;
 }
 
-asynStatus pmacCSController::updateAxis() {
+asynStatus pmacCSController::updateCsDemands() {
   asynStatus status = asynSuccess;
   pmacCSAxis *pAxis = NULL;
-  static const char *functionName = "updateAxis";
+  static const char *functionName = "updateCsDemands";
 
   //Turn on the deferred motion flag for the involved axes.
   for (int axis = 0; axis < numAxes_; axis++) {
     pAxis = getAxis(axis);
     if (pAxis != NULL) {
-      if (pAxis->updateMove_ == 0) {
-        pAxis->updateMove_ = 1;
+      if (pAxis->motorPosChanged_ == 0) {
+        pAxis->motorPosChanged_ = 1;
       }
     }
   }
