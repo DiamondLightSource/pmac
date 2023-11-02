@@ -1,6 +1,6 @@
 # The following definitions must be changed for each site
 
-# These following three base definitions are overwritten by definitions in 
+# These following three base definitions are overwritten by definitions in
 # the RELEASE.<arch>.Common files. Included here for information only.
 # SUPPORT         = /dls_sw/prod/R3.14.12.7/support
 # WORK            = /dls_sw/work/R3.14.12.7/support
@@ -8,7 +8,7 @@
 
 ASYN=       $(SUPPORT)/asyn/4-41dls2
 CALC=       $(SUPPORT)/calc/3-7-3
-MOTOR=      $(SUPPORT)/motor/7-0dls9
+MOTOR=      $(SUPPORT)/motor/7-0dls9-1
 BUSY=       $(SUPPORT)/busy/1-7-2dls6
 
 
