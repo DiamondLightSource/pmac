@@ -201,8 +201,6 @@
 #define PMAC_CPU_I8              "I8"    // RTI period (Servo cycles - 1)
 #define PMAC_CPU_I7002           "I7002" // Servo clock divider (ServoClockFreq = PhaseClockFreq/(ServoClockDiv + 1) )
 
-#define PPMAC_CPU_FREQ           "Sys.CPUFreq"
-#define PPMAC_CPU_TYPE           "Sys.CPUType"
 #define PPMAC_CPU_FPHASE_TIME    "Sys.FltrPhaseTime"
 #define PPMAC_CPU_FSERVO_TIME    "Sys.FltrServoTime"
 #define PPMAC_CPU_FRTI_TIME      "Sys.FltrRtIntTime"
@@ -211,17 +209,13 @@
 #define PPMAC_CPU_SERVOD_TIME    "Sys.ServoDeltaTime"
 #define PPMAC_CPU_RTID_TIME      "Sys.RtIntDeltaTime"
 #define PPMAC_CPU_BGD_TIME       "Sys.BgDeltaTime"
-#define PPMAC_CPU_PHASE_SERV_PER "Sys.PhaseOverServoPeriod"
-#define PPMAC_CPU_SERVO_PERIOD   "Sys.ServoPeriod"
-#define PPMAC_CPU_RTI_PERIOD     "Sys.RtIntPeriod"
-#define PPMAC_CPU_BGSLEEP_TIME   "Sys.BgSleepTime"
 
-#define PPMAC_CPU_MAXCORES      4
-#define PPMAC_CPU_TASKS_NUM     4
-#define PPMAC_CPU_PHASETASK     0
-#define PPMAC_CPU_SERVOTASK     1
-#define PPMAC_CPU_RTTASK        2
-#define PPMAC_CPU_BGTASK        3
+#define PPMAC_CPU_MAXCORES      4 // Maximum number of cores currently supported
+#define PPMAC_CPU_TASKS_NUM     4 // Number of tasks supported by the PowerPMAC core management
+#define PPMAC_CPU_PHASETASK     0 // Highest priority task
+#define PPMAC_CPU_SERVOTASK     1 // ...
+#define PPMAC_CPU_RTTASK        2 // ...
+#define PPMAC_CPU_BGTASK        3 // Lowest priority task
 
 #define PMAC_TRAJ_STATUS         "M4034" // Status of motion program for EPICS - 0: Idle, 1: Running, 2: Finished, 3: Error
 #define PMAC_TRAJ_ABORT          "M4035" // Abort trigger for EPICS
@@ -546,12 +540,6 @@ private:
     int i7002_;
     bool csResetAllDemands;
     int csCount;
-    int Sys_CPUFreq_;
-    // int Sys_CPUType_;
-    int Sys_BgSleepTime_;
-    double Sys_ServoPeriod_;
-    double Sys_RtIntPeriod_;
-    double Sys_PhaseOverServoPeriod_;
 
 
     // Trajectory scan variables

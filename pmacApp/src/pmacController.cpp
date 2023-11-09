@@ -189,12 +189,6 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   i7002_ = 0;
   csResetAllDemands = false;
   csCount = 0;
-  Sys_CPUFreq_ = 0;
-  //Sys_CPUType_ = 0;
-  Sys_BgSleepTime_ = 0;
-  Sys_ServoPeriod_ = 0.0;
-  Sys_RtIntPeriod_ = 0.0;
-  Sys_PhaseOverServoPeriod_ = 0.0;
 
 
   // Create the message broker
@@ -677,12 +671,6 @@ void pmacController::setupBrokerVariables(void) {
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_BGD_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FRTI_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FBG_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_BGSLEEP_TIME);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_FREQ);
-    // pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_TYPE);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_RTI_PERIOD);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_PHASE_SERV_PER);
-    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_SERVO_PERIOD);
   }
 
   // Add the PMAC M variables required for trajectory scanning
@@ -1263,28 +1251,18 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
   }
 
   // Used for CPU calculation
-  if (status == asynSuccess) {
-    status = parseIntegerVariable(PMAC_CPU_I8, sPtr->readValue(PMAC_CPU_I8),
-                                  "Real-time interrupt period", i8_);
-  }
-  if (status == asynSuccess) {
-    status = parseIntegerVariable(PMAC_CPU_I7002, sPtr->readValue(PMAC_CPU_I7002),
-                                  "Servo clock frequency", i7002_);
+  if (cid_ == PMAC_CID_PMAC_ || cid_ == PMAC_CID_CLIPPER_ || cid_ == PMAC_CID_GEOBRICK_) {
+    if (status == asynSuccess) {
+      status = parseIntegerVariable(PMAC_CPU_I8, sPtr->readValue(PMAC_CPU_I8),
+                                    "Real-time interrupt period", i8_);
+    }
+    if (status == asynSuccess) {
+      status = parseIntegerVariable(PMAC_CPU_I7002, sPtr->readValue(PMAC_CPU_I7002),
+                                    "Servo clock frequency", i7002_);
+    }
   }
 
-  if (cid_ == PMAC_CID_POWER_){
-    status = parseIntegerVariable(PPMAC_CPU_FREQ, sPtr->readValue(PPMAC_CPU_FREQ),
-                                  "PPMAC cpu freq", Sys_CPUFreq_);
-    // status = parseIntegerVariable(PPMAC_CPU_TYPE, sPtr->readValue(PPMAC_CPU_TYPE),
-    //                               "PPMAC cpu type", Sys_CPUType_);
-    status = parseDoubleVariable(PPMAC_CPU_SERVO_PERIOD, sPtr->readValue(PPMAC_CPU_SERVO_PERIOD),
-                                  "PPMAC Servo period", Sys_ServoPeriod_);
-    status = parseDoubleVariable(PPMAC_CPU_RTI_PERIOD, sPtr->readValue(PPMAC_CPU_RTI_PERIOD),
-                                  "PPMAC RTI period", Sys_RtIntPeriod_);
-    status = parseDoubleVariable(PPMAC_CPU_PHASE_SERV_PER, sPtr->readValue(PPMAC_CPU_PHASE_SERV_PER),
-                                  "PPMAC Phase over servo per", Sys_PhaseOverServoPeriod_);
 
-  }
 
   // Read out the size of the pmac command stores
   if (pBroker_->readStoreSize(pmacMessageBroker::PMAC_FAST_READ, &storeSize) == asynSuccess) {
@@ -1766,7 +1744,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
     double phaseDeltaTime = 0.0, servoDeltaTime = 0.0, rtiDeltaTime = 0.0, bgDeltaTime = 0.0;
 
     // Values to be calcuated
-    double phaseTaskTime = 0.0,   phaseFreq = 0.0, phasePercent = 0.0;
+    double phaseFreq = 0.0, phasePercent = 0.0;
     double servoTaskTimeUs = 0.0, servoFreq = 0.0, servoPercent = 0.0;
     double rtTaskTimeUs = 0.0,    rtFreq = 0.0,    rtPercent = 0.0;
     double bgTaskTimeUs = 0.0,    bgFreq = 0.0,    bgPercent = 0.0;
@@ -1851,9 +1829,12 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       debug(DEBUG_TRACE, functionName, "Background Interrupt Time (us)", bgTaskTimeUs);
       debug(DEBUG_TRACE, functionName, "Background Interrupt %", bgPercent);
 
-      for (int task_idx = 0; task_idx < 4; task_idx++) {
+      for (int task_idx = 0; task_idx < PPMAC_CPU_TASKS_NUM; task_idx++) {
         int core = cpuCoreTasks_[task_idx];
-        cpuLoad_[core] += tasksPercent[task_idx];
+        if (core >= 0) {
+          cpuLoad_[core] += tasksPercent[task_idx];
+        }
+
       }
 
       int cpuParams[] = {PMAC_C_CpuUsage0_, PMAC_C_CpuUsage1_, PMAC_C_CpuUsage2_, PMAC_C_CpuUsage3_};
@@ -4165,8 +4146,6 @@ asynStatus pmacController::readDeviceType() {
 
 asynStatus pmacController::getCpuNumCores() {
   asynStatus status = asynSuccess;
-  char reply[PMAC_MAXBUF];
-  char cmd[PMAC_MAXBUF];
   static const char *functionName = "getCpuNumCores";
 
   debug(DEBUG_FLOW, functionName);
@@ -4177,17 +4156,27 @@ asynStatus pmacController::getCpuNumCores() {
   }
 
   if (status == asynSuccess) {
+    // Single-core
     if (strcmp(cpu_.c_str(),"PowerPC,460EX") == 0) {
       cpuNumCores_ = 1;
-    } else if (strcmp(cpu_.c_str(),"PowerPC,APM86xxx") == 0) {
+    // Dual-core
+    } else if (strcmp(cpu_.c_str(),"PowerPC,APM86xxx") == 0 ||
+               strcmp(cpu_.c_str(),"arm,LS1021A") == 0) {
       cpuNumCores_ = 2;
-    } else if (strcmp(cpu_.c_str(),"arm,LS1021A") == 0) {
-      strcpy(cmd, "Sys.Cores");
-      status = pBroker_->immediateWriteRead(cmd, reply);
-      status = parseIntegerVariable(cmd, reply,
-                                    "Read the number of CPU cores", cpuNumCores_);
+    // Quad-core
+    } else if (strcmp(cpu_.c_str(),"arm,LS1043A") == 0) {
+      cpuNumCores_ = 4;
     } else {
-      debug(DEBUG_ERROR, functionName, "CPU not recognized");
+      status = asynError;
+      debug(DEBUG_ERROR, functionName,
+            "Error determining the number of cores from CPU type");
+    }
+  }
+
+  if(status == asynSuccess) {
+    if(cpuNumCores_ < 1 || cpuNumCores_ > PPMAC_CPU_MAXCORES) {
+      debugf(DEBUG_ERROR, functionName,
+            "Number of CPU Cores (%d) out of supported range (0-4)", cpuNumCores_);
     }
   }
 
@@ -4229,12 +4218,13 @@ asynStatus pmacController::getTasksCore() {
     cpuCoreTasks_[PPMAC_CPU_SERVOTASK] = 1;
     cpuCoreTasks_[PPMAC_CPU_RTTASK]    = 1;
 
-  // Dual-core ARM
-  } else if(strcmp(cpu_.c_str(), "arm,LS1021A") == 0) {
+  // Dual-core/ Quad-core ARM
+  } else if(strcmp(cpu_.c_str(), "arm,LS1021A") == 0 ||
+            strcmp(cpu_.c_str(), "arm,LS1043A") == 0) {
     debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
     debug(DEBUG_TRACE, functionName, "Number of cores", cpuNumCores_);
 
-    for (int task_idx = 0; task_idx < 4; task_idx++) {
+    for (int task_idx = 0; task_idx < PPMAC_CPU_TASKS_NUM; task_idx++) {
       // get task Core command
       int taskCore;
       switch (task_idx) {
@@ -4244,20 +4234,30 @@ asynStatus pmacController::getTasksCore() {
         case 3:   strcpy(cmd, "Sys.CoreBackground") ; break;
       }
       // get task Core
-      status = pBroker_->immediateWriteRead(cmd, reply);
-      status = parseIntegerVariable(cmd, reply,
-                                    "Read CPU core to execute task", taskCore);
+      status = this->immediateWriteRead(cmd, reply);
+      if (status == asynSuccess) {
+        status = parseIntegerVariable(cmd, reply,
+                                      "Read CPU core to execute task", taskCore);
+      }
       if (status == asynSuccess) {
         cpuCoreTasks_[task_idx] = taskCore;
       } else {
+        status = asynError;
         debugf(DEBUG_ERROR, functionName,
-               "Error reading CPU core to execute task [%d]",task_idx);
+               "Error reading CPU core to execute task [%s]", cmd);
       }
     }
+  } else {
+    status = asynError;
+    cpuCoreTasks_[PPMAC_CPU_PHASETASK] = -1;
+    cpuCoreTasks_[PPMAC_CPU_SERVOTASK] = -1;
+    cpuCoreTasks_[PPMAC_CPU_RTTASK]    = -1;
+    cpuCoreTasks_[PPMAC_CPU_BGTASK]    = -1;
+    debugf(DEBUG_ERROR, functionName,
+          "Invalid CPU [%s] for core management",cpu_.c_str());
+    debug(DEBUG_ERROR, functionName, "Unable to calculate the CPU load");
   }
-  else {
 
-  }
 
   return  status;
 }
