@@ -137,11 +137,11 @@ const int pmacHardwareTurbo::PMAC_GSTATUS_REALTIME_INTR_RE = (0x1 << 22);
 const int pmacHardwareTurbo::PMAC_GSTATUS_RESERVED3 = (0x1 << 23);
 
 const int pmacHardwareTurbo::PMAC_HARDWARE_PROB = (PMAC_GSTATUS_REALTIME_INTR |
-                                                        PMAC_GSTATUS_FLASH_ERROR |
-                                                        PMAC_GSTATUS_DPRAM_ERROR |
-                                                        PMAC_GSTATUS_CKSUM_ERROR |
-                                                        PMAC_GSTATUS_WATCHDOG |
-                                                        PMAC_GSTATUS_SERVO_ERROR);
+                                                   PMAC_GSTATUS_FLASH_ERROR |
+                                                   PMAC_GSTATUS_DPRAM_ERROR |
+                                                   PMAC_GSTATUS_CKSUM_ERROR |
+                                                   PMAC_GSTATUS_WATCHDOG |
+                                                   PMAC_GSTATUS_SERVO_ERROR);
 
 pmacHardwareTurbo::pmacHardwareTurbo() : pmacDebugger("pmacHardwareTurbo") {
 }
