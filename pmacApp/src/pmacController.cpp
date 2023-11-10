@@ -4176,7 +4176,7 @@ asynStatus pmacController::getCpuNumCores() {
   if(status == asynSuccess) {
     if(cpuNumCores_ < 1 || cpuNumCores_ > PPMAC_CPU_MAXCORES) {
       debugf(DEBUG_ERROR, functionName,
-            "Number of CPU Cores (%d) out of supported range (0-4)", cpuNumCores_);
+            "Detected number of CPU Cores (%d) is out of supported range (1 to 4)", cpuNumCores_);
     }
   }
 
