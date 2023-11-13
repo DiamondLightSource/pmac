@@ -169,7 +169,7 @@ asynStatus pmacCSAxis::directMove(double position, double min_velocity, double m
   }
 
   // Calculate the real position demand using the resolution and offset and then call the move command
-  
+
   std::stringstream ss;
   ss << "Direct move called for motor [" << this->axisNo_ << "] EGU Position: " << position;
   ss << " Min Velocity: " << min_velocity << " Max velocity: " << max_velocity << " Acceleration: " << acceleration << std::endl;
@@ -395,7 +395,7 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   previous_position_ = position;
   previous_direction_ = direction;
 
-  moving_ = !cStatus.done_ || deferredMove_;
+  moving_ = !cStatus.done_ || deferredMove_ || motorPosChanged_;
 
   setIntegerParam(pC_->motorStatusDone_, !moving_);
   setIntegerParam(pC_->motorStatusMoving_, moving_);
@@ -405,6 +405,8 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   setIntegerParam(pC_->motorStatusLowLimit_, cStatus.lowLimit_);
   setIntegerParam(pC_->motorStatusFollowingError_, cStatus.followingError_);
   setIntegerParam(pC_->motorStatusProblem_, cStatus.problem_);
+
+  motorPosChanged_ = 0;
 
   axisProblemFlag = 0;
   if (cStatus.problem_) {
