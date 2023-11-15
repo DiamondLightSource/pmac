@@ -40,6 +40,36 @@ const int pmacHardwarePower::PMAC_STATUS1_IN_POSITION = (0x1 << 11);
 const int pmacHardwarePower::PMAC_STATUS1_BLOCK_REQUEST = (0x1 << 9);
 const int pmacHardwarePower::PMAC_STATUS1_PHASED_MOTOR = (0x1 << 8);
 
+/*Global status ?*/
+const int pmacHardwarePower::PMAC_GSTATUS_FOREGROUND_WDT_FAULT = (0x1 << 0);      // Foreground soft watchdog timer fault - WDTFault bit 0
+const int pmacHardwarePower::PMAC_GSTATUS_BACKGROUND_WDT_FAULT = (0x1 << 1);      // Background soft watchdog timer fault - WDTFault bit 1
+const int pmacHardwarePower::PMAC_GSTATUS_PWR_ON_FAULT = (0x1 << 2);              // Power-up/reset load fault            - PwrOnFault
+const int pmacHardwarePower::PMAC_GSTATUS_PROJECT_LOAD_ERROR = (0x1 << 3);        // Project load error                   - ProjectLoadErr
+const int pmacHardwarePower::PMAC_GSTATUS_CONFIG_LOAD_ERROR = (0x1 << 4);         // Saved configuration load error       - ConfigLoadErr
+const int pmacHardwarePower::PMAC_GSTATUS_HW_CHANGE_ERROR = (0x1 << 5);           // Hardware change detected             - HWChangeErr
+const int pmacHardwarePower::PMAC_GSTATUS_FILE_CONFIG_ERROR = (0x1 << 6);         // System file configuration error      - FileConfigErr
+const int pmacHardwarePower::PMAC_GSTATUS_DEFAULT = (0x1 << 7);                   // Factory default configuration set    - Default
+const int pmacHardwarePower::PMAC_GSTATUS_NO_CLOCKS = (0x1 << 8);                 // No system clocks found               - NoClocks
+const int pmacHardwarePower::PMAC_GSTATUS_ABORTALL = (0x1 << 9);                  // “Abort all” input                    - AbortAll
+const int pmacHardwarePower::PMAC_GSTATUS_BUF_SIZE_ERROR = (0x1 << 10);           // Insufficient user buffer size error  - BufSizeErr
+const int pmacHardwarePower::PMAC_GSTATUS_FLASH_SIZE_ERROR = (0x1 << 11);         // Insufficient flash size error        - FlashSizeErr
+const int pmacHardwarePower::PMAC_GSTATUS_CK3W_CONFIG_ERROR0 = (0x1 << 12);       // CK3W module configuration error      - CK3WConfigErr bit 0
+const int pmacHardwarePower::PMAC_GSTATUS_CK3W_CONFIG_ERROR1 = (0x1 << 13);       // CK3W module configuration error      - CK3WConfigErr bit 1
+const int pmacHardwarePower::PMAC_GSTATUS_CK3W_CONFIG_ERROR2 = (0x1 << 14);       // CK3W module configuration error      - CK3WConfigErr bit 2
+const int pmacHardwarePower::PMAC_GSTATUS_CK3W_HW_CHANGE = (0x1 << 15);           // CK3W module change detected          - CK3WHWChange
+
+const int pmacHardwarePower::PMAC_HARDWARE_PROB = (PMAC_GSTATUS_FOREGROUND_WDT_FAULT |
+                                                   PMAC_GSTATUS_BACKGROUND_WDT_FAULT |
+                                                   PMAC_GSTATUS_PROJECT_LOAD_ERROR |
+                                                   PMAC_GSTATUS_CONFIG_LOAD_ERROR |
+                                                   PMAC_GSTATUS_HW_CHANGE_ERROR |
+                                                   PMAC_GSTATUS_FILE_CONFIG_ERROR |
+                                                   PMAC_GSTATUS_NO_CLOCKS |
+                                                   //PMAC_GSTATUS_ABORTALL |  // Not included to not affect CS that ignores the abort input (Coord[x].AbortAllMode=3)
+                                                   PMAC_GSTATUS_BUF_SIZE_ERROR |
+                                                   PMAC_GSTATUS_FLASH_SIZE_ERROR);
+
+
 pmacHardwarePower::pmacHardwarePower() : pmacDebugger("pmacHardwarePower") {
 }
 
@@ -49,6 +79,10 @@ pmacHardwarePower::~pmacHardwarePower() {
 
 std::string pmacHardwarePower::getGlobalStatusCmd() {
   return GLOBAL_STATUS;
+}
+
+int pmacHardwarePower::getGlobalStatusError() {
+  return PMAC_HARDWARE_PROB;
 }
 
 asynStatus

@@ -19,6 +19,8 @@ public:
 
     std::string getGlobalStatusCmd();
 
+    int getGlobalStatusError();
+
     asynStatus parseGlobalStatus(const std::string &statusString, globalStatus &globStatus);
 
     std::string getAxisStatusCmd(int axis);
@@ -159,6 +161,39 @@ private:
     static const int CS_STATUS2_LOOKAHEAD;           // (0x1<<23)
 
     static const int CS_STATUS3_LIMIT;               // (0x1<<1)
+
+    /*Global status ???*/
+    static const int PMAC_GSTATUS_CARD_ADDR;                // (0x1 << 0)
+    static const int PMAC_GSTATUS_ALL_CARD_ADDR;            // (0x1 << 1)
+    static const int PMAC_GSTATUS_RESERVED;                 // (0x1 << 2)
+    static const int PMAC_GSTATUS_PHASE_CLK_MISS;           // (0x1 << 3)
+    static const int PMAC_GSTATUS_MACRO_RING_ERRORCHECK;    // (0x1 << 4)
+    static const int PMAC_GSTATUS_MACRO_RING_COMMS;         // (0x1 << 5)
+    static const int PMAC_GSTATUS_TWS_PARITY_ERROR;         // (0x1 << 6)
+    static const int PMAC_GSTATUS_CONFIG_ERROR;             // (0x1 << 7)
+    static const int PMAC_GSTATUS_ILLEGAL_LVAR;             // (0x1 << 8)
+    static const int PMAC_GSTATUS_REALTIME_INTR;            // (0x1 << 9)
+    static const int PMAC_GSTATUS_FLASH_ERROR;              // (0x1 << 10)
+    static const int PMAC_GSTATUS_DPRAM_ERROR;              // (0x1 << 11)
+    static const int PMAC_GSTATUS_CKSUM_ACTIVE;             // (0x1 << 12)
+    static const int PMAC_GSTATUS_CKSUM_ERROR;              // (0x1 << 13)
+    static const int PMAC_GSTATUS_LEADSCREW_COMP;           // (0x1 << 14)
+    static const int PMAC_GSTATUS_WATCHDOG;                 // (0x1 << 15)
+    static const int PMAC_GSTATUS_SERVO_REQ;                // (0x1 << 16)
+    static const int PMAC_GSTATUS_DATA_GATHER_START;        // (0x1 << 17)
+    static const int PMAC_GSTATUS_RESERVED2;                // (0x1 << 18)
+    static const int PMAC_GSTATUS_DATA_GATHER_ON;           // (0x1 << 19)
+    static const int PMAC_GSTATUS_SERVO_ERROR;              // (0x1 << 20)
+    static const int PMAC_GSTATUS_CPUTYPE;                  // (0x1 << 21)
+    static const int PMAC_GSTATUS_REALTIME_INTR_RE;         // (0x1 << 22)
+    static const int PMAC_GSTATUS_RESERVED3;                // (0x1 << 23)
+
+    static const int PMAC_HARDWARE_PROB;    // (PMAC_GSTATUS_REALTIME_INTR |
+                                            //  PMAC_GSTATUS_FLASH_ERROR |
+                                            //  PMAC_GSTATUS_DPRAM_ERROR |
+                                            //  PMAC_GSTATUS_CKSUM_ERROR |
+                                            //  PMAC_GSTATUS_WATCHDOG |
+                                            //  PMAC_GSTATUS_SERVO_ERROR);
 
 };
 

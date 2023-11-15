@@ -110,6 +110,39 @@ const int pmacHardwareTurbo::CS_STATUS2_LOOKAHEAD = (0x1 << 23);
 
 const int pmacHardwareTurbo::CS_STATUS3_LIMIT = (0x1 << 1);
 
+/*Global status ?*/
+const int pmacHardwareTurbo::PMAC_GSTATUS_CARD_ADDR = (0x1 << 0);
+const int pmacHardwareTurbo::PMAC_GSTATUS_ALL_CARD_ADDR = (0x1 << 1);
+const int pmacHardwareTurbo::PMAC_GSTATUS_RESERVED = (0x1 << 2);
+const int pmacHardwareTurbo::PMAC_GSTATUS_PHASE_CLK_MISS = (0x1 << 3);
+const int pmacHardwareTurbo::PMAC_GSTATUS_MACRO_RING_ERRORCHECK = (0x1 << 4);
+const int pmacHardwareTurbo::PMAC_GSTATUS_MACRO_RING_COMMS = (0x1 << 5);
+const int pmacHardwareTurbo::PMAC_GSTATUS_TWS_PARITY_ERROR = (0x1 << 6);
+const int pmacHardwareTurbo::PMAC_GSTATUS_CONFIG_ERROR = (0x1 << 7);
+const int pmacHardwareTurbo::PMAC_GSTATUS_ILLEGAL_LVAR = (0x1 << 8);
+const int pmacHardwareTurbo::PMAC_GSTATUS_REALTIME_INTR = (0x1 << 9);
+const int pmacHardwareTurbo::PMAC_GSTATUS_FLASH_ERROR = (0x1 << 10);
+const int pmacHardwareTurbo::PMAC_GSTATUS_DPRAM_ERROR = (0x1 << 11);
+const int pmacHardwareTurbo::PMAC_GSTATUS_CKSUM_ACTIVE = (0x1 << 12);
+const int pmacHardwareTurbo::PMAC_GSTATUS_CKSUM_ERROR = (0x1 << 13);
+const int pmacHardwareTurbo::PMAC_GSTATUS_LEADSCREW_COMP = (0x1 << 14);
+const int pmacHardwareTurbo::PMAC_GSTATUS_WATCHDOG = (0x1 << 15);
+const int pmacHardwareTurbo::PMAC_GSTATUS_SERVO_REQ = (0x1 << 16);
+const int pmacHardwareTurbo::PMAC_GSTATUS_DATA_GATHER_START = (0x1 << 17);
+const int pmacHardwareTurbo::PMAC_GSTATUS_RESERVED2 = (0x1 << 18);
+const int pmacHardwareTurbo::PMAC_GSTATUS_DATA_GATHER_ON = (0x1 << 19);
+const int pmacHardwareTurbo::PMAC_GSTATUS_SERVO_ERROR = (0x1 << 20);
+const int pmacHardwareTurbo::PMAC_GSTATUS_CPUTYPE = (0x1 << 21);
+const int pmacHardwareTurbo::PMAC_GSTATUS_REALTIME_INTR_RE = (0x1 << 22);
+const int pmacHardwareTurbo::PMAC_GSTATUS_RESERVED3 = (0x1 << 23);
+
+const int pmacHardwareTurbo::PMAC_HARDWARE_PROB = (PMAC_GSTATUS_REALTIME_INTR |
+                                                   PMAC_GSTATUS_FLASH_ERROR |
+                                                   PMAC_GSTATUS_DPRAM_ERROR |
+                                                   PMAC_GSTATUS_CKSUM_ERROR |
+                                                   PMAC_GSTATUS_WATCHDOG |
+                                                   PMAC_GSTATUS_SERVO_ERROR);
+
 pmacHardwareTurbo::pmacHardwareTurbo() : pmacDebugger("pmacHardwareTurbo") {
 }
 
@@ -118,6 +151,10 @@ pmacHardwareTurbo::~pmacHardwareTurbo() {
 
 std::string pmacHardwareTurbo::getGlobalStatusCmd() {
   return GLOBAL_STATUS;
+}
+
+int pmacHardwareTurbo::getGlobalStatusError() {
+  return PMAC_HARDWARE_PROB;
 }
 
 asynStatus
