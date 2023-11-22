@@ -164,7 +164,7 @@
 #define PMAC_CPU_GEO_240MHZ               "DSP56321"            // Approved geobrick for trajectory scans
 #define PMAC_CPU_CLIPPER                  "DSP56303"            // Allowed for trajectory scans
 
-#define PMAC_MAXBUF 1024
+#define PMAC_MAXBUF 7168
 
 #define PMAC_MAX_PARAMETERS 1000
 
