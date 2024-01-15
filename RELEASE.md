@@ -16,6 +16,19 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-6-2 (Jan 15, 2023)
+==========================
+### Changes
+* Revert PR [#116](https://github.com/dls-controls/pmac/pull/116) due to an introduced bug, that causes Segmentation Fault during the initialization.
+
+R2-6-1 (Nov 15, 2023)
+==========================
+### Changes
+* Fix AbortAll and KillAll for PowerPMAC        - PR [#112](https://github.com/dls-controls/pmac/pull/112)
+* Update motor to 7-0dls9-1 in RELEASE.local    - PR [#115](https://github.com/dls-controls/pmac/pull/115)
+* Motor offset update cs axes position value    - PR [#116](https://github.com/dls-controls/pmac/pull/116)
+* Abstract Global status bits                   - PR [#114](https://github.com/dls-controls/pmac/pull/114)
+
 R2-6-1 (Nov 15, 2023)
 ==========================
 ### Changes
