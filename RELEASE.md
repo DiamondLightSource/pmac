@@ -16,6 +16,11 @@ site location of dependencies.
 Release Notes
 =============
 
+R2-6-3 (Jan 31, 2024)
+==========================
+### Changes
+* Add Busy dependency to Pmac   - PR [#120](https://github.com/dls-controls/pmac/pull/120)
+
 R2-6-2 (Jan 15, 2023)
 ==========================
 ### Changes
