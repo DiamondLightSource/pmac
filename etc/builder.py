@@ -9,7 +9,7 @@ __all__ = ['GeoBrick']
 
 
 class Pmac(Device):
-    Dependencies = (Asyn, MotorLib)
+    Dependencies = (Asyn, MotorLib, Busy)
     AutoInstantiate = True
 
 
