@@ -1752,7 +1752,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
     double tasksPercent[PPMAC_CPU_TASKS_NUM];
 
     // Final result
-    double cpuLoad_[cpuNumCores_];
+    std::vector<double> cpuLoad_(cpuNumCores_,0.0);
 
     // Calculation of each task
     if (status == asynSuccess) {
