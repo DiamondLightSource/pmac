@@ -4170,6 +4170,9 @@ asynStatus pmacController::getCpuNumCores() {
   }
 
   if(status == asynSuccess) {
+    printf("%s:%s: CPU type %s\n", driverName, functionName, cpu_.c_str());
+    printf("%s:%s: Number of cores %d\n", driverName, functionName, cpuNumCores_);
+
     if(cpuNumCores_ < 1 || cpuNumCores_ > PPMAC_CPU_MAXCORES) {
       debugf(DEBUG_ERROR, functionName,
             "Detected number of CPU Cores (%d) is out of supported range (1 to %d)", cpuNumCores_, PPMAC_CPU_MAXCORES);
@@ -4193,9 +4196,6 @@ asynStatus pmacController::getTasksCore() {
 
   // Single-core Power PC
   if (strcmp(cpu_.c_str(), "PowerPC,460EX") == 0) {
-    debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
-    debug(DEBUG_TRACE, functionName, "Number of cores", cpuNumCores_);
-
     // CPU Core 0 executes all tasks: Phase, Servo, RT and Background
     cpuCoreTasks_[PPMAC_CPU_PHASETASK] = 0;
     cpuCoreTasks_[PPMAC_CPU_SERVOTASK] = 0;
@@ -4204,9 +4204,6 @@ asynStatus pmacController::getTasksCore() {
 
   // Dual-core Power PC
   } else if (strcmp(cpu_.c_str(), "PowerPC,APM86xxx") == 0) {
-    debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
-    debug(DEBUG_TRACE, functionName, "Number of cores", cpuNumCores_);
-
     // CPU Core 0 executes: Background tasks
     cpuCoreTasks_[PPMAC_CPU_BGTASK] = 0;
     // CPU Core 1 executes: Phase, Servo and RT tasks
@@ -4217,9 +4214,6 @@ asynStatus pmacController::getTasksCore() {
   // Dual-core/ Quad-core ARM
   } else if(strcmp(cpu_.c_str(), "arm,LS1021A") == 0 ||
             strcmp(cpu_.c_str(), "arm,LS1043A") == 0) {
-    debug(DEBUG_TRACE, functionName, "CPU type", cpu_.c_str());
-    debug(DEBUG_TRACE, functionName, "Number of cores", cpuNumCores_);
-
     for (int task_idx = 0; task_idx < PPMAC_CPU_TASKS_NUM; task_idx++) {
       // get task Core command
       int taskCore;
