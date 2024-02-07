@@ -235,10 +235,6 @@ record(ai, "$(P):CPUNUMCORES") {
   field(DTYP, "asynInt32")
   field(SCAN, "I/O Intr")
   field(INP, "@asyn($(PORT),0)PMAC_C_CPU_NUM_CORES")
-  field(HIGH, "4")
-  field(HSV, "MINOR")
-  field(LOW, "1")
-  field(LSV, "MAJOR")
 }
 
 # % archiver 10 Monitor
