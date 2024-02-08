@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 1961
-y 265
+x 513
+y 64
 w 575
-h 970
+h 955
 font "arial-medium-r-16.0"
 ctlFont "arial-bold-r-16.0"
 btnFont "arial-medium-r-16.0"
@@ -23,8 +23,101 @@ title "$(pmac)"
 showGrid
 snapToGrid
 gridSize 5
-disableScroll
 endScreenProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 765
+w 305
+h 135
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 775
+w 305
+h 125
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 780
+w 135
+h 20
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Response (ECHO)"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 265
+y 765
+w 97
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  PMAC Settings  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 415
+y 780
+w 145
+h 20
+controlPv "$(pmac):READ_ECHO"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):PMACTYPE"
+visMin "0"
+visMax "1"
+endObjectProperties
 
 # (Rectangle)
 object activeRectangleClass
@@ -35,7 +128,7 @@ release 0
 x 5
 y 130
 w 565
-h 75
+h 50
 lineColor index 14
 fill
 fillColor index 5
@@ -248,7 +341,7 @@ major 4
 minor 0
 release 0
 x 265
-y 790
+y 765
 w 305
 h 135
 
@@ -261,101 +354,7 @@ major 4
 minor 0
 release 0
 x 265
-y 800
-w 305
-h 125
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 805
-w 135
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Response (ECHO)"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 265
-y 790
-w 97
-h 13
-font "arial-medium-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 8
-value {
-  "  PMAC Settings  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 415
-y 805
-w 145
-h 20
-controlPv "$(pmac):READ_ECHO"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-endGroup
-
-visPv "$(pmac):PMACTYPE"
-visMin "0"
-visMax "1"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 265
-y 790
-w 305
-h 135
-
-beginGroup
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 265
-y 800
+y 775
 w 305
 h 125
 lineColor index 14
@@ -370,7 +369,7 @@ major 4
 minor 6
 release 0
 x 445
-y 880
+y 855
 w 120
 h 12
 controlPv "$(pmac):VME_ADDR_MODE"
@@ -392,7 +391,7 @@ major 4
 minor 1
 release 1
 x 270
-y 880
+y 855
 w 126
 h 11
 font "arial-medium-r-10.0"
@@ -412,7 +411,7 @@ major 4
 minor 1
 release 1
 x 270
-y 895
+y 870
 w 117
 h 11
 font "arial-medium-r-10.0"
@@ -432,7 +431,7 @@ major 4
 minor 6
 release 0
 x 445
-y 895
+y 870
 w 120
 h 12
 controlPv "$(pmac):VME_INTLVL"
@@ -454,7 +453,7 @@ major 4
 minor 1
 release 1
 x 270
-y 805
+y 780
 w 118
 h 11
 font "arial-medium-r-10.0"
@@ -474,7 +473,7 @@ major 4
 minor 6
 release 0
 x 445
-y 805
+y 780
 w 120
 h 12
 controlPv "$(pmac):PLC_CONTROL"
@@ -497,7 +496,7 @@ major 4
 minor 6
 release 0
 x 445
-y 835
+y 810
 w 120
 h 12
 controlPv "$(pmac):ERRREPMODE"
@@ -519,7 +518,7 @@ major 4
 minor 6
 release 0
 x 445
-y 820
+y 795
 w 120
 h 12
 controlPv "$(pmac):IO_HANDSHAKE"
@@ -541,7 +540,7 @@ major 4
 minor 1
 release 1
 x 270
-y 820
+y 795
 w 123
 h 11
 font "arial-medium-r-10.0"
@@ -561,7 +560,7 @@ major 4
 minor 1
 release 1
 x 270
-y 835
+y 810
 w 119
 h 11
 font "arial-medium-r-10.0"
@@ -581,7 +580,7 @@ major 4
 minor 6
 release 0
 x 445
-y 850
+y 825
 w 120
 h 12
 controlPv "$(pmac):DPRAM_COMMS_INT"
@@ -603,7 +602,7 @@ major 4
 minor 6
 release 0
 x 445
-y 865
+y 840
 w 120
 h 12
 controlPv "$(pmac):DPRAM_COMMS"
@@ -625,7 +624,7 @@ major 4
 minor 1
 release 1
 x 270
-y 865
+y 840
 w 129
 h 11
 font "arial-medium-r-10.0"
@@ -645,7 +644,7 @@ major 4
 minor 1
 release 1
 x 270
-y 850
+y 825
 w 173
 h 11
 font "arial-medium-r-10.0"
@@ -665,7 +664,7 @@ major 4
 minor 1
 release 1
 x 265
-y 790
+y 765
 w 97
 h 13
 font "arial-medium-r-12.0"
@@ -686,7 +685,7 @@ major 4
 minor 6
 release 0
 x 445
-y 910
+y 885
 w 120
 h 12
 controlPv "$(pmac):VME_DPRAMBASE"
@@ -709,7 +708,7 @@ major 4
 minor 1
 release 1
 x 270
-y 910
+y 885
 w 153
 h 11
 font "arial-medium-r-10.0"
@@ -736,7 +735,7 @@ major 4
 minor 1
 release 0
 x 460
-y 935
+y 915
 w 110
 h 25
 fgColor index 46
@@ -746,198 +745,6 @@ botShadowColor index 11
 label "EXIT"
 font "arial-medium-r-18.0"
 3d
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 5
-y 555
-w 250
-h 130
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 5
-y 550
-w 63
-h 13
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 8
-value {
-  "  Feedrate  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 180
-y 650
-w 70
-h 20
-controlPv "$(pmac):FEEDRATE_LIMIT"
-displayMode "decimal"
-precision 2
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 650
-w 155
-h 20
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Minimum allowed"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 600
-w 160
-h 20
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Set feedrate for all CS"
-}
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 180
-y 600
-w 70
-h 20
-controlPv "$(pmac):FEEDRATE"
-displayMode "decimal"
-precision 2
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 180
-y 625
-w 70
-h 20
-controlPv "$(pmac):FEEDRATE_RBV"
-displayMode "decimal"
-precision 2
-fgColor index 15
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 625
-w 160
-h 20
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Current lowest feedrate"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 575
-w 160
-h 20
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Feedrate problem:"
-}
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 235
-y 575
-w 15
-h 15
-controlPv "$(pmac):FEEDRATE_PROBLEM_RBV"
-lineColor index 14
-onColor index 20
-offColor index 24
-lineWidth 2
-numBits 1
 endObjectProperties
 
 # (Static Text)
@@ -961,313 +768,6 @@ autoSize
 border
 endObjectProperties
 
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 175
-w 85
-h 30
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "CPU Load:"
-}
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 340
-y 165
-w 100
-h 35
-
-beginGroup
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 340
-y 165
-w 42
-h 13
-font "courier-bold-r-12.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Core 3"
-}
-autoSize
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 340
-y 180
-w 75
-h 20
-controlPv "$(pmac):CPULOAD_3"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-endGroup
-
-visPv "$(pmac):CPUNUMCORES"
-visMin "4"
-visMax "5"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 260
-y 165
-w 100
-h 35
-
-beginGroup
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 260
-y 165
-w 42
-h 13
-font "courier-bold-r-12.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Core 2"
-}
-autoSize
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 260
-y 180
-w 75
-h 20
-controlPv "$(pmac):CPULOAD_2"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-endGroup
-
-visPv "$(pmac):CPUNUMCORES"
-visMin "3"
-visMax "5"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 180
-y 165
-w 100
-h 35
-
-beginGroup
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 180
-y 165
-w 42
-h 13
-font "courier-bold-r-12.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Core 1"
-}
-autoSize
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 180
-y 180
-w 75
-h 20
-controlPv "$(pmac):CPULOAD_1"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-endGroup
-
-visPv "$(pmac):CPUNUMCORES"
-visMin "2"
-visMax "5"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 100
-y 165
-w 100
-h 35
-
-beginGroup
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 100
-y 165
-w 42
-h 13
-font "courier-bold-r-12.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Core 0"
-}
-autoSize
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 100
-y 180
-w 75
-h 20
-controlPv "$(pmac):CPULOAD_0"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-endGroup
-
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 10
-y 135
-w 245
-h 30
-
-beginGroup
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 135
-w 85
-h 30
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "CPU Cores:"
-}
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 100
-y 140
-w 155
-h 20
-controlPv "$(pmac):CPUNUMCORES"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-endGroup
-
-endObjectProperties
-
 # (Group)
 object activeGroupClass
 beginObjectProperties
@@ -1275,7 +775,7 @@ major 4
 minor 0
 release 0
 x 5
-y 210
+y 190
 w 565
 h 220
 
@@ -1288,7 +788,7 @@ major 4
 minor 0
 release 0
 x 5
-y 220
+y 200
 w 565
 h 210
 
@@ -1301,7 +801,7 @@ major 4
 minor 0
 release 0
 x 5
-y 220
+y 200
 w 565
 h 210
 lineColor index 14
@@ -1316,7 +816,7 @@ major 4
 minor 0
 release 0
 x 15
-y 230
+y 210
 w 130
 h 192
 
@@ -1329,7 +829,7 @@ major 4
 minor 0
 release 0
 x 15
-y 230
+y 210
 w 12
 h 192
 controlPv "$(pmac):CTRLSTAT:status1"
@@ -1346,7 +846,7 @@ major 4
 minor 1
 release 1
 x 30
-y 411
+y 391
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1366,7 +866,7 @@ major 4
 minor 1
 release 1
 x 30
-y 399
+y 379
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1386,7 +886,7 @@ major 4
 minor 1
 release 1
 x 30
-y 387
+y 367
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1406,7 +906,7 @@ major 4
 minor 1
 release 1
 x 30
-y 375
+y 355
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1426,7 +926,7 @@ major 4
 minor 1
 release 1
 x 30
-y 363
+y 343
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1446,7 +946,7 @@ major 4
 minor 1
 release 1
 x 30
-y 351
+y 331
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1466,7 +966,7 @@ major 4
 minor 1
 release 1
 x 30
-y 339
+y 319
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1486,7 +986,7 @@ major 4
 minor 1
 release 1
 x 30
-y 327
+y 307
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1506,7 +1006,7 @@ major 4
 minor 1
 release 1
 x 30
-y 315
+y 295
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1526,7 +1026,7 @@ major 4
 minor 1
 release 1
 x 30
-y 303
+y 283
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1546,7 +1046,7 @@ major 4
 minor 1
 release 1
 x 30
-y 291
+y 271
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1566,7 +1066,7 @@ major 4
 minor 1
 release 1
 x 30
-y 279
+y 259
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1586,7 +1086,7 @@ major 4
 minor 1
 release 1
 x 30
-y 267
+y 247
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1606,7 +1106,7 @@ major 4
 minor 1
 release 1
 x 30
-y 255
+y 235
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1626,7 +1126,7 @@ major 4
 minor 1
 release 1
 x 30
-y 243
+y 223
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1646,7 +1146,7 @@ major 4
 minor 1
 release 1
 x 30
-y 231
+y 211
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1670,7 +1170,7 @@ major 4
 minor 0
 release 0
 x 370
-y 230
+y 210
 w 189
 h 192
 
@@ -1683,7 +1183,7 @@ major 4
 minor 1
 release 1
 x 385
-y 411
+y 391
 w 138
 h 11
 font "arial-medium-r-10.0"
@@ -1703,7 +1203,7 @@ major 4
 minor 1
 release 1
 x 385
-y 399
+y 379
 w 138
 h 11
 font "arial-medium-r-10.0"
@@ -1723,7 +1223,7 @@ major 4
 minor 1
 release 1
 x 385
-y 387
+y 367
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1743,7 +1243,7 @@ major 4
 minor 1
 release 1
 x 385
-y 375
+y 355
 w 80
 h 11
 font "arial-medium-r-10.0"
@@ -1763,7 +1263,7 @@ major 4
 minor 1
 release 1
 x 385
-y 363
+y 343
 w 142
 h 11
 font "arial-medium-r-10.0"
@@ -1783,7 +1283,7 @@ major 4
 minor 1
 release 1
 x 385
-y 351
+y 331
 w 174
 h 11
 font "arial-medium-r-10.0"
@@ -1803,7 +1303,7 @@ major 4
 minor 1
 release 1
 x 385
-y 339
+y 319
 w 140
 h 11
 font "arial-medium-r-10.0"
@@ -1823,7 +1323,7 @@ major 4
 minor 1
 release 1
 x 385
-y 327
+y 307
 w 135
 h 11
 font "arial-medium-r-10.0"
@@ -1843,7 +1343,7 @@ major 4
 minor 1
 release 1
 x 385
-y 315
+y 295
 w 107
 h 11
 font "arial-medium-r-10.0"
@@ -1863,7 +1363,7 @@ major 4
 minor 1
 release 1
 x 385
-y 303
+y 283
 w 85
 h 11
 font "arial-medium-r-10.0"
@@ -1883,7 +1383,7 @@ major 4
 minor 1
 release 1
 x 385
-y 291
+y 271
 w 105
 h 11
 font "arial-medium-r-10.0"
@@ -1903,7 +1403,7 @@ major 4
 minor 1
 release 1
 x 385
-y 279
+y 259
 w 116
 h 11
 font "arial-medium-r-10.0"
@@ -1923,7 +1423,7 @@ major 4
 minor 1
 release 1
 x 385
-y 267
+y 247
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1943,7 +1443,7 @@ major 4
 minor 1
 release 1
 x 385
-y 255
+y 235
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1963,7 +1463,7 @@ major 4
 minor 1
 release 1
 x 385
-y 243
+y 223
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -1983,7 +1483,7 @@ major 4
 minor 1
 release 1
 x 385
-y 231
+y 211
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2003,7 +1503,7 @@ major 4
 minor 0
 release 0
 x 370
-y 230
+y 210
 w 12
 h 192
 controlPv "$(pmac):CTRLSTAT:status2"
@@ -2031,7 +1531,7 @@ major 4
 minor 0
 release 0
 x 5
-y 210
+y 190
 w 565
 h 220
 
@@ -2044,7 +1544,7 @@ major 4
 minor 0
 release 0
 x 5
-y 220
+y 200
 w 565
 h 210
 lineColor index 14
@@ -2059,7 +1559,7 @@ major 4
 minor 1
 release 1
 x 5
-y 210
+y 190
 w 87
 h 13
 font "arial-medium-r-12.0"
@@ -2080,7 +1580,7 @@ major 4
 minor 0
 release 0
 x 15
-y 230
+y 210
 w 507
 h 193
 
@@ -2093,7 +1593,7 @@ major 4
 minor 1
 release 1
 x 31
-y 410
+y 390
 w 125
 h 11
 font "arial-medium-r-10.0"
@@ -2113,7 +1613,7 @@ major 4
 minor 1
 release 1
 x 31
-y 398
+y 378
 w 136
 h 11
 font "arial-medium-r-10.0"
@@ -2133,7 +1633,7 @@ major 4
 minor 1
 release 1
 x 31
-y 386
+y 366
 w 50
 h 11
 font "arial-medium-r-10.0"
@@ -2153,7 +1653,7 @@ major 4
 minor 1
 release 1
 x 31
-y 374
+y 354
 w 64
 h 11
 font "arial-medium-r-10.0"
@@ -2173,7 +1673,7 @@ major 4
 minor 1
 release 1
 x 31
-y 362
+y 342
 w 111
 h 11
 font "arial-medium-r-10.0"
@@ -2193,7 +1693,7 @@ major 4
 minor 1
 release 1
 x 31
-y 350
+y 330
 w 133
 h 11
 font "arial-medium-r-10.0"
@@ -2213,7 +1713,7 @@ major 4
 minor 1
 release 1
 x 31
-y 338
+y 318
 w 129
 h 11
 font "arial-medium-r-10.0"
@@ -2233,7 +1733,7 @@ major 4
 minor 1
 release 1
 x 31
-y 326
+y 306
 w 74
 h 11
 font "arial-medium-r-10.0"
@@ -2253,7 +1753,7 @@ major 4
 minor 1
 release 1
 x 31
-y 314
+y 294
 w 67
 h 11
 font "arial-medium-r-10.0"
@@ -2273,7 +1773,7 @@ major 4
 minor 1
 release 1
 x 31
-y 302
+y 282
 w 127
 h 11
 font "arial-medium-r-10.0"
@@ -2293,7 +1793,7 @@ major 4
 minor 1
 release 1
 x 31
-y 290
+y 270
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2313,7 +1813,7 @@ major 4
 minor 1
 release 1
 x 31
-y 278
+y 258
 w 134
 h 11
 font "arial-medium-r-10.0"
@@ -2333,7 +1833,7 @@ major 4
 minor 1
 release 1
 x 31
-y 266
+y 246
 w 53
 h 11
 font "arial-medium-r-10.0"
@@ -2353,7 +1853,7 @@ major 4
 minor 1
 release 1
 x 31
-y 254
+y 234
 w 73
 h 11
 font "arial-medium-r-10.0"
@@ -2373,7 +1873,7 @@ major 4
 minor 0
 release 0
 x 15
-y 230
+y 210
 w 12
 h 192
 controlPv "$(pmac):CTRLSTAT:status1"
@@ -2390,7 +1890,7 @@ major 4
 minor 1
 release 1
 x 31
-y 242
+y 222
 w 127
 h 11
 font "arial-medium-r-10.0"
@@ -2410,7 +1910,7 @@ major 4
 minor 1
 release 1
 x 31
-y 230
+y 210
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2430,7 +1930,7 @@ major 4
 minor 0
 release 0
 x 185
-y 230
+y 210
 w 337
 h 193
 
@@ -2443,7 +1943,7 @@ major 4
 minor 1
 release 1
 x 201
-y 410
+y 390
 w 67
 h 11
 font "arial-medium-r-10.0"
@@ -2463,7 +1963,7 @@ major 4
 minor 1
 release 1
 x 201
-y 398
+y 378
 w 76
 h 11
 font "arial-medium-r-10.0"
@@ -2483,7 +1983,7 @@ major 4
 minor 1
 release 1
 x 201
-y 386
+y 366
 w 113
 h 11
 font "arial-medium-r-10.0"
@@ -2503,7 +2003,7 @@ major 4
 minor 1
 release 1
 x 201
-y 374
+y 354
 w 87
 h 11
 font "arial-medium-r-10.0"
@@ -2523,7 +2023,7 @@ major 4
 minor 1
 release 1
 x 201
-y 362
+y 342
 w 122
 h 11
 font "arial-medium-r-10.0"
@@ -2543,7 +2043,7 @@ major 4
 minor 1
 release 1
 x 201
-y 350
+y 330
 w 72
 h 11
 font "arial-medium-r-10.0"
@@ -2563,7 +2063,7 @@ major 4
 minor 1
 release 1
 x 201
-y 338
+y 318
 w 54
 h 11
 font "arial-medium-r-10.0"
@@ -2583,7 +2083,7 @@ major 4
 minor 1
 release 1
 x 201
-y 326
+y 306
 w 69
 h 11
 font "arial-medium-r-10.0"
@@ -2603,7 +2103,7 @@ major 4
 minor 1
 release 1
 x 201
-y 314
+y 294
 w 92
 h 11
 font "arial-medium-r-10.0"
@@ -2623,7 +2123,7 @@ major 4
 minor 1
 release 1
 x 201
-y 302
+y 282
 w 90
 h 11
 font "arial-medium-r-10.0"
@@ -2643,7 +2143,7 @@ major 4
 minor 1
 release 1
 x 201
-y 290
+y 270
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2663,7 +2163,7 @@ major 4
 minor 1
 release 1
 x 201
-y 278
+y 258
 w 93
 h 11
 font "arial-medium-r-10.0"
@@ -2683,7 +2183,7 @@ major 4
 minor 1
 release 1
 x 201
-y 266
+y 246
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2703,7 +2203,7 @@ major 4
 minor 1
 release 1
 x 201
-y 242
+y 222
 w 119
 h 11
 font "arial-medium-r-10.0"
@@ -2723,7 +2223,7 @@ major 4
 minor 1
 release 1
 x 201
-y 230
+y 210
 w 89
 h 11
 font "arial-medium-r-10.0"
@@ -2743,7 +2243,7 @@ major 4
 minor 0
 release 0
 x 185
-y 230
+y 210
 w 12
 h 192
 controlPv "$(pmac):CTRLSTAT:status2"
@@ -2760,7 +2260,7 @@ major 4
 minor 1
 release 1
 x 201
-y 254
+y 234
 w 162
 h 11
 font "arial-medium-r-10.0"
@@ -2780,7 +2280,7 @@ major 4
 minor 0
 release 0
 x 370
-y 230
+y 210
 w 152
 h 193
 
@@ -2793,7 +2293,7 @@ major 4
 minor 1
 release 1
 x 385
-y 411
+y 391
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2813,7 +2313,7 @@ major 4
 minor 1
 release 1
 x 385
-y 398
+y 378
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2833,7 +2333,7 @@ major 4
 minor 1
 release 1
 x 385
-y 386
+y 366
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2853,7 +2353,7 @@ major 4
 minor 1
 release 1
 x 385
-y 374
+y 354
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2873,7 +2373,7 @@ major 4
 minor 1
 release 1
 x 385
-y 362
+y 342
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2893,7 +2393,7 @@ major 4
 minor 1
 release 1
 x 385
-y 350
+y 330
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2913,7 +2413,7 @@ major 4
 minor 1
 release 1
 x 385
-y 338
+y 318
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2933,7 +2433,7 @@ major 4
 minor 1
 release 1
 x 385
-y 326
+y 306
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2953,7 +2453,7 @@ major 4
 minor 1
 release 1
 x 385
-y 314
+y 294
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2973,7 +2473,7 @@ major 4
 minor 1
 release 1
 x 385
-y 302
+y 282
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -2993,7 +2493,7 @@ major 4
 minor 1
 release 1
 x 385
-y 290
+y 270
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -3013,7 +2513,7 @@ major 4
 minor 1
 release 1
 x 385
-y 278
+y 258
 w 115
 h 11
 font "arial-medium-r-10.0"
@@ -3033,7 +2533,7 @@ major 4
 minor 1
 release 1
 x 385
-y 266
+y 246
 w 75
 h 11
 font "arial-medium-r-10.0"
@@ -3053,7 +2553,7 @@ major 4
 minor 1
 release 1
 x 385
-y 254
+y 234
 w 137
 h 11
 font "arial-medium-r-10.0"
@@ -3073,7 +2573,7 @@ major 4
 minor 1
 release 1
 x 385
-y 242
+y 222
 w 81
 h 11
 font "arial-medium-r-10.0"
@@ -3093,7 +2593,7 @@ major 4
 minor 1
 release 1
 x 385
-y 230
+y 210
 w 81
 h 11
 font "arial-medium-r-10.0"
@@ -3113,7 +2613,7 @@ major 4
 minor 0
 release 0
 x 370
-y 230
+y 210
 w 12
 h 192
 controlPv "$(pmac):CTRLSTAT:status3"
@@ -3149,7 +2649,7 @@ major 4
 minor 1
 release 1
 x 5
-y 210
+y 190
 w 125
 h 13
 font "arial-medium-r-12.0"
@@ -3177,7 +2677,7 @@ major 4
 minor 0
 release 0
 x 5
-y 445
+y 420
 w 250
 h 95
 
@@ -3190,7 +2690,7 @@ major 4
 minor 0
 release 0
 x 5
-y 455
+y 430
 w 250
 h 85
 lineColor index 14
@@ -3205,7 +2705,7 @@ major 4
 minor 1
 release 1
 x 5
-y 445
+y 420
 w 120
 h 13
 font "arial-medium-r-12.0"
@@ -3226,7 +2726,7 @@ major 4
 minor 4
 release 0
 x 140
-y 465
+y 440
 w 105
 h 25
 fgColor index 43
@@ -3249,7 +2749,7 @@ major 4
 minor 4
 release 0
 x 140
-y 500
+y 475
 w 105
 h 25
 fgColor index 43
@@ -3272,7 +2772,7 @@ major 4
 minor 4
 release 0
 x 20
-y 465
+y 440
 w 105
 h 25
 fgColor index 43
@@ -3295,7 +2795,7 @@ major 4
 minor 0
 release 0
 x 20
-y 500
+y 475
 w 105
 h 25
 fgColor index 43
@@ -3343,7 +2843,7 @@ major 4
 minor 0
 release 0
 x 265
-y 445
+y 420
 w 305
 h 110
 
@@ -3356,7 +2856,7 @@ major 4
 minor 0
 release 0
 x 265
-y 455
+y 430
 w 305
 h 100
 lineColor index 14
@@ -3371,7 +2871,7 @@ major 4
 minor 0
 release 0
 x 275
-y 465
+y 440
 w 285
 h 80
 
@@ -3384,7 +2884,7 @@ major 4
 minor 0
 release 0
 x 275
-y 465
+y 440
 w 285
 h 80
 
@@ -3397,7 +2897,7 @@ major 4
 minor 0
 release 0
 x 275
-y 465
+y 440
 w 285
 h 80
 
@@ -3410,7 +2910,7 @@ major 4
 minor 0
 release 0
 x 275
-y 510
+y 485
 w 285
 h 35
 
@@ -3423,7 +2923,7 @@ major 4
 minor 0
 release 0
 x 275
-y 525
+y 500
 w 285
 h 20
 controlPv "$(pmac):PLCDISBITS01"
@@ -3441,7 +2941,7 @@ major 4
 minor 1
 release 1
 x 275
-y 510
+y 485
 w 282
 h 10
 font "courier-bold-r-10.0"
@@ -3465,7 +2965,7 @@ major 4
 minor 0
 release 0
 x 275
-y 465
+y 440
 w 285
 h 35
 
@@ -3478,7 +2978,7 @@ major 4
 minor 0
 release 0
 x 275
-y 480
+y 455
 w 285
 h 20
 controlPv "$(pmac):PLCDISBITS00"
@@ -3496,7 +2996,7 @@ major 4
 minor 1
 release 1
 x 280
-y 465
+y 440
 w 276
 h 10
 font "courier-bold-r-10.0"
@@ -3532,7 +3032,7 @@ major 4
 minor 1
 release 1
 x 265
-y 445
+y 420
 w 96
 h 13
 font "arial-medium-r-12.0"
@@ -3557,7 +3057,7 @@ major 4
 minor 0
 release 0
 x 265
-y 565
+y 540
 w 305
 h 65
 
@@ -3570,7 +3070,7 @@ major 4
 minor 0
 release 0
 x 265
-y 575
+y 550
 w 305
 h 55
 lineColor index 14
@@ -3585,7 +3085,7 @@ major 4
 minor 1
 release 1
 x 265
-y 565
+y 540
 w 281
 h 13
 font "arial-medium-r-12.0"
@@ -3606,7 +3106,7 @@ major 4
 minor 0
 release 0
 x 275
-y 600
+y 575
 w 285
 h 20
 controlPv "$(pmac):PROGBITS"
@@ -3624,7 +3124,7 @@ major 4
 minor 1
 release 1
 x 280
-y 585
+y 560
 w 276
 h 10
 font "courier-bold-r-10.0"
@@ -3648,7 +3148,7 @@ major 4
 minor 0
 release 0
 x 265
-y 640
+y 615
 w 305
 h 65
 
@@ -3661,7 +3161,7 @@ major 4
 minor 0
 release 0
 x 265
-y 650
+y 625
 w 305
 h 55
 lineColor index 14
@@ -3676,7 +3176,7 @@ major 4
 minor 1
 release 1
 x 265
-y 640
+y 615
 w 144
 h 13
 font "arial-medium-r-12.0"
@@ -3697,7 +3197,7 @@ major 4
 minor 0
 release 0
 x 275
-y 675
+y 650
 w 285
 h 20
 controlPv "$(pmac):GPIO_INP_BITS"
@@ -3715,7 +3215,7 @@ major 4
 minor 1
 release 1
 x 280
-y 660
+y 635
 w 276
 h 10
 font "courier-bold-r-10.0"
@@ -3739,7 +3239,7 @@ major 4
 minor 0
 release 0
 x 265
-y 715
+y 690
 w 305
 h 65
 
@@ -3752,7 +3252,7 @@ major 4
 minor 0
 release 0
 x 265
-y 725
+y 700
 w 305
 h 55
 lineColor index 14
@@ -3767,7 +3267,7 @@ major 4
 minor 1
 release 1
 x 265
-y 715
+y 690
 w 154
 h 13
 font "arial-medium-r-12.0"
@@ -3788,7 +3288,7 @@ major 4
 minor 0
 release 0
 x 275
-y 750
+y 725
 w 285
 h 20
 controlPv "$(pmac):GPIO_OP_BITS"
@@ -3806,7 +3306,7 @@ major 4
 minor 1
 release 1
 x 280
-y 735
+y 710
 w 276
 h 10
 font "courier-bold-r-10.0"
@@ -3830,7 +3330,7 @@ major 4
 minor 0
 release 0
 x 5
-y 870
+y 845
 w 250
 h 55
 
@@ -3843,7 +3343,7 @@ major 4
 minor 0
 release 0
 x 5
-y 880
+y 855
 w 250
 h 45
 lineColor index 14
@@ -3858,7 +3358,7 @@ major 4
 minor 1
 release 1
 x 5
-y 870
+y 845
 w 197
 h 13
 font "arial-medium-r-12.0"
@@ -3879,7 +3379,7 @@ major 4
 minor 0
 release 0
 x 20
-y 890
+y 865
 w 220
 h 25
 fgColor index 14
@@ -3903,7 +3403,7 @@ major 4
 minor 0
 release 0
 x 5
-y 765
+y 740
 w 250
 h 95
 
@@ -3916,7 +3416,7 @@ major 4
 minor 0
 release 0
 x 5
-y 775
+y 750
 w 250
 h 85
 lineColor index 14
@@ -3931,7 +3431,7 @@ major 4
 minor 1
 release 0
 x 20
-y 790
+y 765
 w 220
 h 25
 fgColor index 21
@@ -3957,7 +3457,7 @@ major 4
 minor 1
 release 1
 x 5
-y 765
+y 740
 w 66
 h 13
 font "arial-medium-r-12.0"
@@ -3978,7 +3478,7 @@ major 4
 minor 1
 release 0
 x 20
-y 825
+y 800
 w 220
 h 25
 fgColor index 21
@@ -4008,7 +3508,7 @@ major 4
 minor 0
 release 0
 x 5
-y 695
+y 670
 w 250
 h 60
 
@@ -4021,7 +3521,7 @@ major 4
 minor 0
 release 0
 x 5
-y 700
+y 675
 w 250
 h 55
 lineColor index 14
@@ -4036,7 +3536,7 @@ major 4
 minor 0
 release 0
 x 20
-y 720
+y 695
 w 220
 h 25
 fgColor index 25
@@ -4058,7 +3558,7 @@ major 4
 minor 1
 release 1
 x 5
-y 695
+y 670
 w 95
 h 13
 font "arial-medium-r-12.0"
@@ -4343,6 +3843,525 @@ bgColor index 10
 fill
 font "arial-bold-r-14.0"
 fontAlign "center"
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 525
+w 250
+h 135
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 530
+w 250
+h 130
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 525
+w 63
+h 13
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 8
+value {
+  "  Feedrate  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 180
+y 625
+w 70
+h 20
+controlPv "$(pmac):FEEDRATE_LIMIT"
+displayMode "decimal"
+precision 2
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 625
+w 155
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Minimum allowed"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 575
+w 160
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Set feedrate for all CS"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 180
+y 575
+w 70
+h 20
+controlPv "$(pmac):FEEDRATE"
+displayMode "decimal"
+precision 2
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 180
+y 600
+w 70
+h 20
+controlPv "$(pmac):FEEDRATE_RBV"
+displayMode "decimal"
+precision 2
+fgColor index 15
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 600
+w 160
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Current lowest feedrate"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 550
+w 160
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Feedrate problem:"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 235
+y 550
+w 15
+h 15
+controlPv "$(pmac):FEEDRATE_PROBLEM_RBV"
+lineColor index 14
+onColor index 20
+offColor index 24
+lineWidth 2
+numBits 1
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 185
+y 145
+w 85
+h 30
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "CPU Load:"
+}
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 495
+y 135
+w 70
+h 35
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 495
+y 135
+w 42
+h 13
+font "courier-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Core 3"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 495
+y 150
+w 70
+h 20
+controlPv "$(pmac):CPULOAD_3"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):CPUNUMCORES"
+visInvert
+visMin "0"
+visMax "4"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 420
+y 135
+w 70
+h 35
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 420
+y 135
+w 42
+h 13
+font "courier-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Core 2"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 150
+w 70
+h 20
+controlPv "$(pmac):CPULOAD_2"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):CPUNUMCORES"
+visInvert
+visMin "0"
+visMax "3"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 345
+y 135
+w 70
+h 35
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 345
+y 135
+w 42
+h 13
+font "courier-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Core 1"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 345
+y 150
+w 70
+h 20
+controlPv "$(pmac):CPULOAD_1"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):CPUNUMCORES"
+visInvert
+visMin "0"
+visMax "2"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 270
+y 135
+w 70
+h 35
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 135
+w 42
+h 13
+font "courier-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Core 0"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 270
+y 150
+w 70
+h 20
+controlPv "$(pmac):CPULOAD_0"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 145
+w 165
+h 30
+
+beginGroup
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 100
+y 150
+w 75
+h 20
+controlPv "$(pmac):CPUNUMCORES"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 145
+w 85
+h 30
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "CPU Cores:"
+}
 endObjectProperties
 
 endGroup
