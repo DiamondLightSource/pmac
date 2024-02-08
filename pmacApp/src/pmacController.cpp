@@ -4153,7 +4153,9 @@ asynStatus pmacController::getCpuNumCores() {
 
   if (status == asynSuccess) {
     // Single-core
-    if (strcmp(cpu_.c_str(),"PowerPC,460EX") == 0) {
+    if (strcmp(cpu_.c_str(),PMAC_CPU_GEO_240MHZ) == 0 ||
+        strcmp(cpu_.c_str(),PMAC_CPU_CLIPPER) == 0 ||
+        strcmp(cpu_.c_str(),"PowerPC,460EX") == 0) {
       cpuNumCores_ = 1;
     // Dual-core
     } else if (strcmp(cpu_.c_str(),"PowerPC,APM86xxx") == 0 ||
