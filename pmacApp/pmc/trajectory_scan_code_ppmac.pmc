@@ -34,7 +34,6 @@ PrevBufferFill = BufferLength       // Set PrevBufferFill to pass outer while lo
 GoSub101                            // Check which axes are required
 GoSub103                            // Set addresses for required axes
 GoSub108                            // set all previous velocities to zero
-GoSub112                            // initialize previous positions
 
 While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill == BufferLength)
 {
@@ -133,7 +132,6 @@ Return
 N102:
     Time = Next_Time(CalculatedBase)
     UserFunc = Next_User(CalculatedBase)
-    VelMode = NextVelMode(CalculatedBase)
 
     If(A_Axis == 1)
     {
