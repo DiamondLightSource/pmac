@@ -64,7 +64,7 @@ Z_Axis->u.user:0.8.1
 // *****************************************************************************************
 // EPICS Required Variables
 // *****************************************************************************************
-#define Status              M4034           // Status of motion program for EPICS
+#define Traj_Status         M4034           // Status of motion program for EPICS
                                                     // 0: Initialised, 1: Active, 2: Idle, 3: Error
 #define AbortTrigger        M4035           // Abort trigger for EPICS
 #define Axes                M4036           // An int between 1 and 511 specifying which axes to use
@@ -88,7 +88,7 @@ Z_Axis->u.user:0.8.1
 
 
 // for ppmac set the above M variables as self referenced double floats
-Status->*d
+Traj_Status->*d
 AbortTrigger->*d
 Axes->*d
 BufferLength->*d
@@ -109,7 +109,7 @@ Version->*d
 // Motion Program Variables
 // *****************************************************************************************
 
-global Time                 // Current coordinate values
+global PVT_Time                 // Current coordinate values
 #define Current_A   Q71
 #define Current_B   Q72
 #define Current_C   Q73
