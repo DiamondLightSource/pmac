@@ -6,7 +6,7 @@
 BufferLength = BuffLen                          // BuffLen defined in header file
 BufferAdr_A = 0                                 // BufferAdr defined in header file
 BufferAdr_B = 2 * BufferLength                  // each individual array holds 2 buffers
-Status = 0
+Traj_Status = 0
 AbortTrigger = 0
 Error = 0
 
@@ -19,7 +19,7 @@ Open PROG ProgramNum
 Abs
 FRAX(A,B,C,U,V,W,X,Y,Z)
 
-Status = 1                          // Reset values to defaults
+Traj_Status = 1                     // Reset values to defaults
 AbortTrigger = 0
 Error = 0
 CurrentIndex = 0
@@ -88,7 +88,7 @@ While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill
     }
     Else
     {
-        If(Status == 1)
+        If(Traj_Status == 1)
 		{
             // Move to final point if the scan wasn't aborted
             If(AbortTrigger == 0)
@@ -102,9 +102,9 @@ While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill
 
 Dwell 0                         // Stop program aborting before above lines are complete
 // Set Idle Status if no error occurred
-If(Status == 1)
+If(Traj_Status == 1)
 {
-    Status = 2                  // Set program finished (Idle status)
+    Traj_Status = 2             // Set program finished (Idle status)
 }
 Dwell 200                       // Ensure the driver receives an updated status before killing the program
 Return
@@ -116,7 +116,7 @@ Return
 N101:
     If(Axes > 511)
     {
-        Status = 3
+        Traj_Status = 3
         Error = 1
     }
     Else
@@ -130,7 +130,7 @@ Return
 // *************************************************************************************************
 
 N102:
-    Time = Next_Time(CalculatedBase)
+    PVT_Time = Next_Time(CalculatedBase)
     UserFunc = Next_User(CalculatedBase)
 
     If(A_Axis == 1)
@@ -205,13 +205,13 @@ Return
 // *************************************************************************************************
 
 N104:
-    If(Time == 0)
+    If(PVT_Time == 0)
     {                      // Set error and abort if demanded move time is zero
-        Status = 3
+        Traj_Status = 3
         Error = 2
         CMD"A"
         Dwell 0
-        Time = 1000
+        PVT_Time = 1000
     }
 
 
@@ -238,7 +238,7 @@ Return
 
 N110:
     if (Axes > 0) {
-        PVT (Time * 0.001)                        // Set move time
+        PVT (PVT_Time * 0.001)                    // Set move time
         GoSub111
     }
     TotalPoints = TotalPoints + 1
