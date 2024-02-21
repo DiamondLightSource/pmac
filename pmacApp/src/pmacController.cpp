@@ -3670,9 +3670,9 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
     }
     posCmd = false;
     // cmd[9..17] are reserved for axis velocities
-    for (int index = PMAC_MAX_CS_AXES; index < (2*PMAC_MAX_CS_AXES); index++) {
-      if ((1 << (index-PMAC_MAX_CS_AXES) & tScanAxisMask_) > 0) {
-        pHardware_->startAxisPointsCmd(cmd[index], index, writeAddress, tScanPmacBufferSize_,
+    for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
+      if ((1 << index & tScanAxisMask_) > 0) {
+        pHardware_->startAxisPointsCmd(cmd[index+PMAC_MAX_CS_AXES], index, writeAddress, tScanPmacBufferSize_,
                                        posCmd);
       }
     }
@@ -3699,7 +3699,7 @@ asynStatus pmacController::sendTrajectoryDemands(int buffer) {
             pHardware_->addAxisPointCmd(cmd[index], index, posValue, tScanPmacBufferSize_,
                                         firstVal);
             status = pTrajectory_->getVelocity(index, tScanPointCtr_, &velValue);
-            pHardware_->addAxisPointCmd(cmd[index+PMAC_MAX_CS_AXES], (index+PMAC_MAX_CS_AXES), velValue, tScanPmacBufferSize_,
+            pHardware_->addAxisPointCmd(cmd[index+PMAC_MAX_CS_AXES], index, velValue, tScanPmacBufferSize_,
                                         firstVal);
           }
         }

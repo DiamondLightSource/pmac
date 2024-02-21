@@ -385,11 +385,16 @@ void pmacHardwareTurbo::addTrajectoryTimePointCmd(char *userCmd, char *timeCmd,
   timeCmd[0] = 0;
 }
 
-void pmacHardwareTurbo::startAxisPointsCmd(char *axisCmd, int axis, int addr, int buffSize, bool) {
+void pmacHardwareTurbo::startAxisPointsCmd(char *axisCmd, int axis, int addr, int buffSize, bool posCmd) {
   static const char *functionName = "startAxisPointsCmd";
 
   debugf(DEBUG_FLOW, functionName, "cmd %s, axis %d, addr %d", axisCmd, axis, addr);
-  sprintf(axisCmd, "WL:$%X", addr + ((axis + 1) * buffSize));
+  if(posCmd) {
+    sprintf(axisCmd, "WL:$%X", addr + ((axis + 1) * buffSize));
+  } else {
+    sprintf(axisCmd, "WL:$%X", addr + ((axis + PMAC_MAX_CS_AXES + 1) * buffSize));
+  }
+
 }
 
 void pmacHardwareTurbo::addAxisPointCmd(char *axisCmd, int , double pos, int ,
