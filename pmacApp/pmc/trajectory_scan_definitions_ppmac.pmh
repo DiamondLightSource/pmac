@@ -109,40 +109,43 @@ Version->*d
 // Motion Program Variables
 // *****************************************************************************************
 
-global PVT_Time                 // Current coordinate values
-#define Current_A   Q71
-#define Current_B   Q72
-#define Current_C   Q73
-#define Current_U   Q74
-#define Current_V	Q75
-#define Current_W   Q76
-#define Current_X   Q77
-#define Current_Y   Q78
-#define Current_Z   Q79
+// Current coordinate values
+#define Current_A           Q71
+#define Current_B           Q72
+#define Current_C           Q73
+#define Current_U           Q74
+#define Current_V           Q75
+#define Current_W           Q76
+#define Current_X           Q77
+#define Current_Y           Q78
+#define Current_Z           Q79
+
+// Current velocity values
+#define A_Vel               Q11
+#define B_Vel               Q12
+#define C_Vel               Q13
+#define U_Vel               Q14
+#define V_Vel               Q15
+#define W_Vel               Q16
+#define X_Vel               Q17
+#define Y_Vel               Q18
+#define Z_Vel               Q19
+
+#define Readback_A          Q81
+#define Readback_B          Q82
+#define Readback_C          Q83
+#define Readback_U          Q84
+#define Readback_V          Q85
+#define Readback_W          Q86
+#define Readback_X          Q87
+#define Readback_Y          Q88
+#define Readback_Z          Q89
+
+global PVT_Time
 global UserFunc
 
-#define Readback_A           Q81
-#define Readback_B           Q82
-#define Readback_C           Q83
-#define Readback_U           Q84
-#define Readback_V           Q85
-#define Readback_W           Q86
-#define Readback_X           Q87
-#define Readback_Y           Q88
-#define Readback_Z           Q89
-
-global A_Vel                // Current velocity values
-global B_Vel
-global C_Vel
-global U_Vel
-global V_Vel
-global W_Vel
-global X_Vel
-global Y_Vel
-global Z_Vel
 
 global CalculatedBase       // Calculated temporary variable for Current base address
-global InverseTmpTime       // Calculated temporary variable for time in velocity calcs
 
 // *****************************************************************************************
 // Set the version number
