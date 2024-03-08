@@ -4470,69 +4470,75 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
 
   debug(DEBUG_TRACE, functionName, "Called for index", index);
 
-  switch(profileVelMode_[index]) {
-    // Average Previous -> Next
-    case 0:
-      if(times[index] <=  0 && times[index+1] <= 0) {
-        debugf(DEBUG_ERROR, functionName, "Invalid times (%d and %d) at points %d and %d",
-               times[index],times[index+1], index, (index+1));
-        status = asynError;
+  if (index >0) {
+    switch(profileVelMode_[index]) {
+      // Average Previous -> Next
+      case 0:
+        if(times[index] <=  0 && times[index+1] <= 0) {
+          debugf(DEBUG_ERROR, functionName, "Invalid times (%d and %d) at points %d and %d",
+                 times[index],times[index+1], index, (index+1));
+          status = asynError;
+          break;
+        }
+        inverse_deltaTime = 1000000 / (times[index]+times[index+1]);
+        deltaPos = positions[index+1] - positions[index-1];
+        velocities[index-1] = inverse_deltaTime * deltaPos;
         break;
-      }
-      inverse_deltaTime = 1000000 / (times[index]+times[index+1]);
-      deltaPos = positions[index+1] - positions[index-1];
-      velocities[index] = inverse_deltaTime * deltaPos;
-      break;
 
-    // Real Previous -> Current
-    case 1:
-    if(times[index] <=  0) {
-        debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
-               times[index],index);
-        status = asynError;
-        break;
-      }
-      inverse_deltaTime = 1000000 / (times[index]);
-      deltaPos = positions[index] - positions[index-1];
-      velocities[index] = 2.0 * inverse_deltaTime * deltaPos - velocities[index-1];
-      break;
-
-    // Average Previous -> Current
-    case 2:
+      // Real Previous -> Current
+      case 1:
       if(times[index] <=  0) {
-        debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
-               times[index], index);
+          debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
+                 times[index],index);
+          status = asynError;
+          break;
+        }
+        inverse_deltaTime = 1000000 / (times[index]);
+        deltaPos = positions[index] - positions[index-1];
+        if (index>1)
+          velocities[index-1] = 2.0 * inverse_deltaTime * deltaPos - velocities[index-2];
+        else
+          velocities[index-1] = 2.0 * inverse_deltaTime * deltaPos;
+        break;
+
+      // Average Previous -> Current
+      case 2:
+        if(times[index] <=  0) {
+          debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
+                 times[index], index);
+          status = asynError;
+          break;
+        }
+        inverse_deltaTime = 1000000 / (times[index]);
+        deltaPos = positions[index] - positions[index-1];
+        velocities[index-1] = inverse_deltaTime * deltaPos;
+        break;
+
+      // Zero
+      case 3:
+        velocities[index-1] = 0.0;
+        break;
+
+      // Average Current -> Next
+      case 4:
+        if(times[index+1] <= 0) {
+          debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
+                 times[index+1], (index+1));
+          status = asynError;
+          break;
+        }
+        inverse_deltaTime = 1000000 / (times[index+1]);
+        deltaPos = positions[index+1] - positions[index];
+        velocities[index-1] = inverse_deltaTime * deltaPos;
+        break;
+
+      default:
+        debugf(DEBUG_ERROR, functionName, "Invalid velocity mode (%d) at point %d",
+               profileVelMode_[index], index);
         status = asynError;
         break;
-      }
-      inverse_deltaTime = 1000000 / (times[index]);
-      deltaPos = positions[index] - positions[index-1];
-      velocities[index] = inverse_deltaTime * deltaPos;
-      break;
-
-    // Zero
-    case 3:
-      velocities[index] = 0.0;
-      break;
-
-    // Average Current -> Next
-    case 4:
-      if(times[index+1] <= 0) {
-        debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
-               times[index+1], (index+1));
-        status = asynError;
-        break;
-      }
-      inverse_deltaTime = 1000000 / (times[index+1]);
-      deltaPos = positions[index+1] - positions[index];
-      velocities[index] = inverse_deltaTime * deltaPos;
-      break;
-
-    default:
-      debugf(DEBUG_ERROR, functionName, "Invalid velocity mode (%d) at point %d",
-             profileVelMode_[index], index);
-      status = asynError;
-      break;
+    }
+    std::cout<<"Veolcity: " <<index<<"Is "<<velocities[index-1]<<std::endl;
   }
   return status;
 }
