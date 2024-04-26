@@ -45,7 +45,7 @@ global Next_User(DoubleBuffLen)
 #define W_Axis				M4030
 #define X_Axis				M4031
 #define Y_Axis				M4032
-#define Z_Axis				M4034
+#define Z_Axis				M4033
 
 // User address 0 is the only memory location we allocate explicitly
 // this seems to be required in order to map to bits in the word
