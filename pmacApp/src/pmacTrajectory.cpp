@@ -294,6 +294,25 @@ asynStatus pmacTrajectory::getUserMode(int index, int *user) {
   return status;
 }
 
+asynStatus pmacTrajectory::getVelocityMode(int index, int *velocityMode) {
+  asynStatus status = asynSuccess;
+  static const char *functionName = "readVelocityMode";
+
+  debug(DEBUG_TRACE, functionName, "Called with index", index);
+
+  // Check the index is valid
+  if (index < 0 || index >= noOfValidPoints_) {
+    debug(DEBUG_ERROR, functionName, "Invalid index requested", index);
+    status = asynError;
+  }
+
+  if (status == asynSuccess) {
+    *velocityMode = profileVelMode_[index];
+  }
+
+  return status;
+}
+
 asynStatus pmacTrajectory::getPosition(int axis, int index, double *position) {
   asynStatus status = asynSuccess;
   static const char *functionName = "readPosition";

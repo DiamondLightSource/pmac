@@ -31,6 +31,8 @@ public:
 
     asynStatus getUserMode(int index, int *user);
 
+    asynStatus getVelocityMode(int index, int *velocity);
+
     asynStatus getPosition(int axis, int index, double *position);
 
     asynStatus getVelocity(int axis, int index, double *velocity);
