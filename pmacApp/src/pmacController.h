@@ -354,8 +354,7 @@ public:
     asynStatus updateCsAssignmentParameters();
     asynStatus copyCsReadbackToDemand(bool manual);
     asynStatus tScanBuildProfileArray(double *positions, double *velocities, double *times, int axis, int numPoints);
-    asynStatus tScanCalculateVelocityArray(double *positions, double *velocities, double *times, int index);
-    // asynStatus tScanBuildVelocityProfileArray(double *velocities, int axis, int numPoints);
+    asynStatus tScanCalculateVelocityArray(double *positions, double *velocities, double *times, int numPoints, int index, int csNum, int axis);
     asynStatus tScanIncludedAxes(int *axisMask);
     void registerForLock(asynPortDriver *controller);
 
@@ -567,6 +566,14 @@ private:
     double **tScanVelocities_;      // 2D array of profile velocities (1 array for each axis)
     int *profileUser_;              // Array of profile user values
     int *profileVelMode_;           // Array of profile velocity modes
+    // Used to handle the buffer rollover when the velocities
+    // are calculated from profileVelMode_
+    int tScanPendingPoint_;
+    int tScanPendingPointReady_;
+    double **tScanPrevBufferPositions;  // 2D array for storing the last 2 positions of the buffer (1 array for each axis)
+    double *tScanPrevBufferVelocity;    // Array for storing the last position of the buffer of each axis
+    double tScanPrevBufferTime;         // Stores the last time of the buffer
+
     epicsEventId startEventId_;
     epicsEventId stopEventId_;
 
