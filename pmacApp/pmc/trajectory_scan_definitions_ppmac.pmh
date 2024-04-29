@@ -1,8 +1,8 @@
 // *****************************************************************************************
 // Variables
 // *****************************************************************************************
-#define BuffLen       1000    // Length of buffers
-#define DoubleBuffLen 4000
+#define BuffLen        500    // Length of buffers
+#define DoubleBuffLen 2000    // <= 2864 to prevent P-variables/global variables overflow
 
 
 // *****************************************************************************************
