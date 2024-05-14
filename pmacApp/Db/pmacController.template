@@ -1,11 +1,11 @@
 ##############################################################
 #
-# Records to read asynPortDriver parameters from the param 
+# Records to read asynPortDriver parameters from the param
 # library for the class pmacController.
 #
-# The Asyn address is set as zero because that's what we use 
+# The Asyn address is set as zero because that's what we use
 # for controller parameters.
-# 
+#
 ##############################################################
 
 # % macro, PORT, The asyn port for the pmac controller
@@ -198,7 +198,7 @@ record(bo, "$(P):AxesReadonly")
 
 #
 # Read back the readonly mode for axes
-# 
+#
 record(bi, "$(P):AxesReadonly_RBV")
 {
     field(DTYP, "asynInt32")
@@ -596,7 +596,7 @@ record(bi, "$(P):GLOBAL_PROBLEM_RBV")
 # ///
 record(ai, "$(P):FEEDRATE_RBV")
 {
-   field(DTYP, "asynInt32")
+   field(DTYP, "asynFloat64")
    field(INP,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE")
    field(SCAN, "I/O Intr")
    field(PREC, "2")
@@ -620,11 +620,11 @@ record(longout, "$(P):FEEDRATE_LIMIT")
 # /// Set the PMAC feedrate limit. This writes a new feedrate to
 # /// the controller.
 # ///
-record(longout, "$(P):FEEDRATE")
+record(ao, "$(P):FEEDRATE")
 {
    field(PINI, "YES")
    field(VAL, "$(FEEDRATE=100)")
-   field(DTYP, "asynInt32")
+   field(DTYP, "asynFloat64")
    field(OUT,  "@asyn($(PORT),0,$(TIMEOUT=4))PMAC_C_FEEDRATE")
    field(DRVH, "100")
    field(DRVL, "0")

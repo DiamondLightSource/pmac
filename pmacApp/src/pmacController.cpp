@@ -376,7 +376,7 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_KillAllString, asynParamInt32, &PMAC_C_KillAll_);
   createParam(PMAC_C_GlobalStatusString, asynParamInt32, &PMAC_C_GlobalStatus_);
   createParam(PMAC_C_CommsErrorString, asynParamInt32, &PMAC_C_CommsError_);
-  createParam(PMAC_C_FeedRateString, asynParamInt32, &PMAC_C_FeedRate_);
+  createParam(PMAC_C_FeedRateString, asynParamFloat64, &PMAC_C_FeedRate_);
   createParam(PMAC_C_FeedRateLimitString, asynParamInt32, &PMAC_C_FeedRateLimit_);
   createParam(PMAC_C_FeedRatePollString, asynParamInt32, &PMAC_C_FeedRatePoll_);
   createParam(PMAC_C_FeedRateProblemString, asynParamInt32, &PMAC_C_FeedRateProblem_);
@@ -1321,10 +1321,10 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
   std::string progString = "";
   int axisCs = 0;
   char command[8];
-  int feedrate = 0;
+  double feedrate = 0.0;
   bool printErrors = 0;
   int feedrate_limit = 0;
-  int min_feedrate = 0;
+  double min_feedrate = 0.0;
   int min_feedrate_cs = 0;
   static const char *functionName = "mediumUpdate";
   debug(DEBUG_FLOW, functionName);
@@ -1543,7 +1543,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
     }
   }
 
-  min_feedrate = 100;
+  min_feedrate = 100.0;
   min_feedrate_cs = 0;
   // Lookup the value of the feedrate
   for (int csNo = 1; csNo <= csCount; csNo++) {
@@ -1557,7 +1557,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
         debug(DEBUG_ERROR, functionName, "Problem reading feed rate command %");
         status = asynError;
       } else {
-        nvals = sscanf(feedRate.c_str(), "%d", &feedrate);
+        nvals = sscanf(feedRate.c_str(), "%lf", &feedrate);
         if (nvals != 1) {
           debug(DEBUG_ERROR, functionName, "Error reading feedrate [%]");
           debug(DEBUG_ERROR, functionName, "    nvals", nvals);
@@ -1595,7 +1595,7 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
     }
   }
   if (status == asynSuccess) {
-    status = setIntegerParam(this->PMAC_C_FeedRate_, min_feedrate);
+    status = setDoubleParam(this->PMAC_C_FeedRate_, min_feedrate);
   }
 
 
@@ -2243,6 +2243,16 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     }
     // Update limit on pmacAxis
     pAxis->highLimit_ = value;
+  } else if (function == PMAC_C_FeedRate_) {
+    strcpy(command, "");
+    for (int csNo = 1; csNo <= csCount; csNo++) {
+      sprintf(command, "%s &%d%%%lf", command, csNo, value);
+    }
+    debug(DEBUG_VARIABLE, functionName, "Feedrate Command", command);
+    if (command[0] != 0) {
+      //PMAC does not respond to this command.
+      lowLevelWriteRead(command, response);
+    }
   } else if (pWriteParams_->hasKey(*name)) {
     // This is an integer write of a parameter, so send the immediate write/read
     sprintf(command, "%s=%.12f", pWriteParams_->lookup(*name).c_str(), value);
@@ -2551,16 +2561,6 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     }
   } else if (function == PMAC_C_MotorScale_) {
     pAxis->scale_ = value;
-  } else if (function == PMAC_C_FeedRate_) {
-    strcpy(command, "");
-    for (int csNo = 1; csNo <= csCount; csNo++) {
-      sprintf(command, "%s &%d%%%d", command, csNo, value);
-    }
-    debug(DEBUG_VARIABLE, functionName, "Feedrate Command", command);
-    if (command[0] != 0) {
-      //PMAC does not respond to this command.
-      lowLevelWriteRead(command, response);
-    }
   } else if (function == motorDeferMoves_) {
     debug(DEBUG_VARIABLE, functionName, "Motor defer value", value);
     asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
