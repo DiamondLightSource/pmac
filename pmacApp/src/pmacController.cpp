@@ -1795,18 +1795,18 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       phaseFreq = 1/(phaseDeltaTime/1000000);
       phasePercent = (phaseTaskTimeUs / phaseDeltaTime)*100;
       tasksPercent[PPMAC_CPU_PHASETASK] = phasePercent;
-      debug(DEBUG_TRACE, functionName, "Phase Interrupt Frequency (Hz)", phaseFreq);
-      debug(DEBUG_TRACE, functionName, "Phase Interrupt Time (us)", phaseTaskTimeUs);
-      debug(DEBUG_TRACE, functionName, "Phase Interrupt %", phasePercent);
+      debug(DEBUG_VARIABLE, functionName, "Phase Interrupt Frequency (Hz)", phaseFreq);
+      debug(DEBUG_VARIABLE, functionName, "Phase Interrupt Time (us)", phaseTaskTimeUs);
+      debug(DEBUG_VARIABLE, functionName, "Phase Interrupt %", phasePercent);
 
       // Determine servo percentage
       servoFreq = 1/(servoDeltaTime/1000000);
       servoTaskTimeUs = servoTimeUs - ((double)(int)((servoTimeUs/phaseDeltaTime)+1)) * phaseTaskTimeUs;
       servoPercent = (servoTaskTimeUs / servoDeltaTime)*100;
       tasksPercent[PPMAC_CPU_SERVOTASK] = servoPercent;
-      debug(DEBUG_TRACE, functionName, "Servo Interrupt Frequency (Hz)", servoFreq);
-      debug(DEBUG_TRACE, functionName, "Servo Interrupt Time (us)", servoTaskTimeUs);
-      debug(DEBUG_TRACE, functionName, "Servo Interrupt %", servoPercent);
+      debug(DEBUG_VARIABLE, functionName, "Servo Interrupt Frequency (Hz)", servoFreq);
+      debug(DEBUG_VARIABLE, functionName, "Servo Interrupt Time (us)", servoTaskTimeUs);
+      debug(DEBUG_VARIABLE, functionName, "Servo Interrupt %", servoPercent);
 
       // Determine real time percentage
       rtFreq = 1/(rtiDeltaTime/1000000);
@@ -1814,9 +1814,9 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       rtTaskTimeUs = rtTaskTimeUs - ((double)(int)((rtTimeUs/servoDeltaTime)+1)) * servoTaskTimeUs;
       rtPercent = (rtTaskTimeUs / rtiDeltaTime)*100;
       tasksPercent[PPMAC_CPU_RTTASK] = rtPercent;
-      debug(DEBUG_TRACE, functionName, "Real Time Interrupt Frequency (Hz)", rtFreq);
-      debug(DEBUG_TRACE, functionName, "Real Time Interrupt Time (us)", rtTaskTimeUs);
-      debug(DEBUG_TRACE, functionName, "Real Time Interrupt %", rtPercent);
+      debug(DEBUG_VARIABLE, functionName, "Real Time Interrupt Frequency (Hz)", rtFreq);
+      debug(DEBUG_VARIABLE, functionName, "Real Time Interrupt Time (us)", rtTaskTimeUs);
+      debug(DEBUG_VARIABLE, functionName, "Real Time Interrupt %", rtPercent);
 
       // Background tasks percentage
       bgFreq = 1/ (bgDeltaTime/1000000);
@@ -1825,9 +1825,9 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       bgTaskTimeUs = bgTaskTimeUs - (double)(int)(bgTimeUs/rtiDeltaTime)*rtTaskTimeUs;
       bgPercent = (bgTaskTimeUs / bgDeltaTime)*100;
       tasksPercent[PPMAC_CPU_BGTASK] = bgPercent;
-      debug(DEBUG_TRACE, functionName, "Background Interrupt Frequency (Hz)", bgFreq);
-      debug(DEBUG_TRACE, functionName, "Background Interrupt Time (us)", bgTaskTimeUs);
-      debug(DEBUG_TRACE, functionName, "Background Interrupt %", bgPercent);
+      debug(DEBUG_VARIABLE, functionName, "Background Interrupt Frequency (Hz)", bgFreq);
+      debug(DEBUG_VARIABLE, functionName, "Background Interrupt Time (us)", bgTaskTimeUs);
+      debug(DEBUG_VARIABLE, functionName, "Background Interrupt %", bgPercent);
 
       for (int task_idx = 0; task_idx < PPMAC_CPU_TASKS_NUM; task_idx++) {
         int core = cpuCoreTasks_[task_idx];
@@ -1839,7 +1839,7 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
 
       int cpuParams[] = {PMAC_C_CpuUsage0_, PMAC_C_CpuUsage1_, PMAC_C_CpuUsage2_, PMAC_C_CpuUsage3_};
       for (int core = 0; core < cpuNumCores_; core++) {
-        debugf(DEBUG_TRACE, functionName, "Calculated CPU[%d] %.2f%", core, cpuLoad_[core]);
+        debugf(DEBUG_VARIABLE, functionName, "Calculated CPU[%d] %.2f%", core, cpuLoad_[core]);
         setDoubleParam(cpuParams[core], cpuLoad_[core]);
       }
 
