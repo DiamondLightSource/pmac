@@ -55,6 +55,7 @@ private:
     asynStatus getAxisStatus(pmacCommandStore *sPtr);
 
     int deferredMove_;
+    int motorPosChanged_;
     char deferredCommand_[128];
     int scale_;
     double kinematic_resolution_;
