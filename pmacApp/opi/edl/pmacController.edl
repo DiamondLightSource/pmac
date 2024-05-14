@@ -3,10 +3,10 @@ beginScreenProperties
 major 4
 minor 0
 release 1
-x 997
-y 37
-w 584
-h 886
+x 513
+y 64
+w 575
+h 955
 font "arial-medium-r-16.0"
 ctlFont "arial-bold-r-16.0"
 btnFont "arial-medium-r-16.0"
@@ -23,7 +23,6 @@ title "$(pmac)"
 showGrid
 snapToGrid
 gridSize 5
-disableScroll
 endScreenProperties
 
 # (Group)
@@ -33,7 +32,7 @@ major 4
 minor 0
 release 0
 x 265
-y 710
+y 765
 w 305
 h 135
 
@@ -46,7 +45,7 @@ major 4
 minor 0
 release 0
 x 265
-y 720
+y 775
 w 305
 h 125
 lineColor index 14
@@ -61,7 +60,7 @@ major 4
 minor 1
 release 1
 x 270
-y 725
+y 780
 w 135
 h 20
 font "arial-bold-r-14.0"
@@ -80,7 +79,7 @@ major 4
 minor 1
 release 1
 x 265
-y 710
+y 765
 w 97
 h 13
 font "arial-medium-r-12.0"
@@ -101,7 +100,7 @@ major 10
 minor 0
 release 0
 x 415
-y 725
+y 780
 w 145
 h 20
 controlPv "$(pmac):READ_ECHO"
@@ -120,2301 +119,16 @@ visMin "0"
 visMax "1"
 endObjectProperties
 
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 265
-y 710
-w 305
-h 135
-
-beginGroup
-
 # (Rectangle)
 object activeRectangleClass
 beginObjectProperties
 major 4
 minor 0
 release 0
-x 265
-y 720
-w 305
-h 125
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 800
-w 120
-h 12
-controlPv "$(pmac):VME_ADDR_MODE"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 800
-w 126
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "VME Address Modifier (I90)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 815
-w 117
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "VME Interrupt Level (I95)"
-}
-autoSize
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 815
-w 120
-h 12
-controlPv "$(pmac):VME_INTLVL"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 725
-w 118
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "PLC Program Control (I5)"
-}
-autoSize
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 725
-w 120
-h 12
-controlPv "$(pmac):PLC_CONTROL"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-autoHeight
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 755
-w 120
-h 12
-controlPv "$(pmac):ERRREPMODE"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 740
-w 120
-h 12
-controlPv "$(pmac):IO_HANDSHAKE"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 740
-w 123
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "I/O Handshake Control (I3)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 755
-w 119
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Error Reporting Mode (I6)"
-}
-autoSize
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 770
-w 120
-h 12
-controlPv "$(pmac):DPRAM_COMMS_INT"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 785
-w 120
-h 12
-controlPv "$(pmac):DPRAM_COMMS"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 785
-w 129
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "DPRAM ASCII Comms (I58)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 770
-w 173
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "DPRAM ASCII Comms Interrupt (I56)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 265
-y 710
-w 97
-h 13
-font "arial-medium-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 8
-value {
-  "  PMAC Settings  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Text Monitor)
-object activeXTextDspClass:noedit
-beginObjectProperties
-major 4
-minor 6
-release 0
-x 445
-y 830
-w 120
-h 12
-controlPv "$(pmac):VME_DPRAMBASE"
-format "hex"
-font "arial-medium-r-10.0"
-fgColor index 16
-bgColor index 10
-limitsFromDb
-nullColor index 0
-useHexPrefix
-newPos
-objType "monitors"
-noExecuteClipMask
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 270
-y 830
-w 153
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "VME DPRAM Base Address (I97)"
-}
-autoSize
-endObjectProperties
-
-endGroup
-
-visPv "$(pmac):PMACTYPE"
-visMin "1"
-visMax "100"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
 x 5
-y 145
+y 130
 w 565
-h 210
-
-beginGroup
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 5
-y 145
-w 565
-h 210
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 15
-y 155
-w 130
-h 192
-
-beginGroup
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 15
-y 155
-w 12
-h 192
-controlPv "$(pmac):CTRLSTAT:status1"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 336
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 324
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 312
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 300
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 288
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 276
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 264
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 252
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 240
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 228
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 216
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 204
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 192
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 180
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 168
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 30
-y 156
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-endGroup
-
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 370
-y 155
-w 189
-h 192
-
-beginGroup
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 336
-w 138
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Software watchdog fault bit 2"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 324
-w 138
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Software watchdog fault bit 1"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 312
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Power on/reset load fault"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 300
-w 80
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Project load error"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 288
-w 142
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Saved configuration load error"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 276
-w 174
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Hardware change detected since save"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 264
-w 140
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "System file configuration error"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 252
-w 135
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Factory default configuration"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 240
-w 107
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "No system clocks found"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 228
-w 85
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Abort all condition"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 216
-w 105
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Insufficient user buffer"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 204
-w 116
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Insufficient flash memory"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 192
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 180
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 168
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 156
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 370
-y 155
-w 12
-h 192
-controlPv "$(pmac):CTRLSTAT:status2"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endObjectProperties
-
-endGroup
-
-endObjectProperties
-
-endGroup
-
-visPv "$(pmac):PMACTYPE"
-visMin "0"
-visMax "1"
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 5
-y 135
-w 565
-h 220
-
-beginGroup
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 5
-y 145
-w 565
-h 210
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 5
-y 135
-w 87
-h 13
-font "arial-medium-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 8
-value {
-  "  PMAC Status  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 15
-y 155
-w 507
-h 193
-
-beginGroup
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 335
-w 125
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Illegal L variable definition"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 323
-w 136
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Real-Time Interrupt Warning"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 311
-w 50
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Flash error"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 299
-w 64
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "DPRAM error"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 287
-w 111
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "PROM checksum active"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 275
-w 133
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Any memory checksum error"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 263
-w 129
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Leadscrew compensation on"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 251
-w 74
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Watchdog timer"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 239
-w 67
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Servo Request"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 227
-w 127
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Data gather start on trigger"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 215
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 203
-w 134
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Data Gathering Function On"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 191
-w 53
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Servo Error"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 179
-w 73
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "CPU Type Bit 1"
-}
-autoSize
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 15
-y 155
-w 12
-h 192
-controlPv "$(pmac):CTRLSTAT:status1"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 167
-w 127
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Real-time interrupt re-entry"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 31
-y 155
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 185
-y 155
-w 337
-h 193
-
-beginGroup
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 335
-w 67
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "UMAC System"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 323
-w 76
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "PLC buffer open"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 311
-w 113
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "ASCII rotary buffer open"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 299
-w 87
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Motion buffer open"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 287
-w 122
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Binary rotary buffers open"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 275
-w 72
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "CPU Type Bit 0"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 263
-w 54
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Turbo VME"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 251
-w 69
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Turbo Ultralite"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 239
-w 92
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "This card addressed"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 227
-w 90
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "All cards addressed"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 215
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 203
-w 93
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Phase clock missing"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 191
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "MACRO ring check error"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 167
-w 119
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "TWS variable parity error"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 155
-w 89
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Configuration error"
-}
-autoSize
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 185
-y 155
-w 12
-h 192
-controlPv "$(pmac):CTRLSTAT:status2"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 201
-y 179
-w 162
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "MACRO aux. communication error"
-}
-autoSize
-endObjectProperties
-
-# (Group)
-object activeGroupClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 370
-y 155
-w 152
-h 193
-
-beginGroup
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 336
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 323
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 311
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 299
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 287
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 275
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 263
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 251
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 239
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 227
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 215
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 203
-w 115
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "(Reserved for future use)"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 191
-w 75
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Fixed buffer full"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 179
-w 137
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Ring master-to-master comms"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 167
-w 81
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Kinematics active"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 385
-y 155
-w 81
-h 11
-font "arial-medium-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Kinematics active"
-}
-autoSize
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 370
-y 155
-w 12
-h 192
-controlPv "$(pmac):CTRLSTAT:status3"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endObjectProperties
-
-endGroup
-
-endObjectProperties
-
-endGroup
-
-endObjectProperties
-
-endGroup
-
-endObjectProperties
-
-endGroup
-
-visPv "$(pmac):PMACTYPE"
-visMin "1"
-visMax "100"
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 5
-y 695
-w 250
-h 85
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 265
-y 495
-w 305
-h 55
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 5
-y 45
-w 255
-h 85
+h 50
 lineColor index 14
 fill
 fillColor index 5
@@ -2620,26 +334,18 @@ endGroup
 
 endObjectProperties
 
-# (Static Text)
-object activeXTextClass
+# (Group)
+object activeGroupClass
 beginObjectProperties
 major 4
-minor 1
-release 1
-x 5
-y 35
-w 71
-h 13
-font "arial-medium-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 8
-value {
-  "  PMAC Info  "
-}
-autoSize
-border
-endObjectProperties
+minor 0
+release 0
+x 265
+y 765
+w 305
+h 135
+
+beginGroup
 
 # (Rectangle)
 object activeRectangleClass
@@ -2647,13 +353,35 @@ beginObjectProperties
 major 4
 minor 0
 release 0
-x 270
-y 45
-w 300
-h 85
+x 265
+y 775
+w 305
+h 125
 lineColor index 14
 fill
 fillColor index 5
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 445
+y 855
+w 120
+h 12
+controlPv "$(pmac):VME_ADDR_MODE"
+font "arial-medium-r-10.0"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 0
+useHexPrefix
+newPos
+objType "monitors"
+noExecuteClipMask
 endObjectProperties
 
 # (Static Text)
@@ -2663,18 +391,341 @@ major 4
 minor 1
 release 1
 x 270
-y 35
-w 78
+y 855
+w 126
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "VME Address Modifier (I90)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 870
+w 117
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "VME Interrupt Level (I95)"
+}
+autoSize
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 445
+y 870
+w 120
+h 12
+controlPv "$(pmac):VME_INTLVL"
+font "arial-medium-r-10.0"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 0
+useHexPrefix
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 780
+w 118
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "PLC Program Control (I5)"
+}
+autoSize
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 445
+y 780
+w 120
+h 12
+controlPv "$(pmac):PLC_CONTROL"
+font "arial-medium-r-10.0"
+fgColor index 16
+bgColor index 10
+autoHeight
+limitsFromDb
+nullColor index 0
+useHexPrefix
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 445
+y 810
+w 120
+h 12
+controlPv "$(pmac):ERRREPMODE"
+font "arial-medium-r-10.0"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 0
+useHexPrefix
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 445
+y 795
+w 120
+h 12
+controlPv "$(pmac):IO_HANDSHAKE"
+font "arial-medium-r-10.0"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 0
+useHexPrefix
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 795
+w 123
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "I/O Handshake Control (I3)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 810
+w 119
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Error Reporting Mode (I6)"
+}
+autoSize
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 445
+y 825
+w 120
+h 12
+controlPv "$(pmac):DPRAM_COMMS_INT"
+font "arial-medium-r-10.0"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 0
+useHexPrefix
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 445
+y 840
+w 120
+h 12
+controlPv "$(pmac):DPRAM_COMMS"
+font "arial-medium-r-10.0"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 0
+useHexPrefix
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 840
+w 129
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "DPRAM ASCII Comms (I58)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 825
+w 173
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "DPRAM ASCII Comms Interrupt (I56)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 265
+y 765
+w 97
 h 13
 font "arial-medium-r-12.0"
 fontAlign "center"
 fgColor index 14
 bgColor index 8
 value {
-  "  Error Status  "
+  "  PMAC Settings  "
 }
 autoSize
 border
+endObjectProperties
+
+# (Text Monitor)
+object activeXTextDspClass:noedit
+beginObjectProperties
+major 4
+minor 6
+release 0
+x 445
+y 885
+w 120
+h 12
+controlPv "$(pmac):VME_DPRAMBASE"
+format "hex"
+font "arial-medium-r-10.0"
+fgColor index 16
+bgColor index 10
+limitsFromDb
+nullColor index 0
+useHexPrefix
+newPos
+objType "monitors"
+noExecuteClipMask
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 885
+w 153
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "VME DPRAM Base Address (I97)"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):PMACTYPE"
+visMin "1"
+visMax "100"
 endObjectProperties
 
 # (Exit Button)
@@ -2684,7 +735,7 @@ major 4
 minor 1
 release 0
 x 460
-y 855
+y 915
 w 110
 h 25
 fgColor index 46
@@ -2702,432 +753,46 @@ beginObjectProperties
 major 4
 minor 1
 release 1
-x 10
-y 50
-w 85
-h 30
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "PMAC Type:"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 75
-w 85
-h 30
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "CPU Load:"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 265
-y 485
-w 281
+x 5
+y 120
+w 78
 h 13
 font "arial-medium-r-12.0"
 fontAlign "center"
 fgColor index 14
 bgColor index 8
 value {
-  "  Motion program activity on Co-ordinate system #  "
+  "  PMAC CPU  "
 }
 autoSize
 border
 endObjectProperties
 
-# (Byte)
-object ByteClass
+# (Group)
+object activeGroupClass
 beginObjectProperties
 major 4
 minor 0
 release 0
-x 275
-y 520
-w 285
-h 20
-controlPv "$(pmac):PROGBITS"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endian "little"
-endObjectProperties
+x 5
+y 190
+w 565
+h 220
 
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 275
-y 80
-w 140
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "MACRO ring errors:"
-}
-endObjectProperties
+beginGroup
 
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 100
-y 55
-w 155
-h 20
-controlPv "$(pmac):PMACTYPE"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 100
-y 80
-w 155
-h 20
-controlPv "$(pmac):CPULOAD"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 420
-y 80
-w 145
-h 20
-controlPv "$(pmac):MACROERRS"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
+# (Group)
+object activeGroupClass
 beginObjectProperties
 major 4
 minor 0
 release 0
-x 265
-y 375
-w 305
-h 100
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
+x 5
+y 200
+w 565
+h 210
 
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 265
-y 365
-w 96
-h 13
-font "arial-medium-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 8
-value {
-  "  PLCs disabled  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 275
-y 400
-w 285
-h 20
-controlPv "$(pmac):PLCDISBITS00"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endian "little"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 280
-y 385
-w 276
-h 10
-font "courier-bold-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15"
-}
-autoSize
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 275
-y 445
-w 285
-h 20
-controlPv "$(pmac):PLCDISBITS01"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endian "little"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 275
-y 430
-w 282
-h 10
-font "courier-bold-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31"
-}
-autoSize
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 280
-y 505
-w 276
-h 10
-font "courier-bold-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16"
-}
-autoSize
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 265
-y 570
-w 305
-h 55
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 265
-y 560
-w 144
-h 13
-font "arial-medium-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 8
-value {
-  "  General Purpose Inputs  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 275
-y 595
-w 285
-h 20
-controlPv "$(pmac):GPIO_INP_BITS"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endian "little"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 280
-y 580
-w 276
-h 10
-font "courier-bold-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16"
-}
-autoSize
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 265
-y 645
-w 305
-h 55
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 265
-y 635
-w 154
-h 13
-font "arial-medium-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 8
-value {
-  "  General Purpose Outputs  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 275
-y 670
-w 285
-h 20
-controlPv "$(pmac):GPIO_OP_BITS"
-lineColor index 14
-onColor index 15
-offColor index 19
-lineWidth 2
-endian "little"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 280
-y 655
-w 276
-h 10
-font "courier-bold-r-10.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16"
-}
-autoSize
-endObjectProperties
+beginGroup
 
 # (Rectangle)
 object activeRectangleClass
@@ -3136,7 +801,1896 @@ major 4
 minor 0
 release 0
 x 5
-y 375
+y 200
+w 565
+h 210
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 210
+w 130
+h 192
+
+beginGroup
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 210
+w 12
+h 192
+controlPv "$(pmac):CTRLSTAT:status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 391
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 379
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 367
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 355
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 343
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 331
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 319
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 307
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 295
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 283
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 271
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 259
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 247
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 235
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 223
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 30
+y 211
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 370
+y 210
+w 189
+h 192
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 391
+w 138
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Software watchdog fault bit 2"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 379
+w 138
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Software watchdog fault bit 1"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 367
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Power on/reset load fault"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 355
+w 80
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Project load error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 343
+w 142
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Saved configuration load error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 331
+w 174
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Hardware change detected since save"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 319
+w 140
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "System file configuration error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 307
+w 135
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Factory default configuration"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 295
+w 107
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "No system clocks found"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 283
+w 85
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Abort all condition"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 271
+w 105
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Insufficient user buffer"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 259
+w 116
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Insufficient flash memory"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 247
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 235
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 223
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 211
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 370
+y 210
+w 12
+h 192
+controlPv "$(pmac):CTRLSTAT:status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):PMACTYPE"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 190
+w 565
+h 220
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 200
+w 565
+h 210
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 190
+w 87
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  PMAC Status  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 210
+w 507
+h 193
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 390
+w 125
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Illegal L variable definition"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 378
+w 136
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Real-Time Interrupt Warning"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 366
+w 50
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Flash error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 354
+w 64
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "DPRAM error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 342
+w 111
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "PROM checksum active"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 330
+w 133
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Any memory checksum error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 318
+w 129
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Leadscrew compensation on"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 306
+w 74
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Watchdog timer"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 294
+w 67
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Servo Request"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 282
+w 127
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Data gather start on trigger"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 270
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 258
+w 134
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Data Gathering Function On"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 246
+w 53
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Servo Error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 234
+w 73
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "CPU Type Bit 1"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 15
+y 210
+w 12
+h 192
+controlPv "$(pmac):CTRLSTAT:status1"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 222
+w 127
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Real-time interrupt re-entry"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 31
+y 210
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 185
+y 210
+w 337
+h 193
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 390
+w 67
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "UMAC System"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 378
+w 76
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "PLC buffer open"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 366
+w 113
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "ASCII rotary buffer open"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 354
+w 87
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Motion buffer open"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 342
+w 122
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Binary rotary buffers open"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 330
+w 72
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "CPU Type Bit 0"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 318
+w 54
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Turbo VME"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 306
+w 69
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Turbo Ultralite"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 294
+w 92
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "This card addressed"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 282
+w 90
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "All cards addressed"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 270
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 258
+w 93
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Phase clock missing"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 246
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "MACRO ring check error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 222
+w 119
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "TWS variable parity error"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 210
+w 89
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Configuration error"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 185
+y 210
+w 12
+h 192
+controlPv "$(pmac):CTRLSTAT:status2"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 201
+y 234
+w 162
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "MACRO aux. communication error"
+}
+autoSize
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 370
+y 210
+w 152
+h 193
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 391
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 378
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 366
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 354
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 342
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 330
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 318
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 306
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 294
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 282
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 270
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 258
+w 115
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "(Reserved for future use)"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 246
+w 75
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Fixed buffer full"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 234
+w 137
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Ring master-to-master comms"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 222
+w 81
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Kinematics active"
+}
+autoSize
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 385
+y 210
+w 81
+h 11
+font "arial-medium-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Kinematics active"
+}
+autoSize
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 370
+y 210
+w 12
+h 192
+controlPv "$(pmac):CTRLSTAT:status3"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):PMACTYPE"
+visMin "1"
+visMax "100"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 190
+w 125
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+visPv "$(pmac):PMACTYPE"
+visMin "0"
+visMax "1"
+value {
+  "  Power Pmac Status  "
+}
+autoSize
+border
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 420
+w 250
+h 95
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 430
 w 250
 h 85
 lineColor index 14
@@ -3151,7 +2705,7 @@ major 4
 minor 1
 release 1
 x 5
-y 365
+y 420
 w 120
 h 13
 font "arial-medium-r-12.0"
@@ -3172,7 +2726,7 @@ major 4
 minor 4
 release 0
 x 140
-y 385
+y 440
 w 105
 h 25
 fgColor index 43
@@ -3188,253 +2742,6 @@ displayFileName {
 }
 endObjectProperties
 
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 420
-y 55
-w 15
-h 15
-controlPv "$(pmac):GLOBAL_PROBLEM_RBV"
-lineColor index 14
-onColor index 20
-offColor index 24
-lineWidth 2
-numBits 1
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 275
-y 55
-w 140
-h 20
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 0
-useDisplayBg
-value {
-  "Controller Problem:"
-}
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 100
-y 105
-w 155
-h 20
-controlPv "$(pmac):SERVO_FREQ"
-fgColor index 16
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 100
-w 85
-h 30
-font "arial-bold-r-14.0"
-fgColor index 14
-bgColor index 3
-useDisplayBg
-value {
-  "Servo Freq:"
-}
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 5
-y 620
-w 250
-h 55
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Choice Button)
-object activeChoiceButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 20
-y 640
-w 220
-h 25
-fgColor index 25
-bgColor index 5
-selectColor index 5
-inconsistentColor index 5
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(pmac):DeferMoves"
-indicatorPv "$(pmac):DeferMoves"
-font "helvetica-bold-r-14.0"
-orientation "horizontal"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 5
-y 615
-w 95
-h 13
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 8
-value {
-  "  Deferred move  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 5
-y 475
-w 250
-h 130
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 5
-y 470
-w 63
-h 13
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 8
-value {
-  "  Feedrate  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 180
-y 570
-w 70
-h 20
-controlPv "$(pmac):FEEDRATE_LIMIT"
-displayMode "decimal"
-precision 2
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 570
-w 155
-h 20
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Minimum allowed"
-}
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 520
-w 160
-h 20
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Set feedrate for all CS"
-}
-endObjectProperties
-
-# (Textentry)
-object TextentryClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 180
-y 520
-w 70
-h 20
-controlPv "$(pmac):FEEDRATE"
-displayMode "decimal"
-precision 2
-fgColor index 25
-fgAlarm
-bgColor index 3
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
 # (Related Display)
 object relatedDisplayClass
 beginObjectProperties
@@ -3442,7 +2749,7 @@ major 4
 minor 4
 release 0
 x 140
-y 420
+y 475
 w 105
 h 25
 fgColor index 43
@@ -3465,7 +2772,7 @@ major 4
 minor 4
 release 0
 x 20
-y 385
+y 440
 w 105
 h 25
 fgColor index 43
@@ -3481,212 +2788,6 @@ displayFileName {
 }
 endObjectProperties
 
-# (Message Button)
-object activeMessageButtonClass
-beginObjectProperties
-major 4
-minor 1
-release 0
-x 20
-y 710
-w 220
-h 25
-fgColor index 21
-onColor index 4
-offColor index 3
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(pmac):StopAll"
-pressValue "1"
-onLabel "STOP"
-offLabel "STOP"
-3d
-useEnumNumeric
-font "arial-bold-r-14.0"
-visMin "0"
-visMax "1"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 5
-y 685
-w 66
-h 13
-font "arial-medium-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 8
-value {
-  "  All Motors  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Message Button)
-object activeMessageButtonClass
-beginObjectProperties
-major 4
-minor 1
-release 0
-x 20
-y 745
-w 220
-h 25
-fgColor index 21
-onColor index 4
-offColor index 3
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(pmac):KillAll"
-pressValue "1"
-onLabel "KILL"
-offLabel "KILL"
-3d
-useEnumNumeric
-font "arial-bold-r-14.0"
-visMin "0"
-visMax "1"
-endObjectProperties
-
-# (Textupdate)
-object TextupdateClass
-beginObjectProperties
-major 10
-minor 0
-release 0
-x 180
-y 545
-w 70
-h 20
-controlPv "$(pmac):FEEDRATE_RBV"
-displayMode "decimal"
-precision 2
-fgColor index 15
-fgAlarm
-bgColor index 10
-fill
-font "arial-bold-r-14.0"
-fontAlign "center"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 545
-w 160
-h 20
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Current lowest feedrate"
-}
-endObjectProperties
-
-# (Rectangle)
-object activeRectangleClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 5
-y 800
-w 250
-h 45
-lineColor index 14
-fill
-fillColor index 5
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 5
-y 790
-w 197
-h 13
-font "arial-medium-r-12.0"
-fontAlign "center"
-fgColor index 14
-bgColor index 8
-value {
-  "  Select Coordinate System Group  "
-}
-autoSize
-border
-endObjectProperties
-
-# (Menu Button)
-object activeMenuButtonClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 20
-y 810
-w 220
-h 25
-fgColor index 14
-bgColor index 3
-inconsistentColor index 14
-topShadowColor index 1
-botShadowColor index 11
-controlPv "$(pmac):COORDINATE_SYS_GROUP"
-indicatorPv "$(pmac):COORDINATE_SYS_GROUP"
-font "arial-bold-r-14.0"
-endObjectProperties
-
-# (Static Text)
-object activeXTextClass
-beginObjectProperties
-major 4
-minor 1
-release 1
-x 10
-y 495
-w 160
-h 20
-font "arial-medium-r-12.0"
-fgColor index 14
-bgColor index 10
-useDisplayBg
-value {
-  "Feedrate problem:"
-}
-endObjectProperties
-
-# (Byte)
-object ByteClass
-beginObjectProperties
-major 4
-minor 0
-release 0
-x 235
-y 495
-w 15
-h 15
-controlPv "$(pmac):FEEDRATE_PROBLEM_RBV"
-lineColor index 14
-onColor index 20
-offColor index 24
-lineWidth 2
-numBits 1
-endObjectProperties
-
 # (Extended Related Display)
 object ExtendedRelatedDisplayClass
 beginObjectProperties
@@ -3694,7 +2795,7 @@ major 4
 minor 0
 release 0
 x 20
-y 420
+y 475
 w 105
 h 25
 fgColor index 43
@@ -3731,6 +2832,525 @@ symbols {
 }
 endObjectProperties
 
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 420
+w 305
+h 110
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 430
+w 305
+h 100
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 440
+w 285
+h 80
+
+beginGroup
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 440
+w 285
+h 80
+
+beginGroup
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 440
+w 285
+h 80
+
+beginGroup
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 485
+w 285
+h 35
+
+beginGroup
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 500
+w 285
+h 20
+controlPv "$(pmac):PLCDISBITS01"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endian "little"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 275
+y 485
+w 282
+h 10
+font "courier-bold-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 440
+w 285
+h 35
+
+beginGroup
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 455
+w 285
+h 20
+controlPv "$(pmac):PLCDISBITS00"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endian "little"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 280
+y 440
+w 276
+h 10
+font "courier-bold-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 265
+y 420
+w 96
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  PLCs disabled  "
+}
+autoSize
+border
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 540
+w 305
+h 65
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 550
+w 305
+h 55
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 265
+y 540
+w 281
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  Motion program activity on Co-ordinate system #  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 575
+w 285
+h 20
+controlPv "$(pmac):PROGBITS"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endian "little"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 280
+y 560
+w 276
+h 10
+font "courier-bold-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 615
+w 305
+h 65
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 625
+w 305
+h 55
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 265
+y 615
+w 144
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  General Purpose Inputs  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 650
+w 285
+h 20
+controlPv "$(pmac):GPIO_INP_BITS"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endian "little"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 280
+y 635
+w 276
+h 10
+font "courier-bold-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 690
+w 305
+h 65
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 265
+y 700
+w 305
+h 55
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 265
+y 690
+w 154
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  General Purpose Outputs  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 275
+y 725
+w 285
+h 20
+controlPv "$(pmac):GPIO_OP_BITS"
+lineColor index 14
+onColor index 15
+offColor index 19
+lineWidth 2
+endian "little"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 280
+y 710
+w 276
+h 10
+font "courier-bold-r-10.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16"
+}
+autoSize
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 845
+w 250
+h 55
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 855
+w 250
+h 45
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
 # (Static Text)
 object activeXTextClass
 beginObjectProperties
@@ -3738,20 +3358,1013 @@ major 4
 minor 1
 release 1
 x 5
-y 135
-w 125
+y 845
+w 197
 h 13
 font "arial-medium-r-12.0"
 fontAlign "center"
 fgColor index 14
 bgColor index 8
-visPv "$(pmac):PMACTYPE"
-visMin "0"
-visMax "1"
 value {
-  "  Power Pmac Status  "
+  "  Select Coordinate System Group  "
 }
 autoSize
 border
+endObjectProperties
+
+# (Menu Button)
+object activeMenuButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 20
+y 865
+w 220
+h 25
+fgColor index 14
+bgColor index 3
+inconsistentColor index 14
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):COORDINATE_SYS_GROUP"
+indicatorPv "$(pmac):COORDINATE_SYS_GROUP"
+font "arial-bold-r-14.0"
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 740
+w 250
+h 95
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 750
+w 250
+h 85
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 20
+y 765
+w 220
+h 25
+fgColor index 21
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):StopAll"
+pressValue "1"
+onLabel "STOP"
+offLabel "STOP"
+3d
+useEnumNumeric
+font "arial-bold-r-14.0"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 740
+w 66
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  All Motors  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Message Button)
+object activeMessageButtonClass
+beginObjectProperties
+major 4
+minor 1
+release 0
+x 20
+y 800
+w 220
+h 25
+fgColor index 21
+onColor index 4
+offColor index 3
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):KillAll"
+pressValue "1"
+onLabel "KILL"
+offLabel "KILL"
+3d
+useEnumNumeric
+font "arial-bold-r-14.0"
+visMin "0"
+visMax "1"
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 670
+w 250
+h 60
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 675
+w 250
+h 55
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Choice Button)
+object activeChoiceButtonClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 20
+y 695
+w 220
+h 25
+fgColor index 25
+bgColor index 5
+selectColor index 5
+inconsistentColor index 5
+topShadowColor index 1
+botShadowColor index 11
+controlPv "$(pmac):DeferMoves"
+indicatorPv "$(pmac):DeferMoves"
+font "helvetica-bold-r-14.0"
+orientation "horizontal"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 670
+w 95
+h 13
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 8
+value {
+  "  Deferred move  "
+}
+autoSize
+border
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 35
+w 255
+h 75
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 45
+w 255
+h 65
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 50
+w 85
+h 30
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "PMAC Type:"
+}
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 100
+y 55
+w 155
+h 20
+controlPv "$(pmac):PMACTYPE"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 75
+w 245
+h 30
+
+beginGroup
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 100
+y 80
+w 155
+h 20
+controlPv "$(pmac):SERVO_FREQ"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 75
+w 85
+h 30
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Servo Freq:"
+}
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 35
+w 71
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  PMAC Info  "
+}
+autoSize
+border
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 270
+y 35
+w 300
+h 75
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 270
+y 45
+w 300
+h 65
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 35
+w 78
+h 13
+font "arial-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 8
+value {
+  "  Error Status  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 275
+y 80
+w 140
+h 20
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "MACRO ring errors:"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 275
+y 55
+w 140
+h 20
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Controller Problem:"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 420
+y 55
+w 15
+h 15
+controlPv "$(pmac):GLOBAL_PROBLEM_RBV"
+lineColor index 14
+onColor index 20
+offColor index 24
+lineWidth 2
+numBits 1
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 80
+w 145
+h 20
+controlPv "$(pmac):MACROERRS"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 525
+w 250
+h 135
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 5
+y 530
+w 250
+h 130
+lineColor index 14
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 5
+y 525
+w 63
+h 13
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 8
+value {
+  "  Feedrate  "
+}
+autoSize
+border
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 180
+y 625
+w 70
+h 20
+controlPv "$(pmac):FEEDRATE_LIMIT"
+displayMode "decimal"
+precision 2
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 625
+w 155
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Minimum allowed"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 575
+w 160
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Set feedrate for all CS"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 180
+y 575
+w 70
+h 20
+controlPv "$(pmac):FEEDRATE"
+displayMode "decimal"
+precision 2
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 180
+y 600
+w 70
+h 20
+controlPv "$(pmac):FEEDRATE_RBV"
+displayMode "decimal"
+precision 2
+fgColor index 15
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 600
+w 160
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Current lowest feedrate"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 550
+w 160
+h 20
+font "arial-medium-r-12.0"
+fgColor index 14
+bgColor index 10
+useDisplayBg
+value {
+  "Feedrate problem:"
+}
+endObjectProperties
+
+# (Byte)
+object ByteClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 235
+y 550
+w 15
+h 15
+controlPv "$(pmac):FEEDRATE_PROBLEM_RBV"
+lineColor index 14
+onColor index 20
+offColor index 24
+lineWidth 2
+numBits 1
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 185
+y 145
+w 85
+h 30
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "CPU Load:"
+}
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 495
+y 135
+w 70
+h 35
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 495
+y 135
+w 42
+h 13
+font "courier-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Core 3"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 495
+y 150
+w 70
+h 20
+controlPv "$(pmac):CPULOAD_3"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):CPUNUMCORES"
+visInvert
+visMin "0"
+visMax "4"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 420
+y 135
+w 70
+h 35
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 420
+y 135
+w 42
+h 13
+font "courier-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Core 2"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 420
+y 150
+w 70
+h 20
+controlPv "$(pmac):CPULOAD_2"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):CPUNUMCORES"
+visInvert
+visMin "0"
+visMax "3"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 345
+y 135
+w 70
+h 35
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 345
+y 135
+w 42
+h 13
+font "courier-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Core 1"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 345
+y 150
+w 70
+h 20
+controlPv "$(pmac):CPULOAD_1"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+visPv "$(pmac):CPUNUMCORES"
+visInvert
+visMin "0"
+visMax "2"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 270
+y 135
+w 70
+h 35
+
+beginGroup
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 270
+y 135
+w 42
+h 13
+font "courier-bold-r-12.0"
+fgColor index 14
+bgColor index 0
+useDisplayBg
+value {
+  "Core 0"
+}
+autoSize
+endObjectProperties
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 270
+y 150
+w 70
+h 20
+controlPv "$(pmac):CPULOAD_0"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 10
+y 145
+w 165
+h 30
+
+beginGroup
+
+# (Textupdate)
+object TextupdateClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 100
+y 150
+w 75
+h 20
+controlPv "$(pmac):CPUNUMCORES"
+fgColor index 16
+fgAlarm
+bgColor index 10
+fill
+font "arial-bold-r-14.0"
+fontAlign "center"
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 10
+y 145
+w 85
+h 30
+font "arial-bold-r-14.0"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "CPU Cores:"
+}
+endObjectProperties
+
+endGroup
+
 endObjectProperties
 
