@@ -2985,6 +2985,7 @@ asynStatus pmacController::buildProfile(int csNo) {
       // 1 to 9 axes (0 is error) 111111111 => 1 .. 511
       status = this->tScanIncludedAxes(&axisMask);
       tScanAxisMask_ = axisMask;
+      tScanPendingPoint_ = 0;
       //Check if each axis from the coordinate system is involved in this trajectory scan
       for (int index = 0; index < PMAC_MAX_CS_AXES; index++) {
         if ((1 << index & axisMask) > 0) {
@@ -3015,6 +3016,8 @@ asynStatus pmacController::buildProfile(int csNo) {
       numPointsToBuild--;
     } else {
       debug(DEBUG_ERROR, functionName, "Inconsistent tScanPendingPoint_");
+      debugf(DEBUG_ERROR, functionName, "tScanPendingPoint_==> %d", tScanPendingPoint_);
+      debugf(DEBUG_ERROR, functionName, "tScanAxisMask_==> %d", tScanAxisMask_);
     }
   }
   //Update last time of the previous buffer
