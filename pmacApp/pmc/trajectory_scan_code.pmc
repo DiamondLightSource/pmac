@@ -133,7 +133,7 @@ N102
         A_Vel = Next_A_Vel
     End If
     A_Adr = CalculatedBase + BufferLength
-    A_Vel_Adr = Z_Adr + BufferLength
+    A_Vel_Adr = CalculatedBase + 10*BufferLength
     If(B_Axis = 1)
         Current_B = Next_B
         B_Vel = Next_B_Vel
