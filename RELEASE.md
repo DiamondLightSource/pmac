@@ -2,10 +2,10 @@ pmac Releases
 =============
 
 The latest untagged master branch can be obtained at
-https://github.com/dls-controls/pmac.
+https://github.com/DiamondLightSource/pmac.
 
 Tagged source code releases from 2-0 onward can be obtained at
-https://github.com/dls-controls/pmac/releases (earlier versions are not
+https://github.com/DiamondLightSource/pmac/releases (earlier versions are not
 recommended)
 
 The versions of EPICS base, asyn, and motor modules used for
@@ -19,28 +19,28 @@ Release Notes
 R2-6-3 (Jan 31, 2024)
 ==========================
 ### Changes
-* Add Busy dependency to Pmac   - PR [#120](https://github.com/dls-controls/pmac/pull/120)
+* Add Busy dependency to Pmac   - PR [#120](https://github.com/DiamondLightSource/pmac/pull/120)
 
 R2-6-2 (Jan 15, 2023)
 ==========================
 ### Changes
-* Revert PR [#116](https://github.com/dls-controls/pmac/pull/116) due to an introduced bug, that causes Segmentation Fault during the initialization.
+* Revert PR [#116](https://github.com/DiamondLightSource/pmac/pull/116) due to an introduced bug, that causes Segmentation Fault during the initialization.
 
 R2-6-1 (Nov 15, 2023)
 ==========================
 ### Changes
-* Fix AbortAll and KillAll for PowerPMAC        - PR [#112](https://github.com/dls-controls/pmac/pull/112)
-* Update motor to 7-0dls9-1 in RELEASE.local    - PR [#115](https://github.com/dls-controls/pmac/pull/115)
-* Motor offset update cs axes position value    - PR [#116](https://github.com/dls-controls/pmac/pull/116)
-* Abstract Global status bits                   - PR [#114](https://github.com/dls-controls/pmac/pull/114)
+* Fix AbortAll and KillAll for PowerPMAC        - PR [#112](https://github.com/DiamondLightSource/pmac/pull/112)
+* Update motor to 7-0dls9-1 in RELEASE.local    - PR [#115](https://github.com/DiamondLightSource/pmac/pull/115)
+* Motor offset update cs axes position value    - PR [#116](https://github.com/DiamondLightSource/pmac/pull/116)
+* Abstract Global status bits                   - PR [#114](https://github.com/DiamondLightSource/pmac/pull/114)
 
 R2-6-1 (Nov 15, 2023)
 ==========================
 ### Changes
-* Fix AbortAll and KillAll for PowerPMAC        - PR [#112](https://github.com/dls-controls/pmac/pull/112)
-* Update motor to 7-0dls9-1 in RELEASE.local    - PR [#115](https://github.com/dls-controls/pmac/pull/115)
-* Motor offset update cs axes position value    - PR [#116](https://github.com/dls-controls/pmac/pull/116)
-* Abstract Global status bits                   - PR [#114](https://github.com/dls-controls/pmac/pull/114)
+* Fix AbortAll and KillAll for PowerPMAC        - PR [#112](https://github.com/DiamondLightSource/pmac/pull/112)
+* Update motor to 7-0dls9-1 in RELEASE.local    - PR [#115](https://github.com/DiamondLightSource/pmac/pull/115)
+* Motor offset update cs axes position value    - PR [#116](https://github.com/DiamondLightSource/pmac/pull/116)
+* Abstract Global status bits                   - PR [#114](https://github.com/DiamondLightSource/pmac/pull/114)
 
 R2-6-0 (Oct 18, 2023)
 ==========================
