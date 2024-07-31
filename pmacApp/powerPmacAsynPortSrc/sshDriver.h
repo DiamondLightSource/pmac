@@ -69,10 +69,15 @@ class SSHDriver {
     struct sockaddr_in sin_;
     LIBSSH2_SESSION *session_;
     LIBSSH2_CHANNEL *channel_;
-    char host_[256];
-    char username_[256];
-    char password_[256];
+    char *host_;
+    char *username_;
+    char *password_;
     off_t got_;
+
+    // Memory blocks used when writing to the PowerPMAC
+    char *write_input_;
+    char *read_buffer_;
+    char *write_expected_echo_;
 
     SSHDriverStatus setBlocking(int blocking);
 

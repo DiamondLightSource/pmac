@@ -16,6 +16,15 @@
 #include <osiUnistd.h>
 #include <osiSock.h>
 #include <poll.h>
+#include <stdlib.h>
+
+#define SSH_PORT 22
+#define SSH_NOT_CONNECTED 0
+#define SSH_CONNECTED 1
+#define SSH_ERROR_TIMEOUT_MS 100
+
+#define PPMAC_MAX_CHAR_LENGTH 7168
+#define PPMAC_DOUBLE_MAX_LENGTH 2*PPMAC_MAX_CHAR_LENGTH
 
 /*
  * Uncomment the DEBUG define and recompile for lots of
@@ -95,10 +104,18 @@ SSHDriver::SSHDriver(const char *host)
   // Initialize internal SSH parameters
   auth_pw_ = 0;
   got_ = 0;
-  connected_ = 0;
-  // Username and password currently set to empty strings
-  strcpy(username_, "");
-  strcpy(password_, "");
+  connected_ = SSH_NOT_CONNECTED;
+  // Initialise username and password
+  username_ = NULL;
+  password_ = NULL;
+
+  // Allocate memory required for the write method buffers
+  write_input_ = (char *)malloc(PPMAC_MAX_CHAR_LENGTH);
+  read_buffer_ = (char *)malloc(PPMAC_DOUBLE_MAX_LENGTH);
+  write_expected_echo_ = (char *)malloc(PPMAC_DOUBLE_MAX_LENGTH);
+
+  // Allocate the memory required to store the host address
+  host_ = (char *)malloc(strlen(host));
   // Store the host address
   strcpy(host_, host);
 
@@ -121,6 +138,12 @@ SSHDriverStatus SSHDriver::setUsername(const char *username)
   static const char *functionName = "SSHDriver::setUsername";
   debugPrint("%s : Method called\n", functionName);
 
+  // Allocate the memory for the username
+  if (username_){
+    free(username_);
+  }
+  username_ = (char *)malloc(strlen(username));
+
   // Store the username
   strcpy(username_, username);
 
@@ -139,6 +162,12 @@ SSHDriverStatus SSHDriver::setPassword(const char *password)
 {
   static const char *functionName = "SSHDriver::setPassword";
   debugPrint("%s : Method called\n", functionName);
+
+  // Allocate the memory for the password
+  if (password_){
+    free(password_);
+  }
+  password_ = (char *)malloc(strlen(password));
 
   // Store the password
   strcpy(password_, password);
@@ -190,7 +219,7 @@ SSHDriverStatus SSHDriver::connectSSH()
   sock_ = socket(AF_INET, SOCK_STREAM, 0);
 
   sin_.sin_family = AF_INET;
-  sin_.sin_port = htons(22);
+  sin_.sin_port = htons(SSH_PORT);
   sin_.sin_addr.s_addr = hostaddr;
   if (connect(sock_, (struct sockaddr*)(&sin_), sizeof(struct sockaddr_in)) != 0){
     debugPrint("%s : socket failed to connect!\n", functionName);
@@ -216,7 +245,7 @@ SSHDriverStatus SSHDriver::connectSSH()
   }
 
   // Here we now have a connection that will need to be closed
-  connected_ = 1;
+  connected_ = SSH_CONNECTED;
 
   // At this point the connection hasn't yet authenticated.  The first thing to do
   // is check the hostkey's fingerprint against the known hosts.
@@ -280,7 +309,7 @@ SSHDriverStatus SSHDriver::connectSSH()
   // Poll the underlying socket for bytes once connection established
   // Do not read or write using libssh2 until the socket has received
   // bytes from the server.  These first bytes will contain the welcome
-  // message and then it is safe to proceed with reading  and writing
+  // message and then it is safe to proceed with reading and writing
   // through the established connection.
 	const char numfds = 1;
 	struct pollfd pfds[numfds];
@@ -360,11 +389,10 @@ SSHDriverStatus SSHDriver::setBlocking(int blocking)
  */
 SSHDriverStatus SSHDriver::flush()
 {
-  char buff[2048];
   static const char *functionName = "SSHDriver::flush";
   debugPrint("%s : Method called\n", functionName);
 
-  if (connected_ == 0){
+  if (connected_ == SSH_NOT_CONNECTED){
     debugPrint("%s : Not connected\n", functionName);
     return SSHDriverError;
   }
@@ -376,7 +404,7 @@ SSHDriverStatus SSHDriver::flush()
     return SSHDriverError;
   }
   // Read out any remaining bytes from t he channel
-  rc = libssh2_channel_read(channel_, buff, 2048);
+  rc = libssh2_channel_read(channel_, read_buffer_, PPMAC_DOUBLE_MAX_LENGTH);
   if (rc > 0){
     debugPrint("Flushed %d bytes\n", rc);
   }
@@ -406,13 +434,17 @@ SSHDriverStatus SSHDriver::setErrorChecking(bool error_check)
  */
 SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *bytesWritten, int timeout)
 {
-  char input[2048];
   static const char *functionName = "SSHDriver::write";
   debugPrint("%s : Method called\n", functionName);
   *bytesWritten = 0;
 
-  if (connected_ == 0){
+  if (connected_ == SSH_NOT_CONNECTED){
     debugPrint("%s : Not connected\n", functionName);
+    return SSHDriverError;
+  }
+
+  if (bufferSize > PPMAC_MAX_CHAR_LENGTH){
+    debugPrint("%s : write request exceeds the maximum buffer size\n", functionName);
     return SSHDriverError;
   }
 
@@ -422,13 +454,13 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   long mtimeout = (stime.tv_usec / 1000) + timeout;
   long tnow = 0;
 
-  strncpy(input, buffer, bufferSize);
-  input[bufferSize] = 0;
+  strncpy(write_input_, buffer, bufferSize);
+  write_input_[bufferSize] = 0;
   flush();
   LogComPrint("LogCom sshDriver Writing %02lu bytes => ", (unsigned long)bufferSize);
   LogComStrPrintEscapedNL(buffer, bufferSize);
 
-  int rc = libssh2_channel_write(channel_, input, bufferSize);
+  int rc = libssh2_channel_write(channel_, write_input_, bufferSize);
   if (rc > 0){
     debugPrint("%s : %d bytes written\n", functionName, rc);
     *bytesWritten = rc;
@@ -439,31 +471,31 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   }
 
   // Now we need to read back the same numer of bytes, to remove the written string from the buffer
+  // Each of these buffers must be twice that of the input buffer to allow for the PowerPMAC responding
+  // with a \r\n for every \n that is written by the request
   int bytesToRead = *bytesWritten;
   int bytes = 0;
-  char buff[512];
   rc = 0;
   int crCount = 0;
 
   // Count the number of \n characters sent
   // Build the expected ECHO string
-  char expected_response[512];
-  memset(expected_response, 0, 512);
+  memset(write_expected_echo_, 0, PPMAC_DOUBLE_MAX_LENGTH);
   int expected_index = 0;
   for (int index = 0; index < (int)*bytesWritten; index++){
     if (buffer[index] == '\n'){
       // CR, need to read back 1 extra character
       crCount++;
-      expected_response[expected_index] = '\r';
+      write_expected_echo_[expected_index] = '\r';
       expected_index++;
     }
-    expected_response[expected_index] = buffer[index];
+    write_expected_echo_[expected_index] = buffer[index];
     expected_index++;
   }
   bytesToRead += crCount;
   int matched = 0;
   while ((matched == 0) && (tnow < mtimeout)){
-    rc = libssh2_channel_read(channel_, &buff[bytes], bytesToRead);
+    rc = libssh2_channel_read(channel_, &read_buffer_[bytes], bytesToRead);
     if (rc > 0){
       bytes+=rc;
       bytesToRead-=rc;
@@ -472,7 +504,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
       if (bytes >= expected_index){
         matched = 1;
         for (int mid = 1; mid <= expected_index; mid++){
-          if (buff[bytes-mid] != expected_response[expected_index-mid]){
+          if (read_buffer_[bytes-mid] != write_expected_echo_[expected_index-mid]){
             matched = 0;
           }
         }
@@ -486,32 +518,32 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   }
 
   if (error_checking_){
-    if (buff[0] == '\r' && input[0] != '\r' && expected_index > 2){
+    if (read_buffer_[0] == '\r' && write_input_[0] != '\r' && expected_index > 2){
       caught_errors_++;
       debugPrint("Caught communication error\n");
       debugPrint("Matched status: %d\n", matched);
       debugPrint("Input string: ");
       for (int index=0; index <= expected_index; index++){
-        debugPrint("[%d] ", input[index]);
+        debugPrint("[%d] ", write_input_[index]);
       }
       debugPrint("\n");
       debugPrint("Expected response: ");
       for (int index=0; index <= expected_index; index++){
-        debugPrint("[%d] ", expected_response[index]);
+        debugPrint("[%d] ", write_expected_echo_[index]);
       }
       debugPrint("\n");
       debugPrint("Actual response: ");
       for (int index=0; index <= expected_index; index++){
-        debugPrint("[%d] ", buff[index]);
+        debugPrint("[%d] ", read_buffer_[index]);
       }
       debugPrint("\n");
     }
   }
 
-  buff[bytes] = '\0';
+  read_buffer_[bytes] = '\0';
 
   LogComPrint("LogCom sshDriver Echoed  %02d bytes => ", bytes);
-  LogComStrPrintEscapedNL(buff, bytes);
+  LogComStrPrintEscapedNL(read_buffer_, bytes);
 
 
   gettimeofday(&ctime, NULL);
@@ -546,7 +578,7 @@ SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRe
   debugPrint("%s : Read terminator %d ", functionName, readTerm);
   debugStrPrintEscapedNL(&ch, sizeof(ch));
 
-  if (connected_ == 0){
+  if (connected_ == SSH_NOT_CONNECTED){
     debugPrint("%s : Not connected\n", functionName);
     return SSHDriverError;
   }
@@ -602,7 +634,7 @@ SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRe
   }
 
   if (error_checking_){
-    if ((mtimeout - tnow) < 100){
+    if ((mtimeout - tnow) < SSH_ERROR_TIMEOUT_MS){
       debugPrint("Delay in read response: %ld ms\n", (timeout - (mtimeout - tnow)));
       debugPrint("Input buffer: %s\n", buffer);
       caught_delays_++;
@@ -681,8 +713,8 @@ SSHDriverStatus SSHDriver::disconnectSSH()
   static const char *functionName = "SSHDriver::disconnect";
   debugPrint("%s : Method called\n", functionName);
 
-  if (connected_ == 1){
-    connected_ = 0;
+  if (connected_ == SSH_CONNECTED){
+    connected_ = SSH_NOT_CONNECTED;
     libssh2_session_disconnect(session_, "Normal Shutdown");
     libssh2_session_free(session_);
 
@@ -704,6 +736,18 @@ SSHDriver::~SSHDriver()
 {
   static const char *functionName = "SSHDriver::~SSHDriver";
   debugPrint("%s : Method called\n", functionName);
+
+  free(write_input_);
+  free(read_buffer_);
+  free(write_expected_echo_);
+
+  free(host_);
+  if (username_){
+    free(username_);
+  }
+  if (password_){
+    free(password_);
+  }
 }
 
 SSHDriverStatus SSHDriver::report(FILE *fp)
