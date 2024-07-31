@@ -409,6 +409,8 @@ asynStatus pmacCSController::updateCsDemands(void) {
   pmacCSAxis *pAxis = NULL;
   static const char *functionName = "updateCsDemands";
 
+  debug(DEBUG_TRACE, functionName, "Called");
+
   //Turn on the changed motor position flag for the involved axes.
   for (int axis = 0; axis < numAxes_; axis++) {
     pAxis = this->getAxis(axis);
