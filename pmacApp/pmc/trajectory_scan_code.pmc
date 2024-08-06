@@ -123,64 +123,66 @@ Return
 N102
     Time = Next_Time
     User = Next_User
-    CalculatedBase = CurrentBufferAdr + CurrentIndex
-    Time_Adr = CalculatedBase
-    User_Adr = CalculatedBase
-
 
     If(A_Axis = 1)
         Current_A = Next_A
         A_Vel = Next_A_Vel
     End If
-    A_Adr = CalculatedBase + BufferLength
-    A_Vel_Adr = CalculatedBase + 10*BufferLength
     If(B_Axis = 1)
         Current_B = Next_B
         B_Vel = Next_B_Vel
     End If
-    B_Adr = A_Adr + BufferLength
-    B_Vel_Adr = A_Vel_Adr + BufferLength
     If (C_Axis = 1)
         Current_C = Next_C
         C_Vel = Next_C_Vel
     End If
-    C_Adr = B_Adr + BufferLength
-    C_Vel_Adr = B_Vel_Adr + BufferLength
     If (U_Axis = 1)
         Current_U = Next_U
         U_Vel = Next_U_Vel
     End If
-    U_Adr = C_Adr + BufferLength
-    U_Vel_Adr = C_Vel_Adr + BufferLength
     If (V_Axis = 1)
         Current_V = Next_V
         V_Vel = Next_V_Vel
     End If
-    V_Adr = U_Adr + BufferLength
-    V_Vel_Adr = U_Vel_Adr + BufferLength
     If (W_Axis = 1)
         Current_W = Next_W
         W_Vel = Next_W_Vel
     End If
-    W_Adr = V_Adr + BufferLength
-    W_Vel_Adr = V_Vel_Adr + BufferLength
     If (X_Axis = 1)
         Current_X = Next_X
         X_Vel = Next_X_Vel
     End If
-    X_Adr = W_Adr + BufferLength
-    X_Vel_Adr = W_Vel_Adr + BufferLength
     If (Y_Axis = 1)
         Current_Y = Next_Y
         Y_Vel = Next_Y_Vel
     End If
-    Y_Adr = X_Adr + BufferLength
-    Y_Vel_Adr = X_Vel_Adr + BufferLength
     If (Z_Axis = 1)
         Current_Z = Next_Z
         Z_Vel = Next_Z_Vel
     End If
+
+    CalculatedBase = CurrentBufferAdr + CurrentIndex
+    Time_Adr = CalculatedBase
+    User_Adr = CalculatedBase
+
+    A_Adr = CalculatedBase + BufferLength
+    B_Adr = A_Adr + BufferLength
+    C_Adr = B_Adr + BufferLength
+    U_Adr = C_Adr + BufferLength
+    V_Adr = U_Adr + BufferLength
+    W_Adr = V_Adr + BufferLength
+    X_Adr = W_Adr + BufferLength
+    Y_Adr = X_Adr + BufferLength
     Z_Adr = Y_Adr + BufferLength
+
+    A_Vel_Adr = Z_Adr     + BufferLength
+    B_Vel_Adr = A_Vel_Adr + BufferLength
+    C_Vel_Adr = B_Vel_Adr + BufferLength
+    U_Vel_Adr = C_Vel_Adr + BufferLength
+    V_Vel_Adr = U_Vel_Adr + BufferLength
+    W_Vel_Adr = V_Vel_Adr + BufferLength
+    X_Vel_Adr = W_Vel_Adr + BufferLength
+    Y_Vel_Adr = X_Vel_Adr + BufferLength
     Z_Vel_Adr = Y_Vel_Adr + BufferLength
 Return
 
