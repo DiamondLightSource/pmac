@@ -6,7 +6,7 @@
 BufferLength = BuffLen                          // BuffLen defined in header file
 BufferAdr_A = 0                                 // BufferAdr defined in header file
 BufferAdr_B = 2 * BufferLength                  // each individual array holds 2 buffers
-Traj_Status = 0
+Traj_Status = Traj_StatusInitialised            // Traj_Status = 0
 AbortTrigger = 0
 Error = 0
 
@@ -19,7 +19,7 @@ Open PROG ProgramNum
 Abs
 FRAX(A,B,C,U,V,W,X,Y,Z)
 
-Traj_Status = 1                     // Reset values to defaults
+Traj_Status = Traj_StatusActive                     // Traj_Status = 1: Reset values to defaults
 AbortTrigger = 0
 Error = 0
 CurrentIndex = 0
@@ -88,7 +88,7 @@ While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill
     }
     Else
     {
-        If(Traj_Status == 1)
+        If(Traj_Status == Traj_StatusActive) // Traj_Status == 1
 		{
             // Move to final point if the scan wasn't aborted
             If(AbortTrigger == 0)
@@ -101,10 +101,10 @@ While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill
 }
 
 Dwell 0                         // Stop program aborting before above lines are complete
-// Set Idle Status if no error occurred
-If(Traj_Status == 1)
+// Traj_Status == 1: Set Idle Status if no error occurred
+If(Traj_Status == Traj_StatusActive)
 {
-    Traj_Status = 2             // Set program finished (Idle status)
+    Traj_Status = Traj_StatusIdle // Traj_Status = 2: Set program finished (Idle status)
 }
 Dwell 200                       // Ensure the driver receives an updated status before killing the program
 Return
@@ -116,7 +116,7 @@ Return
 N101:
     If(Axes > 511)
     {
-        Traj_Status = 3
+        Traj_Status = Traj_StatusError // Traj_Status = 3
         Error = 1
     }
     Else
@@ -207,7 +207,7 @@ Return
 N104:
     If(PVT_Time == 0)
     {                      // Set error and abort if demanded move time is zero
-        Traj_Status = 3
+        Traj_Status = Traj_StatusError      // Traj_Status = 3
         Error = 2
         CMD"A"
         Dwell 0
