@@ -258,7 +258,7 @@ int pmacTrajectory::getNoOfValidPoints() {
 
 asynStatus pmacTrajectory::getTime(int index, int *time) {
   asynStatus status = asynSuccess;
-  static const char *functionName = "readTime";
+  static const char *functionName = "getTime";
 
   debug(DEBUG_TRACE, functionName, "Called with index", index);
 
@@ -277,7 +277,7 @@ asynStatus pmacTrajectory::getTime(int index, int *time) {
 
 asynStatus pmacTrajectory::getUserMode(int index, int *user) {
   asynStatus status = asynSuccess;
-  static const char *functionName = "readUserMode";
+  static const char *functionName = "getUserMode";
 
   debug(DEBUG_TRACE, functionName, "Called with index", index);
 
@@ -296,7 +296,7 @@ asynStatus pmacTrajectory::getUserMode(int index, int *user) {
 
 asynStatus pmacTrajectory::getVelocityMode(int index, int *velocityMode) {
   asynStatus status = asynSuccess;
-  static const char *functionName = "readVelocityMode";
+  static const char *functionName = "getVelocityMode";
 
   debug(DEBUG_TRACE, functionName, "Called with index", index);
 
@@ -315,7 +315,7 @@ asynStatus pmacTrajectory::getVelocityMode(int index, int *velocityMode) {
 
 asynStatus pmacTrajectory::getPosition(int axis, int index, double *position) {
   asynStatus status = asynSuccess;
-  static const char *functionName = "readPosition";
+  static const char *functionName = "getPosition";
 
   debug(DEBUG_TRACE, functionName, "Called with axis", axis);
   debug(DEBUG_TRACE, functionName, "Called with index", index);
@@ -341,7 +341,7 @@ asynStatus pmacTrajectory::getPosition(int axis, int index, double *position) {
 
 asynStatus pmacTrajectory::getVelocity(int axis, int index, double *velocity) {
   asynStatus status = asynSuccess;
-  static const char *functionName = "readVelocity";
+  static const char *functionName = "getVelocity";
   debug(DEBUG_TRACE, functionName, "Called with axis", axis);
   debug(DEBUG_TRACE, functionName, "Called with index", index);
 
