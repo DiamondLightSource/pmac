@@ -2770,6 +2770,8 @@ asynStatus pmacController::initializeProfile(size_t maxPoints) {
   }
   profileVelMode_ = (int *) malloc(sizeof(int) * maxPoints);
 
+  // Allocate memory for last the two positions of each axis
+  // previous and current position are used in velocity calculation for last element: Prev->Next and Current->Next
   if (tScanPrevBufferPositions) {
     free(tScanPrevBufferPositions);
   }
