@@ -5,7 +5,7 @@
 // Set Initial Values
 BufferLength = BuffLen                          // BuffLen defined in header file
 BufferAdr_A = 0                                 // BufferAdr defined in header file
-BufferAdr_B = 2 * BufferLength                  // each individual array holds 2 buffers
+BufferAdr_B = BufferLength                  // each individual array holds 2 buffers
 Traj_Status = Traj_StatusInitialised            // Traj_Status = 0
 AbortTrigger = 0
 Error = 0
