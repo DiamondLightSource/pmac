@@ -568,6 +568,13 @@ private:
     double **tScanVelocities_;      // 2D array of profile velocities (1 array for each axis)
     int *profileUser_;              // Array of profile user values
     int *profileVelMode_;           // Array of profile velocity modes
+    enum ProfileVelocityMode {      // Profile Velocity Modes - used in the velocity calculation
+        AVERAGE_PREVIOUS_NEXT,      // 0
+        REAL_PREVIOUS_CURRENT,      // 1
+        AVERAGE_PREVIOUS_CURRENT,   // 2
+        ZERO_VELOCITY,              // 3
+        AVERAGE_CURRENT_NEXT        // 4
+    };
     // Used to handle the buffer rollover when the velocities
     // are calculated from profileVelMode_
     int tScanPendingPoint_;

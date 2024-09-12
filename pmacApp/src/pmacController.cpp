@@ -4663,7 +4663,7 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
       if (status != asynSuccess) {
         debug(DEBUG_ERROR, functionName, "Failed to get previous Velocity Mode");
       }
-      else if(prevBuffLastVelMode == 0) {
+      else if(prevBuffLastVelMode == AVERAGE_PREVIOUS_NEXT) {
          // Prev->Next
         prevBuffPosition = tScanPrevBufferPositions[axis][0];
         prevBuffTime = tScanPrevBufferTime;
@@ -4678,7 +4678,7 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
         deltaPos = positions[0] - prevBuffPosition;
         prevBuffVelocity = inverse_deltaTime * deltaPos;
         tScanPrevBufferVelocity[axis]=prevBuffVelocity;
-      } else if(prevBuffLastVelMode == 4) {
+      } else if(prevBuffLastVelMode == AVERAGE_CURRENT_NEXT) {
         // Curr->Next
         prevBuffPosition = tScanPrevBufferPositions[axis][1];
 
@@ -4700,8 +4700,7 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
   }
 
   switch(profileVelMode_[index]) {
-    // Average Previous -> Next
-    case 0:
+    case AVERAGE_PREVIOUS_NEXT:
       if(times[index] <=  0 && times[index+1] <= 0) {
         debugf(DEBUG_ERROR, functionName, "Invalid times (%d and %d) at points %d and %d",
                times[index],times[index+1], index, (index+1));
@@ -4723,8 +4722,7 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
       }
       break;
 
-    // Real Previous -> Current
-    case 1:
+    case REAL_PREVIOUS_CURRENT:
       if(times[index] <=  0) {
         debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
                times[index],index);
@@ -4740,8 +4738,7 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
       }
       break;
 
-    // Average Previous -> Current
-    case 2:
+    case AVERAGE_PREVIOUS_CURRENT:
       if(times[index] <=  0) {
         debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
                times[index], index);
@@ -4757,13 +4754,11 @@ asynStatus pmacController::tScanCalculateVelocityArray(double *positions, double
       }
       break;
 
-    // Zero
-    case 3:
+    case ZERO_VELOCITY:
       velocities[index] = 0.0;
       break;
 
-    // Average Current -> Next
-    case 4:
+    case AVERAGE_CURRENT_NEXT:
       // Check Next time
       if(times[index+1] <= 0) {
         debugf(DEBUG_ERROR, functionName, "Invalid time (%d) at point %d",
