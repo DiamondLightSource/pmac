@@ -2789,6 +2789,43 @@ asynStatus pmacController::initializeProfile(size_t maxPoints) {
   return asynMotorController::initializeProfile(maxPoints);
 }
 
+asynStatus pmacController::handleBufferRollover(int *numPointsToBuild) {
+  asynStatus status = asynSuccess;
+  static const char *functionName = "handleBufferRollover";
+
+  if (tScanPendingPointReady_ > 0) {
+    memmove(&profileTimes_[1], &profileTimes_[0], (*numPointsToBuild) * sizeof(double));
+    // Insert last Time from previous buffer into the first position
+    profileTimes_[0] = tScanPrevBufferTime;
+  }
+
+  // Append the points to the store
+  if(tScanPendingPoint_ > 0) {
+    if(tScanPendingPoint_ == tScanAxisMask_) {
+      (*numPointsToBuild)--;
+    } else {
+      debug(DEBUG_ERROR,functionName,"Inconsistent tScanPendingPoint_");
+      debugf(DEBUG_ERROR, functionName, "tScanPendingPoint_==> %d", tScanPendingPoint_);
+      debugf(DEBUG_ERROR, functionName, "tScanAxisMask_==> %d", tScanAxisMask_);
+    }
+  }
+  if(tScanPendingPointReady_ > 0) {
+    if(tScanPendingPointReady_ == tScanAxisMask_) {
+      (*numPointsToBuild)++;
+      tScanPendingPointReady_ = 0;
+    } else {
+      debug(DEBUG_ERROR,functionName, "Inconsistent tScanPendingPointReady_");
+      debugf(DEBUG_ERROR, functionName, "tScanPendingPointReady_==> %d", tScanPendingPointReady_);
+      debugf(DEBUG_ERROR, functionName, "tScanAxisMask_==> %d", tScanAxisMask_);
+    }
+  }
+
+  //Update last time from previous buffer
+  tScanPrevBufferTime = profileTimes_[(*numPointsToBuild)-1];
+
+  return status;
+}
+
 asynStatus pmacController::buildProfile() {
   asynStatus status = asynSuccess;
   int csNo = 0;
@@ -3006,24 +3043,7 @@ asynStatus pmacController::buildProfile(int csNo) {
     }
   }
 
-  if (tScanPendingPointReady_ > 0) {
-    memmove(&profileTimes_[1], &profileTimes_[0], (numPointsToBuild) * sizeof(double));
-    // Insert last Time from previous buffer into the first position
-    profileTimes_[0] = tScanPrevBufferTime;
-  }
-
-  if(tScanPendingPoint_ > 0) {
-    // Check if there is a pending velocity calculation, if so append 1 point less
-    if(tScanPendingPoint_ == tScanAxisMask_) {
-      numPointsToBuild--;
-    } else {
-      debug(DEBUG_ERROR, functionName, "Inconsistent tScanPendingPoint_");
-      debugf(DEBUG_ERROR, functionName, "tScanPendingPoint_==> %d", tScanPendingPoint_);
-      debugf(DEBUG_ERROR, functionName, "tScanAxisMask_==> %d", tScanAxisMask_);
-    }
-  }
-  //Update last time of the previous buffer
-  tScanPrevBufferTime = profileTimes_[numPointsToBuild-1];
+  status = this->handleBufferRollover(&numPointsToBuild);
 
   if (status == asynSuccess) {
     // Initialise the trajectory store
@@ -3106,31 +3126,7 @@ asynStatus pmacController::appendToProfile() {
       }
     }
 
-    if (tScanPendingPointReady_ > 0) {
-      memmove(&profileTimes_[1], &profileTimes_[0], (numPointsToBuild) * sizeof(double));
-      // Insert last Time from previous buffer into the first position
-      profileTimes_[0] = tScanPrevBufferTime;
-    }
-
-    // Append the points to the store
-    if(tScanPendingPoint_ > 0) {
-      if(tScanPendingPoint_ == tScanAxisMask_) {
-        numPointsToBuild--;
-      } else {
-        debug(DEBUG_ERROR,functionName,"Inconsistent tScanPendingPoint_");
-      }
-    }
-    if(tScanPendingPointReady_ > 0) {
-      if(tScanPendingPointReady_ == tScanAxisMask_) {
-        numPointsToBuild++;
-        tScanPendingPointReady_ = 0;
-      } else {
-        debug(DEBUG_ERROR,functionName, "Inconsistent tScanPendingPointReady_");
-      }
-    }
-
-    //Update last time from previous buffer
-    tScanPrevBufferTime = profileTimes_[numPointsToBuild-1];
+    status = this->handleBufferRollover(&numPointsToBuild);
 
     status = pTrajectory_->append(tScanPositions_, tScanVelocities_, profileTimes_, profileUser_,
                                   numPointsToBuild);

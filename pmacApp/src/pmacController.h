@@ -300,6 +300,7 @@ public:
 
     // Trajectory scanning methods
     asynStatus initializeProfile(size_t maxPoints);
+    asynStatus handleBufferRollover(int *numPointsToBuild);
     asynStatus buildProfile();
     asynStatus buildProfile(int csNo);
     asynStatus appendToProfile();
