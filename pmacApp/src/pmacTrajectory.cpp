@@ -256,17 +256,42 @@ int pmacTrajectory::getNoOfValidPoints() {
   return noOfValidPoints_;
 }
 
-asynStatus pmacTrajectory::getTime(int index, int *time) {
+asynStatus pmacTrajectory::isIndexValid(int index) {
   asynStatus status = asynSuccess;
-  static const char *functionName = "getTime";
+  static const char *functionName = "isIndexValid";
 
-  debug(DEBUG_TRACE, functionName, "Called with index", index);
+  debug(DEBUG_TRACE, functionName);
 
   // Check the index is valid
   if (index < 0 || index >= noOfValidPoints_) {
     debug(DEBUG_ERROR, functionName, "Invalid index requested", index);
     status = asynError;
   }
+  return status;
+}
+
+asynStatus pmacTrajectory::isAxisValid(int axis) {
+  asynStatus status = asynSuccess;
+  static const char *functionName = "isAxisValid";
+
+  debug(DEBUG_TRACE, functionName);
+
+  // Check the axis is valid
+  if (axis < 0 || axis >= noOfAxes_) {
+    debug(DEBUG_ERROR, functionName, "Invalid axis requested", axis);
+    status = asynError;
+  }
+
+  return status;
+}
+
+asynStatus pmacTrajectory::getTime(int index, int *time) {
+  asynStatus status = asynSuccess;
+  static const char *functionName = "getTime";
+
+  debug(DEBUG_TRACE, functionName, "Called with index", index);
+
+  status = this->isIndexValid(index);
 
   if (status == asynSuccess) {
     *time = profileTimes_[index];
@@ -281,11 +306,7 @@ asynStatus pmacTrajectory::getUserMode(int index, int *user) {
 
   debug(DEBUG_TRACE, functionName, "Called with index", index);
 
-  // Check the index is valid
-  if (index < 0 || index >= noOfValidPoints_) {
-    debug(DEBUG_ERROR, functionName, "Invalid index requested", index);
-    status = asynError;
-  }
+  status = this->isIndexValid(index);
 
   if (status == asynSuccess) {
     *user = profileUser_[index];
@@ -300,11 +321,7 @@ asynStatus pmacTrajectory::getVelocityMode(int index, int *velocityMode) {
 
   debug(DEBUG_TRACE, functionName, "Called with index", index);
 
-  // Check the index is valid
-  if (index < 0 || index >= noOfValidPoints_) {
-    debug(DEBUG_ERROR, functionName, "Invalid index requested", index);
-    status = asynError;
-  }
+  status = this->isIndexValid(index);
 
   if (status == asynSuccess) {
     *velocityMode = profileVelMode_[index];
@@ -320,17 +337,9 @@ asynStatus pmacTrajectory::getPosition(int axis, int index, double *position) {
   debug(DEBUG_TRACE, functionName, "Called with axis", axis);
   debug(DEBUG_TRACE, functionName, "Called with index", index);
 
-  // Check the axis is valid
-  if (axis < 0 || axis >= noOfAxes_) {
-    debug(DEBUG_ERROR, functionName, "Invalid axis requested", axis);
-    status = asynError;
-  }
+  status = this->isAxisValid(axis);
 
-  // Check the index is valid
-  if (index < 0 || index >= noOfValidPoints_) {
-    debug(DEBUG_ERROR, functionName, "Invalid index requested", index);
-    status = asynError;
-  }
+  status = this->isIndexValid(index);
 
   if (status == asynSuccess) {
     *position = profilePositions_[axis][index];
@@ -345,17 +354,10 @@ asynStatus pmacTrajectory::getVelocity(int axis, int index, double *velocity) {
   debug(DEBUG_TRACE, functionName, "Called with axis", axis);
   debug(DEBUG_TRACE, functionName, "Called with index", index);
 
-  // Check the axis is valid
-  if (axis < 0 || axis >= noOfAxes_) {
-    debug(DEBUG_ERROR, functionName, "Invalid axis requested", axis);
-    status = asynError;
-  }
+  status = this->isAxisValid(axis);
 
-  // Check the index is valid
-  if (index < 0 || index >= noOfValidPoints_) {
-    debug(DEBUG_ERROR, functionName, "Invalid index requested", index);
-    status = asynError;
-  }
+  status = this->isIndexValid(index);
+
   if (status == asynSuccess) {
     *velocity = profileVelocities_[axis][index];
   }

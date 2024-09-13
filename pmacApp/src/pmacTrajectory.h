@@ -27,6 +27,10 @@ public:
 
     int getNoOfValidPoints();
 
+    asynStatus isIndexValid(int index);
+
+    asynStatus isAxisValid(int axis);
+
     asynStatus getTime(int index, int *time);
 
     asynStatus getUserMode(int index, int *user);
