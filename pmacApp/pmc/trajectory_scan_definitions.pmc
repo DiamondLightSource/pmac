@@ -163,7 +163,7 @@ Z_Axis->Y:$AxisAdr,8
 ; Motion Program Variables
 ; *****************************************************************************************
 
-#define Time                M4059           ; Current coordinate values
+; Current coordinate values
 #define Current_A           Q71
 #define Current_B           Q72
 #define Current_C           Q73
@@ -173,27 +173,30 @@ Z_Axis->Y:$AxisAdr,8
 #define Current_X           Q77
 #define Current_Y           Q78
 #define Current_Z           Q79
+
+; Current velocity values
+#define A_Vel               Q11
+#define B_Vel               Q12
+#define C_Vel               Q13
+#define U_Vel               Q14
+#define V_Vel               Q15
+#define W_Vel               Q16
+#define X_Vel               Q17
+#define Y_Vel               Q18
+#define Z_Vel               Q19
+
+#define Readback_A          Q81
+#define Readback_B          Q82
+#define Readback_C          Q83
+#define Readback_U          Q84
+#define Readback_V          Q85
+#define Readback_W          Q86
+#define Readback_X          Q87
+#define Readback_Y          Q88
+#define Readback_Z          Q89
+
+#define Time                M4059
 #define User                M4060
-
-#define Readback_A           Q81
-#define Readback_B           Q82
-#define Readback_C           Q83
-#define Readback_U           Q84
-#define Readback_V           Q85
-#define Readback_W           Q86
-#define Readback_X           Q87
-#define Readback_Y           Q88
-#define Readback_Z           Q89
-
-#define A_Vel               M4062          ; Current velocity values
-#define B_Vel               M4063
-#define C_Vel               M4064
-#define U_Vel               M4065
-#define V_Vel               M4066
-#define W_Vel               M4067
-#define X_Vel               M4068
-#define Y_Vel               M4069
-#define Z_Vel               M4070
 
 #define CalculatedBase      M4081           ; Calculated temporary variable for Current base address
 
@@ -218,15 +221,6 @@ Error->Y:$VarAdr0E,0,24
 Version->* ; this is deliberately unmapped so that the value assigned survives a brick swap
 Time->L:$VarAdr19
 User->L:$VarAdr1A
-A_Vel->L:$VarAdr1C
-B_Vel->L:$VarAdr1D
-C_Vel->L:$VarAdr1E
-U_Vel->L:$VarAdr1F
-V_Vel->L:$VarAdr20
-W_Vel->L:$VarAdr21
-X_Vel->L:$VarAdr22
-Y_Vel->L:$VarAdr23
-Z_Vel->L:$VarAdr24
 CalculatedBase->L:$VarAdr2E
 
 
