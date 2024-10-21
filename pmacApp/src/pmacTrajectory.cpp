@@ -339,7 +339,9 @@ asynStatus pmacTrajectory::getPosition(int axis, int index, double *position) {
 
   status = this->isAxisValid(axis);
 
-  status = this->isIndexValid(index);
+  if (status == asynSuccess) {
+    status = this->isIndexValid(index);
+  }
 
   if (status == asynSuccess) {
     *position = profilePositions_[axis][index];
@@ -356,7 +358,9 @@ asynStatus pmacTrajectory::getVelocity(int axis, int index, double *velocity) {
 
   status = this->isAxisValid(axis);
 
-  status = this->isIndexValid(index);
+  if (status == asynSuccess) {
+    status = this->isIndexValid(index);
+  }
 
   if (status == asynSuccess) {
     *velocity = profileVelocities_[axis][index];
