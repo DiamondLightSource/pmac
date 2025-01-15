@@ -162,19 +162,19 @@
 /* #undef NEED_REENTRANT */
 
 /* Name of package */
-#define PACKAGE "libssh2"
+#define PACKAGE "libssh"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "libssh2-devel@cool.haxx.se"
+#define PACKAGE_BUGREPORT "libssh-devel@cool.haxx.se"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "libssh2"
+#define PACKAGE_NAME "libssh"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libssh2 -"
+#define PACKAGE_STRING "libssh -"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "libssh2"
+#define PACKAGE_TARNAME "libssh"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""

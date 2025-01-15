@@ -1,0 +1,44 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.194.0/containers/ubuntu
+{
+    "name": "dev-c7",
+    "image": "ghcr.io/dls-controls/dev-c7:latest",
+    "remoteEnv": {
+        "DISPLAY": "${localEnv:DISPLAY}",
+        "HOME": "${localEnv:HOME}",
+        "SSH_AUTH_SOCK": "${localEnv:SSH_AUTH_SOCK}"
+    },
+    // these two lines mount the local workspace folder so that the path is the same inside and outside the container.
+    "workspaceMount": "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind,consistency=cached",
+    "workspaceFolder": "${localWorkspaceFolder}",
+    // Set *default* container specific settings.json values on container create.
+    "settings": {},
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+        "ms-vscode.cpptools",
+        "ms-python.vscode-pylance",
+        "ryanluker.vscode-coverage-gutters",
+        "mhutchie.git-graph",
+        "eamodio.gitlens",
+        "redhat.vscode-yaml",
+        "nsd.vscode-epics"
+    ],
+    "mounts": [
+        "source=/dls,target=/dls,type=bind,consistency=cached,bind-propagation=shared",
+        "source=/dls_sw,target=/dls_sw,type=bind,consistency=cached,bind-propagation=shared",
+        "source=/home,target=/home,type=bind,consistency=cached,bind-propagation=shared",
+        //"source=/usr,target=/usr,type=bind,consistency=cached,bind-propagation=shared",
+        "source=/scratch/,target=/scratch/,type=bind,consistency=cached",
+        "source=/tmp,target=/tmp,type=bind,consistency=cached",
+        "source=${localEnv:SSH_AUTH_SOCK},target=${localEnv:SSH_AUTH_SOCK},type=bind,consistency=cached"
+    ],
+    "runArgs": [
+        "-e HOME",
+        "--net=host",
+        "--security-opt=label=disable",
+        "--userns=keep-id",
+        "--annotation=run.oci.keep_original_groups=1",
+        "--storage-opt=ignore_chown_errors=true",
+        "--runtime=/usr/bin/crun"
+    ]
+}

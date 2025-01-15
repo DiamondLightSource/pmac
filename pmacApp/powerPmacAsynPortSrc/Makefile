@@ -17,24 +17,24 @@ ifdef SSH
 
 	powerPmacAsynPort_LIBS += asyn
 	powerPmacAsynPort_LIBS += motor
-	powerPmacAsynPort_LIBS += ssh2
+	powerPmacAsynPort_LIBS += ssh
 	powerPmacAsynPort_LIBS += $(EPICS_BASE_IOC_LIBS)
-	ssh2_DIR = $(SSH_LIB)
+	ssh_DIR = $(SSH_LIB)
 	USR_INCLUDES+= $(SSH_INCLUDE)
-	
+
 	#=============================
 	# Build the interactive shell test application
-	
+
 	PROD_IOC_Linux = powerPMACShell
-	
+
 	powerPMACShell_SRCS += interactive.cpp
-	
+
 	# Link in the code from the support library
 	powerPMACShell_LIBS += powerPmacAsynPort
 	powerPMACShell_LIBS += asyn
 	powerPMACShell_LIBS += motor
-	powerPMACShell_LIBS += ssh2
-	ssh2_DIR = $(SSH_LIB)
+	powerPMACShell_LIBS += ssh
+	ssh_DIR = $(SSH_LIB)
 	USR_INCLUDES+= $(SSH_INCLUDE)
 
 	# Finally link to the EPICS Base libraries

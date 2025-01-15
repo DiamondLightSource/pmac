@@ -22,7 +22,7 @@
  * driver debug messages.
  * Uncomment LOGCOM if you want to see the communication
  */
-//#define DEBUG 1
+// #define DEBUG 1
 //#define LOGCOM 1
 
 #ifdef WIN32
@@ -173,63 +173,96 @@ SSHDriverStatus SSHDriver::connectSSH()
 
   in_addr inhost;
   if (hostToIPAddr(host_, &inhost) < 0){
-    debugPrint("%s : libssh2 unknown host %s\n", functionName, host_);
+    debugPrint("%s : libssh unknown host %s\n", functionName, host_);
     return SSHDriverError;
   }
-  hostaddr = inhost.s_addr;
+  // hostaddr = inhost.s_addr;
   debugPrint("%s : String host address (%s)\n", functionName, host_);
-  debugPrint("%s : libssh2 host address (%ld)\n", functionName, hostaddr);
+  // debugPrint("%s : libssh host address (%ld)\n", functionName, hostaddr);
 
-  rc = libssh2_init(0);
-  if (rc != 0) {
-    debugPrint("%s : libssh2 initialization failed, error code (%d)\n", functionName, rc);
-    return SSHDriverError;
-  }
+  // session_ = ssh_new();
+  // ssh_options_set(session_, SSH_OPTIONS_HOST, host_);
+  // int port = 22;
+  // ssh_options_set(session_, SSH_OPTIONS_PORT, &port);
 
-  // Create the socket neccessary for the connection
-  sock_ = socket(AF_INET, SOCK_STREAM, 0);
+  // if (session_ == NULL) {
+  //   debugPrint("%s : libssh initialization failed, error code (%d)\n", functionName, rc);
+  //   ssh_free(session_);
+  //   return SSHDriverError;
+  // }
 
-  sin_.sin_family = AF_INET;
-  sin_.sin_port = htons(22);
-  sin_.sin_addr.s_addr = hostaddr;
-  if (connect(sock_, (struct sockaddr*)(&sin_), sizeof(struct sockaddr_in)) != 0){
-    debugPrint("%s : socket failed to connect!\n", functionName);
-    Close(sock_);
-    return SSHDriverError;
-  }
+  // // Create the socket neccessary for the connection
+  // sock_ = socket(AF_INET, SOCK_STREAM, 0);
+
+  // sin_.sin_family = AF_INET;
+  // sin_.sin_port = htons(22);
+  // sin_.sin_addr.s_addr = hostaddr;
+  // if (connect(sock_, (struct sockaddr*)(&sin_), sizeof(struct sockaddr_in)) != 0){
+  //   debugPrint("%s : socket failed to connect!\n", functionName);
+  //   Close(sock_);
+  //   return SSHDriverError;
+  // }
 
   // Create a session instance
-  session_ = libssh2_session_init();
-  if(!session_){
-    debugPrint("%s : libssh2 failed to create a session instance\n", functionName);
-    Close(sock_);
+  session_ = ssh_new();
+  if(session_ == NULL){
+    debugPrint("%s : libssh failed to create a session instance\n", ssh_get_error(session_));
+    ssh_free(session_);
     return SSHDriverError;
   }
 
-  // Start up the session. This will trade welcome banners, exchange keys,
-  // and setup crypto, compression, and MAC layers
-  rc = libssh2_session_handshake(session_, sock_);
-  if(rc){
-    debugPrint("%s : libssh2 failure establishing SSH session: %d\n", functionName, rc);
-    Close(sock_);
+
+  ssh_options_set(session_, SSH_OPTIONS_HOST, host_);
+  int port = 22;
+  ssh_options_set(session_, SSH_OPTIONS_PORT, &port);
+
+  if (ssh_connect(session_) != SSH_OK){
+    debugPrint("%s : socket failed to connect!\n", functionName);
+    debugPrint("Error: %s\n", ssh_get_error(session_));
+    ssh_free(session_);
     return SSHDriverError;
   }
+
+  // // Start up the session. This will trade welcome banners, exchange keys,
+  // // and setup crypto, compression, and MAC layers
+  // rc = libssh_session_handshake(session_, sock_);
+  // if(rc){
+  //   debugPrint("%s : libssh2 failure establishing SSH session: %d\n", functionName, rc);
+  //   Close(sock_);
+  //   return SSHDriverError;
+  // }
 
   // Here we now have a connection that will need to be closed
   connected_ = 1;
 
   // At this point the connection hasn't yet authenticated.  The first thing to do
   // is check the hostkey's fingerprint against the known hosts.
-  const char *fingerprint = libssh2_hostkey_hash(session_, LIBSSH2_HOSTKEY_HASH_SHA1);
-  debugPrint("%s : SSH fingerprint: ", functionName);
-  for(i = 0; i < 20; i++) {
-    debugPrint("%02X ", (unsigned char)fingerprint[i]);
-  }
-  debugPrint("\n");
+
+  // rc = ssh_get_server_publickey(session_, &server_pubkey);
+  // if (rc != SSH_OK) {
+  //     fprintf(stderr, "Error getting server public key: %s\n", ssh_get_error(session_));
+  //     return SSHDriverError;
+  // }
+
+  // // const char *fingerprint = libssh2_hostkey_hash(session_, LIBSSH2_HOSTKEY_HASH_SHA1);
+  // unsigned char *fingerprint;
+  // size_t fingerprint_len;
+  // rc = ssh_get_publickey_hash(server_pubkey, SSH_PUBLICKEY_HASH_SHA256, &fingerprint, &fingerprint_len);
+  // if (rc != SSH_OK) {
+  //     fprintf(stderr, "Error getting public key hash: %s\n", ssh_get_error(session_));
+  //     ssh_key_free(server_pubkey);
+  //     return SSHDriverError;
+  // }
+
+  // debugPrint("%s : SSH fingerprint: ", functionName);
+  // for(i = 0; i < (int)fingerprint_len; i++) {
+  //   debugPrint("%02X ", (unsigned char)fingerprint[i]);
+  // }
+  // debugPrint("\n");
 
   if (auth_pw_ == 1){
     // Authenticate via password
-    if (libssh2_userauth_password(session_, username_, password_)) {
+    if (ssh_userauth_password(session_, username_, password_) != SSH_AUTH_SUCCESS) {
       debugPrint("%s : SSH authentication by password failed.\n", functionName);
       disconnectSSH();
       return SSHDriverError;
@@ -240,31 +273,51 @@ SSHDriverStatus SSHDriver::connectSSH()
     /* Or by public key */
     char rsapubbuff[256];
     char rsabuff[256];
+    ssh_key pubkey = NULL;
     sprintf(rsapubbuff, "/home/%s/.ssh/id_rsa.pub", username_);
     sprintf(rsabuff, "/home/%s/.ssh/id_rsa", username_);
-    if (libssh2_userauth_publickey_fromfile(session_, username_, rsapubbuff, rsabuff, password_)){
+    // Import the public key
+    rc = ssh_pki_import_pubkey_file(rsapubbuff, &pubkey);
+    if (rc != SSH_OK) {
+        debugPrint("%s : Failed to import public key\n", functionName);
+        disconnectSSH();
+        return SSHDriverError;
+    }
+    if (ssh_userauth_try_publickey(session_, username_, pubkey) != SSH_AUTH_SUCCESS){
       debugPrint("%s : SSH authentication by public key failed\n", functionName);
       disconnectSSH();
       return SSHDriverError;
     }
   }
 
-  libssh2_trace(session_, LIBSSH2_TRACE_CONN);
+  // libssh2_trace(session_, LIBSSH2_TRACE_CONN);
 
   // Open the channel for read/write
-  channel_ = libssh2_channel_open_session(session_);
+  channel_ = ssh_channel_new(session_);
+  if (channel_ == NULL) {
+    debugPrint("%s : SSH channel by public key failed\n", functionName);
+    fprintf(stderr, "Error creating channel: %s\n", ssh_get_error(session_));
+    disconnectSSH();
+    return SSHDriverError;
+  }
+  rc = ssh_channel_open_session(channel_);
   debugPrint("%s : SSH channel opened\n", functionName);
-
+  if (rc != SSH_OK) {
+    fprintf(stderr, "Error opening channel: %s\n", ssh_get_error(session_));
+    ssh_channel_free(channel_);
+    disconnectSSH();
+    return SSHDriverError;
+}
   // Request a terminal with 'dumb' terminal emulation
   // See /etc/termcap for more options
-  if (libssh2_channel_request_pty(channel_, "dumb")){
-    debugPrint("%s : Failed requesting dumb pty\n", functionName);
+  if (ssh_channel_request_pty_size(channel_, "dumb", 80, 24) != SSH_OK){
+    debugPrint("%s : Failed requesting dumb pty. Error: %s\n", functionName, ssh_get_error(session_));
     disconnectSSH();
     return SSHDriverError;
   }
 
   // Open a SHELL on that pty
-  if (libssh2_channel_shell(channel_)) {
+  if (ssh_channel_request_shell(channel_)) {
     debugPrint("%s : Unable to request shell on allocated pty\n", functionName);
     disconnectSSH();
     return SSHDriverError;
@@ -282,30 +335,31 @@ SSHDriverStatus SSHDriver::connectSSH()
   // bytes from the server.  These first bytes will contain the welcome
   // message and then it is safe to proceed with reading  and writing
   // through the established connection.
-	const char numfds = 1;
-	struct pollfd pfds[numfds];
-	memset(pfds, 0, sizeof(struct pollfd) * numfds);
-  bool first_read = false;
-  debugPrint("Poll underlying socket for first bytes...\n");
-  while (!first_read){
-		pfds[0].fd = sock_;
-		pfds[0].events = POLLIN;
-		pfds[0].revents = 0;
-		rc = poll(pfds, numfds, -1);  
-		if (-1 == rc) {
-			perror("poll");
-			break;
-		}
-		if (pfds[0].revents & POLLIN) {
-      first_read = true;
-    } else {
-      debugPrint("Polled underlying socket, no bytes ready for reading.\n");
-    }
-  }
 
-  gettimeofday(&ctime, NULL);
-  tnow = ((ctime.tv_sec - stime.tv_sec) * 1000) + ((ctime.tv_usec - stime.tv_usec) / 1000);
-  debugPrint("Time taken for first read to arrive: %ld ms\n", tnow);
+	// const char numfds = 1;
+	// struct pollfd pfds[numfds];
+	// memset(pfds, 0, sizeof(struct pollfd) * numfds);
+  // bool first_read = false;
+  // debugPrint("Poll underlying socket for first bytes...\n");
+  // while (!first_read){
+	// 	pfds[0].fd = sock_;
+	// 	pfds[0].events = POLLIN;
+	// 	pfds[0].revents = 0;
+	// 	rc = poll(pfds, numfds, -1);
+	// 	if (-1 == rc) {
+	// 		perror("poll");
+	// 		break;
+	// 	}
+	// 	if (pfds[0].revents & POLLIN) {
+  //     first_read = true;
+  //   } else {
+  //     debugPrint("Polled underlying socket, no bytes ready for reading.\n");
+  //   }
+  // }
+
+  // gettimeofday(&ctime, NULL);
+  // tnow = ((ctime.tv_sec - stime.tv_sec) * 1000) + ((ctime.tv_usec - stime.tv_usec) / 1000);
+  // debugPrint("Time taken for first read to arrive: %ld ms\n", tnow);
 
   // Here we should wait for the initial welcome line
   char buffer[1024];
@@ -348,7 +402,7 @@ SSHDriverStatus SSHDriver::setBlocking(int blocking)
   debugPrint("%s : Method called\n", functionName);
 
   // Make the channel blocking or non-blocking
-  libssh2_channel_set_blocking(channel_, blocking);
+  ssh_channel_set_blocking(channel_, blocking);
   debugPrint("%s : Set blocking value to %d\n", functionName, blocking);
   return SSHDriverSuccess;
 }
@@ -361,6 +415,8 @@ SSHDriverStatus SSHDriver::setBlocking(int blocking)
 SSHDriverStatus SSHDriver::flush()
 {
   char buff[2048];
+  int rc = 0;
+  int total_bytes = 0;
   static const char *functionName = "SSHDriver::flush";
   debugPrint("%s : Method called\n", functionName);
 
@@ -370,21 +426,23 @@ SSHDriverStatus SSHDriver::flush()
   }
 
   // Call the underlying libssh2 flush for all channel streams
-  int rc = libssh2_channel_flush_ex(channel_, LIBSSH2_CHANNEL_FLUSH_ALL);
-  if (rc < 0){
-    debugPrint("Flush: libssh2_channel_flush_ex failed with error code %d\n", rc);
-    return SSHDriverError;
-  }
-  // Read out any remaining bytes from t he channel
-  rc = libssh2_channel_read(channel_, buff, 2048);
+  // int rc = ssh_channel_flush(channel_);
+  // if (rc == SSH_ERROR){
+  //   debugPrint("Flush: libssh2_channel_flush_ex failed with error code %d\n", rc);
+  //   return SSHDriverError;
+  // }
+
+  // Read out any remaining bytes from the channel
+  rc = ssh_channel_read(channel_, buff, sizeof(buff), 0);
   if (rc > 0){
     debugPrint("Flushed %d bytes\n", rc);
   }
 
   if (rc < 0){
-    debugPrint("Flush: libssh2_channel_read failed with error code %d\n", rc);
+    debugPrint("Flush: ssh_channel_read failed with error code %d\n", rc);
     return SSHDriverError;
   }
+
   return SSHDriverSuccess;
 }
 
@@ -428,7 +486,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   LogComPrint("LogCom sshDriver Writing %02lu bytes => ", (unsigned long)bufferSize);
   LogComStrPrintEscapedNL(buffer, bufferSize);
 
-  int rc = libssh2_channel_write(channel_, input, bufferSize);
+  int rc = ssh_channel_write(channel_, input, bufferSize);
   if (rc > 0){
     debugPrint("%s : %d bytes written\n", functionName, rc);
     *bytesWritten = rc;
@@ -463,7 +521,7 @@ SSHDriverStatus SSHDriver::write(const char *buffer, size_t bufferSize, size_t *
   bytesToRead += crCount;
   int matched = 0;
   while ((matched == 0) && (tnow < mtimeout)){
-    rc = libssh2_channel_read(channel_, &buff[bytes], bytesToRead);
+    rc = ssh_channel_read(channel_, &buff[bytes], bytesToRead, 0);
     if (rc > 0){
       bytes+=rc;
       bytesToRead-=rc;
@@ -567,7 +625,7 @@ SSHDriverStatus SSHDriver::read(char *buffer, size_t bufferSize, size_t *bytesRe
   while ((matched == 0) && (tnow < mtimeout)){
     /* TODO: Make sure that this loop does not run over bufferSize when
      a match is not found and matched is never set to 1 */
-    rc = libssh2_channel_read(channel_, &buffer[*bytesRead], (bufferSize-*bytesRead));
+    rc = ssh_channel_read(channel_, &buffer[*bytesRead], (bufferSize-*bytesRead),0);
     if (rc > 0){
       *bytesRead+=rc;
     }
@@ -683,14 +741,10 @@ SSHDriverStatus SSHDriver::disconnectSSH()
 
   if (connected_ == 1){
     connected_ = 0;
-    libssh2_session_disconnect(session_, "Normal Shutdown");
-    libssh2_session_free(session_);
+    ssh_disconnect(session_);
+    ssh_free(session_);
 
-    Close(sock_);
     debugPrint("%s : Completed disconnect\n", functionName);
-
-    libssh2_exit();
-
   } else {
     debugPrint("%s : Connection was never established\n", functionName);
   }

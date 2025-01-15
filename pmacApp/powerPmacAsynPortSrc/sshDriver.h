@@ -3,7 +3,7 @@
 #define sshDriver_H
 
 #include "libssh2_config.h"
-#include <libssh2.h>
+#include <libssh/libssh.h>
 
 #ifdef HAVE_WINSOCK2_H
 # include <winsock2.h>
@@ -22,6 +22,9 @@
 #endif
 #ifdef HAVE_SYS_TIME_H
 # include <sys/time.h>
+#endif
+# ifdef HAVE_STRING_H
+# include <string.h>
 #endif
 
 #include <sys/types.h>
@@ -67,8 +70,9 @@ class SSHDriver {
     int auth_pw_;
     int connected_;
     struct sockaddr_in sin_;
-    LIBSSH2_SESSION *session_;
-    LIBSSH2_CHANNEL *channel_;
+    ssh_session session_;
+    ssh_channel channel_;
+    ssh_key server_pubkey;
     char host_[256];
     char username_[256];
     char password_[256];
