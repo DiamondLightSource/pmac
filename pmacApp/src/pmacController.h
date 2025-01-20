@@ -61,6 +61,8 @@
 #define PMAC_C_AxisCSString               "PMAC_C_AXIS_CS"
 #define PMAC_C_AxisReadonlyString         "PMAC_C_AXIS_READONLY"
 #define PMAC_C_WriteCmdString             "PMAC_C_WRITE_CMD"
+#define PMAC_C_WriteReadCmdString         "PMAC_C_WRITE_READ_CMD"
+#define PMAC_C_WriteReadRBVString         "PMAC_C_WRITE_READ_RBV"
 #define PMAC_C_KillAxisString             "PMAC_C_KILL_AXIS"
 #define PMAC_C_PLCBits00String            "PMAC_C_PLC_BITS00"
 #define PMAC_C_PLCBits01String            "PMAC_C_PLC_BITS01"
@@ -395,6 +397,8 @@ protected:
     int PMAC_C_AxisCS_;
     int PMAC_C_AxisReadonly_;
     int PMAC_C_WriteCmd_;
+    int PMAC_C_WriteReadCmd_;
+    int PMAC_C_WriteReadRbv_;
     int PMAC_C_KillAxis_;
     int PMAC_C_PLCBits00_;
     int PMAC_C_PLCBits01_;
