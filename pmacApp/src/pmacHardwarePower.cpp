@@ -10,6 +10,7 @@
 
 const std::string pmacHardwarePower::GLOBAL_STATUS = "?";
 const std::string pmacHardwarePower::AXIS_STATUS = "#%d?";
+const std::string pmacHardwarePower::AXIS_LIMITS = "Motor[%d].pLimits";
 const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
 const std::string pmacHardwarePower::CS_STATUS = "&%d?";
 const std::string pmacHardwarePower::CS_INPOS = "Coord[%d].InPos";
@@ -141,8 +142,7 @@ asynStatus pmacHardwarePower::setupAxisStatus(int axis) {
   return status;
 }
 
-asynStatus
-pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus) {
+asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus) {
   asynStatus status = asynSuccess;
   int nvals = 0;
   int dummyVal = 0;
@@ -215,6 +215,15 @@ pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus 
   }
 
   return status;
+}
+
+std::string pmacHardwarePower::getAxisLimitsCmd(int axis) {
+  char cmd[8];
+  static const char *functionName = "getAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  sprintf(cmd, AXIS_LIMITS.c_str(), axis);
+  return std::string(cmd);
 }
 
 asynStatus pmacHardwarePower::setupCSStatus(int csNo) {

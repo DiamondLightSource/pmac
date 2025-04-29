@@ -29,6 +29,8 @@ public:
 
     asynStatus parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus);
 
+    std::string pmacHardwareTurbo::getAxisLimitsCmd(int axis);
+
     asynStatus setupCSStatus(int csNo);
 
     asynStatus parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus);
@@ -66,6 +68,7 @@ private:
 
     static const std::string GLOBAL_STATUS;
     static const std::string AXIS_STATUS;
+    static const std::string AXIS_LIMITS;
     static const std::string CS_STATUS;
     static const std::string CS_VEL_CMD;
     static const std::string CS_ACCELERATION_CMD;

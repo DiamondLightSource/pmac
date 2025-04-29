@@ -155,7 +155,7 @@ void pmacAxis::initialSetup(int axisNo) {
       sprintf(var, "#%dF", axisNo);
       pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
       // Request ixx24 readback
-      sprintf(var, "i%d24", axisNo);
+      sprintf(var, pC_->pHardware_->getAxisLimitsCmd(axisNo), axisNo);
       pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
 
       // Setup any specific hardware status items
@@ -333,7 +333,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
     if (limitsDisabled_) {
       char buffer[PMAC_MAXBUF] = {0};
       /* Re-enable limits */
-      sprintf(buffer, " i%d24=i%d24&$FDFFFF", axisNo_, axisNo_);
+      sprintf(buffer, "i%d24=i%d24&$FDFFFF", axisNo_, axisNo_);
       strncat(command, buffer, PMAC_MAXBUF - 1);
       limitsDisabled_ = 0;
     }
@@ -935,7 +935,7 @@ asynStatus pmacAxis::poll(bool *moving) {
   }
   callParamCallbacks();
 
-  // If the controller is initialised and connected, but this axis is not 
+  // If the controller is initialised and connected, but this axis is not
   // then re-execute the initialisation
   if (pC_->initialised_ && pC_->connected_ && !initialised_){
     initialSetup(axisNo_);

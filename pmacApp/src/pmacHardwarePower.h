@@ -29,6 +29,8 @@ public:
 
     asynStatus parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus);
 
+    std::string getAxisLimitsCmd(int axis);
+
     asynStatus setupCSStatus(int csNo);
 
     asynStatus parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus);
@@ -65,6 +67,7 @@ public:
 private:
     static const std::string GLOBAL_STATUS;
     static const std::string AXIS_STATUS;
+    static const std::string AXIS_LIMITS;
     static const std::string AXIS_CS_NUMBER;
     static const std::string CS_STATUS;
     static const std::string CS_INPOS;
