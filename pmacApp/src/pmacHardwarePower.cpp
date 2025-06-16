@@ -218,13 +218,67 @@ asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, 
 }
 
 std::string pmacHardwarePower::getAxisLimitsCmd(int axis) {
-  char cmd[8];
+  char cmd[32];
   static const char *functionName = "getAxisLimitsCmd";
 
   debug(DEBUG_TRACE, functionName, "Axis", axis);
   sprintf(cmd, AXIS_LIMITS.c_str(), axis);
   return std::string(cmd);
 }
+
+static inline std::string trim(const std::string& s) {
+    size_t start = s.find_first_not_of(" \t\r\n");
+    size_t end = s.find_last_not_of(" \t\r\n");
+    return (start == std::string::npos) ? "" : s.substr(start, end - start + 1);
+}
+
+asynStatus pmacHardwarePower::parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, int *limitStatus) {
+  asynStatus status = asynSuccess;
+  int nvals = 0;
+  std::string pLimitsString = "";
+
+  static const char *functionName = "parseAxisLimitsCmd";
+
+  // Get the symbolic pointer string
+  pLimitsString = trim(sPtr->readValue(this->getAxisLimitsCmd(axis))); // e.g., "Gate3[0].Chan[0].Status.a" or "0"
+  debug(DEBUG_VARIABLE, functionName, "pLimit string", pLimitsString);
+
+  if (pLimitsString != "0") {
+    // Not disabled
+    // TODO Add sanity checks:
+    //  - Case 1
+    //    - it must begin with: "Gate3", "PowerBrick", "Clipper", "CK3WECS", "ECAT", or related
+    //    - it must end with ".a"
+    //  - Case 2
+    //    - it must begin with: "Sys.pushm", or "Sys.piom"
+    //    - it might contain "+$"
+    *limitStatus = 1;
+  } else {
+    // Disabled
+    *limitStatus = 0;
+  }
+
+  return status;
+}
+
+// asynStatus pmacHardwarePower::disableAxisLimits(int axis, int *addr) {
+//   asynStatus status = asynSuccess;
+//   int nvals = 0;
+//   char cmd[32] = {};
+//   std::string pLimitsString = "";
+//   std::string storedLimitsString = "";
+
+//   static const char *functionName = "disableAxisLimits";
+
+//   storedLimitsString = this->getAxisLimitsCmd(axis);
+//   // TODO Store previous settting
+//   sprintf(cmd, "%s=0", this->getAxisLimitsCmd(axis).c_str());
+//   // Do the write one level above
+//   debug(DEBUG_VARIABLE, functionName, "pLimit string", pLimitsString);
+
+//   return status;
+
+// }
 
 asynStatus pmacHardwarePower::setupCSStatus(int csNo) {
   asynStatus status = asynSuccess;

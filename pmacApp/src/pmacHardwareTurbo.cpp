@@ -186,14 +186,6 @@ pmacHardwareTurbo::parseGlobalStatus(const std::string &statusString, globalStat
   return status;
 }
 
-std::string pmacHardwareTurbo::getAxisLimitsCmd(int axis) {
-  char cmd[8];
-  static const char *functionName = "getAxisLimitsCmd";
-
-  debug(DEBUG_TRACE, functionName, "Axis", axis);
-  sprintf(cmd, AXIS_LIMITS.c_str(), axis);
-  return std::string(cmd);
-}
 
 std::string pmacHardwareTurbo::getAxisStatusCmd(int axis) {
   char cmd[8];
@@ -283,6 +275,38 @@ asynStatus pmacHardwareTurbo::setupCSStatus(int csNo) {
   // Fast poller (with the parameter lock held). Thus if motors have just stopped
   // the readback will happen after the stop status is picked up
   pC_->monitorPMACVariable(pmacMessageBroker::PMAC_PRE_FAST_READ, var);
+
+  return status;
+}
+
+std::string pmacHardwareTurbo::getAxisLimitsCmd(int axis) {
+  char cmd[8];
+  static const char *functionName = "getAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  sprintf(cmd, AXIS_LIMITS.c_str(), axis);
+  return std::string(cmd);
+}
+
+asynStatus pmacHardwareTurbo::parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, int *limitStatus) {
+  asynStatus status = asynSuccess;
+  int nvals = 0;
+  int limitsBits = 0;
+  std::string pLimitsString = "";
+  static const char *functionName = "parseAxisLimitsCmd";
+
+  pLimitsString = sPtr->readValue(this->getAxisLimitsCmd(axis));
+
+  // Response parsed for PowerPMAC
+  debug(DEBUG_VARIABLE, functionName, "pLimit string", pLimitsString);
+  nvals = sscanf(pLimitsString.c_str(), "$%x", &limitsBits);
+  if (nvals != 1) {
+    debug(DEBUG_ERROR, functionName, "Error reading axis limits", AXIS_LIMITS);
+    debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+    debug(DEBUG_ERROR, functionName, "    response", pLimitsString);
+    status = asynError;
+  }
+  *limitStatus = ~((0x20000 & limitsBits) >> 17);
 
   return status;
 }
