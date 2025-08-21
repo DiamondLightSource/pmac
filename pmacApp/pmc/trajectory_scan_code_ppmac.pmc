@@ -243,6 +243,16 @@ N110:
     }
     TotalPoints = TotalPoints + 1
     If(UserFunc > 0) {
+        If(UserFunc > 8) {
+            Gate3[0].Chan[0].EquOutMask = 1
+            Gate3[0].Chan[1].EquOutMask = 2
+            Gate3[0].Chan[2].EquOutMask = 4
+        }
+        Else {
+            Gate3[0].Chan[0].EquOutMask = 0
+            Gate3[0].Chan[1].EquOutMask = 0
+            Gate3[0].Chan[2].EquOutMask = 0
+        }
         GoSub(UserFunc)                     // Run any required subroutine
     }
 Return
@@ -255,6 +265,7 @@ Return
 // User Subroutines ********************************************************************************
 // Subroutines to be used via the user buffer
 // First 8 are for GPIO 1-3 combinations of on and off
+// Subroutines from 9 to 16 are for the first three EQU outputs combinations of on and off
 // *************************************************************************************************
 
 N1:
@@ -281,5 +292,52 @@ Return
 N8:
     M34 == 0 M33 == 0 M32 == 0
 Return
+
+// TODO check if the synchronous assignment works
+N9:
+
+    Gate3[0].Chan[2].EquWrite == 0
+    Gate3[0].Chan[1].EquWrite == 0
+    Gate3[0].Chan[0].EquWrite == 1
+
+Return
+N10:
+    Gate3[0].Chan[2].EquWrite == 0
+    Gate3[0].Chan[1].EquWrite == 1
+    Gate3[0].Chan[0].EquWrite == 0
+
+Return
+N11:
+    Gate3[0].Chan[2].EquWrite == 0
+    Gate3[0].Chan[1].EquWrite == 1
+    Gate3[0].Chan[0].EquWrite == 1
+Return
+N12:
+    Gate3[0].Chan[2].EquWrite == 1
+    Gate3[0].Chan[1].EquWrite == 0
+    Gate3[0].Chan[0].EquWrite == 0
+Return
+N13:
+    Gate3[0].Chan[2].EquWrite == 1
+    Gate3[0].Chan[1].EquWrite == 0
+    Gate3[0].Chan[0].EquWrite == 1
+Return
+N14:
+    Gate3[0].Chan[2].EquWrite == 1
+    Gate3[0].Chan[1].EquWrite == 1
+    Gate3[0].Chan[0].EquWrite == 0
+Return
+N15:
+    Gate3[0].Chan[2].EquWrite == 1
+    Gate3[0].Chan[1].EquWrite == 1
+    Gate3[0].Chan[0].EquWrite == 1
+Return
+N16:
+    Gate3[0].Chan[2].EquWrite == 0
+    Gate3[0].Chan[1].EquWrite == 0
+    Gate3[0].Chan[0].EquWrite == 0
+Return
+
+
 
 close
