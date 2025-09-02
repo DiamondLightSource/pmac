@@ -156,3 +156,15 @@ global CalculatedBase       // Calculated temporary variable for Current base ad
 // Set the version number
 // *****************************************************************************************
 Version = VersionNum
+
+// *****************************************************************************************
+// Disable Position Compare - Using EQU as generic 5V outputs
+// *****************************************************************************************
+Gate3[0].Chan[0].EquOutMask=0
+Gate3[0].Chan[1].EquOutMask=0
+Gate3[0].Chan[2].EquOutMask=0
+Gate3[0].Chan[3].EquOutMask=0
+Gate3[1].Chan[0].EquOutMask=0
+Gate3[1].Chan[1].EquOutMask=0
+Gate3[1].Chan[2].EquOutMask=0
+Gate3[1].Chan[3].EquOutMask=0

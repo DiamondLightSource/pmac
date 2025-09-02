@@ -243,16 +243,6 @@ N110:
     }
     TotalPoints = TotalPoints + 1
     If(UserFunc > 0) {
-        If(UserFunc > 8) {
-            Gate3[0].Chan[0].EquOutMask = 1
-            Gate3[0].Chan[1].EquOutMask = 2
-            Gate3[0].Chan[2].EquOutMask = 4
-        }
-        Else {
-            Gate3[0].Chan[0].EquOutMask = 0
-            Gate3[0].Chan[1].EquOutMask = 0
-            Gate3[0].Chan[2].EquOutMask = 0
-        }
         GoSub(UserFunc)                     // Run any required subroutine
     }
 Return
@@ -296,46 +286,46 @@ Return
 // TODO check if the synchronous assignment works
 N9:
 
-    Gate3[0].Chan[2].EquWrite == 0
-    Gate3[0].Chan[1].EquWrite == 0
-    Gate3[0].Chan[0].EquWrite == 1
+    Gate3[0].Chan[2].EquOutPol == 0
+    Gate3[0].Chan[1].EquOutPol == 0
+    Gate3[0].Chan[0].EquOutPol == 1
 
 Return
 N10:
-    Gate3[0].Chan[2].EquWrite == 0
-    Gate3[0].Chan[1].EquWrite == 1
-    Gate3[0].Chan[0].EquWrite == 0
+    Gate3[0].Chan[2].EquOutPol == 0
+    Gate3[0].Chan[1].EquOutPol == 1
+    Gate3[0].Chan[0].EquOutPol == 0
 
 Return
 N11:
-    Gate3[0].Chan[2].EquWrite == 0
-    Gate3[0].Chan[1].EquWrite == 1
-    Gate3[0].Chan[0].EquWrite == 1
+    Gate3[0].Chan[2].EquOutPol == 0
+    Gate3[0].Chan[1].EquOutPol == 1
+    Gate3[0].Chan[0].EquOutPol == 1
 Return
 N12:
-    Gate3[0].Chan[2].EquWrite == 1
-    Gate3[0].Chan[1].EquWrite == 0
-    Gate3[0].Chan[0].EquWrite == 0
+    Gate3[0].Chan[2].EquOutPol == 1
+    Gate3[0].Chan[1].EquOutPol == 0
+    Gate3[0].Chan[0].EquOutPol == 0
 Return
 N13:
-    Gate3[0].Chan[2].EquWrite == 1
-    Gate3[0].Chan[1].EquWrite == 0
-    Gate3[0].Chan[0].EquWrite == 1
+    Gate3[0].Chan[2].EquOutPol == 1
+    Gate3[0].Chan[1].EquOutPol == 0
+    Gate3[0].Chan[0].EquOutPol == 1
 Return
 N14:
-    Gate3[0].Chan[2].EquWrite == 1
-    Gate3[0].Chan[1].EquWrite == 1
-    Gate3[0].Chan[0].EquWrite == 0
+    Gate3[0].Chan[2].EquOutPol == 1
+    Gate3[0].Chan[1].EquOutPol == 1
+    Gate3[0].Chan[0].EquOutPol == 0
 Return
 N15:
-    Gate3[0].Chan[2].EquWrite == 1
-    Gate3[0].Chan[1].EquWrite == 1
-    Gate3[0].Chan[0].EquWrite == 1
+    Gate3[0].Chan[2].EquOutPol == 1
+    Gate3[0].Chan[1].EquOutPol == 1
+    Gate3[0].Chan[0].EquOutPol == 1
 Return
 N16:
-    Gate3[0].Chan[2].EquWrite == 0
-    Gate3[0].Chan[1].EquWrite == 0
-    Gate3[0].Chan[0].EquWrite == 0
+    Gate3[0].Chan[2].EquOutPol == 0
+    Gate3[0].Chan[1].EquOutPol == 0
+    Gate3[0].Chan[0].EquOutPol == 0
 Return
 
 
