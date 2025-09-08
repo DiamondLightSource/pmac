@@ -1,14 +1,8 @@
-OPEN SUBPROG UserFunc
+OPEN SUBPROG UserFunc (UserCmd)
 
-SUB: gpio (UserCmd)
-    M32 = UserCmd  & 1;
-    M33 = (UserCmd >> 1)  & 1;
-    M34 = (UserCmd >> 2)  & 1;
-RETURN
-
-SUB: equ (UserCmd)
     Gate3[0].Chan[0].EquOutPol = UserCmd  & 1;
     Gate3[0].Chan[1].EquOutPol = (UserCmd >> 1)  & 1;
     Gate3[0].Chan[2].EquOutPol = (UserCmd >> 2)  & 1;
+
 RETURN
 CLOSE

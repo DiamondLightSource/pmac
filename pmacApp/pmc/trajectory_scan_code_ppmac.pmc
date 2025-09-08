@@ -243,7 +243,7 @@ N110:
     }
     TotalPoints = TotalPoints + 1
     If(UserFunc > 0) {
-        call UserFunc.equ(UserFunc)               // Call UserFunc.equ or UserFunc.gpio from trajectory_scan_usercmd_ppmac.pmc
+        call UserFunc(UserFunc)               // Call UserFunc.equ or UserFunc.gpio from trajectory_scan_usercmd_ppmac.pmc
     }
 Return
 
