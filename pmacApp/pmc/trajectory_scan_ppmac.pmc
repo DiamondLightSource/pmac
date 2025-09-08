@@ -401,9 +401,13 @@ N110:
         GoSub111
     }
     TotalPoints = TotalPoints + 1
-    If(UserFunc > 0) {
-        call UserFunc(UserFunc)               // Call UserFunc.equ or UserFunc.gpio from trajectory_scan_usercmd_ppmac.pmc
+    // If UserFunc is defined and greater than zero, call the corresponding function.
+    // This function is expected to be implemented in either:
+    // trajectory_scan_userfunc_equ_ppmac.pmc or trajectory_scan_userfunc_gpio_ppmac.pmc
+    if (UserFunc > 0) {
+        call UserFunc(UserFunc);
     }
+
 Return
 
 N111:
