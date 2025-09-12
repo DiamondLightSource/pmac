@@ -708,6 +708,23 @@ record(sseq, "$(P):OUZOFF_SEQ") {
   field(WAIT4, "Wait")
 }
 
+## Speed Control ##
+
+record(stringin, "$(P):PROG_VERSION") {
+  field(SCAN, "I/O Intr")
+  field(DTYP, "asynOctetRead")
+  field(INP, "@asyn($(PORT),0)PMAC_VDM_&$(COORD)P100")
+}
+
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q24,Q=:TSPEED,EGU=mm/s,VARIABLE_PREC=5"
+include "pmacVariableWrite.template"
+
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q25,Q=:RSPEED,EGU=deg/s,VARIABLE_PREC=5"
+include "pmacVariableWrite.template"
+
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q26,Q=:ACLTIME,EGU=msec,VARIABLE_PREC=5"
+include "pmacVariableWrite.template"
+
 
 #! Further lines contain data used by VisualDCT
 #! View(128,2243,1.1)
