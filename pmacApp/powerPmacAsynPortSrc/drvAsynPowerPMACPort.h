@@ -4,7 +4,7 @@
 #ifndef DRVASYNPOWERPMACPORT_H
 #define DRVASYNPOWERPMACPORT_H
 
-#include <shareLib.h>  
+#include <shareLib.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,6 +12,7 @@ extern "C" {
 
 epicsShareFunc int drvAsynPowerPMACPortConfigure(const char *portName,
                                                  const char *hostaddress,
+                                                 unsigned int sshPortNumber,
                                                  const char *username,
                                                  const char *password,
                                                  unsigned int priority,

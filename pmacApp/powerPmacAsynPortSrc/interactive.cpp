@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-  SSHDriver *ptr = new SSHDriver("172.23.247.1");
+  SSHDriver *ptr = new SSHDriver("172.23.247.1",22);
   ptr->setUsername("root");
   ptr->setPassword("deltatau");
   ptr->connectSSH();

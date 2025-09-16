@@ -87,7 +87,7 @@ void LogComStrPrintEscapedNL(const char *buff, size_t bytes)
  *
  * @param host - Host name/IP to attempt a connection with.
  */
-SSHDriver::SSHDriver(const char *host)
+SSHDriver::SSHDriver(const char *host, unsigned int port)
 {
   static const char *functionName = "SSHDriver::SSHDriver";
   debugPrint("%s : Method called\n", functionName);
@@ -101,7 +101,7 @@ SSHDriver::SSHDriver(const char *host)
   strcpy(password_, "");
   // Store the host address
   strcpy(host_, host);
-
+  sshport_ = port;
   error_checking_ = false;
   potential_errors_ = 0;
   caught_errors_ = 0;
@@ -190,7 +190,7 @@ SSHDriverStatus SSHDriver::connectSSH()
   sock_ = socket(AF_INET, SOCK_STREAM, 0);
 
   sin_.sin_family = AF_INET;
-  sin_.sin_port = htons(22);
+  sin_.sin_port = htons(sshport_);
   sin_.sin_addr.s_addr = hostaddr;
   if (connect(sock_, (struct sockaddr*)(&sin_), sizeof(struct sockaddr_in)) != 0){
     debugPrint("%s : socket failed to connect!\n", functionName);
@@ -291,7 +291,7 @@ SSHDriverStatus SSHDriver::connectSSH()
 		pfds[0].fd = sock_;
 		pfds[0].events = POLLIN;
 		pfds[0].revents = 0;
-		rc = poll(pfds, numfds, -1);  
+		rc = poll(pfds, numfds, -1);
 		if (-1 == rc) {
 			perror("poll");
 			break;

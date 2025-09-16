@@ -36,6 +36,7 @@ typedef struct {
     asynUser          *pasynUser;        /* Not currently used */
     char              *SSHDeviceName;
     char              *SSHHostName;
+    unsigned int       SSHPortNumber;
     char              *SSHUserName;
     char              *SSHPassword;
     char              *portName;
@@ -138,7 +139,7 @@ connectIt(void *drvPvt, asynUser *pasynUser)
 
 
     // Create the driver
-    ssh->fd = new SSHDriver(ssh->SSHHostName);
+    ssh->fd = new SSHDriver(ssh->SSHHostName, ssh->SSHPortNumber);
 
     // Set the username
     ssh->fd->setUsername(ssh->SSHUserName);
@@ -285,7 +286,7 @@ static asynStatus readIt(void *drvPvt, asynUser *pasynUser,
     /* If there is room add a null byte */
     if (thisRead < maxchars)
         data[thisRead] = 0;
-    else 
+    else
         reason |= ASYN_EOM_CNT;
 //printf("*** Reason: %d\n", reason);
     if (gotEom) *gotEom = reason;
@@ -342,6 +343,7 @@ static const struct asynCommon drvAsynPowerPMACPortAsynCommon = {
 epicsShareFunc int
 drvAsynPowerPMACPortConfigure(const char *portName,
                               const char *hostName,
+                              unsigned int sshPortNumber,
                               const char *userName,
                               const char *password,
                               unsigned int priority,
@@ -366,6 +368,10 @@ drvAsynPowerPMACPortConfigure(const char *portName,
         printf("PowerPMAC host name missing.\n");
         return -1;
     }
+    if (sshPortNumber == 0) {
+        printf("PowerPMAC SSH port number missing.\n");
+        return -1;
+    }
     if (userName == NULL) {
         printf("PowerPMAC user name missing.\n");
         return -1;
@@ -382,6 +388,7 @@ drvAsynPowerPMACPortConfigure(const char *portName,
     ssh->fd = NULL;
     ssh->SSHDeviceName = epicsStrDup(hostName);
     ssh->SSHHostName = epicsStrDup(hostName);
+    ssh->SSHPortNumber = sshPortNumber;
     ssh->SSHUserName = epicsStrDup(userName);
     ssh->SSHPassword = epicsStrDup(password);
     ssh->portName = epicsStrDup(portName);
@@ -442,21 +449,22 @@ drvAsynPowerPMACPortConfigure(const char *portName,
  */
 static const iocshArg drvAsynPowerPMACPortConfigureArg0 = { "port name",iocshArgString};
 static const iocshArg drvAsynPowerPMACPortConfigureArg1 = { "host name",iocshArgString};
-static const iocshArg drvAsynPowerPMACPortConfigureArg2 = { "username",iocshArgString};
-static const iocshArg drvAsynPowerPMACPortConfigureArg3 = { "password",iocshArgString};
-static const iocshArg drvAsynPowerPMACPortConfigureArg4 = { "priority",iocshArgInt};
-static const iocshArg drvAsynPowerPMACPortConfigureArg5 = { "disable auto-connect",iocshArgInt};
-static const iocshArg drvAsynPowerPMACPortConfigureArg6 = { "noProcessEos",iocshArgInt};
+static const iocshArg drvAsynPowerPMACPortConfigureArg2 = { "ssh port number",iocshArgInt};
+static const iocshArg drvAsynPowerPMACPortConfigureArg3 = { "username",iocshArgString};
+static const iocshArg drvAsynPowerPMACPortConfigureArg4 = { "password",iocshArgString};
+static const iocshArg drvAsynPowerPMACPortConfigureArg5 = { "priority",iocshArgInt};
+static const iocshArg drvAsynPowerPMACPortConfigureArg6 = { "disable auto-connect",iocshArgInt};
+static const iocshArg drvAsynPowerPMACPortConfigureArg7 = { "noProcessEos",iocshArgInt};
 static const iocshArg *drvAsynPowerPMACPortConfigureArgs[] = {
     &drvAsynPowerPMACPortConfigureArg0, &drvAsynPowerPMACPortConfigureArg1,
     &drvAsynPowerPMACPortConfigureArg2, &drvAsynPowerPMACPortConfigureArg3,
     &drvAsynPowerPMACPortConfigureArg4, &drvAsynPowerPMACPortConfigureArg5,
-    &drvAsynPowerPMACPortConfigureArg6};
+    &drvAsynPowerPMACPortConfigureArg6, &drvAsynPowerPMACPortConfigureArg7};
 static const iocshFuncDef drvAsynPowerPMACPortConfigureFuncDef =
-                      {"drvAsynPowerPMACPortConfigure",7,drvAsynPowerPMACPortConfigureArgs};
+                      {"drvAsynPowerPMACPortConfigure",8,drvAsynPowerPMACPortConfigureArgs};
 static void drvAsynPowerPMACPortConfigureCallFunc(const iocshArgBuf *args)
 {
-    drvAsynPowerPMACPortConfigure(args[0].sval, args[1].sval, args[2].sval, args[3].sval, args[4].ival, args[5].ival, args[6].ival);
+    drvAsynPowerPMACPortConfigure(args[0].sval, args[1].sval, args[2].ival, args[3].sval, args[4].sval, args[5].ival, args[6].ival, args[7].ival);
 }
 
 /*
