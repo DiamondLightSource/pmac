@@ -4,7 +4,7 @@ major 4
 minor 0
 release 1
 x 1188
-y 384
+y 495
 w 1341
 h 580
 font "helvetica-medium-r-18.0"
@@ -20,7 +20,6 @@ ctlBgColor2 index 3
 topShadowColor index 1
 botShadowColor index 11
 title "Symetrie Hexapod - $(hexapod)"
-showGrid
 gridSize 5
 endScreenProperties
 
@@ -1687,7 +1686,7 @@ release 1
 x 1130
 y 292
 w 92
-h 12
+h 14
 font "helvetica-medium-r-12.0"
 fontAlign "center"
 fgColor index 14
@@ -4200,6 +4199,19 @@ fill
 font "arial-bold-r-12.0"
 endObjectProperties
 
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 1130
+y 165
+w 180
+h 115
+
+beginGroup
+
 # (Rectangle)
 object activeRectangleClass
 beginObjectProperties
@@ -4351,5 +4363,12 @@ bgColor index 3
 fill
 font "arial-bold-r-12.0"
 fontAlign "center"
+endObjectProperties
+
+endGroup
+
+visPv "$(hexapod):PROG_VERSION:RBV"
+visMin "1.190723"
+visMax "1.190724"
 endObjectProperties
 
