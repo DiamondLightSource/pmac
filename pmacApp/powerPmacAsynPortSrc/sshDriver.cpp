@@ -86,6 +86,7 @@ void LogComStrPrintEscapedNL(const char *buff, size_t bytes)
  * IP address before connecting.  Initializes internal variables.
  *
  * @param host - Host name/IP to attempt a connection with.
+ * @param port - Port number for ssh connection
  */
 SSHDriver::SSHDriver(const char *host, unsigned int port)
 {
