@@ -368,8 +368,8 @@ drvAsynPowerPMACPortConfigure(const char *portName,
         printf("PowerPMAC host name missing.\n");
         return -1;
     }
-    if (sshPortNumber == 0) {
-        printf("PowerPMAC SSH port number missing.\n");
+    if (sshPortNumber < 1 || sshPortNumber > 65535) {
+        printf("PowerPMAC SSH port number %d is out of valid range (0-65535).\n", sshPortNumber);
         return -1;
     }
     if (userName == NULL) {
