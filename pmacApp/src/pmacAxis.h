@@ -1,12 +1,12 @@
 /********************************************
  *  pmacAxis.cpp
- * 
- *  PMAC Asyn motor based on the 
+ *
+ *  PMAC Asyn motor based on the
  *  asynMotorAxis class.
- * 
+ *
  *  Matthew Pearson
  *  23 May 2012
- * 
+ *
  ********************************************/
 
 #ifndef pmacAxis_H
@@ -101,6 +101,7 @@ private:
     double highLimit_;
     double lowLimit_;
     int limitsDisabled_;
+    bool limitsEnabled_;
     double stepSize_;
     double deferredPosition_;
     double cachedPosition_;
@@ -118,12 +119,14 @@ private:
     int fatal_following_;
     int encoder_axis_;
     int limitsCheckDisable_;
+    std::string limitsEnableAddr_;
     epicsTimeStamp nowTime_;
     epicsFloat64 nowTimeSecs_;
     epicsFloat64 lastTimeSecs_;
     bool printNextError_;
     bool moving_; // only valid within poll time - used as a hint for validating deferred coordinated moves
     axisStatus status_;
+    bool limitsStatus_;
 
     bool connected_; // Current connection status of the hardware
     bool initialised_; // We need to keep a record of this in case the software starts up without a connection

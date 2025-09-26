@@ -74,10 +74,11 @@ public:
 
     virtual std::string getAxisLimitsCmd(int axis) = 0;
 
-    virtual asynStatus parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, int *limitStatus) = 0;
+    virtual std::string getDisableAxisLimitsCmd(int axis) = 0;
 
-    // virtual asynStatus disableLimitsCmd(int axis, pmacCommandStore *sPtr, int *savedStatus) = 0;
-    // virtual asynStatus restoreLimitsCmd(int axis, pmacCommandStore *sPtr, int *savedStatus) = 0;
+    virtual std::string getRestoreAxisLimitsCmd(int axis, const std::string savedStatus) = 0;
+
+    virtual asynStatus parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, bool *limitsEnabled, std::string &pLimitsString) = 0;
 
     virtual asynStatus setupCSStatus(int csNo) = 0;
 

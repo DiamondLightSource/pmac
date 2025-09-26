@@ -232,15 +232,39 @@ static inline std::string trim(const std::string& s) {
     return (start == std::string::npos) ? "" : s.substr(start, end - start + 1);
 }
 
-asynStatus pmacHardwarePower::parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, int *limitStatus) {
-  asynStatus status = asynSuccess;
-  int nvals = 0;
-  std::string pLimitsString = "";
+std::string pmacHardwarePower::getDisableAxisLimitsCmd(int axis) {
+  char cmd[32];
+  static const char *functionName = "getDisableAxisLimitsCmd";
+  char savedStatus[32];
 
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  sprintf(cmd, this->getAxisLimitsCmd(axis).c_str());
+  printf("DEBUG: savedStatus= '%s'\n", savedStatus);
+  sprintf(cmd, "Motor[%d].pLimits=0", axis);
+  printf("DEBUG: DisableAxisLimitsCmd= '%s'\n", cmd);
+
+  return std::string(cmd);
+}
+
+std::string pmacHardwarePower::getRestoreAxisLimitsCmd(int axis, const std::string savedStatus) {
+  char cmd[128];
+  static const char *functionName = "getRestoreAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+
+  // Re-enable limits
+  snprintf(cmd, sizeof(cmd), "Motor[%d].pLimits = %s", axis, savedStatus.c_str());
+  return std::string(cmd);
+}
+
+asynStatus pmacHardwarePower::parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, bool *limitsEnabled, std::string &pLimitsString) {
+  asynStatus status = asynSuccess;
   static const char *functionName = "parseAxisLimitsCmd";
 
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+
   // Get the symbolic pointer string
-  pLimitsString = trim(sPtr->readValue(this->getAxisLimitsCmd(axis))); // e.g., "Gate3[0].Chan[0].Status.a" or "0"
+  pLimitsString = trim(sPtr->readValue(this->getAxisLimitsCmd(axis))); // e.g., "Gate3[i].Chan[j].Status.a" or "0"
   debug(DEBUG_VARIABLE, functionName, "pLimit string", pLimitsString);
 
   if (pLimitsString != "0") {
@@ -252,33 +276,14 @@ asynStatus pmacHardwarePower::parseAxisLimitsCmd(int axis, pmacCommandStore *sPt
     //  - Case 2
     //    - it must begin with: "Sys.pushm", or "Sys.piom"
     //    - it might contain "+$"
-    *limitStatus = 1;
+    *limitsEnabled = true;
   } else {
     // Disabled
-    *limitStatus = 0;
+    *limitsEnabled = false;
   }
 
   return status;
 }
-
-// asynStatus pmacHardwarePower::disableAxisLimits(int axis, int *addr) {
-//   asynStatus status = asynSuccess;
-//   int nvals = 0;
-//   char cmd[32] = {};
-//   std::string pLimitsString = "";
-//   std::string storedLimitsString = "";
-
-//   static const char *functionName = "disableAxisLimits";
-
-//   storedLimitsString = this->getAxisLimitsCmd(axis);
-//   // TODO Store previous settting
-//   sprintf(cmd, "%s=0", this->getAxisLimitsCmd(axis).c_str());
-//   // Do the write one level above
-//   debug(DEBUG_VARIABLE, functionName, "pLimit string", pLimitsString);
-
-//   return status;
-
-// }
 
 asynStatus pmacHardwarePower::setupCSStatus(int csNo) {
   asynStatus status = asynSuccess;

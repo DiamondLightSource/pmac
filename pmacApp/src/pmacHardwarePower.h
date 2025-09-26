@@ -31,9 +31,11 @@ public:
 
     std::string getAxisLimitsCmd(int axis);
 
-    asynStatus parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, int *limitStatus);
+    std::string getDisableAxisLimitsCmd(int axis);
 
-    // asynStatus disableAxisLimits(int axis, int *addr);
+    std::string getRestoreAxisLimitsCmd(int axis, const std::string savedStatus);
+
+    asynStatus parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, bool *limitsEnabled, std::string &pLimitsString);
 
     asynStatus setupCSStatus(int csNo);
 
