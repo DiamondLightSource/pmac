@@ -73,6 +73,8 @@
 #define PMAC_C_AxisBits01String           "PMAC_C_AXIS_BITS01"
 #define PMAC_C_AxisBits02String           "PMAC_C_AXIS_BITS02"
 #define PMAC_C_AxisBits03String           "PMAC_C_AXIS_BITS03"
+#define PMAC_C_AxisMasterCtrlString       "PMAC_C_AXIS_MATSTER_CTRL"
+
 
 #define PMAC_C_NoOfMsgsString             "PMAC_C_NO_OF_MSGS"
 #define PMAC_C_TotalBytesWrittenString    "PMAC_C_TBYTES_WRITE"
@@ -407,6 +409,7 @@ protected:
     int PMAC_C_AxisBits01_;
     int PMAC_C_AxisBits02_;
     int PMAC_C_AxisBits03_;
+    int PMAC_C_AxisMasterCtrl_;
     int PMAC_C_ProfileUseAxisA_;
     int PMAC_C_ProfileUseAxisB_;
     int PMAC_C_ProfileUseAxisC_;
