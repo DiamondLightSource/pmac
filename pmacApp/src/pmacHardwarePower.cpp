@@ -15,7 +15,7 @@ const std::string pmacHardwarePower::CS_STATUS = "&%d?";
 const std::string pmacHardwarePower::CS_INPOS = "Coord[%d].InPos";
 const std::string pmacHardwarePower::CS_AMPENABLE = "Coord[%d].AmpEna";
 const std::string pmacHardwarePower::CS_RUNNING = "Coord[%d].ProgRunning";
-const std::string pmacHardwarePower::CS_VEL_CMD = "&%dQ70=%f ";
+const std::string pmacHardwarePower::CS_VEL_CMD = "Coord[%d].Tm=%f";
 const std::string pmacHardwarePower::CS_ACCELERATION_CMD = "Coord[%d].Ta=%f Coord[%d].Td=%f";
 // the trailing ; stops clashes from occurring (instead of comma on turbo)
 const std::string pmacHardwarePower::CS_AXIS_MAPPING = "#%d->;";

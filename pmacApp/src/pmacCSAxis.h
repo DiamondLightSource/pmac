@@ -34,6 +34,8 @@ public:
 
     asynStatus directMove(double position, double min_velocity, double max_velocity, double acceleration);
 
+    asynStatus getAxisName(int axisIndex, char* axisChar);
+
     asynStatus move(double position, int relative, double min_velocity, double max_velocity,
                     double acceleration);
 

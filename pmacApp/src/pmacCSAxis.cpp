@@ -179,6 +179,49 @@ asynStatus pmacCSAxis::directMove(double position, double min_velocity, double m
   return this->move(raw_position, 0, min_velocity, max_velocity, acceleration);
 }
 
+asynStatus pmacCSAxis::getAxisName(int axisIndex, char* axisChar) {
+  asynStatus status = asynSuccess;
+  const char* singleLetters[] = {"A", "B", "C", "U", "V", "W", "X", "Y", "Z"};
+  const int singleCount = 9; // sizeof(singleLetters) / sizeof(singleLetters[0]);
+  const int indexCharH = 16;
+  const int indexRange = 32;
+  const int asciiCharA = 65;
+  const int skipIJK = 3;
+
+  static const char *functionName = "getAxisName";
+
+  debug(DEBUG_FLOW, functionName);
+
+  if (axisIndex < indexRange) {
+    if (axisIndex < singleCount) {
+        axisChar[0] = singleLetters[axisIndex][0];
+        axisChar[1] = '\0';
+        return status;
+    } else {
+      // axisIndex > 8
+      // (axisIndex-singleCount) 0..25
+      // (axisIndex-singleCount + 65) 65..90
+      // 'A' == 65
+
+      axisChar[0] = (axisIndex - singleCount + asciiCharA);
+      if (axisIndex > indexCharH) {
+        // axisIndex > 16
+        // e.g. axisIndex == 17 results axisChar[0] == 'L'
+        // e.g. axisIndex == 31 results axisChar[0] == 'Z'
+        axisChar[0] += skipIJK; // skips I, J and K
+      }
+      axisChar[1] = axisChar[0];
+      axisChar[2] = '\0';
+      return status;
+    }
+  } else {
+    debug(DEBUG_ERROR, functionName, "CSAxis index out of range:", axisIndex);
+    status = asynError;
+  }
+
+  return status; // Out of range
+}
+
 asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_velocity, double max_velocity,
                             double acceleration) {
   asynStatus status = asynSuccess;
@@ -187,6 +230,7 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
   char response[128];
   static const char *functionName = "move";
 
+  char axis_buff[128] = "";
   char vel_buff[128] = "";
   char buff[128];
   double deviceUnits = 0.0;
@@ -202,6 +246,7 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
       pC_->makeCSDemandsConsistent();
     }
 
+    getAxisName(axisNo_-1, axis_buff);
     if (this->pC_->pC_->useCsVelocity) {
       strcpy(vel_buff, pC_->getVelocityCmd(max_velocity, steps).c_str());
     }
@@ -221,24 +266,18 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
     }
 
     if (pC_->movesDeferred_ == 0) {
-      sprintf(command, "&%d%s%sQ7%d=%.12f", pC_->getCSNumber(), vel_buff,
-              acc_buff, axisNo_, deviceUnits);
+      sprintf(command, "&%d %s %s cpx %s(%.12f)", pC_->getCSNumber(), vel_buff,
+              acc_buff, axis_buff, deviceUnits);
       if (pC_->getProgramNumber() != 0) {
         // Abort current move to make sure axes are enabled
         status = pC_->axisWriteRead(
                 pC_->pC_->pHardware_->getCSEnableCommand(pC_->getCSNumber()).c_str(),
                 response);
-        /* If the program specified is non-zero, add a command to run the program.
-        * If program number is zero, then the move will have to be started by some
-        * external process, which is a mechanism of allowing coordinated starts to
-        * movement. */
-        sprintf(buff, " B%dR", pC_->getProgramNumber());
-        strcat(command, buff);
         status = pC_->axisWriteRead(command, response);
       }
     } else {
       // do not pass the velocity buffer, deferred velocity is controlled separately
-      sprintf(command, "%sQ7%d=%.12f", acc_buff, axisNo_, deviceUnits);
+      sprintf(command, "%s %s(%.12f)", acc_buff, axis_buff, deviceUnits);
       deferredMove_ = pC_->movesDeferred_;
       sprintf(deferredCommand_, "%s", command);
     }
