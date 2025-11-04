@@ -10,6 +10,7 @@
 
 const std::string pmacHardwarePower::GLOBAL_STATUS = "?";
 const std::string pmacHardwarePower::AXIS_STATUS = "#%d?";
+const std::string pmacHardwarePower::AXIS_LIMITS = "Motor[%d].pLimits";
 const std::string pmacHardwarePower::AXIS_CS_NUMBER = "Motor[%d].Coord";
 const std::string pmacHardwarePower::CS_STATUS = "&%d?";
 const std::string pmacHardwarePower::CS_INPOS = "Coord[%d].InPos";
@@ -142,8 +143,7 @@ asynStatus pmacHardwarePower::setupAxisStatus(int axis) {
   return status;
 }
 
-asynStatus
-pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus) {
+asynStatus pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus) {
   asynStatus status = asynSuccess;
   int nvals = 0;
   int dummyVal = 0;
@@ -213,6 +213,74 @@ pmacHardwarePower::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus 
     debug(DEBUG_ERROR, functionName, "Failed to parse CS number", csString);
     axStatus.currentCS_ = 0;
     status = asynError;
+  }
+
+  return status;
+}
+
+std::string pmacHardwarePower::getAxisLimitsCmd(int axis) {
+  char cmd[32];
+  static const char *functionName = "getAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  sprintf(cmd, AXIS_LIMITS.c_str(), axis);
+  return std::string(cmd);
+}
+
+static inline std::string trim(const std::string& s) {
+    size_t start = s.find_first_not_of(" \t\r\n");
+    size_t end = s.find_last_not_of(" \t\r\n");
+    return (start == std::string::npos) ? "" : s.substr(start, end - start + 1);
+}
+
+std::string pmacHardwarePower::getDisableAxisLimitsCmd(int axis) {
+  char cmd[32];
+  static const char *functionName = "getDisableAxisLimitsCmd";
+  char savedStatus[32];
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  sprintf(cmd, this->getAxisLimitsCmd(axis).c_str());
+  printf("DEBUG: savedStatus= '%s'\n", savedStatus);
+  sprintf(cmd, "Motor[%d].pLimits=0", axis);
+  printf("DEBUG: DisableAxisLimitsCmd= '%s'\n", cmd);
+
+  return std::string(cmd);
+}
+
+std::string pmacHardwarePower::getRestoreAxisLimitsCmd(int axis, const std::string savedStatus) {
+  char cmd[128];
+  static const char *functionName = "getRestoreAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+
+  // Re-enable limits
+  snprintf(cmd, sizeof(cmd), "Motor[%d].pLimits = %s", axis, savedStatus.c_str());
+  return std::string(cmd);
+}
+
+asynStatus pmacHardwarePower::parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, bool *limitsEnabled, std::string &pLimitsString) {
+  asynStatus status = asynSuccess;
+  static const char *functionName = "parseAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+
+  // Get the symbolic pointer string
+  pLimitsString = trim(sPtr->readValue(this->getAxisLimitsCmd(axis))); // e.g., "Gate3[i].Chan[j].Status.a" or "0"
+  debug(DEBUG_VARIABLE, functionName, "pLimit string", pLimitsString);
+
+  if (pLimitsString != "0") {
+    // Not disabled
+    // TODO Add sanity checks:
+    //  - Case 1
+    //    - it must begin with: "Gate3", "PowerBrick", "Clipper", "CK3WECS", "ECAT", or related
+    //    - it must end with ".a"
+    //  - Case 2
+    //    - it must begin with: "Sys.pushm", or "Sys.piom"
+    //    - it might contain "+$"
+    *limitsEnabled = true;
+  } else {
+    // Disabled
+    *limitsEnabled = false;
   }
 
   return status;
