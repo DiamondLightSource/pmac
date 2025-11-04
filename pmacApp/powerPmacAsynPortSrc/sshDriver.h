@@ -49,7 +49,7 @@ typedef enum e_SSHDriverStatus
 class SSHDriver {
 
   public:
-    SSHDriver(const char *host);
+    SSHDriver(const char *host, unsigned int port);
     SSHDriverStatus setUsername(const char *username);
     SSHDriverStatus setPassword(const char *password);
     SSHDriverStatus connectSSH();
@@ -70,6 +70,7 @@ class SSHDriver {
     LIBSSH2_SESSION *session_;
     LIBSSH2_CHANNEL *channel_;
     char host_[256];
+    unsigned int sshport_;
     char username_[256];
     char password_[256];
     off_t got_;
