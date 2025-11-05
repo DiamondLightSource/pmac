@@ -76,6 +76,7 @@ public:
     pmacCSAxis *getAxis(asynUser *pasynUser);
     pmacCSAxis *getAxis(int axisNo);
     pmacAxis *getRawAxis(int axisNo);
+    asynStatus getCsPositions();
 
     // Registration for callbacks
     asynStatus registerForCallbacks(pmacCallbackInterface *cbPtr, int type);

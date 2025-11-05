@@ -558,6 +558,42 @@ pmacCSAxis *pmacCSController::getAxis(int axisNo) {
   return pAxes_[axisNo];
 }
 
+// TODO: Integrate with callback, simililar to parseCSStatus
+asynStatus pmacCSController::getCsPositions() {
+  asynStatus status = asynSuccess;
+  static const char *functionName = "getCsPositions";
+  char command[PMAC_CS_MAXBUF] = {0};
+  char response[PMAC_CS_MAXBUF] = {0};
+  char *token;
+  char axis[3] = {0}; // Buffer for axis
+  double position;
+  int axisNum;
+
+  sprintf(command, "&%dp", this->getCSNumber());
+  status = this->immediateWriteRead(command, response);
+  // TODO: Assert that response is not "No data to display"
+  token = strtok(response, " ");
+  while (token != NULL) {
+
+    char* posStart = strpbrk(token, "0123456789-ni");
+    if (posStart != NULL) {
+        int axisLen = posStart - token;
+        strncpy(axis, token, axisLen);
+
+		int adjustments[] = {17, 3};
+        int base[] = {1, 10};
+
+        axisNum = axis[0]-'A' + base[axisLen-1];
+        if (axisNum > (3 + 14*(axisLen-1))) {
+            axisNum -= adjustments[axisLen-1];
+        }
+        position = strtod(posStart, NULL);
+        token = strtok(NULL, " ");
+    }
+  }
+  return status;
+}
+
 // Registration for callbacks
 asynStatus pmacCSController::registerForCallbacks(pmacCallbackInterface *cbPtr, int type) {
   // Simply forward the request to the main controller
