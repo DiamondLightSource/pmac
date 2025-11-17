@@ -413,6 +413,8 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_AxisCSString, asynParamInt32, &PMAC_C_AxisCS_);
   createParam(PMAC_C_AxisReadonlyString, asynParamInt32, &PMAC_C_AxisReadonly_);
   createParam(PMAC_C_WriteCmdString, asynParamOctet, &PMAC_C_WriteCmd_);
+  createParam(PMAC_C_WriteReadCmdString, asynParamOctet, &PMAC_C_WriteReadCmd_);
+  createParam(PMAC_C_WriteReadRBVString, asynParamOctet, &PMAC_C_WriteReadRbv_);
   createParam(PMAC_C_KillAxisString, asynParamInt32, &PMAC_C_KillAxis_);
   createParam(PMAC_C_PLCBits00String, asynParamInt32, &PMAC_C_PLCBits00_);
   createParam(PMAC_C_PLCBits01String, asynParamInt32, &PMAC_C_PLCBits01_);
@@ -2469,6 +2471,18 @@ pmacController::writeOctet(asynUser *pasynUser, const char *value, size_t nChars
     // Write the arbitrary string to the PMAC, ignoring a reponse
     strcpy(command, value);
     status = this->immediateWriteRead(command, response);
+  }
+
+  // Added by AJF
+  if (function == PMAC_C_WriteReadCmd_) {
+    // Write the arbitrary string to the PMAC, set the response in the parameter library
+    strcpy(command, value);
+    status = this->immediateWriteRead(command, response);
+    // Strip off the \r
+    response[strlen(response)-1] = '\0';
+    // Set the response in the parameter library
+    status = (asynStatus) setStringParam(addr, PMAC_C_WriteReadRbv_, response);
+    if (status != asynSuccess) return (status);
   }
 
   // Do callbacks so higher layers see any changes
