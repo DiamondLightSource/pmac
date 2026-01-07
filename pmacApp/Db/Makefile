@@ -62,6 +62,9 @@ DB += zform.template
 # The following templates are used for CSS screens
 DB += pmacCSS.template
 
+# The following templates are used for synchronizing the PMAC values to the PandA readback
+DB += PandAEncoderSync.template 
+
 #----------------------------------------------------
 # If <anyname>.db template is not named <anyname>*.template add
 # <anyname>_template = <templatename>
