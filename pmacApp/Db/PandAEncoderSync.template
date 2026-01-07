@@ -1,0 +1,56 @@
+# Macros
+# % macro, MOTOR,   PV Prefix for the motor to sync with
+# % macro, PANDA,   PV Prefix for the PandA
+# % macro, BLOCK,   Which block to link to
+
+record(calcout, "$(MOTOR):SCALECALC") {
+  field(CALC, "(B=0?A:-A)*(C>0?C:1)")
+  field(INPA, "$(MOTOR).ERES CP")
+  field(INPB, "$(MOTOR).DIR CP")
+  field(INPC, "$(MOTOR):SCALE CP")
+  field(OUT,  "$(PANDA):$(BLOCK):ValScale PP")
+  field(PREC, "4")
+}
+
+record(calcout, "$(MOTOR):OFFCALC") {
+  field(CALC, "A")
+  field(INPA, "$(MOTOR).OFF CP")
+  field(OUT,  "$(PANDA):$(BLOCK):ValOffset PP")
+  field(PREC, "4")
+}
+
+record(stringout, "$(MOTOR):UNITSCALC") {
+  field(OUT,  "$(PANDA):$(BLOCK):UNITS PP")
+  field(DOL, "$(MOTOR).EGU CP")
+  field(OMSL, "closed_loop")
+}
+
+record(calcout, "$(MOTOR):ONHOMED") {
+  field(DESC, "Trigger seq when motor has been homed")
+  field(CALC, "A=0")
+  field(INPA, "$(MOTOR):HOMING CP")
+  field(OOPT, "Transition To Non-zero")
+  field(OUT, "$(MOTOR):ONENABLE.PROC")
+  field(VAL, "1")
+}
+
+record(seq, "$(MOTOR):ONENABLE") {
+  field(DESC, "Process all the records that update the PandA")
+  field(DOL1, "1")
+  field(DLY1, 1)
+  field(LNK1, "$(MOTOR):SETPOSCALC.PROC PP")
+  field(DOL2, "1")
+  field(DLY2, 1)  
+  field(LNK2, "$(MOTOR):SCALECALC.PROC PP")
+  field(DOL3, "1")
+  field(DLY3, 1)
+  field(LNK3, "$(MOTOR):OFFCALC.PROC PP")
+}
+
+# % archiver 10 Monitor
+record(calcout, "$(MOTOR):SETPOSCALC") {
+  field(CALC, "A*(B>0?B:1)")
+  field(INPA, "$(MOTOR).REP") #WRITES TO THE MOTOR RECORD VAL IN COUNTS INSTEAD OF :RBV
+  field(INPB, "$(MOTOR):SCALE")
+  field(OUT, "$(PANDA):$(BLOCK):Setp PP")
+}
