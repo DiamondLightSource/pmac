@@ -708,6 +708,25 @@ record(sseq, "$(P):OUZOFF_SEQ") {
   field(WAIT4, "Wait")
 }
 
+## Speed Control ##
+
+record(ai, "$(P):PROG_VERSION:RBV") {
+  field(SCAN, "I/O Intr")
+  field(PINI, "NO")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_VDM_&$(COORD)P100")
+  field(PREC, "6")
+}
+
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q24,Q=:TSPEED,EGU=mm/s,VARIABLE_PREC=5"
+include "pmacVariableWrite.template"
+
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q25,Q=:RSPEED,EGU=deg/s,VARIABLE_PREC=5"
+include "pmacVariableWrite.template"
+
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q26,Q=:ACLTIME,EGU=msec,VARIABLE_PREC=5"
+include "pmacVariableWrite.template"
+
 
 #! Further lines contain data used by VisualDCT
 #! View(128,2243,1.1)

@@ -4,9 +4,9 @@ major 4
 minor 0
 release 1
 x 1188
-y 62
+y 495
 w 1341
-h 555
+h 580
 font "helvetica-medium-r-18.0"
 ctlFont "courier-bold-r-18.0"
 btnFont "helvetica-medium-r-18.0"
@@ -20,8 +20,6 @@ ctlBgColor2 index 3
 topShadowColor index 1
 botShadowColor index 11
 title "Symetrie Hexapod - $(hexapod)"
-showGrid
-snapToGrid
 gridSize 5
 endScreenProperties
 
@@ -1035,7 +1033,7 @@ major 4
 minor 0
 release 0
 x 975
-y 285
+y 300
 w 145
 h 260
 lineColor index 14
@@ -1050,7 +1048,7 @@ major 4
 minor 1
 release 1
 x 975
-y 275
+y 292
 w 120
 h 14
 font "helvetica-medium-r-12.0"
@@ -1071,7 +1069,7 @@ major 4
 minor 1
 release 0
 x 980
-y 460
+y 475
 w 135
 h 45
 fgColor index 25
@@ -1092,7 +1090,7 @@ major 10
 minor 0
 release 0
 x 980
-y 510
+y 525
 w 135
 h 30
 controlPv "$(hexapod):RECOVERYSTA"
@@ -1228,7 +1226,7 @@ major 4
 minor 1
 release 0
 x 1255
-y 520
+y 535
 w 80
 h 25
 fgColor index 46
@@ -1671,7 +1669,7 @@ major 4
 minor 0
 release 0
 x 1130
-y 285
+y 300
 w 205
 h 230
 lineColor index 14
@@ -1686,7 +1684,7 @@ major 4
 minor 1
 release 1
 x 1130
-y 275
+y 292
 w 92
 h 14
 font "helvetica-medium-r-12.0"
@@ -1707,7 +1705,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 290
+y 305
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -1727,7 +1725,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 290
+y 305
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B0"
@@ -1744,7 +1742,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 310
+y 325
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B1"
@@ -1761,7 +1759,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 330
+y 345
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B2"
@@ -1778,7 +1776,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 350
+y 365
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B3"
@@ -1795,7 +1793,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 370
+y 385
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B4"
@@ -1812,7 +1810,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 390
+y 405
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B5"
@@ -1829,7 +1827,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 410
+y 425
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B6"
@@ -1846,7 +1844,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 430
+y 445
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B7"
@@ -1863,7 +1861,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 470
+y 485
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B9"
@@ -1880,7 +1878,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 450
+y 465
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.B8"
@@ -2320,7 +2318,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 410
+y 425
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -2340,7 +2338,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 370
+y 385
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -2360,7 +2358,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 390
+y 405
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -2380,7 +2378,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 490
+y 505
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -2400,7 +2398,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 470
+y 485
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -2420,7 +2418,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 330
+y 345
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -2440,7 +2438,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 350
+y 365
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -2460,7 +2458,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 450
+y 465
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -2480,7 +2478,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 310
+y 325
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -2500,7 +2498,7 @@ major 4
 minor 1
 release 1
 x 980
-y 295
+y 310
 w 135
 h 20
 font "helvetica-bold-r-14.0"
@@ -2520,7 +2518,7 @@ major 4
 minor 1
 release 0
 x 980
-y 315
+y 330
 w 135
 h 30
 fgColor index 25
@@ -3677,7 +3675,7 @@ major 4
 minor 1
 release 1
 x 980
-y 405
+y 420
 w 135
 h 20
 font "helvetica-bold-r-14.0"
@@ -3697,7 +3695,7 @@ major 10
 minor 0
 release 0
 x 980
-y 425
+y 440
 w 135
 h 30
 controlPv "$(hexapod):STALLPERCENT"
@@ -3716,7 +3714,7 @@ major 4
 minor 1
 release 1
 x 980
-y 350
+y 365
 w 135
 h 20
 font "helvetica-bold-r-14.0"
@@ -3736,7 +3734,7 @@ major 4
 minor 1
 release 0
 x 980
-y 370
+y 385
 w 135
 h 30
 fgColor index 25
@@ -3759,7 +3757,7 @@ major 4
 minor 1
 release 1
 x 980
-y 460
+y 475
 w 135
 h 45
 font "helvetica-bold-r-14.0"
@@ -3887,7 +3885,7 @@ major 4
 minor 0
 release 0
 x 1310
-y 490
+y 505
 w 20
 h 20
 controlPv "$(hexapod):MOTIONSTA.BA"
@@ -3904,7 +3902,7 @@ major 4
 minor 1
 release 1
 x 1135
-y 430
+y 445
 w 170
 h 20
 font "helvetica-bold-r-14.0"
@@ -3924,7 +3922,7 @@ major 4
 minor 4
 release 0
 x 1130
-y 520
+y 535
 w 120
 h 25
 fgColor index 43
@@ -4199,5 +4197,178 @@ fgAlarm
 bgColor index 10
 fill
 font "arial-bold-r-12.0"
+endObjectProperties
+
+# (Group)
+object activeGroupClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 1130
+y 165
+w 180
+h 115
+
+beginGroup
+
+# (Rectangle)
+object activeRectangleClass
+beginObjectProperties
+major 4
+minor 0
+release 0
+x 1130
+y 175
+w 180
+h 105
+lineColor index 18
+fill
+fillColor index 5
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 1130
+y 165
+w 56
+h 14
+font "helvetica-medium-r-12.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 7
+value {
+  "  Speed   "
+}
+autoSize
+border
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 1135
+y 245
+w 40
+h 25
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "Time"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 1135
+y 215
+w 40
+h 25
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "R"
+}
+endObjectProperties
+
+# (Static Text)
+object activeXTextClass
+beginObjectProperties
+major 4
+minor 1
+release 1
+x 1135
+y 185
+w 40
+h 25
+font "helvetica-bold-r-14.0"
+fontAlign "center"
+fgColor index 14
+bgColor index 3
+useDisplayBg
+value {
+  "T"
+}
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 1180
+y 245
+w 120
+h 25
+controlPv "$(hexapod):ACLTIME"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-12.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 1180
+y 215
+w 120
+h 25
+controlPv "$(hexapod):RSPEED"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-12.0"
+fontAlign "center"
+endObjectProperties
+
+# (Textentry)
+object TextentryClass
+beginObjectProperties
+major 10
+minor 0
+release 0
+x 1180
+y 185
+w 120
+h 25
+controlPv "$(hexapod):TSPEED"
+fgColor index 25
+fgAlarm
+bgColor index 3
+fill
+font "arial-bold-r-12.0"
+fontAlign "center"
+endObjectProperties
+
+endGroup
+
+visPv "$(hexapod):PROG_VERSION:RBV"
+visMin "1.190723"
+visMax "1.190724"
 endObjectProperties
 
