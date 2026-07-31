@@ -52,7 +52,7 @@
 #% macro, gda_desc, Description to export this as to GDA
 
 # AUTOSAVE: level 0 = before record init, level 1 = before AND after record init
-#% autosave 0 DVAL OFF DHLM HLM DLLM LLM
+#% autosave 0 DVAL OFF DHLM DLLM
 #% autosave 1 DIR TWV VBAS VELO ACCL BDST BVEL BACC RDBD EGU RTRY UEIP URIP DLY PREC DISA DISP FOFF OFF FRAC OMSL JVEL JAR ADEL MDEL
 #% archiver 0.5 Monitor
 #% archiver 0.5 Monitor RBV
