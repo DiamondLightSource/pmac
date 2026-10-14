@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <components arch="linux-x86_64">
-	<pmac.pmacAsynSSHPort IP="172.23.247.1" name="SSH1"/>
+	<pmac.pmacAsynSSHPort IP="172.23.247.1" SSHPORT="22" name="SSH1"/>
 	<pmac.PowerPMAC P="POWER" Port="SSH1" name="PowerPMAC.pmac"/>
 	<pmac.PowerPmacStatus DEVICE="POWER" NAXES="8" PLC="5" PORT="PowerPMAC.pmac" name="PowerPMAC.STAT"/>
 	<pmac.CS CS="2" Controller="PowerPMAC.pmac" name="PowerPMAC.CS2"/>

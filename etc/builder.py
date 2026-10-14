@@ -66,8 +66,9 @@ class pmacAsynSSHPort(DeltaTauSSHCommsPort):
     DbdFileList = ['drvAsynPowerPMACPort']
     _Cards = []
 
-    def __init__(self, name, IP, USERNAME='root', PASSWORD='deltatau', PRIORITY=0, NOAUTOCONNECT=0, NOEOS=0, simulation=None):
+    def __init__(self, name, IP, SSHPORT=22, USERNAME='root', PASSWORD='deltatau', PRIORITY=0, NOAUTOCONNECT=0, NOEOS=0, simulation=None):
         self.IP = IP
+        self.SSHPORT = SSHPORT
         self.USERNAME = USERNAME
         self.PASSWORD = PASSWORD
         self.PRIORITY = PRIORITY
@@ -78,13 +79,14 @@ class pmacAsynSSHPort(DeltaTauSSHCommsPort):
         self.__super.__init__(name)
 
     def Initialise(self):
-        print '# Create SSH Port (PortName, IPAddress, Username, Password, Priority, DisableAutoConnect, noProcessEos)'
-        print 'drvAsynPowerPMACPortConfigure("%(name)s", "%(IP)s", "%(USERNAME)s", "%(PASSWORD)s", "%(PRIORITY)d", "%(NOAUTOCONNECT)d", "%(NOEOS)d")' % \
+        print '# Create SSH Port (PortName, IPAddress, SSHPort, Username, Password, Priority, DisableAutoConnect, noProcessEos)'
+        print 'drvAsynPowerPMACPortConfigure("%(name)s", "%(IP)s", "%(SSHPORT)d","%(USERNAME)s", "%(PASSWORD)s", "%(PRIORITY)d", "%(NOAUTOCONNECT)d", "%(NOEOS)d")' % \
             self.__dict__
 
     ArgInfo = makeArgInfo(__init__,
         name   = Simple('Port Name, normally something like SSH_PORT', str),
         IP     = Simple('IP address of the powerPMAC', str),
+        SSHPORT = Simple('SSH Port of the powerPMAC', int),
         USERNAME = Simple('Username for the SSH connection', str),
         PASSWORD = Simple('Password for the SSH connection', str),
         PRIORITY = Simple('Priority of the port', int),
