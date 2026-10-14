@@ -4785,7 +4785,8 @@ endObjectProperties
 endGroup
 
 visPv "$(hexapod):PROG_VERSION:RBV"
-visMin "1.190723"
-visMax "1.190724"
+visInvert
+visMin "0"
+visMax "1.19072"
 endObjectProperties
 
