@@ -1016,6 +1016,24 @@ class RunCommand(Device):
     )
 
 
+class _PandAEncoderSync(AutoSubstitution):
+    TemplateFile = 'PandAEncoderSync.template'
+
+class PandAEncoderSync(Device):
+    def __init__(self, MOTOR, PANDA, BLOCK):
+        _PandAEncoderSync(
+            MOTOR=MOTOR,
+            PANDA=PANDA,
+            BLOCK=BLOCK
+        )
+
+    ArgInfo = makeArgInfo(__init__,
+        MOTOR = Simple("PV prefix for the controller", str),
+        PANDA = Simple("PV prefix for the PandA", str),
+        BLOCK = Simple("Name of the block to link to", str)
+    )
+
+
 # hiding templates which are just used in includes so as to not
 # dirty the auto list of builder objects (is this the best way to do this?)
 class _pmacDirectMotorTemplate(AutoSubstitution):
