@@ -19,8 +19,8 @@
 # % macro, name, Object name and gui association name
 
 # This associates an edm screen with the template
-# % gui, $(name=), edm, symetrie_hexapod_CS.edl, hexapod=$(P),RX=$(RX),RY=$(RY),RZ=$(RZ),BRICK=$(BRICK),COORD=$(COORD)
-# included pmacVariableWrite templates have name=noGuiObjectAssociation so that only symetrie_hexapod_CS.edl is associated with the gui name
+# % gui, $(name=), edm, symetrie_hexapod_overview.edl, hexapod=$(P),RX=$(RX),RY=$(RY),RZ=$(RZ),BRICK=$(BRICK),COORD=$(COORD)
+# included pmacVariableWrite templates have name=noGuiObjectAssociation so that only symetrie_hexapod_overview.edl is associated with the gui name
 
 
 # % archiver 1 monitor
@@ -434,6 +434,14 @@ record(ao, "$(P):USERRZPLIM:SET") {
 substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q63,Q=:STALLPERCENT,EGU=%,VARIABLE_PREC=2"
 include "pmacVariableWrite.template"
 
+record(ai, "$(P):PROG_VERSION:RBV") {
+  field(SCAN, "I/O Intr")
+  field(PINI, "NO")
+  field(DTYP, "asynFloat64")
+  field(INP, "@asyn($(PORT),0)PMAC_VDM_&$(COORD)P100")
+  field(PREC, "6")
+}
+
 # % archiver 1 monitor
 record(longin, "$(P):KINEMATICERR:READ") {
   field(SCAN, "I/O Intr")
@@ -707,6 +715,17 @@ record(sseq, "$(P):OUZOFF_SEQ") {
   field(WAIT3, "Wait")
   field(WAIT4, "Wait")
 }
+
+## Speed Control ##
+
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q24,Q=:TSPEED,EGU=mm/s,VARIABLE_PREC=5"
+include "pmacVariableWrite.template"
+
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q25,Q=:RSPEED,EGU=deg/s,VARIABLE_PREC=5"
+include "pmacVariableWrite.template"
+
+substitute "name=noGuiObjectAssociation,VAR=&$(COORD)Q26,Q=:ACLTIME,EGU=msec,VARIABLE_PREC=5"
+include "pmacVariableWrite.template"
 
 
 #! Further lines contain data used by VisualDCT
