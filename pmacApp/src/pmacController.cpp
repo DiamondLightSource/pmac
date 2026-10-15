@@ -39,6 +39,7 @@ using std::dec;
 #include "pmacCSMonitor.h"
 
 #include <epicsExport.h>
+#include <epicsStdlib.h>
 
 static const char *driverName = "pmacController";
 
@@ -135,8 +136,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                                int lowLevelPortAddress,
                                int numAxes, double movingPollPeriod, double idlePollPeriod)
         : asynMotorController(portName, numAxes + 1, NUM_MOTOR_DRIVER_PARAMS + NUM_PMAC_PARAMS,
-                              asynEnumMask | asynInt32ArrayMask, // For user mode and velocity mode
-                              asynEnumMask, // No addition interrupt interfaces
+                              asynEnumMask | asynInt32ArrayMask | asynFloat64ArrayMask, // For user mode and velocity mode
+                              asynEnumMask | asynInt32ArrayMask | asynFloat64ArrayMask,
                               ASYN_CANBLOCK | ASYN_MULTIDEVICE,
                               1, // autoconnect
                               0, 50000),  // Default priority and stack size
@@ -205,6 +206,7 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   pHexParams_ = new IntegerHashtable();
   pDoubleParams_ = new IntegerHashtable();
   pStringParams_ = new IntegerHashtable();
+  pArrayParams_ = new ArrayInfoHashtable();
   pWriteParams_ = new StringHashtable();
 
   pAxes_ = (pmacAxis **) (asynMotorController::pAxes_);
@@ -807,18 +809,23 @@ pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInfo, const ch
   // Accepted parameter formats
   //
   // For reading variables
-  // PMAC_VxF_...  => PMAC Variable Fast Loop
-  // PMAC_VxM_...  => PMAC Variable Medium Loop
-  // PMAC_VxS_...  => PMAC Variable Slow Loop
+  // PMAC_VxF_...       => PMAC Variable Fast Loop
+  // PMAC_VxM_...       => PMAC Variable Medium Loop
+  // PMAC_VxS_...       => PMAC Variable Slow Loop
+  // PMAC_VxF<len>_...  => PMAC Array Fast Loop
+  // PMAC_VxM<len>_...  => PMAC Array Medium Loop
+  // PMAC_VxS<len>_...  => PMAC Array Slow Loop
   //
   // x is I for int, H for hex, D for double or S for string
+  // for arrays only 'D' type is allowed
   //
   // There must be no j or = in a variable, these items will simply be polled for their current status
   //
   // For Writing only
-  // PMAC_WI_... => Write Integer Value
-  // PMAC_WD_... => Write Double Value
-  // PMAC_WS_... => Write String Value
+  // PMAC_WI_...      => Write Integer Value
+  // PMAC_WD_...      => Write Double Value
+  // PMAC_WS_...      => Write String Value
+  // PMAC_WD<len>_... => Write Double Array
   //
   // Writing to these parameters will result in immediate writes to the PMAC
 
@@ -832,21 +839,39 @@ pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInfo, const ch
     status = asynError;
   }
 
-  if (status == asynSuccess) {
+  if (status == asynSuccess && findParam(drvInfo, &index)) {
+    size_t uOffset = strncmp(drvInfo, "PMAC_V", 6) ? 7 : 8;
+    epicsUInt32 uLen = 0;
+    if (drvInfo[uOffset] != '_') {
+      // Find out the array length
+      char* pszUnits = (char*)0;
+      while (drvInfo[uOffset] == '0' && drvInfo[uOffset + 1] >= '0' &&
+             drvInfo[uOffset + 1] <= '9' && uOffset < 100)
+        ++uOffset;
+      // TODO: maximum allow length of array variables
+      if (epicsParseUInt32(&drvInfo[uOffset], &uLen, 10, &pszUnits) == 0 &&
+          pszUnits && *pszUnits == '_' && uLen > 1 && uLen <= 1000000)
+        // found valid array length
+        uOffset += pszUnits - &drvInfo[8];
+    }
 
-    if (findParam(drvInfo, &index) && strlen(drvInfo) > 9 && strncmp(drvInfo, "PMAC_V", 6) == 0 &&
-        drvInfo[8] == '_') {
+    if (strlen(drvInfo) > uOffset && strncmp(drvInfo, "PMAC_V", 6) == 0 &&
+        drvInfo[uOffset] == '_') {
 
       // Retrieve the name of the variable
-      char *rawPmacVariable = epicsStrDup(drvInfo + 9);
       char pmacVariable[128];
-      this->processDrvInfo(rawPmacVariable, pmacVariable);
+      this->processDrvInfo(drvInfo + uOffset + 1, pmacVariable);
 
-      debug(DEBUG_VARIABLE, functionName, "Creating new parameter", pmacVariable);
+      if (uLen > 0)
+        debugf(DEBUG_VARIABLE, functionName, "Creating new array[%u] => %s", uLen, pmacVariable);
+      else
+        debug(DEBUG_VARIABLE, functionName, "Creating new parameter", pmacVariable);
       // Check for I, D or S in drvInfo[6]
       switch (drvInfo[6]) {
         case 'I':
           // Create the parameter
+          if (uLen > 0)
+            goto wrongArrayType1;
           createParam(drvInfo, asynParamInt32, &(this->parameters[parameterIndex_]));
           setIntegerParam(this->parameters[parameterIndex_], 0);
           // Add variable to integer parameter hashtable
@@ -855,6 +880,8 @@ pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInfo, const ch
           break;
         case 'H':
           // Create the parameter
+          if (uLen > 0)
+            goto wrongArrayType1;
           createParam(drvInfo, asynParamInt32, &(this->parameters[parameterIndex_]));
           setIntegerParam(this->parameters[parameterIndex_], 0);
           // Add variable to integer parameter hashtable
@@ -862,41 +889,63 @@ pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInfo, const ch
           parameterIndex_++;
           break;
         case 'D':
-          createParam(drvInfo, asynParamFloat64, &(this->parameters[parameterIndex_]));
-          // Add variable to double parameter hashtable
-          this->pDoubleParams_->insert(pmacVariable, this->parameters[parameterIndex_]);
+          if (uLen > 0)
+          {
+            createParam(drvInfo, asynParamFloat64Array, &(this->parameters[parameterIndex_]));
+            this->pArrayParams_->insert(pmacVariable, this->parameters[parameterIndex_], uLen, 0, new FloatArray64Cache(uLen));
+          }
+          else
+          {
+            createParam(drvInfo, asynParamFloat64, &(this->parameters[parameterIndex_]));
+            // Add variable to double parameter hashtable
+            this->pDoubleParams_->insert(pmacVariable, this->parameters[parameterIndex_]);
+          }
           parameterIndex_++;
           break;
         case 'S':
+          if (uLen > 0)
+            goto wrongArrayType1;
           createParam(drvInfo, asynParamOctet, &(this->parameters[parameterIndex_]));
           // Add variable to string parameter hashtable
           this->pStringParams_->insert(pmacVariable, this->parameters[parameterIndex_]);
           parameterIndex_++;
           break;
         default:
-          asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-                    "%s:%s: Expected PMAC_Vtx_... where x is one of I, D or S. Got '%c'\n",
-                    driverName, functionName, drvInfo[6]);
+          if (uLen > 0)
+          {
+wrongArrayType1:
+            asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+                      "%s:%s: Expected PMAC_Vtx<len>_... where x is only D. Got '%c'\n",
+                      driverName, functionName, drvInfo[6]);
+          }
+          else
+          {
+            asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+                      "%s:%s: Expected PMAC_Vtx_... where x is one of I, H, D or S. Got '%c'\n",
+                      driverName, functionName, drvInfo[6]);
+          }
           status = asynError;
       }
 
       if (status == asynSuccess) {
         // Check for F, M or S in drvInfo[7]
+        int iType(-1);
         switch (drvInfo[7]) {
-          case 'F':
-            this->pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, pmacVariable);
-            break;
-          case 'M':
-            this->pBroker_->addReadVariable(pmacMessageBroker::PMAC_MEDIUM_READ, pmacVariable);
-            break;
-          case 'S':
-            this->pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, pmacVariable);
-            break;
+          case 'F': iType = pmacMessageBroker::PMAC_FAST_READ;   break;
+          case 'M': iType = pmacMessageBroker::PMAC_MEDIUM_READ; break;
+          case 'S': iType = pmacMessageBroker::PMAC_SLOW_READ;   break;
           default:
             asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
                       "%s:%s: Expected PMAC_Vtx_... where t is one of F, M or S. Got '%c'\n",
                       driverName, functionName, drvInfo[7]);
             status = asynError;
+        }
+        if (iType >= 0)
+        {
+          if (uLen > 0)
+            this->pBroker_->addReadArray(iType, pmacVariable, (int)uLen);
+          else
+            this->pBroker_->addReadVariable(iType, pmacVariable);
         }
 
         if (status == asynSuccess) {
@@ -910,40 +959,61 @@ pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInfo, const ch
 
     }
 
-    if (findParam(drvInfo, &index) && strlen(drvInfo) > 9 && strncmp(drvInfo, "PMAC_W", 6) == 0 &&
-        drvInfo[7] == '_') {
+    if (strlen(drvInfo) > uOffset && strncmp(drvInfo, "PMAC_W", 6) == 0 &&
+        drvInfo[uOffset] == '_') {
 
       // Retrieve the name of the variable
-      char *rawPmacVariable = epicsStrDup(drvInfo + 8);
       char pmacVariable[128];
-      this->processDrvInfo(rawPmacVariable, pmacVariable);
+      this->processDrvInfo(drvInfo + uOffset + 1, pmacVariable);
 
       debug(DEBUG_VARIABLE, functionName, "Creating new write only parameter", pmacVariable);
       // Check for I, D or S in drvInfo[7]
       switch (drvInfo[6]) {
         case 'I':
           // Create the parameter
+          if (uLen > 0)
+            goto wrongArrayType2;
           createParam(drvInfo, asynParamInt32, &(this->parameters[parameterIndex_]));
           // Add variable to write only parameter hashtable
           this->pWriteParams_->insert(drvInfo, pmacVariable);
           parameterIndex_++;
           break;
         case 'D':
-          createParam(drvInfo, asynParamFloat64, &(this->parameters[parameterIndex_]));
-          // Add variable to double parameter hashtable
-          this->pWriteParams_->insert(drvInfo, pmacVariable);
+          if (uLen > 0)
+          {
+            createParam(drvInfo, asynParamFloat64Array, &(this->parameters[parameterIndex_]));
+            this->pArrayParams_->insert(pmacVariable, this->parameters[parameterIndex_], uLen, 1, new FloatArray64Cache(uLen));
+          }
+          else
+          {
+            createParam(drvInfo, asynParamFloat64, &(this->parameters[parameterIndex_]));
+            // Add variable to double parameter hashtable
+            this->pWriteParams_->insert(drvInfo, pmacVariable);
+          }
           parameterIndex_++;
           break;
         case 'S':
+          if (uLen > 0)
+            goto wrongArrayType2;
           createParam(drvInfo, asynParamOctet, &(this->parameters[parameterIndex_]));
           // Add variable to string parameter hashtable
           this->pWriteParams_->insert(drvInfo, pmacVariable);
           parameterIndex_++;
           break;
         default:
-          asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
-                    "%s:%s: Expected PMAC_Wx_... where x is one of I, D or S. Got '%c'\n",
-                    driverName, functionName, drvInfo[6]);
+          if (uLen > 0)
+          {
+wrongArrayType2:
+            asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+                      "%s:%s: Expected PMAC_Wx<len>_... where x is only D. Got '%c'\n",
+                      driverName, functionName, drvInfo[6]);
+          }
+          else
+          {
+            asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
+                      "%s:%s: Expected PMAC_Wx_... where x is one of I, D or S. Got '%c'\n",
+                      driverName, functionName, drvInfo[6]);
+          }
           status = asynError;
       }
     }
@@ -957,7 +1027,7 @@ pmacController::drvUserCreate(asynUser *pasynUser, const char *drvInfo, const ch
   return status;
 }
 
-asynStatus pmacController::processDrvInfo(char *input, char *output) {
+asynStatus pmacController::processDrvInfo(const char *input, char *output) {
   asynStatus status = asynSuccess;
   char ppmacStart[128];
   char ppmacEnd[128];
@@ -973,7 +1043,7 @@ asynStatus pmacController::processDrvInfo(char *input, char *output) {
   debug(DEBUG_FLOW, functionName);
 
   // Search for any ` characters that represent an expression
-  sqPtr = strchr(input, '`');
+  sqPtr = strchr((char*)input, '`');
   if (sqPtr != NULL) {
     strncpy(ppmacStart, input, (sqPtr - input));
     ppmacStart[sqPtr - input] = '\0';
@@ -1135,10 +1205,68 @@ void pmacController::callback(pmacCommandStore *sPtr, int type) {
         sscanf(sPtr->readValue(key).c_str(), "%s", val);
         debug(DEBUG_VARIABLE, functionName, "Found key  ", key.c_str());
         debug(DEBUG_VARIABLE, functionName, "      value", (char *) val);
-        setStringParam(this->pDoubleParams_->lookup(key), val);
+        setStringParam(this->pStringParams_->lookup(key), val);
       }
     }
   }
+
+  // Check for array params
+  for (key = this->pArrayParams_->firstKey(); !key.empty(); key = this->pArrayParams_->nextKey())
+  {
+    int iAsynReason = -1, bWriteOnly = -1;
+    epicsUInt32 i, uCount(0);
+    struct FloatArray64Cache* pCache(NULL);
+    asynParamType iType = asynParamNotDefined;
+    if (this->pArrayParams_->lookup(key, &iAsynReason, &uCount, &bWriteOnly, (void**)(&pCache)) &&
+        iAsynReason >= 0 && uCount > 0 && !bWriteOnly && getParamType(iAsynReason, &iType) == asynSuccess)
+    {
+      switch (iType)
+      {
+        case asynParamInt32Array:
+        case asynParamInt64Array:
+        case asynParamFloat64Array:
+        {
+          std::vector<unsigned char> valbuf;
+          bool bFound = false;
+          valbuf.resize(sizeof(epicsFloat64) * uCount);
+          for (i = 0; i < uCount; ++i)
+          {
+            char szItem[100];
+            epicsSnprintf(szItem, sizeof(szItem), "%s(%d)", key.c_str(), i);
+            szItem[sizeof(szItem) - 1] = '\0';
+            if (sPtr->checkForItem(szItem))
+            {
+              std::string sVal(sPtr->readValue(szItem));
+              epicsFloat64* pCacheVal(NULL);
+              if (pCache && pCache->m_pData && i < pCache->m_uSize)
+                pCacheVal = &pCache->m_pData[i];
+              switch (iType)
+              {
+                case asynParamInt32Array:   epicsParseInt32(sVal.c_str(), &((epicsInt32*)(&valbuf[0]))[i], 10, NULL); if (pCacheVal) *pCacheVal = ((epicsInt32*)(&valbuf[0]))[i];   break;
+                case asynParamInt64Array:   epicsParseInt64(sVal.c_str(), &((epicsInt64*)(&valbuf[0]))[i], 10, NULL); if (pCacheVal) *pCacheVal = ((epicsInt64*)(&valbuf[0]))[i];   break;
+                case asynParamFloat64Array: epicsParseFloat64(sVal.c_str(), &((epicsFloat64*)(&valbuf[0]))[i], NULL); if (pCacheVal) *pCacheVal = ((epicsFloat64*)(&valbuf[0]))[i]; break;
+                default: break;
+              }
+              bFound = true;
+            }
+          }
+          if (bFound)
+          {
+            switch (iType)
+            {
+              case asynParamInt32Array:   doCallbacksInt32Array((epicsInt32*)(&valbuf[0]), uCount, iAsynReason, 0); break;
+              case asynParamInt64Array:   doCallbacksInt64Array((epicsInt64*)(&valbuf[0]), uCount, iAsynReason, 0); break;
+              case asynParamFloat64Array: doCallbacksFloat64Array((epicsFloat64*)(&valbuf[0]), uCount, iAsynReason, 0); break;
+              default: break;
+            }
+          }
+          break;
+        }
+        default: break;
+      }
+    }
+  }
+
   unlock();
   callParamCallbacks();
 }
@@ -1503,23 +1631,26 @@ asynStatus pmacController::mediumUpdate(pmacCommandStore *sPtr) {
 
   // For each axis read try to read the assignment
   for (int axis = 1; axis <= this->numAxes_ - 1; axis++) {
+    pmacAxis* pAxis(this->getAxis(axis));
     axisCs = 0;
-    if (this->getAxis(axis) != NULL) {
-      axisCs = this->getAxis(axis)->getAxisCSNo();
+    if (pAxis != NULL) {
+      axisCs = pAxis->getAxisCSNo();
     }
 
-    // Get master control mode
-    std::string master_control_cmd = pHardware_->getMasterControlCmd(axis);
-    if (sPtr->checkForItem(master_control_cmd)) {
-      const std::string result = sPtr->readValue(master_control_cmd);
-      // Set private variable for axis move gating
-      int master_control_mode = stoi(result);
-      this->getAxis(axis)->masterControl_ = master_control_mode;
-      setIntegerParam(axis, PMAC_C_AxisMasterCtrlRBV_, master_control_mode);
-      debugf(DEBUG_VARIABLE, functionName, "Axis %d master control mode:%s",
-        axis, result.c_str());
-    } else {
-      sPtr->addItem(master_control_cmd);
+    if (pAxis) {
+      // Get master control mode
+      std::string master_control_cmd = pHardware_->getMasterControlCmd(axis);
+      if (sPtr->checkForItem(master_control_cmd)) {
+        const std::string result = sPtr->readValue(master_control_cmd);
+        // Set private variable for axis move gating
+        int master_control_mode = stoi(result);
+        pAxis->masterControl_ = master_control_mode;
+        setIntegerParam(axis, PMAC_C_AxisMasterCtrlRBV_, master_control_mode);
+        debugf(DEBUG_VARIABLE, functionName, "Axis %d master control mode:%s",
+               axis, result.c_str());
+      } else {
+        sPtr->addItem(master_control_cmd);
+      }
     }
     
     
@@ -2081,9 +2212,7 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
   char command[PMAC_MAXBUF_] = {0};
   char response[PMAC_MAXBUF_] = {0};
   char auxbuffer[PMAC_MAXBUF_] = {0};
-  double encRatio = 1.0;
-  epicsInt32 encposition = 0;
-  const char *name[128];
+  const char* name = NULL;
 
   static const char *functionName = "writeFloat64";
 
@@ -2093,8 +2222,8 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     return asynSuccess;
   }
 
-  getParamName(function, name);
-  debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
+  getParamName(function, &name);
+  debug(DEBUG_VARIABLE, functionName, "Parameter Updated", name);
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) {
     return asynError;
@@ -2256,9 +2385,9 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
       //PMAC does not respond to this command.
       lowLevelWriteRead(command, response);
     }
-  } else if (pWriteParams_->hasKey(*name)) {
+  } else if (pWriteParams_->hasKey(name) && !pArrayParams_->hasKey(name)) {
     // This is an integer write of a parameter, so send the immediate write/read
-    sprintf(command, "%s=%.12f", pWriteParams_->lookup(*name).c_str(), value);
+    sprintf(command, "%s=%.12f", pWriteParams_->lookup(name).c_str(), value);
     debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   }
@@ -2278,13 +2407,18 @@ asynStatus pmacController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
   }
 
   return asynSuccess;
-
 }
 
-asynStatus
-pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements) {
+/** Called when asyn clients call pasynFloat64Array->write().
+  * \param[in] pasynUser pasynUser structure that encodes the reason and address.
+  * \param[in] value Pointer to the array to write.
+  * \param[in] nElements Number of elements to write. */
+asynStatus pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements) {
   asynStatus status = asynSuccess;
   int function = pasynUser->reason;
+  const char* szName = NULL;
+  epicsUInt32 uArraySize(0);
+  int iArrayWriteOnly(-1);
   unsigned int index = 0;
   unsigned int dataIndex = index;
   int compTableIndex = -1;
@@ -2298,6 +2432,37 @@ pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size
     return asynSuccess;
   }
 
+  if (pArrayParams_->lookup(function, &szName, &uArraySize, &iArrayWriteOnly, NULL))
+  {
+    getParamName(function, &szName);
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "writeFloat64Array(reason=%d %s[%u]%s nElements=%lu values=%p)\n", \
+              function, szName, uArraySize, iArrayWriteOnly ? "WO" : "rw", nElements, value);
+    if (uArraySize > 0)
+    {
+      pmacCommandStore* pTmp(new pmacCommandStore);
+      int i = 0;
+      if (nElements > uArraySize)
+        nElements = uArraySize;
+
+      for (i = 0; i < (int)nElements; ++i)
+      {
+        std::string sCmd;
+        sCmd += szName;
+        sCmd += "(";
+        sCmd += std::to_string(i);
+        sCmd += ")=";
+        sCmd += std::to_string(value[i]);
+        pTmp->addItem(sCmd);
+      }
+      for (i = 0; i < pTmp->countCommandStrings(); ++i)
+        if (this->immediateWriteRead(pTmp->readCommandString(i).c_str(), response) != asynSuccess)
+          status = asynError;
+      delete pTmp;
+    }
+    else
+      status = asynError;
+    return status;
+  }
   if (!profileInitialized_) {
     // Initialise the trajectory scan interface pointers
     debug(DEBUG_TRACE, functionName, "Initialising CS trajectory scan interface");
@@ -2404,10 +2569,12 @@ pmacController::writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size
   * \param[in] pasynUser pasynUser structure that encodes the reason and address.
   * \param[in] value Pointer to the array to write.
   * \param[in] nElements Number of elements to write. */
-asynStatus
-pmacController::writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements) {
+asynStatus pmacController::writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements) {
   asynStatus status = asynSuccess;
   int function = pasynUser->reason;
+  const char* szName = NULL;
+  int iArrayWriteOnly(-1);
+  epicsUInt32 uArraySize(0);
   static const char *functionName = "writeInt32Array";
   debug(DEBUG_FLOW, functionName);
 
@@ -2415,7 +2582,36 @@ pmacController::writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t n
     return asynSuccess;
   }
 
-  if (!profileInitialized_) {
+  if (pArrayParams_->lookup(function, &szName, &uArraySize, &iArrayWriteOnly, NULL))
+  {
+    getParamName(function, &szName);
+    if (uArraySize > 0)
+    {
+      pmacCommandStore* pTmp(new pmacCommandStore);
+      char response[PMAC_MAXBUF];
+      int i = 0;
+      if (nElements > uArraySize)
+        nElements = uArraySize;
+
+      for (i = 0; i < (int)nElements; ++i)
+      {
+        std::string sCmd;
+        sCmd += szName;
+        sCmd += "(";
+        sCmd += std::to_string(i);
+        sCmd += ")=";
+        sCmd += std::to_string(value[i]);
+        pTmp->addItem(sCmd);
+      }
+      for (i = 0; i < pTmp->countCommandStrings(); ++i)
+        if (this->immediateWriteRead(pTmp->readCommandString(i).c_str(), response) != asynSuccess)
+          status = asynError;
+      delete pTmp;
+    }
+    else
+      status = asynError;
+  }
+  else if (!profileInitialized_) {
     // Initialise the trajectory scan interface pointers
     debug(DEBUG_FLOW, functionName, "Initialising trajectory scan interface");
     status = this->initializeProfile(PMAC_MAX_TRAJECTORY_POINTS);
@@ -2509,7 +2705,7 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   char response[PMAC_MAXBUF_] = {0};
   bool status = true;
   pmacAxis *pAxis = NULL;
-  const char *name[128];
+  const char *name = NULL;
   static const char *functionName = "writeInt32";
 
   debug(DEBUG_FLOW, functionName);
@@ -2518,8 +2714,8 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     return asynSuccess;
   }
 
-  getParamName(function, name);
-  debug(DEBUG_VARIABLE, functionName, "Parameter Updated", *name);
+  getParamName(function, &name);
+  debug(DEBUG_VARIABLE, functionName, "Parameter Updated", name);
   pAxis = this->getAxis(pasynUser);
   if (!pAxis) {
     return asynError;
@@ -2576,9 +2772,9 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     status = (pGroupList->switchToGroup(value) == asynSuccess) && status;
     updateCsAssignmentParameters();
     copyCsReadbackToDemand(false);
-  } else if (pWriteParams_->hasKey(*name)) {
+  } else if (pWriteParams_->hasKey(name)) {
     // This is an integer write of a parameter, so send the immediate write/read
-    sprintf(command, "%s=%d", pWriteParams_->lookup(*name).c_str(), value);
+    sprintf(command, "%s=%d", pWriteParams_->lookup(name).c_str(), value);
     debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
   } else if (function == PMAC_C_KillAxis_) {
@@ -2643,6 +2839,74 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 
   return asynSuccess;
 
+}
+
+asynStatus pmacController::readInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements, size_t *nIn) {
+  for (std::string sKey(pArrayParams_->firstKey()); !sKey.empty(); sKey = pArrayParams_->nextKey()) {
+    int iAsynReason(-1), bWriteOnly(-1);
+    epicsUInt32 uArraySize(0);
+    struct FloatArray64Cache* pCache(NULL);
+    if (pArrayParams_->lookup(sKey, &iAsynReason, &uArraySize, &bWriteOnly, (void**)(&pCache)) &&
+        iAsynReason == pasynUser->reason) {
+      if (!pCache || !pCache->m_uSize || !pCache->m_pData)
+        return asynError;
+      if (nElements > pCache->m_uSize)
+        nElements = pCache->m_uSize;
+      for (size_t i = 0; i < nElements; ++i)
+        value[i] = (epicsInt32)(pCache->m_pData[i]);
+      *nIn = nElements;
+      return asynSuccess;
+    }
+  }
+  return asynMotorController::readInt32Array(pasynUser, value, nElements, nIn);
+}
+
+asynStatus pmacController::readInt64Array(asynUser *pasynUser, epicsInt64 *value, size_t nElements, size_t *nIn) {
+  for (std::string sKey(pArrayParams_->firstKey()); !sKey.empty(); sKey = pArrayParams_->nextKey()) {
+    int iAsynReason(-1), bWriteOnly(-1);
+    epicsUInt32 uArraySize(0);
+    struct FloatArray64Cache* pCache(NULL);
+    if (pArrayParams_->lookup(sKey, &iAsynReason, &uArraySize, &bWriteOnly, (void**)(&pCache)) &&
+        iAsynReason == pasynUser->reason) {
+      if (!pCache || !pCache->m_uSize || !pCache->m_pData)
+        return asynError;
+      if (nElements > pCache->m_uSize)
+        nElements = pCache->m_uSize;
+      for (size_t i = 0; i < nElements; ++i)
+        value[i] = (epicsInt64)(pCache->m_pData[i]);
+      *nIn = nElements;
+      return asynSuccess;
+    }
+  }
+  return asynMotorController::readInt64Array(pasynUser, value, nElements, nIn);
+}
+
+asynStatus pmacController::readFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements, size_t *nIn) {
+  for (std::string sKey(pArrayParams_->firstKey()); !sKey.empty(); sKey = pArrayParams_->nextKey()) {
+    int iAsynReason(-1), bWriteOnly(-1);
+    epicsUInt32 uArraySize(0);
+    struct FloatArray64Cache* pCache(NULL);
+    if (pArrayParams_->lookup(sKey, &iAsynReason, &uArraySize, &bWriteOnly, (void**)(&pCache)) &&
+        iAsynReason == pasynUser->reason) {
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "readFloat64Array(reason=%d %s[%u]%s nElements=%lu pCache=%p)\n", \
+                iAsynReason, sKey.c_str(), uArraySize, bWriteOnly ? "WO" : "rw", nElements, pCache);
+      if (pCache)
+        asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "    pCache(size=%u data=%p)\n", \
+                  pCache->m_uSize, pCache->m_pData);
+      if (!pCache || !pCache->m_uSize || !pCache->m_pData)
+      {
+        asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW, "no cached values\n");
+        return asynError;
+      }
+      if (nElements > pCache->m_uSize)
+        nElements = pCache->m_uSize;
+      for (size_t i = 0; i < nElements; ++i)
+        value[i] = pCache->m_pData[i];
+      *nIn = nElements;
+      return asynSuccess;
+    }
+  }
+  return asynMotorController::readFloat64Array(pasynUser, value, nElements, nIn);
 }
 
 asynStatus

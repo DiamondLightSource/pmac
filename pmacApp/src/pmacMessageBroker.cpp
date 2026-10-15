@@ -141,6 +141,42 @@ asynStatus pmacMessageBroker::addReadVariable(int type, const char *variable) {
   return status;
 }
 
+asynStatus pmacMessageBroker::addReadArray(int iType, const char* szVariable, int iSize)
+{
+  int i;
+  switch (iType) // Allowed types
+  {
+    case PMAC_SLOW_READ:
+    case PMAC_MEDIUM_READ:
+    case PMAC_FAST_READ:
+    case PMAC_PRE_FAST_READ: break;
+    default: return asynError;
+  }
+
+  // Lock the mutex
+  mutex_.lock();
+
+  for (i = 0; i < iSize; ++i)
+  {
+    char szItem[100];
+    epicsSnprintf(szItem, sizeof(szItem), "%s(%d)", szVariable, i);
+    szItem[sizeof(szItem) - 1] = '\0';
+    switch (iType)
+    {
+      case PMAC_SLOW_READ:       slowStore_.addItem(szItem);    break;
+      case PMAC_MEDIUM_READ:     mediumStore_.addItem(szItem);  break;
+      case PMAC_FAST_READ:       fastStore_.addItem(szItem);    break;
+      case PMAC_PRE_FAST_READ:   prefastStore_.addItem(szItem); break;
+      default: break;
+    }
+  }
+
+  // Unlock the mutex
+  mutex_.unlock();
+
+  return asynSuccess;
+}
+
 asynStatus pmacMessageBroker::updateVariables(int type) {
   static const char *functionName = "updateVariables";
   char response[1024];

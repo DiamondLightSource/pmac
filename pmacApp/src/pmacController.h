@@ -22,6 +22,7 @@
 #include "pmacHardwareTurbo.h"
 #include "pmacHardwarePower.h"
 #include "IntegerHashtable.h"
+#include "ArrayInfoHashtable.h"
 
 #define PMAC_C_FirstParamString           "PMAC_C_FIRSTPARAM"
 #define PMAC_C_LastParamString            "PMAC_C_LASTPARAM"
@@ -266,7 +267,7 @@ public:
     void setDebugLevel(int level, int axis, int csNo);
 
     asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo, const char **pptypeName, size_t *psize);
-    asynStatus processDrvInfo(char *input, char *output);
+    asynStatus processDrvInfo(const char *input, char *output);
     virtual void callback(pmacCommandStore *sPtr, int type);
     asynStatus slowUpdate(pmacCommandStore *sPtr);
     asynStatus mediumUpdate(pmacCommandStore *sPtr);
@@ -291,6 +292,10 @@ public:
     asynStatus writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements);
     asynStatus writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements);
     asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t nChars, size_t *nActual);
+
+    asynStatus readInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements, size_t *nIn);
+    asynStatus readInt64Array(asynUser *pasynUser, epicsInt64 *value, size_t nElements, size_t *nIn);
+    asynStatus readFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements, size_t *nIn);
 
     asynStatus readEnum(asynUser *pasynUser, char *strings[], int values[], int severities[], size_t nElements,
              size_t *nIn);
@@ -528,6 +533,7 @@ private:
     IntegerHashtable *pHexParams_;
     IntegerHashtable *pDoubleParams_;
     IntegerHashtable *pStringParams_;
+    ArrayInfoHashtable *pArrayParams_;
     StringHashtable *pWriteParams_;
     pmacCSMonitor *pAxisZero;
     pmacCSController **pCSControllers_;
@@ -590,6 +596,14 @@ private:
 
     epicsEventId startEventId_;
     epicsEventId stopEventId_;
+
+    struct FloatArray64Cache
+    {
+        FloatArray64Cache(epicsUInt32 uSize = 0) : m_uSize(uSize), m_pData(0) { if (uSize > 0) m_pData = (epicsFloat64*) malloc(uSize * sizeof(epicsFloat64)); }
+        ~FloatArray64Cache() { if (m_pData) free(m_pData); }
+        epicsUInt32   m_uSize;
+        epicsFloat64* m_pData;
+    };
 
     asynStatus lowLevelWriteRead(const char *command, char *response);
 

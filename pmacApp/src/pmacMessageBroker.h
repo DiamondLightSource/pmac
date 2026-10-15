@@ -49,6 +49,8 @@ public:
 
     asynStatus addReadVariable(int type, const char *variable);
 
+    asynStatus addReadArray(int iType, const char* szVariable, int iSize);
+
     asynStatus updateVariables(int type);
 
     asynStatus supressStatusReads();

@@ -1,0 +1,34 @@
+# % macro, __doc__, Simple template that writes a variable on a
+# PMAC or geoBrick via dynamic parameters.
+# % macro, P, PV prefix
+# % macro, Q, PV suffix
+# % macro, PORT, Motor controller port
+# % macro, SPEED, Speed to read at (F=motor scan rates, M=medium (2 s), S=slow (5 s))
+# % macro, NPOINTS, number of values in array
+# % macro, VAR, Variable on PMAC to read from, e.g. MyArray
+# % macro, LABEL, Label for GUI
+
+##########################################
+# Records for writing from PMAC variables
+##########################################
+
+# output waveform
+record(waveform, "$(P)$(Q)")
+{
+    field(PINI, "NO")
+    field(DTYP, "asynFloat64ArrayOut")
+    field(INP,  "@asyn($(PORT),0)PMAC_VD$(SPEED=M)$(NPOINTS)_$(VAR)")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(NPOINTS)")
+}
+
+# readback waveform
+record(waveform, "$(P)$(Q):RBV")
+{
+    field(PINI, "NO")
+    field(DTYP, "asynFloat64ArrayIn")
+    field(INP,  "@asyn($(PORT),0)PMAC_VD$(SPEED=M)$(NPOINTS)_$(VAR)")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(NPOINTS)")
+    field(SCAN, "I/O Intr")
+}
