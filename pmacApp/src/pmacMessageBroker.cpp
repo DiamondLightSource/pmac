@@ -6,6 +6,8 @@
  */
 
 #include "pmacMessageBroker.h"
+#include <cantProceed.h>
+#include <epicsString.h>
 
 const epicsUInt32  pmacMessageBroker::PMAC_MAXBUF_ = 1024;
 const epicsFloat64 pmacMessageBroker::PMAC_TIMEOUT_ = 2.0;
@@ -466,9 +468,12 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   int eomReason = 0;
   size_t nwrite = 0;
   size_t nread = 0;
+  size_t nCmds = 0, nResp = 0, nTries = 3;
   static const char *functionName = "pmacMessageBroker::lowLevelWriteRead";
 
   asynPrint(this->ownerAsynUser_, ASYN_TRACE_FLOW, "%s\n", functionName);
+
+again:
   epicsTimeGetCurrent(&this->writeTime_);
 
   if (!lowLevelPortUser_) {
@@ -476,6 +481,30 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   }
 
   asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: command: %s\n", functionName, command);
+
+  // Count number of commands
+  for (size_t i = 0, j = 0; command[i]; ++i)
+  {
+    switch (command[i])
+    {
+      case ' ':
+        j = 0;
+        break;
+      case '\0':
+        break;
+      case '=': // a set command is included, no retries here
+        nTries = 0;
+        goto handleChar;
+      default:
+handleChar:
+        if (!j)
+        {
+          j = 1;
+          ++nCmds;
+        }
+        break;
+    }
+  }
 
   status = pasynOctetSyncIO->writeRead(lowLevelPortUser_,
                                        command,
@@ -503,6 +532,26 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
     if (powerPMAC_) {
       replace(response, '\n', ' ');
     }
+    // Count number of responses
+    for (size_t i = 0, j = 0; response[i]; ++i)
+    {
+      switch (response[i])
+      {
+        case ' ':
+          j = 0;
+          break;
+        case '\0':
+          break;
+        default:
+          if (!j)
+          {
+            j = 1;
+            ++nResp;
+          }
+          break;
+      }
+    }
+
     // Update statistics
     this->noOfMessages_++;
     this->totalBytesWritten_ += strlen(command);
@@ -516,6 +565,45 @@ asynStatus pmacMessageBroker::lowLevelWriteRead(const char *command, char *respo
   }
 
   asynPrint(lowLevelPortUser_, ASYN_TRACEIO_DRIVER, "%s: response: %s\n", functionName, response);
+  if (nCmds > 1 && nResp > 0 && nCmds < nResp)
+  {
+    // There were more responses than commands
+    char *szCommand = (char*)0, *szResponse = (char*)0;
+    size_t iSrcLen, iDstLen;
+
+    asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: reply count does not match (%li cmds, %li resp)\n", functionName, nCmds, nResp);
+
+    // Convert command and reply to printable strings
+    iSrcLen = strlen(command);
+    iDstLen = epicsStrnEscapedFromRaw(szCommand, 0, command, iSrcLen);
+    if (iDstLen < 1) goto cannotPrint;
+    szCommand = (char*)callocMustSucceed(iDstLen + 1, 1, functionName);
+    epicsStrnEscapedFromRaw(szCommand, iDstLen + 1, command, iSrcLen);
+    szCommand[iDstLen] = '\0';
+    iSrcLen = strlen(response);
+    iDstLen = epicsStrnEscapedFromRaw(szResponse, 0, response, iSrcLen);
+    if (iDstLen < 1) goto cannotPrint;
+    szResponse = (char*)callocMustSucceed(iDstLen + 1, 1, functionName);
+    epicsStrnEscapedFromRaw(szResponse, iDstLen + 1, response, iSrcLen);
+    szResponse[iDstLen] = '\0';
+
+    // Print diagnosis information
+    asynPrint(lowLevelPortUser_, ASYN_TRACE_WARNING, "%s: cmds \"%s\"\n", functionName, (const char*)szCommand);
+    asynPrint(lowLevelPortUser_, ASYN_TRACE_WARNING, "%s: resp \"%s\"\n", functionName, (const char*)szResponse);
+
+cannotPrint:
+    if (szCommand)  free(szCommand);
+    if (szResponse) free(szResponse);
+    if (nTries > 0)
+    {
+      // Use the retry option
+      --nTries;
+      asynPrint(lowLevelPortUser_, ASYN_TRACE_ERROR, "%s: retrying... (%li tr%s left)\n", functionName, nTries, nTries == 1 ? "y" : "ies");
+      status = asynSuccess;
+      nwrite = nread = nCmds = nResp = eomReason = 0;
+      goto again;
+    }
+  }
 
   return status;
 }
