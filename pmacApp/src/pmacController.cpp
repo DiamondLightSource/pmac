@@ -134,7 +134,7 @@ static void trajTaskC(void *drvPvt) {
 pmacController::pmacController(const char *portName, const char *lowLevelPortName,
                                int lowLevelPortAddress,
                                int numAxes, double movingPollPeriod, double idlePollPeriod)
-        : asynMotorController(portName, numAxes + 1, NUM_MOTOR_DRIVER_PARAMS + NUM_PMAC_PARAMS,
+        : asynMotorController(portName, numAxes + 1, NUM_PMAC_PARAMS,
                               asynEnumMask | asynInt32ArrayMask, // For user mode and velocity mode
                               asynEnumMask, // No addition interrupt interfaces
                               ASYN_CANBLOCK | ASYN_MULTIDEVICE,

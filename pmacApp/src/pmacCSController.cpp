@@ -148,7 +148,7 @@ const std::string pmacCSController::CS_RUNTIME_ERRORS[] = {
  */
 pmacCSController::pmacCSController(const char *portName, const char *controllerPortName, int csNo,
                                    int program)
-        : asynMotorController(portName, 10, (int)NUM_MOTOR_DRIVER_PARAMS + (int)NUM_PMAC_CS_PARAMS,
+        : asynMotorController(portName, 10, NUM_PMAC_CS_PARAMS,
                               asynInt32ArrayMask, // For user mode and velocity mode
                               0, // No addition interrupt interfaces
                               ASYN_CANBLOCK | ASYN_MULTIDEVICE,

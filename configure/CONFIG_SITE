@@ -21,22 +21,27 @@ CHECK_RELEASE = WARN
 # build for a specific one (e.g., linux-x86_64 or RTEMS-beatnik). It helps avoid unnecessary
 # builds and potential duplication errors. In EPICS 7, this can be used alongside
 # CROSS_COMPILER_TARGET_ARCHS to control cross-compilation targets.
-BUILD_ARCHS = linux-x86_64
+#BUILD_ARCHS = linux-x86_64
 
 # Set this when you only want to compile this application
 #   for a subset of the cross-compiled target architectures
 #   that Base is built for.
 #CROSS_COMPILER_TARGET_ARCHS = RTEMS-beatnik
 
-ifeq (,$(findstring R3.14, $(EPICS_BASE)))
-  # If R3.14 is not in EPICS_BASE then build RTEMS support
-  # DLS support for RTEMS was added in epics 7
-  CROSS_COMPILER_TARGET_ARCHS = RTEMS-beatnik
-endif
-
 # To install files into a location other than $(TOP) define
 #   INSTALL_LOCATION here.
 #INSTALL_LOCATION=</path/name/to/install/top>
+
+# To build the IOC applications set BUILD_IOCS to YES; otherwise set it to NO
+#BUILD_IOCS=NO
+
+# For SSH access to PowerPMACs, we need a SSH client library
+#SSH             = /usr
+#SSH_LIB         = $(SSH)/lib64
+#SSH_INCLUDE     = -I$(SSH)/include
+
+# Build unit tests (requires BOOST >= 1.34.0)
+WITH_BOOST = NO
 
 # Set this when your IOC and the host use different paths
 #   to access the application. This will be needed to boot
@@ -44,3 +49,7 @@ endif
 # You must rebuild in the iocBoot directory for this to
 #   take effect.
 #IOCS_APPL_TOP = </IOC/path/to/application/top>
+
+-include $(SUPPORT)/configure/CONFIG_SITE
+-include $(TOP)/../CONFIG_SITE.local
+-include $(TOP)/configure/CONFIG_SITE.local

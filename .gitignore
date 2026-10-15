@@ -1,17 +1,44 @@
+# Install directories
+/bin/
+/cfg/
+/db/
+/dbd/
+/html/
+/include/
+/lib/
+/templates/
+/iocs/*IOC/db/
+/iocs/*IOC/dbd/
+/iocs/*IOC/bin/
+/iocs/*IOC/lib/
+iocs/lab
+iocs/gui
+iocs/lab-ppmac
+
+# Local configuration files
+/configure/*.local
+/iocs/*IOC*/configure/*.local
+
+# iocBoot generated files
+/iocBoot/*ioc*/cdCommands
+/iocBoot/*ioc*/dllPath.bat
+/iocBoot/*ioc*/envPaths
+/iocBoot/*ioc*/relPaths.sh
+/iocs/*IOC*/iocBoot/*ioc*/cdCommands
+/iocs/*IOC*/iocBoot/*ioc*/dllPath.bat
+/iocs/*IOC*/iocBoot/*ioc*/envPaths
+/iocs/*IOC*/iocBoot/*ioc*/relPaths.sh
+/iocs/*IOC*/iocBoot/*ioc*/.iocsh_history
+
+# Build directories
+O.*/
+
+# Common files created by other tools
 *~
 .cproject
 .project
 .vscode
-O.*
-bin
-include
-lib
-db
-dbd
 data
-iocs/lab
-iocs/gui
-iocs/lab-ppmac
 .idea
 cmake-build-debug/
 *.pyc
