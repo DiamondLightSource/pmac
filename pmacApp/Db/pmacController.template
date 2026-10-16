@@ -36,6 +36,30 @@ record(stringout, "$(P):Port")
     field(PINI, "YES")
 }
 
+################################################################################
+# signaling flag, that IOC should be restarted because hardware was reset
+################################################################################
+record(mbbo, "$(P):NEED_IOCRESTART")
+{
+    field(DESC, "HW reset detected: need to restart IOC")
+    field(DTYP, "asynInt32")
+    field(OUT, "@asyn($(PORT),0)PMAC_C_NEEDIOCRESTART")
+    field(VAL, "0")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(ZRST, "no")
+    field(ONST, "YES")
+    field(TWST, "clear")
+    field(ZRSV, "NO_ALARM")
+    field(ONSV, "MAJOR")
+    field(TWSV, "MINOR")
+    field(UNSV, "INVALID")
+    field(NOBT, "2")
+    field(SCAN, "Passive")
+    info(asyn:READBACK, "1")
+}
+
 ##############################################################
 # Listing of combined Slow Poll Variables
 ##############################################################

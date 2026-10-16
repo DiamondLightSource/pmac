@@ -31,6 +31,7 @@
 #define PMAC_C_KillAllString              "PMAC_C_KILLALL"
 #define PMAC_C_GlobalStatusString         "PMAC_C_GLOBALSTATUS"
 #define PMAC_C_CommsErrorString           "PMAC_C_COMMSERROR"
+#define PMAC_C_NeedIocRestartString       "PMAC_C_NEEDIOCRESTART"
 
 #define PMAC_C_FeedRateString             "PMAC_C_FEEDRATE"
 #define PMAC_C_FeedRateLimitString        "PMAC_C_FEEDRATE_LIMIT"
@@ -209,6 +210,7 @@
 #define PPMAC_CPU_FBG_TIME       "Sys.FltrBgTime"
 #define PPMAC_CPU_PHASED_TIME    "Sys.PhaseDeltaTime"
 #define PPMAC_CPU_SERVOD_TIME    "Sys.ServoDeltaTime"
+#define PPMAC_CPU_SERVO_COUNT    "Sys.ServoCount"
 #define PPMAC_CPU_RTID_TIME      "Sys.RtIntDeltaTime"
 #define PPMAC_CPU_BGD_TIME       "Sys.BgDeltaTime"
 
@@ -372,6 +374,7 @@ protected:
     int PMAC_C_PollAllNow_;
     int PMAC_C_GlobalStatus_;
     int PMAC_C_CommsError_;
+    int PMAC_C_NeedIocRestart_;
     int PMAC_C_FeedRate_;
     int PMAC_C_FeedRateLimit_;
     int PMAC_C_FeedRatePoll_;
@@ -546,6 +549,9 @@ private:
     int i7002_;
     bool csResetAllDemands;
     int csCount;
+    epicsTimeStamp tLastServoCount_;
+    epicsUInt64    uLastServoCount_;
+    double         dServoCountFreq_;
 
 
     // Trajectory scan variables

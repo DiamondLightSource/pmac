@@ -44,6 +44,13 @@ std::string pmacCommandStore::readValue(const std::string &key) {
   return this->store.lookup(key);
 }
 
+void pmacCommandStore::clearValue(const std::string &key) {
+  if (this->store.hasKey(key)) {
+    this->store.remove(key);
+    this->store.insert(key, "");
+  }
+}
+
 int pmacCommandStore::size() {
   return this->store.count();
 }

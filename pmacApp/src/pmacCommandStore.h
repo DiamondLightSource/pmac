@@ -28,6 +28,8 @@ public:
 
     std::string readValue(const std::string &key);
 
+    void clearValue(const std::string &key);
+
     int size();
 
     std::string readCommandString(int index);

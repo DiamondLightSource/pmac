@@ -27,6 +27,7 @@ using std::dec;
 #include <epicsTime.h>
 #include <epicsThread.h>
 #include <epicsString.h>
+#include <epicsMath.h>
 #include <postfix.h>
 #include <iocsh.h>
 #include <drvSup.h>
@@ -39,6 +40,7 @@ using std::dec;
 #include "pmacCSMonitor.h"
 
 #include <epicsExport.h>
+#include <epicsStdlib.h>
 
 static const char *driverName = "pmacController";
 
@@ -192,6 +194,9 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   i7002_ = 0;
   csResetAllDemands = false;
   csCount = 0;
+  tLastServoCount_.secPastEpoch = tLastServoCount_.nsec = 0;
+  uLastServoCount_ = 0;
+  dServoCountFreq_ = 0.0;
 
 
   // Create the message broker
@@ -387,6 +392,7 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_KillAllString, asynParamInt32, &PMAC_C_KillAll_);
   createParam(PMAC_C_GlobalStatusString, asynParamInt32, &PMAC_C_GlobalStatus_);
   createParam(PMAC_C_CommsErrorString, asynParamInt32, &PMAC_C_CommsError_);
+  createParam(PMAC_C_NeedIocRestartString, asynParamInt32, &PMAC_C_NeedIocRestart_);
   createParam(PMAC_C_FeedRateString, asynParamFloat64, &PMAC_C_FeedRate_);
   createParam(PMAC_C_FeedRateLimitString, asynParamInt32, &PMAC_C_FeedRateLimit_);
   createParam(PMAC_C_FeedRatePollString, asynParamInt32, &PMAC_C_FeedRatePoll_);
@@ -685,6 +691,7 @@ void pmacController::setupBrokerVariables(void) {
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_BGD_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FRTI_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FBG_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_SERVO_COUNT);
   }
 
   // Add the PMAC M variables required for trajectory scanning
@@ -1276,7 +1283,61 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
     }
   }
 
-
+  // Used for check of hardware-restart
+  if (cid_ == PMAC_CID_POWER_ && status == asynSuccess) {
+    epicsUInt64 uServoCount(0);
+    std::string sServoCount(sPtr->readValue(PPMAC_CPU_SERVO_COUNT));
+    sPtr->clearValue(PPMAC_CPU_SERVO_COUNT); // discard value from command store
+    if (sServoCount.empty())
+      status = asynSuccess; // ignore empty value
+    else if (epicsParseUInt64(sServoCount.c_str(), &uServoCount, 10, NULL) != 0)
+      status = asynError;
+    else {
+      epicsTimeStamp tNow;
+      epicsTimeGetCurrent(&tNow);
+      if (tLastServoCount_.secPastEpoch || tLastServoCount_.nsec) {
+        double dDiffTime(epicsTimeDiffInSeconds(&tNow, &tLastServoCount_));
+        if (dDiffTime >= 1.) { // actual servo frequency rounded to next 100Hz
+          double dActFreq(100. * floor((uServoCount - uLastServoCount_) / dDiffTime / 100.0 + 0.5));
+          if (fabs(dServoCountFreq_) > 0.) { // test count, if we have a frequency, last time and last count
+            epicsUInt64 uExpectedCount(uLastServoCount_ + static_cast<epicsUInt64>(dServoCountFreq_ * dDiffTime + .5));
+            epicsInt64  llMinDiffCount(static_cast<epicsInt64>(std::max(dServoCountFreq_, dActFreq)) / 10); // allowed count difference for 100ms
+            epicsInt64  llDiffCount(std::abs(static_cast<epicsInt64>(uExpectedCount) - static_cast<epicsInt64>(uServoCount))); // actual difference
+            if (fabs(fabs(dServoCountFreq_ / dActFreq) - 1.) > 0.05 || // 5% frequency difference
+                (llDiffCount > llMinDiffCount && // count difference between actual and expected greather than difference expected for 100ms time
+                 fabs((llDiffCount / dActFreq / dDiffTime) - 1.) > 0.01)) { // 1% count difference over time
+              // signal a problem: IOC needs a restart or autosave restore for hardware
+              char szLast[32];
+              epicsTimeToStrftime(&szLast[0], sizeof(szLast), "%Y-%m-%d/%H:%M:%S.%06f", &tLastServoCount_);
+              szLast[sizeof(szLast) - 1] = '\0';
+              asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
+                        "signal_iocrestart: difftime=%gs to lasttime=%s, servofreq:last=%gHz/act=%gHz, servocount:last=%Lu/act=%Lu/exp=%Lu/diff=%Ld/mindiff=%Ld\n",
+                        dDiffTime, szLast, dServoCountFreq_, dActFreq, uLastServoCount_, uServoCount, uExpectedCount, llDiffCount, llMinDiffCount);
+              setParamStatus       (0, PMAC_C_NeedIocRestart_, asynSuccess);
+              setParamAlarmStatus  (0, PMAC_C_NeedIocRestart_, 7); // STATE
+              setParamAlarmSeverity(0, PMAC_C_NeedIocRestart_, 2); // MAJOR
+              setIntegerParam      (0, PMAC_C_NeedIocRestart_, 1); // YES
+              // restart measurement again from begin
+              dActFreq = 0.;
+              uServoCount = tNow.secPastEpoch = tNow.nsec = 0;
+            }
+          }
+          dServoCountFreq_ = dActFreq;
+          uLastServoCount_ = uServoCount;
+          tLastServoCount_ = tNow;
+        }
+      } else {
+        // init time
+        dServoCountFreq_ = 0.;
+        uLastServoCount_ = uServoCount;
+        tLastServoCount_ = tNow;
+      }
+    }
+    if (status != asynSuccess) {
+      debug(DEBUG_ERROR, functionName, "Read Error [Servo count]", PPMAC_CPU_SERVO_COUNT);
+      debug(DEBUG_ERROR, functionName, "    response", sServoCount);
+    }
+  }
 
   // Read out the size of the pmac command stores
   if (pBroker_->readStoreSize(pmacMessageBroker::PMAC_FAST_READ, &storeSize) == asynSuccess) {
@@ -2615,6 +2676,17 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     status = (this->executeManualGroup() == asynSuccess) && status;
   } else if (function == PMAC_C_AxisMasterCtrl_) {
     pAxis->setMasterControlState(value);
+  } else if (function == PMAC_C_NeedIocRestart_) {
+    epicsInt32 iLast(0);
+    getIntegerParam      (0, PMAC_C_NeedIocRestart_, &iLast);
+    if (value == 2) iLast = 0; // clear to NO
+    setParamStatus       (0, PMAC_C_NeedIocRestart_, asynSuccess);
+    setIntegerParam      (0, PMAC_C_NeedIocRestart_, 1 - iLast); // enforce "changed" flag
+    setIntegerParam      (0, PMAC_C_NeedIocRestart_, iLast);
+    setParamAlarmStatus  (0, PMAC_C_NeedIocRestart_, iLast ? 7 : 0); // STATE, NO_ALARM
+    setParamAlarmSeverity(0, PMAC_C_NeedIocRestart_, iLast ? 2 : 0); // MAJOR, NO_ALARM
+    callParamCallbacks();
+    return asynSuccess; // ignore
   }
 
 
