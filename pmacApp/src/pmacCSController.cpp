@@ -64,6 +64,9 @@ pmacSetCoordMovingPollPeriod(0, 100)
 #include <drvSup.h>
 #include <registryFunction.h>
 #include <epicsExport.h>
+#include <epicsString.h>
+#include <epicsStdlib.h>
+#include <epicsMath.h>
 #include <sstream>
 #include "pmacCSController.h"
 #include "pmacController.h"
@@ -194,6 +197,7 @@ pmacCSController::pmacCSController(const char *portName, const char *controllerP
   createParam(PMAC_CS_DirectMoveString, asynParamFloat64, &PMAC_CS_DirectMove_);
   createParam(PMAC_CS_DirectResString, asynParamFloat64, &PMAC_CS_DirectRes_);
   createParam(PMAC_CS_DirectOffsetString, asynParamFloat64, &PMAC_CS_DirectOffset_);
+  createParam(PMAC_C_IdleWaitTimeString, asynParamFloat64, &PMAC_C_IdleWaitTime_);
   createParam(PMAC_CS_LastParamString, asynParamInt32, &PMAC_CS_LastParam_);
   paramStatus = ((setDoubleParam(PMAC_CS_CsMoveTime_, csMoveTime_) == asynSuccess) && paramStatus);
   for(int index=0; index<=PMAC_CS_AXES_COUNT; index++) {
@@ -286,6 +290,10 @@ asynStatus pmacCSController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     debug(DEBUG_VARIABLE, functionName, "Command sent to PMAC", command);
     status = (this->immediateWriteRead(command, response) == asynSuccess) && status;
     pC_->csResetAllDemands = true;
+  } else if (function == PMAC_C_IdleWaitTime_) {
+    if (value < 0) value = 0;
+    else if (value > 10) value = 10;
+    pAxis->dIdleWaitTime_ = value;
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.
@@ -343,12 +351,60 @@ asynStatus pmacCSController::writeFloat64(asynUser *pasynUser, epicsFloat64 valu
     pAxis->setIntegerParam(motorStatusDone_, 0);
     pAxis->callParamCallbacks();
     wakeupPoller();
+  } else if (function == PMAC_C_IdleWaitTime_) {
+    if (value < 0.) value = 0.;
+    else if (value > 10.) value = 10.;
+    pAxis->dIdleWaitTime_ = value;
   }
 
   //Call base class method. This will handle callCallbacks even if the function was handled here.
   status = (asynMotorController::writeFloat64(pasynUser, value) == asynSuccess) && status;
 
   return status ? asynSuccess : asynError;
+}
+
+/** Called for "asynSetOption" in IOC shell.
+  * \param[in] pasynUser pasynUser structure that encodes the reason and address.
+  * \param[in] key Option key string.
+  * \param[in] value Value string. */
+asynStatus pmacCSController::writeOption(asynUser *pasynUser, const char *key, const char *value)
+{
+  pmacCSAxis* pAxis(getAxis(pasynUser));
+  if (pAxis && key && value)
+  {
+    if (!epicsStrCaseCmp(key, "idle-waittime"))
+    {
+      double dIdleWaitTime(static_cast<double>(epicsNAN));
+      if (!epicsParseDouble(value, &dIdleWaitTime, NULL) && std::isfinite(dIdleWaitTime))
+      {
+        if (dIdleWaitTime < 0.) dIdleWaitTime = 0.; // no wait time
+        else if (dIdleWaitTime > 10000.) dIdleWaitTime = 10000.; // maximum wait time
+        pAxis->dIdleWaitTime_ = dIdleWaitTime / 1000.;
+        return asynSuccess;
+      }
+      return asynError;
+    }
+  }
+  return asynMotorController::writeOption(pasynUser, key, value);
+}
+
+/** Called for "asynShowOption" in IOC shell.
+  * \param[in] pasynUser pasynUser structure that encodes the reason and address.
+  * \param[in] key Option key string.
+  * \param[in] value Address of value string to be returned
+  * \param[in] maxChars Size of value string */
+asynStatus pmacCSController::readOption(asynUser *pasynUser, const char *key, char *value, int maxChars)
+{
+  pmacCSAxis* pAxis(getAxis(pasynUser));
+  if (pAxis && key && maxChars > 0)
+  {
+    if (!epicsStrCaseCmp(key, "idle-waittime"))
+    {
+      epicsSnprintf(value, maxChars, "%.15g", 1000. * pAxis->dIdleWaitTime_);
+      return asynSuccess;
+    }
+  }
+  return asynMotorController::readOption(pasynUser, key, value, maxChars);
 }
 
 

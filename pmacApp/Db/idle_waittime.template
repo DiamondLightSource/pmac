@@ -1,0 +1,17 @@
+#% macro, __doc__, template for motor axis idle wait time after movement stop
+#% macro, P      , Device Prefix
+#% macro, M      , Device Suffix
+#% macro, PORT   , Asyn port for motor record
+#% macro, ADDR   , Address on controller
+#% macro, PINI   , Should initialize on iocInit
+#% macro, VAL    , Init value
+
+record(ao, "$(P)$(M):IDLEWAITTIME") {
+  field(DESC, "Idle wait time")
+  field(EGU, "s")
+  field(DTYP, "asynFloat64")
+  field(OUT, "@asyn($(PORT),$(ADDR),0)PMAC_C_IDLEWAITTIME")
+  field(PINI, "$(PINI=YES)")
+  field(VAL, "$(VAL=0)")
+  info(asyn:READBACK, "1")
+}

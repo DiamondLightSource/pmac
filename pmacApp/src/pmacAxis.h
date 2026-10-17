@@ -131,6 +131,10 @@ private:
     bool connected_; // Current connection status of the hardware
     bool initialised_; // We need to keep a record of this in case the software starts up without a connection
 
+    double         dIdleWaitTime_;
+    epicsTimeStamp tIdleDetected_;
+    bool           bLastMoving_; // inverted axStatus.done_ with dIdleWaitTime_ delay
+
     friend class pmacController;
 
     friend class pmacCsGroups;

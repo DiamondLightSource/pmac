@@ -33,6 +33,9 @@ pmacCSAxis::pmacCSAxis(pmacCSController *pController, int axisNo)
   moving_ = false;
   connected_ = false;
   initialized_ = false;
+  dIdleWaitTime_ = 0.;
+  tIdleDetected_.secPastEpoch = tIdleDetected_.nsec = 0;
+  bLastMoving_ = false;
 
   if (pC_->initialised()) {
 //    this->goodConnection();
@@ -196,6 +199,7 @@ asynStatus pmacCSAxis::move(double position, int /*relative*/, double min_veloci
 
   if (connected_){
     setIntegerParam(pC_->motorStatusMoving_, true);
+    bLastMoving_ = true;
 
     // Make any CS demands consistent with this move
     if (pC_->movesDeferred_ == 0) {
@@ -328,6 +332,7 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   int direction = 0;
   int mappedAxis = 0;
   int retStatus = asynSuccess;
+  bool bNewMoving(bLastMoving_);
 
   static const char *functionName = "pmacCSAxis::GetAxisStatus";
 
@@ -399,7 +404,26 @@ asynStatus pmacCSAxis::getAxisStatus(pmacCommandStore *sPtr) {
   previous_position_ = position;
   previous_direction_ = direction;
 
-  moving_ = !cStatus.done_ || deferredMove_ || motorPosChanged_;
+  // Check for state change MOVING --> IDLE and optionally wait a small time to calm
+  do {
+    if (dIdleWaitTime_ > 0. && bLastMoving_ && cStatus.done_) {
+      // MOVING --> IDLE
+      epicsTimeStamp tNow;
+      epicsTimeGetCurrent(&tNow);
+      if (!tIdleDetected_.secPastEpoch && !tIdleDetected_.nsec) {
+        // first deference, store start time
+        tIdleDetected_ = tNow;
+        break;
+      }
+      if (epicsTimeDiffInSeconds(&tNow, &tIdleDetected_) < dIdleWaitTime_)
+        break; // wait more
+    }
+    tIdleDetected_.secPastEpoch = tIdleDetected_.nsec = 0; // clear start time
+    bNewMoving = !cStatus.done_; // new status
+  } while (0);
+
+  bLastMoving_ = bNewMoving;
+  moving_ = bNewMoving || deferredMove_ || motorPosChanged_;
 
   setIntegerParam(pC_->motorStatusDone_, !moving_);
   setIntegerParam(pC_->motorStatusMoving_, moving_);

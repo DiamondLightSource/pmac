@@ -36,6 +36,7 @@
 #define PMAC_CS_ForwardKinematicString     "PMAC_CS_FWD_KIN"
 #define PMAC_CS_InverseKinematicString     "PMAC_CS_INV_KIN"
 #define PMAC_CS_QVariablesString           "PMAC_CS_Q_VARIABLES"
+#define PMAC_C_IdleWaitTimeString          "PMAC_C_IDLEWAITTIME"
 
 // direct moves
 #define PMAC_CS_DirectMoveString           "PMAC_C_DIRECT_MOVE"
@@ -61,6 +62,8 @@ public:
     std::string getPortName();
     asynStatus writeInt32(asynUser *pasynUser, epicsInt32 value);
     asynStatus writeFloat64(asynUser *pasynUser, epicsFloat64 value);
+    asynStatus writeOption(asynUser *pasynUser, const char *key, const char *value);
+    asynStatus readOption(asynUser *pasynUser, const char *key, char *value, int maxChars);
     void setDebugLevel(int level, int axis);
     bool getMoving();
     int getCSNumber();
@@ -117,6 +120,7 @@ protected:
     int PMAC_CS_DirectMove_;
     int PMAC_CS_DirectRes_;
     int PMAC_CS_DirectOffset_;
+    int PMAC_C_IdleWaitTime_;
 #define LAST_PMAC_CS_PARAM PMAC_CS_LastParam_
 
 private:

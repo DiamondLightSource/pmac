@@ -99,6 +99,9 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   moving_ = false;
   connected_ = true;
   initialised_ = false;
+  dIdleWaitTime_ = 0.;
+  tIdleDetected_.secPastEpoch = tIdleDetected_.nsec = 0;
+  bLastMoving_ = false;
 
   /* Set an EPICS exit handler that will shut down polling before asyn kills the IP sockets */
   epicsAtExit(shutdownCallback, pC_);
@@ -321,6 +324,7 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
 
   if (connected_){
     setIntegerParam(pC_->motorStatusMoving_, true);
+    bLastMoving_ = true;
 
     char acc_buff[PMAC_MAXBUF] = {0};
     char vel_buff[PMAC_MAXBUF] = {0};
@@ -766,6 +770,7 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
 
             //int homeSignal = ((status[1] & pC_->PMAC_STATUS2_HOME_COMPLETE) != 0);
             int direction = 0;
+            bool bNewMoving(bLastMoving_);
 
             // For closed loop axes, encoder position is actually following error up to this point
             if (encoder_axis_ == 0) {
@@ -797,17 +802,36 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
             previous_position_ = position;
             previous_direction_ = direction;
 
+            // Check for state change MOVING --> IDLE and optionally wait a small time to calm
+            do {
+              if (dIdleWaitTime_ > 0. && bLastMoving_ && axStatus.done_) {
+                // MOVING --> IDLE
+                epicsTimeStamp tNow;
+                epicsTimeGetCurrent(&tNow);
+                if (!tIdleDetected_.secPastEpoch && !tIdleDetected_.nsec) {
+                  // first deference, store start time
+                  tIdleDetected_ = tNow;
+                  break;
+                }
+                if (epicsTimeDiffInSeconds(&tNow, &tIdleDetected_) < dIdleWaitTime_)
+                  break; // wait more
+              }
+              tIdleDetected_.secPastEpoch = tIdleDetected_.nsec = 0; // clear start time
+              bNewMoving = !axStatus.done_; // new status
+            } while (0);
+
             // Test that we initiated a move, were moving and have now
             // stopped moving.  In this case we must update the cached
             // position.
-            if (moving_ && initiatedMove_ && axStatus.done_) {
+            if (bLastMoving_ && initiatedMove_ && !bNewMoving) {
                 initiatedMove_ = false;
                 cachedPosition_ = rawPosition_;
                 debug(DEBUG_TRACE, functionName, "Updating cached position after move complete",
                       cachedPosition_);
             }
 
-            moving_ = !axStatus.done_ || deferredMove_;
+            bLastMoving_ = bNewMoving;
+            moving_ = bNewMoving || deferredMove_;
 
             // Read the currently assigned CS for the axis, and whether it is assigned at all
             assignedCS_ = axStatus.currentCS_;

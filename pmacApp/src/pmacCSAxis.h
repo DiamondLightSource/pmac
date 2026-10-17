@@ -71,6 +71,10 @@ private:
     bool connected_;
     bool initialized_;
 
+    double         dIdleWaitTime_;
+    epicsTimeStamp tIdleDetected_;
+    bool           bLastMoving_; // inverted cStatus.done_ with dIdleWaitTime_ delay
+
     friend class pmacCSController;
 
     friend class pmacCsGroups;
