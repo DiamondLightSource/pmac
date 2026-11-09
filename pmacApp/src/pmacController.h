@@ -31,6 +31,7 @@
 #define PMAC_C_KillAllString              "PMAC_C_KILLALL"
 #define PMAC_C_GlobalStatusString         "PMAC_C_GLOBALSTATUS"
 #define PMAC_C_CommsErrorString           "PMAC_C_COMMSERROR"
+#define PMAC_C_NeedIocRestartString       "PMAC_C_NEEDIOCRESTART"
 
 #define PMAC_C_FeedRateString             "PMAC_C_FEEDRATE"
 #define PMAC_C_FeedRateLimitString        "PMAC_C_FEEDRATE_LIMIT"
@@ -211,6 +212,7 @@
 #define PPMAC_CPU_SERVOD_TIME    "Sys.ServoDeltaTime"
 #define PPMAC_CPU_RTID_TIME      "Sys.RtIntDeltaTime"
 #define PPMAC_CPU_BGD_TIME       "Sys.BgDeltaTime"
+#define PPMAC_CPU_TIME           "Sys.Time" // seconds since system start
 
 #define PPMAC_CPU_MAXCORES      4 // Maximum number of cores currently supported
 #define PPMAC_CPU_TASKS_NUM     4 // Number of tasks supported by the PowerPMAC core management
@@ -291,9 +293,11 @@ public:
     asynStatus writeFloat64Array(asynUser *pasynUser, epicsFloat64 *value, size_t nElements);
     asynStatus writeInt32Array(asynUser *pasynUser, epicsInt32 *value, size_t nElements);
     asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t nChars, size_t *nActual);
+    asynStatus writeOption(asynUser* pasynUser, const char* szKey, const char* szValue);
 
     asynStatus readEnum(asynUser *pasynUser, char *strings[], int values[], int severities[], size_t nElements,
              size_t *nIn);
+    asynStatus readOption(asynUser* pasynUser, const char* szKey, char* szValue, int iMaxChars);
 
     void report(FILE *fp, int level);
     pmacAxis *getAxis(asynUser *pasynUser);
@@ -372,6 +376,7 @@ protected:
     int PMAC_C_PollAllNow_;
     int PMAC_C_GlobalStatus_;
     int PMAC_C_CommsError_;
+    int PMAC_C_NeedIocRestart_;
     int PMAC_C_FeedRate_;
     int PMAC_C_FeedRateLimit_;
     int PMAC_C_FeedRatePoll_;
@@ -546,6 +551,9 @@ private:
     int i7002_;
     bool csResetAllDemands;
     int csCount;
+    bool allowExitOnError_;
+    epicsTimeStamp tLastSysTime_;
+    double         dLastSysTime_;
 
 
     // Trajectory scan variables

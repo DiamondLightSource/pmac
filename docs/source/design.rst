@@ -407,6 +407,19 @@ There is a single predefined group that will always be available (group 1) in th
 
 &1 #8->Y
 
+5.5 PMAC power cycle detection
+******************************
+
+The EPICS IOC will always monitor the Sys.Time variable of the PMAC controller.
+This check will keep silent, if the clocks of the IOC and the PMAC increased synchronously.
+If the PMAC was power cycled, the PMAC clock will start from zero and the IOC will detect, warn and signal this via an EPICS PV.
+Optionally an user could set
+
+  asynSetOption( pmacport, 0, "allowExitOnError", "true" )
+
+in the start up file, the IOC will exit itself after a power cycle was detected, which often triggers the surrounding environment to restart it (e.g. like procServ or docker do).
+In the case the network connections gets lost and is not reconnected yet, this check is skipped.
+
 6. PMAC Axis
 ------------
 

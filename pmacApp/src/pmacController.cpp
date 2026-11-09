@@ -27,6 +27,8 @@ using std::dec;
 #include <epicsTime.h>
 #include <epicsThread.h>
 #include <epicsString.h>
+#include <epicsMath.h>
+#include <epicsExit.h>
 #include <postfix.h>
 #include <iocsh.h>
 #include <drvSup.h>
@@ -39,6 +41,7 @@ using std::dec;
 #include "pmacCSMonitor.h"
 
 #include <epicsExport.h>
+#include <epicsStdlib.h>
 
 static const char *driverName = "pmacController";
 
@@ -135,8 +138,8 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
                                int lowLevelPortAddress,
                                int numAxes, double movingPollPeriod, double idlePollPeriod)
         : asynMotorController(portName, numAxes + 1, NUM_MOTOR_DRIVER_PARAMS + NUM_PMAC_PARAMS,
-                              asynEnumMask | asynInt32ArrayMask, // For user mode and velocity mode
-                              asynEnumMask, // No addition interrupt interfaces
+                              asynEnumMask | asynInt32ArrayMask | asynOptionMask, // supported asyn interfaces
+                              asynEnumMask, // supported asyn interrupt/callback interfaces
                               ASYN_CANBLOCK | ASYN_MULTIDEVICE,
                               1, // autoconnect
                               0, 50000),  // Default priority and stack size
@@ -192,6 +195,9 @@ pmacController::pmacController(const char *portName, const char *lowLevelPortNam
   i7002_ = 0;
   csResetAllDemands = false;
   csCount = 0;
+  allowExitOnError_ = false;
+  tLastSysTime_.secPastEpoch = tLastSysTime_.nsec = 0;
+  dLastSysTime_ = 0.0;
 
 
   // Create the message broker
@@ -387,6 +393,7 @@ void pmacController::createAsynParams(void) {
   createParam(PMAC_C_KillAllString, asynParamInt32, &PMAC_C_KillAll_);
   createParam(PMAC_C_GlobalStatusString, asynParamInt32, &PMAC_C_GlobalStatus_);
   createParam(PMAC_C_CommsErrorString, asynParamInt32, &PMAC_C_CommsError_);
+  createParam(PMAC_C_NeedIocRestartString, asynParamInt32, &PMAC_C_NeedIocRestart_);
   createParam(PMAC_C_FeedRateString, asynParamFloat64, &PMAC_C_FeedRate_);
   createParam(PMAC_C_FeedRateLimitString, asynParamInt32, &PMAC_C_FeedRateLimit_);
   createParam(PMAC_C_FeedRatePollString, asynParamInt32, &PMAC_C_FeedRatePoll_);
@@ -685,6 +692,7 @@ void pmacController::setupBrokerVariables(void) {
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_BGD_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FRTI_TIME);
     pBroker_->addReadVariable(pmacMessageBroker::PMAC_FAST_READ, PPMAC_CPU_FBG_TIME);
+    pBroker_->addReadVariable(pmacMessageBroker::PMAC_SLOW_READ, PPMAC_CPU_TIME);
   }
 
   // Add the PMAC M variables required for trajectory scanning
@@ -1276,7 +1284,56 @@ asynStatus pmacController::slowUpdate(pmacCommandStore *sPtr) {
     }
   }
 
-
+  // Used for check of hardware-restart
+  if (cid_ == PMAC_CID_POWER_ && status == asynSuccess) {
+    double dSysTime(0.);
+    std::string sSysTime(sPtr->readValue(PPMAC_CPU_TIME));
+    sPtr->clearValue(PPMAC_CPU_TIME); // discard cached value from command store for next cycle
+    if (sSysTime.empty())
+      status = asynSuccess; // ignore empty value
+    else if (epicsParseDouble(sSysTime.c_str(), &dSysTime, NULL) != 0) // ignore unsupported "Sys.Time"
+      status = asynSuccess;
+    else if (!std::isfinite(dSysTime) || dSysTime <= 0.) // ignore unsupported "Sys.Time"
+      status = asynSuccess;
+    else {
+      epicsTimeStamp tNow;
+      epicsTimeGetCurrent(&tNow);
+      if (tLastSysTime_.secPastEpoch || tLastSysTime_.nsec) {
+        double dDiffTime(epicsTimeDiffInSeconds(&tNow, &tLastSysTime_));
+        if (dDiffTime >= 1.) {
+          // we have last time, check against actual (never faster than every second)
+          double dExpectedSysTime(dLastSysTime_ + dDiffTime);
+          double dDiffSysTime(std::fabs(dExpectedSysTime - dSysTime)); // actual difference
+          if ((dDiffSysTime > 1.0 && // difference between actual and expected greather than a second
+               fabs((dDiffSysTime / dDiffTime) - 1.) > 0.01)) { // 1% count difference over time
+            // signal a problem: IOC needs a restart or autosave restore for hardware
+            char szLast[32];
+            epicsTimeToStrftime(&szLast[0], sizeof(szLast), "%Y-%m-%d/%H:%M:%S.%06f", &tLastSysTime_);
+            szLast[sizeof(szLast) - 1] = '\0';
+            asynPrint(pasynUserSelf, ASYN_TRACE_ERROR,
+                      "signal_iocrestart: difftime=%.0fs to lasttime=%s, sys.time:last=%.0f/act=%.0f/exp=%.0f/diff=%.0f\n",
+                      dDiffTime, szLast, dLastSysTime_, dSysTime, dExpectedSysTime, dDiffSysTime);
+            setParamStatus       (0, PMAC_C_NeedIocRestart_, asynSuccess);
+            setParamAlarmStatus  (0, PMAC_C_NeedIocRestart_, 7); // STATE
+            setParamAlarmSeverity(0, PMAC_C_NeedIocRestart_, 2); // MAJOR
+            setIntegerParam      (0, PMAC_C_NeedIocRestart_, 1); // YES
+            if (allowExitOnError_)
+              epicsExit(1);
+          }
+          dLastSysTime_ = dSysTime;
+          tLastSysTime_ = tNow;
+        }
+      } else {
+        // init time
+        dLastSysTime_ = dSysTime;
+        tLastSysTime_ = tNow;
+      }
+    }
+    if (status != asynSuccess) {
+      debug(DEBUG_ERROR, functionName, "Read Error [system time]", PPMAC_CPU_TIME);
+      debug(DEBUG_ERROR, functionName, "    response", sSysTime);
+    }
+  }
 
   // Read out the size of the pmac command stores
   if (pBroker_->readStoreSize(pmacMessageBroker::PMAC_FAST_READ, &storeSize) == asynSuccess) {
@@ -2615,6 +2672,17 @@ asynStatus pmacController::writeInt32(asynUser *pasynUser, epicsInt32 value) {
     status = (this->executeManualGroup() == asynSuccess) && status;
   } else if (function == PMAC_C_AxisMasterCtrl_) {
     pAxis->setMasterControlState(value);
+  } else if (function == PMAC_C_NeedIocRestart_) {
+    epicsInt32 iLast(0);
+    getIntegerParam      (0, PMAC_C_NeedIocRestart_, &iLast);
+    if (value == 2) iLast = 0; // clear to NO
+    setParamStatus       (0, PMAC_C_NeedIocRestart_, asynSuccess);
+    setIntegerParam      (0, PMAC_C_NeedIocRestart_, 1 - iLast); // enforce "changed" flag
+    setIntegerParam      (0, PMAC_C_NeedIocRestart_, iLast);
+    setParamAlarmStatus  (0, PMAC_C_NeedIocRestart_, iLast ? 7 : 0); // STATE, NO_ALARM
+    setParamAlarmSeverity(0, PMAC_C_NeedIocRestart_, iLast ? 2 : 0); // MAJOR, NO_ALARM
+    callParamCallbacks();
+    return asynSuccess; // ignore
   }
 
 
@@ -2687,6 +2755,63 @@ pmacController::readEnum(asynUser *pasynUser, char *strings[], int values[], int
     status = asynError;
   }
   return status;
+}
+
+
+/**
+ * Called when asyn clients call pasynOption->write().
+ * The base class implementation simply prints an error message.
+ * Derived classes may reimplement this function if required.
+ * \param[in] pasynUser  pasynUser structure that encodes the reason and address.
+ * \param[in] szKey      Option key string.
+ * \param[in] szValue    Value string.
+ * \return asyn status
+ */
+asynStatus
+pmacController::writeOption(asynUser* pasynUser, const char* szKey, const char* szValue) {
+  if (epicsStrCaseCmp(szKey, "allowExitOnError") == 0) {
+    // configure "allow exit on error": after detection of this, the IOC exists and should be restarted by outside world, e.g. procServ
+    epicsInt64 iTmp(0);
+    if (epicsParseInt64(szValue, &iTmp, 0, NULL) == 0)
+      allowExitOnError_ = (iTmp != 0);
+    else if (epicsStrCaseCmp(szValue, "t") == 0 || epicsStrCaseCmp(szValue, "true") == 0 ||
+             epicsStrCaseCmp(szValue, "y") == 0 || epicsStrCaseCmp(szValue, "yes") == 0 ||
+             epicsStrCaseCmp(szValue, "on") == 0)
+      allowExitOnError_ = true;
+    else if (epicsStrCaseCmp(szValue, "f") == 0 || epicsStrCaseCmp(szValue, "false") == 0 ||
+             epicsStrCaseCmp(szValue, "n") == 0 || epicsStrCaseCmp(szValue, "no") == 0 ||
+             epicsStrCaseCmp(szValue, "off") == 0)
+      allowExitOnError_ = false;
+    else {
+      epicsSnprintf(pasynUser->errorMessage, pasynUser->errorMessageSize,
+                    "pmacController:writeOption(%s, %s) wrong value - allowed is boolean", szKey, szValue);
+      return asynError;
+    }
+    return asynSuccess;
+  }
+
+  return asynMotorController::writeOption(pasynUser, szKey, szValue);
+}
+
+/**
+ * Called when asyn clients call pasynOption->read().
+ * The base class implementation simply prints an error message.
+ * Derived classes may reimplement this function if required.
+ * \param[in]  pasynUser  pasynUser structure that encodes the reason and address.
+ * \param[in]  szKey      Option key string.
+ * \param[out] szValue    string to be returned
+ * \param[in]  iMaxChars  Size of value string
+ * \return asyn status
+ */
+asynStatus
+pmacController::readOption(asynUser* pasynUser, const char* szKey, char* szValue, int iMaxChars) {
+  if (epicsStrCaseCmp(szKey, "allowExitOnError") == 0) {
+    // configure "allow exit on error": after detection of this, the IOC exists and should be restarted by procServ
+    snprintf(szValue, iMaxChars, "%s", allowExitOnError_ ? "true" : "false");
+    return asynSuccess;
+  }
+
+  return asynMotorController::readOption(pasynUser, szKey, szValue, iMaxChars);
 }
 
 /** Returns a pointer to an pmacAxis object.
