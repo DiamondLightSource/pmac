@@ -76,6 +76,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   highLimit_ = 0.0;
   lowLimit_ = 0.0;
   limitsDisabled_ = 0;
+  limitsEnabled_ = true;
   stepSize_ = 1; //Don't need?
   deferredPosition_ = 0.0;
   cachedPosition_ = 0.0;
@@ -93,6 +94,7 @@ pmacAxis::pmacAxis(pmacController *pC, int axisNo)
   fatal_following_ = 0;
   encoder_axis_ = 0;
   limitsCheckDisable_ = 0;
+  limitsEnableAddr_ = "";
   nowTimeSecs_ = 0.0;
   lastTimeSecs_ = 0.0;
   printNextError_ = false;
@@ -148,7 +150,7 @@ void pmacAxis::initialSetup(int axisNo) {
 
     callParamCallbacks();
     if (axisNo > 0) {
-      char var[16];
+      char var[32];
       // Request position readback
       sprintf(var, "#%dP", axisNo);
       pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
@@ -156,7 +158,7 @@ void pmacAxis::initialSetup(int axisNo) {
       sprintf(var, "#%dF", axisNo);
       pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
       // Request ixx24 readback
-      sprintf(var, "i%d24", axisNo);
+      sprintf(var, "%s", pC_->pHardware_->getAxisLimitsCmd(axisNo).c_str());
       pC_->monitorPMACVariable(pmacMessageBroker::PMAC_FAST_READ, var);
 
       // Setup any specific hardware status items
@@ -351,12 +353,12 @@ asynStatus pmacAxis::move(double position, int relative, double min_velocity, do
     }
 
   #ifdef REMOVE_LIMITS_ON_HOME
-    if (limitsDisabled_) {
+    if (!limitsEnabled_) {
       char buffer[PMAC_MAXBUF] = {0};
       /* Re-enable limits */
-      sprintf(buffer, " i%d24=i%d24&$FDFFFF", axisNo_, axisNo_);
+      strncat(buffer, pC_->pHardware_->getRestoreAxisLimitsCmd(axisNo_, limitsEnableAddr_).c_str(), PMAC_MAXBUF - 1);
       strncat(command, buffer, PMAC_MAXBUF - 1);
-      limitsDisabled_ = 0;
+      limitsEnabled_ = true;
     }
   #endif
     debug(DEBUG_TRACE, functionName, "Axis Move command", command);
@@ -414,39 +416,26 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
     double home_velocity = 0.0;
     char buffer[PMAC_MAXBUF] = {0};
 
-    /* Discover type of controller */
-    strncpy(buffer, "cid", PMAC_MAXBUF);
-    status = pC_->lowLevelWriteRead(buffer, response);
-    if (status != asynSuccess) {
-      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-                "Controller %s Addr %d. %s: ERROR Reading Controller Type.\n", pC_->portName, axisNo_,
-                functionName);
-      return asynError;
-    }
-    nvals = sscanf(response, "%d", &controller_type);
+    controller_type = pC_->cid_;
+    if ( controller_type == pC_->PMAC_CID_POWER_) {
+        /* Read home flags and home direction from PowerBrick LV */
+        // ixx23 and ixx26 are just valid up to Motor[49], so to avoid execptions the Motor[x] structure was used instead
+        // ixx24 has a different purpose on PowerPMAC, so Motor[x].pLimits was used instead
+        // 'Gate3' was used instead of the alias 'PowerBrick' to reduce the number of characters
 
-    if (controller_type == pC_->PMAC_CID_GEOBRICK_ || controller_type == pC_->PMAC_CID_CLIPPER_) {
-      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
-                "Controller %s Addr %d. %s: This is a Geobrick LV.\n", pC_->portName, axisNo_,
-                functionName);
-    } else if (controller_type == pC_->PMAC_CID_PMAC_) {
-      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
-                "Controller %s Addr %d. %s: This is a Turbo PMAC 2 Ultralite.\n", pC_->portName,
-                axisNo_, functionName);
-    } else if (controller_type == pC_->PMAC_CID_POWER_) {
-      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
-                "Controller %s Addr %d. %s: This is a Power Brick.\n", pC_->portName,
-                axisNo_, functionName);
-    } else {
-      asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-                "Controller %s Addr %d. %s: ERROR Unknown controller type = %d.\n", pC_->portName,
-                axisNo_, functionName, controller_type);
-      return asynError;
+        int gateIndex = (axisNo_ < 5) ? 0 : 1;
+        int chanIndex = (axisNo_ < 5) ? axisNo_ - 1 : axisNo_ - 5;
+        char limitsAddress[PMAC_MAXBUF] = {0};
+        // strncpy(limitsAddress, response, PMAC_MAXBUF);
+        sprintf(buffer, "Gate3[%d].Chan[%d].CaptCtrl Gate3[%d].Chan[%d].CaptFlagSel Motor[%d].pLimits Motor[%d].HomeVel Motor[%d].HomeOffset",
+                  gateIndex, chanIndex, gateIndex, chanIndex, axisNo_, axisNo_, axisNo_);
+        status = (pC_->lowLevelWriteRead(buffer, response));
+        nvals = sscanf(response, "%d %d %s %lf %d", &home_type, &home_flag, limitsAddress, &home_velocity,
+                      &home_offset);
     }
-
+    // TODO: store flag_mode for re-enabling the limits correctly
     if (controller_type == pC_->PMAC_CID_GEOBRICK_
-    || controller_type == pC_->PMAC_CID_CLIPPER_
-    || controller_type == pC_->PMAC_CID_POWER_)  {
+    || controller_type == pC_->PMAC_CID_CLIPPER_) {
       /* Read home flags and home direction from Geobrick LV */
       if (axisNo_ < 5) {
         sprintf(buffer, "I70%d2 I70%d3 i%d24 i%d23 i%d26", axisNo_, axisNo_, axisNo_, axisNo_,
@@ -487,12 +476,12 @@ pmacAxis::home(double min_velocity, double max_velocity, double acceleration, in
 
     if ((home_type <= 15) &&
         (home_type % 4 >= 2) &&
-        !(flag_mode & 0x20000) &&
+        limitsEnabled_ &&
         ((home_velocity > 0 && home_flag == 1 && home_offset <= 0) ||
         (home_velocity < 0 && home_flag == 2 && home_offset >= 0))) {
-      sprintf(buffer, " i%d24=i%d24|$20000", axisNo_, axisNo_);
-      strncat(command, buffer, PMAC_MAXBUF - 1);
-      limitsDisabled_ = 1;
+      // Concatenate string to disable limits to command
+      strncat(command, pC_->pHardware_->getDisableAxisLimitsCmd(axisNo_).c_str(), PMAC_MAXBUF - 1);
+      limitsEnabled_ = false;
       asynPrint(pC_->pasynUserSelf, ASYN_TRACE_FLOW,
                 "%s. Disabling limits whilst homing PMAC controller %s, axis %d, type:%d, flag:$%x, vel:%f\n",
                 functionName, pC_->portName, axisNo_, home_type, home_flag, home_velocity);
@@ -538,12 +527,12 @@ asynStatus pmacAxis::moveVelocity(double min_velocity, double max_velocity, doub
     sprintf(command, "%s%s#%d %s", vel_buff, acc_buff, axisNo_, (max_velocity < 0 ? "J-" : "J+"));
 
   #ifdef REMOVE_LIMITS_ON_HOME
-    if (limitsDisabled_) {
+    if (!limitsEnabled_) {
       char buffer[PMAC_MAXBUF];
       /* Re-enable limits */
-      sprintf(buffer, " i%d24=i%d24&$FDFFFF", axisNo_, axisNo_);
+      strncat(buffer, pC_->pHardware_->getRestoreAxisLimitsCmd(axisNo_, limitsEnableAddr_).c_str(), PMAC_MAXBUF - 1);
       strncat(command, buffer, PMAC_MAXBUF - 1);
-      limitsDisabled_ = 0;
+      limitsEnabled_ = true;
     }
   #endif
     debug(DEBUG_TRACE, functionName, "Axis MoveVelocity command", command);
@@ -699,7 +688,6 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
     double enc_position = 0;
     int nvals = 0;
     int axisProblemFlag = 0;
-    int limitsDisabledBit = 0;
     bool printErrors = true;
     char key[16];
     std::string value = "";
@@ -861,21 +849,16 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
             // flag, which the user can set to disable this feature.*/
             if (!limitsCheckDisable_) {
                 // Check we haven't intentially disabled limits for homing.
-                if (!limitsDisabled_) {
-                    // Parse ixx24
-                    sprintf(key, "i%d24", axisNo_);
-                    value = sPtr->readValue(key);
-                    sscanf(value.c_str(), "$%x", &limitsDisabledBit);
-                    limitsDisabledBit = ((0x20000 & limitsDisabledBit) >> 17);
-                    if (limitsDisabledBit) {
-                        axisProblemFlag = 1;
-                        if (printErrors) {
-                            asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
-                                      "*** WARNING *** Limits are disabled on controller %s, axis %d\n",
-                                      pC_->portName, axisNo_);
-                            printNextError_ = false;
-                        }
-                    }
+                // Parse ixx24 or Motor[x].pLimits
+                retStatus = pC_->pHardware_->parseAxisLimitsCmd(axisNo_, sPtr, &limitsEnabled_, limitsEnableAddr_);
+                if (!(limitsEnabled_)) {
+                  axisProblemFlag = 1;
+                  if (printErrors) {
+                    asynPrint(pC_->pasynUserSelf, ASYN_TRACE_ERROR,
+                              "*** WARNING *** Limits are disabled on controller %s, axis %d\n",
+                              pC_->portName, axisNo_);
+                    printNextError_ = false;
+                  }
                 }
             }
             setIntegerParam(pC_->motorStatusProblem_, axisProblemFlag);
@@ -887,12 +870,12 @@ asynStatus pmacAxis::getAxisStatus(pmacCommandStore *sPtr) {
         }
 
 #ifdef REMOVE_LIMITS_ON_HOME
-        if (limitsDisabled_ && (axStatus.status24Bit2_ & pC_->PMAC_STATUS2_HOME_COMPLETE) &&
+        if (!limitsEnabled_ && (axStatus.status24Bit2_ & pC_->PMAC_STATUS2_HOME_COMPLETE) &&
             (axStatus.status24Bit1_ & pC_->PMAC_STATUS1_DESIRED_VELOCITY_ZERO)) {
             // Re-enable limits
-            sprintf(command, "i%d24=i%d24&$FDFFFF", axisNo_, axisNo_);
+            strncat(command, pC_->pHardware_->getRestoreAxisLimitsCmd(axisNo_, limitsEnableAddr_).c_str(), PMAC_MAXBUF - 1);
             cmdStatus = pC_->lowLevelWriteRead(command, response);
-            limitsDisabled_ = (cmdStatus != 0);
+            limitsEnabled_ = (cmdStatus == 0);
         }
 #endif
         // Set amplifier enabled bit.
@@ -956,7 +939,7 @@ asynStatus pmacAxis::poll(bool *moving) {
   }
   callParamCallbacks();
 
-  // If the controller is initialised and connected, but this axis is not 
+  // If the controller is initialised and connected, but this axis is not
   // then re-execute the initialisation
   if (pC_->initialised_ && pC_->connected_ && !initialised_){
     initialSetup(axisNo_);

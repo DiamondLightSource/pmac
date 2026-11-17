@@ -10,6 +10,7 @@
 
 const std::string pmacHardwareTurbo::GLOBAL_STATUS = "???";
 const std::string pmacHardwareTurbo::AXIS_STATUS = "#%d?";
+const std::string pmacHardwareTurbo::AXIS_LIMITS = "i%d24";
 const std::string pmacHardwareTurbo::CS_STATUS = "&%d??";
 const std::string pmacHardwareTurbo::CS_VEL_CMD = "&%dQ70=%f ";
 const std::string pmacHardwareTurbo::CS_ACCELERATION_CMD = "I%d87=%f";
@@ -187,6 +188,7 @@ pmacHardwareTurbo::parseGlobalStatus(const std::string &statusString, globalStat
   return status;
 }
 
+
 std::string pmacHardwareTurbo::getAxisStatusCmd(int axis) {
   char cmd[8];
   static const char *functionName = "getAxisStatusCmd";
@@ -205,8 +207,7 @@ asynStatus pmacHardwareTurbo::setupAxisStatus(int axis) {
   return status;
 }
 
-asynStatus
-pmacHardwareTurbo::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus) {
+asynStatus pmacHardwareTurbo::parseAxisStatus(int axis, pmacCommandStore *sPtr, axisStatus &axStatus) {
   asynStatus status = asynSuccess;
   int nvals = 0;
   std::string statusString = "";
@@ -280,8 +281,60 @@ asynStatus pmacHardwareTurbo::setupCSStatus(int csNo) {
   return status;
 }
 
-asynStatus
-pmacHardwareTurbo::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus) {
+std::string pmacHardwareTurbo::getAxisLimitsCmd(int axis) {
+  char cmd[8];
+  static const char *functionName = "getAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  sprintf(cmd, AXIS_LIMITS.c_str(), axis);
+  return std::string(cmd);
+}
+
+std::string pmacHardwareTurbo::getDisableAxisLimitsCmd(int axis) {
+  char cmd[32];
+  static const char *functionName = "getDisableAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  sprintf(cmd, " i%d24=i%d24|$20000", axis, axis);   // Disable limits
+
+  return(cmd);
+}
+
+std::string pmacHardwareTurbo::getRestoreAxisLimitsCmd(int axis, const std::string) {
+  char cmd[32];
+  static const char *functionName = "getRestoreAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  sprintf(cmd, " i%d24=i%d24&$FDFFFF", axis, axis);   // Re-enable limits
+  return(cmd);
+}
+
+
+asynStatus pmacHardwareTurbo::parseAxisLimitsCmd(int axis, pmacCommandStore *sPtr, bool *limitsEnabled, std::string&) {
+  asynStatus status = asynSuccess;
+  int nvals = 0;
+  int limitsBits = 0;
+  std::string pLimitsString = "";
+  static const char *functionName = "parseAxisLimitsCmd";
+
+  debug(DEBUG_TRACE, functionName, "Axis", axis);
+  pLimitsString = sPtr->readValue(this->getAxisLimitsCmd(axis));
+
+  // Response parsed for PowerPMAC
+  debug(DEBUG_VARIABLE, functionName, "pLimit string", pLimitsString);
+  nvals = sscanf(pLimitsString.c_str(), "$%x", &limitsBits);
+  if (nvals != 1) {
+    debug(DEBUG_ERROR, functionName, "Error reading axis limits", AXIS_LIMITS);
+    debug(DEBUG_ERROR, functionName, "    nvals", nvals);
+    debug(DEBUG_ERROR, functionName, "    response", pLimitsString);
+    status = asynError;
+  }
+  *limitsEnabled = ~((0x20000 & limitsBits) >> 17);
+
+  return status;
+}
+
+asynStatus pmacHardwareTurbo::parseCSStatus(int csNo, pmacCommandStore *sPtr, csStatus &coordStatus) {
   asynStatus status = asynSuccess;
   int nvals = 0;
   std::string statusString = "";
