@@ -201,7 +201,7 @@ Z_Axis->Y:$AxisAdr,8
 #define CalculatedBase      M4081           ; Calculated temporary variable for Current base address
 
 ; *****************************************************************************************
-; Progran variable assignments
+; Program variable assignments
 ; *****************************************************************************************
 Status->Y:$VarAdr00,0,24
 Abort->Y:$VarAdr01,0,24
