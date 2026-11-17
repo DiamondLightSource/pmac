@@ -183,7 +183,8 @@ Version->*d
 global PVT_Time
 global UserCmd
 
-global CalculatedBase       // Calculated temporary variable for Current base address
+global CalculatedBaseInt          // Calculated temporary variable for Current base address
+global CalculatedBaseDouble       // Calculated temporary variable for Current base address
 
 // *****************************************************************************************
 // Set the version number
@@ -221,6 +222,12 @@ TotalPoints = 0
 CurrentBufferAdr = BufferAdr_A      // Set CurrentBuffer values to buffer A
 CurrentBufferFill = BufferFill_A
 CurrentBuffer = 0
+
+// Convert absolute address to the index of integer data in the user shared memory buffer (USHM)
+CalculatedBaseInt = CurrentBufferAdr/ _SIZEOF_INTEGER_;
+// Convert absolute address to the index of double data in the user shared memory buffer (USHM)
+CalculatedBaseDouble = CurrentBufferAdr/ _SIZEOF_DOUBLE_;
+
 
 PrevBufferFill = BufferLength       // Set PrevBufferFill to pass outer while loop condition
 
@@ -262,6 +269,9 @@ While(AbortTrigger == 0 && Error == 0 && CurrentBufferFill > 0 && PrevBufferFill
             CurrentBufferFill = BufferFill_A
             BufferFill_B = 0
         }
+        CalculatedBaseInt = CurrentBufferAdr/ _SIZEOF_INTEGER_;
+        CalculatedBaseDouble = CurrentBufferAdr/ _SIZEOF_DOUBLE_;
+
         // Move to final point of buffer if next buffer has points
         If(AbortTrigger == 0 && CurrentBufferFill > 0)     // Do move with previous buffer N-1 and N and current buffer 1
         {
@@ -382,14 +392,12 @@ Return
 // *************************************************************************************************
 
 N103:
-    // Convert absolute address to the index of integer data in the user shared memory buffer (USHM)
-    CalculatedBase = CurrentBufferAdr/ _SIZEOF_INTEGER_;
     // Integer type buffers
-	Time_Idx = CalculatedBase + CurrentIndex
+	Time_Idx = CalculatedBaseInt + CurrentIndex
 	User_Idx = Time_Idx + BuffLen
     // Double type buffers
     // Convert index of integer data to double data in USHM
-    A_Idx     = (User_Idx + BuffLen) * _SIZEOF_INTEGER_ / _SIZEOF_DOUBLE_
+    A_Idx     = CalculatedBaseDouble + BuffLen + CurrentIndex
     B_Idx     = A_Idx     + BuffLen
     C_Idx     = B_Idx     + BuffLen
     U_Idx     = C_Idx     + BuffLen
