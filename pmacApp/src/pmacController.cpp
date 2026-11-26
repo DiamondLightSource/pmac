@@ -1873,7 +1873,6 @@ asynStatus pmacController::fastUpdate(pmacCommandStore *sPtr) {
       }
 
     }
-    return status;
   }
 
   if (cid_ == PMAC_CID_GEOBRICK_ || cid_ == PMAC_CID_CLIPPER_) {
